@@ -30,7 +30,7 @@ export default function Footer() {
             className="flex space-x-6 mb-6 md:mb-0"
           >
             <a
-              href="https://github.com/Punds101"
+              href="https://github.com/dominikkoenitzer"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
