@@ -57,7 +57,7 @@ export default function ContactSection() {
               <h4 className="font-medium mb-4 text-lg">Follow Me</h4>
               <div className="flex space-x-4">
                 <a
-                  href="https://github.com/Punds101"
+                  href="https://github.com/dominikkoenitzer"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="h-12 w-12 rounded-full bg-background/50 border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300 group"
