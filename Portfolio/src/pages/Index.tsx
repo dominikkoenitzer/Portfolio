@@ -18,23 +18,23 @@ const Index = () => {
     restDelta: 0.001
   });
 
-  // Add custom font link
+  
   useEffect(() => {
     const fontLink = document.createElement('link');
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap';
     fontLink.rel = 'stylesheet';
     document.head.appendChild(fontLink);
     
-    // Update body font family
+    
     document.body.style.fontFamily = "'Inter', sans-serif";
     
-    // Add CSS variables for primary color in RGB format and update custom styling
+    
     const rootStyles = document.documentElement.style;
     
-    // For primary blue (rgb(37, 99, 235))
+    
     rootStyles.setProperty('--primary-rgb', '37, 99, 235');
     
-    // Smooth scrolling for all anchor links
+    
     const handleAnchorClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
@@ -43,11 +43,11 @@ const Index = () => {
         const targetElement = document.querySelector(anchor.hash);
         if (targetElement) {
           window.scrollTo({
-            top: targetElement.getBoundingClientRect().top + window.scrollY - 80, // Offset for navbar
+            top: targetElement.getBoundingClientRect().top + window.scrollY - 80,
             behavior: 'smooth'
           });
           
-          // Update URL without scroll
+          
           history.pushState(null, '', anchor.hash);
         }
       }
@@ -55,7 +55,7 @@ const Index = () => {
     
     document.addEventListener('click', handleAnchorClick);
     
-    // Add custom styling for the highlight text
+    
     const style = document.createElement('style');
     style.textContent = `
       .highlight-text {

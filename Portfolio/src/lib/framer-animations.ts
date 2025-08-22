@@ -1,7 +1,7 @@
 
 import { MotionProps } from "framer-motion";
 
-// Section animations
+
 export const fadeInUp: MotionProps = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -36,7 +36,7 @@ export const staggerContainer: MotionProps = {
   viewport: { once: true, margin: "-100px" }
 };
 
-// Item animation (for staggered children)
+
 export const staggerItem = (index: number): MotionProps => ({
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -48,7 +48,7 @@ export const staggerItem = (index: number): MotionProps => ({
   viewport: { once: true }
 });
 
-// Hover animations
+
 export const scaleOnHover = {
   whileHover: { scale: 1.05 },
   transition: { duration: 0.3, ease: "easeInOut" }
@@ -59,12 +59,12 @@ export const liftOnHover = {
   transition: { duration: 0.4, ease: "easeInOut" }
 };
 
-// Button animations
+
 export const buttonClick = {
   whileTap: { scale: 0.97 }
 };
 
-// Typing animation settings
+
 export const typingAnimationProps = {
   speed: 50,
   deletionSpeed: 80,
