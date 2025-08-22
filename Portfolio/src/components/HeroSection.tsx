@@ -5,13 +5,13 @@ import { TypeAnimation } from 'react-type-animation';
 export default function HeroSection() {
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Modern Background Elements */}
+      
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-20 -left-20 w-[500px] h-[500px] bg-primary/5 rounded-full mix-blend-normal filter blur-[100px] opacity-70 animate-blob"></div>
         <div className="absolute bottom-20 -right-20 w-[500px] h-[500px] bg-primary/10 rounded-full mix-blend-normal filter blur-[100px] opacity-70 animate-blob animation-delay-2000"></div>
       </div>
       
-      {/* Subtle grid pattern */}
+      
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] -z-10"></div>
       
       <div className="container max-w-5xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
