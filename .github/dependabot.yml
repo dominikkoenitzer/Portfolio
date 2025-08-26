@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"         # Change this based on your ecosystem (see below)
+    directory: "/"                   # Location of your package.json or manifest file
+    schedule:
+      interval: "weekly"             # Options: "daily", "weekly", "monthly"
+    open-pull-requests-limit: 5     # Limit open PRs from Dependabot to avoid overload
+    allow:
+      - dependency-type: "all"      # Update both direct and indirect dependencies
+    ignore:
+      - dependency-name: "lodash"   # Example: ignore specific dependencies if needed
+        versions:
+          - "4.x"
+    commit-message:
+      prefix: "deps"                # Prefix for commit messages from Dependabot
+      include: "scope"              # Include scope if applicable
+    labels:
+      - "dependencies"
+      - "automated update"
