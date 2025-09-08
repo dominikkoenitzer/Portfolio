@@ -135,7 +135,7 @@ const Index = () => {
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="light">
+  <ThemeProvider defaultTheme="system">
       <motion.div 
         className="progress-bar fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/70 via-primary to-primary/70 z-[100]"
         style={{ scaleX, transformOrigin: "0%" }}
