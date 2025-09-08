@@ -26,24 +26,19 @@ const skillCategories: SkillCategory[] = [
     ),
     skills: [
       {
-        name: "HTML5",
-        description: "Building structured and semantic web pages",
+        name: "React",
+        description: "Building dynamic user interfaces",
         proficiency: 95
       },
       {
-        name: "CSS3",
-        description: "Styling websites with modern techniques like Flexbox and Grid",
-        proficiency: 90
-      },
-      {
-        name: "JavaScript",
+        name: "Next.js",
         description: "Client-side scripting and interactive functionality",
         proficiency: 90
       },
       {
-        name: "React",
-        description: "Building dynamic user interfaces",
-        proficiency: 85
+        name: "shadcn/ui",
+        description: "Accessible and customizable UI components",
+        proficiency: 90
       },
       {
         name: "Tailwind CSS",
@@ -56,11 +51,21 @@ const skillCategories: SkillCategory[] = [
         proficiency: 80
       },
       {
-        name: "UI/UX Design",
-        description: "Creating intuitive and appealing user interfaces",
+        name: "JavaScript (ES6+)",
+        description: "Modern JavaScript features and best practices",
         proficiency: 75
+      },
+      {
+        name: "Framer Motion",
+        description: "Advanced animations and interactive UI effects in React",
+        proficiency: 75
+      },
+      {
+        name: "Lighthouse",
+        description: "Web performance, accessibility, and SEO auditing",
+        proficiency: 70
       }
-    ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
+  ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   },
   {
     name: "Professional Skills",
@@ -72,13 +77,18 @@ const skillCategories: SkillCategory[] = [
     ),
     skills: [
       {
+        name: "Customer Service",
+        description: "Ensuring client satisfaction and positive experiences",
+        proficiency: 90
+      },
+      {
         name: "Communication",
         description: "Clear and effective verbal and written communication",
         proficiency: 90
       },
       {
-        name: "Software Development",
-        description: "End-to-end development of software applications",
+        name: "Project Management",
+        description: "Planning and executing projects efficiently",
         proficiency: 85
       },
       {
@@ -135,8 +145,8 @@ const skillCategories: SkillCategory[] = [
         proficiency: 80
       },
       {
-        name: "Express",
-        description: "Creating RESTful APIs and web servers",
+        name: "GraphQL",
+        description: "Efficient data querying and manipulation",
         proficiency: 75
       },
       {
@@ -145,8 +155,8 @@ const skillCategories: SkillCategory[] = [
         proficiency: 75
       },
       {
-        name: "C++",
-        description: "System-level programming and performance-critical applications",
+        name: "C#",
+        description: "Backend development with .NET framework",
         proficiency: 70
       },
       {
@@ -155,8 +165,8 @@ const skillCategories: SkillCategory[] = [
         proficiency: 65
       },
       {
-        name: "Redis",
-        description: "In-memory data structure store for caching",
+        name: "C++",
+        description: "System-level programming and performance-critical applications",
         proficiency: 60
       }
     ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
@@ -171,8 +181,8 @@ const skillCategories: SkillCategory[] = [
     ),
     skills: [
       {
-        name: "Linux",
-        description: "General Linux operating system knowledge",
+        name: "Windows Server",
+        description: "Windows Server management and administration",
         proficiency: 85
       },
       {
@@ -181,8 +191,13 @@ const skillCategories: SkillCategory[] = [
         proficiency: 85
       },
       {
+        name: "Jenkins",
+        description: "Automation server for building, deploying, and CI/CD pipelines",
+        proficiency: 80
+      },
+      {
         name: "Linux Server",
-        description: "Server management and administration",
+        description: "Linux Server management and administration",
         proficiency: 80
       },
       {
@@ -196,10 +211,11 @@ const skillCategories: SkillCategory[] = [
         proficiency: 75
       },
       {
-        name: "Windows Server",
-        description: "Managing and configuring Windows Server environments",
-        proficiency: 70
+        name: "Grafana",
+        description: "Metrics visualization and monitoring platform",
+        proficiency: 65
       }
+
     ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   },
   {
@@ -218,14 +234,19 @@ const skillCategories: SkillCategory[] = [
         proficiency: 90
       },
       {
-        name: "GitHub",
-        description: "Hosting and collaboration platform for Git repositories",
+        name: "Docker",
+        description: "Containerization platform for developing and deploying applications",
         proficiency: 85
       },
       {
-        name: "MySQL",
-        description: "Relational database management and SQL queries",
+        name: "SQLite",
+        description: "Lightweight, serverless embedded database engine",
         proficiency: 85
+      },
+      {
+        name: "PostgreSQL",
+        description: "Advanced open-source relational database management system",
+        proficiency: 80
       },
       {
         name: "MongoDB",
@@ -259,18 +280,18 @@ const skillCategories: SkillCategory[] = [
       },
       {
         name: "German",
-        description: "Fluent",
-        proficiency: 80
+        description: "Native proficiency",
+        proficiency: 85
       },
       {
         name: "Chinese/Mandarin",
-        description: "Good knowledge",
-        proficiency: 65
+        description: "Fluent proficiency",
+        proficiency: 70
       },
       {
         name: "French",
-        description: "Basic knowledge",
-        proficiency: 40
+        description: "Basic proficiency",
+        proficiency: 45
       }
     ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   }
@@ -328,7 +349,7 @@ export default function SkillsSection() {
                           {skill.name}
                         </span>
                         {category.name === "Languages" && (
-                          <span className="text-xs text-muted-foreground mt-0.5 truncate">
+                          <span className="text-xs sm:text-sm text-muted-foreground mt-1.5 sm:mt-2 group-hover:text-muted-foreground/80 transition-colors duration-300 line-clamp-2">
                             {skill.description}
                           </span>
                         )}
