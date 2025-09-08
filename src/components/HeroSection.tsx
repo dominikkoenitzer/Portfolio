@@ -4,7 +4,7 @@ import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-20 -left-20 w-[500px] h-[500px] bg-primary/5 rounded-full mix-blend-normal filter blur-[100px] opacity-70 animate-blob"></div>
