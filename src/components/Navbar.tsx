@@ -7,16 +7,27 @@ import { Button } from "@/components/ui/button";
 
 interface NavLink {
   name: string;
-  href: string;
+  targetId: string;
 }
 
 const navLinks: NavLink[] = [
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Services", href: "#services" },
-  { name: "Contact", href: "#contact" },
-  { name: "Donate", href: "#donate" },
+  { name: "About", targetId: "about" },
+  { name: "Skills", targetId: "skills" },
+  { name: "Services", targetId: "services" },
+  { name: "Contact", targetId: "contact" },
+  { name: "Donate", targetId: "donate" },
 ];
+
+const scrollToSection = (targetId: string) => {
+  const element = document.getElementById(targetId);
+  if (element) {
+    const offsetTop = element.offsetTop - 80; // Account for fixed navbar
+    window.scrollTo({
+      top: offsetTop,
+      behavior: 'smooth'
+    });
+  }
+};
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,8 +57,8 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <a 
-              href="#" 
+            <button 
+              onClick={() => scrollToSection('hero')} 
               className="group flex items-center text-xl md:text-2xl font-bold tracking-tight"
             >
               <span className="h-9 w-9 mr-2 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-300">
@@ -60,19 +71,19 @@ export default function Navbar() {
               >
                 Dominik Könitzer
               </motion.span>
-            </a>
+            </button>
           </div>
           
           <nav className="hidden md:flex space-x-1 items-center">
             {navLinks.map((link, index) => (
-              <a
+              <button
                 key={link.name}
-                href={link.href}
+                onClick={() => scrollToSection(link.targetId)}
                 className="relative px-3 py-2 text-sm font-medium hover:text-primary transition-colors duration-200 rounded-md group"
               >
                 <span className="relative z-10">{link.name}</span>
                 <span className="absolute inset-0 bg-primary/10 rounded-md scale-0 transition-transform duration-200 origin-center group-hover:scale-100"></span>
-              </a>
+              </button>
             ))}
             <div className="ml-2">
               <ThemeToggle />
@@ -109,17 +120,19 @@ export default function Navbar() {
           >
             <nav className="flex flex-col space-y-2 pt-2 pb-6">
               {navLinks.map((link, index) => (
-                <motion.a
+                <motion.button
                   key={link.name}
-                  href={link.href}
+                  onClick={() => {
+                    scrollToSection(link.targetId);
+                    setMobileMenuOpen(false);
+                  }}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + index * 0.1 }}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-base font-medium py-3 px-4 rounded-lg transition-colors hover:bg-primary/10 hover:text-primary"
+                  className="text-base font-medium py-3 px-4 rounded-lg transition-colors hover:bg-primary/10 hover:text-primary text-left w-full"
                 >
                   {link.name}
-                </motion.a>
+                </motion.button>
               ))}
             </nav>
           </motion.div>
