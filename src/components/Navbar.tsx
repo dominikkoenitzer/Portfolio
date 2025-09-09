@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Code } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { Link, useLocation } from "react-router-dom";
 
 interface NavLink {
   name: string;
@@ -29,9 +30,20 @@ const scrollToSection = (targetId: string) => {
   }
 };
 
+const handleNavigation = (targetId: string, pathname: string) => {
+  if (pathname === '/') {
+    // We're on the home page, scroll to section
+    scrollToSection(targetId);
+  } else {
+    // We're on another page, navigate to home page with hash
+    window.location.href = `/#${targetId}`;
+  }
+};
+
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,8 +69,8 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <button 
-              onClick={() => scrollToSection('hero')} 
+            <Link 
+              to="/" 
               className="group flex items-center text-xl md:text-2xl font-bold tracking-tight"
             >
               <span className="h-9 w-9 mr-2 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors duration-300">
@@ -71,14 +83,14 @@ export default function Navbar() {
               >
                 Dominik Könitzer
               </motion.span>
-            </button>
+            </Link>
           </div>
           
           <nav className="hidden md:flex space-x-1 items-center">
             {navLinks.map((link, index) => (
               <button
                 key={link.name}
-                onClick={() => scrollToSection(link.targetId)}
+                onClick={() => handleNavigation(link.targetId, location.pathname)}
                 className="relative px-3 py-2 text-sm font-medium hover:text-primary transition-colors duration-200 rounded-md group"
               >
                 <span className="relative z-10">{link.name}</span>
@@ -123,7 +135,7 @@ export default function Navbar() {
                 <motion.button
                   key={link.name}
                   onClick={() => {
-                    scrollToSection(link.targetId);
+                    handleNavigation(link.targetId, location.pathname);
                     setMobileMenuOpen(false);
                   }}
                   initial={{ opacity: 0, x: -10 }}
