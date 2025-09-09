@@ -59,9 +59,6 @@ export default function Footer() {
             <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Terms of Service
-            </a>
           </div>
         </motion.div>
       </div>
