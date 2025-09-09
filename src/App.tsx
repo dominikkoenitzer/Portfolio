@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import Index from "./pages/Index";
+import Privacy from "./pages/Privacy";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/privacy" element={<Privacy />} />
           {/* Redirect any invalid routes back to the main page */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
