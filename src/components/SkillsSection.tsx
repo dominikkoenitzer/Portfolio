@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { SectionHeading } from "./SectionHeading";
 import { staggerContainer, staggerItem } from "@/lib/framer-animations";
@@ -65,7 +66,7 @@ const skillCategories: SkillCategory[] = [
         description: "Web performance, accessibility, and SEO auditing",
         proficiency: 70
       }
-  ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
+    ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   },
   {
     name: "Professional Skills",
@@ -132,16 +133,21 @@ const skillCategories: SkillCategory[] = [
       {
         name: "Java",
         description: "Backend programming for applications",
-        proficiency: 85
+        proficiency: 90
       },
       {
         name: "Spring Framework",
         description: "Java-based framework for creating microservices",
-        proficiency: 80
+        proficiency: 85
       },
       {
         name: "Node.js",
         description: "Building server-side applications",
+        proficiency: 85
+      },
+      {
+        name: "Bash",
+        description: "Scripting for automating tasks on Linux systems",
         proficiency: 80
       },
       {
@@ -158,11 +164,6 @@ const skillCategories: SkillCategory[] = [
         name: "C#",
         description: "Backend development with .NET framework",
         proficiency: 70
-      },
-      {
-        name: "Bash",
-        description: "Scripting for automating tasks on Linux systems",
-        proficiency: 65
       },
       {
         name: "C++",
@@ -215,7 +216,6 @@ const skillCategories: SkillCategory[] = [
         description: "Metrics visualization and monitoring platform",
         proficiency: 65
       }
-
     ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   },
   {
@@ -296,6 +296,7 @@ const skillCategories: SkillCategory[] = [
     ].sort((a, b) => (b.proficiency || 0) - (a.proficiency || 0))
   }
 ];
+
 
 export default function SkillsSection() {
   return (
