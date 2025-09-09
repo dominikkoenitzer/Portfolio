@@ -90,7 +90,7 @@ export default function AboutSection() {
                 transition={{ duration: 0.4, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                I'm Dominik Könitzer, a 17-year-old software engineer at WISS Schulen für Wirtschaft Informatik Immobilien, currently in my fifth semester of a 4-year software engineering program.
+                I'm Dominik Könitzer, a 17-year-old software engineer at WISS Schulen für Wirtschaft Informatik Immobilien, currently in my <span className="font-medium text-foreground">fifth</span> semester of a 4-year software engineering program.
               </motion.p>
               
               <motion.p 
