@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { SectionHeading } from "./SectionHeading";
+import { SectionHeading } from "../layout/SectionHeading";
 import { staggerContainer, staggerItem, scaleOnHover } from "@/lib/framer-animations";
 import { Check } from "lucide-react";
 

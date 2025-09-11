@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { SectionHeading } from "./SectionHeading";
+import { SectionHeading } from "../layout/SectionHeading";
 import { fadeInUp, fadeInLeft, fadeInRight } from "@/lib/framer-animations";
 import { Calendar, Award, GraduationCap } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 export default function AboutSection() {
   return (
