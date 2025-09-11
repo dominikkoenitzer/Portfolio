@@ -3,5 +3,5 @@ export * from './sections';
 export * from './layout';
 export * from './forms';
 
-// Re-export UI components for easier access
-export * from './ui';
+// Note: UI components can be imported directly from '@/components/ui'
+// to avoid potential circular imports and keep bundle size optimized
