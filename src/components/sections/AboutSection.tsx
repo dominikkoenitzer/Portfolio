@@ -21,7 +21,7 @@ export default function AboutSection() {
             <div className="aspect-square rounded-2xl overflow-hidden shadow-lg bg-background/80">
               <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent flex items-center justify-center">
                 <motion.img 
-                  src="public/Favicon.png"
+                  src="/Favicon.png"
                   alt="Dominik Könitzer"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
