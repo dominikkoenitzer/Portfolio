@@ -11,4 +11,4 @@ export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 export { Progress } from './progress';
 export { Skeleton } from './skeleton';
 export { Toaster } from './toaster';
-export { useToast } from './use-toast';
+export { useToast, toast } from './use-toast';
