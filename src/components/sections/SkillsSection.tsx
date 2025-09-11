@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { SectionHeading } from "./SectionHeading";
+import { SectionHeading } from "../layout/SectionHeading";
 import { staggerContainer, staggerItem } from "@/lib/framer-animations";
 
 interface Skill {

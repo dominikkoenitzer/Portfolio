@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { SectionHeading } from "./SectionHeading";
-import ContactForm from "./ContactForm";
+import { SectionHeading } from "../layout/SectionHeading";
+import ContactForm from "../forms/ContactForm";
 import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 
 export default function ContactSection() {
