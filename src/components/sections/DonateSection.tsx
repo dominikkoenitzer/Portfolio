@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { SectionHeading } from "./SectionHeading";
+import { SectionHeading } from "../layout/SectionHeading";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

@@ -1,8 +1,11 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "dominik-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Personal portfolio website for Dominik Könitzer - Software Engineer",
   "type": "module",
+  "author": "Dominik Könitzer",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
