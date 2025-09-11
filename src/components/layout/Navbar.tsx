@@ -5,19 +5,9 @@ import { Menu, X, Code } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
+import { NAV_LINKS } from "@/constants";
 
-interface NavLink {
-  name: string;
-  targetId: string;
-}
-
-const navLinks: NavLink[] = [
-  { name: "About", targetId: "about" },
-  { name: "Skills", targetId: "skills" },
-  { name: "Services", targetId: "services" },
-  { name: "Contact", targetId: "contact" },
-  { name: "Donate", targetId: "donate" },
-];
+const navLinks = NAV_LINKS;
 
 const scrollToSection = (targetId: string) => {
   const element = document.getElementById(targetId);

@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { ThemeProvider } from "@/context/ThemeContext";
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import SkillsSection from "@/components/SkillsSection";
-import ServicesSection from "@/components/ServicesSection";
-import ContactSection from "@/components/ContactSection";
-import DonateSection from "@/components/DonateSection";
-import Footer from "@/components/Footer";
+import { 
+  Navbar,
+  Footer,
+  HeroSection,
+  AboutSection,
+  SkillsSection,
+  ServicesSection,
+  ContactSection,
+  DonateSection
+} from "@/components";
 import { motion, useScroll, useSpring } from "framer-motion";
 
 const Index = () => {

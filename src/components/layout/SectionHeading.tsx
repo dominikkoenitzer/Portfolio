@@ -39,3 +39,5 @@ export function SectionHeading({
     </motion.div>
   );
 }
+
+export default SectionHeading;

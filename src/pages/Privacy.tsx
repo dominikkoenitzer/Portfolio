@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { ThemeProvider } from "@/context/ThemeContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Navbar, Footer } from "@/components";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
