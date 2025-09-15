@@ -28,7 +28,7 @@ export const themes: Record<string, ThemeColors> = {
   light: {
     name: "light",
     displayName: "Light",
-    description: "Clean and bright interface",
+    description: "Clean & bright",
     icon: "Sun",
     primary: "220 98% 61%",
     primaryForeground: "220 98% 98%",
@@ -53,7 +53,7 @@ export const themes: Record<string, ThemeColors> = {
   dark: {
     name: "dark",
     displayName: "Dark",
-    description: "Easy on the eyes",
+    description: "Easy on eyes",
     icon: "Moon",
     primary: "220 98% 61%",
     primaryForeground: "220 98% 98%",
@@ -78,7 +78,7 @@ export const themes: Record<string, ThemeColors> = {
   solarpunk: {
     name: "solarpunk",
     displayName: "Solarpunk",
-    description: "Nature-inspired green tech",
+    description: "Nature tech vibe",
     icon: "Leaf",
     primary: "142 76% 36%",
     primaryForeground: "355.7 100% 97.3%",
@@ -103,7 +103,7 @@ export const themes: Record<string, ThemeColors> = {
   cyberpunk: {
     name: "cyberpunk",
     displayName: "Cyberpunk",
-    description: "Neon-soaked digital future",
+    description: "Neon digital future",
     icon: "Zap",
     primary: "316 100% 50%",
     primaryForeground: "0 0% 0%",
@@ -128,7 +128,7 @@ export const themes: Record<string, ThemeColors> = {
   cloud: {
     name: "cloud",
     displayName: "Cloud",
-    description: "Soft and airy sky tones",
+    description: "Soft sky tones",
     icon: "Cloud",
     primary: "200 100% 70%",
     primaryForeground: "200 100% 10%",
@@ -178,7 +178,7 @@ export const themes: Record<string, ThemeColors> = {
   amethyst: {
     name: "amethyst",
     displayName: "Amethyst",
-    description: "Mystical purple gemstone",
+    description: "Mystical purple gem",
     icon: "Gem",
     primary: "270 95% 60%",
     primaryForeground: "270 100% 95%",
