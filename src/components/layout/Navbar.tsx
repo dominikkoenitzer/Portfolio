@@ -215,16 +215,17 @@ export default function Navbar() {
                   transition={{ delay: index * 0.1 }}
                   aria-label={`Navigate to ${link.name} section`}
                 >
-                  <span className="relative z-10 flex items-center gap-1">
+                  <span className="relative z-10 flex items-center gap-2">
+                    <motion.div
+                      className="w-1 h-1 bg-primary rounded-full"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ 
+                        scale: isActive ? 1 : 0.6, 
+                        opacity: isActive ? 1 : 0.4 
+                      }}
+                      transition={{ duration: 0.2 }}
+                    />
                     {link.name}
-                    {isActive && (
-                      <motion.div
-                        className="w-1 h-1 bg-primary rounded-full"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                      />
-                    )}
                   </span>
                   <motion.span 
                     className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg"
