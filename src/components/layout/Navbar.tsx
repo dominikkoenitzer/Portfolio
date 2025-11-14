@@ -170,7 +170,7 @@ export default function Navbar() {
           : "bg-transparent"
       } transition-all duration-700`}
     >
-      <div className="mx-auto max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <Link 
@@ -241,7 +241,7 @@ export default function Navbar() {
             </div>
           </nav>
           
-          <div className="flex md:hidden items-center space-x-3">
+          <div className="flex md:hidden items-center gap-2.5 sm:gap-3">
             <ThemeToggle />
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -253,7 +253,7 @@ export default function Navbar() {
                 onClick={mobileMenuOpen ? closeMobileMenu : openMobileMenu}
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
-                className="h-11 w-11 rounded-xl bg-primary/5 hover:bg-primary/10 border border-border/30 transition-all duration-300"
+                className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-primary/5 hover:bg-primary/10 border border-border/30 transition-all duration-300 flex-shrink-0"
               >
                 <motion.div
                   animate={{ rotate: mobileMenuOpen ? 180 : 0 }}
