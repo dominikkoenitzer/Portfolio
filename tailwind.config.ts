@@ -61,8 +61,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        heading: ["Playfair Display", ...fontFamily.serif],
+        sans: ["Eloquia Display Medium", ...fontFamily.sans],
+        heading: ["Eloquia Display Medium", ...fontFamily.serif],
       },
       keyframes: {
         "accordion-down": {
