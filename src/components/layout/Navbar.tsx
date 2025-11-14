@@ -23,6 +23,19 @@ export default function Navbar() {
   const y = useMotionValue(0);
   const opacity = useTransform(y, [-100, 0], [0, 1]);
 
+  // Handle mobile menu state with animation timing - must be defined before useEffect
+  const closeMobileMenu = useCallback(() => {
+    setMenuClosing(true);
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setMenuClosing(false);
+    }, 200);
+  }, []);
+
+  const openMobileMenu = useCallback(() => {
+    setMobileMenuOpen(true);
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -51,17 +64,6 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [mobileMenuOpen, closeMobileMenu]);
-
-  // Handle mobile menu state with animation timing
-  const closeMobileMenu = useCallback(() => {
-    setMenuClosing(true);
-    setTimeout(() => {
-      setMobileMenuOpen(false);
-      setMenuClosing(false);
-    }, 200);
-  }, []);
-
-  const openMobileMenu = useCallback(() => {
     setMobileMenuOpen(true);
   }, []);
 
