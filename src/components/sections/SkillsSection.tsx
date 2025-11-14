@@ -330,7 +330,7 @@ export default function SkillsSection() {
               >
                 {category.icon}
               </motion.div>
-              <h3 className="text-lg sm:text-xl font-semibold">{category.name}</h3>
+              <h3 className="text-lg sm:text-xl font-semibold font-heading">{category.name}</h3>
             </div>
             
             <div className="space-y-4 sm:space-y-5">

@@ -209,7 +209,7 @@ export default function ServicesSection() {
               <div className="h-10 sm:h-12 w-10 sm:w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mr-3">
                 {service.icon}
               </div>
-              <h3 className="text-base sm:text-lg font-semibold">{service.title}</h3>
+              <h3 className="text-base sm:text-lg font-semibold font-heading">{service.title}</h3>
             </div>
             
             <p className="text-muted-foreground text-sm sm:text-base mb-4 sm:mb-5 flex-grow">
