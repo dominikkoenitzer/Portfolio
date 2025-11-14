@@ -126,7 +126,7 @@ export default function AboutSection() {
                 className="group"
                 asChild
               >
-                <a href="#skills">
+                <a href="/skills">
                   Explore my skills
                   <svg
                     className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
