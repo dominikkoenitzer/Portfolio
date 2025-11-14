@@ -7,7 +7,7 @@ export const useScrollAnimation = (threshold = 0.1) => {
   const margin = `0px 0px -${Math.round(threshold * 100)}% 0px`
   const isInView = useInView(ref, { 
     once: true, 
-    margin: margin as any
+    margin: margin as string
   })
   
   return { ref, isInView }
@@ -104,18 +104,22 @@ export const useSmoothScroll = () => {
 }
 
 // Advanced parallax with multiple layers
+// Note: This hook is limited to 3 layers to avoid hooks in loops
 export const useMultiLayerParallax = (layers: number[] = [0.2, 0.5, 0.8]) => {
   const { scrollY } = useScroll()
   
-  const transforms = layers.map(speed => 
-    useTransform(scrollY, [0, 1000], [0, -1000 * speed])
-  )
+  // Limit to 3 layers to avoid hooks in loops
+  const [layer1, layer2, layer3] = layers.slice(0, 3)
   
-  const springTransforms = transforms.map(transform => 
-    useSpring(transform, { stiffness: 100, damping: 30 })
-  )
+  const transform1 = useTransform(scrollY, [0, 1000], [0, -1000 * (layer1 || 0.2)])
+  const transform2 = useTransform(scrollY, [0, 1000], [0, -1000 * (layer2 || 0.5)])
+  const transform3 = useTransform(scrollY, [0, 1000], [0, -1000 * (layer3 || 0.8)])
   
-  return springTransforms
+  const spring1 = useSpring(transform1, { stiffness: 100, damping: 30 })
+  const spring2 = useSpring(transform2, { stiffness: 100, damping: 30 })
+  const spring3 = useSpring(transform3, { stiffness: 100, damping: 30 })
+  
+  return [spring1, spring2, spring3].filter((_, i) => i < layers.length)
 }
 
 // Staggered animation hook

@@ -50,7 +50,7 @@ export default function Navbar() {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, closeMobileMenu]);
 
   // Handle mobile menu state with animation timing
   const closeMobileMenu = useCallback(() => {
