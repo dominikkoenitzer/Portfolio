@@ -45,14 +45,15 @@ export function ThemeToggle() {
   
   // Calculate responsive dimensions based on viewport
   const getButtonSize = () => {
-    if (typeof window === 'undefined') return 'h-11 w-11'
+    if (typeof window === 'undefined') return 'h-10 w-10'
     const width = window.innerWidth
     const dpr = window.devicePixelRatio || 1
     
     // Scale based on viewport width and device pixel ratio
     if (width < 640) {
-      // Mobile: smaller but touch-friendly
-      return dpr >= 2 ? 'h-10 w-10' : 'h-11 w-11'
+      // Mobile: optimized for iPhone X (375px) and similar devices
+      // Use consistent size for better alignment
+      return 'h-10 w-10'
     } else if (width < 1024) {
       // Tablet
       return 'h-11 w-11'
@@ -74,14 +75,63 @@ export function ThemeToggle() {
     if (typeof window === 'undefined') return 'w-[calc(100vw-2rem)] sm:w-[350px] md:w-[400px]'
     const width = window.innerWidth
     if (width < 640) {
-      // Mobile: use most of viewport width with padding
-      return 'w-[calc(100vw-2rem)] max-w-[350px]'
+      // Mobile: optimized for iPhone X (375px) - use safe area aware width
+      // iPhone X width is 375px, so we want ~340px with padding
+      return 'w-[calc(100vw-1.5rem)] max-w-[340px]'
     } else if (width < 768) {
       return 'w-[350px]'
     } else if (width < 1024) {
       return 'w-[380px]'
     } else {
       return 'w-[400px]'
+    }
+  }
+  
+  // Get dropdown position for mobile devices
+  const getDropdownPosition = () => {
+    if (!isMobile) return '-right-16 sm:right-4'
+    
+    // On mobile, we'll use fixed positioning via inline styles
+    return 'right-0'
+  }
+  
+  // Calculate dropdown position for mobile (centered better on iPhone X)
+  const getDropdownStyle = () => {
+    if (!isMobile) {
+      return {
+        maxWidth: 'calc(100vw - 2rem)',
+      }
+    }
+    
+    if (typeof window === 'undefined') {
+      return {
+        maxWidth: 'calc(100vw - 1.5rem)',
+        right: '0.75rem',
+        left: 'auto',
+      }
+    }
+    
+    const width = window.innerWidth
+    // For iPhone X (375px), center the dropdown better
+    if (width <= 375) {
+      // iPhone X: position from right with safe margin, but ensure it's visible
+      return {
+        maxWidth: 'calc(100vw - 1.5rem)',
+        right: '0.75rem',
+        left: 'auto',
+      }
+    } else if (width < 640) {
+      return {
+        maxWidth: 'calc(100vw - 1.5rem)',
+        right: '0.75rem',
+        left: 'auto',
+      }
+    }
+    
+    return {
+      maxWidth: 'calc(100vw - 1.5rem)',
+      right: '0.75rem',
+      left: 'auto',
     }
   }
 
@@ -117,6 +167,8 @@ export function ThemeToggle() {
   const buttonSizeClass = getButtonSize()
   const iconSizeClass = getIconSize()
   const dropdownWidthClass = getDropdownWidth()
+  const dropdownPositionClass = getDropdownPosition()
+  const dropdownStyle = getDropdownStyle()
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -129,7 +181,7 @@ export function ThemeToggle() {
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
-          className={`${buttonSizeClass} rounded-xl sm:rounded-2xl border transition-all duration-300 ${
+          className={`${buttonSizeClass} rounded-xl sm:rounded-2xl border transition-all duration-300 flex-shrink-0 ${
             isOpen 
               ? 'bg-primary/10 border-primary/20 shadow-lg shadow-primary/10' 
               : 'border-border/20 hover:bg-primary/5 hover:border-primary/15 hover:shadow-md active:scale-95'
@@ -137,8 +189,8 @@ export function ThemeToggle() {
           aria-label="Select theme"
           aria-expanded={isOpen}
           style={{
-            minWidth: '44px', // Minimum touch target size for accessibility
-            minHeight: '44px',
+            minWidth: isMobile ? '40px' : '44px', // Slightly smaller on mobile for better fit
+            minHeight: isMobile ? '40px' : '44px',
           }}
         >
           <motion.div
@@ -191,12 +243,10 @@ export function ThemeToggle() {
               }}
               className={`absolute top-full mt-2 sm:mt-4 md:mt-8 ${
                 isMobile 
-                  ? 'right-0 left-auto' 
+                  ? dropdownPositionClass
                   : '-right-16 sm:right-4'
               } ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
-              style={{
-                maxWidth: 'calc(100vw - 2rem)',
-              }}
+              style={dropdownStyle}
             >
               {/* Header */}
               <div className="p-3 sm:p-4 border-b border-border">
