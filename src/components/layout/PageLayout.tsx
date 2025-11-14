@@ -17,7 +17,7 @@ export function PageLayout({ children }: PageLayoutProps) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.body.style.fontFamily = "'Eloquia Display Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
+    document.body.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
     const rootStyles = document.documentElement.style;
     rootStyles.setProperty('--primary-rgb', '37, 99, 235');
   }, []);

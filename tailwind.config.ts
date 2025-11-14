@@ -61,8 +61,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Eloquia Display Medium", ...fontFamily.sans],
-        heading: ["Eloquia Display Medium", ...fontFamily.serif],
+        sans: ["Inter", ...fontFamily.sans],
+        heading: ["Space Grotesk", ...fontFamily.sans],
+        display: ["Space Grotesk", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {

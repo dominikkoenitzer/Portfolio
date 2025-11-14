@@ -2,16 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Eloquia Display Medium Font */
-@font-face {
-  font-family: 'Eloquia Display Medium';
-  src: url('/fonts/EloquiaDisplay-Medium.woff2') format('woff2'),
-       url('/fonts/EloquiaDisplay-Medium.woff') format('woff'),
-       url('/fonts/EloquiaDisplay-Medium.ttf') format('truetype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
+/* Import fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -59,17 +51,18 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
-    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-weight: 600;
   }
   
   * {
-    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
   }
   
   /* Common utility classes */
