@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useTheme } from "@/context/ThemeContext"
 import { themes } from "@/lib/themes"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 // Icon mapping for theme icons
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -38,8 +39,51 @@ export function ThemeToggle() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
 
   const themeEntries = Object.entries(themes)
+  
+  // Calculate responsive dimensions based on viewport
+  const getButtonSize = () => {
+    if (typeof window === 'undefined') return 'h-11 w-11'
+    const width = window.innerWidth
+    const dpr = window.devicePixelRatio || 1
+    
+    // Scale based on viewport width and device pixel ratio
+    if (width < 640) {
+      // Mobile: smaller but touch-friendly
+      return dpr >= 2 ? 'h-10 w-10' : 'h-11 w-11'
+    } else if (width < 1024) {
+      // Tablet
+      return 'h-11 w-11'
+    } else {
+      // Desktop: can be slightly larger
+      return 'h-12 w-12'
+    }
+  }
+  
+  const getIconSize = () => {
+    if (typeof window === 'undefined') return 'h-4 w-4'
+    const width = window.innerWidth
+    if (width < 640) return 'h-3.5 w-3.5 sm:h-4 sm:w-4'
+    if (width < 1024) return 'h-4 w-4'
+    return 'h-5 w-5'
+  }
+  
+  const getDropdownWidth = () => {
+    if (typeof window === 'undefined') return 'w-[calc(100vw-2rem)] sm:w-[350px] md:w-[400px]'
+    const width = window.innerWidth
+    if (width < 640) {
+      // Mobile: use most of viewport width with padding
+      return 'w-[calc(100vw-2rem)] max-w-[350px]'
+    } else if (width < 768) {
+      return 'w-[350px]'
+    } else if (width < 1024) {
+      return 'w-[380px]'
+    } else {
+      return 'w-[400px]'
+    }
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,20 +113,33 @@ export function ThemeToggle() {
 
   const currentTheme = themes[theme === 'system' ? 'light' : theme] || themes.light
 
+  // Dynamic classes based on viewport
+  const buttonSizeClass = getButtonSize()
+  const iconSizeClass = getIconSize()
+  const dropdownWidthClass = getDropdownWidth()
+
   return (
     <div className="relative" ref={dropdownRef}>
-      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+      <motion.div 
+        whileHover={{ scale: isMobile ? 1 : 1.02 }} 
+        whileTap={{ scale: 0.98 }}
+        className="touch-manipulation"
+      >
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
-          className={`h-11 w-11 rounded-2xl border transition-all duration-300 ${
+          className={`${buttonSizeClass} rounded-xl sm:rounded-2xl border transition-all duration-300 ${
             isOpen 
               ? 'bg-primary/10 border-primary/20 shadow-lg shadow-primary/10' 
-              : 'border-border/20 hover:bg-primary/5 hover:border-primary/15 hover:shadow-md'
+              : 'border-border/20 hover:bg-primary/5 hover:border-primary/15 hover:shadow-md active:scale-95'
           }`}
           aria-label="Select theme"
           aria-expanded={isOpen}
+          style={{
+            minWidth: '44px', // Minimum touch target size for accessibility
+            minHeight: '44px',
+          }}
         >
           <motion.div
             className="relative flex items-center justify-center"
@@ -90,11 +147,11 @@ export function ThemeToggle() {
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           >
             {isTransitioning ? (
-              <Sparkles className="h-4 w-4 animate-spin text-primary" />
+              <Sparkles className={`${iconSizeClass} animate-spin text-primary`} />
             ) : (
               <div className="flex items-center justify-center">
                 {React.createElement(iconMap[currentTheme.icon] || Sun, { 
-                  className: "h-4 w-4 text-primary" 
+                  className: `${iconSizeClass} text-primary` 
                 })}
               </div>
             )}
@@ -132,19 +189,26 @@ export function ThemeToggle() {
                 y: -10,
                 transition: { duration: 0.15 }
               }}
-              className="absolute top-full mt-8 -right-16 sm:right-4 w-[350px] sm:w-[400px] bg-background border border-border shadow-lg rounded-xl z-50 overflow-hidden"
+              className={`absolute top-full mt-2 sm:mt-4 md:mt-8 ${
+                isMobile 
+                  ? 'right-0 left-auto' 
+                  : '-right-16 sm:right-4'
+              } ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
+              style={{
+                maxWidth: 'calc(100vw - 2rem)',
+              }}
             >
               {/* Header */}
-              <div className="p-4 border-b border-border">
-                <h3 className="font-semibold text-base">Choose Theme</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+              <div className="p-3 sm:p-4 border-b border-border">
+                <h3 className="font-semibold text-sm sm:text-base">Choose Theme</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
                   Select your preferred visual style
                 </p>
               </div>
 
               {/* Theme Grid */}
-              <div className="p-4">
-                <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 sm:p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {themeEntries.map(([themeName, themeData], index) => {
                     const isSelected = theme === themeName
                     
@@ -152,10 +216,10 @@ export function ThemeToggle() {
                       <motion.button
                         key={themeName}
                         onClick={() => handleThemeSelect(themeName)}
-                        className={`relative p-3 rounded-lg border text-left transition-all duration-200 ${
+                        className={`relative p-2.5 sm:p-3 rounded-lg border text-left transition-all duration-200 touch-manipulation ${
                           isSelected 
                             ? 'border-primary bg-primary/10 ring-1 ring-primary/20' 
-                            : 'border-border hover:border-primary/40 hover:bg-primary/5'
+                            : 'border-border hover:border-primary/40 hover:bg-primary/5 active:scale-95'
                         }`}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ 
@@ -166,28 +230,31 @@ export function ThemeToggle() {
                             duration: 0.25
                           }
                         }}
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={isMobile ? {} : { scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        style={{
+                          minHeight: '44px', // Minimum touch target
+                        }}
                       >
                         {/* Theme Content */}
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                           <div 
-                            className="w-10 h-10 rounded-lg flex items-center justify-center"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                             style={{ 
                               background: `hsl(${themeData.primary})`,
                               color: `hsl(${themeData.primaryForeground})`
                             }}
                           >
                             {React.createElement(iconMap[themeData.icon] || Sun, { 
-                              className: "h-5 w-5" 
+                              className: "h-4 w-4 sm:h-5 sm:w-5" 
                             })}
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-semibold text-sm mb-1">
+                            <h4 className="font-semibold text-xs sm:text-sm mb-0.5 sm:mb-1">
                               {themeData.displayName}
                             </h4>
-                            <p className="text-xs text-muted-foreground line-clamp-2">
+                            <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2">
                               {themeData.description}
                             </p>
                           </div>
@@ -196,9 +263,9 @@ export function ThemeToggle() {
                             <motion.div
                               initial={{ scale: 0, rotate: -180 }}
                               animate={{ scale: 1, rotate: 0 }}
-                              className="text-primary"
+                              className="text-primary flex-shrink-0"
                             >
-                              <Check className="h-4 w-4" />
+                              <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </motion.div>
                           )}
                         </div>
@@ -206,22 +273,22 @@ export function ThemeToggle() {
                         {/* Color Preview */}
                         <div className="flex gap-1">
                           <div 
-                            className="w-4 h-4 rounded-full border-2 border-white/30"
+                            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white/30"
                             style={{ background: `hsl(${themeData.background})` }}
                             title="Background"
                           />
                           <div 
-                            className="w-4 h-4 rounded-full border-2 border-white/30"
+                            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white/30"
                             style={{ background: `hsl(${themeData.secondary})` }}
                             title="Secondary"
                           />
                           <div 
-                            className="w-4 h-4 rounded-full border-2 border-white/30"
+                            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white/30"
                             style={{ background: `hsl(${themeData.primary})` }}
                             title="Primary"
                           />
                           <div 
-                            className="w-4 h-4 rounded-full border-2 border-white/30"
+                            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white/30"
                             style={{ background: `hsl(${themeData.foreground})` }}
                             title="Foreground"
                           />
@@ -234,8 +301,8 @@ export function ThemeToggle() {
               </div>
 
               {/* Footer */}
-              <div className="px-4 py-3 border-t border-border bg-muted/20">
-                <p className="text-xs text-center text-muted-foreground">
+              <div className="px-3 sm:px-4 py-2 sm:py-3 border-t border-border bg-muted/20">
+                <p className="text-[10px] sm:text-xs text-center text-muted-foreground">
                   Theme changes are saved automatically
                 </p>
               </div>
