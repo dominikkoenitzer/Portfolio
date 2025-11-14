@@ -22,7 +22,7 @@ export default function ContactSection() {
           viewport={{ once: true }}
         >
           <div className="glass-card rounded-xl p-8 h-full">
-            <h3 className="text-2xl font-semibold mb-8">Contact Information</h3>
+            <h3 className="text-2xl font-semibold mb-8 font-heading">Contact Information</h3>
             
             <div className="space-y-6">
               <div className="flex items-start">
@@ -81,7 +81,7 @@ export default function ContactSection() {
           viewport={{ once: true }}
         >
           <div className="glass-card rounded-xl p-8">
-            <h3 className="text-2xl font-semibold mb-8">Send Me a Message</h3>
+            <h3 className="text-2xl font-semibold mb-8 font-heading">Send Me a Message</h3>
             <ContactForm />
           </div>
         </motion.div>

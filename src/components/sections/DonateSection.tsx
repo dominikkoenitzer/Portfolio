@@ -25,7 +25,7 @@ export default function DonateSection() {
           </div>
         </div>
         
-        <h3 className="text-2xl font-semibold mb-3">Support My Journey</h3>
+        <h3 className="text-2xl font-semibold mb-3 font-heading">Support My Journey</h3>
         
         <p className="text-muted-foreground mb-6">
           Your donations help me continue creating valuable content, improving my skills, and developing new projects. Any amount is greatly appreciated!
