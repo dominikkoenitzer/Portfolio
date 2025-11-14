@@ -64,8 +64,6 @@ export default function Navbar() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [mobileMenuOpen, closeMobileMenu]);
-    setMobileMenuOpen(true);
-  }, []);
 
   // Touch gesture handlers for swipe-to-close
   const handleTouchStart = (e: React.TouchEvent) => {
