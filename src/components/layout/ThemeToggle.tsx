@@ -106,17 +106,18 @@ export function ThemeToggle() {
     }
     
     // For mobile, use fixed positioning centered on screen
-    // Ensure it's perfectly centered horizontally
+    // Calculate exact center position
+    const dropdownWidth = width <= 375 ? Math.min(340, width - 24) : Math.min(350, width - 24)
+    const leftPosition = (width - dropdownWidth) / 2
+    
     return {
       position: 'fixed',
-      left: '50%',
+      left: `${leftPosition}px`,
       top: `${dropdownTop}px`,
-      transform: 'translateX(-50%)',
-      width: width <= 375 ? 'calc(100vw - 1.5rem)' : 'calc(100vw - 1.5rem)',
-      maxWidth: width <= 375 ? '340px' : '350px',
+      width: `${dropdownWidth}px`,
       right: 'auto',
-      marginLeft: '0',
-      marginRight: '0',
+      margin: '0',
+      transform: 'none', // Remove transform since we're calculating exact left position
     }
   }
 
@@ -257,7 +258,7 @@ export function ThemeToggle() {
                 y: -10,
                 transition: { duration: 0.15 }
               }}
-              className={`${dropdownPositionClass} ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
+              className={`${dropdownPositionClass} ${windowWidth > 0 && windowWidth < 768 ? '' : dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
               style={dropdownStyle}
             >
               {/* Header */}
