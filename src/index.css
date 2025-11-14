@@ -61,7 +61,7 @@
     font-weight: 600;
   }
   
-  *:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
+  p, span, div, a, button, input, textarea, select, label, li, td, th, small, strong, em, b, i, u, code, pre, blockquote {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
   }
   
