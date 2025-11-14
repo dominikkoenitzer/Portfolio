@@ -39,22 +39,32 @@ export function ThemeToggle() {
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
   const [dropdownTop, setDropdownTop] = useState<number>(80)
+  const [windowWidth, setWindowWidth] = useState<number>(0)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
   const isMobile = useIsMobile()
 
   const themeEntries = Object.entries(themes)
   
+  // Track window width for responsive calculations
+  useEffect(() => {
+    const updateWindowWidth = () => {
+      setWindowWidth(window.innerWidth)
+    }
+    
+    updateWindowWidth()
+    window.addEventListener('resize', updateWindowWidth)
+    return () => window.removeEventListener('resize', updateWindowWidth)
+  }, [])
+  
   // Calculate responsive dimensions based on viewport
   const getButtonSize = () => {
-    if (typeof window === 'undefined') return 'h-10 w-10'
-    const width = window.innerWidth
-    const dpr = window.devicePixelRatio || 1
+    const width = windowWidth || (typeof window !== 'undefined' ? window.innerWidth : 0)
     
-    // Scale based on viewport width and device pixel ratio
+    // Scale based on viewport width
+    if (width === 0) return 'h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12'
     if (width < 640) {
-      // Mobile: optimized for iPhone X (375px) and similar devices
-      // Use consistent size for better alignment
+      // Mobile: optimized for all mobile devices
       return 'h-10 w-10'
     } else if (width < 1024) {
       // Tablet
@@ -66,95 +76,62 @@ export function ThemeToggle() {
   }
   
   const getIconSize = () => {
-    if (typeof window === 'undefined') return 'h-4 w-4'
-    const width = window.innerWidth
-    if (width < 640) return 'h-3.5 w-3.5 sm:h-4 sm:w-4'
+    const width = windowWidth || (typeof window !== 'undefined' ? window.innerWidth : 0)
+    if (width === 0) return 'h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5'
+    if (width < 640) return 'h-3.5 w-3.5'
     if (width < 1024) return 'h-4 w-4'
     return 'h-5 w-5'
   }
   
   const getDropdownWidth = () => {
-    if (typeof window === 'undefined') return 'w-[calc(100vw-2rem)] sm:w-[350px] md:w-[400px]'
-    const width = window.innerWidth
-    if (width < 640) {
-      // Mobile: width will be controlled by inline styles for better positioning
-      return 'mx-auto'
-    } else if (width < 768) {
-      return 'w-[350px]'
-    } else if (width < 1024) {
-      return 'w-[380px]'
-    } else {
-      return 'w-[400px]'
-    }
+    // Use Tailwind responsive classes instead of JS calculations
+    return 'w-[calc(100vw-1.5rem)] sm:w-[350px] md:w-[380px] lg:w-[400px] max-w-[340px] sm:max-w-none'
   }
   
   // Get dropdown position for mobile devices
   const getDropdownPosition = () => {
-    if (!isMobile) return '-right-16 sm:right-4'
-    
-    // On mobile, use fixed positioning to ensure it's not cut off
-    return 'fixed'
+    // Use responsive classes
+    return 'fixed sm:absolute left-1/2 sm:left-auto -translate-x-1/2 sm:translate-x-0 sm:right-4 sm:-right-16'
   }
   
-  // Calculate dropdown position for mobile (centered better on iPhone X)
+  // Calculate dropdown position for mobile (centered better on all mobile devices)
   const getDropdownStyle = () => {
-    if (!isMobile) {
-      return {
-        maxWidth: 'calc(100vw - 2rem)',
-      }
+    const width = windowWidth || (typeof window !== 'undefined' ? window.innerWidth : 0)
+    const isMobileView = width < 768 || isMobile
+    
+    if (!isMobileView) {
+      return {}
     }
     
-    if (typeof window === 'undefined') {
-      return {
-        position: 'fixed',
-        width: 'calc(100vw - 1.5rem)',
-        maxWidth: '340px',
-        left: '50%',
-        top: `${dropdownTop}px`,
-        transform: 'translateX(-50%)',
-      }
-    }
-    
-    const width = window.innerWidth
-    // For iPhone X (375px), ensure dropdown is centered and fully visible
-    if (width <= 375) {
-      // iPhone X: center the dropdown horizontally
-      return {
-        position: 'fixed',
-        width: 'calc(100vw - 1.5rem)',
-        maxWidth: '340px',
-        left: '50%',
-        top: `${dropdownTop}px`,
-        transform: 'translateX(-50%)',
-      }
-    } else if (width < 640) {
-      return {
-        position: 'fixed',
-        width: 'calc(100vw - 1.5rem)',
-        maxWidth: '350px',
-        left: '50%',
-        top: `${dropdownTop}px`,
-        transform: 'translateX(-50%)',
-      }
-    }
-    
+    // For mobile, use fixed positioning centered on screen
     return {
       position: 'fixed',
-      width: 'calc(100vw - 1.5rem)',
-      maxWidth: '350px',
       left: '50%',
-      top: `${dropdownTop}px`,
       transform: 'translateX(-50%)',
+      top: `${dropdownTop}px`,
+      width: width <= 375 ? 'calc(100vw - 1.5rem)' : 'calc(100vw - 1.5rem)',
+      maxWidth: width <= 375 ? '340px' : '350px',
     }
   }
 
-  // Update dropdown position when opened
+  // Update dropdown position when opened or window resized
   useEffect(() => {
-    if (isOpen && isMobile && buttonRef.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect()
-      setDropdownTop(buttonRect.bottom + 8)
+    const updatePosition = () => {
+      if (isOpen && buttonRef.current) {
+        const width = windowWidth || window.innerWidth
+        const isMobileView = width < 768 || isMobile
+        
+        if (isMobileView) {
+          const buttonRect = buttonRef.current.getBoundingClientRect()
+          setDropdownTop(buttonRect.bottom + 8)
+        }
+      }
     }
-  }, [isOpen, isMobile])
+    
+    updatePosition()
+    window.addEventListener('resize', updatePosition)
+    return () => window.removeEventListener('resize', updatePosition)
+  }, [isOpen, isMobile, windowWidth])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -184,7 +161,7 @@ export function ThemeToggle() {
 
   const currentTheme = themes[theme === 'system' ? 'light' : theme] || themes.light
 
-  // Dynamic classes based on viewport
+  // Dynamic classes based on viewport - calculate once per render
   const buttonSizeClass = getButtonSize()
   const iconSizeClass = getIconSize()
   const dropdownWidthClass = getDropdownWidth()
@@ -263,11 +240,7 @@ export function ThemeToggle() {
                 y: -10,
                 transition: { duration: 0.15 }
               }}
-              className={`absolute top-full mt-2 sm:mt-4 md:mt-8 ${
-                isMobile 
-                  ? dropdownPositionClass
-                  : '-right-16 sm:right-4'
-              } ${isMobile ? '' : dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
+              className={`${dropdownPositionClass} top-full mt-2 sm:mt-4 md:mt-8 ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
               style={dropdownStyle}
             >
               {/* Header */}
