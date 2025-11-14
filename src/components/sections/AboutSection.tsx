@@ -150,7 +150,7 @@ export default function AboutSection() {
                 asChild
               >
                 <a 
-                  href="https://senbon.ch/" 
+                  href="https://senbon.ch/journal" 
                   target="_blank"
                   rel="noopener noreferrer"
                 >
