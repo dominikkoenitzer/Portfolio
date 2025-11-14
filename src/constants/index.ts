@@ -1,11 +1,11 @@
 import { NavLink } from '@/types';
 
 export const NAV_LINKS: NavLink[] = [
-  { name: "About", targetId: "about" },
-  { name: "Skills", targetId: "skills" },
-  { name: "Services", targetId: "services" },
-  { name: "Contact", targetId: "contact" },
-  { name: "Donate", targetId: "donate" },
+  { name: "About", targetId: "/about" },
+  { name: "Skills", targetId: "/skills" },
+  { name: "Services", targetId: "/services" },
+  { name: "Contact", targetId: "/contact" },
+  { name: "Donate", targetId: "/donate" },
 ];
 
 export const SITE_CONFIG = {
