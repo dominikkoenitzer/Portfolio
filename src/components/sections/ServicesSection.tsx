@@ -231,7 +231,7 @@ export default function ServicesSection() {
               </div>
               
               <motion.a
-                href="#contact"
+                href="/contact"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 className="block w-full text-center py-2 sm:py-2.5 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium transition-colors hover:bg-primary/90"

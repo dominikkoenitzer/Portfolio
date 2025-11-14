@@ -66,7 +66,7 @@ export default function HeroSection() {
             className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0"
           >
             <Button size="lg" className="px-8 py-6 text-base rounded-lg shadow-md hover:shadow-lg transition-all" asChild>
-              <a href="#contact">
+              <a href="/contact">
                 Get in Touch
                 <svg
                   className="w-4 h-4 ml-2 transition-transform duration-700 ease-in-out group-hover:translate-x-1"
@@ -85,7 +85,7 @@ export default function HeroSection() {
               </a>
             </Button>
             <Button size="lg" variant="outline" className="px-8 py-6 text-base rounded-lg border-2 shadow-sm hover:shadow-md transition-all" asChild>
-              <a href="#about">
+              <a href="/about">
                 Learn More
               </a>
             </Button>

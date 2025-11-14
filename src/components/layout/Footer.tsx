@@ -15,9 +15,9 @@ export default function Footer() {
             viewport={{ once: true }}
             className="mb-6 md:mb-0"
           >
-            <a href="#" className="text-xl font-bold tracking-tight">
+            <Link to="/" className="text-xl font-bold tracking-tight">
               Dominik Könitzer
-            </a>
+            </Link>
             <p className="text-sm text-muted-foreground mt-1">
               Creative Web Developer
             </p>
