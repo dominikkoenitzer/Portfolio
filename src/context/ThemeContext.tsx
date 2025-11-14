@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
 import { themes, applyTheme, getTheme, type ThemeColors } from '@/lib/themes'
 
 type Theme = 'light' | 'dark' | 'system' | 'solarpunk' | 'cyberpunk' | 'cloud' | 'forest' | 'amethyst' | 'vintage' | 'coffee'
@@ -42,12 +42,12 @@ export function ThemeProvider({
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
 
-  const resolveTheme = (currentTheme: Theme): keyof typeof themes => {
+  const resolveTheme = useCallback((currentTheme: Theme): keyof typeof themes => {
     if (currentTheme === 'system') {
       return getSystemTheme()
     }
     return currentTheme
-  }
+  }, [])
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -91,7 +91,7 @@ export function ThemeProvider({
 
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme])
+  }, [theme, resolveTheme])
 
   const handleSetTheme = (newTheme: Theme) => {
     setIsTransitioning(true)

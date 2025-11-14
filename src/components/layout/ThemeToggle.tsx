@@ -173,7 +173,7 @@ export function ThemeToggle() {
   }, [])
 
   const handleThemeSelect = (themeName: string) => {
-    setTheme(themeName as any)
+    setTheme(themeName as "light" | "dark" | "system")
     setIsOpen(false)
   }
 
