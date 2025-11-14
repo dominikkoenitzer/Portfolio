@@ -38,7 +38,9 @@ export function ThemeToggle() {
   const { setTheme, theme, isTransitioning } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
+  const [dropdownTop, setDropdownTop] = useState<number>(80)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const isMobile = useIsMobile()
 
   const themeEntries = Object.entries(themes)
@@ -75,9 +77,8 @@ export function ThemeToggle() {
     if (typeof window === 'undefined') return 'w-[calc(100vw-2rem)] sm:w-[350px] md:w-[400px]'
     const width = window.innerWidth
     if (width < 640) {
-      // Mobile: optimized for iPhone X (375px) - use safe area aware width
-      // iPhone X width is 375px, so we want ~340px with padding
-      return 'w-[calc(100vw-1.5rem)] max-w-[340px]'
+      // Mobile: width will be controlled by inline styles for better positioning
+      return 'mx-auto'
     } else if (width < 768) {
       return 'w-[350px]'
     } else if (width < 1024) {
@@ -91,8 +92,8 @@ export function ThemeToggle() {
   const getDropdownPosition = () => {
     if (!isMobile) return '-right-16 sm:right-4'
     
-    // On mobile, we'll use fixed positioning via inline styles
-    return 'right-0'
+    // On mobile, use fixed positioning to ensure it's not cut off
+    return 'fixed'
   }
   
   // Calculate dropdown position for mobile (centered better on iPhone X)
@@ -105,35 +106,55 @@ export function ThemeToggle() {
     
     if (typeof window === 'undefined') {
       return {
-        maxWidth: 'calc(100vw - 1.5rem)',
-        right: '0.75rem',
-        left: 'auto',
+        position: 'fixed',
+        width: 'calc(100vw - 1.5rem)',
+        maxWidth: '340px',
+        left: '50%',
+        top: `${dropdownTop}px`,
+        transform: 'translateX(-50%)',
       }
     }
     
     const width = window.innerWidth
-    // For iPhone X (375px), center the dropdown better
+    // For iPhone X (375px), ensure dropdown is centered and fully visible
     if (width <= 375) {
-      // iPhone X: position from right with safe margin, but ensure it's visible
+      // iPhone X: center the dropdown horizontally
       return {
-        maxWidth: 'calc(100vw - 1.5rem)',
-        right: '0.75rem',
-        left: 'auto',
+        position: 'fixed',
+        width: 'calc(100vw - 1.5rem)',
+        maxWidth: '340px',
+        left: '50%',
+        top: `${dropdownTop}px`,
+        transform: 'translateX(-50%)',
       }
     } else if (width < 640) {
       return {
-        maxWidth: 'calc(100vw - 1.5rem)',
-        right: '0.75rem',
-        left: 'auto',
+        position: 'fixed',
+        width: 'calc(100vw - 1.5rem)',
+        maxWidth: '350px',
+        left: '50%',
+        top: `${dropdownTop}px`,
+        transform: 'translateX(-50%)',
       }
     }
     
     return {
-      maxWidth: 'calc(100vw - 1.5rem)',
-      right: '0.75rem',
-      left: 'auto',
+      position: 'fixed',
+      width: 'calc(100vw - 1.5rem)',
+      maxWidth: '350px',
+      left: '50%',
+      top: `${dropdownTop}px`,
+      transform: 'translateX(-50%)',
     }
   }
+
+  // Update dropdown position when opened
+  useEffect(() => {
+    if (isOpen && isMobile && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect()
+      setDropdownTop(buttonRect.bottom + 8)
+    }
+  }, [isOpen, isMobile])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -178,6 +199,7 @@ export function ThemeToggle() {
         className="touch-manipulation"
       >
         <Button
+          ref={buttonRef}
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
@@ -245,7 +267,7 @@ export function ThemeToggle() {
                 isMobile 
                   ? dropdownPositionClass
                   : '-right-16 sm:right-4'
-              } ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
+              } ${isMobile ? '' : dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
               style={dropdownStyle}
             >
               {/* Header */}
@@ -365,3 +387,4 @@ export function ThemeToggle() {
 }
 
 export default ThemeToggle;
+
