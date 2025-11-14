@@ -59,17 +59,17 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Eloquia Display Medium", sans-serif;
+    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight;
-    font-family: "Eloquia Display Medium", sans-serif;
+    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
   }
   
   * {
-    font-family: "Eloquia Display Medium", sans-serif;
+    font-family: "Eloquia Display Medium", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
   }
   
   /* Common utility classes */
