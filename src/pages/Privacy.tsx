@@ -30,7 +30,7 @@ const Privacy = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 font-heading">Privacy Policy</h1>
               <div className="w-20 h-1 bg-primary mx-auto"></div>
             </motion.div>
 
@@ -42,7 +42,7 @@ const Privacy = () => {
             >
               <div className="space-y-8">
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Introduction</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Introduction</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     This personal portfolio website (<a href="https://dominikkoenitzer.ch" className="text-primary hover:underline">https://dominikkoenitzer.ch</a>) showcases my projects and freelance services. This privacy policy complies with the Swiss Federal Act on Data Protection (revFADP 2023) and the European General Data Protection Regulation (GDPR). It explains which data are processed when you visit this site and why.
                   </p>
@@ -53,7 +53,7 @@ const Privacy = () => {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Hosting</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Hosting</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     The site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA.
                     Vercel automatically stores connection data — such as IP address, browser type, and time of access — in server logs to ensure secure and reliable website delivery.
@@ -64,7 +64,7 @@ const Privacy = () => {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Analytics</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Analytics</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     Visitor statistics are collected with Vercel Analytics. All data are anonymised before storage; no cookies or cross-site identifiers are set.
                   </p>
@@ -74,7 +74,7 @@ const Privacy = () => {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Contact</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Contact</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     You can contact me via the on-site contact form or email. I store the data you provide (name, email address, and message) solely to process your enquiry and for possible follow-up questions.
                   </p>
@@ -89,14 +89,14 @@ const Privacy = () => {
 
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Processors</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Processors</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     Data processed by Vercel and Vercel Analytics is governed by data-processing agreements compliant with Art. 28 GDPR and Art. 9 revFADP.
                   </p>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Your Rights</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Your Rights</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     You have the right to request confirmation of whether personal data about you is processed and to obtain access to such data. You may also:
                   </p>
@@ -116,14 +116,14 @@ const Privacy = () => {
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Changes</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Changes</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     This privacy policy may be updated to reflect changes in law or site functionality. The current version is always available at: <a href="https://dominikkoenitzer.ch/privacy" className="text-primary hover:underline">https://dominikkoenitzer.ch/privacy</a>
                   </p>
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold mb-4">Impressum</h2>
+                  <h2 className="text-2xl font-semibold mb-4 font-heading">Impressum</h2>
                   <p className="text-muted-foreground leading-relaxed">
                     <strong>Responsible for this website:</strong><br />
                     Dominik Könitzer<br />
