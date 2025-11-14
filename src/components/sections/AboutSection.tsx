@@ -73,7 +73,7 @@ export default function AboutSection() {
             viewport={{ once: true }}
           >
             <motion.h3 
-              className="text-xl sm:text-2xl font-semibold tracking-tight mb-4 sm:mb-6"
+              className="text-xl sm:text-2xl font-semibold tracking-tight mb-4 sm:mb-6 font-heading"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
