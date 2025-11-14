@@ -90,27 +90,33 @@ export function ThemeToggle() {
   
   // Get dropdown position for mobile devices
   const getDropdownPosition = () => {
-    // Use responsive classes
-    return 'fixed sm:absolute left-1/2 sm:left-auto -translate-x-1/2 sm:translate-x-0 sm:right-4 sm:-right-16'
+    // On mobile, we'll use fixed positioning via inline styles (no classes)
+    // On desktop, use absolute positioning relative to button
+    return 'sm:absolute sm:top-full sm:mt-4 md:sm:mt-8 sm:-right-16 sm:right-4'
   }
   
   // Calculate dropdown position for mobile (centered better on all mobile devices)
   const getDropdownStyle = () => {
     const width = windowWidth || (typeof window !== 'undefined' ? window.innerWidth : 0)
-    const isMobileView = width < 768 || isMobile
+    const isMobileView = width > 0 && width < 768
     
     if (!isMobileView) {
+      // Desktop: no inline styles needed, use Tailwind classes
       return {}
     }
     
     // For mobile, use fixed positioning centered on screen
+    // Ensure it's perfectly centered horizontally
     return {
       position: 'fixed',
       left: '50%',
-      transform: 'translateX(-50%)',
       top: `${dropdownTop}px`,
+      transform: 'translateX(-50%)',
       width: width <= 375 ? 'calc(100vw - 1.5rem)' : 'calc(100vw - 1.5rem)',
       maxWidth: width <= 375 ? '340px' : '350px',
+      right: 'auto',
+      marginLeft: '0',
+      marginRight: '0',
     }
   }
 
@@ -118,19 +124,30 @@ export function ThemeToggle() {
   useEffect(() => {
     const updatePosition = () => {
       if (isOpen && buttonRef.current) {
-        const width = windowWidth || window.innerWidth
-        const isMobileView = width < 768 || isMobile
+        const width = windowWidth || (typeof window !== 'undefined' ? window.innerWidth : 0)
+        const isMobileView = width < 768 || (isMobile && width > 0)
         
         if (isMobileView) {
           const buttonRect = buttonRef.current.getBoundingClientRect()
+          // Position dropdown below button with some spacing
           setDropdownTop(buttonRect.bottom + 8)
         }
       }
     }
     
-    updatePosition()
-    window.addEventListener('resize', updatePosition)
-    return () => window.removeEventListener('resize', updatePosition)
+    if (isOpen) {
+      // Small delay to ensure button is rendered
+      const timeoutId = setTimeout(updatePosition, 0)
+      updatePosition()
+      window.addEventListener('resize', updatePosition)
+      window.addEventListener('scroll', updatePosition, { passive: true })
+      
+      return () => {
+        clearTimeout(timeoutId)
+        window.removeEventListener('resize', updatePosition)
+        window.removeEventListener('scroll', updatePosition)
+      }
+    }
   }, [isOpen, isMobile, windowWidth])
 
   useEffect(() => {
@@ -240,7 +257,7 @@ export function ThemeToggle() {
                 y: -10,
                 transition: { duration: 0.15 }
               }}
-              className={`${dropdownPositionClass} top-full mt-2 sm:mt-4 md:mt-8 ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
+              className={`${dropdownPositionClass} ${dropdownWidthClass} bg-background border border-border shadow-lg rounded-xl sm:rounded-2xl z-50 overflow-hidden max-h-[calc(100vh-8rem)] overflow-y-auto`}
               style={dropdownStyle}
             >
               {/* Header */}
