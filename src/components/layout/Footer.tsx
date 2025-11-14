@@ -42,6 +42,19 @@ export default function Footer() {
                 <path d="M9 18c-4.51 2-5-2-7-2" />
               </svg>
             </a>
+            <a
+              href="https://senbon.ch/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Journal"
+              title="My Journal - A zen garden for thoughts and notes"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </a>
           </motion.div>
         </div>
         
