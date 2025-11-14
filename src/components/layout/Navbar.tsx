@@ -9,72 +9,7 @@ import { NAV_LINKS } from "@/constants";
 
 const navLinks = NAV_LINKS;
 
-// Enhanced scroll to section with better offset calculation and active section tracking
-const scrollToSection = (targetId: string) => {
-  const element = document.getElementById(targetId);
-  if (element) {
-    // Calculate navbar height dynamically
-    const navbar = document.querySelector('header');
-    const navbarHeight = navbar ? navbar.offsetHeight : 80;
-    
-    const elementTop = element.getBoundingClientRect().top;
-    const absoluteElementTop = elementTop + window.pageYOffset;
-    const middle = absoluteElementTop - navbarHeight - 20; // Extra padding
-    
-    window.scrollTo({
-      top: middle,
-      behavior: 'smooth'
-    });
-
-    // Update URL hash without triggering scroll
-    const currentUrl = new URL(window.location.href);
-    currentUrl.hash = targetId;
-    window.history.pushState({}, '', currentUrl);
-  }
-};
-
-const handleNavigation = (targetId: string, pathname: string) => {
-  if (pathname === '/') {
-    // We're on the home page, scroll to section
-    scrollToSection(targetId);
-  } else {
-    // We're on another page, navigate to home page with hash
-    window.location.href = `/#${targetId}`;
-  }
-};
-
-// Enhanced active section detection
-const useActiveSection = () => {
-  const [activeSection, setActiveSection] = useState('');
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const navbar = document.querySelector('header');
-      const navbarHeight = navbar ? navbar.offsetHeight : 80;
-      const scrollPosition = window.scrollY + navbarHeight + 50;
-
-      for (const link of navLinks) {
-        const element = document.getElementById(link.targetId);
-        if (element) {
-          const elementTop = element.offsetTop;
-          const elementBottom = elementTop + element.offsetHeight;
-          
-          if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-            setActiveSection(link.targetId);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return activeSection;
-};
+// Navigation is now handled by React Router
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -83,7 +18,6 @@ export default function Navbar() {
   const [touchStartY, setTouchStartY] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const activeSection = useActiveSection();
 
   // Animation values for gesture controls
   const y = useMotionValue(0);
@@ -198,42 +132,42 @@ export default function Navbar() {
           
           <nav className="hidden md:flex space-x-2 items-center">
             {navLinks.map((link, index) => {
-              const isActive = activeSection === link.targetId;
+              const isActive = location.pathname === link.targetId;
               return (
-                <motion.button
+                <motion.div
                   key={link.name}
-                  onClick={() => handleNavigation(link.targetId, location.pathname)}
-                  className={`relative px-4 py-2.5 text-sm font-medium rounded-lg group transition-all duration-300 ${
-                    isActive 
-                      ? 'text-primary bg-primary/10 shadow-md' 
-                      : 'hover:text-primary hover:bg-primary/5'
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  aria-label={`Navigate to ${link.name} section`}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <motion.div
-                      className="w-1 h-1 bg-primary rounded-full"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ 
-                        scale: isActive ? 1 : 0.6, 
-                        opacity: isActive ? 1 : 0.4 
-                      }}
+                  <Link
+                    to={link.targetId}
+                    className={`relative px-4 py-2.5 text-sm font-medium rounded-lg group transition-all duration-300 block ${
+                      isActive 
+                        ? 'text-primary bg-primary/10 shadow-md' 
+                        : 'hover:text-primary hover:bg-primary/5'
+                    }`}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <motion.div
+                        className="w-1 h-1 bg-primary rounded-full"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ 
+                          scale: isActive ? 1 : 0.6, 
+                          opacity: isActive ? 1 : 0.4 
+                        }}
+                        transition={{ duration: 0.2 }}
+                      />
+                      {link.name}
+                    </span>
+                    <motion.span 
+                      className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileHover={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.2 }}
                     />
-                    {link.name}
-                  </span>
-                  <motion.span 
-                    className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </motion.button>
+                  </Link>
+                </motion.div>
               );
             })}
             <div className="ml-4 pl-4 border-l border-border/30">
@@ -350,7 +284,7 @@ export default function Navbar() {
                   }}
                 >
                   {navLinks.map((link, index) => {
-                    const isActive = activeSection === link.targetId;
+                    const isActive = location.pathname === link.targetId;
                     return (
                       <motion.div
                         key={link.name}
@@ -373,19 +307,14 @@ export default function Navbar() {
                           }
                         }}
                       >
-                        <motion.button
-                          onClick={() => {
-                            handleNavigation(link.targetId, location.pathname);
-                            closeMobileMenu();
-                          }}
-                          className={`w-full text-left p-4 rounded-xl transition-all duration-300 group relative overflow-hidden ${
+                        <Link
+                          to={link.targetId}
+                          onClick={closeMobileMenu}
+                          className={`w-full text-left p-4 rounded-xl transition-all duration-300 group relative overflow-hidden block ${
                             isActive 
                               ? 'bg-gradient-to-r from-primary/15 to-primary/5 text-primary border border-primary/20' 
                               : 'hover:bg-primary/5 active:bg-primary/10'
                           }`}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          aria-label={`Navigate to ${link.name} section`}
                         >
                           {/* Background Gradient Effect */}
                           <motion.div 
@@ -427,7 +356,7 @@ export default function Navbar() {
                               <ArrowUpRight className="h-5 w-5" />
                             </motion.div>
                           </div>
-                        </motion.button>
+                        </Link>
                       </motion.div>
                     );
                   })}
