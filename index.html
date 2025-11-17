@@ -19,7 +19,19 @@
 
     <!-- Enhanced SEO Meta Tags -->
     <meta name="description" content="Dominik Könitzer's portfolio - Software Engineer specializing in modern web development. View my projects, skills, and experience in software engineering." />
-    <meta name="keywords" content="Dominik Könitzer, software engineer, web development, portfolio, frontend developer, software engineering, programming, WISS" />
+    <meta name="keywords" content="Dominik Könitzer, software engineer, web development, portfolio, frontend developer, software engineering, programming, WISS, Switzerland, Swiss developer, React developer, TypeScript developer, full-stack developer, web developer Switzerland, software engineer Zurich, software engineer Bern" />
+    
+    <!-- Geographic SEO -->
+    <meta name="geo.region" content="CH" />
+    <meta name="geo.placename" content="Switzerland" />
+    <meta name="ICBM" content="46.8182, 8.2275" />
+    <meta name="geo.position" content="46.8182;8.2275" />
+    
+    <!-- Language and Locale -->
+    <meta http-equiv="content-language" content="en" />
+    <link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch" />
+    <link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de" />
+    <link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch" />
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
     <meta name="google" content="notranslate" />
@@ -38,6 +50,13 @@
     <meta property="og:image" content="https://dominikkoenitzer.ch/og-image.png" />
     <meta property="og:site_name" content="Dominik Könitzer Portfolio" />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="de_CH" />
+    
+    <!-- Additional Open Graph Tags -->
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Dominik Könitzer - Software Engineer Portfolio" />
+    <meta property="og:image:type" content="image/png" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -45,8 +64,46 @@
     <meta name="twitter:title" content="Dominik Könitzer - Software Engineer Portfolio" />
     <meta name="twitter:description" content="Software Engineer specializing in modern web development. View my projects, skills, and experience in software engineering." />
     <meta name="twitter:image" content="https://dominikkoenitzer.ch/og-image.png" />
+    <meta name="twitter:image:alt" content="Dominik Könitzer - Software Engineer Portfolio" />
+    <meta name="twitter:creator" content="@dominikkoenitzer" />
+    <meta name="twitter:site" content="@dominikkoenitzer" />
     
-    <!-- JSON-LD Structured Data -->
+    <!-- AI Search Optimization / GEO (Generative Engine Optimization) -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Dominik Könitzer" />
+    
+    <!-- GEO: Author and Expertise Signals -->
+    <meta name="author" content="Dominik Könitzer" />
+    <meta name="copyright" content="Dominik Könitzer" />
+    <meta name="DC.title" content="Dominik Könitzer - Software Engineer Portfolio" />
+    <meta name="DC.creator" content="Dominik Könitzer" />
+    <meta name="DC.subject" content="Software Engineering, Web Development, React, TypeScript" />
+    <meta name="DC.description" content="Portfolio of Dominik Könitzer - Software Engineer specializing in modern web development" />
+    <meta name="DC.publisher" content="Dominik Könitzer" />
+    <meta name="DC.contributor" content="Dominik Könitzer" />
+    <meta name="DC.type" content="Portfolio" />
+    <meta name="DC.format" content="text/html" />
+    <meta name="DC.language" content="en" />
+    <meta name="DC.coverage" content="Switzerland" />
+    
+    <!-- GEO: Entity Recognition Signals -->
+    <meta property="article:author" content="Dominik Könitzer" />
+    <meta property="article:published_time" content="2024-01-01T00:00:00Z" />
+    <meta property="article:modified_time" content="2024-12-19T00:00:00Z" />
+    <meta property="article:section" content="Portfolio" />
+    <meta property="article:tag" content="Software Engineering" />
+    <meta property="article:tag" content="Web Development" />
+    <meta property="article:tag" content="React" />
+    <meta property="article:tag" content="TypeScript" />
+    
+    <!-- Additional SEO -->
+    <meta name="application-name" content="Dominik Könitzer Portfolio" />
+    <meta name="msapplication-TileColor" content="#2563eb" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
+    <!-- JSON-LD Structured Data - Base Person Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,13 +112,65 @@
       "url": "https://dominikkoenitzer.ch",
       "image": "https://dominikkoenitzer.ch/og-image.png",
       "sameAs": [
-        "https://github.com/dominikkoenitzer",
+        "https://github.com/dominikkoenitzer"
+      ],
       "jobTitle": "Software Engineer",
       "worksFor": {
         "@type": "Organization",
-        "name": "WISS Schulen für Wirtschaft Informatik Immobilien"
+        "name": "WISS Schulen für Wirtschaft Informatik Immobilien",
+        "url": "https://www.wiss.ch"
       },
-      "description": "Software Engineer specializing in modern web development."
+      "description": "Software Engineer specializing in modern web development, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "CH",
+        "addressLocality": "Switzerland"
+      },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "WISS Schulen für Wirtschaft Informatik Immobilien"
+      }
+    }
+    </script>
+    
+    <!-- WebSite Schema for Search Engine -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Dominik Könitzer Portfolio",
+      "url": "https://dominikkoenitzer.ch",
+      "description": "Portfolio website of Dominik Könitzer - Software Engineer specializing in modern web development",
+      "author": {
+        "@type": "Person",
+        "name": "Dominik Könitzer"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dominikkoenitzer.ch/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <!-- ProfessionalService Schema for Local/Geo SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Dominik Könitzer - Software Engineering Services",
+      "description": "Professional software engineering and web development services",
+      "url": "https://dominikkoenitzer.ch",
+      "provider": {
+        "@type": "Person",
+        "name": "Dominik Könitzer",
+        "jobTitle": "Software Engineer"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Switzerland"
+      },
+      "serviceType": ["Web Development", "Software Engineering", "Frontend Development", "Backend Development"]
     }
     </script>
   </head>

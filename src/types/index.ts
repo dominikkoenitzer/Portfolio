@@ -37,3 +37,14 @@ export interface SocialLink {
   url: string;
   icon: React.ReactNode;
 }
+
+// Re-export SEO types
+export type {
+  SEOProps,
+  GeoLocation,
+  FAQItem,
+  HowToSchema,
+  HowToStep,
+  CitationLink,
+  AlternateLanguage,
+} from './seo';

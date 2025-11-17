@@ -11,13 +11,19 @@ export const NAV_LINKS: NavLink[] = [
 export const SITE_CONFIG = {
   name: "Dominik Könitzer",
   title: "Software Engineer & Web Developer",
-  description: "Passionate Software Engineer specializing in modern web development",
+  description: "Passionate Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien. Expert in React, TypeScript, and full-stack development.",
   author: "Dominik Könitzer",
-  url: "https://dominik-portfolio.vercel.app",
+  url: "https://dominikkoenitzer.ch",
   ogImage: "/og-image.png",
   email: "dominik@example.com",
   github: "https://github.com/dominikkoenitzer",
-  linkedin: "https://linkedin.com/in/dominik-koenitzer",
+  location: {
+    country: "Switzerland",
+    countryCode: "CH",
+    region: "CH",
+    latitude: 46.8182,
+    longitude: 8.2275,
+  },
 } as const;
 
 export const ANIMATION_DURATION = {
