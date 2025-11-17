@@ -1,11 +1,31 @@
-import { PageLayout } from "@/components/layout/PageLayout";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { PageLayout } from '@/components/layout/PageLayout';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { SEO } from '@/components/seo';
+import { SITE_CONFIG } from '@/constants';
+import { generateAlternateLanguages } from '@/lib/seo-utils';
 
 const Privacy = () => {
+  const privacyUrl = `${SITE_CONFIG.url}/privacy`;
+
   return (
-    <PageLayout>
+    <>
+      <SEO
+        title="Privacy Policy"
+        description="Privacy policy for dominikkoenitzer.ch. Learn how your data is collected, used, and protected when visiting this website. Compliant with Swiss FADP and EU GDPR regulations."
+        keywords="privacy policy, data protection, GDPR, FADP, privacy statement, data privacy, Switzerland privacy"
+        url={privacyUrl}
+        alternateLanguages={generateAlternateLanguages('/privacy')}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Privacy Policy',
+          description: 'Privacy policy for dominikkoenitzer.ch',
+          url: privacyUrl,
+        }}
+      />
+      <PageLayout>
       <div className="min-h-screen bg-background">
         <section className="section-padding pt-32">
           <div className="max-w-4xl mx-auto">
@@ -137,6 +157,7 @@ const Privacy = () => {
         </section>
       </div>
     </PageLayout>
+    </>
   );
 };
 

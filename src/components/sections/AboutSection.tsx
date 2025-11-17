@@ -22,11 +22,13 @@ export default function AboutSection() {
               <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-transparent flex items-center justify-center">
                 <motion.img 
                   src="/Favicon.png"
-                  alt="Dominik Könitzer"
+                  alt="Dominik Könitzer - Software Engineer and Web Developer based in Switzerland"
+                  title="Dominik Könitzer - Software Engineer"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                   className="w-3/4 h-3/4 object-contain"
+                  loading="eager"
                 />
               </div>
             </div>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/" />
+  </url>
+  
+  <!-- About Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/about</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/about" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/about" />
+  </url>
+  
+  <!-- Skills Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/skills</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/skills" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/skills" />
+  </url>
+  
+  <!-- Services Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/services</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/services" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/services" />
+  </url>
+  
+  <!-- Contact Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/contact</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/contact" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/contact" />
+  </url>
+  
+  <!-- Donate Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/donate</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/donate" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/donate" />
+  </url>
+  
+  <!-- Privacy Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/privacy</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/privacy" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/privacy" />
+  </url>
+  
+</urlset>
+
