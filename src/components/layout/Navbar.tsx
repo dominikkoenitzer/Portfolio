@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code, ArrowUpRight, ChevronRight, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
@@ -29,18 +30,43 @@ export default function Navbar() {
   // Lock body scroll when menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
+      // Use requestAnimationFrame to ensure menu starts animating first
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const html = document.documentElement;
+        const body = document.body;
+        
+        // Store original styles
+        const originalBodyPosition = body.style.position;
+        const originalBodyTop = body.style.top;
+        const originalBodyWidth = body.style.width;
+        const originalBodyOverflow = body.style.overflow;
+        const originalHtmlOverflow = html.style.overflow;
+        
+        // Lock scroll
+        body.style.position = 'fixed';
+        body.style.top = `-${scrollY}px`;
+        body.style.width = '100%';
+        body.style.overflow = 'hidden';
+        html.style.overflow = 'hidden';
+      });
       
       return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
+        const scrollY = parseInt(document.body.style.top || '0') * -1;
+        const html = document.documentElement;
+        const body = document.body;
+        
+        // Restore styles
+        body.style.position = '';
+        body.style.top = '';
+        body.style.width = '';
+        body.style.overflow = '';
+        html.style.overflow = '';
+        
+        // Restore scroll position
+        if (!isNaN(scrollY)) {
+          window.scrollTo(0, scrollY);
+        }
       };
     }
   }, [mobileMenuOpen]);
@@ -214,32 +240,44 @@ export default function Navbar() {
       </div>
       
       {/* Modern Full-Screen Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop with blur */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-0 bg-background/95 backdrop-blur-xl md:hidden z-40"
-            />
-            
-            {/* Full-Screen Menu Container */}
-            <motion.div
-              ref={menuRef}
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{
-                type: "spring",
-                damping: 30,
-                stiffness: 300,
-                mass: 0.8
-              }}
-              className="md:hidden fixed inset-y-0 right-0 w-full max-w-md bg-gradient-to-br from-background via-background to-background/95 backdrop-blur-2xl z-50 shadow-2xl shadow-primary/10 border-l border-border/50 overflow-y-auto overscroll-contain"
-            >
+      {typeof window !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <>
+              {/* Backdrop with blur */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="fixed inset-0 bg-background/95 backdrop-blur-xl md:hidden z-[60]"
+                style={{ position: 'fixed' }}
+              />
+              
+              {/* Full-Screen Menu Container */}
+              <motion.div
+                ref={menuRef}
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{
+                  type: "spring",
+                  damping: 30,
+                  stiffness: 300,
+                  mass: 0.8
+                }}
+                style={{ 
+                  position: 'fixed',
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  left: 'auto',
+                  zIndex: 70,
+                  width: '100%',
+                  maxWidth: '28rem'
+                }}
+                className="md:hidden bg-gradient-to-br from-background via-background to-background/95 backdrop-blur-2xl shadow-2xl shadow-primary/10 border-l border-border/50 overflow-y-auto overscroll-contain"
+              >
               {/* Animated background pattern */}
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
@@ -437,7 +475,9 @@ export default function Navbar() {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </motion.header>
   );
 }
