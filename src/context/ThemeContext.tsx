@@ -51,6 +51,8 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement
+    const body = window.document.body
+    const rootElement = document.getElementById('root')
     const resolvedTheme = resolveTheme(theme)
     const selectedTheme = getTheme(resolvedTheme)
     
@@ -62,6 +64,14 @@ export function ThemeProvider({
     setTimeout(() => {
       applyTheme(selectedTheme)
       setThemeColors(selectedTheme)
+      
+      // Apply background color to html, body, and root to prevent mobile overscroll background issues
+      const bgColor = `hsl(${selectedTheme.background})`
+      root.style.backgroundColor = bgColor
+      body.style.backgroundColor = bgColor
+      if (rootElement) {
+        rootElement.style.backgroundColor = bgColor
+      }
       
       // Remove old theme classes
       Object.keys(themes).forEach(themeName => {
@@ -82,10 +92,21 @@ export function ThemeProvider({
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const handleChange = () => {
       if (theme === 'system') {
+        const root = window.document.documentElement
+        const body = window.document.body
+        const rootElement = document.getElementById('root')
         const newResolvedTheme = getSystemTheme()
         const newTheme = getTheme(newResolvedTheme)
         applyTheme(newTheme)
         setThemeColors(newTheme)
+        
+        // Apply background color to html, body, and root
+        const bgColor = `hsl(${newTheme.background})`
+        root.style.backgroundColor = bgColor
+        body.style.backgroundColor = bgColor
+        if (rootElement) {
+          rootElement.style.backgroundColor = bgColor
+        }
       }
     }
 
