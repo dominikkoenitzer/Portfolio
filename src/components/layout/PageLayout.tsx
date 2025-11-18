@@ -31,7 +31,7 @@ export function PageLayout({ children }: PageLayoutProps) {
       
       <Navbar />
       
-      <main className="overflow-x-hidden w-full min-h-screen">
+      <main className="overflow-x-hidden w-full min-h-screen pt-24 sm:pt-28 md:pt-32">
         {children}
       </main>
       

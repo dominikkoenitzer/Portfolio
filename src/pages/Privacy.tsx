@@ -1,6 +1,4 @@
 import { PageLayout } from '@/components/layout/PageLayout';
-import { ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SEO } from '@/components/seo';
 import { SITE_CONFIG } from '@/constants';
@@ -26,137 +24,125 @@ const Privacy = () => {
         }}
       />
       <PageLayout>
-      <div className="min-h-screen bg-background">
-        <section className="section-padding pt-32">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <Link 
-                to="/" 
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors duration-300 group"
+        <div className="min-h-screen bg-background">
+          <section className="px-4 sm:px-6 md:px-8 lg:px-16 py-8 sm:py-12 md:py-20 pt-[72px] sm:pt-[86px] md:pt-[101px]">
+            <div className="max-w-3xl mx-auto">
+              {/* Header */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="text-center mb-4 sm:mb-8"
               >
-                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                Back to Home
-              </Link>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 font-heading">Privacy Policy</h1>
-              <div className="w-20 h-1 bg-primary mx-auto"></div>
-            </motion.div>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 sm:mb-3 font-heading">Privacy Policy</h1>
+                <div className="w-12 sm:w-16 md:w-20 h-0.5 sm:h-1 bg-primary mx-auto"></div>
+              </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="prose prose-lg max-w-none dark:prose-invert"
-            >
-              <div className="space-y-8">
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Introduction</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    This personal portfolio website (<a href="https://dominikkoenitzer.ch" className="text-primary hover:underline">https://dominikkoenitzer.ch</a>) showcases my projects and freelance services. This privacy policy complies with the Swiss Federal Act on Data Protection (revFADP 2023) and the European General Data Protection Regulation (GDPR). It explains which data are processed when you visit this site and why.
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="space-y-4 sm:space-y-6 md:space-y-8"
+              >
+                {/* Introduction Card */}
+                <motion.section
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-card/50 border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8"
+                >
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 font-heading">Introduction</h2>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-3 sm:mb-4">
+                    This personal portfolio website showcases my projects and services. This privacy policy explains how your data is handled when you visit this site.
                   </p>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    <strong>Data Controller:</strong> Dominik Könitzer, Switzerland<br />
-                    <strong>Contact:</strong> <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline">dominik.koenitzer@gmail.com</a>
-                  </p>
-                </section>
+                  <div className="space-y-1.5 sm:space-y-2 text-sm sm:text-base">
+                    <p className="text-foreground">
+                      <strong className="text-foreground">Data Controller:</strong> Dominik Könitzer, Switzerland
+                    </p>
+                    <p className="text-foreground">
+                      <strong className="text-foreground">Contact:</strong>{' '}
+                      <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline break-all">
+                        dominik.koenitzer@gmail.com
+                      </a>
+                    </p>
+                  </div>
+                </motion.section>
 
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Hosting</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    The site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA.
-                    Vercel automatically stores connection data — such as IP address, browser type, and time of access — in server logs to ensure secure and reliable website delivery.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    <strong>Legal basis:</strong> Art. 6 (1)(f) GDPR — Legitimate interest in operating and safeguarding the site.
-                  </p>
-                </section>
+                {/* Data Collection Card */}
+                <motion.section
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-card/50 border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8"
+                >
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 font-heading">Data Collection</h2>
+                  <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    <p>
+                      <strong className="text-foreground">Hosting & Analytics:</strong> This site is hosted by Vercel. Server logs (IP address, browser type, access time) are stored for security and reliability. Visitor statistics are collected via Vercel Analytics with anonymized data only—no cookies or tracking identifiers are used.
+                    </p>
+                    <p>
+                      <strong className="text-foreground">Contact Form:</strong> If you contact me via the contact form or email, I store your provided information (name, email, message) solely to process your enquiry and respond to follow-up questions.
+                    </p>
+                  </div>
+                </motion.section>
 
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Analytics</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Visitor statistics are collected with Vercel Analytics. All data are anonymised before storage; no cookies or cross-site identifiers are set.
+                {/* Your Rights Card */}
+                <motion.section
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="bg-card/50 border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8"
+                >
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 font-heading">Your Rights</h2>
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-3 sm:mb-4">
+                    You have the right to access, rectify, or delete your personal data. You may also request restriction of processing or object to processing.
                   </p>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    <strong>Legal basis:</strong> Art. 6 (1)(f) GDPR — Legitimate interest in analysing and improving site performance without infringing on user privacy.
+                  <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    To exercise these rights, please contact me at{' '}
+                    <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline break-all">
+                      dominik.koenitzer@gmail.com
+                    </a>
                   </p>
-                </section>
+                </motion.section>
 
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Contact</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    You can contact me via the on-site contact form or email. I store the data you provide (name, email address, and message) solely to process your enquiry and for possible follow-up questions.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    <strong>Legal basis:</strong>
-                  </p>
-                  <ul className="list-disc list-inside text-muted-foreground leading-relaxed ml-4">
-                    <li>Art. 6 (1)(a) GDPR — Consent</li>
-                    <li>Where relevant, Art. 6 (1)(b) GDPR — Pre-contractual measures at your request</li>
-                  </ul>
-                </section>
+                {/* Impressum Card */}
+                <motion.section
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-card/50 border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8"
+                >
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3 font-heading">Impressum</h2>
+                  <div className="space-y-1.5 sm:space-y-2 text-sm sm:text-base text-foreground leading-relaxed">
+                    <p><strong>Responsible for this website:</strong></p>
+                    <p>Dominik Könitzer</p>
+                    <p>Zurich, Switzerland</p>
+                    <p>
+                      Email:{' '}
+                      <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline break-all">
+                        dominik.koenitzer@gmail.com
+                      </a>
+                    </p>
+                  </div>
+                </motion.section>
 
-
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Processors</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Data processed by Vercel and Vercel Analytics is governed by data-processing agreements compliant with Art. 28 GDPR and Art. 9 revFADP.
+                {/* Last Updated */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-center pt-2 sm:pt-4"
+                >
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    Last updated: {new Date().getFullYear()}
                   </p>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Your Rights</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    You have the right to request confirmation of whether personal data about you is processed and to obtain access to such data. You may also:
-                  </p>
-                  <ul className="list-disc list-inside text-muted-foreground leading-relaxed ml-4 mt-4">
-                    <li>Request rectification or erasure</li>
-                    <li>Request restriction of processing</li>
-                    <li>Exercise your right to data portability</li>
-                    <li>Object to processing based on legitimate interests, on grounds relating to your particular situation</li>
-                  </ul>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    To exercise these rights, please email <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline">dominik.koenitzer@gmail.com</a>.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed mt-4">
-                    Swiss residents may contact the Federal Data Protection and Information Commissioner (FDPIC).
-                    EU residents may lodge a complaint with their local data protection supervisory authority.
-                  </p>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Changes</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    This privacy policy may be updated to reflect changes in law or site functionality. The current version is always available at: <a href="https://dominikkoenitzer.ch/privacy" className="text-primary hover:underline">https://dominikkoenitzer.ch/privacy</a>
-                  </p>
-                </section>
-
-                <section>
-                  <h2 className="text-2xl font-semibold mb-4 font-heading">Impressum</h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    <strong>Responsible for this website:</strong><br />
-                    Dominik Könitzer<br />
-                    Zurich, Switzerland<br />
-                    Email: <a href="mailto:dominik.koenitzer@gmail.com" className="text-primary hover:underline">dominik.koenitzer@gmail.com</a>
-                  </p>
-                </section>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      </div>
-    </PageLayout>
+                </motion.div>
+              </motion.div>
+            </div>
+          </section>
+        </div>
+      </PageLayout>
     </>
   );
 };
