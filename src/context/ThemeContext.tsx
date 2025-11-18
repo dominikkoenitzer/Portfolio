@@ -65,9 +65,14 @@ export function ThemeProvider({
       (section as HTMLElement).style.backgroundColor = bgColor
     })
     
-    // Update overscroll background element directly
+    // Update overscroll background element directly (both layers)
     if (overscrollElement) {
       overscrollElement.style.backgroundColor = bgColor
+      // Also update any extended layers
+      const extendedLayers = document.querySelectorAll('[id="overscroll-background"] + div')
+      extendedLayers.forEach(layer => {
+        (layer as HTMLElement).style.backgroundColor = bgColor
+      })
     }
     
     // Update CSS variable for other uses
