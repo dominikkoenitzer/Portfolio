@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { 
   Palette, 
   Check, 
-  Sparkles, 
   ChevronDown, 
   Sun, 
   Moon, 
@@ -35,7 +34,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 }
 
 export function ThemeToggle() {
-  const { setTheme, theme, isTransitioning } = useTheme()
+  const { setTheme, theme } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredTheme, setHoveredTheme] = useState<string | null>(null)
   const [dropdownTop, setDropdownTop] = useState<number>(80)
@@ -215,15 +214,11 @@ export function ThemeToggle() {
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           >
-            {isTransitioning ? (
-              <Sparkles className={`${iconSizeClass} animate-spin text-primary`} />
-            ) : (
-              <div className="flex items-center justify-center">
-                {React.createElement(iconMap[currentTheme.icon] || Sun, { 
-                  className: `${iconSizeClass} text-primary` 
-                })}
-              </div>
-            )}
+            <div className="flex items-center justify-center">
+              {React.createElement(iconMap[currentTheme.icon] || Sun, { 
+                className: `${iconSizeClass} text-primary` 
+              })}
+            </div>
           </motion.div>
         </Button>
       </motion.div>
