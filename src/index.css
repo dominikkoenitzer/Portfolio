@@ -47,42 +47,54 @@
   html {
     scroll-behavior: smooth;
     @apply text-base;
-    /* Ensure html background matches theme - prevents dark background on mobile overscroll */
+    /* Ensure html background matches theme and covers overscroll areas */
     background-color: hsl(var(--background)) !important;
-    min-height: 100%;
-    height: 100%;
-    /* Prevent overscroll bounce on mobile */
-    overscroll-behavior: none;
-    /* Prevent pull-to-refresh on mobile */
-    overscroll-behavior-y: none;
+    background-attachment: fixed;
+    /* Smooth theme transitions */
+    transition: background-color 0.2s ease;
   }
   
   body {
     @apply bg-background text-foreground antialiased;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-    /* Ensure body background matches theme - use !important to override browser defaults */
+    /* Ensure body background matches theme and covers overscroll areas */
     background-color: hsl(var(--background)) !important;
+    background-attachment: fixed;
     min-height: 100vh;
     /* Prevent overscroll bounce on mobile */
     overscroll-behavior: none;
     overscroll-behavior-y: none;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
-    /* Ensure smooth transitions when theme changes */
-    transition: background-color 0.3s ease;
+    /* Smooth theme transitions */
+    transition: background-color 0.2s ease;
+  }
+  
+  /* Add pseudo-element to extend background beyond viewport for mobile overscroll */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -100vh;
+    left: 0;
+    right: 0;
+    bottom: -100vh;
+    background-color: hsl(var(--background));
+    z-index: -1;
+    transition: background-color 0.2s ease;
   }
   
   /* Ensure root element also has background */
   #root {
     background-color: hsl(var(--background)) !important;
     min-height: 100vh;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
   }
   
   /* Ensure main element has background too */
   main {
     background-color: hsl(var(--background)) !important;
+    transition: background-color 0.2s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
