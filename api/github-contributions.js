@@ -1,6 +1,6 @@
 const GQL = 'https://api.github.com/graphql';
 
-const query = `
+const contributionsQuery = `
   query ($login: String!) {
     user(login: $login) {
       contributionsCollection {
@@ -12,6 +12,37 @@ const query = `
               contributionCount
               date
               weekday
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const recentCommitsQuery = `
+  query ($login: String!, $first: Int!) {
+    user(login: $login) {
+      repositories(first: $first, orderBy: {field: UPDATED_AT, direction: DESC}, ownerAffiliations: OWNER) {
+        nodes {
+          name
+          defaultBranchRef {
+            target {
+              ... on Commit {
+                history(first: 10) {
+                  nodes {
+                    message
+                    committedDate
+                    url
+                    oid
+                    author {
+                      user {
+                        login
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -38,26 +69,71 @@ export default async function handler(req, res) {
   }
 
   try {
-    const r = await fetch(GQL, {
+    // Fetch contributions calendar
+    const contributionsRes = await fetch(GQL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ query, variables: { login: username } }),
+      body: JSON.stringify({ query: contributionsQuery, variables: { login: username } }),
     });
 
-    if (!r.ok) {
-      const txt = await r.text();
-      return res.status(r.status).json({ error: 'GitHub API error', details: txt });
+    if (!contributionsRes.ok) {
+      const txt = await contributionsRes.text();
+      return res.status(contributionsRes.status).json({ error: 'GitHub API error', details: txt });
     }
-    const data = await r.json();
-    const calendar = data?.data?.user?.contributionsCollection?.contributionCalendar;
+
+    const contributionsData = await contributionsRes.json();
+    const calendar = contributionsData?.data?.user?.contributionsCollection?.contributionCalendar;
     if (!calendar) return res.status(404).json({ error: 'User or calendar not found' });
+
+    // Fetch recent commits from repositories
+    const commitsRes = await fetch(GQL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        query: recentCommitsQuery, 
+        variables: { login: username, first: 10 } 
+      }),
+    });
+
+    let recentCommits = [];
+    if (commitsRes.ok) {
+      const commitsData = await commitsRes.json();
+      const repos = commitsData?.data?.user?.repositories?.nodes || [];
+      
+      // Flatten commits from all repositories, filter by author, and sort by date
+      const allCommits = [];
+      repos.forEach(repo => {
+        const commits = repo?.defaultBranchRef?.target?.history?.nodes || [];
+        commits.forEach(commit => {
+          // Only include commits by the user
+          if (commit.author?.user?.login === username) {
+            allCommits.push({
+              message: commit.message,
+              date: commit.committedDate,
+              url: commit.url,
+              sha: commit.oid,
+              repository: repo.name,
+            });
+          }
+        });
+      });
+
+      // Sort by date (newest first) and take top 5
+      recentCommits = allCommits
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+    }
 
     return res.status(200).json({
       total: calendar.totalContributions,
       weeks: calendar.weeks,
+      recentCommits,
     });
   } catch (e) {
     return res.status(500).json({ error: 'Unexpected error', details: e?.message || String(e) });

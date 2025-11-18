@@ -3,6 +3,7 @@ import { SectionHeading } from "../layout/SectionHeading";
 import { fadeInUp, fadeInLeft, fadeInRight } from "@/lib/framer-animations";
 import { Calendar, Award, GraduationCap } from "lucide-react";
 import { Button } from "../ui/button";
+import GitHubContributions from "./GitHubContributions";
 
 export default function AboutSection() {
   return (
@@ -191,6 +192,17 @@ export default function AboutSection() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* GitHub Contributions */}
+      <motion.div
+        className="mt-12 md:mt-16"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        viewport={{ once: true }}
+      >
+        <GitHubContributions />
+      </motion.div>
     </section>
   );
 }
