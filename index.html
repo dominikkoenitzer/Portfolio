@@ -173,6 +173,39 @@
       "serviceType": ["Web Development", "Software Engineering", "Frontend Development", "Backend Development"]
     }
     </script>
+    
+    <!-- Set initial background color immediately to prevent flash of wrong color -->
+    <script>
+      (function() {
+        // Get saved theme or default to system
+        const savedTheme = localStorage.getItem('portfolio-theme') || 'system';
+        let resolvedTheme = savedTheme;
+        
+        // If system theme, detect preference
+        if (savedTheme === 'system') {
+          resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        // Theme background colors
+        const themeColors = {
+          light: 'hsl(0 0% 100%)',
+          dark: 'hsl(0 0% 3%)',
+          solarpunk: 'hsl(138 100% 98%)',
+          cyberpunk: 'hsl(270 100% 3%)',
+          cloud: 'hsl(200 50% 98%)',
+          forest: 'hsl(120 50% 96%)',
+          amethyst: 'hsl(270 50% 97%)',
+          vintage: 'hsl(25 30% 96%)',
+          coffee: 'hsl(30 40% 94%)'
+        };
+        
+        const bgColor = themeColors[resolvedTheme] || themeColors.light;
+        
+        // Apply immediately to prevent any flash
+        document.documentElement.style.backgroundColor = bgColor;
+        document.body.style.backgroundColor = bgColor;
+      })();
+    </script>
   </head>
 
   <body>

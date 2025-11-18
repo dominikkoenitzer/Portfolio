@@ -20,6 +20,15 @@ export function PageLayout({ children }: PageLayoutProps) {
     document.body.style.fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
     const rootStyles = document.documentElement.style;
     rootStyles.setProperty('--primary-rgb', '37, 99, 235');
+    
+    // Ensure main element has background color matching theme
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+      const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--background');
+      if (bgColor) {
+        (mainElement as HTMLElement).style.backgroundColor = `hsl(${bgColor.trim()})`;
+      }
+    }
   }, []);
 
   return (
