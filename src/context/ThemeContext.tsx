@@ -53,6 +53,7 @@ export function ThemeProvider({
     const rootElement = document.getElementById('root')
     const mainElement = document.querySelector('main')
     const allSections = document.querySelectorAll('section')
+    const overscrollElement = document.getElementById('overscroll-background')
     
     root.style.backgroundColor = bgColor
     body.style.backgroundColor = bgColor
@@ -64,7 +65,12 @@ export function ThemeProvider({
       (section as HTMLElement).style.backgroundColor = bgColor
     })
     
-    // Update CSS variable for pseudo-elements
+    // Update overscroll background element directly
+    if (overscrollElement) {
+      overscrollElement.style.backgroundColor = bgColor
+    }
+    
+    // Update CSS variable for other uses
     root.style.setProperty('--background', themeBackground)
   }
 
