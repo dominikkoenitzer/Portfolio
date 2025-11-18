@@ -25,6 +25,10 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  esbuild: {
+    target: 'es2020',
+    legalComments: 'none',
+  },
   build: {
     rollupOptions: {
       output: {
