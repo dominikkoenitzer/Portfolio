@@ -1,14 +1,16 @@
 import { ReactNode, useEffect } from "react";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { Navbar, Footer } from "@/components";
+import { OverscrollBackground } from "./OverscrollBackground";
 import { motion, useScroll, useSpring } from "framer-motion";
 
 interface PageLayoutProps {
   children: ReactNode;
 }
 
-export function PageLayout({ children }: PageLayoutProps) {
+function PageLayoutContent({ children }: PageLayoutProps) {
   const { scrollYProgress } = useScroll();
+  const { themeColors } = useTheme();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -31,8 +33,11 @@ export function PageLayout({ children }: PageLayoutProps) {
     }
   }, []);
 
+  const backgroundColor = `hsl(${themeColors.background})`;
+
   return (
-    <ThemeProvider defaultTheme="system">
+    <>
+      <OverscrollBackground backgroundColor={backgroundColor} />
       <motion.div 
         className="progress-bar fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/70 via-primary to-primary/70 z-[100]"
         style={{ scaleX, transformOrigin: "0%" }}
@@ -45,6 +50,14 @@ export function PageLayout({ children }: PageLayoutProps) {
       </main>
       
       <Footer />
+    </>
+  );
+}
+
+export function PageLayout({ children }: PageLayoutProps) {
+  return (
+    <ThemeProvider defaultTheme="system">
+      <PageLayoutContent>{children}</PageLayoutContent>
     </ThemeProvider>
   );
 }
