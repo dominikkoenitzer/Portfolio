@@ -53,8 +53,20 @@ export function ThemeProvider({
     const root = window.document.documentElement
     const body = window.document.body
     const rootElement = document.getElementById('root')
+    const mainElement = document.querySelector('main')
     const resolvedTheme = resolveTheme(theme)
     const selectedTheme = getTheme(resolvedTheme)
+    
+    // Apply background color IMMEDIATELY to prevent any flash of wrong color
+    const bgColor = `hsl(${selectedTheme.background})`
+    root.style.backgroundColor = bgColor
+    body.style.backgroundColor = bgColor
+    if (rootElement) {
+      rootElement.style.backgroundColor = bgColor
+    }
+    if (mainElement) {
+      (mainElement as HTMLElement).style.backgroundColor = bgColor
+    }
     
     // Add smooth transition class
     root.classList.add('theme-transitioning')
@@ -65,12 +77,14 @@ export function ThemeProvider({
       applyTheme(selectedTheme)
       setThemeColors(selectedTheme)
       
-      // Apply background color to html, body, and root to prevent mobile overscroll background issues
-      const bgColor = `hsl(${selectedTheme.background})`
+      // Ensure background color is still set (in case theme application changed it)
       root.style.backgroundColor = bgColor
       body.style.backgroundColor = bgColor
       if (rootElement) {
         rootElement.style.backgroundColor = bgColor
+      }
+      if (mainElement) {
+        (mainElement as HTMLElement).style.backgroundColor = bgColor
       }
       
       // Remove old theme classes
@@ -95,17 +109,21 @@ export function ThemeProvider({
         const root = window.document.documentElement
         const body = window.document.body
         const rootElement = document.getElementById('root')
+        const mainElement = document.querySelector('main')
         const newResolvedTheme = getSystemTheme()
         const newTheme = getTheme(newResolvedTheme)
         applyTheme(newTheme)
         setThemeColors(newTheme)
         
-        // Apply background color to html, body, and root
+        // Apply background color to html, body, root, and main
         const bgColor = `hsl(${newTheme.background})`
         root.style.backgroundColor = bgColor
         body.style.backgroundColor = bgColor
         if (rootElement) {
           rootElement.style.backgroundColor = bgColor
+        }
+        if (mainElement) {
+          (mainElement as HTMLElement).style.backgroundColor = bgColor
         }
       }
     }
