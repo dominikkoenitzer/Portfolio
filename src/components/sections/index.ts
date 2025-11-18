@@ -4,3 +4,4 @@ export { default as SkillsSection } from './SkillsSection';
 export { default as ServicesSection } from './ServicesSection';
 export { default as ContactSection } from './ContactSection';
 export { default as DonateSection } from './DonateSection';
+export { default as GitHubContributions } from './GitHubContributions';
