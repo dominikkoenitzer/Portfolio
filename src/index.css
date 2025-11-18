@@ -77,34 +77,6 @@
     transition: background-color 0.2s ease;
   }
   
-  /* Add pseudo-element to extend background beyond viewport for mobile overscroll */
-  body::before {
-    content: '';
-    position: fixed;
-    top: -200vh;
-    left: -100vw;
-    right: -100vw;
-    bottom: -200vh;
-    background-color: hsl(var(--background)) !important;
-    z-index: -9999;
-    transition: background-color 0.2s ease;
-    pointer-events: none;
-  }
-  
-  /* Also add to html for extra coverage */
-  html::before {
-    content: '';
-    position: fixed;
-    top: -200vh;
-    left: -100vw;
-    right: -100vw;
-    bottom: -200vh;
-    background-color: hsl(var(--background)) !important;
-    z-index: -9999;
-    transition: background-color 0.2s ease;
-    pointer-events: none;
-  }
-  
   /* Ensure root element also has background */
   #root {
     background-color: hsl(var(--background)) !important;
@@ -140,15 +112,6 @@
     html, body {
       background-color: hsl(var(--background)) !important;
       background-attachment: fixed !important;
-    }
-    
-    /* Ensure pseudo-elements cover everything on mobile */
-    html::before,
-    body::before {
-      top: -500vh !important;
-      left: -200vw !important;
-      right: -200vw !important;
-      bottom: -500vh !important;
     }
   }
   
