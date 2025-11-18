@@ -68,6 +68,7 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
     /* Prevent overscroll bounce on mobile */
     overscroll-behavior: none;
     overscroll-behavior-y: none;
@@ -112,6 +113,12 @@
     html, body {
       background-color: hsl(var(--background)) !important;
       background-attachment: fixed !important;
+    }
+    
+    /* Ensure root extends to cover overscroll */
+    #root {
+      min-height: 200vh !important;
+      position: relative;
     }
   }
   
