@@ -50,6 +50,9 @@
     /* Ensure html background matches theme and covers overscroll areas */
     background-color: hsl(var(--background)) !important;
     background-attachment: fixed;
+    /* Cover entire viewport and beyond */
+    width: 100%;
+    height: 100%;
     /* Smooth theme transitions */
     transition: background-color 0.2s ease;
   }
@@ -62,6 +65,9 @@
     background-color: hsl(var(--background)) !important;
     background-attachment: fixed;
     min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
     /* Prevent overscroll bounce on mobile */
     overscroll-behavior: none;
     overscroll-behavior-y: none;
@@ -75,26 +81,75 @@
   body::before {
     content: '';
     position: fixed;
-    top: -100vh;
-    left: 0;
-    right: 0;
-    bottom: -100vh;
-    background-color: hsl(var(--background));
-    z-index: -1;
+    top: -200vh;
+    left: -100vw;
+    right: -100vw;
+    bottom: -200vh;
+    background-color: hsl(var(--background)) !important;
+    z-index: -9999;
     transition: background-color 0.2s ease;
+    pointer-events: none;
+  }
+  
+  /* Also add to html for extra coverage */
+  html::before {
+    content: '';
+    position: fixed;
+    top: -200vh;
+    left: -100vw;
+    right: -100vw;
+    bottom: -200vh;
+    background-color: hsl(var(--background)) !important;
+    z-index: -9999;
+    transition: background-color 0.2s ease;
+    pointer-events: none;
   }
   
   /* Ensure root element also has background */
   #root {
     background-color: hsl(var(--background)) !important;
     min-height: 100vh;
+    width: 100%;
     transition: background-color 0.2s ease;
   }
   
   /* Ensure main element has background too */
   main {
     background-color: hsl(var(--background)) !important;
+    width: 100%;
     transition: background-color 0.2s ease;
+  }
+  
+  /* Ensure all sections and containers have background */
+  section {
+    background-color: hsl(var(--background)) !important;
+  }
+  
+  /* Cover any potential gaps - ensure no default browser colors show */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Ensure no blue default colors anywhere */
+  :root {
+    background-color: hsl(var(--background)) !important;
+  }
+  
+  /* Mobile-specific: ensure viewport is fully covered */
+  @media (max-width: 768px) {
+    html, body {
+      background-color: hsl(var(--background)) !important;
+      background-attachment: fixed !important;
+    }
+    
+    /* Ensure pseudo-elements cover everything on mobile */
+    html::before,
+    body::before {
+      top: -500vh !important;
+      left: -200vw !important;
+      right: -200vw !important;
+      bottom: -500vh !important;
+    }
   }
   
   h1, h2, h3, h4, h5, h6 {
