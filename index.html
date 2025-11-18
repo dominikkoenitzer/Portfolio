@@ -201,9 +201,23 @@
         
         const bgColor = themeColors[resolvedTheme] || themeColors.light;
         
-        // Apply immediately to prevent any flash
+        // Apply immediately to prevent any flash - cover all elements
         document.documentElement.style.backgroundColor = bgColor;
         document.body.style.backgroundColor = bgColor;
+        const rootEl = document.getElementById('root');
+        if (rootEl) rootEl.style.backgroundColor = bgColor;
+        
+        // Set CSS variable for pseudo-elements
+        const bgHsl = resolvedTheme === 'dark' ? '0 0% 3%' : 
+                     resolvedTheme === 'light' ? '0 0% 100%' :
+                     resolvedTheme === 'solarpunk' ? '138 100% 98%' :
+                     resolvedTheme === 'cyberpunk' ? '270 100% 3%' :
+                     resolvedTheme === 'cloud' ? '200 50% 98%' :
+                     resolvedTheme === 'forest' ? '120 50% 96%' :
+                     resolvedTheme === 'amethyst' ? '270 50% 97%' :
+                     resolvedTheme === 'vintage' ? '25 30% 96%' :
+                     resolvedTheme === 'coffee' ? '30 40% 94%' : '0 0% 100%';
+        document.documentElement.style.setProperty('--background', bgHsl);
       })();
     </script>
   </head>
