@@ -4,7 +4,7 @@ import { TypeAnimation } from 'react-type-animation';
 
 export default function HeroSection() {
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 sm:pt-0">
       
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-20 -left-20 w-[500px] h-[500px] bg-primary/5 rounded-full mix-blend-normal filter blur-[100px] opacity-70 animate-blob"></div>
@@ -14,15 +14,15 @@ export default function HeroSection() {
       
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] -z-10"></div>
       
-      <div className="container max-w-5xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
+      <div className="container max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="flex flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           >
-            <span className="inline-block py-1.5 px-4 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20">
+            <span className="inline-block py-1.5 px-3 sm:px-4 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium border border-primary/20">
               Software Engineer
             </span>
           </motion.div>
@@ -31,7 +31,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-bold mb-8 tracking-tight"
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 sm:mb-8 tracking-tight px-2"
           >
             Dominik <span className="text-primary">Könitzer</span>
           </motion.h1>
@@ -40,7 +40,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-xl sm:text-2xl text-muted-foreground max-w-2xl mb-12"
+            className="text-base sm:text-xl md:text-2xl text-muted-foreground max-w-2xl mb-8 sm:mb-12 px-4"
           >
             <TypeAnimation
               sequence={[
@@ -63,9 +63,9 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0"
+            className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0 w-full sm:w-auto px-4 sm:px-0"
           >
-            <Button size="lg" className="px-8 py-6 text-base rounded-lg shadow-md hover:shadow-lg transition-all" asChild>
+            <Button size="lg" className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base rounded-lg shadow-md hover:shadow-lg transition-all" asChild>
               <a href="/contact">
                 Get in Touch
                 <svg
@@ -84,7 +84,7 @@ export default function HeroSection() {
                 </svg>
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="px-8 py-6 text-base rounded-lg border-2 shadow-sm hover:shadow-md transition-all" asChild>
+            <Button size="lg" variant="outline" className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base rounded-lg border-2 shadow-sm hover:shadow-md transition-all" asChild>
               <a href="/about">
                 Learn More
               </a>
