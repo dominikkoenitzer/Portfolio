@@ -47,16 +47,25 @@ export function ThemeProvider({
   }, [])
 
   // Helper function to apply background color to all elements
-  const applyBackgroundColor = (bgColor: string) => {
+  const applyBackgroundColor = (bgColor: string, themeBackground: string) => {
     const root = window.document.documentElement
     const body = window.document.body
     const rootElement = document.getElementById('root')
     const mainElement = document.querySelector('main')
+    const allSections = document.querySelectorAll('section')
     
     root.style.backgroundColor = bgColor
     body.style.backgroundColor = bgColor
     if (rootElement) rootElement.style.backgroundColor = bgColor
     if (mainElement) (mainElement as HTMLElement).style.backgroundColor = bgColor
+    
+    // Update all sections
+    allSections.forEach(section => {
+      (section as HTMLElement).style.backgroundColor = bgColor
+    })
+    
+    // Update CSS variable for pseudo-elements
+    root.style.setProperty('--background', themeBackground)
   }
 
   useEffect(() => {
@@ -68,7 +77,7 @@ export function ThemeProvider({
     // Apply theme immediately
     applyTheme(selectedTheme)
     setThemeColors(selectedTheme)
-    applyBackgroundColor(bgColor)
+    applyBackgroundColor(bgColor, selectedTheme.background)
     
     // Remove old theme classes and add new one
     Object.keys(themes).forEach(themeName => {
@@ -86,7 +95,7 @@ export function ThemeProvider({
         
         applyTheme(newTheme)
         setThemeColors(newTheme)
-        applyBackgroundColor(bgColor)
+        applyBackgroundColor(bgColor, newTheme.background)
         
         const root = window.document.documentElement
         Object.keys(themes).forEach(themeName => {
