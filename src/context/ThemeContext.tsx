@@ -24,6 +24,19 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+// Theme background hex colors for meta tag
+const THEME_HEX_COLORS: Record<string, string> = {
+  light: '#ffffff',
+  dark: '#080808',
+  solarpunk: '#f7fff7',
+  cyberpunk: '#0a0014',
+  cloud: '#f7fbfd',
+  forest: '#f5fdf5',
+  amethyst: '#f9f7fd',
+  vintage: '#faf8f5',
+  coffee: '#faf6f0'
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
@@ -46,79 +59,59 @@ export function ThemeProvider({
     return currentTheme
   }, [])
 
-  // Helper function to apply background color to all elements
-  const applyBackgroundColor = (bgColor: string, themeBackground: string) => {
-    const root = window.document.documentElement
-    const body = window.document.body
-    const rootElement = document.getElementById('root')
-    const mainElement = document.querySelector('main')
-    const allSections = document.querySelectorAll('section')
-    const overscrollElement = document.getElementById('overscroll-background')
-    
-    root.style.backgroundColor = bgColor
-    body.style.backgroundColor = bgColor
-    if (rootElement) rootElement.style.backgroundColor = bgColor
-    if (mainElement) (mainElement as HTMLElement).style.backgroundColor = bgColor
-    
-    // Update all sections
-    allSections.forEach(section => {
-      (section as HTMLElement).style.backgroundColor = bgColor
-    })
-    
-    // Update overscroll background element directly (both layers)
-    if (overscrollElement) {
-      overscrollElement.style.backgroundColor = bgColor
-      // Also update any extended layers
-      const extendedLayers = document.querySelectorAll('[id="overscroll-background"] + div')
-      extendedLayers.forEach(layer => {
-        (layer as HTMLElement).style.backgroundColor = bgColor
-      })
+  // Update meta theme-color tag
+  const updateMetaThemeColor = (themeName: string) => {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+    if (metaThemeColor) {
+      const hexColor = THEME_HEX_COLORS[themeName] || THEME_HEX_COLORS.light
+      metaThemeColor.setAttribute('content', hexColor)
     }
-    
-    // Update CSS variable for other uses
-    root.style.setProperty('--background', themeBackground)
   }
 
-  useEffect(() => {
+  // Apply theme changes
+  const applyThemeChanges = useCallback((themeName: keyof typeof themes) => {
     const root = window.document.documentElement
-    const resolvedTheme = resolveTheme(theme)
-    const selectedTheme = getTheme(resolvedTheme)
+    const selectedTheme = getTheme(themeName)
     const bgColor = `hsl(${selectedTheme.background})`
     
-    // Apply theme immediately
+    // Apply theme CSS variables
     applyTheme(selectedTheme)
     setThemeColors(selectedTheme)
-    applyBackgroundColor(bgColor, selectedTheme.background)
     
-    // Remove old theme classes and add new one
-    Object.keys(themes).forEach(themeName => {
-      root.classList.remove(themeName)
-    })
-    root.classList.add(resolvedTheme)
+    // Update CSS custom property
+    root.style.setProperty('--background', selectedTheme.background)
+    
+    // Set background colors (html::before will handle overscroll)
+    root.style.backgroundColor = bgColor
+    document.body.style.backgroundColor = bgColor
+    
+    // Update data attribute for potential CSS hooks
+    root.setAttribute('data-theme', themeName)
+    
+    // Update meta theme-color for mobile browser UI
+    updateMetaThemeColor(themeName)
+    
+    // Update theme class
+    Object.keys(themes).forEach(name => root.classList.remove(name))
+    root.classList.add(themeName)
+  }, [])
+
+  useEffect(() => {
+    const resolvedTheme = resolveTheme(theme)
+    applyThemeChanges(resolvedTheme)
 
     // Listen for system theme changes
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const handleChange = () => {
       if (theme === 'system') {
         const newResolvedTheme = getSystemTheme()
-        const newTheme = getTheme(newResolvedTheme)
-        const bgColor = `hsl(${newTheme.background})`
-        
-        applyTheme(newTheme)
-        setThemeColors(newTheme)
-        applyBackgroundColor(bgColor, newTheme.background)
-        
-        const root = window.document.documentElement
-        Object.keys(themes).forEach(themeName => {
-          root.classList.remove(themeName)
-        })
-        root.classList.add(newResolvedTheme)
+        applyThemeChanges(newResolvedTheme)
       }
     }
 
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [theme, resolveTheme])
+  }, [theme, resolveTheme, applyThemeChanges])
 
   const handleSetTheme = (newTheme: Theme) => {
     localStorage.setItem(storageKey, newTheme)
