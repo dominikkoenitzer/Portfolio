@@ -35,7 +35,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow" />
     <meta name="google" content="notranslate" />
-    <meta name="theme-color" content="#2563eb" />
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta" />
     <meta name="rating" content="General" />
     <meta name="revisit-after" content="7 days" />
     
@@ -174,7 +174,7 @@
     }
     </script>
     
-    <!-- Set initial background color immediately to prevent flash of wrong color -->
+    <!-- Set initial background color immediately to prevent flash and overscroll issues -->
     <script>
       (function() {
         // Get saved theme or default to system
@@ -186,40 +186,85 @@
           resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
         
-        // Theme background colors
-        const themeColors = {
-          light: 'hsl(0 0% 100%)',
-          dark: 'hsl(0 0% 3%)',
-          solarpunk: 'hsl(138 100% 98%)',
-          cyberpunk: 'hsl(270 100% 3%)',
-          cloud: 'hsl(200 50% 98%)',
-          forest: 'hsl(120 50% 96%)',
-          amethyst: 'hsl(270 50% 97%)',
-          vintage: 'hsl(25 30% 96%)',
-          coffee: 'hsl(30 40% 94%)'
+        // Theme background HSL values for CSS variables
+        const themeBackgroundHSL = {
+          light: '0 0% 100%',
+          dark: '0 0% 3%',
+          solarpunk: '138 100% 98%',
+          cyberpunk: '270 100% 3%',
+          cloud: '200 50% 98%',
+          forest: '120 50% 96%',
+          amethyst: '270 50% 97%',
+          vintage: '25 30% 96%',
+          coffee: '30 40% 94%'
         };
         
-        const bgColor = themeColors[resolvedTheme] || themeColors.light;
+        // Theme background hex colors for meta tag
+        const themeBackgroundHex = {
+          light: '#ffffff',
+          dark: '#080808',
+          solarpunk: '#f7fff7',
+          cyberpunk: '#0a0014',
+          cloud: '#f7fbfd',
+          forest: '#f5fdf5',
+          amethyst: '#f9f7fd',
+          vintage: '#faf8f5',
+          coffee: '#faf6f0'
+        };
         
-        // Apply immediately to prevent any flash - cover all elements
-        document.documentElement.style.backgroundColor = bgColor;
-        document.body.style.backgroundColor = bgColor;
-        const rootEl = document.getElementById('root');
-        if (rootEl) rootEl.style.backgroundColor = bgColor;
+        const bgHsl = themeBackgroundHSL[resolvedTheme] || themeBackgroundHSL.light;
+        const bgHex = themeBackgroundHex[resolvedTheme] || themeBackgroundHex.light;
+        const bgColor = `hsl(${bgHsl})`;
         
-        // Set CSS variable for theme background
-        const bgHsl = resolvedTheme === 'dark' ? '0 0% 3%' : 
-                     resolvedTheme === 'light' ? '0 0% 100%' :
-                     resolvedTheme === 'solarpunk' ? '138 100% 98%' :
-                     resolvedTheme === 'cyberpunk' ? '270 100% 3%' :
-                     resolvedTheme === 'cloud' ? '200 50% 98%' :
-                     resolvedTheme === 'forest' ? '120 50% 96%' :
-                     resolvedTheme === 'amethyst' ? '270 50% 97%' :
-                     resolvedTheme === 'vintage' ? '25 30% 96%' :
-                     resolvedTheme === 'coffee' ? '30 40% 94%' : '0 0% 100%';
+        // Set CSS variable FIRST - this is critical
         document.documentElement.style.setProperty('--background', bgHsl);
+        document.documentElement.setAttribute('data-theme', resolvedTheme);
+        
+        // Apply to all critical elements immediately
+        document.documentElement.style.backgroundColor = bgColor;
+        
+        // Update meta theme-color for mobile browsers (prevents browser UI color mismatch)
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+          metaThemeColor.setAttribute('content', bgHex);
+        }
+        
+        // This ensures body is set as soon as it exists
+        if (document.body) {
+          document.body.style.backgroundColor = bgColor;
+        } else {
+          document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.backgroundColor = bgColor;
+          });
+        }
       })();
     </script>
+    
+    <style>
+      /* Critical CSS to prevent any background color issues */
+      html, body {
+        background-color: hsl(var(--background)) !important;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+      }
+      
+      /* Fixed background layer that covers everything including overscroll */
+      html::before {
+        content: '';
+        position: fixed;
+        top: -100vh;
+        left: -100vw;
+        right: -100vw;
+        bottom: -100vh;
+        width: 300vw;
+        height: 300vh;
+        background-color: hsl(var(--background));
+        z-index: -999999;
+        pointer-events: none;
+      }
+    </style>
   </head>
 
   <body>

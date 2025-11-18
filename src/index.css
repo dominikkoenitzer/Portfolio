@@ -44,82 +44,52 @@
     @apply border-border;
   }
   
+  /* Base HTML - background is set in index.html critical CSS */
   html {
     scroll-behavior: smooth;
     @apply text-base;
-    /* Ensure html background matches theme and covers overscroll areas */
-    background-color: hsl(var(--background)) !important;
-    background-attachment: fixed;
-    /* Cover entire viewport and beyond */
+    background-color: hsl(var(--background));
     width: 100%;
-    height: 100%;
-    /* Smooth theme transitions */
-    transition: background-color 0.2s ease;
+    min-height: 100%;
+    position: relative;
+    transition: background-color 0.15s ease;
   }
   
+  /* Body - inherits background from html::before pseudo-element */
   body {
     @apply bg-background text-foreground antialiased;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
-    /* Ensure body background matches theme and covers overscroll areas */
-    background-color: hsl(var(--background)) !important;
-    background-attachment: fixed;
+    background-color: hsl(var(--background));
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
     width: 100%;
     margin: 0;
     padding: 0;
     position: relative;
-    /* Prevent overscroll bounce on mobile */
-    overscroll-behavior: none;
-    overscroll-behavior-y: none;
-    /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
-    /* Smooth theme transitions */
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
   }
   
-  /* Ensure root element also has background */
+  /* Root element */
   #root {
-    background-color: hsl(var(--background)) !important;
     min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
-    transition: background-color 0.2s ease;
+    position: relative;
+    isolation: isolate; /* Creates stacking context */
   }
   
-  /* Ensure main element has background too */
+  /* Main content area */
   main {
-    background-color: hsl(var(--background)) !important;
     width: 100%;
-    transition: background-color 0.2s ease;
+    min-height: 100vh;
+    position: relative;
   }
   
-  /* Ensure all sections and containers have background */
-  section {
-    background-color: hsl(var(--background)) !important;
-  }
-  
-  /* Cover any potential gaps - ensure no default browser colors show */
+  /* All elements use border-box */
   * {
     box-sizing: border-box;
-  }
-  
-  /* Ensure no blue default colors anywhere */
-  :root {
-    background-color: hsl(var(--background)) !important;
-  }
-  
-  /* Mobile-specific: ensure viewport is fully covered */
-  @media (max-width: 768px) {
-    html, body {
-      background-color: hsl(var(--background)) !important;
-      background-attachment: fixed !important;
-    }
-    
-    /* Ensure root extends to cover overscroll */
-    #root {
-      min-height: 200vh !important;
-      position: relative;
-    }
   }
   
   h1, h2, h3, h4, h5, h6 {
