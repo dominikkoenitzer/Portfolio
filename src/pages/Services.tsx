@@ -1,13 +1,13 @@
-import { PageLayout } from '@/components/layout/PageLayout';
-import { ServicesSection } from '@/components';
-import { SEO } from '@/components/seo';
-import { SITE_CONFIG } from '@/constants';
+import { ServicesSection } from "@/components";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { SEO } from "@/components/seo";
+import { SERVICES_FAQS, SERVICES_HOW_TO } from "@/config/seo-data";
+import { SITE_CONFIG } from "@/constants";
 import {
-  getDefaultGeoLocation,
   generateAlternateLanguages,
   getDefaultCitations,
-} from '@/lib/seo-utils';
-import { SERVICES_FAQS, SERVICES_HOW_TO } from '@/config/seo-data';
+  getDefaultGeoLocation,
+} from "@/lib/seo-utils";
 
 const Services = () => {
   const servicesUrl = `${SITE_CONFIG.url}/services`;
@@ -15,45 +15,47 @@ const Services = () => {
   return (
     <>
       <SEO
-        title="Services"
+        alternateLanguages={generateAlternateLanguages("/services")}
+        citationLinks={getDefaultCitations()}
         description="Professional software engineering and web development services by Dominik Könitzer. Offering frontend development, backend development, full-stack solutions, and modern web application development. Based in Switzerland, serving clients worldwide."
-        keywords="software engineering services, web development services, frontend development services, backend development services, full-stack development, React development services, TypeScript development, custom web applications, software development Switzerland"
-        url={servicesUrl}
+        faqSchema={SERVICES_FAQS}
         geoLocation={getDefaultGeoLocation()}
-        alternateLanguages={generateAlternateLanguages('/services')}
+        howToSchema={SERVICES_HOW_TO}
+        keywords="software engineering services, web development services, frontend development services, backend development services, full-stack development, React development services, TypeScript development, custom web applications, software development Switzerland"
         structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'ProfessionalService',
-          name: 'Software Engineering & Web Development Services',
-          description: 'Professional software engineering and web development services',
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          name: "Software Engineering & Web Development Services",
+          description:
+            "Professional software engineering and web development services",
           url: servicesUrl,
           provider: {
-            '@type': 'Person',
+            "@type": "Person",
             name: SITE_CONFIG.name,
-            jobTitle: 'Software Engineer',
+            jobTitle: "Software Engineer",
             url: SITE_CONFIG.url,
           },
           areaServed: {
-            '@type': 'Country',
-            name: 'Switzerland',
+            "@type": "Country",
+            name: "Switzerland",
           },
           serviceType: [
-            'Web Development',
-            'Software Engineering',
-            'Frontend Development',
-            'Backend Development',
-            'Full-Stack Development',
-            'React Development',
-            'TypeScript Development',
+            "Web Development",
+            "Software Engineering",
+            "Frontend Development",
+            "Backend Development",
+            "Full-Stack Development",
+            "React Development",
+            "TypeScript Development",
           ],
           offers: {
-            '@type': 'Offer',
-            description: 'Professional software engineering and web development services',
+            "@type": "Offer",
+            description:
+              "Professional software engineering and web development services",
           },
         }}
-        faqSchema={SERVICES_FAQS}
-        howToSchema={SERVICES_HOW_TO}
-        citationLinks={getDefaultCitations()}
+        title="Services"
+        url={servicesUrl}
       />
       <PageLayout>
         <ServicesSection />
@@ -63,4 +65,3 @@ const Services = () => {
 };
 
 export default Services;
-

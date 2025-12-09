@@ -1,38 +1,35 @@
-import { PageLayout } from '@/components/layout/PageLayout';
-import { HeroSection } from '@/components';
-import { SEO } from '@/components/seo';
-import { SITE_CONFIG } from '@/constants';
+import { HeroSection } from "@/components";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { SEO } from "@/components/seo";
+import { HOME_FAQS } from "@/config/seo-data";
+import { SITE_CONFIG } from "@/constants";
 import {
-  getDefaultGeoLocation,
+  createPersonSchema,
   generateAlternateLanguages,
   getDefaultCitations,
-  createPersonSchema,
-} from '@/lib/seo-utils';
-import { HOME_FAQS } from '@/config/seo-data';
+  getDefaultGeoLocation,
+} from "@/lib/seo-utils";
 
-const Home = () => {
-  return (
-    <>
-      <SEO
-        title="Software Engineer & Web Developer"
-        description="Dominik Könitzer - Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS. Expert in React, TypeScript, and full-stack development. View my portfolio, projects, and skills."
-        keywords="Dominik Könitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, software engineer Switzerland, web development services, frontend developer, backend developer, portfolio"
-        url={SITE_CONFIG.url}
-        geoLocation={getDefaultGeoLocation()}
-        alternateLanguages={[
-          ...generateAlternateLanguages('/'),
-          { lang: 'x-default', url: SITE_CONFIG.url },
-        ]}
-        structuredData={[createPersonSchema()]}
-        faqSchema={HOME_FAQS}
-        citationLinks={getDefaultCitations()}
-      />
-      <PageLayout>
-        <HeroSection />
-      </PageLayout>
-    </>
-  );
-};
+const Home = () => (
+  <>
+    <SEO
+      alternateLanguages={[
+        ...generateAlternateLanguages("/"),
+        { lang: "x-default", url: SITE_CONFIG.url },
+      ]}
+      citationLinks={getDefaultCitations()}
+      description="Dominik Könitzer - Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS. Expert in React, TypeScript, and full-stack development. View my portfolio, projects, and skills."
+      faqSchema={HOME_FAQS}
+      geoLocation={getDefaultGeoLocation()}
+      keywords="Dominik Könitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, software engineer Switzerland, web development services, frontend developer, backend developer, portfolio"
+      structuredData={[createPersonSchema()]}
+      title="Software Engineer & Web Developer"
+      url={SITE_CONFIG.url}
+    />
+    <PageLayout>
+      <HeroSection />
+    </PageLayout>
+  </>
+);
 
 export default Home;
-

@@ -1,11 +1,11 @@
-import { Helmet } from 'react-helmet-async';
-import { SITE_CONFIG } from '@/constants';
-import type { SEOProps } from '@/types/seo';
+import { Helmet } from "react-helmet-async";
+import { SITE_CONFIG } from "@/constants";
 import {
+  createBreadcrumbSchema,
   createFAQSchema,
   createHowToSchema,
-  createBreadcrumbSchema,
-} from '@/lib/seo-utils';
+} from "@/lib/seo-utils";
+import type { SEOProps } from "@/types/seo";
 
 export function SEO({
   title,
@@ -13,7 +13,7 @@ export function SEO({
   keywords,
   image,
   url,
-  type = 'website',
+  type = "website",
   author,
   publishedTime,
   modifiedTime,
@@ -29,22 +29,22 @@ export function SEO({
   howToSchema,
   citationLinks,
 }: SEOProps) {
-  const siteTitle = title 
-    ? `${title} | ${SITE_CONFIG.name}` 
+  const siteTitle = title
+    ? `${title} | ${SITE_CONFIG.name}`
     : `${SITE_CONFIG.title} | ${SITE_CONFIG.name}`;
-  
+
   const siteDescription = description || SITE_CONFIG.description;
   const siteUrl = url || SITE_CONFIG.url;
   const siteImage = image || `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`;
   const canonicalUrl = canonical || siteUrl;
-  
+
   const robotsContent = [
-    noindex ? 'noindex' : 'index',
-    nofollow ? 'nofollow' : 'follow',
-    'max-snippet:-1',
-    'max-image-preview:large',
-    'max-video-preview:-1',
-  ].join(', ');
+    noindex ? "noindex" : "index",
+    nofollow ? "nofollow" : "follow",
+    "max-snippet:-1",
+    "max-image-preview:large",
+    "max-video-preview:-1",
+  ].join(", ");
 
   // Combine structured data
   const allStructuredData: object[] = [];
@@ -72,27 +72,27 @@ export function SEO({
   }
 
   // Add Article schema if type is article
-  if (type === 'article' && publishedTime) {
+  if (type === "article" && publishedTime) {
     allStructuredData.push({
-      '@context': 'https://schema.org',
-      '@type': 'Article',
+      "@context": "https://schema.org",
+      "@type": "Article",
       headline: title,
       description: siteDescription,
       image: siteImage,
       datePublished: publishedTime,
       dateModified: modifiedTime || publishedTime,
       author: {
-        '@type': 'Person',
+        "@type": "Person",
         name: author || SITE_CONFIG.name,
         url: SITE_CONFIG.url,
       },
       publisher: {
-        '@type': 'Person',
+        "@type": "Person",
         name: SITE_CONFIG.name,
         url: SITE_CONFIG.url,
       },
       ...(section && { articleSection: section }),
-      ...(tags.length > 0 && { keywords: tags.join(', ') }),
+      ...(tags.length > 0 && { keywords: tags.join(", ") }),
     });
   }
 
@@ -106,75 +106,90 @@ export function SEO({
     <Helmet>
       {/* Primary Meta Tags */}
       <title>{siteTitle}</title>
-      <meta name="title" content={siteTitle} />
-      <meta name="description" content={siteDescription} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      <meta name="author" content={author || SITE_CONFIG.author} />
-      <meta name="robots" content={robotsContent} />
-      <meta name="googlebot" content={robotsContent} />
-      
+      <meta content={siteTitle} name="title" />
+      <meta content={siteDescription} name="description" />
+      {keywords && <meta content={keywords} name="keywords" />}
+      <meta content={author || SITE_CONFIG.author} name="author" />
+      <meta content={robotsContent} name="robots" />
+      <meta content={robotsContent} name="googlebot" />
+
       {/* Canonical URL */}
-      <link rel="canonical" href={canonicalUrl} />
-      
+      <link href={canonicalUrl} rel="canonical" />
+
       {/* Geographic SEO */}
       {geoLocation && (
         <>
-          <meta name="geo.region" content={geoLocation.region} />
-          <meta name="geo.placename" content={geoLocation.placename} />
-          <meta name="ICBM" content={`${geoLocation.latitude}, ${geoLocation.longitude}`} />
-          <meta name="geo.position" content={`${geoLocation.latitude};${geoLocation.longitude}`} />
+          <meta content={geoLocation.region} name="geo.region" />
+          <meta content={geoLocation.placename} name="geo.placename" />
+          <meta
+            content={`${geoLocation.latitude}, ${geoLocation.longitude}`}
+            name="ICBM"
+          />
+          <meta
+            content={`${geoLocation.latitude};${geoLocation.longitude}`}
+            name="geo.position"
+          />
         </>
       )}
-      
+
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content={type} />
-      <meta property="og:url" content={siteUrl} />
-      <meta property="og:title" content={siteTitle} />
-      <meta property="og:description" content={siteDescription} />
-      <meta property="og:image" content={siteImage} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={siteTitle} />
-      <meta property="og:site_name" content={SITE_CONFIG.name} />
-      <meta property="og:locale" content="en_US" />
-      <meta property="og:locale:alternate" content="de_CH" />
-      {author && <meta property="article:author" content={author} />}
-      {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-      {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
-      {section && <meta property="article:section" content={section} />}
-      {tags.length > 0 && tags.map((tag) => (
-        <meta key={tag} property="article:tag" content={tag} />
-      ))}
-      
+      <meta content={type} property="og:type" />
+      <meta content={siteUrl} property="og:url" />
+      <meta content={siteTitle} property="og:title" />
+      <meta content={siteDescription} property="og:description" />
+      <meta content={siteImage} property="og:image" />
+      <meta content="1200" property="og:image:width" />
+      <meta content="630" property="og:image:height" />
+      <meta content={siteTitle} property="og:image:alt" />
+      <meta content={SITE_CONFIG.name} property="og:site_name" />
+      <meta content="en_US" property="og:locale" />
+      <meta content="de_CH" property="og:locale:alternate" />
+      {author && <meta content={author} property="article:author" />}
+      {publishedTime && (
+        <meta content={publishedTime} property="article:published_time" />
+      )}
+      {modifiedTime && (
+        <meta content={modifiedTime} property="article:modified_time" />
+      )}
+      {section && <meta content={section} property="article:section" />}
+      {tags.length > 0 &&
+        tags.map((tag) => (
+          <meta content={tag} key={tag} property="article:tag" />
+        ))}
+
       {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={siteUrl} />
-      <meta name="twitter:title" content={siteTitle} />
-      <meta name="twitter:description" content={siteDescription} />
-      <meta name="twitter:image" content={siteImage} />
-      <meta name="twitter:image:alt" content={siteTitle} />
-      <meta name="twitter:creator" content="@dominikkoenitzer" />
-      <meta name="twitter:site" content="@dominikkoenitzer" />
-      
+      <meta content="summary_large_image" name="twitter:card" />
+      <meta content={siteUrl} name="twitter:url" />
+      <meta content={siteTitle} name="twitter:title" />
+      <meta content={siteDescription} name="twitter:description" />
+      <meta content={siteImage} name="twitter:image" />
+      <meta content={siteTitle} name="twitter:image:alt" />
+      <meta content="@dominikkoenitzer" name="twitter:creator" />
+      <meta content="@dominikkoenitzer" name="twitter:site" />
+
       {/* Alternate Languages */}
       {alternateLanguages.map((alt) => (
-        <link key={alt.lang} rel="alternate" hreflang={alt.lang} href={alt.url} />
+        <link
+          href={alt.url}
+          hreflang={alt.lang}
+          key={alt.lang}
+          rel="alternate"
+        />
       ))}
-      
+
       {/* Structured Data */}
       {allStructuredData.map((data, index) => (
         <script
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
           key={index}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
         />
       ))}
-      
+
       {/* Citations for GEO - AI engines use these for authority signals */}
       {citationLinks?.map((citation, index) => (
-        <link key={index} rel="citation" href={citation.url} />
+        <link href={citation.url} key={index} rel="citation" />
       ))}
     </Helmet>
   );
 }
-
