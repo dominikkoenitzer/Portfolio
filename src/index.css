@@ -1,5 +1,5 @@
 /* Import fonts from Google Fonts - must be before @tailwind */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,7 +8,7 @@
 @layer base {
   :root {
     --radius: 0.75rem;
-    
+
     /* Default light theme values (will be overridden by theme system) */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -29,21 +29,29 @@
     --ring: 220 98% 61%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
+
     /* Theme-specific variables */
-    --theme-gradient: linear-gradient(135deg, hsl(220 98% 61%) 0%, hsl(240 98% 71%) 100%);
+    --theme-gradient: linear-gradient(
+      135deg,
+      hsl(220 98% 61%) 0%,
+      hsl(240 98% 71%) 100%
+    );
     --theme-shadow-color: 220 98% 61%;
   }
 
   /* Smooth theme transitions */
   .theme-transitioning * {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease !important;
   }
 
   * {
     @apply border-border;
   }
-  
+
   /* Base HTML - background is set in index.html critical CSS */
   html {
     scroll-behavior: smooth;
@@ -54,11 +62,13 @@
     position: relative;
     transition: background-color 0.15s ease;
   }
-  
+
   /* Body - inherits background from html::before pseudo-element */
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family:
+      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", sans-serif !important;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
     background-color: hsl(var(--background));
     min-height: 100vh;
@@ -70,7 +80,7 @@
     overflow-x: hidden;
     transition: background-color 0.15s ease;
   }
-  
+
   /* Root element */
   #root {
     min-height: 100vh;
@@ -79,29 +89,58 @@
     position: relative;
     isolation: isolate; /* Creates stacking context */
   }
-  
+
   /* Main content area */
   main {
     width: 100%;
     min-height: 100vh;
     position: relative;
   }
-  
+
   /* All elements use border-box */
   * {
     box-sizing: border-box;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply tracking-tight;
-    font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family:
+      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     font-weight: 600;
   }
-  
-  p, span, div, a, button, input, textarea, select, label, li, td, th, small, strong, em, b, i, u, code, pre, blockquote {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+
+  p,
+  span,
+  div,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label,
+  li,
+  td,
+  th,
+  small,
+  strong,
+  em,
+  b,
+  i,
+  u,
+  code,
+  pre,
+  blockquote {
+    font-family:
+      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+      "Ubuntu", "Cantarell", sans-serif !important;
   }
-  
+
   /* Common utility classes */
   .highlight-text {
     display: inline-block;
@@ -109,33 +148,42 @@
     color: var(--foreground);
     font-weight: 500;
   }
-  
+
   .highlight-text::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 5px;
-    background: linear-gradient(to right, rgba(var(--primary-rgb), 0.2), rgba(var(--primary-rgb), 0.05));
+    background: linear-gradient(
+      to right,
+      rgba(var(--primary-rgb), 0.2),
+      rgba(var(--primary-rgb), 0.05)
+    );
     border-radius: 4px;
     z-index: -1;
   }
-  
+
   .gradient-border {
     position: relative;
   }
-  
+
   .gradient-border::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -1px;
-    background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.3), transparent, rgba(var(--primary-rgb), 0.3));
+    background: linear-gradient(
+      45deg,
+      rgba(var(--primary-rgb), 0.3),
+      transparent,
+      rgba(var(--primary-rgb), 0.3)
+    );
     border-radius: inherit;
     z-index: -1;
     animation: border-rotate 8s linear infinite;
   }
-  
+
   @keyframes border-rotate {
     0% {
       background-position: 0% 50%;
@@ -147,13 +195,13 @@
       background-position: 0% 50%;
     }
   }
-  
+
   .link-hover {
     position: relative;
   }
-  
+
   .link-hover::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 2px;
@@ -164,7 +212,7 @@
     transform-origin: right;
     transition: transform 0.3s ease;
   }
-  
+
   .link-hover:hover::after {
     transform: scaleX(1);
     transform-origin: left;
@@ -188,9 +236,16 @@
     background-color: hsl(var(--background));
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-bold;
-    font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    font-family:
+      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
   }
 
   /* Enhanced card styles */
@@ -208,18 +263,38 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    background-image: linear-gradient(to right, hsl(var(--primary)), hsla(var(--primary) / 0.8));
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--primary)),
+      hsla(var(--primary) / 0.8)
+    );
   }
-  
+
   /* Enhanced responsive typography */
-  .text-responsive-xs { @apply text-xs sm:text-sm; }
-  .text-responsive-sm { @apply text-sm sm:text-base; }
-  .text-responsive-base { @apply text-base sm:text-lg; }
-  .text-responsive-lg { @apply text-lg sm:text-xl md:text-2xl; }
-  .text-responsive-xl { @apply text-xl sm:text-2xl md:text-3xl; }
-  .text-responsive-2xl { @apply text-2xl sm:text-3xl md:text-4xl; }
-  .text-responsive-3xl { @apply text-3xl sm:text-4xl md:text-5xl; }
-  .text-responsive-4xl { @apply text-4xl sm:text-5xl md:text-6xl; }
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl md:text-4xl;
+  }
+  .text-responsive-3xl {
+    @apply text-3xl sm:text-4xl md:text-5xl;
+  }
+  .text-responsive-4xl {
+    @apply text-4xl sm:text-5xl md:text-6xl;
+  }
 
   /* Fluid containers */
   .fluid-container {
@@ -227,57 +302,108 @@
   }
 
   /* Advanced spacing utilities */
-  .space-responsive-xs { @apply space-y-2 sm:space-y-3; }
-  .space-responsive-sm { @apply space-y-4 sm:space-y-6; }
-  .space-responsive-md { @apply space-y-6 sm:space-y-8 md:space-y-10; }
-  .space-responsive-lg { @apply space-y-8 sm:space-y-12 md:space-y-16; }
+  .space-responsive-xs {
+    @apply space-y-2 sm:space-y-3;
+  }
+  .space-responsive-sm {
+    @apply space-y-4 sm:space-y-6;
+  }
+  .space-responsive-md {
+    @apply space-y-6 sm:space-y-8 md:space-y-10;
+  }
+  .space-responsive-lg {
+    @apply space-y-8 sm:space-y-12 md:space-y-16;
+  }
 
   /* Enhanced animations */
   @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   @keyframes float-elegant {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
   }
 
   @keyframes parallax-float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    25% { transform: translateY(-5px) rotate(1deg); }
-    50% { transform: translateY(-10px) rotate(0deg); }
-    75% { transform: translateY(-5px) rotate(-1deg); }
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-5px) rotate(1deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(0deg);
+    }
+    75% {
+      transform: translateY(-5px) rotate(-1deg);
+    }
   }
 
   @keyframes glow-pulse {
-    0%, 100% { 
-      box-shadow: 0 0 20px hsl(var(--theme-shadow-color) / 0.2),
-                  0 0 40px hsl(var(--theme-shadow-color) / 0.1);
+    0%,
+    100% {
+      box-shadow:
+        0 0 20px hsl(var(--theme-shadow-color) / 0.2),
+        0 0 40px hsl(var(--theme-shadow-color) / 0.1);
     }
-    50% { 
-      box-shadow: 0 0 30px hsl(var(--theme-shadow-color) / 0.4),
-                  0 0 60px hsl(var(--theme-shadow-color) / 0.2);
+    50% {
+      box-shadow:
+        0 0 30px hsl(var(--theme-shadow-color) / 0.4),
+        0 0 60px hsl(var(--theme-shadow-color) / 0.2);
     }
   }
 
   @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
-  .animate-float-elegant { animation: float-elegant 6s ease-in-out infinite; }
-  .animate-parallax-float { animation: parallax-float 8s ease-in-out infinite; }
-  .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
-  .animate-shimmer { animation: shimmer 2s ease-in-out infinite; }
+  .animate-float-elegant {
+    animation: float-elegant 6s ease-in-out infinite;
+  }
+  .animate-parallax-float {
+    animation: parallax-float 8s ease-in-out infinite;
+  }
+  .animate-glow-pulse {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+  }
 
   .animate-blob {
     animation: blob 7s infinite;
@@ -297,8 +423,17 @@
 
   .bg-grid-pattern {
     background-size: 50px 50px;
-    background-image: linear-gradient(to right, rgba(var(--foreground) / 0.05) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(var(--foreground) / 0.05) 1px, transparent 1px);
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(var(--foreground) / 0.05) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(var(--foreground) / 0.05) 1px,
+        transparent 1px
+      );
   }
 
   /* Media query adjustments for better responsiveness */
@@ -308,14 +443,14 @@
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
-    
+
     body {
       /* Better touch scrolling on mobile */
       -webkit-overflow-scrolling: touch;
       /* Prevent pull-to-refresh */
       overscroll-behavior-y: contain;
     }
-    
+
     h1 {
       @apply text-3xl;
     }
@@ -331,19 +466,19 @@
     .section-padding {
       @apply py-12 px-4;
     }
-    
+
     /* Prevent horizontal scroll on mobile */
     * {
       max-width: 100%;
     }
-    
+
     /* Better mobile viewport handling */
     main {
       overflow-x: hidden;
       width: 100%;
     }
   }
-  
+
   /* Additional mobile optimizations */
   @media (max-width: 768px) {
     /* Ensure all containers respect viewport */
@@ -352,7 +487,7 @@
       padding-left: 1rem;
       padding-right: 1rem;
     }
-    
+
     /* Better spacing on mobile */
     section {
       padding-left: 1rem;
@@ -376,45 +511,55 @@
   .glass-morph {
     @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
   }
-  
+
   .section-heading {
     @apply text-3xl md:text-4xl font-bold mb-8 text-center leading-tight;
   }
-  
+
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .highlight-text {
     @apply text-primary font-semibold;
   }
-  
+
   .gradient-bg {
     @apply bg-gradient-to-r from-primary/10 to-primary/5;
   }
-  
+
   .gradient-border {
-    background: linear-gradient(var(--background), var(--background)) padding-box,
-                linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary)/30%)) border-box;
+    background:
+      linear-gradient(var(--background), var(--background)) padding-box,
+      linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 30%))
+      border-box;
     border: 2px solid transparent;
   }
-  
+
   .link-hover {
     @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
-  
+
   .gradient-text {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    background-image: linear-gradient(to right, hsl(var(--primary)), hsla(var(--primary) / 0.8));
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--primary)),
+      hsla(var(--primary) / 0.8)
+    );
   }
-  
+
   .gradient-text-primary {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    background-image: linear-gradient(to right, hsl(var(--primary)), hsla(var(--primary) / 0.8));
+    background-image: linear-gradient(
+      to right,
+      hsl(var(--primary)),
+      hsla(var(--primary) / 0.8)
+    );
   }
 }
 
@@ -441,7 +586,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -450,7 +596,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

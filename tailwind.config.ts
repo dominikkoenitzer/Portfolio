@@ -110,10 +110,10 @@ export default {
         "fade-in": "fadeIn 0.7s ease-out forwards",
         "fade-in-left": "fadeInLeft 0.7s ease-out forwards",
         "fade-in-right": "fadeInRight 0.7s ease-out forwards",
-        "float": "float 6s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
         "scale-in": "scale 0.4s ease-out forwards",
         "gradient-shift": "gradientShift 8s ease infinite",
-        "pulse": "pulse 4s ease-in-out infinite",
+        pulse: "pulse 4s ease-in-out infinite",
       },
       transitionTimingFunction: {
         "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",

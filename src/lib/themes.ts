@@ -47,8 +47,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "220 13% 91%",
     input: "220 13% 91%",
     ring: "220 98% 61%",
-    gradient: "linear-gradient(135deg, hsl(220 98% 61%) 0%, hsl(240 98% 71%) 100%)",
-    shadow: "220 98% 61%"
+    gradient:
+      "linear-gradient(135deg, hsl(220 98% 61%) 0%, hsl(240 98% 71%) 100%)",
+    shadow: "220 98% 61%",
   },
   dark: {
     name: "dark",
@@ -72,8 +73,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "217.2 32.6% 17.5%",
     input: "217.2 32.6% 17.5%",
     ring: "220 98% 61%",
-    gradient: "linear-gradient(135deg, hsl(220 98% 61%) 0%, hsl(240 98% 71%) 100%)",
-    shadow: "220 98% 61%"
+    gradient:
+      "linear-gradient(135deg, hsl(220 98% 61%) 0%, hsl(240 98% 71%) 100%)",
+    shadow: "220 98% 61%",
   },
   solarpunk: {
     name: "solarpunk",
@@ -97,8 +99,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "138 40% 85%",
     input: "138 40% 85%",
     ring: "142 76% 36%",
-    gradient: "linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(120 100% 25%) 100%)",
-    shadow: "142 76% 36%"
+    gradient:
+      "linear-gradient(135deg, hsl(142 76% 36%) 0%, hsl(120 100% 25%) 100%)",
+    shadow: "142 76% 36%",
   },
   cyberpunk: {
     name: "cyberpunk",
@@ -122,8 +125,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "270 100% 12%",
     input: "270 100% 12%",
     ring: "316 100% 50%",
-    gradient: "linear-gradient(135deg, hsl(316 100% 50%) 0%, hsl(180 100% 50%) 100%)",
-    shadow: "316 100% 50%"
+    gradient:
+      "linear-gradient(135deg, hsl(316 100% 50%) 0%, hsl(180 100% 50%) 100%)",
+    shadow: "316 100% 50%",
   },
   cloud: {
     name: "cloud",
@@ -147,8 +151,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "200 30% 88%",
     input: "200 30% 88%",
     ring: "200 100% 70%",
-    gradient: "linear-gradient(135deg, hsl(200 100% 70%) 0%, hsl(220 100% 85%) 100%)",
-    shadow: "200 100% 70%"
+    gradient:
+      "linear-gradient(135deg, hsl(200 100% 70%) 0%, hsl(220 100% 85%) 100%)",
+    shadow: "200 100% 70%",
   },
   forest: {
     name: "forest",
@@ -172,8 +177,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "120 40% 83%",
     input: "120 40% 83%",
     ring: "120 60% 25%",
-    gradient: "linear-gradient(135deg, hsl(120 60% 25%) 0%, hsl(90 60% 35%) 100%)",
-    shadow: "120 60% 25%"
+    gradient:
+      "linear-gradient(135deg, hsl(120 60% 25%) 0%, hsl(90 60% 35%) 100%)",
+    shadow: "120 60% 25%",
   },
   amethyst: {
     name: "amethyst",
@@ -197,8 +203,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "270 40% 85%",
     input: "270 40% 85%",
     ring: "270 95% 60%",
-    gradient: "linear-gradient(135deg, hsl(270 95% 60%) 0%, hsl(300 95% 70%) 100%)",
-    shadow: "270 95% 60%"
+    gradient:
+      "linear-gradient(135deg, hsl(270 95% 60%) 0%, hsl(300 95% 70%) 100%)",
+    shadow: "270 95% 60%",
   },
   vintage: {
     name: "vintage",
@@ -222,8 +229,9 @@ export const themes: Record<string, ThemeColors> = {
     border: "25 30% 83%",
     input: "25 30% 83%",
     ring: "25 95% 53%",
-    gradient: "linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(45 95% 63%) 100%)",
-    shadow: "25 95% 53%"
+    gradient:
+      "linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(45 95% 63%) 100%)",
+    shadow: "25 95% 53%",
   },
   coffee: {
     name: "coffee",
@@ -247,26 +255,34 @@ export const themes: Record<string, ThemeColors> = {
     border: "30 30% 80%",
     input: "30 30% 80%",
     ring: "30 100% 30%",
-    gradient: "linear-gradient(135deg, hsl(30 100% 30%) 0%, hsl(20 100% 40%) 100%)",
-    shadow: "30 100% 30%"
-  }
+    gradient:
+      "linear-gradient(135deg, hsl(30 100% 30%) 0%, hsl(20 100% 40%) 100%)",
+    shadow: "30 100% 30%",
+  },
 };
 
-export const getTheme = (themeName: string): ThemeColors => {
-  return themes[themeName] || themes.light;
-};
+export const getTheme = (themeName: string): ThemeColors =>
+  themes[themeName] || themes.light;
 
 export const applyTheme = (theme: ThemeColors) => {
   const root = document.documentElement;
-  
+
   Object.entries(theme).forEach(([key, value]) => {
-    if (key !== 'name' && key !== 'displayName' && key !== 'description' && key !== 'icon') {
-      root.style.setProperty(`--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`, value);
+    if (
+      key !== "name" &&
+      key !== "displayName" &&
+      key !== "description" &&
+      key !== "icon"
+    ) {
+      root.style.setProperty(
+        `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`,
+        value
+      );
     }
   });
-  
+
   // Set theme-specific custom properties
-  root.style.setProperty('--theme-gradient', theme.gradient);
-  root.style.setProperty('--theme-shadow-color', theme.shadow);
-  root.setAttribute('data-theme', theme.name);
+  root.style.setProperty("--theme-gradient", theme.gradient);
+  root.style.setProperty("--theme-shadow-color", theme.shadow);
+  root.setAttribute("data-theme", theme.name);
 };

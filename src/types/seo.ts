@@ -42,7 +42,7 @@ export interface SEOProps {
   keywords?: string;
   image?: string;
   url?: string;
-  type?: 'website' | 'article' | 'profile';
+  type?: "website" | "article" | "profile";
   author?: string;
   publishedTime?: string;
   modifiedTime?: string;
@@ -58,4 +58,3 @@ export interface SEOProps {
   howToSchema?: HowToSchema;
   citationLinks?: CitationLink[];
 }
-
