@@ -14,7 +14,7 @@ export interface Service {
 export interface Skill {
   name: string;
   level: number;
-  category: 'frontend' | 'backend' | 'tools' | 'other';
+  category: "frontend" | "backend" | "tools" | "other";
   icon?: React.ReactNode;
 }
 
@@ -40,11 +40,11 @@ export interface SocialLink {
 
 // Re-export SEO types
 export type {
-  SEOProps,
-  GeoLocation,
+  AlternateLanguage,
+  CitationLink,
   FAQItem,
+  GeoLocation,
   HowToSchema,
   HowToStep,
-  CitationLink,
-  AlternateLanguage,
-} from './seo';
+  SEOProps,
+} from "./seo";

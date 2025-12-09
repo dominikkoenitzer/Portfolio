@@ -1,12 +1,11 @@
-
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { Paperclip, Send } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Paperclip, Send } from "lucide-react";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -41,12 +40,12 @@ export default function ContactForm() {
       // Formspree integration would go here in a real application
       // For now, we'll simulate a successful form submission
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+
       toast({
         title: "Message sent!",
         description: "Thank you for your message. I'll get back to you soon.",
       });
-      
+
       // Reset form
       setFormData({
         name: "",
@@ -58,7 +57,8 @@ export default function ContactForm() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "There was an error sending your message. Please try again.",
+        description:
+          "There was an error sending your message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -68,110 +68,110 @@ export default function ContactForm() {
 
   return (
     <motion.form
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      onSubmit={handleSubmit}
       className="space-y-6"
+      initial={{ opacity: 0 }}
+      onSubmit={handleSubmit}
+      viewport={{ once: true }}
+      whileInView={{ opacity: 1 }}
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <Label htmlFor="name">Name</Label>
         <Input
+          className="mt-1"
           id="name"
           name="name"
-          value={formData.name}
           onChange={handleChange}
           placeholder="Your name"
           required
-          className="mt-1"
+          value={formData.name}
         />
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
         viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <Label htmlFor="email">Email</Label>
         <Input
+          className="mt-1"
           id="email"
           name="email"
-          type="email"
-          value={formData.email}
           onChange={handleChange}
           placeholder="Your email address"
           required
-          className="mt-1"
+          type="email"
+          value={formData.email}
         />
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <Label htmlFor="message">Message</Label>
         <Textarea
+          className="mt-1 min-h-[120px]"
           id="message"
           name="message"
-          value={formData.message}
           onChange={handleChange}
           placeholder="Your message"
           required
-          className="mt-1 min-h-[120px]"
+          value={formData.message}
         />
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
-        <Label htmlFor="file" className="block mb-1">
+        <Label className="mb-1 block" htmlFor="file">
           Attachment (optional)
         </Label>
         <div className="flex items-center">
           <Label
+            className="flex cursor-pointer items-center justify-center rounded-md border border-input bg-background px-4 py-2 font-medium text-sm transition-colors hover:bg-secondary"
             htmlFor="file"
-            className="cursor-pointer flex items-center justify-center px-4 py-2 border border-input rounded-md text-sm font-medium bg-background hover:bg-secondary transition-colors"
           >
             <Paperclip className="mr-2 h-4 w-4" />
             Choose File
           </Label>
           <Input
+            className="hidden"
             id="file"
             name="file"
-            type="file"
             onChange={handleFileChange}
-            className="hidden"
+            type="file"
           />
-          <span className="ml-3 text-sm text-muted-foreground">
+          <span className="ml-3 text-muted-foreground text-sm">
             {fileName || "No file chosen"}
           </span>
         </div>
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
         viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <Button
-          type="submit"
+          className="flex w-full items-center justify-center"
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center"
+          type="submit"
         >
           {isSubmitting ? (
-            <div className="h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
           ) : (
             <>
               <Send className="mr-2 h-4 w-4" />

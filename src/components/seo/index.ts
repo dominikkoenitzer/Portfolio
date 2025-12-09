@@ -1,3 +1,2 @@
-export { SEO } from './SEO';
-export type { SEOProps } from './SEO';
-
+export type { SEOProps } from "./SEO";
+export { SEO } from "./SEO";

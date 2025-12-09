@@ -1,4 +1,4 @@
-import { NavLink } from '@/types';
+import type { NavLink } from "@/types";
 
 export const NAV_LINKS: NavLink[] = [
   { name: "About", targetId: "/about" },
@@ -11,7 +11,8 @@ export const NAV_LINKS: NavLink[] = [
 export const SITE_CONFIG = {
   name: "Dominik Könitzer",
   title: "Software Engineer & Web Developer",
-  description: "Passionate Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien. Expert in React, TypeScript, and full-stack development.",
+  description:
+    "Passionate Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien. Expert in React, TypeScript, and full-stack development.",
   author: "Dominik Könitzer",
   url: "https://dominikkoenitzer.ch",
   ogImage: "/og-image.png",
@@ -33,9 +34,9 @@ export const ANIMATION_DURATION = {
 } as const;
 
 export const BREAKPOINTS = {
-  sm: '640px',
-  md: '768px',
-  lg: '1024px',
-  xl: '1280px',
-  '2xl': '1536px',
+  sm: "640px",
+  md: "768px",
+  lg: "1024px",
+  xl: "1280px",
+  "2xl": "1536px",
 } as const;
