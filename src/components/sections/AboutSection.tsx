@@ -20,13 +20,11 @@ export default function AboutSection() {
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
                 <motion.div
                   animate={{ opacity: 1, scale: 1 }}
-                  aria-label="Dominik Könitzer - Software Engineer"
-                  className="flex h-3/4 w-3/4 items-center justify-center rounded-xl bg-primary/5 font-semibold text-4xl text-primary/80 tracking-tight"
+                  aria-hidden="true"
+                  className="h-3/4 w-3/4 rounded-xl bg-primary/5"
                   initial={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                  <span aria-hidden="true">DK</span>
-                </motion.div>
+                />
               </div>
             </div>
             <motion.div
