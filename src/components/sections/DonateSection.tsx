@@ -1,46 +1,49 @@
 import { motion } from "framer-motion";
-import { SectionHeading } from "../layout/SectionHeading";
 import { Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SectionHeading } from "../layout/SectionHeading";
 
 export default function DonateSection() {
   return (
-    <section id="donate" className="section-padding">
-      <SectionHeading 
-        title="Support My Work" 
+    <section className="section-padding" id="donate">
+      <SectionHeading
         subtitle="If you find value in my work and would like to support me, consider making a donation."
+        title="Support My Work"
       />
-      
+
       <motion.div
+        className="mx-auto max-w-2xl rounded-xl border border-border/50 bg-background p-8 text-center shadow-sm"
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         viewport={{ once: true }}
-        className="max-w-2xl mx-auto text-center bg-background rounded-xl p-8 shadow-sm border border-border/50"
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <div className="relative mb-6 inline-block">
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-secondary/50 rounded-full blur-md"></div>
-          <div className="relative flex items-center justify-center h-16 w-16 rounded-full bg-background border border-border mx-auto">
-            <Heart className="h-8 w-8 text-primary animate-pulse" />
+          <div className="-inset-1 absolute rounded-full bg-gradient-to-r from-primary/50 to-secondary/50 blur-md" />
+          <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-border bg-background">
+            <Heart className="h-8 w-8 animate-pulse text-primary" />
           </div>
         </div>
-        
-        <h3 className="text-2xl font-semibold mb-3 font-heading">Support My Journey</h3>
-        
-        <p className="text-muted-foreground mb-6">
-          Your donations help me continue creating valuable content, improving my skills, and developing new projects. Any amount is greatly appreciated!
+
+        <h3 className="mb-3 font-heading font-semibold text-2xl">
+          Support My Journey
+        </h3>
+
+        <p className="mb-6 text-muted-foreground">
+          Your donations help me continue creating valuable content, improving
+          my skills, and developing new projects. Any amount is greatly
+          appreciated!
         </p>
-        
+
         <motion.div
+          className="inline-block"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          className="inline-block"
         >
           <a
+            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 font-medium text-base text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             href="https://www.paypal.com/paypalme/dominikkoenitzer"
-            target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-12 items-center justify-center rounded-md bg-primary px-8 text-base font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            target="_blank"
           >
             Donate via PayPal
           </a>
