@@ -17,11 +17,12 @@ export default function AboutSection() {
         <motion.div className="md:col-span-5 lg:col-span-5" {...fadeInLeft}>
           <div className="relative mx-auto max-w-xs md:max-w-none">
             <div className="aspect-square overflow-hidden rounded-2xl bg-background/80 shadow-lg">
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
-                <motion.div
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8">
+                <motion.img
+                  src="/favicon.svg"
+                  alt="Dominik Könitzer"
                   animate={{ opacity: 1, scale: 1 }}
-                  aria-hidden="true"
-                  className="h-3/4 w-3/4 rounded-xl bg-primary/5"
+                  className="h-full w-full object-contain"
                   initial={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 />
