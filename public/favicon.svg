@@ -1,5 +1,5 @@
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-  <circle cx='50' cy='50' r='45' fill='#4f2f8b' opacity='0.1'/>
-  <circle cx='50' cy='50' r='45' fill='none' stroke='#4f2f8b' stroke-width='3'/>
-  <text x='50' y='68' font-size='48' font-family='Arial, sans-serif' font-weight='bold' fill='#4f2f8b' text-anchor='middle'>DK</text>
+  <circle cx='50' cy='50' r='45' fill='#a0bed8' opacity='0.1'/>
+  <circle cx='50' cy='50' r='45' fill='none' stroke='#a0bed8' stroke-width='3'/>
+  <text x='50' y='68' font-size='48' font-family='Arial, sans-serif' font-weight='bold' fill='#a0bed8' text-anchor='middle'>DK</text>
 </svg>
