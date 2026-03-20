@@ -1,12 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
-  Cloud,
   Coffee,
   Gem,
-  Leaf,
   Moon,
-  Radio,
   Sun,
   TreePine,
   Zap,
@@ -22,12 +19,9 @@ import { themes } from "@/lib/themes";
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Sun,
   Moon,
-  Leaf,
   Zap,
-  Cloud,
   TreePine,
   Gem,
-  Radio,
   Coffee,
 };
 
