@@ -156,3 +156,45 @@ export const PROJECTS_FAQS: FAQItem[] = [
       "The showcased work demonstrates end-to-end product thinking: planning structured interfaces, implementing modern frontend architecture, optimizing performance, and building reusable components that support collaboration and future iteration.",
   },
 ];
+
+export const DONATE_FAQS: FAQItem[] = [
+  {
+    question: "Why should I donate to support this portfolio?",
+    answer:
+      "Donations directly support ongoing software project development, hosting costs, tooling, and time invested in shipping higher-quality features, better performance, and more useful public work.",
+  },
+  {
+    question: "What does my donation help fund?",
+    answer:
+      "Your contribution helps fund infrastructure, software subscriptions, development tools, and focused build time for new projects, improvements, and educational engineering content.",
+  },
+  {
+    question: "How can I donate?",
+    answer:
+      "You can donate securely via PayPal using the donation options on this page, or choose a custom amount through the main PayPal donation button.",
+  },
+];
+
+export const DONATE_HOW_TO: HowToSchema = {
+  name: "How to Support Dominik Konitzer's Work",
+  description:
+    "Simple steps to donate and support ongoing software projects and portfolio development.",
+  step: [
+    {
+      name: "Choose Donation Option",
+      text: "Select one of the suggested donation amounts or choose a custom amount.",
+    },
+    {
+      name: "Open Secure PayPal Checkout",
+      text: "Click a donation button to continue through PayPal's secure payment flow.",
+    },
+    {
+      name: "Complete Donation",
+      text: "Confirm your payment details and complete the donation.",
+    },
+    {
+      name: "Support Ongoing Work",
+      text: "Your contribution helps fund future project development, maintenance, and technical content.",
+    },
+  ],
+};
