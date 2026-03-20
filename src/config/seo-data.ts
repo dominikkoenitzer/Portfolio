@@ -138,3 +138,21 @@ export const ABOUT_FAQS: FAQItem[] = [
       "Dominik Könitzer enjoys creating clean, functional, and visually appealing websites and applications that provide real value to users. Beyond technical skills, he values continuous learning, problem-solving, and effective communication in software development.",
   },
 ];
+
+export const PROJECTS_FAQS: FAQItem[] = [
+  {
+    question: "What kind of impact-focused projects are included in this portfolio?",
+    answer:
+      "This portfolio includes production-oriented projects focused on practical outcomes such as improved user experience, stronger performance, accessibility, and maintainable architecture. Each project highlights decisions that support real users and long-term product growth.",
+  },
+  {
+    question: "Where can I review project code and live implementations?",
+    answer:
+      "Each project includes both a GitHub repository and a live deployment link so recruiters and hiring teams can evaluate implementation quality, code structure, UI decisions, and end-user behavior.",
+  },
+  {
+    question: "How do these projects demonstrate job-ready software engineering skills?",
+    answer:
+      "The showcased work demonstrates end-to-end product thinking: planning structured interfaces, implementing modern frontend architecture, optimizing performance, and building reusable components that support collaboration and future iteration.",
+  },
+];

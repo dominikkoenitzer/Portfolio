@@ -12,12 +12,9 @@ type Theme =
   | "light"
   | "dark"
   | "system"
-  | "solarpunk"
   | "cyberpunk"
-  | "cloud"
   | "forest"
   | "amethyst"
-  | "vintage"
   | "coffee";
 
 type ThemeProviderProps = {
@@ -44,14 +41,14 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 const THEME_HEX_COLORS: Record<string, string> = {
   light: "#ffffff",
   dark: "#080808",
-  solarpunk: "#f7fff7",
   cyberpunk: "#0a0014",
-  cloud: "#f7fbfd",
   forest: "#f5fdf5",
   amethyst: "#f9f7fd",
-  vintage: "#faf8f5",
   coffee: "#faf6f0",
 };
+
+const isTheme = (value: string | null): value is Theme =>
+  value === "system" || value === "light" || value === "dark" || value in themes;
 
 export function ThemeProvider({
   children,
@@ -60,7 +57,10 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => {
+      const storedTheme = localStorage.getItem(storageKey);
+      return isTheme(storedTheme) ? storedTheme : defaultTheme;
+    }
   );
   const [themeColors, setThemeColors] = useState<ThemeColors>(themes.light);
 
