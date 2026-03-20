@@ -40,7 +40,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 // Theme background hex colors for meta tag
 const THEME_HEX_COLORS: Record<string, string> = {
   light: "#ffffff",
-  dark: "#080808",
+  dark: "#141820",
   cyberpunk: "#0a0014",
   forest: "#f5fdf5",
   amethyst: "#f9f7fd",
