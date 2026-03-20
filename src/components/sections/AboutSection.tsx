@@ -18,14 +18,6 @@ export default function AboutSection() {
           <div className="relative mx-auto max-w-xs md:max-w-none">
             <div className="aspect-square overflow-hidden rounded-2xl bg-background/80 shadow-lg">
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8">
-                <motion.img
-                  src="/favicon.svg"
-                  alt="Dominik Könitzer"
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="h-full w-full object-contain"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                />
               </div>
             </div>
             <motion.div

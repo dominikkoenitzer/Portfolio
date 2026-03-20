@@ -43,6 +43,44 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/services" />
     <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/services" />
   </url>
+
+  <!-- Projects Page -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/projects" />
+  </url>
+
+  <!-- Project Detail Pages -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/zephyr</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/zephyr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/projects/zephyr" />
+  </url>
+
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/spectrum</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/spectrum" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/projects/spectrum" />
+  </url>
+
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/entropy</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/entropy" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/de/projects/entropy" />
+  </url>
   
   <!-- Contact Page -->
   <url>
