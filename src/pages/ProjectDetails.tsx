@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { ArrowLeft, ExternalLink, Github } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
@@ -21,6 +20,11 @@ const ProjectDetails = () => {
 
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
+  const projectTimeline = `${project.year} - Present`;
+  const otherProjects = PORTFOLIO_PROJECTS.filter((item) => item.slug !== project.slug);
+  const architectureText = project.architectureDecisions.join(" ");
+  const implementationText = project.implementationHighlights.join(" ");
+  const qualityText = project.qualityAndSecurity.join(" ");
 
   return (
     <>
@@ -57,31 +61,22 @@ const ProjectDetails = () => {
       />
 
       <PageLayout>
-        <div className="min-h-screen bg-background pb-16">
-          <section className="relative overflow-hidden border-border/30 border-b">
-            <div className={`absolute inset-0 ${project.toneClass}`} />
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.04)_50%,_transparent_80%)]" />
-            <div className="relative mx-auto max-w-7xl px-6 py-20 text-center sm:px-8 md:px-12 md:py-24 lg:px-16 lg:py-28">
-              <motion.h1
-                className="font-heading font-semibold text-4xl tracking-tight sm:text-5xl md:text-6xl"
-                initial={{ opacity: 0, y: 16 }}
-                transition={{ duration: 0.45 }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
+        <div className="min-h-screen bg-background pb-20">
+          <section className="border-border/30 border-b">
+            <div className="mx-auto max-w-5xl px-6 py-16 sm:px-8 md:px-12 lg:py-20">
+              <h1 className="font-heading font-semibold text-4xl tracking-tight sm:text-5xl">
                 {project.title}
-              </motion.h1>
-              <motion.p
-                className="mx-auto mt-4 max-w-3xl text-muted-foreground text-sm sm:text-base"
-                initial={{ opacity: 0, y: 16 }}
-                transition={{ duration: 0.45, delay: 0.05 }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
+              </h1>
+              <p className="mt-4 max-w-3xl text-muted-foreground leading-7">
                 {project.tagline}
-              </motion.p>
+              </p>
+              <p className="mt-4 max-w-3xl text-foreground/90 leading-7">
+                {project.description}
+              </p>
             </div>
           </section>
 
-          <section className="mx-auto max-w-7xl px-6 py-10 sm:px-8 md:px-12 lg:px-16">
+          <section className="mx-auto max-w-5xl px-6 py-10 sm:px-8 md:px-12">
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-border/40 border-b pb-4 text-xs uppercase tracking-wide">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Link className="transition-colors hover:text-foreground" to="/">
@@ -104,79 +99,61 @@ const ProjectDetails = () => {
               </Link>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-[1.5fr_0.9fr]">
-              <div className="space-y-8">
-                <article className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6 md:p-7">
-                  <p className="mb-2 text-muted-foreground text-xs uppercase tracking-wide">
-                    {project.year}
-                  </p>
-                  <h2 className="mb-3 font-heading font-semibold text-2xl tracking-tight">
-                    Overview
-                  </h2>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {project.overview}
-                  </p>
-                </article>
+            <article>
+              <p className="text-muted-foreground text-xs uppercase tracking-[0.2em]">
+                {projectTimeline}
+              </p>
 
-                <article className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6 md:p-7">
-                  <h2 className="mb-3 font-heading font-semibold text-2xl tracking-tight">
-                    {project.impactHeading}
-                  </h2>
-                  <ul className="space-y-3 text-muted-foreground leading-relaxed">
-                    {project.impactPoints.map((point) => (
-                      <li className="flex items-start gap-2" key={point}>
-                        <span className="mt-[10px] h-1.5 w-1.5 rounded-full bg-primary/80" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              </div>
+              <section className="mt-5 border-border/30 border-t pt-8">
+                <h2 className="font-heading text-2xl tracking-tight">Overview</h2>
+                <p className="mt-4 text-foreground/90 leading-8">{project.description}</p>
+                <p className="mt-4 text-foreground/85 leading-8">{project.overview}</p>
+              </section>
 
-              <aside className="space-y-5">
-                <div className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6">
-                  <h3 className="mb-3 font-heading font-semibold text-lg">Tech Stack</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        className="rounded-full border border-border/60 bg-background/70 px-2.5 py-1 text-sm"
-                        key={tag}
+              <section className="mt-10 border-border/30 border-t pt-8">
+                <h2 className="font-heading text-2xl tracking-tight">Notes</h2>
+                <div className="mt-4 space-y-4 text-foreground/90 leading-8">
+                  <p>{project.roleSummary}</p>
+                  <p>{project.problemStatement}</p>
+                  <p>{architectureText}</p>
+                  <p>{implementationText}</p>
+                  <p>{qualityText}</p>
+                </div>
+              </section>
+
+              <section className="mt-10 border-border/30 border-t pt-8">
+                <h2 className="font-heading text-2xl tracking-tight">Links</h2>
+                <div className="mt-4 space-y-3 text-foreground/90 leading-8">
+                  <p>
+                    Visit Site: <a className="text-primary underline-offset-4 hover:underline" href={project.liveUrl} rel="noopener noreferrer" target="_blank">{project.liveUrl}</a>
+                  </p>
+                  <p>
+                    Source Code: <a className="text-primary underline-offset-4 hover:underline" href={project.repoUrl} rel="noopener noreferrer" target="_blank">{project.repoUrl}</a>
+                  </p>
+                </div>
+              </section>
+
+              <section className="mt-10 border-border/30 border-t pt-8">
+                <h2 className="font-heading text-2xl tracking-tight">More Projects</h2>
+                <div className="mt-6 space-y-7">
+                  {otherProjects.map((item) => (
+                    <article className="border-border/30 border-b pb-6" key={item.slug}>
+                      <Link
+                        className="font-heading text-2xl tracking-tight transition-colors hover:text-primary"
+                        to={`/projects/${item.slug}`}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                        {item.title}
+                      </Link>
+                      <p className="mt-2 text-muted-foreground text-sm uppercase tracking-wide">
+                        {item.year} - Present
+                      </p>
+                      <p className="mt-3 text-foreground/85 leading-8">{item.description}</p>
+                      <p className="mt-3 text-muted-foreground text-sm">{item.tags.join(" • ")}</p>
+                    </article>
+                  ))}
                 </div>
-
-                <div className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6">
-                  <h3 className="mb-3 font-heading font-semibold text-lg">Links</h3>
-                  <div className="space-y-2">
-                    <a
-                      className="inline-flex w-full items-center justify-between rounded-md border border-border/60 bg-background/80 px-3 py-2 text-sm transition-colors hover:border-primary/30"
-                      href={project.repoUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        <Github className="h-4 w-4" />
-                        Source Code
-                      </span>
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-
-                    <a
-                      className="inline-flex w-full items-center justify-between rounded-md border border-border/60 bg-primary/10 px-3 py-2 text-primary text-sm transition-colors hover:bg-primary/20"
-                      href={project.liveUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <span className="inline-flex items-center gap-2">Live Project</span>
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </div>
-                </div>
-              </aside>
-            </div>
+              </section>
+            </article>
           </section>
         </div>
       </PageLayout>
