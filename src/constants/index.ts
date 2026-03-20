@@ -3,6 +3,7 @@ import type { NavLink } from "@/types";
 export const NAV_LINKS: NavLink[] = [
   { name: "About", targetId: "/about" },
   { name: "Skills", targetId: "/skills" },
+  { name: "Projects", targetId: "/projects" },
   { name: "Services", targetId: "/services" },
   { name: "Contact", targetId: "/contact" },
   { name: "Donate", targetId: "/donate" },
