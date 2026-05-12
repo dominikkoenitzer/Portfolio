@@ -111,13 +111,6 @@ export default function Navbar() {
               className="group flex items-center font-bold text-xl tracking-tight md:text-2xl"
               to="/"
             >
-              <motion.span
-                className="mr-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent text-primary shadow-lg shadow-primary/10 transition-all duration-300 group-hover:from-primary/30 group-hover:via-primary/20"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Code className="h-5 w-5" />
-              </motion.span>
               <span className="text-foreground">
                 Dominik Könitzer
               </span>
