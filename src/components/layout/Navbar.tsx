@@ -97,7 +97,7 @@ export default function Navbar() {
       animate={{ y: 0 }}
       className={`fixed top-0 right-0 left-0 z-50 ${
         isScrolled
-          ? "border-border/50 border-b bg-background/90 shadow-primary/5 shadow-xl backdrop-blur-2xl"
+          ? "scrolled-nav border-border/50 border-b bg-background/90 shadow-primary/5 shadow-xl backdrop-blur-2xl"
           : "bg-transparent"
       } transition-all duration-700`}
       initial={{ y: -100 }}
@@ -118,18 +118,9 @@ export default function Navbar() {
               >
                 <Code className="h-5 w-5" />
               </motion.span>
-              <motion.span
-                animate={{ y: [0, -2, 0] }}
-                className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
-                initial={false}
-                transition={{
-                  duration: 1,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatDelay: 3,
-                }}
-              >
+              <span className="text-foreground">
                 Dominik Könitzer
-              </motion.span>
+              </span>
             </Link>
           </div>
 
@@ -151,23 +142,14 @@ export default function Navbar() {
                     }`}
                     to={link.targetId}
                   >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <motion.div
-                        animate={{
-                          scale: isActive ? 1 : 0.6,
-                          opacity: isActive ? 1 : 0.4,
-                        }}
-                        className="h-1 w-1 rounded-full bg-primary"
-                        initial={{ scale: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                      />
+                    <span className="relative z-10">
                       {link.name}
                     </span>
                     <motion.span
-                      className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/20 to-primary/10"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      transition={{ duration: 0.2 }}
-                      whileHover={{ opacity: 1, scale: 1 }}
+                      className="absolute inset-0 rounded-lg bg-primary/[0.08]"
+                      initial={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      whileHover={{ opacity: 1 }}
                     />
                   </Link>
                 </motion.div>
@@ -387,18 +369,6 @@ export default function Navbar() {
                                   initial={false}
                                 />
 
-                                {/* Active indicator glow */}
-                                {isActive && (
-                                  <motion.div
-                                    animate={{ opacity: [0.5, 1, 0.5] }}
-                                    className="absolute inset-0 rounded-2xl bg-primary/5"
-                                    initial={{ opacity: 0 }}
-                                    transition={{
-                                      duration: 2,
-                                      repeat: Number.POSITIVE_INFINITY,
-                                    }}
-                                  />
-                                )}
 
                                 <div className="relative flex items-center justify-between">
                                   <div className="flex items-center gap-4">

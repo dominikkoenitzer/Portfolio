@@ -240,4 +240,75 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
       "Demonstrates product-level thinking beyond visuals by prioritizing reliability and UX outcomes.",
     ],
   },
+  {
+    slug: "remnants",
+    title: "Remnants",
+    tagline:
+      "A browser-native code editor built for developers who think in files.",
+    description:
+      "Remnants is an in-browser IDE with persistent file tree management, multi-panel layouts, and syntax highlighting — a fully capable editing environment that lives entirely in your browser.",
+    overview:
+      "Remnants brings the IDE experience to the browser without any installation. Built with React and TypeScript, it delivers a familiar workspace with recursive file trees, split panel editing, quick-open navigation, and full syntax highlighting — all persisted locally across sessions.",
+    roleSummary:
+      "Full-stack frontend engineer architecting a production-grade in-browser development environment from scratch.",
+    problemStatement:
+      "Setting up a local development environment has a high barrier to entry. Remnants brings a capable, familiar editing workflow directly into the browser — instantly accessible from any device.",
+    objectives: [
+      "Build a persistent file tree with full create, rename, and delete operations that survives page reloads.",
+      "Implement multi-panel layouts with independent scroll and focus state per panel.",
+      "Deliver syntax-highlighted code editing with a responsive, IDE-like interface.",
+    ],
+    architectureDecisions: [
+      "localStorage-backed persistence layer for both workspace tree structure and per-file content.",
+      "Immutable recursive tree data structure enabling safe, predictable nested file operations.",
+      "Component isolation between FileTree, Panel, and SyntaxHighlighter for independent scaling.",
+    ],
+    implementationHighlights: [
+      "Built a fully recursive file tree with path-aware create, rename, delete, and duplicate prevention.",
+      "Implemented quick-open functionality for fast keyboard-driven navigation across nested file structures.",
+      "Delivered real-time syntax highlighting with a custom-styled monospace editing experience.",
+    ],
+    qualityAndSecurity: [
+      "Path-aware recursive state updates with operation success tracking to prevent tree corruption.",
+      "Input validation on file and folder naming to reject invalid or conflicting entries.",
+      "Graceful degradation for empty workspace states and missing or malformed storage entries.",
+    ],
+    challengesAndSolutions: [
+      {
+        challenge:
+          "Maintaining correct tree state through deeply nested create, rename, and delete operations.",
+        solution:
+          "Built a path-aware recursive update system returning both the updated tree and an operation success flag, enabling reliable rollback on failure.",
+      },
+      {
+        challenge:
+          "Preserving editor content and scroll position when switching between open files.",
+        solution:
+          "Decoupled file content storage from panel rendering so each panel independently manages its own view state without cross-contamination.",
+      },
+    ],
+    hiringSignals: [
+      "Demonstrates ability to build complex stateful UIs with recursive tree data structures.",
+      "Shows architectural thinking around component isolation and predictable data flow.",
+      "Proves comfort building developer-facing tooling and editor-domain products.",
+    ],
+    nextIterations: [
+      "Add real-time collaborative editing with cursor and selection sharing.",
+      "Introduce file-type detection for smarter per-language syntax highlighting.",
+      "Expand keyboard shortcut coverage for full power-user workflow parity.",
+    ],
+    year: "2026",
+    repoUrl: "https://github.com/dominikkoenitzer/Remnants",
+    liveUrl: "https://remnants.punds.ch/",
+    priority: 4,
+    toneClass:
+      "bg-[radial-gradient(circle_at_50%_50%,_hsl(var(--primary)/0.18),_transparent_70%)]",
+    tags: ["Dev Tools", "TypeScript", "Browser IDE"],
+    impactHeading: "How This Project Creates Impact",
+    impactPoints: [
+      "Lowers the barrier to entry for coding by making a capable editor instantly accessible in any browser.",
+      "Demonstrates deep mastery of complex tree-based UI state management at production quality.",
+      "Reflects genuine developer empathy — building tools that developers themselves want to use.",
+    ],
+  },
 ];

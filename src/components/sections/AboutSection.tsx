@@ -15,10 +15,13 @@ export default function AboutSection() {
 
       <div className="grid items-center gap-8 md:grid-cols-12 md:gap-10">
         <motion.div className="md:col-span-5 lg:col-span-5" {...fadeInLeft}>
-          <div className="relative mx-auto max-w-xs md:max-w-none">
-            <div className="aspect-square overflow-hidden rounded-2xl bg-background/80 shadow-lg">
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8">
-              </div>
+          <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
+            <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
+              <img
+                alt="Dominik Könitzer"
+                className="h-full w-full object-cover"
+                src="https://avatars.githubusercontent.com/u/82450286?v=4"
+              />
             </div>
             <motion.div
               animate={{ opacity: 1, x: 0, y: 0 }}
@@ -80,7 +83,7 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                I'm Dominik Könitzer, a 17-year-old software engineer at WISS
+                I'm Dominik Könitzer, an 18-year-old software engineer at WISS
                 Schulen für Wirtschaft Informatik Immobilien, currently in my{" "}
                 <span className="font-medium text-foreground">fifth</span>{" "}
                 semester of a 4-year software engineering program.
