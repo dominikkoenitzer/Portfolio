@@ -2,6 +2,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { type ReactNode, useEffect } from "react";
 import { Footer, Navbar } from "@/components";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -24,11 +25,66 @@ export function PageLayout({ children }: PageLayoutProps) {
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="system">
+    <ThemeProvider>
+      <CustomCursor />
+
+      {/* Scroll progress bar */}
       <motion.div
-        className="progress-bar fixed top-0 right-0 left-0 z-[100] h-1 bg-gradient-to-r from-primary/70 via-primary to-primary/70"
+        className="progress-bar fixed top-0 right-0 left-0 z-[100] h-[2px] bg-gradient-to-r from-primary/70 via-primary to-primary/70"
         style={{ scaleX, transformOrigin: "0%" }}
       />
+
+      {/* Aurora background — only visible on glass theme via CSS */}
+      <div className="aurora-layer pointer-events-none fixed inset-0 -z-50 overflow-hidden" aria-hidden="true">
+        <div
+          className="aurora-orb absolute"
+          style={{
+            top: "-15%",
+            left: "-8%",
+            width: "900px",
+            height: "900px",
+            background: "hsl(var(--primary) / 0.18)",
+            filter: "blur(160px)",
+            borderRadius: "50%",
+          }}
+        />
+        <div
+          className="aurora-orb absolute"
+          style={{
+            bottom: "-20%",
+            right: "-8%",
+            width: "750px",
+            height: "750px",
+            background: "hsl(260 100% 68% / 0.13)",
+            filter: "blur(150px)",
+            borderRadius: "50%",
+          }}
+        />
+        <div
+          className="aurora-orb absolute"
+          style={{
+            top: "35%",
+            right: "15%",
+            width: "550px",
+            height: "550px",
+            background: "hsl(185 100% 58% / 0.09)",
+            filter: "blur(130px)",
+            borderRadius: "50%",
+          }}
+        />
+        <div
+          className="aurora-orb absolute"
+          style={{
+            bottom: "20%",
+            left: "30%",
+            width: "400px",
+            height: "400px",
+            background: "hsl(210 100% 70% / 0.07)",
+            filter: "blur(110px)",
+            borderRadius: "50%",
+          }}
+        />
+      </div>
 
       <Navbar />
 

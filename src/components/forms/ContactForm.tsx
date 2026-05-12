@@ -1,35 +1,90 @@
-import { motion } from "framer-motion";
-import { Paperclip, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
+interface FieldProps {
+  id: string;
+  label: string;
+  type?: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  required?: boolean;
+  multiline?: boolean;
+  delay?: number;
+}
+
+function Field({ id, label, type = "text", placeholder, value, onChange, required, multiline, delay = 0 }: FieldProps) {
+  const [focused, setFocused] = useState(false);
+  const base =
+    "w-full bg-transparent pt-1 pb-3 text-base placeholder:text-muted-foreground/30 text-foreground focus:outline-none transition-colors duration-200 resize-none";
+
+  return (
+    <motion.div
+      className="group"
+      initial={{ opacity: 0, y: 14 }}
+      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true }}
+      whileInView={{ opacity: 1, y: 0 }}
+    >
+      <label
+        className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40"
+        htmlFor={id}
+      >
+        {label}
+      </label>
+
+      {multiline ? (
+        <textarea
+          className={`${base} min-h-[140px]`}
+          id={id}
+          name={id}
+          onBlur={() => setFocused(false)}
+          onChange={onChange}
+          onFocus={() => setFocused(true)}
+          placeholder={placeholder}
+          required={required}
+          value={value}
+        />
+      ) : (
+        <input
+          className={base}
+          id={id}
+          name={id}
+          onBlur={() => setFocused(false)}
+          onChange={onChange}
+          onFocus={() => setFocused(true)}
+          placeholder={placeholder}
+          required={required}
+          type={type}
+          value={value}
+        />
+      )}
+
+      {/* Animated bottom border */}
+      <div className="relative h-px">
+        <div className="absolute inset-0 bg-border/25" />
+        <motion.div
+          animate={{ scaleX: focused ? 1 : 0 }}
+          className="absolute inset-0 origin-left bg-primary"
+          initial={{ scaleX: 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-    file: null as File | null,
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fileName, setFileName] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, file: e.target.files![0] }));
-      setFileName(e.target.files[0].name);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,28 +92,12 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      // Formspree integration would go here in a real application
-      // For now, we'll simulate a successful form submission
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      setSubmitted(true);
+    } catch {
       toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      });
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        message: "",
-        file: null,
-      });
-      setFileName("");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error sending your message. Please try again.",
+        title: "Something went wrong",
+        description: "Please try again or email me directly.",
         variant: "destructive",
       });
     } finally {
@@ -67,119 +106,92 @@ export default function ContactForm() {
   };
 
   return (
-    <motion.form
-      className="space-y-6"
-      initial={{ opacity: 0 }}
-      onSubmit={handleSubmit}
-      viewport={{ once: true }}
-      whileInView={{ opacity: 1 }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <Label htmlFor="name">Name</Label>
-        <Input
-          className="mt-1"
-          id="name"
-          name="name"
-          onChange={handleChange}
-          placeholder="Your name"
-          required
-          value={formData.name}
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <Label htmlFor="email">Email</Label>
-        <Input
-          className="mt-1"
-          id="email"
-          name="email"
-          onChange={handleChange}
-          placeholder="Your email address"
-          required
-          type="email"
-          value={formData.email}
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <Label htmlFor="message">Message</Label>
-        <Textarea
-          className="mt-1 min-h-[120px]"
-          id="message"
-          name="message"
-          onChange={handleChange}
-          placeholder="Your message"
-          required
-          value={formData.message}
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <Label className="mb-1 block" htmlFor="file">
-          Attachment (optional)
-        </Label>
-        <div className="flex items-center">
-          <Label
-            className="flex cursor-pointer items-center justify-center rounded-md border border-input bg-background px-4 py-2 font-medium text-sm transition-colors hover:bg-secondary"
-            htmlFor="file"
-          >
-            <Paperclip className="mr-2 h-4 w-4" />
-            Choose File
-          </Label>
-          <Input
-            className="hidden"
-            id="file"
-            name="file"
-            onChange={handleFileChange}
-            type="file"
-          />
-          <span className="ml-3 text-muted-foreground text-sm">
-            {fileName || "No file chosen"}
-          </span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <Button
-          className="flex w-full items-center justify-center"
-          disabled={isSubmitting}
-          type="submit"
+    <AnimatePresence mode="wait">
+      {submitted ? (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="flex h-full flex-col items-start justify-center py-12"
+          exit={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: 20 }}
+          key="success"
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          {isSubmitting ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-          ) : (
-            <>
-              <Send className="mr-2 h-4 w-4" />
-              Send Message
-            </>
-          )}
-        </Button>
-      </motion.div>
-    </motion.form>
+          <CheckCircle2 className="mb-6 h-10 w-10 text-primary" strokeWidth={1.5} />
+          <h3 className="mb-3 font-semibold text-2xl tracking-tight">Message received.</h3>
+          <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
+            Thanks for reaching out. I'll get back to you within 24 hours.
+          </p>
+          <button
+            className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 transition-colors duration-200 hover:text-muted-foreground"
+            onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", message: "" }); }}
+          >
+            Send another →
+          </button>
+        </motion.div>
+      ) : (
+        <motion.form
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          initial={{ opacity: 0 }}
+          key="form"
+          className="space-y-8"
+          onSubmit={handleSubmit}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="grid gap-8 sm:grid-cols-2">
+            <Field
+              delay={0.1}
+              id="name"
+              label="Name"
+              onChange={handleChange}
+              placeholder="Your name"
+              required
+              value={formData.name}
+            />
+            <Field
+              delay={0.15}
+              id="email"
+              label="Email"
+              onChange={handleChange}
+              placeholder="your@email.com"
+              required
+              type="email"
+              value={formData.email}
+            />
+          </div>
+
+          <Field
+            delay={0.2}
+            id="message"
+            label="Message"
+            multiline
+            onChange={handleChange}
+            placeholder="Tell me about your project or idea..."
+            required
+            value={formData.message}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.5, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            whileInView={{ opacity: 1, y: 0 }}
+          >
+            <button
+              className="group flex w-full items-center justify-between rounded-lg bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_28px_hsl(var(--primary)/0.38)] disabled:opacity-60"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              <span>{isSubmitting ? "Sending..." : "Send message"}</span>
+              {isSubmitting ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+              )}
+            </button>
+          </motion.div>
+        </motion.form>
+      )}
+    </AnimatePresence>
   );
 }

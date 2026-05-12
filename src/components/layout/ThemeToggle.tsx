@@ -4,6 +4,7 @@ import {
   Coffee,
   Gem,
   Moon,
+  Sparkles,
   Sun,
   TreePine,
   Zap,
@@ -23,6 +24,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   TreePine,
   Gem,
   Coffee,
+  Sparkles,
 };
 
 export function ThemeToggle() {
@@ -248,7 +250,7 @@ export function ThemeToggle() {
                   ease: [0.25, 0.46, 0.45, 0.94],
                 },
               }}
-              className={`${dropdownPositionClass} ${windowWidth > 0 && windowWidth < 768 ? "" : dropdownWidthClass} z-50 max-h-[calc(100vh-8rem)] overflow-hidden overflow-y-auto rounded-xl border border-border bg-background shadow-lg sm:rounded-2xl`}
+              className={`theme-dropdown-glass ${dropdownPositionClass} ${windowWidth > 0 && windowWidth < 768 ? "" : dropdownWidthClass} z-50 max-h-[calc(100vh-8rem)] overflow-hidden overflow-y-auto rounded-xl border border-border bg-background shadow-lg sm:rounded-2xl`}
               exit={{
                 opacity: 0,
                 scale: 0.95,

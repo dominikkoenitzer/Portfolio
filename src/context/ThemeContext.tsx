@@ -8,14 +8,7 @@ import {
 } from "react";
 import { applyTheme, getTheme, type ThemeColors, themes } from "@/lib/themes";
 
-type Theme =
-  | "light"
-  | "dark"
-  | "system"
-  | "cyberpunk"
-  | "forest"
-  | "amethyst"
-  | "coffee";
+type Theme = "cyberpunk" | "forest" | "coffee" | "glass";
 
 type ThemeProviderProps = {
   children: ReactNode;
@@ -30,52 +23,41 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: "system",
+  theme: "glass",
   setTheme: () => null,
-  themeColors: themes.light,
+  themeColors: themes.glass,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 // Theme background hex colors for meta tag
 const THEME_HEX_COLORS: Record<string, string> = {
-  light: "#ffffff",
-  dark: "#141820",
   cyberpunk: "#0a0014",
   forest: "#f5fdf5",
-  amethyst: "#f9f7fd",
   coffee: "#faf6f0",
+  glass: "#07090f",
 };
 
 const isTheme = (value: string | null): value is Theme =>
-  value === "system" || value === "light" || value === "dark" || value in themes;
+  value !== null && value in themes;
+
+const systemDefault = (): Theme => {
+  const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (dark) return Math.random() < 0.5 ? "glass" : "cyberpunk";
+  return Math.random() < 0.5 ? "coffee" : "forest";
+};
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
+  defaultTheme,
   storageKey = "portfolio-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => {
-      const storedTheme = localStorage.getItem(storageKey);
-      return isTheme(storedTheme) ? storedTheme : defaultTheme;
-    }
-  );
+  const [theme, setTheme] = useState<Theme>(() => systemDefault());
   const [themeColors, setThemeColors] = useState<ThemeColors>(themes.light);
 
-  const getSystemTheme = (): "light" | "dark" =>
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-
   const resolveTheme = useCallback(
-    (currentTheme: Theme): keyof typeof themes => {
-      if (currentTheme === "system") {
-        return getSystemTheme();
-      }
-      return currentTheme;
-    },
+    (currentTheme: Theme): keyof typeof themes => currentTheme,
     []
   );
 
@@ -120,17 +102,7 @@ export function ThemeProvider({
     const resolvedTheme = resolveTheme(theme);
     applyThemeChanges(resolvedTheme);
 
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      if (theme === "system") {
-        const newResolvedTheme = getSystemTheme();
-        applyThemeChanges(newResolvedTheme);
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    return () => {};
   }, [theme, resolveTheme, applyThemeChanges]);
 
   const handleSetTheme = (newTheme: Theme) => {

@@ -505,6 +505,97 @@
     background-color: hsl(var(--primary) / 0.15);
     color: hsl(var(--primary));
   }
+
+  /* Hero gradient text */
+  .hero-name-gradient {
+    background-image: linear-gradient(
+      120deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary) / 0.65) 50%,
+      hsl(var(--primary)) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-shift 7s ease infinite;
+  }
+
+  /* Glass badge */
+  .glass-badge {
+    @apply inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-primary/[0.07] px-5 py-2.5 font-semibold text-primary text-sm backdrop-blur-md;
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.12), 0 2px 8px hsl(var(--primary) / 0.08);
+  }
+
+  /* Strong glass card */
+  .glass-deep {
+    @apply backdrop-blur-xl border border-border/30 bg-background/60;
+    box-shadow:
+      0 4px 24px -4px rgba(0, 0, 0, 0.08),
+      0 1px 0 0 hsl(var(--primary) / 0);
+    transition: box-shadow 0.5s ease, border-color 0.5s ease, transform 0.4s ease;
+  }
+
+  .glass-deep:hover {
+    box-shadow:
+      0 8px 40px -4px hsl(var(--primary) / 0.12),
+      0 20px 60px -10px hsl(var(--primary) / 0.06),
+      0 0 0 1px hsl(var(--primary) / 0.12);
+  }
+
+  /* Shimmer sweep for cards */
+  @keyframes shimmer-sweep {
+    0% { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(250%) skewX(-15deg); }
+  }
+
+  .shimmer-on-hover {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer-on-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(
+      110deg,
+      transparent,
+      hsl(var(--primary) / 0.06),
+      transparent
+    );
+    transform: translateX(-100%) skewX(-15deg);
+    transition: none;
+  }
+
+  .shimmer-on-hover:hover::after {
+    animation: shimmer-sweep 0.8s ease forwards;
+  }
+
+  /* Ping animation for status dot */
+  @keyframes status-ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  .animate-status-ping {
+    animation: status-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Scroll mouse indicator */
+  @keyframes scroll-cue {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(4px); opacity: 1; }
+  }
+
+  .animate-scroll-cue {
+    animation: scroll-cue 1.6s ease-in-out infinite;
+  }
 }
 
 @layer utilities {
@@ -561,6 +652,214 @@
       hsla(var(--primary) / 0.8)
     );
   }
+}
+
+/* =====================================================
+   CUSTOM CURSOR — hide native cursor on mouse devices
+   ===================================================== */
+
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+/* =====================================================
+   GLASS THEME — Full Glassmorphism Override System
+   ===================================================== */
+
+/* Aurora orbs — invisible by default, revealed on glass theme */
+.aurora-orb {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+[data-theme="glass"] .aurora-orb {
+  opacity: 1;
+}
+
+/* Subtle noise grain overlay for glass theme */
+[data-theme="glass"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -30;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Base glass surface override — every .glass-card becomes real glass */
+[data-theme="glass"] .glass-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border-color: rgba(255, 255, 255, 0.075) !important;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease !important;
+}
+
+[data-theme="glass"] .glass-card:hover {
+  background: rgba(255, 255, 255, 0.065) !important;
+  border-color: hsl(var(--primary) / 0.38) !important;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.6),
+    0 0 0 1px hsl(var(--primary) / 0.18),
+    0 0 60px hsl(var(--primary) / 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
+}
+
+/* Deep glass override */
+[data-theme="glass"] .glass-deep {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="glass"] .glass-deep:hover {
+  background: rgba(255, 255, 255, 0.055) !important;
+  border-color: hsl(var(--primary) / 0.42) !important;
+  box-shadow:
+    0 16px 56px rgba(0, 0, 0, 0.6),
+    0 0 0 1px hsl(var(--primary) / 0.22),
+    0 0 80px hsl(var(--primary) / 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Navbar glass effect when scrolled */
+[data-theme="glass"] .scrolled-nav {
+  background: rgba(6, 9, 16, 0.5) !important;
+  backdrop-filter: blur(36px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Hero name — multi-color gradient on glass theme */
+[data-theme="glass"] .hero-name-gradient {
+  background-image: linear-gradient(
+    135deg,
+    hsl(210 100% 82%) 0%,
+    hsl(255 100% 78%) 45%,
+    hsl(183 100% 68%) 100%
+  ) !important;
+  background-size: 200% 200% !important;
+}
+
+/* Glass badge — neon glow */
+[data-theme="glass"] .glass-badge {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: hsl(var(--primary) / 0.4) !important;
+  box-shadow:
+    0 0 20px hsl(var(--primary) / 0.25),
+    0 0 48px hsl(var(--primary) / 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Section backgrounds — subtle glass tint */
+[data-theme="glass"] section {
+  position: relative;
+}
+
+/* All secondary-bg elements become glass */
+[data-theme="glass"] .bg-secondary\/50,
+[data-theme="glass"] .bg-secondary\/60,
+[data-theme="glass"] .bg-secondary\/70 {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Popover and dropdown glass effect */
+[data-theme="glass"] [class*="bg-background"] {
+  background: hsl(var(--background) / 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Tag pills — glass */
+[data-theme="glass"] .rounded-full.border.border-border\/40,
+[data-theme="glass"] .rounded-full.border.border-border\/50 {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Primary button — add neon glow */
+[data-theme="glass"] .shadow-\[0_4px_24px_hsl\(var\(--primary\)\/0\.3\)\] {
+  box-shadow:
+    0 4px 24px hsl(var(--primary) / 0.4),
+    0 0 60px hsl(var(--primary) / 0.15) !important;
+}
+
+/* Grid pattern more visible on glass */
+[data-theme="glass"] .bg-grid-pattern {
+  opacity: 0.04 !important;
+}
+
+/* Progress bars — glowing neon */
+[data-theme="glass"] .h-full.rounded-full {
+  box-shadow: 0 0 8px hsl(var(--primary) / 0.6);
+}
+
+/* Theme toggle dropdown — deep glass */
+[data-theme="glass"] .theme-dropdown-glass {
+  background: rgba(6, 9, 16, 0.85) !important;
+  backdrop-filter: blur(32px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Mobile menu overlay — deep glass */
+[data-theme="glass"] .bg-background\/95.backdrop-blur-xl {
+  background: rgba(6, 9, 16, 0.88) !important;
+}
+
+[data-theme="glass"] .border-l.bg-gradient-to-br.from-background {
+  background: rgba(6, 9, 16, 0.82) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-left-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Skill icon containers — glass */
+[data-theme="glass"] .bg-primary\/10.text-primary.rounded-lg,
+[data-theme="glass"] .bg-primary\/10.text-primary.rounded-full {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid hsl(var(--primary) / 0.25);
+  box-shadow: 0 0 16px hsl(var(--primary) / 0.15);
+}
+
+/* About info cards */
+[data-theme="glass"] .bg-background\/50.backdrop-blur-sm {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Muted tint areas */
+[data-theme="glass"] .bg-muted\/20,
+[data-theme="glass"] .bg-muted\/30 {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* SectionHeading underline */
+[data-theme="glass"] .section-heading-line {
+  box-shadow: 0 0 12px hsl(var(--primary) / 0.6);
 }
 
 @keyframes fadeIn {
