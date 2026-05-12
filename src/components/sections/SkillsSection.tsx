@@ -1,6 +1,32 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "../layout/SectionHeading";
 
+function SkillDots({ proficiency, index }: { proficiency: number; index: number }) {
+  const filled = Math.round(proficiency / 20);
+  return (
+    <div className="flex shrink-0 items-center gap-[3px]">
+      {Array.from({ length: 5 }, (_, i) => (
+        <motion.span
+          className={`block h-1.5 w-1.5 rounded-full transition-colors duration-300 ${
+            i < filled
+              ? "bg-primary group-hover:bg-primary/90"
+              : "bg-muted-foreground/20 group-hover:bg-muted-foreground/30"
+          }`}
+          initial={{ opacity: 0, scale: 0 }}
+          key={i}
+          transition={{
+            duration: 0.25,
+            delay: Math.min(0.1 + index * 0.03, 0.2) + i * 0.03,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true, margin: "-30px" }}
+          whileInView={{ opacity: 1, scale: 1 }}
+        />
+      ))}
+    </div>
+  );
+}
+
 interface Skill {
   name: string;
   description: string;
@@ -390,13 +416,9 @@ export default function SkillsSection() {
             whileInView={{ opacity: 1, y: 0 }}
           >
             <div className="mb-5 flex items-center border-border/20 border-b pb-3 sm:mb-6">
-              <motion.div
-                className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12"
-                transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                whileHover={{ scale: 1.05, rotate: 5 }}
-              >
+              <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12">
                 {category.icon}
-              </motion.div>
+              </div>
               <h3 className="font-heading font-semibold text-lg sm:text-xl">
                 {category.name}
               </h3>
@@ -415,50 +437,26 @@ export default function SkillsSection() {
                   viewport={{ once: true, margin: "-30px" }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <div className="flex flex-col">
-                    <div className="mb-1.5 flex items-center justify-between sm:mb-2">
-                      <div className="flex max-w-[calc(100%-60px)] flex-col">
-                        <span className="truncate font-medium text-sm transition-colors duration-300 group-hover:text-primary sm:text-base">
-                          {skill.name}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <span className="truncate font-medium text-sm transition-colors duration-300 group-hover:text-primary sm:text-base">
+                        {skill.name}
+                      </span>
+                      {category.name === "Languages" && (
+                        <span className="mt-0.5 block text-muted-foreground text-xs">
+                          {skill.description}
                         </span>
-                        {category.name === "Languages" && (
-                          <span className="mt-1.5 line-clamp-2 text-muted-foreground text-xs transition-colors duration-300 group-hover:text-muted-foreground/80 sm:mt-2 sm:text-sm">
-                            {skill.description}
-                          </span>
-                        )}
-                      </div>
-                      {skill.proficiency && (
-                        <div className="relative">
-                          <span className="rounded-full border border-border/30 bg-background/80 px-1.5 py-0.5 text-xs transition-colors duration-300 group-hover:border-primary/30 sm:px-2 sm:py-1">
-                            <span className="font-medium text-primary">
-                              {skill.proficiency}
-                            </span>
-                            <span className="text-muted-foreground">%</span>
-                          </span>
-                        </div>
                       )}
                     </div>
                     {skill.proficiency && (
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted/30 sm:h-2">
-                        <motion.div
-                          className={"h-full rounded-full bg-primary/90"}
-                          initial={{ width: 0 }}
-                          transition={{
-                            duration: 0.8,
-                            ease: "easeOut",
-                            delay: Math.min(0.1 + index * 0.03, 0.2),
-                          }}
-                          viewport={{ once: true, margin: "-30px" }}
-                          whileInView={{ width: `${skill.proficiency}%` }}
-                        />
-                      </div>
-                    )}
-                    {category.name !== "Languages" && (
-                      <span className="mt-1.5 line-clamp-2 text-muted-foreground text-xs transition-colors duration-300 group-hover:text-muted-foreground/80 sm:mt-2 sm:text-sm">
-                        {skill.description}
-                      </span>
+                      <SkillDots proficiency={skill.proficiency} index={index} />
                     )}
                   </div>
+                  {category.name !== "Languages" && (
+                    <span className="mt-0.5 block text-muted-foreground text-xs">
+                      {skill.description}
+                    </span>
+                  )}
                 </motion.div>
               ))}
             </div>

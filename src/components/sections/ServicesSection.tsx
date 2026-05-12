@@ -1,7 +1,20 @@
-import { motion } from "framer-motion";
-import { Check } from "lucide-react";
-import { staggerContainer } from "@/lib/framer-animations";
-import { SectionHeading } from "../layout/SectionHeading";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowRight,
+  Code,
+  FileText,
+  HardDrive,
+  Laptop,
+  Search,
+  Server,
+  Settings,
+  Shield,
+  Wrench,
+} from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+
+type Category = "all" | "build" | "protect" | "grow";
 
 interface Service {
   title: string;
@@ -9,345 +22,243 @@ interface Service {
   price: string;
   icon: React.ReactNode;
   features: string[];
+  category: Exclude<Category, "all">;
 }
+
+const CATEGORY_META: Record<Exclude<Category, "all">, { label: string; desc: string }> = {
+  build: { label: "Build", desc: "Design & development" },
+  protect: { label: "Protect", desc: "Security & reliability" },
+  grow: { label: "Grow", desc: "Visibility & performance" },
+};
 
 const services: Service[] = [
   {
-    title: "Website Maintenance",
-    description: "Regular updates, security patches, and bug fixes.",
-    price: "50 CHF/month",
-    features: [
-      "Regular security updates",
-      "Bug fixes & troubleshooting",
-      "Performance monitoring",
-      "Content updates",
-      "Technical support",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-wrench"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Technical Support",
-    description: "Reliable, quick help for technical issues.",
-    price: "30 CHF/hour",
-    features: [
-      "Fast response time",
-      "Bug fixes & troubleshooting",
-      "Code optimization",
-      "Software integration",
-      "Technical guidance",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-laptop"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
-      </svg>
-    ),
-  },
-  {
-    title: "Content Management",
-    description:
-      "Assistance with content updates and management on your website.",
-    price: "40 CHF/hour",
-    features: [
-      "Regular content updates",
-      "CMS maintenance",
-      "Image optimization",
-      "Layout improvements",
-      "SEO-friendly content",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-file-text"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-        <polyline points="14 2 14 8 20 8" />
-        <line x1="16" x2="8" y1="13" y2="13" />
-        <line x1="16" x2="8" y1="17" y2="17" />
-        <line x1="10" x2="8" y1="9" y2="9" />
-      </svg>
-    ),
-  },
-  {
-    title: "Security Consultation",
-    description:
-      "Expert guidance on cybersecurity measures for business protection.",
-    price: "60 CHF/hour",
-    features: [
-      "Security audit",
-      "Vulnerability assessment",
-      "Security best practices",
-      "Risk mitigation strategies",
-      "Compliance guidance",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-shield"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-      </svg>
-    ),
-  },
-  {
-    title: "Data Loss Prevention & Backup",
-    description:
-      "Comprehensive data backup and recovery solutions to protect against data loss.",
-    price: "200 CHF (setup) + 50 CHF/month",
-    features: [
-      "Automated backup system",
-      "Secure cloud storage",
-      "Data recovery protocols",
-      "Regular backup testing",
-      "Real-time monitoring",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-hard-drive"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <line x1="22" x2="2" y1="12" y2="12" />
-        <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11" />
-        <line x1="6" x2="6.01" y1="16" y2="16" />
-        <line x1="10" x2="10.01" y1="16" y2="16" />
-      </svg>
-    ),
-  },
-  {
-    title: "SEO Optimization",
-    description: "Improve website visibility and ranking on search engines.",
-    price: "150 CHF (one-time)",
-    features: [
-      "Keyword research & analysis",
-      "On-page SEO optimization",
-      "Technical SEO audit",
-      "Content recommendations",
-      "Performance reporting",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-search"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.3-4.3" />
-      </svg>
-    ),
-  },
-  {
     title: "Web Development",
-    description: "Comprehensive website creation, design, and hosting support.",
-    price: "300 CHF (one-time)",
-    features: [
-      "Responsive design",
-      "Modern user interface",
-      "SEO-friendly structure",
-      "Fast loading speed",
-      "Cross-browser compatibility",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-code"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polyline points="16 18 22 12 16 6" />
-        <polyline points="8 6 2 12 8 18" />
-      </svg>
-    ),
+    description: "End-to-end website creation — responsive, fast, and built to convert.",
+    price: "300 CHF",
+    icon: <Code className="h-5 w-5" />,
+    features: ["Responsive design", "SEO-friendly", "Fast loading", "Cross-browser"],
+    category: "build",
+  },
+  {
+    title: "Custom Software",
+    description: "Tailored software designed around your exact business requirements.",
+    price: "500 CHF",
+    icon: <Settings className="h-5 w-5" />,
+    features: ["Requirements analysis", "Custom architecture", "Full testing", "Handover"],
+    category: "build",
   },
   {
     title: "Server Setup",
-    description: "Server setup and configuration for your web applications.",
-    price: "350 CHF (one-time)",
-    features: [
-      "Server installation",
-      "Security configuration",
-      "Performance optimization",
-      "Monitoring setup",
-      "Documentation",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-server"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect height="8" rx="2" ry="2" width="20" x="2" y="2" />
-        <rect height="8" rx="2" ry="2" width="20" x="2" y="14" />
-        <line x1="6" x2="6.01" y1="6" y2="6" />
-        <line x1="6" x2="6.01" y1="18" y2="18" />
-      </svg>
-    ),
+    description: "Production-grade server configuration with security and monitoring baked in.",
+    price: "350 CHF",
+    icon: <Server className="h-5 w-5" />,
+    features: ["Installation", "Security hardening", "Performance tuning", "Monitoring"],
+    category: "build",
   },
   {
-    title: "Custom Software Development",
-    description: "End-to-end software solutions tailored to business needs.",
-    price: "500 CHF (project-based)",
-    features: [
-      "Requirements analysis",
-      "Custom solution design",
-      "Development & testing",
-      "Deployment assistance",
-      "Maintenance support",
-    ],
-    icon: (
-      <svg
-        className="lucide lucide-settings"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-        <circle cx="12" cy="12" r="3" />
-      </svg>
-    ),
+    title: "Security Consultation",
+    description: "Find vulnerabilities before attackers do. Audits with actionable fixes.",
+    price: "60 CHF/hr",
+    icon: <Shield className="h-5 w-5" />,
+    features: ["Security audit", "Vulnerability scan", "Risk mitigation", "Compliance"],
+    category: "protect",
+  },
+  {
+    title: "Website Maintenance",
+    description: "Keep your site secure, patched, and running smoothly every month.",
+    price: "50 CHF/mo",
+    icon: <Wrench className="h-5 w-5" />,
+    features: ["Security updates", "Bug fixes", "Uptime monitoring", "Content updates"],
+    category: "protect",
+  },
+  {
+    title: "Backup & Recovery",
+    description: "Automated backups and tested recovery — because data loss isn't an option.",
+    price: "200 CHF + 50/mo",
+    icon: <HardDrive className="h-5 w-5" />,
+    features: ["Automated backups", "Cloud storage", "Recovery protocols", "Real-time alerts"],
+    category: "protect",
+  },
+  {
+    title: "SEO Optimization",
+    description: "Improve organic rankings with technical SEO, keywords, and performance.",
+    price: "150 CHF",
+    icon: <Search className="h-5 w-5" />,
+    features: ["Keyword research", "On-page SEO", "Technical audit", "Reporting"],
+    category: "grow",
+  },
+  {
+    title: "Content Management",
+    description: "Ongoing content updates and CMS care so your site stays fresh.",
+    price: "40 CHF/hr",
+    icon: <FileText className="h-5 w-5" />,
+    features: ["CMS maintenance", "Image optimization", "Layout updates", "SEO content"],
+    category: "grow",
+  },
+  {
+    title: "Technical Support",
+    description: "Fast, reliable help when something breaks or needs to be optimised.",
+    price: "30 CHF/hr",
+    icon: <Laptop className="h-5 w-5" />,
+    features: ["Fast response", "Bug fixes", "Code optimisation", "Integration help"],
+    category: "grow",
   },
 ];
 
+const FILTERS: { id: Category; label: string }[] = [
+  { id: "all", label: "All services" },
+  { id: "build", label: "Build" },
+  { id: "protect", label: "Protect" },
+  { id: "grow", label: "Grow" },
+];
+
 export default function ServicesSection() {
+  const [active, setActive] = useState<Category>("all");
+
+  const filtered = active === "all" ? services : services.filter((s) => s.category === active);
+
   return (
     <section className="section-padding" id="services">
-      <SectionHeading
-        subtitle="Comprehensive web development and technical services to help your business thrive online."
-        title="Services I Offer"
-      />
 
+      {/* Header */}
       <motion.div
-        className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
-        {...staggerContainer}
+        className="mb-10 md:mb-12"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
-        {services.map((service, index) => (
-          <motion.div
-            className="glass-card flex h-full flex-col rounded-xl p-4 transition-all duration-500 sm:p-6"
-            custom={index}
-            initial={{ opacity: 0, y: 20 }}
-            key={service.title}
-            transition={{
-              duration: 0.5,
-              delay: 0.1 + index * 0.1,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            viewport={{ once: true }}
-            whileHover={{ y: -8 }}
-            whileInView={{ opacity: 1, y: 0 }}
+        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/35">
+          What I offer
+        </p>
+        <div className="flex items-end justify-between">
+          <h2 className="font-bold text-4xl tracking-tight md:text-5xl">Services</h2>
+          <span aria-hidden="true" className="font-mono text-5xl font-bold text-muted-foreground/10 md:text-7xl">
+            {String(services.length).padStart(2, "0")}
+          </span>
+        </div>
+      </motion.div>
+
+      {/* Category filter */}
+      <motion.div
+        className="mb-8 flex flex-wrap gap-2 md:mb-10"
+        initial={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
+      >
+        {FILTERS.map((f) => (
+          <button
+            className={cn(
+              "relative rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200",
+              active === f.id
+                ? "bg-primary text-primary-foreground shadow-[0_2px_12px_hsl(var(--primary)/0.3)]"
+                : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground"
+            )}
+            key={f.id}
+            onClick={() => setActive(f.id)}
           >
-            <div className="mb-4 flex items-center">
-              <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12">
-                {service.icon}
-              </div>
-              <h3 className="font-heading font-semibold text-base sm:text-lg">
-                {service.title}
-              </h3>
-            </div>
-
-            <p className="mb-4 flex-grow text-muted-foreground text-sm sm:mb-5 sm:text-base">
-              {service.description}
-            </p>
-
-            <div className="mb-4 space-y-2 sm:mb-5 sm:space-y-3">
-              {service.features.map((feature, idx) => (
-                <div className="flex items-start" key={idx}>
-                  <Check className="mt-1 mr-2 h-4 w-4 flex-shrink-0 text-primary" />
-                  <span className="text-xs sm:text-sm">{feature}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-auto space-y-3 sm:space-y-4">
-              <div className="inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 font-medium text-primary text-xs sm:text-sm">
-                {service.price}
-              </div>
-
-              <motion.a
-                className="block w-full rounded-lg bg-primary px-4 py-2 text-center font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90 sm:py-2.5"
-                href="/contact"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Contact Now
-              </motion.a>
-            </div>
-          </motion.div>
+            {f.label}
+            {active === f.id && f.id !== "all" && (
+              <span className="ml-1.5 font-mono text-[10px] opacity-70">
+                — {CATEGORY_META[f.id as Exclude<Category, "all">].desc}
+              </span>
+            )}
+          </button>
         ))}
       </motion.div>
+
+      {/* Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <AnimatePresence mode="popLayout">
+          {filtered.map((service, i) => (
+            <motion.div
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              className="glass-card group flex flex-col rounded-2xl p-5 sm:p-6"
+              exit={{ opacity: 0, scale: 0.94, y: 6 }}
+              initial={{ opacity: 0, scale: 0.94, y: 6 }}
+              key={service.title}
+              layout
+              transition={{
+                duration: 0.35,
+                delay: i * 0.04,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              {/* Top row: icon + price */}
+              <div className="mb-4 flex items-start justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/15">
+                  {service.icon}
+                </div>
+                <span className="rounded-lg border border-border/20 bg-muted/20 px-2.5 py-1 font-mono text-xs font-medium text-foreground/70">
+                  {service.price}
+                </span>
+              </div>
+
+              {/* Category label */}
+              <span className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/35">
+                {CATEGORY_META[service.category].label}
+              </span>
+
+              {/* Title */}
+              <h3 className="mb-2 font-semibold text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
+                {service.title}
+              </h3>
+
+              {/* Description */}
+              <p className="mb-4 flex-1 text-muted-foreground text-sm leading-relaxed">
+                {service.description}
+              </p>
+
+              {/* Feature pills */}
+              <div className="mb-5 flex flex-wrap gap-1.5">
+                {service.features.map((f) => (
+                  <span
+                    className="rounded-full border border-border/20 bg-muted/15 px-2.5 py-0.5 text-[11px] text-muted-foreground/60"
+                    key={f}
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <a
+                className="group/btn mt-auto flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-sm text-muted-foreground transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
+                href="/contact"
+              >
+                Get in touch
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
+              </a>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom CTA */}
+      <motion.div
+        className="mt-16 flex flex-col items-center gap-4 border-t border-border/20 pt-14 text-center"
+        initial={{ opacity: 0, y: 16 }}
+        transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/35">
+          Have a project in mind?
+        </p>
+        <h3 className="font-bold text-2xl tracking-tight md:text-3xl">
+          Let's build something together
+        </h3>
+        <a
+          className="group mt-2 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]"
+          href="/contact"
+        >
+          Get in Touch
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+        </a>
+      </motion.div>
+
     </section>
   );
 }
