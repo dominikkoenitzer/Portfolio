@@ -20,14 +20,12 @@ export function SectionHeading({
       viewport={{ once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <h2 className="mb-4 font-bold text-3xl tracking-tight md:text-4xl lg:text-5xl">
-        <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-          {title}
-        </span>
+      <h2 className="mb-3 font-bold text-3xl tracking-tight md:text-4xl">
+        {title}
       </h2>
 
       {subtitle && (
-        <p className="mx-auto mt-3 max-w-2xl text-balance text-lg text-muted-foreground">
+        <p className="mx-auto mt-3 max-w-xl text-balance text-base text-muted-foreground">
           {subtitle}
         </p>
       )}
