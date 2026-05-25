@@ -56,15 +56,19 @@ export function ThemeToggle({
         <DropdownMenuLabel>Themes</DropdownMenuLabel>
         {THEMES.map((option) => {
           const isSelected = theme === option.value;
+          const Icon = option.icon;
           return (
             <DropdownMenuItem
-              className="flex justify-between"
+              className="flex items-center justify-between"
               key={option.value}
               onClick={(e) => setTheme(option.value as Theme, e)}
             >
-              <span className={isSelected ? "text-muted-foreground" : ""}>
-                {option.label}
-              </span>
+              <div className="flex items-center gap-2">
+                <Icon className="h-4 w-4" />
+                <span className={isSelected ? "text-muted-foreground" : ""}>
+                  {option.label}
+                </span>
+              </div>
               {isSelected && (
                 <Check className="ml-2 h-4 w-4 text-muted-foreground" />
               )}

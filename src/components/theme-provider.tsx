@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { ALL_THEME_VALUES, getThemeType, type Theme } from "@/config/themes";
+import { ALL_THEME_VALUES, type Theme } from "@/config/themes";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -25,15 +25,15 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-const THEME_META_HEX: Record<string, string> = {
-  glass: "#07090f",
-  cyberpunk: "#0a0014",
-  forest: "#f5fdf5",
-  coffee: "#faf6f0",
+const THEME_META_HEX: Record<Theme, string> = {
+  glass: "#fbfdff",
+  cyberpunk: "#fef6fb",
+  forest: "#f6faf2",
+  coffee: "#faf4ea",
 };
 
-const isValidTheme = (value: string | null): value is Theme =>
-  value !== null && (ALL_THEME_VALUES as string[]).includes(value);
+const isTheme = (v: string | null): v is Theme =>
+  v !== null && (ALL_THEME_VALUES as string[]).includes(v);
 
 export function ThemeProvider({
   children,
@@ -41,45 +41,44 @@ export function ThemeProvider({
   storageKey = "portfolio-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     const stored = localStorage.getItem(storageKey);
-    return isValidTheme(stored) ? stored : defaultTheme;
+    return isTheme(stored) ? stored : defaultTheme;
   });
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove(...ALL_THEME_VALUES, "dark", "light");
+    root.classList.remove(...ALL_THEME_VALUES);
     root.classList.add(theme);
-    if (getThemeType(theme) === "dark") root.classList.add("dark");
     root.setAttribute("data-theme", theme);
 
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) {
-      meta.setAttribute("content", THEME_META_HEX[theme] || "#07090f");
+      meta.setAttribute("content", THEME_META_HEX[theme]);
     }
   }, [theme]);
 
-  const handleSetTheme = useCallback(
+  const setTheme = useCallback(
     (newTheme: Theme, event?: React.MouseEvent | MouseEvent) => {
-      const applyTheme = () => {
+      if (newTheme === theme) return;
+
+      const apply = () => {
         localStorage.setItem(storageKey, newTheme);
-        setTheme(newTheme);
+        setThemeState(newTheme);
       };
 
-      const shouldAnimate =
+      const canAnimate =
         "startViewTransition" in document &&
         !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-        event &&
-        theme !== newTheme;
+        event;
 
-      if (!shouldAnimate) {
-        applyTheme();
+      if (!canAnimate) {
+        apply();
         return;
       }
 
       const { clientX: x, clientY: y } = event;
       const { innerWidth: w, innerHeight: h } = window;
-
       const maxRadius = Math.ceil(
         Math.max(
           Math.hypot(x, y),
@@ -99,7 +98,7 @@ export function ThemeProvider({
           startViewTransition: (cb: () => void) => { finished: Promise<void> };
         }
       )
-        .startViewTransition(applyTheme)
+        .startViewTransition(apply)
         .finished.then(() => {
           root.style.removeProperty("--theme-transition-x");
           root.style.removeProperty("--theme-transition-y");
@@ -110,10 +109,7 @@ export function ThemeProvider({
   );
 
   return (
-    <ThemeProviderContext.Provider
-      {...props}
-      value={{ theme, setTheme: handleSetTheme }}
-    >
+    <ThemeProviderContext.Provider {...props} value={{ theme, setTheme }}>
       {children}
     </ThemeProviderContext.Provider>
   );

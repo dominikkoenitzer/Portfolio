@@ -220,75 +220,28 @@
     }
     </script>
 
-    <!-- Set initial background color immediately to prevent flash and overscroll issues -->
+    <!-- Apply theme class before React mounts to prevent FOUC -->
     <script>
     "use strict";
     (() => {
-      // Get saved theme or default to system
-      const savedTheme = localStorage.getItem("portfolio-theme") || "system";
-      let resolvedTheme = savedTheme;
+      const THEMES = ["glass", "cyberpunk", "forest", "coffee"];
+      const stored = localStorage.getItem("portfolio-theme");
+      const theme = THEMES.indexOf(stored) >= 0 ? stored : "glass";
 
-      // If system theme, detect preference
-      if (savedTheme === "system") {
-        resolvedTheme = window.matchMedia("(prefers-color-scheme: dark)")
-          .matches
-          ? "dark"
-          : "light";
-      }
+      const bgHex = {
+        glass: "#fbfdff",
+        cyberpunk: "#fef6fb",
+        forest: "#f6faf2",
+        coffee: "#faf4ea",
+      }[theme];
 
-      // Theme background HSL values for CSS variables
-      const themeBackgroundHSL = {
-        light: "0 0% 100%",
-        dark: "220 12% 9%",
-        solarpunk: "138 100% 98%",
-        cyberpunk: "270 100% 3%",
-        cloud: "200 50% 98%",
-        forest: "120 50% 96%",
-        amethyst: "270 50% 97%",
-        vintage: "25 30% 96%",
-        coffee: "30 40% 94%",
-      };
+      // Add theme class so CSS variables resolve before paint
+      document.documentElement.classList.add(theme);
+      document.documentElement.setAttribute("data-theme", theme);
 
-      // Theme background hex colors for meta tag
-      const themeBackgroundHex = {
-        light: "#ffffff",
-        dark: "#141820",
-        solarpunk: "#f7fff7",
-        cyberpunk: "#0a0014",
-        cloud: "#f7fbfd",
-        forest: "#f5fdf5",
-        amethyst: "#f9f7fd",
-        vintage: "#faf8f5",
-        coffee: "#faf6f0",
-      };
-
-      const bgHsl =
-        themeBackgroundHSL[resolvedTheme] || themeBackgroundHSL.light;
-      const bgHex =
-        themeBackgroundHex[resolvedTheme] || themeBackgroundHex.light;
-      const bgColor = `hsl(${bgHsl})`;
-
-      // Set CSS variable FIRST - this is critical
-      document.documentElement.style.setProperty("--background", bgHsl);
-      document.documentElement.setAttribute("data-theme", resolvedTheme);
-
-      // Apply to all critical elements immediately
-      document.documentElement.style.backgroundColor = bgColor;
-
-      // Update meta theme-color for mobile browsers (prevents browser UI color mismatch)
-      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (metaThemeColor) {
-        metaThemeColor.setAttribute("content", bgHex);
-      }
-
-      // This ensures body is set as soon as it exists
-      if (document.body) {
-        document.body.style.backgroundColor = bgColor;
-      } else {
-        document.addEventListener("DOMContentLoaded", () => {
-          document.body.style.backgroundColor = bgColor;
-        });
-      }
+      // Update meta theme-color for mobile browser chrome
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", bgHex);
     })();
     </script>
 

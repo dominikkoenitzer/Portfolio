@@ -6,123 +6,122 @@
 @tailwind utilities;
 
 @layer base {
+  /* Glass — cool, frosted, ethereal blue/violet */
   :root,
   .glass {
     --radius: 0.75rem;
-    --background: 222 30% 5%;
-    --foreground: 210 30% 94%;
-    --card: 220 26% 8%;
-    --card-foreground: 210 30% 94%;
-    --popover: 220 26% 8%;
-    --popover-foreground: 210 30% 94%;
-    --primary: 210 100% 65%;
-    --primary-foreground: 210 50% 5%;
-    --secondary: 220 25% 16%;
-    --secondary-foreground: 210 30% 90%;
-    --muted: 220 22% 13%;
-    --muted-foreground: 215 18% 56%;
-    --accent: 220 25% 20%;
-    --accent-foreground: 210 30% 90%;
-    --border: 220 18% 20%;
-    --input: 220 18% 20%;
-    --ring: 210 100% 65%;
-    --destructive: 0 65% 60%;
-    --destructive-foreground: 0 0% 98%;
-
+    --background: 210 50% 99%;
+    --foreground: 222 60% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 60% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 60% 8%;
+    --primary: 217 95% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 18% 95%;
+    --secondary-foreground: 222 50% 14%;
+    --muted: 220 16% 94%;
+    --muted-foreground: 220 22% 38%;
+    --accent: 217 92% 92%;
+    --accent-foreground: 217 92% 22%;
+    --border: 220 18% 86%;
+    --input: 220 18% 86%;
+    --ring: 217 95% 55%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(210 100% 65%) 0%,
-      hsl(260 100% 72%) 50%,
-      hsl(185 100% 62%) 100%
+      hsl(217 95% 55%) 0%,
+      hsl(260 95% 64%) 100%
     );
-    --theme-shadow-color: 210 100% 65%;
+    --theme-shadow-color: 217 95% 55%;
   }
 
+  /* Cyberpunk — electric neon magenta/cyan on pink-tinted white */
   .cyberpunk {
-    --background: 270 70% 9%;
-    --foreground: 200 80% 92%;
-    --card: 270 65% 11%;
-    --card-foreground: 200 80% 92%;
-    --popover: 270 65% 11%;
-    --popover-foreground: 200 80% 92%;
-    --primary: 316 100% 67%;
-    --primary-foreground: 270 100% 4%;
-    --secondary: 270 65% 14%;
-    --secondary-foreground: 180 100% 85%;
-    --muted: 270 60% 15%;
-    --muted-foreground: 270 30% 62%;
-    --accent: 270 65% 17%;
-    --accent-foreground: 180 100% 85%;
-    --border: 270 55% 23%;
-    --input: 270 55% 23%;
-    --ring: 316 100% 67%;
-    --destructive: 0 65% 60%;
-    --destructive-foreground: 0 0% 98%;
-
+    --background: 320 80% 99%;
+    --foreground: 280 75% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 280 75% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 75% 8%;
+    --primary: 316 95% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 280 22% 95%;
+    --secondary-foreground: 280 60% 18%;
+    --muted: 280 18% 94%;
+    --muted-foreground: 280 28% 36%;
+    --accent: 190 92% 92%;
+    --accent-foreground: 195 90% 22%;
+    --border: 280 18% 86%;
+    --input: 280 18% 86%;
+    --ring: 316 95% 48%;
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(316 100% 67%) 0%,
-      hsl(180 100% 60%) 100%
+      hsl(316 95% 48%) 0%,
+      hsl(190 90% 48%) 100%
     );
-    --theme-shadow-color: 316 100% 67%;
+    --theme-shadow-color: 316 95% 48%;
   }
 
+  /* Forest — organic, earthy green on off-white */
   .forest {
-    --background: 120 50% 96%;
-    --foreground: 120 60% 12%;
-    --card: 120 50% 96%;
-    --card-foreground: 120 60% 12%;
-    --popover: 120 50% 96%;
-    --popover-foreground: 120 60% 12%;
-    --primary: 120 60% 25%;
-    --primary-foreground: 120 100% 95%;
-    --secondary: 120 30% 90%;
-    --secondary-foreground: 120 60% 15%;
-    --muted: 120 30% 90%;
-    --muted-foreground: 120 40% 40%;
-    --accent: 120 30% 90%;
-    --accent-foreground: 120 60% 15%;
-    --border: 120 40% 83%;
-    --input: 120 40% 83%;
-    --ring: 120 60% 25%;
-    --destructive: 0 65% 48%;
+    --background: 95 32% 97%;
+    --foreground: 140 55% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 140 55% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 55% 9%;
+    --primary: 142 68% 28%;
+    --primary-foreground: 140 40% 98%;
+    --secondary: 100 24% 92%;
+    --secondary-foreground: 140 55% 14%;
+    --muted: 100 20% 93%;
+    --muted-foreground: 140 22% 32%;
+    --accent: 90 28% 88%;
+    --accent-foreground: 140 55% 14%;
+    --border: 100 18% 85%;
+    --input: 100 18% 85%;
+    --ring: 142 68% 28%;
+    --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
-
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(120 60% 25%) 0%,
-      hsl(90 60% 35%) 100%
+      hsl(142 68% 28%) 0%,
+      hsl(95 60% 40%) 100%
     );
-    --theme-shadow-color: 120 60% 25%;
+    --theme-shadow-color: 142 68% 28%;
   }
 
+  /* Coffee — warm cream / espresso */
   .coffee {
-    --background: 30 40% 94%;
-    --foreground: 30 100% 10%;
-    --card: 30 40% 94%;
-    --card-foreground: 30 100% 10%;
-    --popover: 30 40% 94%;
-    --popover-foreground: 30 100% 10%;
-    --primary: 30 100% 30%;
-    --primary-foreground: 30 100% 95%;
-    --secondary: 30 20% 88%;
-    --secondary-foreground: 30 100% 15%;
-    --muted: 30 20% 88%;
-    --muted-foreground: 30 50% 40%;
-    --accent: 30 20% 88%;
-    --accent-foreground: 30 100% 15%;
-    --border: 30 30% 80%;
-    --input: 30 30% 80%;
-    --ring: 30 100% 30%;
-    --destructive: 0 65% 48%;
+    --background: 36 42% 96%;
+    --foreground: 24 72% 9%;
+    --card: 40 48% 99%;
+    --card-foreground: 24 72% 9%;
+    --popover: 40 48% 99%;
+    --popover-foreground: 24 72% 9%;
+    --primary: 24 88% 30%;
+    --primary-foreground: 36 50% 97%;
+    --secondary: 34 26% 90%;
+    --secondary-foreground: 24 65% 14%;
+    --muted: 34 22% 92%;
+    --muted-foreground: 28 28% 32%;
+    --accent: 34 32% 86%;
+    --accent-foreground: 24 65% 14%;
+    --border: 30 24% 82%;
+    --input: 30 24% 82%;
+    --ring: 24 88% 30%;
+    --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
-
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(30 100% 30%) 0%,
-      hsl(20 100% 40%) 100%
+      hsl(24 88% 30%) 0%,
+      hsl(18 92% 42%) 100%
     );
-    --theme-shadow-color: 30 100% 30%;
+    --theme-shadow-color: 24 88% 30%;
   }
 
   /* Smooth theme transitions */
