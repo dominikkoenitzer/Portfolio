@@ -6,37 +6,123 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  .glass {
     --radius: 0.75rem;
-
-    /* Default light theme values (will be overridden by theme system) */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 220 98% 61%;
-    --primary-foreground: 220 98% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 98% 61%;
-    --destructive: 0 84.2% 60.2%;
+    --background: 222 30% 5%;
+    --foreground: 210 30% 94%;
+    --card: 220 26% 8%;
+    --card-foreground: 210 30% 94%;
+    --popover: 220 26% 8%;
+    --popover-foreground: 210 30% 94%;
+    --primary: 210 100% 65%;
+    --primary-foreground: 210 50% 5%;
+    --secondary: 220 25% 16%;
+    --secondary-foreground: 210 30% 90%;
+    --muted: 220 22% 13%;
+    --muted-foreground: 215 18% 56%;
+    --accent: 220 25% 20%;
+    --accent-foreground: 210 30% 90%;
+    --border: 220 18% 20%;
+    --input: 220 18% 20%;
+    --ring: 210 100% 65%;
+    --destructive: 0 65% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Theme-specific variables */
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(220 98% 61%) 0%,
-      hsl(240 98% 71%) 100%
+      hsl(210 100% 65%) 0%,
+      hsl(260 100% 72%) 50%,
+      hsl(185 100% 62%) 100%
     );
-    --theme-shadow-color: 220 98% 61%;
+    --theme-shadow-color: 210 100% 65%;
+  }
+
+  .cyberpunk {
+    --background: 270 70% 9%;
+    --foreground: 200 80% 92%;
+    --card: 270 65% 11%;
+    --card-foreground: 200 80% 92%;
+    --popover: 270 65% 11%;
+    --popover-foreground: 200 80% 92%;
+    --primary: 316 100% 67%;
+    --primary-foreground: 270 100% 4%;
+    --secondary: 270 65% 14%;
+    --secondary-foreground: 180 100% 85%;
+    --muted: 270 60% 15%;
+    --muted-foreground: 270 30% 62%;
+    --accent: 270 65% 17%;
+    --accent-foreground: 180 100% 85%;
+    --border: 270 55% 23%;
+    --input: 270 55% 23%;
+    --ring: 316 100% 67%;
+    --destructive: 0 65% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --theme-gradient: linear-gradient(
+      135deg,
+      hsl(316 100% 67%) 0%,
+      hsl(180 100% 60%) 100%
+    );
+    --theme-shadow-color: 316 100% 67%;
+  }
+
+  .forest {
+    --background: 120 50% 96%;
+    --foreground: 120 60% 12%;
+    --card: 120 50% 96%;
+    --card-foreground: 120 60% 12%;
+    --popover: 120 50% 96%;
+    --popover-foreground: 120 60% 12%;
+    --primary: 120 60% 25%;
+    --primary-foreground: 120 100% 95%;
+    --secondary: 120 30% 90%;
+    --secondary-foreground: 120 60% 15%;
+    --muted: 120 30% 90%;
+    --muted-foreground: 120 40% 40%;
+    --accent: 120 30% 90%;
+    --accent-foreground: 120 60% 15%;
+    --border: 120 40% 83%;
+    --input: 120 40% 83%;
+    --ring: 120 60% 25%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 98%;
+
+    --theme-gradient: linear-gradient(
+      135deg,
+      hsl(120 60% 25%) 0%,
+      hsl(90 60% 35%) 100%
+    );
+    --theme-shadow-color: 120 60% 25%;
+  }
+
+  .coffee {
+    --background: 30 40% 94%;
+    --foreground: 30 100% 10%;
+    --card: 30 40% 94%;
+    --card-foreground: 30 100% 10%;
+    --popover: 30 40% 94%;
+    --popover-foreground: 30 100% 10%;
+    --primary: 30 100% 30%;
+    --primary-foreground: 30 100% 95%;
+    --secondary: 30 20% 88%;
+    --secondary-foreground: 30 100% 15%;
+    --muted: 30 20% 88%;
+    --muted-foreground: 30 50% 40%;
+    --accent: 30 20% 88%;
+    --accent-foreground: 30 100% 15%;
+    --border: 30 30% 80%;
+    --input: 30 30% 80%;
+    --ring: 30 100% 30%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 98%;
+
+    --theme-gradient: linear-gradient(
+      135deg,
+      hsl(30 100% 30%) 0%,
+      hsl(20 100% 40%) 100%
+    );
+    --theme-shadow-color: 30 100% 30%;
   }
 
   /* Smooth theme transitions */
@@ -969,5 +1055,48 @@
   50% {
     opacity: 0.85;
     transform: scale(1.05);
+  }
+}
+
+/* =====================================================
+   THEME TRANSITION — View Transitions API circular wipe
+   ===================================================== */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+  animation: theme-fade-out 900ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: theme-reveal 850ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@keyframes theme-reveal {
+  0% {
+    clip-path: circle(
+      0px at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
+    );
+  }
+  100% {
+    clip-path: circle(
+      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%)
+        var(--theme-transition-y, 50%)
+    );
+  }
+}
+
+@keyframes theme-fade-out {
+  0%,
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
