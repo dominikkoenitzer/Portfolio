@@ -1,7 +1,7 @@
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 import {
-  AURORA_THEME_CLASS_KEYS,
+  ALL_THEME_VALUES,
   getAuroraPreset,
   type Theme,
 } from "@/config/themes";
@@ -111,13 +111,12 @@ export interface AuroraProps {
   base?: number;
 }
 
-const detectThemeFromHtml = (): Exclude<Theme, "system"> => {
+const detectThemeFromHtml = (): Theme => {
   const cls = document.documentElement.classList;
-  for (const key of AURORA_THEME_CLASS_KEYS) if (cls.contains(key)) return key;
-  if (cls.contains("dark")) return "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  for (const key of ALL_THEME_VALUES) {
+    if (cls.contains(key)) return key;
+  }
+  return "glass";
 };
 
 export default function Aurora({
