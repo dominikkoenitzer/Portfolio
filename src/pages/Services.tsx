@@ -1,5 +1,4 @@
 import { ServicesSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { SERVICES_FAQS, SERVICES_HOW_TO } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -57,9 +56,7 @@ const Services = () => {
         title="Services"
         url={servicesUrl}
       />
-      <PageLayout>
-        <ServicesSection />
-      </PageLayout>
+      <ServicesSection />
     </>
   );
 };

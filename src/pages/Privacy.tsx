@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { generateAlternateLanguages } from "@/lib/seo-utils";
@@ -23,8 +22,7 @@ const Privacy = () => {
         title="Privacy Policy"
         url={privacyUrl}
       />
-      <PageLayout>
-        <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background">
           <section className="px-4 py-8 pt-[72px] sm:px-6 sm:py-12 sm:pt-[86px] md:px-8 md:py-20 md:pt-[101px] lg:px-16">
             <div className="mx-auto max-w-3xl">
               {/* Header */}
@@ -179,8 +177,7 @@ const Privacy = () => {
               </motion.div>
             </div>
           </section>
-        </div>
-      </PageLayout>
+      </div>
     </>
   );
 };
