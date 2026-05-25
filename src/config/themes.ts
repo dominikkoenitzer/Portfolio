@@ -1,27 +1,22 @@
 import { Coffee, Sparkles, TreePine, Zap } from "lucide-react";
 import type { ElementType } from "react";
 
+export type Theme = "glass" | "cyberpunk" | "forest" | "coffee";
+
 export interface ThemeConfig {
-  value: string;
+  value: Theme;
   label: string;
   icon: ElementType;
-  type: "light" | "dark";
 }
 
 export const THEMES: ThemeConfig[] = [
-  { value: "glass", label: "Glass", icon: Sparkles, type: "dark" },
-  { value: "cyberpunk", label: "Cyberpunk", icon: Zap, type: "dark" },
-  { value: "forest", label: "Forest", icon: TreePine, type: "light" },
-  { value: "coffee", label: "Coffee", icon: Coffee, type: "light" },
+  { value: "glass", label: "Glass", icon: Sparkles },
+  { value: "cyberpunk", label: "Cyberpunk", icon: Zap },
+  { value: "forest", label: "Forest", icon: TreePine },
+  { value: "coffee", label: "Coffee", icon: Coffee },
 ];
 
-export const ALL_THEME_VALUES = THEMES.map((t) => t.value);
-export type Theme = (typeof ALL_THEME_VALUES)[number];
-
-export const getThemeType = (currentTheme: Theme): "light" | "dark" => {
-  const cfg = THEMES.find((t) => t.value === currentTheme);
-  return cfg?.type || "dark";
-};
+export const ALL_THEME_VALUES: Theme[] = THEMES.map((t) => t.value);
 
 type BlendMode =
   | "normal"
@@ -56,56 +51,54 @@ export type AuroraPreset = {
 
 export const AURORA_PRESETS: Record<Theme, AuroraPreset> = {
   glass: {
-    colorStops: ["#7FB8FF", "#9C7BFF", "#5EE6F0"],
-    blendMode: "screen",
-    intensity: 0.82,
+    colorStops: ["#BFD7FF", "#D9C8FF", "#B4ECFF"],
+    blendMode: "multiply",
+    intensity: 0.5,
     blend: 0.6,
-    scale: 1.0,
-    feather: 0.3,
-    alphaGamma: 1.12,
-    saturation: 1.18,
-    minAlpha: 0.0,
-    base: 0.24,
-  },
-  cyberpunk: {
-    colorStops: ["#E879F9", "#A78BFA", "#60A5FA"],
-    blendMode: "screen",
-    intensity: 0.9,
-    blend: 0.58,
-    scale: 1.05,
-    feather: 0.22,
-    alphaGamma: 1.12,
-    saturation: 1.25,
-    minAlpha: 0.0,
+    scale: 0.85,
+    feather: 0.45,
+    alphaGamma: 1.15,
+    saturation: 1.05,
+    minAlpha: 0.04,
     base: 0.22,
   },
+  cyberpunk: {
+    colorStops: ["#FFB6E0", "#D8C0FF", "#A8E6FF"],
+    blendMode: "multiply",
+    intensity: 0.55,
+    blend: 0.58,
+    scale: 0.9,
+    feather: 0.4,
+    alphaGamma: 1.1,
+    saturation: 1.1,
+    minAlpha: 0.04,
+    base: 0.2,
+  },
   forest: {
-    colorStops: ["#A7F3D0", "#34D399", "#D1FAE5"],
-    blendMode: "screen",
-    intensity: 0.58,
-    blend: 0.52,
-    scale: 0.95,
-    feather: 0.46,
-    alphaGamma: 1.18,
-    saturation: 1.04,
-    minAlpha: 0.0,
-    base: 0.26,
+    colorStops: ["#C8F2D6", "#A8E6C5", "#E0F5E3"],
+    blendMode: "multiply",
+    intensity: 0.5,
+    blend: 0.55,
+    scale: 0.88,
+    feather: 0.5,
+    alphaGamma: 1.15,
+    saturation: 1.02,
+    minAlpha: 0.04,
+    base: 0.24,
   },
   coffee: {
-    colorStops: ["#F6E7D8", "#EAD0B6", "#FFF9F2"],
-    blendMode: "overlay",
-    intensity: 0.72,
-    blend: 0.64,
-    scale: 0.85,
-    feather: 0.52,
+    colorStops: ["#F4D9BA", "#E8C49A", "#FFEEDC"],
+    blendMode: "multiply",
+    intensity: 0.42,
+    blend: 0.62,
+    scale: 0.82,
+    feather: 0.5,
     alphaGamma: 1.12,
-    saturation: 0.98,
+    saturation: 1.0,
     minAlpha: 0.05,
-    base: 0.3,
+    base: 0.28,
   },
 };
-
-export const AURORA_THEME_CLASS_KEYS = Object.keys(AURORA_PRESETS) as Theme[];
 
 export const getAuroraPreset = (theme: Theme): AuroraPreset =>
   AURORA_PRESETS[theme] ?? AURORA_PRESETS.glass;
