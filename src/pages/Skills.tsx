@@ -1,5 +1,4 @@
 import { SkillsSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { SKILLS_FAQS } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -103,9 +102,7 @@ const Skills = () => {
         title="Skills & Technologies"
         url={skillsUrl}
       />
-      <PageLayout>
-        <SkillsSection />
-      </PageLayout>
+      <SkillsSection />
     </>
   );
 };

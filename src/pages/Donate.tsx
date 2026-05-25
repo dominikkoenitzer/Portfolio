@@ -1,5 +1,4 @@
 import { DonateSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { DONATE_FAQS, DONATE_HOW_TO } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -22,9 +21,7 @@ const Donate = () => (
       title="Donate"
       url={`${SITE_CONFIG.url}/donate`}
     />
-    <PageLayout>
-      <DonateSection />
-    </PageLayout>
+    <DonateSection />
   </>
 );
 
