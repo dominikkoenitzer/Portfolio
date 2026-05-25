@@ -1,5 +1,4 @@
 import { AboutSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { ABOUT_FAQS } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -67,9 +66,7 @@ const About = () => {
         title="About Me"
         url={aboutUrl}
       />
-      <PageLayout>
-        <AboutSection />
-      </PageLayout>
+      <AboutSection />
     </>
   );
 };

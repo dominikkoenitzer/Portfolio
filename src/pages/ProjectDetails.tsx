@@ -1,6 +1,5 @@
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { PORTFOLIO_PROJECTS } from "@/constants/projects";
 import { SITE_CONFIG } from "@/constants";
@@ -60,8 +59,7 @@ const ProjectDetails = () => {
         url={projectUrl}
       />
 
-      <PageLayout>
-        <div className="min-h-screen bg-background pb-20">
+      <div className="min-h-screen bg-background pb-20">
           <section className="border-border/30 border-b">
             <div className="mx-auto max-w-5xl px-6 py-16 sm:px-8 md:px-12 lg:py-20">
               <h1 className="font-heading font-semibold text-4xl tracking-tight sm:text-5xl">
@@ -153,10 +151,9 @@ const ProjectDetails = () => {
                   ))}
                 </div>
               </section>
-            </article>
-          </section>
-        </div>
-      </PageLayout>
+          </article>
+        </section>
+      </div>
     </>
   );
 };

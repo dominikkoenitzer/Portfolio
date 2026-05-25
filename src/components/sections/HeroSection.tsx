@@ -1,5 +1,4 @@
 import {
-  AnimatePresence,
   motion,
   useMotionValue,
   useScroll,
@@ -10,67 +9,6 @@ import {
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-
-// ─── Text scramble ────────────────────────────────────────────────────────────
-const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234@#$%";
-
-function ScrambleText({
-  target,
-  active,
-  startDelay = 0,
-  className,
-}: {
-  target: string;
-  active: boolean;
-  startDelay?: number;
-  className?: string;
-}) {
-  const spanRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (!active) return;
-    let frame = 0;
-    let raf: number;
-
-    const timeout = setTimeout(() => {
-      const tick = () => {
-        const revealed = Math.floor(frame / 4);
-        const next = target
-          .split("")
-          .map((char, i) => {
-            if (char === " ") return " ";
-            if (i < revealed) return char;
-            return CHARSET[Math.floor(Math.random() * CHARSET.length)];
-          })
-          .join("");
-        if (spanRef.current) spanRef.current.textContent = next;
-        frame++;
-        if (revealed < target.length) {
-          raf = requestAnimationFrame(tick);
-        } else {
-          if (spanRef.current) spanRef.current.textContent = target;
-        }
-      };
-      raf = requestAnimationFrame(tick);
-    }, startDelay);
-
-    return () => {
-      clearTimeout(timeout);
-      cancelAnimationFrame(raf);
-    };
-  }, [target, active, startDelay]);
-
-  return (
-    <span ref={spanRef} className={className}>
-      {target
-        .split("")
-        .map((c) =>
-          c === " " ? " " : CHARSET[Math.floor(Math.random() * CHARSET.length)]
-        )
-        .join("")}
-    </span>
-  );
-}
 
 // ─── Blur morph title ─────────────────────────────────────────────────────────
 const PHRASES = [
@@ -161,13 +99,6 @@ function Stat({ value, label }: { value: string; label: string }) {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const [scrambleActive, setScrambleActive] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setScrambleActive(true), 200);
-    return () => clearTimeout(t);
-  }, []);
-
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 40, stiffness: 280 });
@@ -192,16 +123,6 @@ export default function HeroSection() {
       >
         <motion.div style={{ y: contentY }}>
 
-          {/* Hi I am */}
-          <motion.p
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground/45 sm:mb-2"
-            initial={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Hi, I am
-          </motion.p>
-
           {/* Name */}
           <motion.p
             animate={{ opacity: 1, y: 0 }}
@@ -210,7 +131,7 @@ export default function HeroSection() {
             style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.75rem)" }}
             transition={{ duration: 0.5, delay: 0.18 }}
           >
-            <ScrambleText active={scrambleActive} startDelay={0} target="Dominik Könitzer" />
+            Hi, I'm Dominik Könitzer
           </motion.p>
 
           {/* Role — blur morph cycling title */}

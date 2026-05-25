@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { HOME_FAQS } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -26,9 +25,7 @@ const Home = () => (
       title="Software Engineer & Web Developer"
       url={SITE_CONFIG.url}
     />
-    <PageLayout>
-      <HeroSection />
-    </PageLayout>
+    <HeroSection />
   </>
 );
 

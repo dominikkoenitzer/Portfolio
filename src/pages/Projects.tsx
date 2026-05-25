@@ -1,5 +1,4 @@
 import { ProjectsSection } from "@/components";
-import { PageLayout } from "@/components/layout/PageLayout";
 import { SEO } from "@/components/seo";
 import { PROJECTS_FAQS } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
@@ -83,9 +82,7 @@ const Projects = () => {
         title="Projects"
         url={projectsUrl}
       />
-      <PageLayout>
-        <ProjectsSection />
-      </PageLayout>
+      <ProjectsSection />
     </>
   );
 };
