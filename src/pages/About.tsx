@@ -17,7 +17,7 @@ const About = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages("/about")}
         citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
-        description="Learn about Dominik Könitzer - a 17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien. Currently in the fifth semester of a 4-year software engineering program, specializing in modern web development."
+        description="Learn about Dominik Könitzer - a 17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien. Currently in the sixth semester of a 4-year software engineering program, specializing in modern web development."
         faqSchema={ABOUT_FAQS}
         geoLocation={getDefaultGeoLocation()}
         keywords="about Dominik Könitzer, software engineer biography, WISS student, software engineering student Switzerland, web developer background, software engineer education"
@@ -50,7 +50,7 @@ const About = () => {
           },
           createPersonSchema({
             description:
-              "17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien, currently in fifth semester of 4-year program",
+              "17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien, currently in sixth semester of 4-year program",
             educationalCredentialAwarded:
               "Software Engineering Degree (In Progress)",
             hasCredential: {

@@ -85,7 +85,7 @@ export default function AboutSection() {
               >
                 I'm Dominik Könitzer, an 18-year-old software engineer at WISS
                 Schulen für Wirtschaft Informatik Immobilien, currently in my{" "}
-                <span className="font-medium text-foreground">fifth</span>{" "}
+                <span className="font-medium text-foreground">sixth</span>{" "}
                 semester of a 4-year software engineering program.
               </motion.p>
 
