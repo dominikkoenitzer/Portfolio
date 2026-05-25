@@ -1,7 +1,8 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { type ReactNode, useEffect } from "react";
 import { Footer, Navbar } from "@/components";
-import { ThemeProvider } from "@/context/ThemeContext";
+import AuroraBackground from "@/components/backgrounds/AuroraBackground";
+import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 
 interface PageLayoutProps {
@@ -25,7 +26,8 @@ export function PageLayout({ children }: PageLayoutProps) {
   }, []);
 
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="glass">
+      <AuroraBackground />
       <CustomCursor />
 
       {/* Scroll progress bar */}
