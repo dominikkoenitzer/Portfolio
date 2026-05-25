@@ -18,7 +18,7 @@ export const HOME_FAQS: FAQItem[] = [
   {
     question: "Where is Dominik Könitzer located?",
     answer:
-      "Dominik Könitzer is based in Switzerland and provides software engineering services to clients in Switzerland and internationally. He is currently in his fifth semester of a 4-year software engineering program at WISS Schulen für Wirtschaft Informatik Immobilien.",
+      "Dominik Könitzer is based in Switzerland and provides software engineering services to clients in Switzerland and internationally. He is currently in his sixth semester of a 4-year software engineering program at WISS Schulen für Wirtschaft Informatik Immobilien.",
   },
   {
     question: "What technologies does Dominik Könitzer specialize in?",
@@ -33,7 +33,7 @@ export const HOME_FAQS: FAQItem[] = [
   {
     question: "What is Dominik Könitzer's educational background?",
     answer:
-      "Dominik Könitzer is currently a student at WISS Schulen für Wirtschaft Informatik Immobilien, in his fifth semester of a 4-year software engineering program. The program includes two years of coursework followed by two years of practical internship with ongoing studies, providing both theoretical knowledge and hands-on experience.",
+      "Dominik Könitzer is currently a student at WISS Schulen für Wirtschaft Informatik Immobilien, in his sixth semester of a 4-year software engineering program. The program includes two years of coursework followed by two years of practical internship with ongoing studies, providing both theoretical knowledge and hands-on experience.",
   },
 ];
 
@@ -125,7 +125,7 @@ export const ABOUT_FAQS: FAQItem[] = [
   {
     question: "How old is Dominik Könitzer?",
     answer:
-      "Dominik Könitzer is 17 years old and currently in his fifth semester of a 4-year software engineering program at WISS Schulen für Wirtschaft Informatik Immobilien in Switzerland.",
+      "Dominik Könitzer is 17 years old and currently in his sixth semester of a 4-year software engineering program at WISS Schulen für Wirtschaft Informatik Immobilien in Switzerland.",
   },
   {
     question: "What is Dominik Könitzer's educational background?",
