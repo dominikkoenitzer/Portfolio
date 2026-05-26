@@ -22,14 +22,17 @@ export default function ContactSection() {
         >
           {/* Headline — uses hyphens: manual so it only breaks where the
               translation file places a soft hyphen (U+00AD), e.g.
-              "zusammen-arbeiten" instead of the dictionary "zusammenar-beiten". */}
+              "zusammen-arbeiten" instead of the dictionary "zusammenar-beiten".
+              pb on the gradient span ensures descenders ("g") aren't clipped. */}
           <h1
-            className="mb-6 break-words font-bold leading-[0.95] tracking-tight [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
+            className="mb-6 break-words font-bold leading-[1.02] tracking-tight [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
             style={{ fontSize: "clamp(2rem, 7vw, 3.75rem)" }}
           >
             {t.headlineLine1}
             <br />
-            <span className="hero-name-gradient">{t.headlineLine2}</span>
+            <span className="hero-name-gradient inline-block pb-[0.15em]">
+              {t.headlineLine2}
+            </span>
           </h1>
 
           <p className="mb-12 max-w-sm text-muted-foreground text-base leading-relaxed">

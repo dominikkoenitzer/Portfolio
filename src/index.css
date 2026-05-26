@@ -233,6 +233,10 @@
     word-wrap: break-word;
     hyphens: auto;
     -webkit-hyphens: auto;
+    /* Never clip descenders — affects "g", "j", "p", "q", "y" and accented
+       descenders ("ç" in français). Without this, Chrome with
+       -webkit-background-clip: text + tight line-height shaves their bottoms. */
+    overflow: visible;
   }
 
   p,
@@ -388,6 +392,9 @@
       hsl(var(--primary)),
       hsla(var(--primary) / 0.8)
     );
+    /* Reserve descender room — see .hero-name-gradient comment for the why. */
+    padding-bottom: 0.08em;
+    line-height: 1.05;
   }
 
   /* Enhanced responsive typography */
@@ -639,6 +646,12 @@
     color: transparent;
     background-size: 200% 200%;
     animation: gradient-shift 7s ease infinite;
+    /* -webkit-background-clip:text trims the rendered gradient to the element's
+       text box; without a baseline-aware bottom buffer, descenders ("g", "j",
+       "y", "p", "q") render with their bottoms shaved off. line-height alone
+       isn't enough because the line-box height excludes descender area. */
+    padding-bottom: 0.08em;
+    line-height: 1.05;
   }
 
   /* Glass badge */
@@ -760,6 +773,8 @@
       hsl(var(--primary)),
       hsla(var(--primary) / 0.8)
     );
+    padding-bottom: 0.08em;
+    line-height: 1.05;
   }
 
   .gradient-text-primary {
@@ -771,6 +786,8 @@
       hsl(var(--primary)),
       hsla(var(--primary) / 0.8)
     );
+    padding-bottom: 0.08em;
+    line-height: 1.05;
   }
 }
 
@@ -953,6 +970,55 @@
   backdrop-filter: blur(40px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
   border-left-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Glass theme — the drawer background flips dark, so flip every foreground
+   token inside it to a light palette. Without these overrides the items
+   render dark-on-dark and the menu looks empty. */
+[data-theme="glass"] [data-mobile-scroll] {
+  color: rgba(255, 255, 255, 0.92);
+}
+[data-theme="glass"] [data-mobile-scroll] h1,
+[data-theme="glass"] [data-mobile-scroll] h2,
+[data-theme="glass"] [data-mobile-scroll] h3,
+[data-theme="glass"] [data-mobile-scroll] .text-foreground {
+  color: rgba(255, 255, 255, 0.96) !important;
+}
+[data-theme="glass"] [data-mobile-scroll] .text-muted-foreground,
+[data-theme="glass"] [data-mobile-scroll] .text-foreground\/70,
+[data-theme="glass"] [data-mobile-scroll] .text-muted-foreground\/70 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+[data-theme="glass"] [data-mobile-scroll] .text-primary {
+  color: hsl(210 100% 78%) !important;
+}
+[data-theme="glass"] [data-mobile-scroll] .text-primary\/70 {
+  color: hsl(210 100% 78% / 0.75) !important;
+}
+/* Inactive item cards: light glass surface on dark drawer */
+[data-theme="glass"] [data-mobile-scroll] .bg-muted\/30,
+[data-theme="glass"] [data-mobile-scroll] .bg-muted\/50 {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+/* Number badges */
+[data-theme="glass"] [data-mobile-scroll] .bg-background\/50 {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+/* Border tokens */
+[data-theme="glass"] [data-mobile-scroll] .border-border\/30,
+[data-theme="glass"] [data-mobile-scroll] .border-border\/40,
+[data-theme="glass"] [data-mobile-scroll] .border-border\/50,
+[data-theme="glass"] [data-mobile-scroll] .border-border\/20 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+/* Close button */
+[data-theme="glass"] [data-mobile-scroll] button[aria-label]:not([aria-label=""]) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 /* Skill icon containers — glass */
