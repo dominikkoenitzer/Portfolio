@@ -1,17 +1,23 @@
 import { motion } from "framer-motion";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import { generateAlternateLanguages } from "@/lib/seo-utils";
 
 const Privacy = () => {
+  const { language } = useLanguage();
+  const t = translations[language].privacy;
+  const seo = translations[language].seo.privacy;
+  const s = t.sections;
   const privacyUrl = `${SITE_CONFIG.url}/privacy`;
 
   return (
     <>
       <SEO
         alternateLanguages={generateAlternateLanguages("/privacy")}
-        description="Privacy policy for dominikkoenitzer.ch. Learn how your data is collected, used, and protected when visiting this website. Compliant with Swiss FADP and EU GDPR regulations."
-        keywords="privacy policy, data protection, GDPR, FADP, privacy statement, data privacy, Switzerland privacy"
+        description={seo.description}
+        keywords={seo.keywords}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebPage",
@@ -19,7 +25,7 @@ const Privacy = () => {
           description: "Privacy policy for dominikkoenitzer.ch",
           url: privacyUrl,
         }}
-        title="Privacy Policy"
+        title={seo.title}
         url={privacyUrl}
       />
       <div className="min-h-screen bg-background">
@@ -33,7 +39,7 @@ const Privacy = () => {
                 transition={{ duration: 0.4 }}
               >
                 <h1 className="mb-2 font-bold font-heading text-2xl sm:mb-3 sm:text-3xl md:text-4xl lg:text-5xl">
-                  Privacy Policy
+                  {t.title}
                 </h1>
                 <div className="mx-auto h-0.5 w-12 bg-primary sm:h-1 sm:w-16 md:w-20" />
               </motion.div>
@@ -53,22 +59,20 @@ const Privacy = () => {
                   transition={{ delay: 0.2 }}
                 >
                   <h2 className="mb-2 font-heading font-semibold text-lg sm:mb-3 sm:text-xl md:text-2xl">
-                    Introduction
+                    {s.intro.heading}
                   </h2>
                   <p className="mb-3 text-muted-foreground text-sm leading-relaxed sm:mb-4 sm:text-base">
-                    This personal portfolio website showcases my projects and
-                    services. This privacy policy explains how your data is
-                    handled when you visit this site.
+                    {s.intro.body}
                   </p>
                   <div className="space-y-1.5 text-sm sm:space-y-2 sm:text-base">
                     <p className="text-foreground">
                       <strong className="text-foreground">
-                        Data Controller:
+                        {s.intro.controllerLabel}
                       </strong>{" "}
-                      Dominik Könitzer, Switzerland
+                      {s.intro.controllerValue}
                     </p>
                     <p className="text-foreground">
-                      <strong className="text-foreground">Contact:</strong>{" "}
+                      <strong className="text-foreground">{s.intro.contactLabel}</strong>{" "}
                       <a
                         className="break-all text-primary hover:underline"
                         href="mailto:dominik.koenitzer@gmail.com"
@@ -87,24 +91,16 @@ const Privacy = () => {
                   transition={{ delay: 0.3 }}
                 >
                   <h2 className="mb-2 font-heading font-semibold text-lg sm:mb-3 sm:text-xl md:text-2xl">
-                    Data Collection
+                    {s.collection.heading}
                   </h2>
                   <div className="space-y-3 text-muted-foreground text-sm leading-relaxed sm:space-y-4 sm:text-base">
                     <p>
-                      <strong className="text-foreground">
-                        Hosting & Analytics:
-                      </strong>{" "}
-                      This site is hosted by Vercel. Server logs (IP address,
-                      browser type, access time) are stored for security and
-                      reliability. Visitor statistics are collected via Vercel
-                      Analytics with anonymized data only—no cookies or tracking
-                      identifiers are used.
+                      <strong className="text-foreground">{s.collection.hostingLabel}</strong>{" "}
+                      {s.collection.hostingBody}
                     </p>
                     <p>
-                      <strong className="text-foreground">Contact Form:</strong>{" "}
-                      If you contact me via the contact form or email, I store
-                      your provided information (name, email, message) solely to
-                      process your enquiry and respond to follow-up questions.
+                      <strong className="text-foreground">{s.collection.contactLabel}</strong>{" "}
+                      {s.collection.contactBody}
                     </p>
                   </div>
                 </motion.section>
@@ -117,15 +113,13 @@ const Privacy = () => {
                   transition={{ delay: 0.4 }}
                 >
                   <h2 className="mb-2 font-heading font-semibold text-lg sm:mb-3 sm:text-xl md:text-2xl">
-                    Your Rights
+                    {s.rights.heading}
                   </h2>
                   <p className="mb-3 text-muted-foreground text-sm leading-relaxed sm:mb-4 sm:text-base">
-                    You have the right to access, rectify, or delete your
-                    personal data. You may also request restriction of
-                    processing or object to processing.
+                    {s.rights.body}
                   </p>
                   <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                    To exercise these rights, please contact me at{" "}
+                    {s.rights.contactPrompt}
                     <a
                       className="break-all text-primary hover:underline"
                       href="mailto:dominik.koenitzer@gmail.com"
@@ -143,16 +137,16 @@ const Privacy = () => {
                   transition={{ delay: 0.5 }}
                 >
                   <h2 className="mb-2 font-heading font-semibold text-lg sm:mb-3 sm:text-xl md:text-2xl">
-                    Impressum
+                    {s.impressum.heading}
                   </h2>
                   <div className="space-y-1.5 text-foreground text-sm leading-relaxed sm:space-y-2 sm:text-base">
                     <p>
-                      <strong>Responsible for this website:</strong>
+                      <strong>{s.impressum.responsibleFor}</strong>
                     </p>
-                    <p>Dominik Könitzer</p>
-                    <p>Zurich, Switzerland</p>
+                    <p>{s.impressum.name}</p>
+                    <p>{s.impressum.city}</p>
                     <p>
-                      Email:{" "}
+                      {s.impressum.emailLabel}
                       <a
                         className="break-all text-primary hover:underline"
                         href="mailto:dominik.koenitzer@gmail.com"
@@ -171,7 +165,7 @@ const Privacy = () => {
                   transition={{ delay: 0.6 }}
                 >
                   <p className="text-muted-foreground text-xs sm:text-sm">
-                    Last updated: {new Date().getFullYear()}
+                    {s.lastUpdated}{new Date().getFullYear()}
                   </p>
                 </motion.div>
               </motion.div>

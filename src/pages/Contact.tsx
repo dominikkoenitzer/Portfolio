@@ -1,6 +1,8 @@
 import { ContactSection } from "@/components";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
@@ -8,15 +10,17 @@ import {
 } from "@/lib/seo-utils";
 
 const Contact = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.contact;
   const contactUrl = `${SITE_CONFIG.url}/contact`;
 
   return (
     <>
       <SEO
         alternateLanguages={generateAlternateLanguages("/contact")}
-        description="Get in touch with Dominik Könitzer for software engineering and web development projects. Based in Switzerland, available for freelance work, collaborations, and consulting opportunities."
+        description={seo.description}
         geoLocation={getDefaultGeoLocation()}
-        keywords="contact Dominik Könitzer, software engineer contact, web developer contact, hire software engineer, freelance developer Switzerland, software engineering consultation"
+        keywords={seo.keywords}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "ContactPage",
@@ -27,7 +31,7 @@ const Contact = () => {
             email: SITE_CONFIG.email,
           }),
         }}
-        title="Contact"
+        title={seo.title}
         url={contactUrl}
       />
       <ContactSection />

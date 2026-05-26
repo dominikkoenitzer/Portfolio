@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 
 export default function Footer() {
+  const { language } = useLanguage();
+  const t = translations[language];
   const currentYear = new Date().getFullYear();
 
   return (
@@ -19,7 +23,7 @@ export default function Footer() {
               Dominik Könitzer
             </Link>
             <p className="mt-1 text-muted-foreground text-sm">
-              Creative Web Developer
+              {t.footer.tagline}
             </p>
           </motion.div>
 
@@ -88,7 +92,7 @@ export default function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <p className="mb-4 text-muted-foreground text-sm sm:mb-0">
-            © {currentYear} Dominik Könitzer. All rights reserved.
+            © {currentYear} Dominik Könitzer. {t.footer.rights}
           </p>
 
           <div className="flex space-x-6">
@@ -96,7 +100,7 @@ export default function Footer() {
               className="text-muted-foreground text-sm transition-colors hover:text-primary"
               to="/privacy"
             >
-              Privacy Policy
+              {t.footer.privacyPolicy}
             </Link>
           </div>
         </motion.div>

@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/tooltip";
 import { SITE_CONFIG } from "@/constants";
 import { fadeInUp } from "@/lib/framer-animations";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 
 interface ContributionDay {
   color: string;
@@ -55,6 +57,8 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
 };
 
 export default function GitHubContributions() {
+  const { language } = useLanguage();
+  const t = translations[language].github;
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
 
   const { data, isLoading, error } = useQuery<GitHubData>({
@@ -127,7 +131,7 @@ export default function GitHubContributions() {
       >
         <div className="flex items-center gap-3 text-destructive">
           <AlertCircle className="h-5 w-5" />
-          <p className="text-sm">Failed to load GitHub contributions</p>
+          <p className="text-sm">{t.loadError}</p>
         </div>
       </motion.div>
     );
@@ -140,10 +144,10 @@ export default function GitHubContributions() {
     >
       <div className="mb-3 sm:mb-4">
         <h3 className="mb-0.5 font-semibold text-foreground text-sm sm:text-base md:text-lg">
-          {data?.total?.toLocaleString() || 0} contributions in the last year
+          {data?.total?.toLocaleString() || 0} {t.contributionsSuffix}
         </h3>
         <p className="text-muted-foreground text-xs sm:text-sm">
-          GitHub activity over the past 12 months
+          {t.activityNote}
         </p>
       </div>
 
@@ -266,8 +270,8 @@ export default function GitHubContributions() {
                               <div className="font-semibold text-foreground">
                                 {day.contributionCount}{" "}
                                 {day.contributionCount === 1
-                                  ? "contribution"
-                                  : "contributions"}
+                                  ? t.contribution
+                                  : t.contributions}
                               </div>
                               <div className="mt-0.5 text-muted-foreground">
                                 {formattedDate}
@@ -287,7 +291,7 @@ export default function GitHubContributions() {
         {/* Legend */}
         <div className="mt-3 flex items-center justify-center gap-2 border-border/20 border-t pt-3 sm:mt-4 sm:justify-start">
           <span className="font-medium text-muted-foreground text-xs">
-            Less
+            {t.less}
           </span>
           <div className="flex" style={{ gap: "2px" }}>
             {Object.values(GITHUB_COLORS).map((color, index) => (
@@ -305,7 +309,7 @@ export default function GitHubContributions() {
             ))}
           </div>
           <span className="font-medium text-muted-foreground text-xs">
-            More
+            {t.more}
           </span>
         </div>
       </div>
@@ -316,7 +320,7 @@ export default function GitHubContributions() {
           <div className="mb-2 flex items-center gap-2 sm:mb-3">
             <GitCommit className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
             <h4 className="font-semibold text-foreground text-sm sm:text-base">
-              Recent activity
+              {t.recentActivity}
             </h4>
           </div>
           <div className="space-y-1 sm:space-y-1.5">

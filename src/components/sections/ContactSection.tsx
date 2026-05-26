@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Linkedin } from "lucide-react";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import ContactForm from "../forms/ContactForm";
 
 export default function ContactSection() {
+  const { language } = useLanguage();
+  const t = translations[language].contact;
   return (
     <section className="section-padding relative overflow-hidden" id="contact">
 
@@ -18,14 +22,13 @@ export default function ContactSection() {
         >
           {/* Headline */}
           <h1 className="mb-6 font-bold leading-[0.92] tracking-tight" style={{ fontSize: "clamp(2.8rem, 5.5vw, 4.5rem)" }}>
-            Let's work
+            {t.headlineLine1}
             <br />
-            <span className="hero-name-gradient">together.</span>
+            <span className="hero-name-gradient">{t.headlineLine2}</span>
           </h1>
 
           <p className="mb-12 max-w-xs text-muted-foreground text-sm leading-relaxed">
-            Have a project, an idea, or just want to say hi?
-            I'm always open to new work and interesting conversations.
+            {t.intro}
           </p>
 
           {/* Contact details */}
@@ -35,7 +38,7 @@ export default function ContactSection() {
               href="mailto:dominik.koenitzer@gmail.com"
             >
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/30 w-16">
-                Email
+                {t.emailLabel}
               </span>
               dominik.koenitzer@gmail.com
               <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-200 group-hover:opacity-70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -43,9 +46,9 @@ export default function ContactSection() {
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/30 w-16">
-                Based
+                {t.basedLabel}
               </span>
-              Zürich, Switzerland
+              {t.basedLocation}
             </div>
           </div>
 

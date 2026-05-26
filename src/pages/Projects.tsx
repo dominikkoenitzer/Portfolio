@@ -1,7 +1,9 @@
 import { ProjectsSection } from "@/components";
 import { SEO } from "@/components/seo";
-import { PROJECTS_FAQS } from "@/config/seo-data";
+import { getProjectsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   generateAlternateLanguages,
   getDefaultCitations,
@@ -9,6 +11,8 @@ import {
 } from "@/lib/seo-utils";
 
 const Projects = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.projects;
   const projectsUrl = `${SITE_CONFIG.url}/projects`;
 
   return (
@@ -16,10 +20,10 @@ const Projects = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages("/projects")}
         citationLinks={getDefaultCitations()}
-        description="Explore impact-focused software projects by Dominik Konitzer, including Zephyr, Spectrum, and Entropy. Review live deployments and source code that demonstrate real-world product thinking, performance optimization, and professional engineering execution."
-        faqSchema={PROJECTS_FAQS}
+        description={seo.description}
+        faqSchema={getProjectsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        keywords="software engineer portfolio, impactful web development projects, Zephyr project, Spectrum project, Entropy project, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer"
+        keywords={seo.keywords}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -79,7 +83,7 @@ const Projects = () => {
             ],
           },
         ]}
-        title="Projects"
+        title={seo.title}
         url={projectsUrl}
       />
       <ProjectsSection />

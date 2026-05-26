@@ -1,7 +1,9 @@
 import { SkillsSection } from "@/components";
 import { SEO } from "@/components/seo";
-import { SKILLS_FAQS } from "@/config/seo-data";
+import { getSkillsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
@@ -10,6 +12,8 @@ import {
 } from "@/lib/seo-utils";
 
 const Skills = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.skills;
   const skillsUrl = `${SITE_CONFIG.url}/skills`;
 
   return (
@@ -17,10 +21,10 @@ const Skills = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages("/skills")}
         citationLinks={getDefaultCitations()}
-        description="Explore Dominik Könitzer's technical skills and expertise. Proficient in React, TypeScript, JavaScript, Node.js, and modern web development technologies. Full-stack developer with expertise in frontend and backend development."
-        faqSchema={SKILLS_FAQS}
+        description={seo.description}
+        faqSchema={getSkillsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        keywords="software engineer skills, React skills, TypeScript skills, JavaScript developer, Node.js developer, full-stack developer skills, web development technologies, programming languages, software engineering expertise"
+        keywords={seo.keywords}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -99,7 +103,7 @@ const Skills = () => {
             },
           }),
         ]}
-        title="Skills & Technologies"
+        title={seo.title}
         url={skillsUrl}
       />
       <SkillsSection />
