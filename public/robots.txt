@@ -1,16 +1,21 @@
-# robots.txt for dominikkoenitzer.ch
+# robots.txt — https://dominikkoenitzer.ch
+# Allow everything by default; sitemap is canonical truth for indexing.
+
 User-agent: *
 Allow: /
+Disallow: /api/
 
-# Sitemap location
+# Sitemap
 Sitemap: https://dominikkoenitzer.ch/sitemap.xml
 
-# Disallow admin or private areas (if any)
-# Disallow: /admin/
-# Disallow: /private/
-
-# Allow all major search engines
+# ---------- Major search engines ----------
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-News
 Allow: /
 
 User-agent: Bingbot
@@ -28,28 +33,82 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
-# AI Search Crawlers
+# ---------- AI / LLM search & training crawlers ----------
+# OpenAI
 User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
-User-agent: CCBot
+User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: anthropic-ai
+# Anthropic
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: Claude-Web
 Allow: /
 
-User-agent: PerplexityBot
+User-agent: anthropic-ai
+Allow: /
+
+# Google Gemini / AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
 Allow: /
 
 User-agent: Applebot-Extended
 Allow: /
 
-# Crawl-delay (optional, in seconds)
-Crawl-delay: 1
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
+# Common Crawl (training data)
+User-agent: CCBot
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# DeepSeek
+User-agent: DeepSeekBot
+Allow: /
+
+# ---------- Crawl rate ----------
+Crawl-delay: 1

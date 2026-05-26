@@ -2,11 +2,26 @@
  * SEO utility functions for generating structured data and meta tags
  */
 
+import { LANGUAGES, type Language } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
 import type { CitationLink, FAQItem, HowToSchema } from "@/types/seo";
 
 /**
- * Generate default geo location from site config
+ * Map a UI language code to an Open Graph locale string.
+ * Used for og:locale and og:locale:alternate emission.
+ */
+const OG_LOCALES: Record<Language, string> = {
+  en: "en_US",
+  de: "de_CH",
+  fr: "fr_CH",
+  zh: "zh_CN",
+};
+
+export const getOgLocale = (lang: Language): string =>
+  OG_LOCALES[lang] ?? OG_LOCALES.en;
+
+/**
+ * Default geo location from site config
  */
 export const getDefaultGeoLocation = () => ({
   latitude: SITE_CONFIG.location.latitude,
@@ -16,15 +31,24 @@ export const getDefaultGeoLocation = () => ({
 });
 
 /**
- * Generate alternate language links for a given path
+ * Generate alternate language links for a given path. Includes all supported
+ * languages plus x-default so search engines and AI crawlers can resolve the
+ * right variant per user.
  */
-export const generateAlternateLanguages = (path = "") => [
-  { lang: "en", url: `${SITE_CONFIG.url}${path}` },
-  { lang: "de", url: `${SITE_CONFIG.url}/de${path}` },
-];
+export const generateAlternateLanguages = (
+  path = ""
+): { lang: string; url: string }[] => {
+  const url = `${SITE_CONFIG.url}${path}`;
+  const links: { lang: string; url: string }[] = LANGUAGES.map(({ code }) => ({
+    lang: code,
+    url,
+  }));
+  links.push({ lang: "x-default", url });
+  return links;
+};
 
 /**
- * Generate default citation links
+ * Default citation links used as authority signals for AI search engines.
  */
 export const getDefaultCitations = (): CitationLink[] => [
   { name: "WISS Schulen", url: "https://www.wiss.ch" },
@@ -32,7 +56,8 @@ export const getDefaultCitations = (): CitationLink[] => [
 ];
 
 /**
- * Create FAQ schema structured data
+ * FAQ schema (schema.org/FAQPage). Rich results + AI engines read these to
+ * answer follow-up questions directly.
  */
 export const createFAQSchema = (
   faqs: FAQItem[],
@@ -59,7 +84,7 @@ export const createFAQSchema = (
 };
 
 /**
- * Create HowTo schema structured data
+ * HowTo schema (schema.org/HowTo). Used by AI engines for step-by-step recipes.
  */
 export const createHowToSchema = (
   howTo: HowToSchema,
@@ -87,10 +112,13 @@ export const createHowToSchema = (
 };
 
 /**
- * Create breadcrumb schema for a given URL
+ * Breadcrumb schema for the given URL. Skips emission on the homepage so
+ * search consoles don't flag a single-item breadcrumb.
  */
 export const createBreadcrumbSchema = (url: string) => {
-  if (!url || url === SITE_CONFIG.url) return null;
+  if (!url || url === SITE_CONFIG.url || url === `${SITE_CONFIG.url}/`) {
+    return null;
+  }
 
   try {
     const pathSegments = new URL(url).pathname.split("/").filter(Boolean);
@@ -120,18 +148,22 @@ export const createBreadcrumbSchema = (url: string) => {
 };
 
 /**
- * Create Person schema with default values
+ * Person schema with defaults derived from SITE_CONFIG.
+ * Pass per-page extras (knowsAbout, hasCredential, etc.) via `additionalData`.
  */
 export const createPersonSchema = (
   additionalData?: Record<string, unknown>
 ) => ({
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": `${SITE_CONFIG.url}/#person`,
   name: SITE_CONFIG.name,
+  alternateName: ["Dominik Konitzer", "D. Könitzer"],
   url: SITE_CONFIG.url,
   image: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
   sameAs: [SITE_CONFIG.github],
   jobTitle: "Software Engineer",
+  knowsLanguage: ["en", "de", "fr"],
   worksFor: {
     "@type": "Organization",
     name: "WISS Schulen für Wirtschaft Informatik Immobilien",
@@ -147,4 +179,76 @@ export const createPersonSchema = (
     name: "WISS Schulen für Wirtschaft Informatik Immobilien",
   },
   ...additionalData,
+});
+
+/**
+ * Speakable specification (schema.org/SpeakableSpecification) — voice
+ * assistants and AEO engines use these CSS selectors to pick the spoken
+ * summary of the page.
+ */
+export const createSpeakableSchema = (url: string, cssSelectors: string[]) => {
+  if (!cssSelectors || cssSelectors.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: cssSelectors,
+    },
+  };
+};
+
+/**
+ * SoftwareSourceCode schema for project detail pages — richer than the base
+ * version because AI engines surface this when answering "show me X's code".
+ */
+export const createSoftwareSourceCodeSchema = (project: {
+  title: string;
+  description: string;
+  liveUrl: string;
+  repoUrl: string;
+  tags: string[];
+  year: string;
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  name: project.title,
+  description: project.description,
+  url: project.liveUrl,
+  codeRepository: project.repoUrl,
+  codeSampleType: "full",
+  programmingLanguage: ["TypeScript", "JavaScript"],
+  runtimePlatform: "Web",
+  keywords: project.tags.join(", "),
+  datePublished: `${project.year}-01-01`,
+  author: { "@id": `${SITE_CONFIG.url}/#person` },
+  creator: { "@id": `${SITE_CONFIG.url}/#person` },
+  maintainer: { "@id": `${SITE_CONFIG.url}/#person` },
+});
+
+/**
+ * SoftwareApplication schema — pairs with SoftwareSourceCode to describe the
+ * deployed product behind a project.
+ */
+export const createSoftwareApplicationSchema = (project: {
+  title: string;
+  description: string;
+  liveUrl: string;
+  tags: string[];
+}) => ({
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: project.title,
+  description: project.description,
+  url: project.liveUrl,
+  applicationCategory: "WebApplication",
+  operatingSystem: "Any",
+  keywords: project.tags.join(", "),
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "CHF",
+  },
+  author: { "@id": `${SITE_CONFIG.url}/#person` },
 });
