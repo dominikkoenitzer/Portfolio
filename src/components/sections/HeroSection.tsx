@@ -46,11 +46,14 @@ function BlurMorphTitle() {
   return (
     <h1
       aria-live="polite"
-      className="mb-7 font-bold leading-[0.88] tracking-[-0.03em] sm:mb-9 md:mb-11"
+      // leading-[0.95] + pb-[0.25em] on each gradient span gives French/German
+      // descenders ("g" in Ingénieur, "j" in projet, etc.) enough room — at the
+      // 7.5rem max font size the descender alone is ~24px.
+      className="mb-7 overflow-visible font-bold leading-[0.95] tracking-[-0.03em] sm:mb-9 md:mb-11"
       style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
     >
-      <span className="block hero-name-gradient pb-[0.08em]" style={morphStyle}>{PHRASES[idx].line1}</span>
-      <span className="block hero-name-gradient pb-[0.18em]" style={morphStyle}>{PHRASES[idx].line2}</span>
+      <span className="block hero-name-gradient pb-[0.12em]" style={morphStyle}>{PHRASES[idx].line1}</span>
+      <span className="block hero-name-gradient pb-[0.25em]" style={morphStyle}>{PHRASES[idx].line2}</span>
     </h1>
   );
 }
