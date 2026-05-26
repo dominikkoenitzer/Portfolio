@@ -4,6 +4,7 @@ import { Footer, Navbar } from "@/components";
 import AuroraBackground from "@/components/backgrounds/AuroraBackground";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { LanguageProvider } from "@/lib/language-provider";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -27,8 +28,9 @@ export function PageLayout({ children }: PageLayoutProps) {
 
   return (
     <ThemeProvider defaultTheme="glass">
-      <AuroraBackground />
-      <CustomCursor />
+      <LanguageProvider defaultLanguage="en">
+        <AuroraBackground />
+        <CustomCursor />
 
       {/* Scroll progress bar */}
       <motion.div
@@ -95,6 +97,7 @@ export function PageLayout({ children }: PageLayoutProps) {
       </main>
 
       <Footer />
+      </LanguageProvider>
     </ThemeProvider>
   );
 }

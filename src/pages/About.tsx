@@ -1,7 +1,9 @@
 import { AboutSection } from "@/components";
 import { SEO } from "@/components/seo";
-import { ABOUT_FAQS } from "@/config/seo-data";
+import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
@@ -9,6 +11,8 @@ import {
 } from "@/lib/seo-utils";
 
 const About = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.about;
   const aboutUrl = `${SITE_CONFIG.url}/about`;
 
   return (
@@ -16,10 +20,10 @@ const About = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages("/about")}
         citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
-        description="Learn about Dominik Könitzer - a 17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien. Currently in the sixth semester of a 4-year software engineering program, specializing in modern web development."
-        faqSchema={ABOUT_FAQS}
+        description={seo.description}
+        faqSchema={getAboutFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        keywords="about Dominik Könitzer, software engineer biography, WISS student, software engineering student Switzerland, web developer background, software engineer education"
+        keywords={seo.keywords}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -63,7 +67,7 @@ const About = () => {
             },
           }),
         ]}
-        title="About Me"
+        title={seo.title}
         url={aboutUrl}
       />
       <AboutSection />

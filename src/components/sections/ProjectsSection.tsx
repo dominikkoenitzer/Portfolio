@@ -1,19 +1,21 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
-import { PORTFOLIO_PROJECTS } from "@/constants/projects";
+import { getProjects } from "@/constants/projects";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
 export default function ProjectsSection() {
+  const { language } = useLanguage();
+  const t = translations[language].projects;
+  const projects = getProjects(language);
   return (
     <section className="section-padding" id="projects">
-      <SectionHeading
-        subtitle="A focused collection of products built with clarity, consistency, and performance in mind."
-        title="Projects"
-      />
+      <SectionHeading subtitle={t.subheading} title={t.heading} />
 
       <div className="space-y-5 sm:space-y-6">
-        {PORTFOLIO_PROJECTS.map((project, index) => (
+        {projects.map((project, index) => (
           <motion.article
             className="glass-deep group relative overflow-hidden rounded-2xl border border-border/30 bg-background/60 backdrop-blur-xl"
             initial={{ opacity: 0, y: 28 }}
@@ -80,31 +82,31 @@ export default function ProjectsSection() {
 
                 <div className="mt-auto grid grid-cols-3 gap-2 border-t border-border/25 pt-3.5">
                   <a
-                    aria-label={`Open ${project.title} repository`}
+                    aria-label={t.openRepo.replace("{name}", project.title)}
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-secondary/50 px-3 py-2.5 font-medium text-xs backdrop-blur-sm transition-all duration-200 hover:border-border/70 hover:bg-secondary"
                     href={project.repoUrl}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
                     <Github className="h-3.5 w-3.5" />
-                    Source
+                    {t.source}
                   </a>
                   <a
-                    aria-label={`Open ${project.title} live site`}
+                    aria-label={t.openLive.replace("{name}", project.title)}
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
                     href={project.liveUrl}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    Live
+                    {t.live}
                     <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                   <Link
-                    aria-label={`View details about ${project.title}`}
+                    aria-label={t.viewDetails.replace("{name}", project.title)}
                     className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.06]"
                     to={`/projects/${project.slug}`}
                   >
-                    Details
+                    {t.details}
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>

@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { type Theme, THEMES } from "@/config/themes";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 
 export function ThemeToggle({
   open,
@@ -19,6 +21,8 @@ export function ThemeToggle({
   onOpenChange?: (open: boolean) => void;
 }) {
   const { theme, setTheme } = useTheme();
+  const { language } = useLanguage();
+  const t = translations[language];
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -49,11 +53,11 @@ export function ThemeToggle({
               />
             );
           })}
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{t.toggles.theme}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[180px]">
-        <DropdownMenuLabel>Themes</DropdownMenuLabel>
+        <DropdownMenuLabel>{t.toggles.themes}</DropdownMenuLabel>
         {THEMES.map((option) => {
           const isSelected = theme === option.value;
           const Icon = option.icon;

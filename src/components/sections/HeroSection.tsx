@@ -9,17 +9,13 @@ import {
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 
 // ─── Blur morph title ─────────────────────────────────────────────────────────
-const PHRASES = [
-  { line1: "Software", line2: "Engineer." },
-  { line1: "Full-Stack", line2: "Developer." },
-  { line1: "Clean Code", line2: "Craftsman." },
-  { line1: "Systems", line2: "Architect." },
-  { line1: "Problem", line2: "Solver." },
-];
-
 function BlurMorphTitle() {
+  const { language } = useLanguage();
+  const PHRASES = translations[language].hero.roles;
   const [idx, setIdx] = useState(0);
   const [blurOut, setBlurOut] = useState(false);
 
@@ -99,6 +95,8 @@ function Stat({ value, label }: { value: string; label: string }) {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function HeroSection() {
+  const { language } = useLanguage();
+  const t = translations[language];
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 40, stiffness: 280 });
@@ -131,7 +129,7 @@ export default function HeroSection() {
             style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.75rem)" }}
             transition={{ duration: 0.5, delay: 0.18 }}
           >
-            Hi, I'm Dominik Könitzer
+            {t.hero.greeting}
           </motion.p>
 
           {/* Role — blur morph cycling title */}
@@ -196,7 +194,7 @@ export default function HeroSection() {
                 className="group h-10 rounded-lg px-6 text-sm font-medium shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]"
               >
                 <a className="flex items-center gap-1.5" href="/contact">
-                  Hire Me
+                  {t.hero.hireMe}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </a>
               </Button>
@@ -207,7 +205,7 @@ export default function HeroSection() {
                 className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium transition-all duration-200 hover:border-primary/25 hover:bg-primary/[0.04]"
                 variant="outline"
               >
-                <a href="/projects">View Work</a>
+                <a href="/projects">{t.hero.viewWork}</a>
               </Button>
             </Magnetic>
           </motion.div>
@@ -219,11 +217,11 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.5, delay: 0.78 }}
           >
-            <Stat value="20+" label="Projects" />
+            <Stat value="20+" label={t.hero.stats.projects} />
             <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="4+" label="Years coding" />
+            <Stat value="4+" label={t.hero.stats.yearsCoding} />
             <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="30+" label="Technologies" />
+            <Stat value="30+" label={t.hero.stats.technologies} />
           </motion.div>
 
         </motion.div>

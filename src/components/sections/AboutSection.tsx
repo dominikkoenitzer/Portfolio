@@ -1,17 +1,18 @@
 import { motion } from "framer-motion";
 import { Award, GraduationCap } from "lucide-react";
 import { fadeInLeft, fadeInRight } from "@/lib/framer-animations";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";
 import GitHubContributions from "./GitHubContributions";
 
 export default function AboutSection() {
+  const { language } = useLanguage();
+  const t = translations[language].about;
   return (
     <section className="section-padding" id="about">
-      <SectionHeading
-        subtitle="Get to know me better and what drives my passion for web development."
-        title="About Me"
-      />
+      <SectionHeading subtitle={t.subheading} title={t.heading} />
 
       <div className="grid items-center gap-8 md:grid-cols-12 md:gap-10">
         <motion.div className="md:col-span-5 lg:col-span-5" {...fadeInLeft}>
@@ -41,15 +42,15 @@ export default function AboutSection() {
             <InfoCard
               delay={0.1}
               icon={<GraduationCap className="h-5 w-5" />}
-              subtitle="4-year program at WISS"
-              title="Education"
+              subtitle={t.cards.educationSubtitle}
+              title={t.cards.educationTitle}
             />
 
             <InfoCard
               delay={0.2}
               icon={<Award className="h-5 w-5" />}
-              subtitle="Modern Web Development"
-              title="Specialized In"
+              subtitle={t.cards.specializedSubtitle}
+              title={t.cards.specializedTitle}
             />
           </div>
         </motion.div>
@@ -69,9 +70,9 @@ export default function AboutSection() {
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              Passionate{" "}
+              {t.passionate}{" "}
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Software Engineer
+                {t.passionateRole}
               </span>
             </motion.h3>
 
@@ -83,10 +84,11 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                I'm Dominik Könitzer, an 18-year-old software engineer at WISS
-                Schulen für Wirtschaft Informatik Immobilien, currently in my{" "}
-                <span className="font-medium text-foreground">sixth</span>{" "}
-                semester of a 4-year software engineering program.
+                {t.intro1Before}
+                <span className="font-medium text-foreground">
+                  {t.intro1Highlight}
+                </span>
+                {t.intro1After}
               </motion.p>
 
               <motion.p
@@ -96,10 +98,7 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                The first two years of my program focus on coursework, followed
-                by two years of practical internship with ongoing studies.
-                Throughout this journey, I'm developing a strong foundation in
-                both theoretical knowledge and hands-on experience.
+                {t.intro2}
               </motion.p>
 
               <motion.p
@@ -109,16 +108,13 @@ export default function AboutSection() {
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
-                I enjoy creating{" "}
-                <span className="font-medium text-foreground">clean</span>,{" "}
-                <span className="font-medium text-foreground">functional</span>,
-                and{" "}
-                <span className="font-medium text-foreground">
-                  visually appealing
-                </span>{" "}
-                websites and applications that provide real value to users.
-                Beyond technical skills, I value continuous learning,
-                problem-solving, and effective communication.
+                {t.intro3Before}
+                <span className="font-medium text-foreground">{t.intro3Word1}</span>
+                {t.intro3Comma1}
+                <span className="font-medium text-foreground">{t.intro3Word2}</span>
+                {t.intro3Comma2}
+                <span className="font-medium text-foreground">{t.intro3Word3}</span>
+                {t.intro3After}
               </motion.p>
             </div>
 
@@ -131,7 +127,7 @@ export default function AboutSection() {
             >
               <Button asChild className="group" variant="default">
                 <a href="/skills">
-                  Explore my skills
+                  {t.exploreSkills}
                   <svg
                     className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
                     fill="none"
@@ -168,7 +164,7 @@ export default function AboutSection() {
                       strokeWidth={2}
                     />
                   </svg>
-                  Read my journal
+                  {t.readJournal}
                   <svg
                     className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
                     fill="none"

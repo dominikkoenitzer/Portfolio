@@ -53,7 +53,7 @@ export function CustomCursor() {
   return (
     <div className="pointer-events-none select-none" aria-hidden="true">
       <motion.div
-        className="fixed z-[9999] rounded-full bg-white mix-blend-difference"
+        className="fixed z-[9999] rounded-full bg-foreground"
         style={{
           width: 8,
           height: 8,
