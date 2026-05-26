@@ -35,6 +35,8 @@
       hsl(260 95% 64%) 100%
     );
     --theme-shadow-color: 217 95% 55%;
+    --scrollbar-thumb: 220 18% 78%;
+    --scrollbar-thumb-hover: 217 90% 60%;
   }
 
   /* Cyberpunk — electric neon magenta/cyan on pink-tinted white */
@@ -64,6 +66,8 @@
       hsl(190 90% 48%) 100%
     );
     --theme-shadow-color: 316 95% 48%;
+    --scrollbar-thumb: 280 22% 80%;
+    --scrollbar-thumb-hover: 316 92% 60%;
   }
 
   /* Forest — organic, earthy green on off-white */
@@ -93,6 +97,8 @@
       hsl(95 60% 40%) 100%
     );
     --theme-shadow-color: 142 68% 28%;
+    --scrollbar-thumb: 100 22% 76%;
+    --scrollbar-thumb-hover: 142 60% 38%;
   }
 
   /* Coffee — warm cream / espresso */
@@ -122,6 +128,8 @@
       hsl(18 92% 42%) 100%
     );
     --theme-shadow-color: 24 88% 30%;
+    --scrollbar-thumb: 30 24% 76%;
+    --scrollbar-thumb-hover: 24 82% 42%;
   }
 
   /* Smooth theme transitions */
@@ -146,6 +154,26 @@
     min-height: 100%;
     position: relative;
     transition: background-color 0.15s ease;
+    /* Firefox scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--scrollbar-thumb)) transparent;
+  }
+
+  /* WebKit / Blink scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--scrollbar-thumb));
+    border-radius: 9999px;
+    transition: background-color 200ms;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--scrollbar-thumb-hover));
   }
 
   /* Body - inherits background from html::before pseudo-element */

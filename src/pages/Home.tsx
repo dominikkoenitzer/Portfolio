@@ -1,7 +1,9 @@
 import { HeroSection } from "@/components";
 import { SEO } from "@/components/seo";
-import { HOME_FAQS } from "@/config/seo-data";
+import { getHomeFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
@@ -9,24 +11,29 @@ import {
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 
-const Home = () => (
-  <>
-    <SEO
-      alternateLanguages={[
-        ...generateAlternateLanguages("/"),
-        { lang: "x-default", url: SITE_CONFIG.url },
-      ]}
-      citationLinks={getDefaultCitations()}
-      description="Dominik Könitzer - Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS. Expert in React, TypeScript, and full-stack development. View my portfolio, projects, and skills."
-      faqSchema={HOME_FAQS}
-      geoLocation={getDefaultGeoLocation()}
-      keywords="Dominik Könitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, software engineer Switzerland, web development services, frontend developer, backend developer, portfolio"
-      structuredData={[createPersonSchema()]}
-      title="Software Engineer & Web Developer"
-      url={SITE_CONFIG.url}
-    />
-    <HeroSection />
-  </>
-);
+const Home = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.home;
+
+  return (
+    <>
+      <SEO
+        alternateLanguages={[
+          ...generateAlternateLanguages("/"),
+          { lang: "x-default", url: SITE_CONFIG.url },
+        ]}
+        citationLinks={getDefaultCitations()}
+        description={seo.description}
+        faqSchema={getHomeFaqs(language)}
+        geoLocation={getDefaultGeoLocation()}
+        keywords={seo.keywords}
+        structuredData={[createPersonSchema()]}
+        title={seo.title}
+        url={SITE_CONFIG.url}
+      />
+      <HeroSection />
+    </>
+  );
+};
 
 export default Home;

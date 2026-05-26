@@ -4,9 +4,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { NAV_LINKS } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
+import LanguageToggle from "./LanguageToggle";
 import { ThemeToggle } from "./ThemeToggle";
 
-const navLinks = NAV_LINKS;
+const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
+  "/about": "about",
+  "/skills": "skills",
+  "/projects": "projects",
+  "/services": "services",
+  "/contact": "contact",
+  "/donate": "donate",
+};
 
 // Navigation is now handled by React Router
 
@@ -15,6 +25,12 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { language } = useLanguage();
+  const t = translations[language];
+  const navLinks = NAV_LINKS.map((link) => ({
+    ...link,
+    name: t.nav[NAV_KEY_BY_PATH[link.targetId]] ?? link.name,
+  }));
 
   // Handle mobile menu state
   const closeMobileMenu = useCallback(() => {
@@ -107,7 +123,7 @@ export default function Navbar() {
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <Link
-              aria-label="Go to home page"
+              aria-label={t.nav.goHome}
               className="group flex items-center font-bold text-xl tracking-tight md:text-2xl"
               to="/"
             >
@@ -148,16 +164,18 @@ export default function Navbar() {
                 </motion.div>
               );
             })}
-            <div className="ml-4 border-border/30 border-l pl-4">
+            <div className="ml-4 flex items-center gap-1 border-border/30 border-l pl-4">
               <ThemeToggle />
+              <LanguageToggle />
             </div>
           </nav>
 
           <div className="flex items-center gap-2.5 sm:gap-3 md:hidden">
             <ThemeToggle />
+            <LanguageToggle />
             <motion.button
               aria-expanded={mobileMenuOpen}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
               className="group relative flex h-11 w-11 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 transition-all duration-300 hover:from-primary/20 hover:to-primary/10"
               onClick={mobileMenuOpen ? closeMobileMenu : openMobileMenu}
               whileHover={{ scale: 1.05 }}
@@ -277,15 +295,15 @@ export default function Navbar() {
                         </motion.div>
                         <div>
                           <h2 className="font-bold text-foreground text-lg">
-                            Menu
+                            {t.nav.menu}
                           </h2>
                           <p className="text-muted-foreground text-xs">
-                            Navigation
+                            {t.nav.navigation}
                           </p>
                         </div>
                       </div>
                       <motion.button
-                        aria-label="Close menu"
+                        aria-label={t.nav.closeMenu}
                         className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors hover:bg-muted"
                         onClick={closeMobileMenu}
                         whileHover={{ scale: 1.05 }}
@@ -393,7 +411,7 @@ export default function Navbar() {
                                           className="font-medium text-primary/70 text-xs"
                                           initial={{ opacity: 0, y: -5 }}
                                         >
-                                          Current page
+                                          {t.nav.currentPage}
                                         </motion.p>
                                       )}
                                     </div>
@@ -443,7 +461,7 @@ export default function Navbar() {
                         onClick={closeMobileMenu}
                         to="/privacy"
                       >
-                        <span>Privacy Policy</span>
+                        <span>{t.nav.privacyPolicy}</span>
                         <ChevronRight className="h-3.5 w-3.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
                       </Link>
                     </motion.div>
