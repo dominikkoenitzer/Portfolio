@@ -1,7 +1,9 @@
 import { ServicesSection } from "@/components";
 import { SEO } from "@/components/seo";
-import { SERVICES_FAQS, SERVICES_HOW_TO } from "@/config/seo-data";
+import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   generateAlternateLanguages,
   getDefaultCitations,
@@ -9,6 +11,8 @@ import {
 } from "@/lib/seo-utils";
 
 const Services = () => {
+  const { language } = useLanguage();
+  const seo = translations[language].seo.services;
   const servicesUrl = `${SITE_CONFIG.url}/services`;
 
   return (
@@ -16,11 +20,11 @@ const Services = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages("/services")}
         citationLinks={getDefaultCitations()}
-        description="Professional software engineering and web development services by Dominik Könitzer. Offering frontend development, backend development, full-stack solutions, and modern web application development. Based in Switzerland, serving clients worldwide."
-        faqSchema={SERVICES_FAQS}
+        description={seo.description}
+        faqSchema={getServicesFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        howToSchema={SERVICES_HOW_TO}
-        keywords="software engineering services, web development services, frontend development services, backend development services, full-stack development, React development services, TypeScript development, custom web applications, software development Switzerland"
+        howToSchema={getServicesHowTo(language)}
+        keywords={seo.keywords}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
@@ -53,7 +57,7 @@ const Services = () => {
               "Professional software engineering and web development services",
           },
         }}
-        title="Services"
+        title={seo.title}
         url={servicesUrl}
       />
       <ServicesSection />

@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 
 interface FieldProps {
   id: string;
@@ -77,6 +79,8 @@ function Field({ id, label, type = "text", placeholder, value, onChange, require
 }
 
 export default function ContactForm() {
+  const { language } = useLanguage();
+  const t = translations[language].contact.form;
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -96,8 +100,8 @@ export default function ContactForm() {
       setSubmitted(true);
     } catch {
       toast({
-        title: "Something went wrong",
-        description: "Please try again or email me directly.",
+        title: t.errorTitle,
+        description: t.errorBody,
         variant: "destructive",
       });
     } finally {
@@ -117,15 +121,15 @@ export default function ContactForm() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <CheckCircle2 className="mb-6 h-10 w-10 text-primary" strokeWidth={1.5} />
-          <h3 className="mb-3 font-semibold text-2xl tracking-tight">Message received.</h3>
+          <h3 className="mb-3 font-semibold text-2xl tracking-tight">{t.successTitle}</h3>
           <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
-            Thanks for reaching out. I'll get back to you within 24 hours.
+            {t.successBody}
           </p>
           <button
             className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 transition-colors duration-200 hover:text-muted-foreground"
             onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", message: "" }); }}
           >
-            Send another →
+            {t.sendAnother}
           </button>
         </motion.div>
       ) : (
@@ -142,18 +146,18 @@ export default function ContactForm() {
             <Field
               delay={0.1}
               id="name"
-              label="Name"
+              label={t.nameLabel}
               onChange={handleChange}
-              placeholder="Your name"
+              placeholder={t.namePlaceholder}
               required
               value={formData.name}
             />
             <Field
               delay={0.15}
               id="email"
-              label="Email"
+              label={t.emailLabel}
               onChange={handleChange}
-              placeholder="your@email.com"
+              placeholder={t.emailPlaceholder}
               required
               type="email"
               value={formData.email}
@@ -163,10 +167,10 @@ export default function ContactForm() {
           <Field
             delay={0.2}
             id="message"
-            label="Message"
+            label={t.messageLabel}
             multiline
             onChange={handleChange}
-            placeholder="Tell me about your project or idea..."
+            placeholder={t.messagePlaceholder}
             required
             value={formData.message}
           />
@@ -182,7 +186,7 @@ export default function ContactForm() {
               disabled={isSubmitting}
               type="submit"
             >
-              <span>{isSubmitting ? "Sending..." : "Send message"}</span>
+              <span>{isSubmitting ? t.sending : t.send}</span>
               {isSubmitting ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (

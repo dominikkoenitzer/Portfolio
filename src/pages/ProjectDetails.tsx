@@ -1,8 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
-import { PORTFOLIO_PROJECTS } from "@/constants/projects";
+import { getProject, getProjects } from "@/constants/projects";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import {
   generateAlternateLanguages,
   getDefaultCitations,
@@ -11,7 +13,10 @@ import {
 
 const ProjectDetails = () => {
   const { projectSlug } = useParams();
-  const project = PORTFOLIO_PROJECTS.find((item) => item.slug === projectSlug);
+  const { language } = useLanguage();
+  const t = translations[language].projectDetails;
+  const seoSuffix = translations[language].seo.projectDetailsKeywordsSuffix;
+  const project = projectSlug ? getProject(projectSlug, language) : undefined;
 
   if (!project) {
     return <Navigate replace to="/projects" />;
@@ -19,8 +24,10 @@ const ProjectDetails = () => {
 
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
-  const projectTimeline = `${project.year} - Present`;
-  const otherProjects = PORTFOLIO_PROJECTS.filter((item) => item.slug !== project.slug);
+  const projectTimeline = `${project.year} - ${t.present}`;
+  const otherProjects = getProjects(language).filter(
+    (item) => item.slug !== project.slug
+  );
   const architectureText = project.architectureDecisions.join(" ");
   const implementationText = project.implementationHighlights.join(" ");
   const qualityText = project.qualityAndSecurity.join(" ");
@@ -30,9 +37,9 @@ const ProjectDetails = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages(projectPath)}
         citationLinks={getDefaultCitations()}
-        description={`${project.title}: ${project.description} Explore architecture, outcomes, and project links.`}
+        description={`${project.title}: ${project.description}`}
         geoLocation={getDefaultGeoLocation()}
-        keywords={`${project.title} project, software engineering case study, web development portfolio, ${project.tags.join(", ")}, Dominik Konitzer`}
+        keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -78,11 +85,11 @@ const ProjectDetails = () => {
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-border/40 border-b pb-4 text-xs uppercase tracking-wide">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Link className="transition-colors hover:text-foreground" to="/">
-                  Home
+                  {t.home}
                 </Link>
                 <span>/</span>
                 <Link className="transition-colors hover:text-foreground" to="/projects">
-                  Projects
+                  {t.projects}
                 </Link>
                 <span>/</span>
                 <span className="text-foreground">{project.title}</span>
@@ -93,7 +100,7 @@ const ProjectDetails = () => {
                 to="/projects"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back
+                {t.back}
               </Link>
             </div>
 
@@ -103,13 +110,13 @@ const ProjectDetails = () => {
               </p>
 
               <section className="mt-5 border-border/30 border-t pt-8">
-                <h2 className="font-heading text-2xl tracking-tight">Overview</h2>
+                <h2 className="font-heading text-2xl tracking-tight">{t.overview}</h2>
                 <p className="mt-4 text-foreground/90 leading-8">{project.description}</p>
                 <p className="mt-4 text-foreground/85 leading-8">{project.overview}</p>
               </section>
 
               <section className="mt-10 border-border/30 border-t pt-8">
-                <h2 className="font-heading text-2xl tracking-tight">Notes</h2>
+                <h2 className="font-heading text-2xl tracking-tight">{t.notes}</h2>
                 <div className="mt-4 space-y-4 text-foreground/90 leading-8">
                   <p>{project.roleSummary}</p>
                   <p>{project.problemStatement}</p>
@@ -120,19 +127,19 @@ const ProjectDetails = () => {
               </section>
 
               <section className="mt-10 border-border/30 border-t pt-8">
-                <h2 className="font-heading text-2xl tracking-tight">Links</h2>
+                <h2 className="font-heading text-2xl tracking-tight">{t.links}</h2>
                 <div className="mt-4 space-y-3 text-foreground/90 leading-8">
                   <p>
-                    Visit Site: <a className="text-primary underline-offset-4 hover:underline" href={project.liveUrl} rel="noopener noreferrer" target="_blank">{project.liveUrl}</a>
+                    {t.visitSite}: <a className="text-primary underline-offset-4 hover:underline" href={project.liveUrl} rel="noopener noreferrer" target="_blank">{project.liveUrl}</a>
                   </p>
                   <p>
-                    Source Code: <a className="text-primary underline-offset-4 hover:underline" href={project.repoUrl} rel="noopener noreferrer" target="_blank">{project.repoUrl}</a>
+                    {t.sourceCode}: <a className="text-primary underline-offset-4 hover:underline" href={project.repoUrl} rel="noopener noreferrer" target="_blank">{project.repoUrl}</a>
                   </p>
                 </div>
               </section>
 
               <section className="mt-10 border-border/30 border-t pt-8">
-                <h2 className="font-heading text-2xl tracking-tight">More Projects</h2>
+                <h2 className="font-heading text-2xl tracking-tight">{t.moreProjects}</h2>
                 <div className="mt-6 space-y-7">
                   {otherProjects.map((item) => (
                     <article className="border-border/30 border-b pb-6" key={item.slug}>
@@ -143,7 +150,7 @@ const ProjectDetails = () => {
                         {item.title}
                       </Link>
                       <p className="mt-2 text-muted-foreground text-sm uppercase tracking-wide">
-                        {item.year} - Present
+                        {item.year} - {t.present}
                       </p>
                       <p className="mt-3 text-foreground/85 leading-8">{item.description}</p>
                       <p className="mt-3 text-muted-foreground text-sm">{item.tags.join(" • ")}</p>
