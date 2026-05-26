@@ -3,13 +3,13 @@ import { SEO } from "@/components/seo";
 import { getHomeFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
-import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
   getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
+import { translations } from "@/lib/translations";
 
 const Home = () => {
   const { language } = useLanguage();
@@ -18,15 +18,13 @@ const Home = () => {
   return (
     <>
       <SEO
-        alternateLanguages={[
-          ...generateAlternateLanguages("/"),
-          { lang: "x-default", url: SITE_CONFIG.url },
-        ]}
+        alternateLanguages={generateAlternateLanguages("/")}
         citationLinks={getDefaultCitations()}
         description={seo.description}
         faqSchema={getHomeFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
+        speakableSelectors={["h1", "h2", "[data-speakable]"]}
         structuredData={[createPersonSchema()]}
         title={seo.title}
         url={SITE_CONFIG.url}

@@ -2,18 +2,20 @@ import { ProjectsSection } from "@/components";
 import { SEO } from "@/components/seo";
 import { getProjectsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
+import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
-import { translations } from "@/lib/translations";
 import {
   generateAlternateLanguages,
   getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
+import { translations } from "@/lib/translations";
 
 const Projects = () => {
   const { language } = useLanguage();
   const seo = translations[language].seo.projects;
   const projectsUrl = `${SITE_CONFIG.url}/projects`;
+  const projects = getProjects(language);
 
   return (
     <>
@@ -32,55 +34,35 @@ const Projects = () => {
             description:
               "Impact-focused software projects by Dominik Konitzer",
             url: projectsUrl,
+            inLanguage: language,
+            isPartOf: { "@id": `${SITE_CONFIG.url}/#website` },
           },
           {
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: "Featured Software Projects",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                item: {
-                  "@type": "CreativeWork",
-                  name: "Zephyr",
-                  url: "https://zephyr.punds.ch/",
-                  sameAs: "https://github.com/dominikkoenitzer/Zephyr",
-                  creator: {
-                    "@type": "Person",
-                    name: SITE_CONFIG.name,
-                  },
+            numberOfItems: projects.length,
+            itemListOrder: "https://schema.org/ItemListOrderAscending",
+            itemListElement: projects.map((project, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              url: `${SITE_CONFIG.url}/projects/${project.slug}`,
+              item: {
+                "@type": "SoftwareApplication",
+                name: project.title,
+                description: project.description,
+                url: project.liveUrl,
+                sameAs: project.repoUrl,
+                applicationCategory: "WebApplication",
+                operatingSystem: "Any",
+                keywords: project.tags.join(", "),
+                creator: {
+                  "@type": "Person",
+                  name: SITE_CONFIG.name,
+                  url: SITE_CONFIG.url,
                 },
               },
-              {
-                "@type": "ListItem",
-                position: 2,
-                item: {
-                  "@type": "CreativeWork",
-                  name: "Spectrum",
-                  url: "https://spectrum.punds.ch/",
-                  sameAs: "https://github.com/dominikkoenitzer/Spectrum",
-                  creator: {
-                    "@type": "Person",
-                    name: SITE_CONFIG.name,
-                  },
-                },
-              },
-              {
-                "@type": "ListItem",
-                position: 3,
-                item: {
-                  "@type": "CreativeWork",
-                  name: "Entropy",
-                  url: "https://entropy.punds.ch/",
-                  sameAs: "https://github.com/dominikkoenitzer/Entropy",
-                  creator: {
-                    "@type": "Person",
-                    name: SITE_CONFIG.name,
-                  },
-                },
-              },
-            ],
+            })),
           },
         ]}
         title={seo.title}

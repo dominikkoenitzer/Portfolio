@@ -2,8 +2,10 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { type ReactNode, useEffect } from "react";
 import { Footer, Navbar } from "@/components";
 import AuroraBackground from "@/components/backgrounds/AuroraBackground";
+import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { LanguageProvider } from "@/lib/language-provider";
 
 interface PageLayoutProps {
@@ -17,6 +19,10 @@ export function PageLayout({ children }: PageLayoutProps) {
     damping: 30,
     restDelta: 0.001,
   });
+
+  // Keeps --vh in sync with the real visual viewport so 100vh layouts
+  // don't overshoot iOS Safari's collapsing toolbar.
+  useViewportHeight();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -92,11 +98,12 @@ export function PageLayout({ children }: PageLayoutProps) {
 
       <Navbar />
 
-      <main className="min-h-screen w-full overflow-x-hidden pt-24 sm:pt-28 md:pt-32">
+      <main className="min-h-screen-mobile w-full overflow-x-hidden pt-24 sm:pt-28 md:pt-32">
         {children}
       </main>
 
       <Footer />
+      <ScrollToTopFab />
       </LanguageProvider>
     </ThemeProvider>
   );

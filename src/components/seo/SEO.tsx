@@ -1,11 +1,17 @@
 import { Helmet } from "react-helmet-async";
+import { LANGUAGES } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
+import { useLanguage } from "@/lib/language-provider";
 import {
   createBreadcrumbSchema,
   createFAQSchema,
   createHowToSchema,
+  createSpeakableSchema,
+  getOgLocale,
 } from "@/lib/seo-utils";
 import type { SEOProps } from "@/types/seo";
+
+export type { SEOProps };
 
 export function SEO({
   title,
@@ -28,7 +34,9 @@ export function SEO({
   faqSchema,
   howToSchema,
   citationLinks,
+  speakableSelectors,
 }: SEOProps) {
+  const { language } = useLanguage();
   const siteTitle = title
     ? `${title} | ${SITE_CONFIG.name}`
     : `${SITE_CONFIG.title} | ${SITE_CONFIG.name}`;
@@ -57,13 +65,13 @@ export function SEO({
     }
   }
 
-  // Add FAQ schema if provided
+  // FAQ schema
   const faqSchemaData = createFAQSchema(faqSchema || [], citationLinks);
   if (faqSchemaData) {
     allStructuredData.push(faqSchemaData);
   }
 
-  // Add HowTo schema if provided
+  // HowTo schema
   if (howToSchema) {
     const howToSchemaData = createHowToSchema(howToSchema, citationLinks);
     if (howToSchemaData) {
@@ -71,7 +79,7 @@ export function SEO({
     }
   }
 
-  // Add Article schema if type is article
+  // Article schema for article-type pages
   if (type === "article" && publishedTime) {
     allStructuredData.push({
       "@context": "https://schema.org",
@@ -96,14 +104,25 @@ export function SEO({
     });
   }
 
-  // Add BreadcrumbList schema
+  // Breadcrumb schema
   const breadcrumbSchema = createBreadcrumbSchema(siteUrl);
   if (breadcrumbSchema) {
     allStructuredData.push(breadcrumbSchema);
   }
 
+  // Speakable schema (AEO / voice assistants)
+  if (speakableSelectors && speakableSelectors.length > 0) {
+    const speakable = createSpeakableSchema(siteUrl, speakableSelectors);
+    if (speakable) allStructuredData.push(speakable);
+  }
+
+  const currentLocale = getOgLocale(language);
+  const alternateLocales = LANGUAGES.map((l) => getOgLocale(l.code)).filter(
+    (l) => l !== currentLocale
+  );
+
   return (
-    <Helmet>
+    <Helmet htmlAttributes={{ lang: language }}>
       {/* Primary Meta Tags */}
       <title>{siteTitle}</title>
       <meta content={siteTitle} name="title" />
@@ -112,6 +131,19 @@ export function SEO({
       <meta content={author || SITE_CONFIG.author} name="author" />
       <meta content={robotsContent} name="robots" />
       <meta content={robotsContent} name="googlebot" />
+      <meta content={robotsContent} name="bingbot" />
+
+      {/* AI / LLM crawler directives — explicit so GEO/AEO bots index the page */}
+      <meta content={robotsContent} name="GPTBot" />
+      <meta content={robotsContent} name="ChatGPT-User" />
+      <meta content={robotsContent} name="OAI-SearchBot" />
+      <meta content={robotsContent} name="ClaudeBot" />
+      <meta content={robotsContent} name="anthropic-ai" />
+      <meta content={robotsContent} name="Claude-Web" />
+      <meta content={robotsContent} name="PerplexityBot" />
+      <meta content={robotsContent} name="Google-Extended" />
+      <meta content={robotsContent} name="Applebot-Extended" />
+      <meta content={robotsContent} name="CCBot" />
 
       {/* Canonical URL */}
       <link href={canonicalUrl} rel="canonical" />
@@ -132,18 +164,25 @@ export function SEO({
         </>
       )}
 
+      {/* Language */}
+      <meta content={language} httpEquiv="content-language" />
+
       {/* Open Graph / Facebook */}
       <meta content={type} property="og:type" />
       <meta content={siteUrl} property="og:url" />
       <meta content={siteTitle} property="og:title" />
       <meta content={siteDescription} property="og:description" />
       <meta content={siteImage} property="og:image" />
+      <meta content={siteImage} property="og:image:secure_url" />
+      <meta content="image/png" property="og:image:type" />
       <meta content="1200" property="og:image:width" />
       <meta content="630" property="og:image:height" />
       <meta content={siteTitle} property="og:image:alt" />
       <meta content={SITE_CONFIG.name} property="og:site_name" />
-      <meta content="en_US" property="og:locale" />
-      <meta content="de_CH" property="og:locale:alternate" />
+      <meta content={currentLocale} property="og:locale" />
+      {alternateLocales.map((loc) => (
+        <meta content={loc} key={loc} property="og:locale:alternate" />
+      ))}
       {author && <meta content={author} property="article:author" />}
       {publishedTime && (
         <meta content={publishedTime} property="article:published_time" />
@@ -167,7 +206,7 @@ export function SEO({
       <meta content="@dominikkoenitzer" name="twitter:creator" />
       <meta content="@dominikkoenitzer" name="twitter:site" />
 
-      {/* Alternate Languages */}
+      {/* Alternate Languages (hreflang) */}
       {alternateLanguages.map((alt) => (
         <link
           href={alt.url}
@@ -180,15 +219,17 @@ export function SEO({
       {/* Structured Data */}
       {allStructuredData.map((data, index) => (
         <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: required to inject JSON-LD into <head>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+          // biome-ignore lint/suspicious/noArrayIndexKey: order-stable list within a single render
           key={index}
           type="application/ld+json"
         />
       ))}
 
-      {/* Citations for GEO - AI engines use these for authority signals */}
-      {citationLinks?.map((citation, index) => (
-        <link href={citation.url} key={index} rel="citation" />
+      {/* Citations for GEO — AI engines use these for authority signals */}
+      {citationLinks?.map((citation) => (
+        <link href={citation.url} key={citation.url} rel="citation" />
       ))}
     </Helmet>
   );
