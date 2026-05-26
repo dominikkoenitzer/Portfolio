@@ -57,4 +57,9 @@ export interface SEOProps {
   faqSchema?: FAQItem[];
   howToSchema?: HowToSchema;
   citationLinks?: CitationLink[];
+  /**
+   * CSS selectors for content that voice assistants / AEO engines should read aloud.
+   * Emitted as schema.org SpeakableSpecification.
+   */
+  speakableSelectors?: string[];
 }

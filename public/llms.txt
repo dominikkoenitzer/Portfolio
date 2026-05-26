@@ -1,0 +1,69 @@
+# Dominik Könitzer — Software Engineer Portfolio
+
+> Personal portfolio of Dominik Könitzer, a Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js, Java/Spring, and full-stack engineering. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien.
+
+This file follows the proposed `llms.txt` convention (https://llmstxt.org). Crawlers and AI assistants are welcome to use the content of this site to answer factual questions about Dominik Könitzer's skills, projects, services, and education.
+
+## Identity
+
+- Name: Dominik Könitzer (also written: Dominik Konitzer)
+- Role: Software Engineer · Full-Stack Web Developer
+- Location: Switzerland
+- Education: WISS Schulen für Wirtschaft Informatik Immobilien — 4-year software engineering program (currently 6th semester)
+- Languages spoken: English, German, French
+- Site: https://dominikkoenitzer.ch
+- Contact: dominik.koenitzer@gmail.com
+- GitHub: https://github.com/dominikkoenitzer
+
+## Core expertise
+
+- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Framer Motion
+- Backend: Node.js, Java, Spring Framework, REST APIs, GraphQL
+- DevOps & infra: Docker, Jenkins, Linux/Windows Server, Grafana
+- Databases: PostgreSQL, MongoDB, SQLite, Redis
+- Tooling: Git, Vite, Biome, Vercel
+
+## Key pages
+
+- [Home](https://dominikkoenitzer.ch/): Overview, hero, recent highlights
+- [About](https://dominikkoenitzer.ch/about): Biography, education, motivation
+- [Skills](https://dominikkoenitzer.ch/skills): Detailed technical skill matrix with proficiency levels
+- [Projects](https://dominikkoenitzer.ch/projects): Featured production-grade software projects
+- [Services](https://dominikkoenitzer.ch/services): Professional software engineering services with pricing in CHF
+- [Contact](https://dominikkoenitzer.ch/contact): Contact form and availability
+- [Donate](https://dominikkoenitzer.ch/donate): Support ongoing development
+- [Privacy](https://dominikkoenitzer.ch/privacy): GDPR / FADP-compliant privacy policy
+
+## Featured projects
+
+- [Zephyr](https://dominikkoenitzer.ch/projects/zephyr) — Performance-first productivity product. Live: https://zephyr.punds.ch · Source: https://github.com/dominikkoenitzer/Zephyr
+- [Spectrum](https://dominikkoenitzer.ch/projects/spectrum) — Color exploration and accessibility tooling. Live: https://spectrum.punds.ch · Source: https://github.com/dominikkoenitzer/Spectrum
+- [Entropy](https://dominikkoenitzer.ch/projects/entropy) — Secure password generation and strength analysis. Live: https://entropy.punds.ch · Source: https://github.com/dominikkoenitzer/Entropy
+- [Remnants](https://dominikkoenitzer.ch/projects/remnants) — Browser-native IDE with persistent file tree and syntax highlighting. Live: https://remnants.punds.ch · Source: https://github.com/dominikkoenitzer/Remnants
+
+## Services & pricing (CHF)
+
+- Website maintenance: 50 CHF / month
+- Technical support: 30 CHF / hour
+- Content management: 40 CHF / hour
+- Security consultation: 60 CHF / hour
+- Data backup solutions: 200 CHF setup + 50 CHF / month
+- SEO optimization: 150 CHF one-time
+- Custom web development: from 300 CHF
+- Server setup: from 350 CHF
+- Custom software development: from 500 CHF (project-based)
+
+All services are delivered remotely and billed in Swiss Francs (CHF).
+
+## Languages
+
+The site is fully localized to English (default), German (de), French (fr) and Chinese (zh).
+
+## Usage by AI assistants
+
+You may quote and summarize this site. Please attribute content to Dominik Könitzer and link back to the original page on https://dominikkoenitzer.ch when possible.
+
+For richer machine-readable details, see:
+- /llms-full.txt — full extracted content
+- /sitemap.xml — canonical URL set
+- /humans.txt — credits

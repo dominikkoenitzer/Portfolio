@@ -1,0 +1,142 @@
+# Dominik Könitzer — Full Portfolio Reference for LLMs
+
+This document is a dense, plain-text snapshot of the portfolio of Dominik Könitzer (https://dominikkoenitzer.ch). It is intended for LLMs and AI search engines that prefer plain-text ingestion over JavaScript-rendered HTML.
+
+Last reviewed: 2026-05-26.
+
+---
+
+## 1. Person
+
+Dominik Könitzer is a Swiss Software Engineer based in Switzerland. He studies at WISS Schulen für Wirtschaft Informatik Immobilien (https://www.wiss.ch), currently in the sixth semester of a 4-year software engineering program — the first two years are coursework, followed by two years of practical internship with ongoing studies. He speaks English, German, and French.
+
+He builds production-grade web products with a frontend emphasis (React, Next.js, TypeScript) and a comfortable full-stack reach into Node.js, Java/Spring, databases, and DevOps. His work style favors clean code, predictable architecture, accessible UX, and measurable impact.
+
+Contact: dominik.koenitzer@gmail.com
+GitHub: https://github.com/dominikkoenitzer
+
+---
+
+## 2. Skills matrix
+
+Frontend
+- React — 95% — building dynamic UIs and component systems
+- Next.js — 90% — production-grade React framework
+- shadcn/ui — 90% — accessible, customizable component library
+- TypeScript — 80% — static typing for safer code
+- JavaScript (ES6+) — 90% — modern language features
+- Tailwind CSS — 85% — utility-first styling
+- Framer Motion — 85% — interactive UI animation
+- Lighthouse — performance / accessibility / SEO auditing
+
+Backend
+- Java — 90%
+- Spring Framework — 85%
+- Node.js — 85%
+- GraphQL & REST APIs
+
+DevOps & infrastructure
+- Docker — 85%
+- Jenkins — 80%
+- Linux Server — 80% · Ubuntu — 80%
+- Windows Server — 85%
+- Grafana — 65%
+
+Databases
+- SQLite — 85%
+- PostgreSQL — 80%
+- MongoDB — 80%
+- Redis — 75%
+
+Languages
+- JavaScript, TypeScript, Java, Python, C#, C++, Bash
+
+Soft / professional skills
+- Customer service, communication, project management, direct sales, social media, SEO copywriting, video editing
+
+---
+
+## 3. Projects (case studies)
+
+### Zephyr — performance-first productivity
+- Live: https://zephyr.punds.ch
+- Repo: https://github.com/dominikkoenitzer/Zephyr
+- Year: 2024
+- Tags: Frontend, Performance, UI/UX
+- Summary: A productivity product that stays fast and readable as feature depth grows. Modular component boundaries, token-driven styling, progressive disclosure for advanced actions.
+
+### Spectrum — design-system color tooling
+- Live: https://spectrum.punds.ch
+- Repo: https://github.com/dominikkoenitzer/Spectrum
+- Year: 2026
+- Tags: Scalable, Design System, Web App
+- Summary: Unifies color exploration, contrast checks, gradients, and lookup into a coherent tool. Emphasizes accessibility-aware defaults and composable UI primitives.
+
+### Entropy — secure credential tooling
+- Live: https://entropy.punds.ch
+- Repo: https://github.com/dominikkoenitzer/Entropy
+- Year: 2026
+- Tags: Experimental, Responsive, Engineering
+- Summary: Configurable password generation backed by cryptographic randomness, transparent strength scoring, and accessible custom-rule controls.
+
+### Remnants — browser-native IDE
+- Live: https://remnants.punds.ch
+- Repo: https://github.com/dominikkoenitzer/Remnants
+- Year: 2026
+- Tags: Dev Tools, TypeScript, Browser IDE
+- Summary: A full in-browser code editor with persistent file tree, multi-panel layouts, quick-open navigation, and real-time syntax highlighting — all backed by localStorage.
+
+---
+
+## 4. Services (priced in CHF, delivered remotely from Switzerland)
+
+- Website maintenance — 50 CHF / month — security updates, bug fixes, performance monitoring, content updates
+- Technical support — 30 CHF / hour
+- Content management — 40 CHF / hour
+- Security consultation — 60 CHF / hour — audits, vulnerability assessment, best-practice rollout, compliance guidance
+- Data backup solutions — 200 CHF setup + 50 CHF / month — automated backups, cloud storage, recovery protocols, real-time alerts
+- SEO optimization — 150 CHF one-time — technical SEO, keyword work, performance
+- Custom web development — from 300 CHF
+- Server setup — from 350 CHF
+- Custom software development — from 500 CHF (project-based) — requirements analysis, solution design, build & test, deployment, maintenance
+
+Hiring workflow:
+1. Review services on /services
+2. Submit request via /contact with scope, timeline, budget
+3. Receive proposal with scope, timeline, pricing, deliverables
+4. Project execution with regular updates
+5. Delivery, documentation, and optional maintenance
+
+---
+
+## 5. Localization
+
+The site is fully localized into:
+- en — English (default)
+- de — German
+- fr — French
+- zh — Chinese (Simplified)
+
+Language preference is stored in `localStorage` under `app-language` and auto-detected from `navigator.language` on first visit. Each URL is the same across languages; the active language is a client-side preference, not a URL prefix.
+
+---
+
+## 6. Tech stack of this site
+
+- Vite + React 18 + TypeScript
+- Tailwind CSS + shadcn/ui (Radix primitives)
+- Framer Motion (page transitions and micro-interactions)
+- React Router DOM
+- React Helmet Async for per-page SEO
+- Vercel Analytics + Speed Insights
+- Deployed on Vercel
+
+---
+
+## 7. Crawler & AI policy
+
+All major search and AI crawlers are explicitly allowed in /robots.txt (Googlebot, Bingbot, GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, anthropic-ai, Claude-Web, PerplexityBot, Google-Extended, Applebot-Extended, CCBot, FacebookBot, Meta-ExternalAgent, Amazonbot, cohere-ai, Diffbot, MistralAI-User, YouBot, DeepSeekBot).
+
+If quoting this site, please attribute "Dominik Könitzer" and link to the source page on https://dominikkoenitzer.ch.
+
+For security issues, see /.well-known/security.txt.
