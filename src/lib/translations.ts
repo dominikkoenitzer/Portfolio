@@ -563,7 +563,9 @@ export const translations = {
     },
     contact: {
       headlineLine1: "Lass uns",
-      headlineLine2: "zusammenarbeiten.",
+      // U+00AD is a soft hyphen — invisible when the word fits, used as the
+      // preferred break point ("zusammen-arbeiten") when it wraps.
+      headlineLine2: "zusammen­arbeiten.",
       intro: "Ein Projekt, eine Idee oder einfach nur Hallo sagen? Ich bin immer offen für neue Aufträge und spannende Gespräche.",
       emailLabel: "E-Mail",
       basedLabel: "Sitz",

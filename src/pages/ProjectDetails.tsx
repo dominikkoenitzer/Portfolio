@@ -1,15 +1,17 @@
 import { ArrowLeft } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
-import { getProject, getProjects } from "@/constants/projects";
 import { SITE_CONFIG } from "@/constants";
+import { getProject, getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
-import { translations } from "@/lib/translations";
 import {
+  createSoftwareApplicationSchema,
+  createSoftwareSourceCodeSchema,
   generateAlternateLanguages,
   getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
+import { translations } from "@/lib/translations";
 
 const ProjectDetails = () => {
   const { projectSlug } = useParams();
@@ -40,6 +42,7 @@ const ProjectDetails = () => {
         description={`${project.title}: ${project.description}`}
         geoLocation={getDefaultGeoLocation()}
         keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
+        speakableSelectors={["h1", "h2"]}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -47,20 +50,16 @@ const ProjectDetails = () => {
             name: `${project.title} Project Details`,
             description: project.description,
             url: projectUrl,
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "SoftwareSourceCode",
-            name: project.title,
-            description: project.description,
-            url: project.liveUrl,
-            codeRepository: project.repoUrl,
-            author: {
-              "@type": "Person",
-              name: SITE_CONFIG.name,
+            inLanguage: language,
+            isPartOf: { "@id": `${SITE_CONFIG.url}/#website` },
+            about: {
+              "@type": "CreativeWork",
+              name: project.title,
+              keywords: project.tags.join(", "),
             },
-            programmingLanguage: ["TypeScript", "JavaScript"],
           },
+          createSoftwareSourceCodeSchema(project),
+          createSoftwareApplicationSchema(project),
         ]}
         title={`${project.title} Project`}
         url={projectUrl}

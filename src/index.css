@@ -226,6 +226,13 @@
       "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
       "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     font-weight: 600;
+    /* Defensive wrapping for long German compounds (Zusammenarbeit,
+       Datenschutzerklärung, Webentwicklung). hyphens: auto relies on the
+       html[lang] attribute that LanguageProvider keeps in sync. */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
   }
 
   p,
@@ -1127,3 +1134,206 @@
     opacity: 0;
   }
 }
+
+/* =====================================================
+   MOBILE QUALITY-OF-LIFE LAYER
+   Loaded last so it overrides earlier rules. Keeps touch
+   UX feeling like a native app: safe areas, tap targets,
+   no input zoom, snappier feedback, reduced-motion respect.
+   ===================================================== */
+
+:root {
+  /* JS-managed visual-viewport unit (see useViewportHeight) */
+  --vh: 1vh;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+html {
+  /* iOS Safari: never let the browser silently bump font size on rotate */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* Smoother momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Block the rubber-band pull-to-refresh that randomly nukes app state */
+  overscroll-behavior-y: contain;
+  /* Stop iOS double-tap-to-zoom on tappable UI */
+  touch-action: manipulation;
+  /* Kill the grey flash that mobile browsers paint on every tap */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tap targets: kill flash + snap haptic-feeling scale on press */
+@media (hover: none) and (pointer: coarse) {
+  a,
+  button,
+  [role="button"],
+  [data-tap] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  a:active,
+  button:active:not(:disabled),
+  [role="button"]:active,
+  [data-tap]:active {
+    transform: scale(0.97);
+    transition: transform 0.08s ease-out;
+  }
+
+  /* Minimum WCAG-aligned touch target (44x44 CSS px) for icon-only buttons */
+  button[aria-label]:not([aria-label=""]),
+  a[aria-label]:not([aria-label=""]) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Prevent iOS Safari from zooming when focusing form fields.
+   16px is the magic threshold below which auto-zoom fires. */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Reduced-motion: cut all decoration animations, keep functional ones (page transitions) usable */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .aurora-orb,
+  .animate-blob,
+  .animate-float-elegant,
+  .animate-parallax-float,
+  .animate-glow-pulse,
+  .animate-shimmer,
+  .animate-status-ping,
+  .animate-scroll-cue,
+  .hero-name-gradient {
+    animation: none !important;
+  }
+}
+
+/* Safe-area helpers — opt-in via `pt-safe`, `pb-safe`, `px-safe` */
+.pt-safe {
+  padding-top: max(var(--safe-top), 1rem);
+}
+.pb-safe {
+  padding-bottom: max(var(--safe-bottom), 1rem);
+}
+.pl-safe {
+  padding-left: max(var(--safe-left), 0rem);
+}
+.pr-safe {
+  padding-right: max(var(--safe-right), 0rem);
+}
+.px-safe {
+  padding-left: max(var(--safe-left), 0rem);
+  padding-right: max(var(--safe-right), 0rem);
+}
+.mt-safe {
+  margin-top: var(--safe-top);
+}
+.mb-safe {
+  margin-bottom: var(--safe-bottom);
+}
+.inset-safe {
+  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+}
+.top-safe {
+  top: var(--safe-top);
+}
+.bottom-safe {
+  bottom: var(--safe-bottom);
+}
+
+/* True viewport height (handles iOS toolbar collapse) */
+.min-h-screen-mobile {
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 100dvh;
+}
+.h-screen-mobile {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  height: 100dvh;
+}
+
+/* Custom cursor is hidden on touch — auto-restore native cursor for accessibility */
+@media (hover: none), (pointer: coarse) {
+  *,
+  *::before,
+  *::after {
+    cursor: auto !important;
+  }
+  a,
+  button,
+  [role="button"],
+  label,
+  select,
+  summary,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    cursor: pointer !important;
+  }
+}
+
+/* Restore visible focus for keyboard users on touch (touchscreen + keyboard hybrids) */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary) / 0.65);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Mobile drawer / sheet — block overscroll chaining into the body */
+[data-mobile-scroll] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better long-press handling — disable iOS callout for navigation elements */
+header,
+nav,
+[data-no-callout] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* But keep content selectable */
+main,
+article,
+section p,
+section h1,
+section h2,
+section h3,
+section h4 {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* Active-press fade for cards on touch */
+@media (hover: none) and (pointer: coarse) {
+  .glass-card:active,
+  .glass-deep:active {
+    transform: scale(0.985);
+    transition: transform 0.1s ease-out;
+  }
+}
+

@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import { NAV_LINKS } from "@/constants";
+import { useHaptic } from "@/hooks/use-haptic";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import { useSwipe } from "@/hooks/use-swipe";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import LanguageToggle from "./LanguageToggle";
@@ -18,8 +21,6 @@ const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
   "/donate": "donate",
 };
 
-// Navigation is now handled by React Router
-
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,37 +28,41 @@ export default function Navbar() {
   const location = useLocation();
   const { language } = useLanguage();
   const t = translations[language];
+  const haptic = useHaptic();
+  const scrollDirection = useScrollDirection(8, 100);
   const navLinks = NAV_LINKS.map((link) => ({
     ...link,
     name: t.nav[NAV_KEY_BY_PATH[link.targetId]] ?? link.name,
   }));
 
-  // Handle mobile menu state
+  // Hide the bar when scrolling down past the hero, show on scroll-up.
+  // Always visible while the menu is open so the user can find the close button.
+  const navHidden = !mobileMenuOpen && isScrolled && scrollDirection === "down";
+
   const closeMobileMenu = useCallback(() => {
+    haptic("light");
     setMobileMenuOpen(false);
-  }, []);
+  }, [haptic]);
 
   const openMobileMenu = useCallback(() => {
+    haptic("medium");
     setMobileMenuOpen(true);
-  }, []);
+  }, [haptic]);
+
+  // Swipe-right inside the drawer closes it — feels native on iOS/Android.
+  const swipeHandlers = useSwipe({
+    onSwipeRight: closeMobileMenu,
+    threshold: 70,
+  });
 
   // Lock body scroll when menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      // Use requestAnimationFrame to ensure menu starts animating first
       requestAnimationFrame(() => {
         const scrollY = window.scrollY;
         const html = document.documentElement;
         const body = document.body;
 
-        // Store original styles
-        const originalBodyPosition = body.style.position;
-        const originalBodyTop = body.style.top;
-        const originalBodyWidth = body.style.width;
-        const originalBodyOverflow = body.style.overflow;
-        const originalHtmlOverflow = html.style.overflow;
-
-        // Lock scroll
         body.style.position = "fixed";
         body.style.top = `-${scrollY}px`;
         body.style.width = "100%";
@@ -70,15 +75,13 @@ export default function Navbar() {
         const html = document.documentElement;
         const body = document.body;
 
-        // Restore styles
         body.style.position = "";
         body.style.top = "";
         body.style.width = "";
         body.style.overflow = "";
         html.style.overflow = "";
 
-        // Restore scroll position
-        if (!isNaN(scrollY)) {
+        if (!Number.isNaN(scrollY)) {
           window.scrollTo(0, scrollY);
         }
       };
@@ -88,8 +91,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       if (!mobileMenuOpen) {
-        const scrollPosition = window.scrollY;
-        setIsScrolled(scrollPosition > 50);
+        setIsScrolled(window.scrollY > 50);
       }
     };
 
@@ -110,14 +112,16 @@ export default function Navbar() {
 
   return (
     <motion.header
-      animate={{ y: 0 }}
+      animate={{ y: navHidden ? -120 : 0 }}
       className={`fixed top-0 right-0 left-0 z-50 ${
         isScrolled
           ? "scrolled-nav border-border/50 border-b bg-background/90 shadow-primary/5 shadow-xl backdrop-blur-2xl"
           : "bg-transparent"
       } transition-all duration-700`}
+      data-no-callout
       initial={{ y: -100 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      style={{ paddingTop: "var(--safe-top, 0px)" }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="flex h-20 items-center justify-between">
@@ -127,9 +131,7 @@ export default function Navbar() {
               className="group flex items-center font-bold text-xl tracking-tight md:text-2xl"
               to="/"
             >
-              <span className="text-foreground">
-                Dominik Könitzer
-              </span>
+              <span className="text-foreground">Dominik Könitzer</span>
             </Link>
           </div>
 
@@ -151,9 +153,7 @@ export default function Navbar() {
                     }`}
                     to={link.targetId}
                   >
-                    <span className="relative z-10">
-                      {link.name}
-                    </span>
+                    <span className="relative z-10">{link.name}</span>
                     <motion.span
                       className="absolute inset-0 rounded-lg bg-primary/[0.08]"
                       initial={{ opacity: 0 }}
@@ -181,7 +181,6 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {/* Animated background glow */}
               <motion.div
                 animate={{
                   opacity: mobileMenuOpen ? 1 : 0.5,
@@ -191,7 +190,6 @@ export default function Navbar() {
                 transition={{ duration: 0.3 }}
               />
 
-              {/* Custom Hamburger Icon */}
               <div className="relative flex h-5 w-5 flex-col items-center justify-center">
                 <motion.span
                   animate={{
@@ -199,10 +197,7 @@ export default function Navbar() {
                     y: mobileMenuOpen ? 0 : -6,
                   }}
                   className="absolute h-0.5 w-5 origin-center rounded-full bg-primary"
-                  transition={{
-                    duration: 0.3,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 />
                 <motion.span
                   animate={{
@@ -210,10 +205,7 @@ export default function Navbar() {
                     scale: mobileMenuOpen ? 0 : 1,
                   }}
                   className="absolute h-0.5 w-5 origin-center rounded-full bg-primary"
-                  transition={{
-                    duration: 0.2,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                 />
                 <motion.span
                   animate={{
@@ -221,10 +213,7 @@ export default function Navbar() {
                     y: mobileMenuOpen ? 0 : 6,
                   }}
                   className="absolute h-0.5 w-5 origin-center rounded-full bg-primary"
-                  transition={{
-                    duration: 0.3,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
             </motion.button>
@@ -238,22 +227,33 @@ export default function Navbar() {
           <AnimatePresence>
             {mobileMenuOpen && (
               <>
-                {/* Backdrop with blur */}
+                {/* Backdrop — tap to dismiss */}
                 <motion.div
                   animate={{ opacity: 1 }}
                   className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl md:hidden"
                   exit={{ opacity: 0 }}
                   initial={{ opacity: 0 }}
+                  onClick={closeMobileMenu}
                   style={{ position: "fixed" }}
                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 />
 
-                {/* Full-Screen Menu Container */}
+                {/* Drawer — swipe right to close */}
                 <motion.div
                   animate={{ x: 0 }}
                   className="overflow-y-auto overscroll-contain border-border/50 border-l bg-gradient-to-br from-background via-background to-background/95 shadow-2xl shadow-primary/10 backdrop-blur-2xl md:hidden"
+                  data-mobile-scroll
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={{ left: 0, right: 0.5 }}
+                  dragMomentum={false}
                   exit={{ x: "100%" }}
                   initial={{ x: "100%" }}
+                  onDragEnd={(_, info) => {
+                    if (info.offset.x > 100 || info.velocity.x > 500) {
+                      closeMobileMenu();
+                    }
+                  }}
                   ref={menuRef}
                   style={{
                     position: "fixed",
@@ -264,6 +264,8 @@ export default function Navbar() {
                     zIndex: 70,
                     width: "100%",
                     maxWidth: "28rem",
+                    paddingTop: "var(--safe-top, 0px)",
+                    paddingBottom: "var(--safe-bottom, 0px)",
                   }}
                   transition={{
                     type: "spring",
@@ -271,13 +273,15 @@ export default function Navbar() {
                     stiffness: 300,
                     mass: 0.8,
                   }}
+                  {...swipeHandlers}
                 >
-                  {/* Animated background pattern */}
+                  {/* Drag affordance — small grip on the left edge */}
+                  <div className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 z-20 hidden h-12 w-1 rounded-full bg-border/40 sm:block" />
+
                   <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
                     <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
                   </div>
 
-                  {/* Header Section */}
                   <motion.div
                     animate={{ opacity: 1, y: 0 }}
                     className="relative z-10 border-border/30 border-b px-6 pt-8 pb-6"
@@ -304,7 +308,7 @@ export default function Navbar() {
                       </div>
                       <motion.button
                         aria-label={t.nav.closeMenu}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors hover:bg-muted"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors hover:bg-muted"
                         onClick={closeMobileMenu}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -314,7 +318,6 @@ export default function Navbar() {
                     </div>
                   </motion.div>
 
-                  {/* Navigation Items */}
                   <nav className="relative z-10 px-6 py-6">
                     <motion.div
                       animate="open"
@@ -353,9 +356,7 @@ export default function Navbar() {
                               closed: {
                                 opacity: 0,
                                 x: 50,
-                                transition: {
-                                  duration: 0.2,
-                                },
+                                transition: { duration: 0.2 },
                               },
                             }}
                           >
@@ -374,16 +375,13 @@ export default function Navbar() {
                                 whileHover={{ scale: 1.02, x: 4 }}
                                 whileTap={{ scale: 0.98 }}
                               >
-                                {/* Animated background gradient */}
                                 <motion.div
                                   className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                                   initial={false}
                                 />
 
-
                                 <div className="relative flex items-center justify-between">
                                   <div className="flex items-center gap-4">
-                                    {/* Number badge */}
                                     <motion.div
                                       className={`flex h-10 w-10 items-center justify-center rounded-xl border font-bold text-sm ${
                                         isActive
@@ -433,7 +431,6 @@ export default function Navbar() {
                                   </motion.div>
                                 </div>
 
-                                {/* Bottom accent line for active */}
                                 {isActive && (
                                   <motion.div
                                     animate={{ scaleX: 1 }}
@@ -449,7 +446,6 @@ export default function Navbar() {
                       })}
                     </motion.div>
 
-                    {/* Privacy Policy Link */}
                     <motion.div
                       animate={{ opacity: 1, y: 0 }}
                       className="mt-8 border-border/20 border-t pt-6"

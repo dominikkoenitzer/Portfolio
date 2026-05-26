@@ -20,18 +20,18 @@ interface FieldProps {
 function Field({ id, label, type = "text", placeholder, value, onChange, required, multiline, delay = 0 }: FieldProps) {
   const [focused, setFocused] = useState(false);
   const base =
-    "w-full bg-transparent pt-1 pb-3 text-base placeholder:text-muted-foreground/30 text-foreground focus:outline-none transition-colors duration-200 resize-none";
+    "w-full bg-transparent pt-1 pb-3 text-base placeholder:text-muted-foreground/55 text-foreground focus:outline-none transition-colors duration-200 resize-none";
 
   return (
     <motion.div
-      className="group"
+      className="group min-w-0"
       initial={{ opacity: 0, y: 14 }}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       viewport={{ once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
       <label
-        className="mb-2 block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40"
+        className="mb-2 block font-mono font-medium text-[11px] text-muted-foreground uppercase tracking-[0.2em]"
         htmlFor={id}
       >
         {label}
@@ -126,7 +126,7 @@ export default function ContactForm() {
             {t.successBody}
           </p>
           <button
-            className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 transition-colors duration-200 hover:text-muted-foreground"
+            className="mt-8 font-medium font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors duration-200 hover:text-foreground"
             onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", message: "" }); }}
           >
             {t.sendAnother}
@@ -138,11 +138,11 @@ export default function ContactForm() {
           exit={{ opacity: 0 }}
           initial={{ opacity: 0 }}
           key="form"
-          className="space-y-8"
+          className="min-w-0 space-y-8"
           onSubmit={handleSubmit}
           transition={{ duration: 0.3 }}
         >
-          <div className="grid gap-8 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
             <Field
               delay={0.1}
               id="name"
@@ -182,15 +182,15 @@ export default function ContactForm() {
             whileInView={{ opacity: 1, y: 0 }}
           >
             <button
-              className="group flex w-full items-center justify-between rounded-lg bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_28px_hsl(var(--primary)/0.38)] disabled:opacity-60"
+              className="group flex w-full items-center justify-center gap-3 rounded-lg bg-primary px-6 py-3.5 font-medium text-primary-foreground text-sm shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_28px_hsl(var(--primary)/0.38)] disabled:opacity-60"
               disabled={isSubmitting}
               type="submit"
             >
-              <span>{isSubmitting ? t.sending : t.send}</span>
+              <span className="truncate">{isSubmitting ? t.sending : t.send}</span>
               {isSubmitting ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <div className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
               )}
             </button>
           </motion.div>
