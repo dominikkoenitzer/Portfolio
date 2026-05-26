@@ -1,9 +1,15 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
+
+interface InquiryState {
+  subject?: string;
+  message?: string;
+}
 
 interface FieldProps {
   id: string;
@@ -81,7 +87,14 @@ function Field({ id, label, type = "text", placeholder, value, onChange, require
 export default function ContactForm() {
   const { language } = useLanguage();
   const t = translations[language].contact.form;
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const location = useLocation();
+  const inquiry = (location.state ?? null) as InquiryState | null;
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: inquiry?.subject ?? "",
+    message: inquiry?.message ?? "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
@@ -127,7 +140,7 @@ export default function ContactForm() {
           </p>
           <button
             className="mt-8 font-medium font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors duration-200 hover:text-foreground"
-            onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", message: "" }); }}
+            onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", subject: "", message: "" }); }}
           >
             {t.sendAnother}
           </button>
@@ -166,6 +179,15 @@ export default function ContactForm() {
 
           <Field
             delay={0.2}
+            id="subject"
+            label={t.subjectLabel}
+            onChange={handleChange}
+            placeholder={t.subjectPlaceholder}
+            value={formData.subject}
+          />
+
+          <Field
+            delay={0.25}
             id="message"
             label={t.messageLabel}
             multiline

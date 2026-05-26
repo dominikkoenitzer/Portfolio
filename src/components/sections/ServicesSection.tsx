@@ -12,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
@@ -104,6 +105,17 @@ export default function ServicesSection() {
         <AnimatePresence mode="popLayout">
           {filtered.map((service, i) => {
             const item = t.items[service.itemKey];
+            const subject = `${t.inquiry.subjectPrefix} ${item.title}`;
+            const message = [
+              t.inquiry.greeting,
+              "",
+              t.inquiry.intro.replace("{service}", item.title),
+              "",
+              t.inquiry.discuss,
+              ...item.features.map((f) => `  → ${f}`),
+              "",
+              t.inquiry.closing,
+            ].join("\n");
             return (
               <motion.div
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -150,13 +162,14 @@ export default function ServicesSection() {
                   ))}
                 </div>
 
-                <a
+                <Link
                   className="group/btn mt-auto flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-sm text-muted-foreground transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
-                  href="/contact"
+                  state={{ subject, message }}
+                  to="/contact"
                 >
                   {t.getInTouch}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                </a>
+                </Link>
               </motion.div>
             );
           })}
