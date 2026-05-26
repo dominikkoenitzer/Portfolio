@@ -1,16 +1,17 @@
 import { motion } from "framer-motion";
-import { Heart, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight, Infinity as InfinityIcon, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
-import { SectionHeading } from "../layout/SectionHeading";
 
 type TierKey = keyof typeof translations.en.donate.tiers;
-const donationTiers: { amount: string; tierKey: TierKey }[] = [
+const tiers: { amount: string; tierKey: TierKey }[] = [
   { amount: "5", tierKey: "tier5" },
   { amount: "15", tierKey: "tier15" },
   { amount: "30", tierKey: "tier30" },
 ];
+
+const PAYPAL = "https://www.paypal.com/paypalme/dominikkoenitzer";
 
 export default function DonateSection() {
   const { language } = useLanguage();
@@ -18,88 +19,128 @@ export default function DonateSection() {
 
   return (
     <section className="section-padding" id="donate">
-      <SectionHeading subtitle={t.subheading} title={t.heading} />
+      <div className="grid gap-12 sm:gap-16 md:grid-cols-12 md:gap-12 lg:gap-20">
 
-      <motion.div
-        className="mx-auto max-w-5xl space-y-5"
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <div className="glass-card rounded-2xl border border-border/50 bg-background/80 p-6 sm:p-8">
-          <h3 className="mb-3 font-heading font-semibold text-2xl sm:text-3xl">
-            {t.cardTitle}
-          </h3>
+        {/* Left — editorial intro */}
+        <motion.div
+          className="flex min-w-0 flex-col md:col-span-5"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40">
+            {t.eyebrow}
+          </p>
+          <h1
+            className="mb-6 break-words font-bold leading-[1.02] tracking-tight [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
+            style={{ fontSize: "clamp(2rem, 7vw, 3.75rem)" }}
+          >
+            {t.headlineLine1}
+            <br />
+            <span className="hero-name-gradient inline-block pb-[0.15em]">
+              {t.headlineLine2}
+            </span>
+          </h1>
 
-          <p className="max-w-3xl text-muted-foreground leading-relaxed">
-            {t.cardBody}
+          <p className="max-w-sm text-muted-foreground text-base leading-relaxed">
+            {t.intro}
+          </p>
+        </motion.div>
+
+        {/* Right — amount picker */}
+        <motion.div
+          className="flex min-w-0 flex-col md:col-span-7"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <p className="mb-5 font-mono font-medium text-[11px] text-muted-foreground uppercase tracking-[0.2em]">
+            {t.pickAmount}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button asChild className="h-11 px-6">
-              <a
-                href="https://www.paypal.com/paypalme/dominikkoenitzer"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <Heart className="h-4 w-4" />
-                {t.supportAny}
-              </a>
-            </Button>
-
-            <a
-              className="inline-flex h-11 items-center justify-center rounded-md border border-border/60 bg-background px-5 font-medium text-sm transition-colors hover:border-primary/30 hover:bg-background/80"
-              href="/contact"
-            >
-              {t.sponsorBigger}
-            </a>
-          </div>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-3">
-          {donationTiers.map((tier, index) => {
-            const tierData = t.tiers[tier.tierKey];
-            return (
-              <motion.div
-                className="rounded-xl border border-border/50 bg-card/60 p-5"
-                initial={{ opacity: 0, y: 16 }}
-                key={tier.amount}
-                transition={{ duration: 0.4, delay: 0.08 + index * 0.08 }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
-              >
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <h4 className="font-heading font-semibold text-lg">{tierData.label}</h4>
-                  <span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 font-semibold text-primary text-sm">
-                    CHF {tier.amount}
-                  </span>
-                </div>
-
-                <p className="mb-4 text-muted-foreground text-sm leading-relaxed">
-                  {tierData.description}
-                </p>
-
-                <a
-                  className="inline-flex h-9 w-full items-center justify-center rounded-md border border-border/60 bg-background px-3 font-medium text-sm transition-colors hover:border-primary/30 hover:text-primary"
-                  href={`https://www.paypal.com/paypalme/dominikkoenitzer/${tier.amount}`}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            {tiers.map((tier, i) => {
+              const data = t.tiers[tier.tierKey];
+              return (
+                <motion.a
+                  className="group/tile relative flex flex-col gap-2 overflow-hidden rounded-xl border border-border/30 bg-background/40 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.04] sm:p-5"
+                  href={`${PAYPAL}/${tier.amount}`}
+                  initial={{ opacity: 0, y: 12 }}
+                  key={tier.amount}
                   rel="noopener noreferrer"
                   target="_blank"
+                  transition={{ duration: 0.45, delay: 0.05 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  viewport={{ once: true }}
+                  whileInView={{ opacity: 1, y: 0 }}
                 >
-                  {t.chooseTier}
-                </a>
-              </motion.div>
-            );
-          })}
-        </div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/45">
+                    {t.currency}
+                  </span>
+                  <span className="font-bold text-3xl tracking-tight transition-colors duration-200 group-hover/tile:text-primary sm:text-4xl">
+                    {tier.amount}
+                  </span>
+                  <span className="text-muted-foreground/75 text-xs leading-snug">
+                    {data.label}
+                  </span>
+                  <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground/35 transition-all duration-200 group-hover/tile:-translate-y-0.5 group-hover/tile:translate-x-0.5 group-hover/tile:text-primary" />
+                </motion.a>
+              );
+            })}
 
-        <div className="rounded-xl border border-border/50 bg-card/40 p-4 text-muted-foreground text-sm">
-          <div className="flex items-start gap-2">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <motion.a
+              className="group/tile relative flex flex-col gap-2 overflow-hidden rounded-xl border border-primary/30 bg-primary/[0.04] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/55 hover:bg-primary/[0.08] sm:p-5"
+              href={PAYPAL}
+              initial={{ opacity: 0, y: 12 }}
+              rel="noopener noreferrer"
+              target="_blank"
+              transition={{ duration: 0.45, delay: 0.05 + tiers.length * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/65">
+                {t.anyAmount.title}
+              </span>
+              <InfinityIcon className="h-7 w-7 text-primary sm:h-8 sm:w-8" strokeWidth={1.75} />
+              <span className="text-foreground/80 text-xs leading-snug">
+                {t.anyAmount.label}
+              </span>
+              <ArrowUpRight className="absolute right-3 top-3 h-3.5 w-3.5 text-primary/60 transition-all duration-200 group-hover/tile:-translate-y-0.5 group-hover/tile:translate-x-0.5 group-hover/tile:text-primary" />
+            </motion.a>
+          </div>
+
+          {/* Divider */}
+          <motion.div
+            animate={{ scaleX: 1 }}
+            className="my-10 h-px w-full bg-border/20"
+            initial={{ scaleX: 0 }}
+            style={{ transformOrigin: "left" }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            whileInView={{ scaleX: 1 }}
+          />
+
+          {/* Bigger collab nudge */}
+          <div className="mb-8 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span className="text-foreground/85 text-sm">{t.sponsorBiggerLead}</span>
+            <Link
+              className="group/cta inline-flex items-center gap-1 text-primary text-sm transition-colors duration-200 hover:text-primary/80"
+              to="/contact"
+            >
+              {t.sponsorBiggerCta}
+              <ArrowUpRight className="h-3 w-3 transition-all duration-200 group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5" />
+            </Link>
+          </div>
+
+          {/* Tiny security note */}
+          <div className="flex items-center gap-2 text-muted-foreground/55 text-xs">
+            <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
             <p>{t.paypalNote}</p>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+      </div>
     </section>
   );
 }
