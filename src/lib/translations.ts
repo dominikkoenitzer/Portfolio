@@ -126,6 +126,8 @@ export const translations = {
     projects: {
       heading: "Projects",
       subheading: "A focused collection of products built with clarity, consistency, and performance in mind.",
+      disclosureEyebrow: "Before you scroll",
+      disclosureBody: "This page is only the public-facing sliver of what I've built. A few other projects sit behind NDAs, in private repos, or on client infrastructure I'd rather not put on display — so they don't appear here. Everything you see below is personal: small things I tinker on in the evenings and on weekends, made out of curiosity and the quiet hope of making someone's day a fraction lighter. If one of them happens to do that for you, mission accomplished.",
       source: "Source",
       live: "Live",
       details: "Details",
@@ -485,6 +487,8 @@ export const translations = {
     projects: {
       heading: "Projekte",
       subheading: "Eine fokussierte Auswahl von Produkten, gebaut mit Klarheit, Konsistenz und Performance im Sinn.",
+      disclosureEyebrow: "Bevor du weiterscrollst",
+      disclosureBody: "Diese Seite ist nur der öffentlich sichtbare Ausschnitt dessen, was ich gebaut habe. Ein paar weitere Projekte liegen hinter NDAs, in privaten Repos oder auf Kunden-Infrastruktur, die ich lieber nicht zur Schau stelle — die tauchen hier also nicht auf. Alles, was du unten siehst, ist persönlich: kleine Dinge, an denen ich abends und am Wochenende bastle, aus Neugier und der leisen Hoffnung, jemandem den Tag ein winziges Stück leichter zu machen. Wenn eines davon genau das bei dir tut — Mission erfüllt.",
       source: "Quellcode",
       live: "Live",
       details: "Details",
@@ -846,6 +850,8 @@ export const translations = {
     projects: {
       heading: "Projets",
       subheading: "Une sélection ciblée de produits conçus avec clarté, cohérence et performance.",
+      disclosureEyebrow: "Avant de faire défiler",
+      disclosureBody: "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer — ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
       source: "Source",
       live: "Live",
       details: "Détails",
@@ -1205,6 +1211,8 @@ export const translations = {
     projects: {
       heading: "项目",
       subheading: "一组聚焦于清晰、一致与性能的产品作品。",
+      disclosureEyebrow: "在往下滑之前",
+      disclosureBody: "这一页只展示了我做过的东西里能公开的那一小部分。还有一些项目藏在 NDA、私有仓库，或客户的服务器里——我不太适合把它们摆出来，所以这里没有它们的身影。下面这些都是个人项目：是我在晚上和周末闲下来时折腾出来的小东西，源于好奇，也带着一点想让某个人的日子轻松那么一点点的私心。如果其中有一个真的做到了——那就刚刚好。",
       source: "源码",
       live: "在线",
       details: "详情",
