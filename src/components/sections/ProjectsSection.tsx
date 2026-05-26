@@ -14,6 +14,21 @@ export default function ProjectsSection() {
     <section className="section-padding" id="projects">
       <SectionHeading subtitle={t.subheading} title={t.heading} />
 
+      <motion.div
+        className="mb-10 max-w-3xl border-l-2 border-primary/35 pl-5 sm:mb-12 sm:pl-6"
+        initial={{ opacity: 0, x: -10 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: 1, x: 0 }}
+      >
+        <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+          {t.disclosureEyebrow}
+        </p>
+        <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-[15px]">
+          {t.disclosureBody}
+        </p>
+      </motion.div>
+
       <div className="space-y-5 sm:space-y-6">
         {projects.map((project, index) => (
           <motion.article
