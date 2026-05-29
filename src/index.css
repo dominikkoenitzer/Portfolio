@@ -1,5 +1,5 @@
-/* Import fonts from Google Fonts - must be before @tailwind */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+/* Fonts are loaded non-render-blocking from index.html (<link> in <head>)
+   so first paint isn't gated on the Google Fonts request. */
 
 @tailwind base;
 @tailwind components;
@@ -16,7 +16,8 @@
     --card-foreground: 222 60% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 60% 8%;
-    --primary: 217 95% 55%;
+    /* 51% (was 55%) so white text on the primary CTA clears WCAG AA 4.5:1 */
+    --primary: 217 95% 51%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 18% 95%;
     --secondary-foreground: 222 50% 14%;
@@ -1400,6 +1401,16 @@ section h4 {
   .glass-deep:active {
     transform: scale(0.985);
     transition: transform 0.1s ease-out;
+  }
+}
+
+/* Mobile: drop the fixed full-screen noise-grain overlay. It's an extra
+   composited layer for a ~2.5% texture that's invisible on small screens and
+   only adds GPU/memory cost during scroll. */
+@media (hover: none) and (pointer: coarse) {
+  [data-theme="glass"] body::after,
+  [data-theme="cyberpunk"] body::after {
+    display: none !important;
   }
 }
 

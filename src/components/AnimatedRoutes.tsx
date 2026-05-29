@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { lazy, type ReactNode, Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import Home from "@/pages/Home";
 import { pageTransition, pageTransitionVariants } from "@/lib/transitions";
 
-const Home = lazy(() => import("@/pages/Home"));
 const About = lazy(() => import("@/pages/About"));
 const Skills = lazy(() => import("@/pages/Skills"));
 const Projects = lazy(() => import("@/pages/Projects"));

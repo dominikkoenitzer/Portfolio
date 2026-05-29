@@ -133,11 +133,17 @@ export default function Aurora({
     const ctn = ctnDom.current;
     if (!ctn) return;
 
+    const isCoarse =
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: coarse)").matches;
+
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true,
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      // MSAA is wasted on a soft, blurry aurora — skip it on phones.
+      antialias: !isCoarse,
+      // iPhones report dpr 3; a blurry full-screen shader doesn't need that.
+      dpr: Math.min(window.devicePixelRatio || 1, isCoarse ? 1.5 : 2),
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -164,11 +170,26 @@ export default function Aurora({
         ];
     };
 
+    // iOS Safari fires `resize` on every scroll as the URL bar collapses —
+    // that only changes the height. Re-allocating the GL buffer mid-scroll is
+    // what makes scrolling hitch, so on touch we react to real width changes
+    // only (rotation etc.) and let CSS stretch the canvas over height changes.
+    let lastWidth = -1;
     const resize = () => {
-      renderer.setSize(ctn.offsetWidth, ctn.offsetHeight);
+      const w = ctn.offsetWidth;
+      if (isCoarse && w === lastWidth) return;
+      lastWidth = w;
+      renderer.setSize(w, ctn.offsetHeight);
+      gl.canvas.style.width = "100%";
+      gl.canvas.style.height = "100%";
       setRes();
     };
-    window.addEventListener("resize", resize);
+    let resizeRaf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(resizeRaf);
+      resizeRaf = requestAnimationFrame(resize);
+    };
+    window.addEventListener("resize", onResize);
 
     const geometry = new Triangle(gl);
     // biome-ignore lint/suspicious/noExplicitAny: OGL Triangle internals not typed
@@ -262,7 +283,8 @@ export default function Aurora({
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(resizeRaf);
+      window.removeEventListener("resize", onResize);
       observer.disconnect();
       if (gl.canvas.parentNode === ctn) ctn.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
