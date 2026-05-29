@@ -55,6 +55,9 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://github.com">
+    <!-- Avatar on /about is the LCP image — warm the connection early -->
+    <link rel="preconnect" href="https://avatars.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
 
     <!-- Fonts — loaded non-render-blocking so text paints immediately with a
          system fallback, then swaps in (display=swap) once the webfont arrives -->
@@ -93,7 +96,9 @@
 
     <!-- Language and Locale -->
     <meta http-equiv="content-language" content="en">
-    <link rel="canonical" href="https://dominikkoenitzer.ch/">
+    <!-- NOTE: canonical is injected per-route by react-helmet (see SEO.tsx).
+         Do NOT add a static <link rel="canonical"> here — it can't be removed
+         on sub-routes and produces "multiple conflicting canonical URLs". -->
     <link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/">
     <link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/">
     <link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/">
