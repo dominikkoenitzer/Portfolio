@@ -167,10 +167,10 @@ const skillCategories: SkillCategory[] = [
 ];
 
 const languageSkills: LanguageSkill[] = [
-  { langKey: "english", descKey: "langEnglish", proficiency: 90 },
-  { langKey: "german", descKey: "langGerman", proficiency: 85 },
+  { langKey: "english", descKey: "langEnglish", proficiency: 95 },
+  { langKey: "german", descKey: "langGerman", proficiency: 90 },
   { langKey: "chinese", descKey: "langChinese", proficiency: 70 },
-  { langKey: "french", descKey: "langFrench", proficiency: 45 },
+  { langKey: "french", descKey: "langFrench", proficiency: 60 },
 ].sort((a, b) => b.proficiency - a.proficiency);
 
 export default function SkillsSection() {

@@ -114,7 +114,7 @@ export const translations = {
         langEnglish: "Native proficiency",
         langGerman: "Native proficiency",
         langChinese: "Fluent proficiency",
-        langFrench: "Basic proficiency",
+        langFrench: "Conversational proficiency",
       },
       langNames: {
         english: "English",
@@ -472,7 +472,7 @@ export const translations = {
         langEnglish: "Muttersprachliches Niveau",
         langGerman: "Muttersprachliches Niveau",
         langChinese: "Fliessend",
-        langFrench: "Grundkenntnisse",
+        langFrench: "Konversationssicher",
       },
       langNames: {
         english: "Englisch",
@@ -832,7 +832,7 @@ export const translations = {
         langEnglish: "Niveau natif",
         langGerman: "Niveau natif",
         langChinese: "Maîtrise courante",
-        langFrench: "Niveau basique",
+        langFrench: "Niveau conversationnel",
       },
       langNames: {
         english: "Anglais",
@@ -1190,7 +1190,7 @@ export const translations = {
         langEnglish: "母语级",
         langGerman: "母语级",
         langChinese: "流利",
-        langFrench: "初级",
+        langFrench: "会话水平",
       },
       langNames: {
         english: "英语",
