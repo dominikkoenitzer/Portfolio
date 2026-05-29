@@ -116,7 +116,9 @@ export default function GitHubContributions() {
         className="glass-card rounded-2xl border border-border/20 p-6 shadow-sm backdrop-blur-sm sm:p-8"
         {...fadeInUp}
       >
-        <div className="flex items-center justify-center py-12">
+        {/* Reserve ~the loaded height so the calendar/commits popping in after
+            the API resolves doesn't shove the page (layout shift / jank). */}
+        <div className="flex min-h-[400px] items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </motion.div>

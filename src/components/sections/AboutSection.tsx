@@ -18,10 +18,17 @@ export default function AboutSection() {
         <motion.div className="md:col-span-5 lg:col-span-5" {...fadeInLeft}>
           <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
+              {/* LCP element on /about — fetchPriority high + async decode so it
+                  paints fast; explicit square dimensions reserve space (no CLS).
+                  &size=480 trims the payload vs the default 460→full-res avatar. */}
               <img
                 alt="Dominik Könitzer"
                 className="h-full w-full object-cover"
-                src="https://avatars.githubusercontent.com/u/82450286?v=4"
+                decoding="async"
+                fetchPriority="high"
+                height={480}
+                src="https://avatars.githubusercontent.com/u/82450286?v=4&size=480"
+                width={480}
               />
             </div>
             <motion.div
@@ -221,7 +228,7 @@ function InfoCard({ icon, title, subtitle, delay }: InfoCardProps) {
         {icon}
       </div>
       <div>
-        <h4 className="font-medium text-sm sm:text-base">{title}</h4>
+        <h3 className="font-medium text-sm sm:text-base">{title}</h3>
         <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>
       </div>
     </motion.div>
