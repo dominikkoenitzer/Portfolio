@@ -1,7 +1,12 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { type ReactNode, useEffect } from "react";
+import { lazy, type ReactNode, Suspense, useEffect } from "react";
 import { Footer, Navbar } from "@/components";
-import AuroraBackground from "@/components/backgrounds/AuroraBackground";
+
+// Decorative WebGL background — defer it (and the ~70KB ogl lib) off the
+// critical path so first paint isn't blocked by it.
+const AuroraBackground = lazy(
+  () => import("@/components/backgrounds/AuroraBackground")
+);
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -35,7 +40,9 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <ThemeProvider defaultTheme="glass">
       <LanguageProvider defaultLanguage="en">
-        <AuroraBackground />
+        <Suspense fallback={null}>
+          <AuroraBackground />
+        </Suspense>
         <CustomCursor />
 
       {/* Scroll progress bar */}

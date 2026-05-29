@@ -127,7 +127,6 @@ export default function Navbar() {
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <Link
-              aria-label={t.nav.goHome}
               className="group flex items-center font-bold text-xl tracking-tight md:text-2xl"
               to="/"
             >
