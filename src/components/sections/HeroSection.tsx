@@ -91,7 +91,7 @@ function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col gap-0.5">
       <span className="font-bold text-xl text-primary sm:text-2xl md:text-3xl">{value}</span>
-      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground/80 sm:text-[10px] sm:tracking-[0.18em]">{label}</span>
+      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground sm:text-[10px] sm:tracking-[0.18em]">{label}</span>
     </div>
   );
 }
@@ -105,6 +105,17 @@ export default function HeroSection() {
   const smoothVelocity = useSpring(scrollVelocity, { damping: 40, stiffness: 280 });
   const skewY = useTransform(smoothVelocity, [-2500, 0, 2500], [2.5, 0, -2.5]);
   const contentY = useTransform(scrollY, [0, 600], [0, -60]);
+
+  // The velocity-driven skew + parallax shear the hero during touch momentum
+  // scrolling — it reads as the content being thrown off-center. Desktop only.
+  const [reduceFx, setReduceFx] = useState(false);
+  useEffect(() => {
+    setReduceFx(
+      window.matchMedia(
+        "(pointer: coarse), (prefers-reduced-motion: reduce)"
+      ).matches
+    );
+  }, []);
 
   return (
     <section
@@ -120,9 +131,9 @@ export default function HeroSection() {
 
       <motion.div
         className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12 lg:px-16"
-        style={{ skewY }}
+        style={{ skewY: reduceFx ? 0 : skewY }}
       >
-        <motion.div style={{ y: contentY }}>
+        <motion.div style={{ y: reduceFx ? 0 : contentY }}>
 
           {/* Name */}
           <motion.p
