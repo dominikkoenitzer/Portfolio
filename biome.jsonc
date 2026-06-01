@@ -1,0 +1,21 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  // Respect .gitignore so lint/format skip dist/ and node_modules/.
+  // Without this, `ultracite check` lints the built output in dist/,
+  // burying real source findings under thousands of false positives.
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true
+  },
+  // Match the repo's existing style (2-space indent) rather than Biome's
+  // tab default, so formatting stays consistent across the whole codebase.
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  }
+}
