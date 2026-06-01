@@ -1097,46 +1097,20 @@
 }
 
 /* =====================================================
-   THEME TRANSITION — View Transitions API circular wipe
+   THEME TRANSITION — circular reveal animated from JS
+   theme-provider.tsx animates a clip-path keyframe on the
+   new view-transition snapshot via the Web Animations API,
+   so the default cross-fade is suppressed here.
    ===================================================== */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
+  animation: none;
   mix-blend-mode: normal;
 }
 
-::view-transition-old(root) {
-  z-index: 1;
-  animation: theme-fade-out 900ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
 ::view-transition-new(root) {
-  z-index: 9999;
-  animation: theme-reveal 850ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
-}
-
-@keyframes theme-reveal {
-  0% {
-    clip-path: circle(
-      0px at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
-    );
-  }
-  100% {
-    clip-path: circle(
-      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%)
-        var(--theme-transition-y, 50%)
-    );
-  }
-}
-
-@keyframes theme-fade-out {
-  0%,
-  20% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  z-index: 1;
 }
 
 /* =====================================================
