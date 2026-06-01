@@ -21,6 +21,7 @@ export interface PortfolioProject {
   liveUrl: string;
   priority: number;
   toneClass: string;
+  image?: string;
   tags: string[];
   impactHeading: string;
   impactPoints: string[];
@@ -52,4 +53,6 @@ export type ProjectBase = {
   liveUrl: string;
   priority: number;
   toneClass: string;
+  /** Optional screenshot path under /public (e.g. /projects/zephyr.png). */
+  image?: string;
 };
