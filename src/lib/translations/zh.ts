@@ -18,7 +18,7 @@ export const zh = {
     theme: "切换主题",
     themes: "主题",
     language: "切换语言",
-    detected: "检测到",
+    useSystem: "使用系统语言",
   },
   hero: {
     greeting: "你好，我是 Dominik Könitzer",
