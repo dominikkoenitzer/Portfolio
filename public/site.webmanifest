@@ -7,7 +7,7 @@
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2563eb",
-  "background_color": "#fbfdff",
+  "background_color": "#080c16",
   "lang": "en",
   "dir": "ltr",
   "categories": ["business", "portfolio", "productivity", "developer"],

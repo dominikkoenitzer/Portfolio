@@ -203,8 +203,7 @@ export function SEO({
       <meta content={siteDescription} name="twitter:description" />
       <meta content={siteImage} name="twitter:image" />
       <meta content={siteTitle} name="twitter:image:alt" />
-      <meta content="@dominikkoenitzer" name="twitter:creator" />
-      <meta content="@dominikkoenitzer" name="twitter:site" />
+      {/* No X/Twitter account — card still renders without a handle */}
 
       {/* Alternate Languages (hreflang) */}
       {alternateLanguages.map((alt) => (

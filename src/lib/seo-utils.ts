@@ -161,13 +161,21 @@ export const createPersonSchema = (
   alternateName: ["Dominik Konitzer", "D. Könitzer"],
   url: SITE_CONFIG.url,
   image: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
-  sameAs: [SITE_CONFIG.github],
+  sameAs: [SITE_CONFIG.github, SITE_CONFIG.linkedin],
   jobTitle: "Software Engineer",
   knowsLanguage: ["en", "de", "fr"],
-  worksFor: {
-    "@type": "Organization",
-    name: "WISS Schulen für Wirtschaft Informatik Immobilien",
-    url: "https://www.wiss.ch",
+  email: SITE_CONFIG.email,
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "Software Engineer",
+    occupationalCategory: "15-1252.00",
+    occupationLocation: { "@type": "Country", name: "Switzerland" },
+    skills:
+      "React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, Full-Stack Development, Docker, PostgreSQL",
+  },
+  seeks: {
+    "@type": "Demand",
+    name: "Software engineering roles, internships, and freelance opportunities",
   },
   address: {
     "@type": "PostalAddress",
