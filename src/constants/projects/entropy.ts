@@ -4,248 +4,250 @@ import type { LocalizedContent } from "./types";
 export const entropy: Record<Language, LocalizedContent> = {
   en: {
     tagline:
-      "An experimental concept refined into a stable, production-minded experience with strong technical foundations.",
+      "Generate, score, and refine strong passwords — built on cryptographically secure randomness, not Math.random().",
     description:
-      "Entropy helps you generate, evaluate, and refine secure passwords with tools for custom rules, strength scoring, and cryptography-backed randomness so you can create safer credentials with confidence.",
+      "Entropy helps you generate, evaluate, and refine secure passwords with custom rules, transparent strength scoring, and cryptography-backed randomness.",
     overview:
-      "Entropy started as a creative exploration and evolved into a structured product implementation. I focused on maintainability, interaction quality, and resilient behavior so the experience remains reliable under real usage conditions.",
+      "Entropy is a solo project built in Next.js and TypeScript. It generates passwords from the browser's cryptographic randomness (Web Crypto), scores their strength transparently, and lets you shape them with custom rules — turning 'is this password actually good?' into a clear, actionable answer.",
     roleSummary:
-      "Security-minded frontend engineer delivering reliable credential tooling with clear user guidance.",
+      "Sole designer and developer: security-minded UX plus the full Next.js/TypeScript build.",
     problemStatement:
-      "Many password tools are either too simplistic or too technical. Entropy bridges that gap by making secure generation understandable and actionable.",
+      "Most password tools are either too basic to trust or too technical to use. Entropy makes secure generation understandable — strong randomness under the hood, plain-language strength feedback on top.",
     objectives: [
-      "Provide configurable password generation grounded in strong randomness principles.",
-      "Make strength analysis readable so users can improve weak credentials confidently.",
-      "Combine generation, evaluation, and refinement in one repeatable workflow.",
+      "Generate passwords from cryptographically secure randomness, not predictable PRNGs.",
+      "Score strength transparently so users understand why a password is weak or strong.",
+      "Combine generation, scoring, and custom rules in one repeatable flow.",
     ],
     architectureDecisions: [
-      "Isolated generation, scoring, and rule configuration into explicit feature modules.",
-      "Separated presentation and logic layers for easier testing and iteration.",
-      "Designed deterministic UI states around validation and recommendation outputs.",
+      "Next.js + TypeScript with generation, scoring, and rule config as separate, testable modules.",
+      "Browser-native Web Crypto for randomness rather than Math.random().",
+      "Logic separated from presentation for easier testing and iteration.",
     ],
     implementationHighlights: [
-      "Integrated cryptography-backed randomness for stronger generated outputs.",
-      "Built transparent scoring feedback so users understand why passwords are weak or strong.",
-      "Implemented custom-rule controls without sacrificing usability.",
+      "Cryptographically secure password generation, entirely client-side.",
+      "Transparent strength scoring with plain-language feedback.",
+      "Custom-rule controls (length, character sets, constraints) that stay usable.",
     ],
     qualityAndSecurity: [
-      "Security-first interaction design that avoids exposing sensitive data patterns.",
-      "Robust input validation to guard against invalid rule combinations.",
-      "Accessibility-aware UX to keep critical security workflows broadly usable.",
+      "Security-first: randomness from Web Crypto, and generation runs client-side — no secrets leave the browser.",
+      "Validation that guards against impossible or contradictory rule combinations.",
+      "Accessibility-aware UX so the security workflow stays broadly usable.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Conveying security complexity without overwhelming non-technical users.",
+          "Explaining password strength without overwhelming non-technical users.",
         solution:
-          "Translated technical scoring outputs into plain-language recommendations and actionable improvements.",
+          "Translated scoring into plain-language recommendations and concrete fixes.",
       },
       {
         challenge:
-          "Maintaining trust while introducing advanced customization controls.",
+          "Offering advanced customization without letting users build weak configs.",
         solution:
-          "Added clear defaults, constraints, and immediate feedback to prevent misconfiguration.",
+          "Sensible defaults, constraints, and immediate feedback to prevent misconfiguration.",
       },
     ],
     hiringSignals: [
-      "Demonstrates applied security thinking in product UX.",
-      "Shows ability to simplify complex domains into reliable interfaces.",
-      "Reflects strong attention to risk, validation, and user trust.",
+      "Applied security thinking — CSPRNG randomness, client-side generation — in a real product.",
+      "Makes a technical domain understandable through UX.",
+      "Full Next.js/TypeScript ownership, end to end.",
     ],
     nextIterations: [
-      "Add optional passphrase mode and entropy-comparison utilities.",
-      "Provide downloadable security reports for personal credential audits.",
-      "Expand automated test coverage around edge-case rule combinations.",
+      "Passphrase mode and entropy-comparison tools.",
+      "Optional downloadable credential-audit reports.",
+      "Automated tests around edge-case rule combinations.",
     ],
-    tags: ["Experimental", "Responsive", "Engineering"],
+    tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
     impactHeading: "How This Project Creates Impact",
     impactPoints: [
-      "Turns complex interactions into a stable flow that users can trust.",
-      "Improves maintainability with clearer architecture and component boundaries.",
-      "Demonstrates product-level thinking beyond visuals by prioritizing reliability and UX outcomes.",
+      "Helps people create genuinely strong passwords with confidence.",
+      "Makes security understandable instead of intimidating.",
+      "Keeps secrets safe by generating entirely client-side.",
     ],
   },
   de: {
     tagline:
-      "Ein experimentelles Konzept, verfeinert zu einem stabilen, produktionsorientierten Erlebnis mit starken technischen Grundlagen.",
+      "Starke Passwörter generieren, bewerten und verfeinern — basierend auf kryptografisch sicherer Zufälligkeit, nicht auf Math.random().",
     description:
-      "Entropy hilft dir, sichere Passwörter zu erzeugen, zu bewerten und zu verfeinern — mit Tools für individuelle Regeln, Stärke-Scoring und Kryptografie-basierter Zufälligkeit, damit du sichere Zugangsdaten mit Vertrauen erstellst.",
+      "Entropy hilft dir, sichere Passwörter zu generieren, zu bewerten und zu verfeinern — mit eigenen Regeln, transparentem Strength-Scoring und kryptografisch gestützter Zufälligkeit.",
     overview:
-      "Entropy begann als kreative Erkundung und entwickelte sich zu einer strukturierten Produkt-Umsetzung. Ich habe Wert auf Wartbarkeit, Interaktionsqualität und resilientes Verhalten gelegt, damit die Erfahrung unter echten Nutzungsbedingungen zuverlässig bleibt.",
+      "Entropy ist ein Solo-Projekt, gebaut mit Next.js und TypeScript. Es generiert Passwörter aus der kryptografischen Zufälligkeit des Browsers (Web Crypto), bewertet ihre Stärke transparent und lässt dich sie über eigene Regeln formen — und macht aus der Frage, ob ein Passwort wirklich gut ist, eine klare, umsetzbare Antwort.",
     roleSummary:
-      "Sicherheitsbewusster Frontend Engineer, der verlässliches Credential-Tooling mit klarer Nutzerführung liefert.",
+      "Alleiniger Designer und Entwickler: sicherheitsbewusste UX plus der vollständige Next.js/TypeScript-Build.",
     problemStatement:
-      "Viele Passwort-Tools sind entweder zu simpel oder zu technisch. Entropy schliesst diese Lücke, indem sichere Generierung verständlich und umsetzbar wird.",
+      "Die meisten Passwort-Tools sind entweder zu simpel, um ihnen zu vertrauen, oder zu technisch, um sie zu nutzen. Entropy macht sichere Generierung verständlich — starke Zufälligkeit im Hintergrund, klares Stärke-Feedback in einfacher Sprache obendrauf.",
     objectives: [
-      "Konfigurierbare Passwort-Generierung auf Basis starker Zufallsprinzipien bereitstellen.",
-      "Stärke-Analyse lesbar machen, damit Nutzer schwache Credentials selbstbewusst verbessern können.",
-      "Generierung, Bewertung und Verfeinerung in einem wiederholbaren Workflow vereinen.",
+      "Passwörter aus kryptografisch sicherer Zufälligkeit generieren, nicht aus vorhersehbaren PRNGs.",
+      "Stärke transparent bewerten, damit Nutzer verstehen, warum ein Passwort schwach oder stark ist.",
+      "Generierung, Scoring und eigene Regeln in einem wiederholbaren Flow vereinen.",
     ],
     architectureDecisions: [
-      "Generierung, Scoring und Regel-Konfiguration in explizite Feature-Module isoliert.",
-      "Präsentations- und Logik-Schichten getrennt — für einfacheres Testen und Iterieren.",
-      "Deterministische UI-States rund um Validierungs- und Empfehlungs-Outputs gestaltet.",
+      "Next.js + TypeScript mit Generierung, Scoring und Regel-Konfiguration als getrennte, testbare Module.",
+      "Browser-natives Web Crypto für Zufälligkeit statt Math.random().",
+      "Logik von der Präsentation getrennt für einfacheres Testen und Iterieren.",
     ],
     implementationHighlights: [
-      "Kryptografie-basierte Zufälligkeit für stärkere Outputs integriert.",
-      "Transparentes Scoring-Feedback gebaut, damit Nutzer verstehen, warum Passwörter schwach oder stark sind.",
-      "Custom-Rule-Controls implementiert, ohne Usability zu opfern.",
+      "Kryptografisch sichere Passwort-Generierung, vollständig client-seitig.",
+      "Transparentes Strength-Scoring mit Feedback in einfacher Sprache.",
+      "Eigene Regel-Controls (Länge, Zeichensätze, Einschränkungen), die nutzbar bleiben.",
     ],
     qualityAndSecurity: [
-      "Security-First-Interaktionsdesign, das keine sensiblen Muster offenlegt.",
-      "Robuste Eingabe-Validierung gegen ungültige Regel-Kombinationen.",
-      "Accessibility-bewusste UX, damit kritische Security-Workflows breit nutzbar bleiben.",
+      "Security-first: Zufälligkeit aus Web Crypto, und die Generierung läuft client-seitig — keine Geheimnisse verlassen den Browser.",
+      "Validierung, die gegen unmögliche oder widersprüchliche Regel-Kombinationen absichert.",
+      "Barrierefreiheits-bewusste UX, damit der Security-Workflow breit nutzbar bleibt.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Security-Komplexität vermitteln, ohne nicht-technische Nutzer zu überfordern.",
+          "Passwort-Stärke erklären, ohne nicht-technische Nutzer zu überfordern.",
         solution:
-          "Technische Scoring-Outputs in einfache Empfehlungen und umsetzbare Verbesserungen übersetzt.",
+          "Scoring in Empfehlungen in einfacher Sprache und konkrete Korrekturen übersetzt.",
       },
       {
         challenge:
-          "Vertrauen erhalten, während fortgeschrittene Customization-Controls eingeführt werden.",
+          "Fortgeschrittene Anpassung bieten, ohne dass Nutzer schwache Konfigurationen bauen.",
         solution:
-          "Klare Defaults, Constraints und unmittelbares Feedback ergänzt, um Fehlkonfigurationen zu verhindern.",
+          "Sinnvolle Defaults, Einschränkungen und sofortiges Feedback, um Fehlkonfigurationen zu verhindern.",
       },
     ],
     hiringSignals: [
-      "Zeigt angewandtes Security-Denken in Produkt-UX.",
-      "Beweist die Fähigkeit, komplexe Domains in verlässliche Interfaces zu übersetzen.",
-      "Spiegelt starken Fokus auf Risiko, Validierung und Nutzervertrauen.",
+      "Angewandtes Security-Denken — CSPRNG-Zufälligkeit, client-seitige Generierung — in einem echten Produkt.",
+      "Macht eine technische Domäne über UX verständlich.",
+      "Vollständige Next.js/TypeScript-Ownership, Ende zu Ende.",
     ],
     nextIterations: [
-      "Optionalen Passphrase-Modus und Entropy-Vergleichs-Utilities ergänzen.",
-      "Herunterladbare Security-Reports für persönliche Credential-Audits bereitstellen.",
-      "Automatisierte Test-Abdeckung für Edge-Case-Regelkombinationen ausbauen.",
+      "Passphrasen-Modus und Entropie-Vergleichs-Tools.",
+      "Optionale herunterladbare Credential-Audit-Berichte.",
+      "Automatisierte Tests rund um Edge-Case-Regel-Kombinationen.",
     ],
-    tags: ["Experimentell", "Responsive", "Engineering"],
+    tags: ["Next.js", "TypeScript", "Web Crypto", "Sicherheit"],
     impactHeading: "Wie dieses Projekt Wirkung erzeugt",
     impactPoints: [
-      "Verwandelt komplexe Interaktionen in einen stabilen Flow, dem Nutzer vertrauen können.",
-      "Verbessert die Wartbarkeit durch klarere Architektur und Komponenten-Grenzen.",
-      "Beweist produktorientiertes Denken jenseits des Visuellen — durch Priorisierung von Zuverlässigkeit und UX-Ergebnissen.",
+      "Hilft Menschen, mit Zuversicht wirklich starke Passwörter zu erstellen.",
+      "Macht Sicherheit verständlich statt einschüchternd.",
+      "Hält Geheimnisse sicher, indem alles client-seitig generiert wird.",
     ],
   },
   fr: {
     tagline:
-      "Un concept expérimental affiné en une expérience stable et orientée production, avec des fondations techniques solides.",
+      "Générer, évaluer et affiner des mots de passe forts — bâti sur un aléa cryptographiquement sûr, pas sur Math.random().",
     description:
-      "Entropy vous aide à générer, évaluer et affiner des mots de passe sécurisés grâce à des règles personnalisées, un scoring de robustesse et une aléatoire cryptographique, pour créer des identifiants plus sûrs en toute confiance.",
+      "Entropy vous aide à générer, évaluer et affiner des mots de passe sécurisés, avec des règles personnalisées, un scoring de robustesse transparent et un aléa adossé à la cryptographie.",
     overview:
-      "Entropy a commencé comme une exploration créative pour évoluer en implémentation produit structurée. J'ai mis l'accent sur la maintenabilité, la qualité d'interaction et un comportement résilient pour que l'expérience reste fiable en conditions réelles.",
+      "Entropy est un projet solo bâti en Next.js et TypeScript. Il génère des mots de passe à partir de l'aléa cryptographique du navigateur (Web Crypto), évalue leur robustesse de façon transparente et permet de les façonner avec des règles personnalisées — transformant la question « ce mot de passe est-il vraiment bon ? » en une réponse claire et actionnable.",
     roleSummary:
-      "Ingénieur frontend orienté sécurité fournissant un outillage d'identifiants fiable avec un guidage clair pour l'utilisateur.",
+      "Seul concepteur et développeur : UX soucieuse de sécurité et le build Next.js/TypeScript complet.",
     problemStatement:
-      "Beaucoup d'outils de mots de passe sont soit trop simplistes, soit trop techniques. Entropy comble cet écart en rendant la génération sécurisée compréhensible et actionnable.",
+      "La plupart des outils de mots de passe sont soit trop basiques pour être fiables, soit trop techniques pour être utilisés. Entropy rend la génération sécurisée compréhensible — un aléa fort sous le capot, un retour de robustesse en langage clair par-dessus.",
     objectives: [
-      "Fournir une génération de mots de passe configurable basée sur des principes solides d'aléa.",
-      "Rendre l'analyse de robustesse lisible pour que les utilisateurs améliorent leurs identifiants faibles en confiance.",
-      "Combiner génération, évaluation et raffinement dans un seul workflow répétable.",
+      "Générer des mots de passe à partir d'un aléa cryptographiquement sûr, pas de PRNG prévisibles.",
+      "Évaluer la robustesse de façon transparente pour que les utilisateurs comprennent pourquoi un mot de passe est faible ou fort.",
+      "Combiner génération, scoring et règles personnalisées dans un flux reproductible.",
     ],
     architectureDecisions: [
-      "Isolation de la génération, du scoring et de la configuration des règles dans des modules explicites.",
-      "Séparation des couches de présentation et de logique pour faciliter tests et itérations.",
-      "Conception d'états UI déterministes autour des résultats de validation et de recommandation.",
+      "Next.js + TypeScript avec génération, scoring et configuration des règles en modules séparés et testables.",
+      "Web Crypto natif au navigateur pour l'aléa plutôt que Math.random().",
+      "Logique séparée de la présentation pour faciliter les tests et l'itération.",
     ],
     implementationHighlights: [
-      "Intégration d'une aléatoire cryptographique pour des sorties générées plus solides.",
-      "Construction d'un feedback de scoring transparent pour expliquer la robustesse des mots de passe.",
-      "Implémentation de contrôles de règles personnalisées sans sacrifier l'utilisabilité.",
+      "Génération de mots de passe cryptographiquement sûre, entièrement côté client.",
+      "Scoring de robustesse transparent avec un retour en langage clair.",
+      "Des contrôles de règles personnalisées (longueur, jeux de caractères, contraintes) qui restent utilisables.",
     ],
     qualityAndSecurity: [
-      "Design d'interaction orienté sécurité qui évite d'exposer des patterns de données sensibles.",
-      "Validation d'entrée robuste contre les combinaisons de règles invalides.",
-      "UX consciente de l'accessibilité pour garder les workflows de sécurité critiques largement utilisables.",
+      "Sécurité d'abord : aléa issu de Web Crypto, et génération côté client — aucun secret ne quitte le navigateur.",
+      "Une validation qui protège contre les combinaisons de règles impossibles ou contradictoires.",
+      "Une UX soucieuse de l'accessibilité pour que le workflow de sécurité reste largement utilisable.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Communiquer la complexité de la sécurité sans submerger des utilisateurs non techniques.",
+          "Expliquer la robustesse des mots de passe sans submerger les utilisateurs non techniques.",
         solution:
-          "Traduction des sorties techniques de scoring en recommandations en langage clair et améliorations actionnables.",
+          "Traduction du scoring en recommandations en langage clair et corrections concrètes.",
       },
       {
         challenge:
-          "Maintenir la confiance tout en introduisant des contrôles de personnalisation avancés.",
+          "Offrir une personnalisation avancée sans laisser les utilisateurs créer des configs faibles.",
         solution:
-          "Ajout de valeurs par défaut claires, de contraintes et d'un feedback immédiat pour éviter les mauvaises configurations.",
+          "Des défauts sensés, des contraintes et un retour immédiat pour éviter les mauvaises configurations.",
       },
     ],
     hiringSignals: [
-      "Démontre une pensée sécurité appliquée à l'UX produit.",
-      "Montre la capacité à simplifier des domaines complexes en interfaces fiables.",
-      "Reflète une forte attention au risque, à la validation et à la confiance utilisateur.",
+      "Une pensée sécurité appliquée — aléa CSPRNG, génération côté client — dans un vrai produit.",
+      "Rend un domaine technique compréhensible grâce à l'UX.",
+      "Ownership Next.js/TypeScript complète, de bout en bout.",
     ],
     nextIterations: [
-      "Ajouter un mode passphrase optionnel et des utilitaires de comparaison d'entropie.",
-      "Fournir des rapports de sécurité téléchargeables pour audits d'identifiants personnels.",
-      "Étendre la couverture de tests automatisés sur les combinaisons de règles limites.",
+      "Mode phrase de passe et outils de comparaison d'entropie.",
+      "Rapports d'audit d'identifiants téléchargeables en option.",
+      "Tests automatisés autour des combinaisons de règles aux cas limites.",
     ],
-    tags: ["Expérimental", "Responsive", "Ingénierie"],
+    tags: ["Next.js", "TypeScript", "Web Crypto", "Sécurité"],
     impactHeading: "Comment ce projet crée de l'impact",
     impactPoints: [
-      "Transforme des interactions complexes en un flux stable auquel les utilisateurs peuvent faire confiance.",
-      "Améliore la maintenabilité grâce à une architecture et des frontières de composants plus claires.",
-      "Démontre une pensée au niveau produit, au-delà du visuel, en priorisant fiabilité et résultats UX.",
+      "Aide les gens à créer des mots de passe réellement forts en toute confiance.",
+      "Rend la sécurité compréhensible plutôt qu'intimidante.",
+      "Garde les secrets en sécurité en générant entièrement côté client.",
     ],
   },
   zh: {
-    tagline: "由实验概念打磨为具有扎实技术基础的、面向生产的稳定体验。",
+    tagline:
+      "生成、评分并优化强密码——基于密码学安全的随机性，而非 Math.random()。",
     description:
-      "Entropy 通过自定义规则、强度评分与密码学级随机性，帮助你生成、评估并优化安全密码，从容地创建更安全的凭据。",
+      "Entropy 帮助你生成、评估并优化安全密码，支持自定义规则、透明的强度评分以及由密码学支撑的随机性。",
     overview:
-      "Entropy 起源于一次创意探索，最终演化为结构化的产品实现。我专注于可维护性、交互质量与稳健行为，使其在真实使用中依然可靠。",
-    roleSummary: "注重安全的前端工程师，交付提供清晰用户指引的可靠凭据工具。",
+      "Entropy 是一个使用 Next.js 与 TypeScript 构建的独立项目。它利用浏览器的密码学随机性（Web Crypto）生成密码，透明地评估其强度，并允许你通过自定义规则进行调整——把“这个密码到底好不好？”变成清晰、可执行的答案。",
+    roleSummary:
+      "唯一的设计者与开发者：以安全为导向的 UX，以及完整的 Next.js/TypeScript 构建。",
     problemStatement:
-      "许多密码工具要么过于简单，要么过于技术化。Entropy 通过把安全生成变得可理解、可执行，弥合了这一空白。",
+      "大多数密码工具要么过于简单而不可信，要么过于技术化而难以使用。Entropy 让安全的密码生成变得易懂——底层是强随机性，上层是通俗易懂的强度反馈。",
     objectives: [
-      "提供建立在强随机性原则之上的可配置密码生成。",
-      "让强度分析可读，使用户能放心地改进弱凭据。",
-      "在同一个可重复的工作流中整合生成、评估与优化。",
+      "使用密码学安全的随机性生成密码，而非可预测的 PRNG。",
+      "透明地评估强度，让用户理解密码为何强或弱。",
+      "将生成、评分与自定义规则整合到一个可重复的流程中。",
     ],
     architectureDecisions: [
-      "将生成、评分与规则配置隔离为明确的功能模块。",
-      "分离表现层与逻辑层，便于测试与迭代。",
-      "围绕校验与建议输出设计确定性的 UI 状态。",
+      "Next.js + TypeScript，将生成、评分与规则配置拆分为独立、可测试的模块。",
+      "使用浏览器原生的 Web Crypto 而非 Math.random() 来获取随机性。",
+      "将逻辑与展示分离，便于测试与迭代。",
     ],
     implementationHighlights: [
-      "集成密码学级随机性，生成更强的输出。",
-      "提供透明的评分反馈，让用户理解为何密码弱或强。",
-      "在不牺牲易用性的前提下实现自定义规则控件。",
+      "完全在客户端进行的、密码学安全的密码生成。",
+      "透明的强度评分，配以通俗易懂的反馈。",
+      "自定义规则控件（长度、字符集、约束）依然保持易用。",
     ],
     qualityAndSecurity: [
-      "以安全为先的交互设计，避免暴露敏感数据模式。",
-      "稳健的输入校验，防止非法的规则组合。",
-      "考量可访问性的 UX，让关键安全流程保持广泛可用。",
+      "安全优先：随机性来自 Web Crypto，且生成在客户端进行——没有任何机密离开浏览器。",
+      "校验机制可防止不可能或相互矛盾的规则组合。",
+      "关注无障碍的 UX，让安全流程对广泛用户都保持可用。",
     ],
     challengesAndSolutions: [
       {
-        challenge: "在不让非技术用户感到压力的情况下传达安全的复杂性。",
-        solution: "将技术化的评分输出转化为通俗的建议与可执行的改进。",
+        challenge: "在不让非技术用户感到不知所措的前提下，解释密码强度。",
+        solution: "将评分转化为通俗易懂的建议与具体的改进措施。",
       },
       {
-        challenge: "在引入高级自定义控件时维持用户信任。",
-        solution: "添加清晰的默认值、约束与即时反馈，防止配置出错。",
+        challenge: "在提供高级自定义的同时，不让用户构建出脆弱的配置。",
+        solution: "合理的默认值、约束与即时反馈，避免错误配置。",
       },
     ],
     hiringSignals: [
-      "在产品 UX 中体现应用化的安全思维。",
-      "证明可以把复杂领域简化为可信的界面。",
-      "体现对风险、校验与用户信任的高度关注。",
+      "在真实产品中应用安全思维——CSPRNG 随机性、客户端生成。",
+      "通过 UX 让一个技术领域变得易懂。",
+      "端到端、完整的 Next.js/TypeScript 主导能力。",
     ],
     nextIterations: [
-      "增加可选的口令短语模式与熵对比工具。",
-      "提供可下载的安全报告用于个人凭据审计。",
-      "扩展对边界规则组合的自动化测试覆盖。",
+      "口令短语（passphrase）模式与熵值对比工具。",
+      "可选的、可下载的凭据审计报告。",
+      "围绕边界情况规则组合的自动化测试。",
     ],
-    tags: ["实验性", "响应式", "工程"],
+    tags: ["Next.js", "TypeScript", "Web Crypto", "安全"],
     impactHeading: "本项目如何创造价值",
     impactPoints: [
-      "把复杂交互转化为用户可信赖的稳定流程。",
-      "通过更清晰的架构与组件边界提升可维护性。",
-      "通过优先关注可靠性与 UX 结果，展示超越视觉的产品级思考。",
+      "帮助人们自信地创建真正强健的密码。",
+      "让安全变得易懂，而非令人生畏。",
+      "通过完全在客户端生成，确保机密的安全。",
     ],
   },
 };

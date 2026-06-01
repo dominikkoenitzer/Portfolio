@@ -30,9 +30,11 @@ const ProjectDetails = () => {
   const otherProjects = getProjects(language).filter(
     (item) => item.slug !== project.slug
   );
-  const architectureText = project.architectureDecisions.join(" ");
-  const implementationText = project.implementationHighlights.join(" ");
-  const qualityText = project.qualityAndSecurity.join(" ");
+  const technicalPoints = [
+    ...project.architectureDecisions,
+    ...project.implementationHighlights,
+    ...project.qualityAndSecurity,
+  ];
 
   return (
     <>
@@ -77,6 +79,27 @@ const ProjectDetails = () => {
               <p className="mt-4 max-w-3xl text-foreground/90 leading-7">
                 {project.description}
               </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span
+                    className="rounded-full border border-border/40 bg-secondary/40 px-3 py-1 text-muted-foreground text-xs"
+                    key={tag}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              {project.image ? (
+                <img
+                  alt={`${project.title} screenshot`}
+                  className="mt-8 w-full rounded-xl border border-border/40 object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                  src={project.image}
+                />
+              ) : null}
             </div>
           </section>
 
@@ -119,10 +142,18 @@ const ProjectDetails = () => {
                 <div className="mt-4 space-y-4 text-foreground/90 leading-8">
                   <p>{project.roleSummary}</p>
                   <p>{project.problemStatement}</p>
-                  <p>{architectureText}</p>
-                  <p>{implementationText}</p>
-                  <p>{qualityText}</p>
                 </div>
+                <ul className="mt-6 space-y-2.5">
+                  {technicalPoints.map((point) => (
+                    <li
+                      className="flex gap-2.5 text-foreground/90 leading-7"
+                      key={point}
+                    >
+                      <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </section>
 
               <section className="mt-10 border-border/30 border-t pt-8">

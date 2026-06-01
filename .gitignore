@@ -78,3 +78,6 @@ coverage/
 tmp/
 temp/
 .vercel
+
+# Scratch screenshot originals — optimized copies live in public/projects/
+Screenshots/
