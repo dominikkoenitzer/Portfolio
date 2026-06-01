@@ -18,7 +18,7 @@ export const en = {
     theme: "Toggle theme",
     themes: "Themes",
     language: "Toggle language",
-    detected: "Detected",
+    useSystem: "Use system language",
   },
   hero: {
     greeting: "Hi, I'm Dominik Könitzer",
