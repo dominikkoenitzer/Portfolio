@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { lazy, type ReactNode, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Home from "@/pages/Home";
 import { pageTransition, pageTransitionVariants } from "@/lib/transitions";
@@ -13,47 +13,39 @@ const Contact = lazy(() => import("@/pages/Contact"));
 const Donate = lazy(() => import("@/pages/Donate"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
 
-const PageTransition = ({ children }: { children: ReactNode }) => (
-  <motion.div
-    animate="animate"
-    className="flex flex-1 flex-col"
-    exit="exit"
-    initial="initial"
-    transition={pageTransition}
-    variants={pageTransitionVariants}
-  >
-    {children}
-  </motion.div>
-);
-
 export const AnimatedRoutes = () => {
   const location = useLocation();
 
-  const withTransition = (Component: React.ComponentType) => (
-    <AnimatePresence mode="wait">
-      <PageTransition key={location.pathname}>
-        <Suspense fallback={<div className="flex-1" />}>
-          <Component />
-        </Suspense>
-      </PageTransition>
-    </AnimatePresence>
-  );
-
+  // One motion wrapper around the route outlet, re-keyed on the path so
+  // AnimatePresence runs the exit/enter between pages. The outgoing copy keeps
+  // the previous `location` because AnimatePresence holds it mounted until its
+  // exit finishes.
   return (
-    <Routes location={location}>
-      <Route element={withTransition(Home)} path="/" />
-      <Route element={withTransition(About)} path="/about" />
-      <Route element={withTransition(Skills)} path="/skills" />
-      <Route element={withTransition(Projects)} path="/projects" />
-      <Route
-        element={withTransition(ProjectDetails)}
-        path="/projects/:projectSlug"
-      />
-      <Route element={withTransition(Services)} path="/services" />
-      <Route element={withTransition(Contact)} path="/contact" />
-      <Route element={withTransition(Donate)} path="/donate" />
-      <Route element={withTransition(Privacy)} path="/privacy" />
-      <Route element={<Navigate replace to="/" />} path="*" />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <motion.div
+        animate="animate"
+        className="flex min-h-full flex-1 flex-col"
+        exit="exit"
+        initial="initial"
+        key={location.pathname}
+        transition={pageTransition}
+        variants={pageTransitionVariants}
+      >
+        <Suspense fallback={null}>
+          <Routes location={location}>
+            <Route element={<Home />} path="/" />
+            <Route element={<About />} path="/about" />
+            <Route element={<Skills />} path="/skills" />
+            <Route element={<Projects />} path="/projects" />
+            <Route element={<ProjectDetails />} path="/projects/:projectSlug" />
+            <Route element={<Services />} path="/services" />
+            <Route element={<Contact />} path="/contact" />
+            <Route element={<Donate />} path="/donate" />
+            <Route element={<Privacy />} path="/privacy" />
+            <Route element={<Navigate replace to="/" />} path="*" />
+          </Routes>
+        </Suspense>
+      </motion.div>
+    </AnimatePresence>
   );
 };
