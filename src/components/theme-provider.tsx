@@ -28,8 +28,8 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 const THEME_META_HEX: Record<Theme, string> = {
   glass: "#080c16",
   bloom: "#fdf0f2",
-  forest: "#f6faf2",
-  sunset: "#fdf6f1",
+  forest: "#f5f8f2",
+  sunset: "#190b0e",
 };
 
 const isTheme = (v: string | null): v is Theme =>

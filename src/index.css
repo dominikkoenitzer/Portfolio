@@ -71,68 +71,68 @@
     --scrollbar-thumb-hover: 265 35% 52%;
   }
 
-  /* Forest — organic, earthy green on off-white */
+  /* Forest — sunlit woodland: deep green, moss, and warm wood on cream */
   .forest {
-    --background: 95 32% 97%;
-    --foreground: 140 55% 9%;
-    --card: 0 0% 100%;
-    --card-foreground: 140 55% 9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 140 55% 9%;
-    --primary: 142 68% 28%;
-    --primary-foreground: 140 40% 98%;
-    --secondary: 100 24% 92%;
-    --secondary-foreground: 140 55% 14%;
-    --muted: 100 20% 93%;
-    --muted-foreground: 140 22% 32%;
-    --accent: 28 45% 85%;
+    --background: 90 30% 96%;
+    --foreground: 145 45% 10%;
+    --card: 80 30% 99%;
+    --card-foreground: 145 45% 10%;
+    --popover: 80 30% 99%;
+    --popover-foreground: 145 45% 10%;
+    --primary: 145 55% 30%;
+    --primary-foreground: 90 40% 97%;
+    --secondary: 95 28% 90%;
+    --secondary-foreground: 145 45% 16%;
+    --muted: 95 22% 91%;
+    --muted-foreground: 130 18% 34%;
+    --accent: 32 48% 84%;
     --accent-foreground: 28 55% 26%;
-    --border: 100 18% 85%;
-    --input: 100 18% 85%;
-    --ring: 142 68% 28%;
+    --border: 95 22% 83%;
+    --input: 95 22% 83%;
+    --ring: 145 55% 30%;
     --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(142 64% 30%) 0%,
-      hsl(80 45% 42%) 45%,
-      hsl(30 55% 42%) 100%
+      hsl(150 60% 26%) 0%,
+      hsl(95 50% 40%) 50%,
+      hsl(32 60% 45%) 100%
     );
-    --theme-shadow-color: 142 68% 28%;
-    --scrollbar-thumb: 100 22% 76%;
-    --scrollbar-thumb-hover: 142 60% 38%;
+    --theme-shadow-color: 145 55% 28%;
+    --scrollbar-thumb: 95 22% 76%;
+    --scrollbar-thumb-hover: 145 50% 36%;
   }
 
-  /* Sunset — warm rose, coral, and gold over a peach cream */
+  /* Sunset — dusk sky: neon rose, coral, and gold */
   .sunset {
-    --background: 25 80% 97%;
-    --foreground: 345 35% 13%;
-    --card: 0 0% 100%;
-    --card-foreground: 345 35% 13%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 345 35% 13%;
-    --primary: 342 70% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 30 50% 92%;
-    --secondary-foreground: 345 45% 20%;
-    --muted: 28 35% 92%;
-    --muted-foreground: 20 25% 38%;
-    --accent: 38 90% 86%;
-    --accent-foreground: 30 80% 28%;
-    --border: 28 40% 86%;
-    --input: 28 40% 86%;
-    --ring: 342 70% 45%;
-    --destructive: 0 75% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --background: 345 42% 7%;
+    --foreground: 30 30% 95%;
+    --card: 345 36% 10%;
+    --card-foreground: 30 30% 95%;
+    --popover: 345 38% 9%;
+    --popover-foreground: 30 30% 95%;
+    --primary: 345 88% 68%;
+    --primary-foreground: 345 45% 8%;
+    --secondary: 345 28% 17%;
+    --secondary-foreground: 30 25% 90%;
+    --muted: 345 22% 16%;
+    --muted-foreground: 20 24% 77%;
+    --accent: 38 70% 26%;
+    --accent-foreground: 40 95% 78%;
+    --border: 345 26% 24%;
+    --input: 345 24% 21%;
+    --ring: 345 88% 68%;
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 0 0% 98%;
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(342 75% 55%) 0%,
-      hsl(15 88% 62%) 50%,
-      hsl(40 92% 60%) 100%
+      hsl(345 90% 68%) 0%,
+      hsl(15 92% 65%) 50%,
+      hsl(40 94% 62%) 100%
     );
-    --theme-shadow-color: 342 70% 50%;
-    --scrollbar-thumb: 28 30% 80%;
-    --scrollbar-thumb-hover: 342 70% 58%;
+    --theme-shadow-color: 345 82% 58%;
+    --scrollbar-thumb: 345 24% 28%;
+    --scrollbar-thumb-hover: 345 82% 62%;
   }
 
   /* Smooth theme transitions */
