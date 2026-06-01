@@ -1,7 +1,7 @@
-import { Coffee, Sparkles, TreePine, Zap } from "lucide-react";
+import { Coffee, Flower2, Sparkles, TreePine } from "lucide-react";
 import type { ElementType } from "react";
 
-export type Theme = "glass" | "cyberpunk" | "forest" | "coffee";
+export type Theme = "glass" | "bloom" | "forest" | "coffee";
 
 export interface ThemeConfig {
   value: Theme;
@@ -11,7 +11,7 @@ export interface ThemeConfig {
 
 export const THEMES: ThemeConfig[] = [
   { value: "glass", label: "Glass", icon: Sparkles },
-  { value: "cyberpunk", label: "Cyberpunk", icon: Zap },
+  { value: "bloom", label: "Bloom", icon: Flower2 },
   { value: "forest", label: "Forest", icon: TreePine },
   { value: "coffee", label: "Coffee", icon: Coffee },
 ];
@@ -62,17 +62,17 @@ export const VEIL_PRESETS: Record<Theme, VeilPreset> = {
     minAlpha: 0.04,
     base: 0.22,
   },
-  cyberpunk: {
-    colorStops: ["#FFB6E0", "#D8C0FF", "#A8E6FF"],
+  bloom: {
+    colorStops: ["#453161", "#B6D088", "#FFE8EA"],
     blendMode: "multiply",
-    intensity: 0.55,
-    blend: 0.58,
-    scale: 0.9,
-    feather: 0.4,
-    alphaGamma: 1.1,
-    saturation: 1.1,
-    minAlpha: 0.04,
-    base: 0.2,
+    intensity: 0.45,
+    blend: 0.62,
+    scale: 0.85,
+    feather: 0.48,
+    alphaGamma: 1.2,
+    saturation: 1.0,
+    base: 0.22,
+    minAlpha: 0.03,
   },
   forest: {
     colorStops: ["#C8F2D6", "#A8E6C5", "#E0F5E3"],
