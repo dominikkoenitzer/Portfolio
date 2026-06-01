@@ -1,10 +1,12 @@
+// Page-level enter/exit motion for routes. A short blur-and-lift that settles
+// with an ease-out-quint curve.
 export const pageTransitionVariants = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
+  initial: { opacity: 0, y: 12, filter: "blur(4px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -12, filter: "blur(4px)" },
 };
 
 export const pageTransition = {
-  duration: 0.5,
-  ease: [0.25, 0.1, 0.25, 1] as const,
+  duration: 0.45,
+  ease: [0.22, 1, 0.36, 1] as const,
 };

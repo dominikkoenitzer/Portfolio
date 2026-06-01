@@ -62,48 +62,53 @@ export function ThemeProvider({
     (newTheme: Theme, event?: React.MouseEvent | MouseEvent) => {
       if (newTheme === theme) return;
 
-      const apply = () => {
+      const commit = () => {
         localStorage.setItem(storageKey, newTheme);
         setThemeState(newTheme);
       };
 
-      const canAnimate =
-        "startViewTransition" in document &&
-        !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-        event;
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
-      if (!canAnimate) {
-        apply();
+      if (
+        !(event && !prefersReducedMotion && "startViewTransition" in document)
+      ) {
+        commit();
         return;
       }
 
-      const { clientX: x, clientY: y } = event;
-      const { innerWidth: w, innerHeight: h } = window;
-      const maxRadius = Math.ceil(
-        Math.max(
-          Math.hypot(x, y),
-          Math.hypot(w - x, y),
-          Math.hypot(x, h - y),
-          Math.hypot(w - x, h - y)
-        ) * 1.05
+      // Grow a circle from the click point out to the farthest viewport
+      // corner, animated on the view-transition snapshot via the Web
+      // Animations API — no CSS state is involved.
+      const x = event.clientX;
+      const y = event.clientY;
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
       );
 
-      const root = document.documentElement;
-      root.style.setProperty("--theme-transition-x", `${x}px`);
-      root.style.setProperty("--theme-transition-y", `${y}px`);
-      root.style.setProperty("--theme-transition-radius", `${maxRadius}px`);
-
-      (
+      const transition = (
         document as Document & {
-          startViewTransition: (cb: () => void) => { finished: Promise<void> };
+          startViewTransition: (cb: () => void) => { ready: Promise<void> };
         }
-      )
-        .startViewTransition(apply)
-        .finished.then(() => {
-          root.style.removeProperty("--theme-transition-x");
-          root.style.removeProperty("--theme-transition-y");
-          root.style.removeProperty("--theme-transition-radius");
-        });
+      ).startViewTransition(commit);
+
+      transition.ready.then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${endRadius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 480,
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          }
+        );
+      });
     },
     [storageKey, theme]
   );
