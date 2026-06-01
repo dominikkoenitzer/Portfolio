@@ -60,6 +60,21 @@ export function ProjectsSection() {
                 <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.025)_50%,_transparent_80%)]" />
                 <div className="absolute inset-0 opacity-40 [background:repeating-linear-gradient(135deg,transparent,transparent_22px,hsl(var(--foreground)/0.025)_22px,hsl(var(--foreground)/0.025)_23px)]" />
 
+                {project.image ? (
+                  <>
+                    <img
+                      alt={`${project.title} screenshot`}
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                      src={project.image}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/35 to-background/10" />
+                  </>
+                ) : null}
+
                 <div className="relative flex h-full min-h-[220px] flex-col items-center justify-center px-8 py-10 text-center">
                   <h3 className="font-heading font-bold text-4xl tracking-tight sm:text-5xl">
                     {project.title}

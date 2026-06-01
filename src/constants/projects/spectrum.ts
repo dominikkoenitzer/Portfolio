@@ -4,249 +4,248 @@ import type { LocalizedContent } from "./types";
 export const spectrum: Record<Language, LocalizedContent> = {
   en: {
     tagline:
-      "A structured and scalable web product foundation for teams that need consistency and speed.",
+      "A fast, accessible color workbench — pick, explore, and transform colors, then check them against real contrast standards.",
     description:
-      "Spectrum helps you pick, explore, and transform colors with tools for contrast checks, gradients, color lookup, and accessibility-friendly choices.",
+      "Spectrum is a color tool for picking, exploring, and transforming colors, with contrast checking, gradient generation, color lookup, and accessibility-aware recommendations.",
     overview:
-      "Spectrum combines visual quality with engineering discipline. The project emphasizes consistent component behavior, scalable layout systems, and clear UX flows so users and teams both benefit from a more reliable product experience.",
+      "Spectrum is a solo project built in Next.js and TypeScript. It pulls the scattered pieces of a color workflow — picking, converting, building gradients, and checking contrast — into one fast interface, with recommendations that steer toward WCAG-friendly choices.",
     roleSummary:
-      "UI engineer and product designer translating color theory workflows into production-grade tooling.",
+      "Sole designer and developer: product, UX, and the full Next.js/TypeScript implementation.",
     problemStatement:
-      "Color workflows are often fragmented across disconnected tools. Spectrum unifies exploration, validation, and transformation into one coherent product flow.",
+      "Color work is usually spread across disconnected tools — one to pick, another to check contrast, another for gradients. Spectrum unifies exploration, conversion, and accessibility checking in a single flow.",
     objectives: [
-      "Enable rapid palette exploration with immediate visual feedback.",
-      "Support accessibility-aware choices without requiring expert-level color knowledge.",
-      "Provide conversion and gradient tooling in the same interface context.",
+      "Make palette exploration and color conversion fast, with immediate visual feedback.",
+      "Build contrast checking in so accessibility is a default, not an afterthought.",
+      "Keep advanced color tooling approachable for non-experts.",
     ],
     architectureDecisions: [
-      "Utility-oriented feature modules for contrast, gradients, and lookup capabilities.",
-      "Composable UI primitives to keep advanced controls consistent across tool surfaces.",
-      "State design that keeps color updates predictable and easy to reason about.",
+      "Built with Next.js and TypeScript for a type-safe, maintainable UI.",
+      "Feature modules for contrast, gradients, and lookup that share composable primitives.",
+      "Predictable color state so every tool reflects updates consistently.",
     ],
     implementationHighlights: [
-      "Delivered fast visual iteration loops for experimenting with palettes and gradients.",
-      "Implemented contrast-checking flows that are readable for both designers and engineers.",
-      "Built conversion helpers that reduce repetitive manual color transformations.",
+      "A WCAG-style contrast checker that reads clearly for designers and engineers alike.",
+      "Gradient generation and color-format conversion in the same context.",
+      "Accessibility-aware recommendations that nudge toward usable color pairs.",
     ],
     qualityAndSecurity: [
-      "Accessible semantic and contrast-conscious presentation throughout tooling screens.",
-      "Input handling that reduces malformed color states and broken calculations.",
-      "Responsive layouts that preserve utility density on smaller devices.",
+      "Accessibility is first-class — contrast and semantics built into the core flow.",
+      "Input handling that guards against malformed color values.",
+      "Responsive layouts that keep tool density usable on small screens.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Keeping advanced color controls powerful while still approachable for first-time users.",
+          "Keeping powerful color controls approachable for first-time users.",
         solution:
-          "Used progressive disclosure and context hints so default flows stay simple but depth remains available.",
+          "Progressive disclosure — simple defaults up front, with depth available on demand.",
       },
       {
-        challenge:
-          "Avoiding inconsistent behavior across multiple color tools in one app.",
+        challenge: "Consistent behavior across several color tools in one app.",
         solution:
-          "Centralized shared interaction patterns and validation logic for a unified experience.",
+          "Shared interaction patterns and validation centralized across every tool surface.",
       },
     ],
     hiringSignals: [
-      "Shows cross-functional thinking between design quality and engineering execution.",
-      "Proves ability to build domain tooling with clear user-centered tradeoffs.",
-      "Highlights consistency discipline at both UX and code architecture levels.",
+      "Accessibility built in by default — a signal teams genuinely care about.",
+      "A type-safe Next.js/TypeScript front end owned end to end.",
+      "Turns a fuzzy domain (color) into a precise, usable tool.",
     ],
     nextIterations: [
-      "Add export presets for design tokens and team handoff workflows.",
-      "Introduce saved sessions for repeatable palette experiments.",
-      "Expand educational guidance for accessibility-first color decisions.",
+      "Export presets for design tokens and developer handoff.",
+      "Saved palettes and repeatable sessions.",
+      "More guidance for accessibility-first color decisions.",
     ],
-    tags: ["Scalable", "Design System", "Web App"],
+    tags: ["Next.js", "TypeScript", "Accessibility"],
     impactHeading: "How This Project Creates Impact",
     impactPoints: [
-      "Gives teams a cleaner system to ship features without sacrificing consistency.",
-      "Makes interfaces easier to understand for users through repeatable visual language.",
-      "Balances aesthetics and performance to keep quality high across devices.",
+      "Makes accessible color choices the easy default.",
+      "Saves time by unifying picking, converting, and contrast-checking in one place.",
+      "Keeps quality high across devices with responsive, type-safe UI.",
     ],
   },
   de: {
     tagline:
-      "Eine strukturierte und skalierbare Web-Produktbasis für Teams, die Konsistenz und Tempo brauchen.",
+      "Eine schnelle, barrierefreie Farb-Werkbank — Farben auswählen, erkunden und transformieren und sie dann gegen echte Kontrast-Standards prüfen.",
     description:
-      "Spectrum hilft dir, Farben auszuwählen, zu erkunden und zu transformieren — mit Tools für Kontrast-Checks, Gradients, Farb-Lookups und barrierearmen Entscheidungen.",
+      "Spectrum ist ein Farb-Tool zum Auswählen, Erkunden und Transformieren von Farben, mit Kontrast-Prüfung, Gradient-Generierung, Farb-Lookup und barrierefreiheits-bewussten Empfehlungen.",
     overview:
-      "Spectrum verbindet visuelle Qualität mit Engineering-Disziplin. Der Fokus liegt auf konsistentem Komponentenverhalten, skalierbaren Layout-Systemen und klaren UX-Flows, sodass Nutzer und Teams gleichermassen von einer verlässlicheren Produkterfahrung profitieren.",
+      "Spectrum ist ein Solo-Projekt, gebaut mit Next.js und TypeScript. Es bündelt die verstreuten Teile eines Farb-Workflows — Auswählen, Konvertieren, Gradienten bauen und Kontrast prüfen — in einem schnellen Interface, mit Empfehlungen, die zu WCAG-konformen Entscheidungen führen.",
     roleSummary:
-      "UI Engineer und Produktdesigner, der Farbtheorie-Workflows in produktionsreifes Tooling übersetzt.",
+      "Alleiniger Designer und Entwickler: Produkt, UX und die vollständige Next.js/TypeScript-Implementierung.",
     problemStatement:
-      "Farb-Workflows sind oft auf unverbundene Tools verteilt. Spectrum vereint Exploration, Validierung und Transformation in einem zusammenhängenden Produkt-Flow.",
+      "Farb-Arbeit ist meist über getrennte Tools verteilt — eines zum Auswählen, eines für Kontrast, eines für Gradienten. Spectrum vereint Erkundung, Konvertierung und Barrierefreiheits-Prüfung in einem einzigen Flow.",
     objectives: [
-      "Schnelle Paletten-Exploration mit unmittelbarem visuellen Feedback ermöglichen.",
-      "Accessibility-bewusste Entscheidungen unterstützen, ohne Expertenwissen über Farbe vorauszusetzen.",
-      "Konvertierungs- und Gradient-Tools im selben Interface-Kontext anbieten.",
+      "Paletten-Erkundung und Farb-Konvertierung schnell machen, mit sofortigem visuellem Feedback.",
+      "Kontrast-Prüfung einbauen, damit Barrierefreiheit Standard ist, kein Nachgedanke.",
+      "Fortgeschrittenes Farb-Tooling auch für Nicht-Experten zugänglich halten.",
     ],
     architectureDecisions: [
-      "Utility-orientierte Feature-Module für Kontrast, Gradients und Lookup-Fähigkeiten.",
-      "Komponierbare UI-Primitiven, damit fortgeschrittene Controls über Tool-Oberflächen konsistent bleiben.",
-      "State-Design, das Farb-Updates vorhersehbar und gut nachvollziehbar hält.",
+      "Mit Next.js und TypeScript gebaut für ein typsicheres, wartbares UI.",
+      "Feature-Module für Kontrast, Gradienten und Lookup, die komponierbare Primitiven teilen.",
+      "Vorhersehbarer Farb-State, damit jedes Tool Updates konsistent widerspiegelt.",
     ],
     implementationHighlights: [
-      "Schnelle Visualisierungs-Loops zum Experimentieren mit Paletten und Gradients geliefert.",
-      "Kontrast-Check-Flows umgesetzt, die für Designer und Engineers gleichermassen lesbar sind.",
-      "Konvertierungs-Helfer gebaut, die wiederkehrende manuelle Farb-Transformationen reduzieren.",
+      "Ein WCAG-artiger Kontrast-Checker, der für Designer und Engineers gleichermaßen klar lesbar ist.",
+      "Gradient-Generierung und Farb-Format-Konvertierung im selben Kontext.",
+      "Barrierefreiheits-bewusste Empfehlungen, die zu nutzbaren Farb-Paaren führen.",
     ],
     qualityAndSecurity: [
-      "Barrierearme Semantik und kontrastbewusste Darstellung über alle Tool-Screens hinweg.",
-      "Eingabe-Handling, das fehlerhafte Farbzustände und kaputte Berechnungen vermeidet.",
-      "Responsive Layouts, die die Utility-Dichte auch auf kleineren Geräten erhalten.",
+      "Barrierefreiheit ist erstklassig — Kontrast und Semantik sind im Kern-Flow verankert.",
+      "Eingabe-Handling, das gegen fehlerhafte Farbwerte absichert.",
+      "Responsive Layouts, die die Tool-Dichte auch auf kleinen Bildschirmen nutzbar halten.",
     ],
     challengesAndSolutions: [
       {
-        challenge:
-          "Fortgeschrittene Farb-Controls leistungsstark, aber für Einsteiger zugänglich halten.",
+        challenge: "Mächtige Farb-Controls für Erstnutzer zugänglich halten.",
         solution:
-          "Progressive Disclosure und Kontext-Hinweise eingesetzt, sodass Default-Flows einfach bleiben, Tiefe aber verfügbar ist.",
+          "Progressive Disclosure — einfache Defaults zuerst, Tiefe bei Bedarf verfügbar.",
       },
       {
         challenge:
-          "Inkonsistentes Verhalten zwischen mehreren Farb-Tools in einer App vermeiden.",
+          "Konsistentes Verhalten über mehrere Farb-Tools in einer App.",
         solution:
-          "Geteilte Interaktionsmuster und Validierungs-Logik zentralisiert — für ein einheitliches Erlebnis.",
+          "Geteilte Interaktionsmuster und Validierung, zentralisiert über alle Tool-Oberflächen.",
       },
     ],
     hiringSignals: [
-      "Zeigt cross-funktionales Denken zwischen Design-Qualität und Engineering-Umsetzung.",
-      "Beweist die Fähigkeit, Domain-Tooling mit klaren nutzerzentrierten Trade-offs zu bauen.",
-      "Hebt Konsistenz-Disziplin auf UX- und Code-Architektur-Ebene hervor.",
+      "Barrierefreiheit von Haus aus eingebaut — ein Signal, das Teams wirklich wichtig ist.",
+      "Ein typsicheres Next.js/TypeScript-Frontend, Ende zu Ende verantwortet.",
+      "Macht aus einer unscharfen Domäne (Farbe) ein präzises, nutzbares Tool.",
     ],
     nextIterations: [
-      "Export-Presets für Design-Tokens und Team-Handoff-Workflows hinzufügen.",
-      "Gespeicherte Sessions für wiederholbare Paletten-Experimente einführen.",
-      "Lern-Hilfen für Accessibility-First-Farbentscheidungen ausbauen.",
+      "Export-Presets für Design-Tokens und Entwickler-Handoff.",
+      "Gespeicherte Paletten und wiederholbare Sessions.",
+      "Mehr Anleitung für barrierefreiheits-orientierte Farb-Entscheidungen.",
     ],
-    tags: ["Skalierbar", "Design-System", "Web-App"],
+    tags: ["Next.js", "TypeScript", "Barrierefreiheit"],
     impactHeading: "Wie dieses Projekt Wirkung erzeugt",
     impactPoints: [
-      "Gibt Teams ein klareres System, um Features ohne Konsistenz-Verlust zu liefern.",
-      "Macht Oberflächen durch wiederholbare visuelle Sprache verständlicher für Nutzer.",
-      "Balanciert Ästhetik und Performance, um Qualität auf allen Geräten hochzuhalten.",
+      "Macht barrierefreie Farb-Entscheidungen zum einfachen Standard.",
+      "Spart Zeit, indem Auswählen, Konvertieren und Kontrast-Prüfung an einem Ort vereint werden.",
+      "Hält die Qualität geräteübergreifend hoch — mit responsivem, typsicherem UI.",
     ],
   },
   fr: {
     tagline:
-      "Une base de produit web structurée et scalable pour les équipes qui ont besoin de cohérence et de rapidité.",
+      "Un atelier de couleurs rapide et accessible — choisir, explorer et transformer des couleurs, puis les vérifier face à de vrais standards de contraste.",
     description:
-      "Spectrum vous aide à choisir, explorer et transformer les couleurs avec des outils de vérification de contraste, de dégradés, de recherche de couleur et de choix accessibles.",
+      "Spectrum est un outil de couleurs pour choisir, explorer et transformer des couleurs, avec vérification de contraste, génération de dégradés, recherche de couleurs et recommandations soucieuses de l'accessibilité.",
     overview:
-      "Spectrum combine qualité visuelle et discipline d'ingénierie. Le projet met l'accent sur un comportement de composants cohérent, des systèmes de layout scalables et des flux UX clairs pour que utilisateurs et équipes bénéficient d'une expérience produit plus fiable.",
+      "Spectrum est un projet solo bâti en Next.js et TypeScript. Il rassemble les pièces éparpillées d'un workflow couleur — choisir, convertir, créer des dégradés et vérifier le contraste — dans une interface rapide, avec des recommandations qui orientent vers des choix conformes WCAG.",
     roleSummary:
-      "Ingénieur UI et designer produit traduisant les workflows de théorie des couleurs en outils de qualité production.",
+      "Seul concepteur et développeur : produit, UX et l'implémentation Next.js/TypeScript complète.",
     problemStatement:
-      "Les workflows liés à la couleur sont souvent fragmentés entre plusieurs outils non connectés. Spectrum réunit exploration, validation et transformation dans un flux produit cohérent.",
+      "Le travail des couleurs est généralement éclaté entre des outils déconnectés — un pour choisir, un pour le contraste, un pour les dégradés. Spectrum unifie exploration, conversion et vérification d'accessibilité dans un seul flux.",
     objectives: [
-      "Permettre une exploration rapide des palettes avec un retour visuel immédiat.",
-      "Soutenir des choix orientés accessibilité sans nécessiter une expertise en couleur.",
-      "Proposer outils de conversion et de dégradés dans le même contexte d'interface.",
+      "Rendre l'exploration de palettes et la conversion de couleurs rapides, avec un retour visuel immédiat.",
+      "Intégrer la vérification de contraste pour que l'accessibilité soit un défaut, pas une réflexion après coup.",
+      "Garder l'outillage couleur avancé accessible aux non-experts.",
     ],
     architectureDecisions: [
-      "Modules fonctionnels orientés utilitaire pour le contraste, les dégradés et la recherche.",
-      "Primitives UI composables pour garder les contrôles avancés cohérents sur toutes les surfaces.",
-      "Design d'état qui rend les mises à jour de couleur prévisibles et faciles à raisonner.",
+      "Bâti en Next.js et TypeScript pour une UI typée et maintenable.",
+      "Des modules de fonctionnalités pour le contraste, les dégradés et la recherche, partageant des primitives composables.",
+      "Un état couleur prévisible pour que chaque outil reflète les mises à jour de façon cohérente.",
     ],
     implementationHighlights: [
-      "Boucles d'itération visuelle rapides pour expérimenter palettes et dégradés.",
-      "Flux de vérification de contraste lisibles pour designers et ingénieurs.",
-      "Aides à la conversion réduisant les transformations de couleur manuelles répétitives.",
+      "Un vérificateur de contraste façon WCAG, lisible aussi bien pour les designers que pour les ingénieurs.",
+      "Génération de dégradés et conversion de formats de couleur dans le même contexte.",
+      "Des recommandations soucieuses de l'accessibilité qui orientent vers des paires de couleurs utilisables.",
     ],
     qualityAndSecurity: [
-      "Sémantique accessible et présentation soucieuse du contraste sur l'ensemble des écrans.",
-      "Gestion des entrées limitant les états de couleur mal formés et les calculs cassés.",
-      "Mises en page responsives qui préservent la densité d'outillage sur les petits écrans.",
+      "L'accessibilité est de premier plan — contraste et sémantique intégrés au flux principal.",
+      "Une gestion des entrées qui protège contre les valeurs de couleur mal formées.",
+      "Des mises en page responsives qui gardent la densité d'outils utilisable sur petits écrans.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Garder les contrôles avancés puissants tout en restant accessibles aux utilisateurs débutants.",
+          "Garder des contrôles couleur puissants accessibles aux nouveaux utilisateurs.",
         solution:
-          "Utilisation du dévoilement progressif et d'indices contextuels pour des flux par défaut simples mais une profondeur disponible.",
+          "Dévoilement progressif — des défauts simples d'abord, la profondeur disponible à la demande.",
       },
       {
         challenge:
-          "Éviter un comportement incohérent entre plusieurs outils de couleur dans la même app.",
+          "Un comportement cohérent à travers plusieurs outils couleur dans une même app.",
         solution:
-          "Centralisation des patterns d'interaction et de la logique de validation pour une expérience unifiée.",
+          "Des schémas d'interaction et une validation partagés, centralisés sur chaque surface d'outil.",
       },
     ],
     hiringSignals: [
-      "Démontre une pensée transverse entre qualité de design et exécution d'ingénierie.",
-      "Prouve la capacité à construire un outillage de domaine avec des compromis clairs centrés utilisateur.",
-      "Met en avant la discipline de cohérence au niveau UX et architecture de code.",
+      "Accessibilité intégrée par défaut — un signal qui compte vraiment pour les équipes.",
+      "Un frontend Next.js/TypeScript typé, porté de bout en bout.",
+      "Transforme un domaine flou (la couleur) en un outil précis et utilisable.",
     ],
     nextIterations: [
-      "Ajouter des presets d'export pour design tokens et workflows de remise aux équipes.",
-      "Introduire des sessions sauvegardées pour des expérimentations de palettes répétables.",
-      "Étendre les conseils pédagogiques pour des décisions de couleur orientées accessibilité.",
+      "Presets d'export pour les design tokens et le handoff développeur.",
+      "Palettes sauvegardées et sessions reproductibles.",
+      "Plus de guidage pour des décisions couleur centrées sur l'accessibilité.",
     ],
-    tags: ["Scalable", "Design System", "Application Web"],
+    tags: ["Next.js", "TypeScript", "Accessibilité"],
     impactHeading: "Comment ce projet crée de l'impact",
     impactPoints: [
-      "Offre aux équipes un système plus net pour livrer des fonctionnalités sans sacrifier la cohérence.",
-      "Rend les interfaces plus faciles à comprendre via un langage visuel répétable.",
-      "Équilibre esthétique et performance pour maintenir une qualité élevée sur tous les appareils.",
+      "Fait des choix de couleur accessibles le défaut évident.",
+      "Fait gagner du temps en unifiant le choix, la conversion et la vérification de contraste au même endroit.",
+      "Maintient une qualité élevée sur tous les appareils grâce à une UI responsive et typée.",
     ],
   },
   zh: {
-    tagline: "为需要一致性与速度的团队打造的结构化、可扩展的 Web 产品基础。",
+    tagline:
+      "一个快速且无障碍的颜色工作台——选取、探索与转换颜色，并对照真实的对比度标准进行检查。",
     description:
-      "Spectrum 帮助你挑选、探索与转换颜色——提供对比度检查、渐变、配色查找与无障碍友好的选择工具。",
+      "Spectrum 是一个颜色工具，用于选取、探索与转换颜色，具备对比度检查、渐变生成、颜色查找以及关注无障碍的推荐。",
     overview:
-      "Spectrum 兼具视觉质量与工程纪律。项目强调一致的组件行为、可扩展的布局系统与清晰的 UX 流程，让用户与团队都能获得更可靠的产品体验。",
-    roleSummary: "UI 工程师与产品设计师，将色彩理论流程转化为生产级的工具。",
+      "Spectrum 是一个使用 Next.js 与 TypeScript 构建的独立项目。它将颜色工作流中分散的环节——选取、转换、构建渐变与检查对比度——汇聚到一个快速的界面中，并通过推荐引导用户做出符合 WCAG 的选择。",
+    roleSummary:
+      "唯一的设计者与开发者：产品、UX，以及完整的 Next.js/TypeScript 实现。",
     problemStatement:
-      "色彩工作流常被碎片化地散落在不同工具中。Spectrum 将探索、校验与转换整合到统一的产品流程中。",
+      "颜色相关的工作通常分散在彼此割裂的工具中——一个用于选取、一个用于对比度、一个用于渐变。Spectrum 将探索、转换与无障碍检查统一到一个流程里。",
     objectives: [
-      "通过即时视觉反馈实现快速的调色板探索。",
-      "在不依赖专家级色彩知识的情况下支持无障碍友好的选择。",
-      "在同一界面上下文中提供转换与渐变工具。",
+      "让调色板探索与颜色转换变得快速，并提供即时的视觉反馈。",
+      "内置对比度检查，让无障碍成为默认，而非事后补救。",
+      "让进阶的颜色工具对非专家也保持易用。",
     ],
     architectureDecisions: [
-      "围绕对比度、渐变与查找能力构建以工具为导向的功能模块。",
-      "通过可组合的 UI 基元，使高级控件在不同工具界面保持一致。",
-      "状态设计让颜色更新可预期、易于推理。",
+      "使用 Next.js 与 TypeScript 构建，打造类型安全、可维护的 UI。",
+      "为对比度、渐变与查找设计的功能模块，共享可组合的基元。",
+      "可预测的颜色状态，让每个工具都能一致地反映更新。",
     ],
     implementationHighlights: [
-      "提供快速的视觉迭代循环，用于尝试调色板与渐变。",
-      "构建对设计师与工程师都友好的对比度检查流程。",
-      "提供可减少重复手动颜色转换的转换辅助。",
+      "一个 WCAG 风格的对比度检查器，对设计师与工程师都清晰易读。",
+      "在同一上下文中进行渐变生成与颜色格式转换。",
+      "关注无障碍的推荐，引导用户选择可用的配色。",
     ],
     qualityAndSecurity: [
-      "在所有工具界面采用可访问的语义结构与对比度敏感的呈现。",
-      "输入处理减少异常颜色状态与失效计算。",
-      "响应式布局在小屏设备上仍保留工具密度。",
+      "无障碍是头等大事——对比度与语义化融入核心流程。",
+      "输入处理可防范格式错误的颜色值。",
+      "响应式布局，在小屏幕上也能保持工具密度的可用性。",
     ],
     challengesAndSolutions: [
       {
-        challenge: "在保持高级颜色控件强大的同时，让新手也能轻松上手。",
-        solution:
-          "采用渐进披露与上下文提示，让默认流程保持简洁，同时保留深度功能。",
+        challenge: "在保持颜色控件强大的同时，让初次使用者也能上手。",
+        solution: "渐进式披露——先给出简单的默认值，进阶能力按需提供。",
       },
       {
-        challenge: "避免同一应用中多个颜色工具间的行为不一致。",
-        solution: "集中共享的交互模式与校验逻辑，打造统一体验。",
+        challenge: "在一个应用中的多个颜色工具间保持一致的行为。",
+        solution: "在每个工具界面间共享并集中化交互模式与校验逻辑。",
       },
     ],
     hiringSignals: [
-      "体现设计质量与工程执行之间的跨职能思维。",
-      "证明能够构建以用户为中心、取舍清晰的领域工具。",
-      "在 UX 与代码架构层面都体现一致性纪律。",
+      "默认内置无障碍——这是团队真正看重的信号。",
+      "端到端独立负责的、类型安全的 Next.js/TypeScript 前端。",
+      "把一个模糊的领域（颜色）变成精确、可用的工具。",
     ],
     nextIterations: [
-      "为设计 token 与团队交接流程添加导出预设。",
-      "引入可保存的会话，便于重复进行调色板实验。",
-      "扩展面向无障碍优先的色彩决策学习指导。",
+      "面向设计 token 与开发交接的导出预设。",
+      "可保存的调色板与可复现的会话。",
+      "为以无障碍为先的配色决策提供更多指导。",
     ],
-    tags: ["可扩展", "设计系统", "Web 应用"],
+    tags: ["Next.js", "TypeScript", "无障碍"],
     impactHeading: "本项目如何创造价值",
     impactPoints: [
-      "为团队提供更清晰的系统，在不牺牲一致性的前提下交付功能。",
-      "通过可复用的视觉语言，让界面更易被用户理解。",
-      "在美学与性能之间取得平衡，在各类设备上保持高质量。",
+      "让无障碍的配色成为轻松的默认选择。",
+      "通过将选取、转换与对比度检查统一在一处来节省时间。",
+      "凭借响应式、类型安全的 UI，在各类设备上保持高质量。",
     ],
   },
 };

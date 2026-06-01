@@ -19,6 +19,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://zephyr.punds.ch/",
     priority: 1,
     toneClass: TONE_RADIAL,
+    image: "/projects/zephyr.png",
   },
   {
     slug: "spectrum",
@@ -28,6 +29,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://spectrum.punds.ch/",
     priority: 2,
     toneClass: TONE_RADIAL,
+    image: "/projects/spectrum.png",
   },
   {
     slug: "entropy",
@@ -37,6 +39,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://entropy.punds.ch/",
     priority: 3,
     toneClass: TONE_RADIAL,
+    image: "/projects/entropy.png",
   },
   {
     slug: "remnants",
@@ -46,6 +49,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://remnants.punds.ch/",
     priority: 4,
     toneClass: TONE_RADIAL,
+    image: "/projects/remnants.png",
   },
 ];
 
