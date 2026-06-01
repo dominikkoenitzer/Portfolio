@@ -84,7 +84,7 @@ function Field({ id, label, type = "text", placeholder, value, onChange, require
   );
 }
 
-export default function ContactForm() {
+export function ContactForm() {
   const { language } = useLanguage();
   const t = translations[language].contact.form;
   const location = useLocation();

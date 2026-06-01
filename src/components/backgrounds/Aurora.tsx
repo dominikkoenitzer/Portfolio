@@ -119,7 +119,7 @@ const detectThemeFromHtml = (): Theme => {
   return "glass";
 };
 
-export default function Aurora({
+export function Aurora({
   amplitude = 0.45,
   speed = 1.0,
   ...over

@@ -1,4 +1,4 @@
-import Aurora from "./Aurora";
+import { Aurora } from "./Aurora";
 
 export default function AuroraBackground() {
   return (

@@ -6,7 +6,7 @@ import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
-export default function ProjectsSection() {
+export function ProjectsSection() {
   const { language } = useLanguage();
   const t = translations[language].projects;
   const projects = getProjects(language);

@@ -13,7 +13,7 @@ const tiers: { amount: string; tierKey: TierKey }[] = [
 
 const PAYPAL = "https://www.paypal.com/paypalme/dominikkoenitzer";
 
-export default function DonateSection() {
+export function DonateSection() {
   const { language } = useLanguage();
   const t = translations[language].donate;
 

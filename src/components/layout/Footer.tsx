@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 
-export default function Footer() {
+export function Footer() {
   const { language } = useLanguage();
   const t = translations[language];
   const currentYear = new Date().getFullYear();
