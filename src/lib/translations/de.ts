@@ -18,7 +18,7 @@ export const de = {
     theme: "Theme wechseln",
     themes: "Themes",
     language: "Sprache wechseln",
-    detected: "Erkannt",
+    useSystem: "Systemsprache verwenden",
   },
   hero: {
     greeting: "Hi, ich bin Dominik Könitzer",

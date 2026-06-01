@@ -36,7 +36,7 @@ type BlendMode =
   | "color"
   | "luminosity";
 
-export type AuroraPreset = {
+export type VeilPreset = {
   colorStops: [string, string, string];
   blendMode: BlendMode;
   intensity: number;
@@ -49,7 +49,7 @@ export type AuroraPreset = {
   base: number;
 };
 
-export const AURORA_PRESETS: Record<Theme, AuroraPreset> = {
+export const VEIL_PRESETS: Record<Theme, VeilPreset> = {
   glass: {
     colorStops: ["#BFD7FF", "#D9C8FF", "#B4ECFF"],
     blendMode: "multiply",
@@ -100,5 +100,5 @@ export const AURORA_PRESETS: Record<Theme, AuroraPreset> = {
   },
 };
 
-export const getAuroraPreset = (theme: Theme): AuroraPreset =>
-  AURORA_PRESETS[theme] ?? AURORA_PRESETS.glass;
+export const getVeilPreset = (theme: Theme): VeilPreset =>
+  VEIL_PRESETS[theme] ?? VEIL_PRESETS.glass;
