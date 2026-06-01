@@ -19,6 +19,7 @@ export const SITE_CONFIG = {
   ogImage: "/og-image.png",
   email: "dominik.koenitzer@gmail.com",
   github: "https://github.com/dominikkoenitzer",
+  linkedin: "https://linkedin.com/in/dominik-koenitzer",
   location: {
     country: "Switzerland",
     countryCode: "CH",
