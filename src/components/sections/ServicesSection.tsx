@@ -42,7 +42,7 @@ const services: Service[] = [
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
 
-export default function ServicesSection() {
+export function ServicesSection() {
   const { language } = useLanguage();
   const t = translations[language].services;
   const [active, setActive] = useState<Category>("all");

@@ -173,7 +173,7 @@ const languageSkills: LanguageSkill[] = [
   { langKey: "french", descKey: "langFrench", proficiency: 60 },
 ].sort((a, b) => b.proficiency - a.proficiency);
 
-export default function SkillsSection() {
+export function SkillsSection() {
   const { language } = useLanguage();
   const t = translations[language].skills;
 

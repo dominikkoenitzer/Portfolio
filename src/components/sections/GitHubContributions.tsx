@@ -56,7 +56,7 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   return response.json();
 };
 
-export default function GitHubContributions() {
+export function GitHubContributions() {
   const { language } = useLanguage();
   const t = translations[language].github;
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";

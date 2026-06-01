@@ -1,0 +1,382 @@
+export const zh = {
+  nav: {
+    about: "关于",
+    skills: "技能",
+    projects: "项目",
+    services: "服务",
+    contact: "联系",
+    donate: "打赏",
+    menu: "菜单",
+    navigation: "导航",
+    currentPage: "当前页面",
+    privacyPolicy: "隐私政策",
+    openMenu: "打开菜单",
+    closeMenu: "关闭菜单",
+    goHome: "前往首页",
+  },
+  toggles: {
+    theme: "切换主题",
+    themes: "主题",
+    language: "切换语言",
+    detected: "检测到",
+  },
+  hero: {
+    greeting: "你好，我是 Dominik Könitzer",
+    roles: [
+      { line1: "软件", line2: "工程师。" },
+      { line1: "全栈", line2: "开发者。" },
+      { line1: "整洁代码", line2: "工匠。" },
+      { line1: "系统", line2: "架构师。" },
+    ] as { line1: string; line2: string }[],
+    hireMe: "雇用我",
+    viewWork: "查看作品",
+    stats: {
+      projects: "项目",
+      yearsCoding: "编程年数",
+      technologies: "技术",
+    },
+  },
+  about: {
+    heading: "关于我",
+    subheading: "更深入地了解我，以及驱动我对网页开发热情的源泉。",
+    passionate: "充满热情的",
+    passionateRole: "软件工程师",
+    intro1Before:
+      "我是 Dominik Könitzer，一名 18 岁的软件工程师，就读于 WISS Schulen für Wirtschaft Informatik Immobilien，目前处于为期四年的软件工程项目的第",
+    intro1Highlight: "六",
+    intro1After: "学期。",
+    intro2:
+      "项目的前两年专注于课程学习，随后两年是边实习边学习的实践阶段。在这一旅程中，我不断打下扎实的理论基础与实战经验。",
+    intro3Before: "我喜欢创建",
+    intro3Word1: "整洁",
+    intro3Comma1: "、",
+    intro3Word2: "实用",
+    intro3Comma2: "且",
+    intro3Word3: "视觉上吸引人",
+    intro3After:
+      "的网站与应用，为用户提供真实价值。除了技术能力，我也重视持续学习、解决问题和有效沟通。",
+    exploreSkills: "查看我的技能",
+    readJournal: "阅读我的日志",
+    cards: {
+      educationTitle: "教育",
+      educationSubtitle: "WISS 的四年项目",
+      specializedTitle: "专注于",
+      specializedSubtitle: "现代网页开发",
+    },
+  },
+  skills: {
+    heading: "技术技能",
+    subheading: "我的专长覆盖多种技术，聚焦于构建高效且优雅的解决方案。",
+    categories: {
+      frontend: "前端开发",
+      professional: "职业技能",
+      backend: "后端开发",
+      devops: "操作系统与 DevOps",
+      databases: "数据库管理与版本控制",
+      languages: "语言",
+    },
+    descriptions: {
+      react: "构建动态用户界面",
+      nextjs: "客户端脚本与交互功能",
+      shadcn: "易访问且可定制的 UI 组件",
+      tailwind: "现代化的 utility-first 样式",
+      typescript: "通过静态类型构建更稳健的代码",
+      javascript: "现代 JavaScript 特性与最佳实践",
+      framerMotion: "React 中的高级动画与交互式 UI 效果",
+      lighthouse: "网页性能、可访问性与 SEO 审计",
+      customerService: "确保客户满意与积极体验",
+      communication: "清晰高效的口头与书面沟通",
+      projectManagement: "高效规划与执行项目",
+      excel: "数据分析与电子表格管理",
+      directSales: "人对人销售与建立关系",
+      socialMedia: "通过社交平台与受众互动",
+      seoCopywriting: "撰写针对搜索引擎优化的内容",
+      videoEditing: "创建与编辑视频内容",
+      java: "用于应用程序的后端编程",
+      spring: "用于创建微服务的 Java 框架",
+      nodejs: "构建服务器端应用",
+      bash: "为 Linux 系统编写自动化脚本",
+      graphql: "高效的数据查询与操作",
+      python: "用于后端与自动化的多功能编程语言",
+      csharp: "使用 .NET 框架进行后端开发",
+      cpp: "系统级编程与对性能要求高的应用",
+      windowsServer: "Windows Server 管理与运维",
+      hardware: "计算机硬件的安装与配置",
+      jenkins: "用于构建、部署与 CI/CD 流水线的自动化服务器",
+      linux: "Linux 服务器管理与运维",
+      ubuntu: "Ubuntu 发行版管理与配置",
+      kali: "专注安全的 Linux 发行版",
+      grafana: "指标可视化与监控平台",
+      git: "用于追踪代码变更的版本控制系统",
+      docker: "用于开发与部署应用的容器化平台",
+      sqlite: "轻量级、无需服务器的嵌入式数据库引擎",
+      postgres: "先进的开源关系型数据库管理系统",
+      mongo: "用于灵活数据存储的 NoSQL 文档型数据库",
+      redis: "用于缓存的内存数据结构存储",
+      langEnglish: "母语级",
+      langGerman: "母语级",
+      langChinese: "流利",
+      langFrench: "会话水平",
+    },
+    langNames: {
+      english: "英语",
+      german: "德语",
+      chinese: "中文/普通话",
+      french: "法语",
+    },
+  },
+  projects: {
+    heading: "项目",
+    subheading: "一组聚焦于清晰、一致与性能的产品作品。",
+    disclosureEyebrow: "在往下滑之前",
+    disclosureBody:
+      "这一页只展示了我做过的东西里能公开的那一小部分。还有一些项目藏在 NDA、私有仓库，或客户的服务器里——我不太适合把它们摆出来，所以这里没有它们的身影。下面这些都是个人项目：是我在晚上和周末闲下来时折腾出来的小东西，源于好奇，也带着一点想让某个人的日子轻松那么一点点的私心。如果其中有一个真的做到了——那就刚刚好。",
+    source: "源码",
+    live: "在线",
+    details: "详情",
+    openRepo: "打开 {name} 仓库",
+    openLive: "打开 {name} 在线站点",
+    viewDetails: "查看 {name} 的详情",
+  },
+  projectDetails: {
+    home: "首页",
+    projects: "项目",
+    back: "返回",
+    overview: "概览",
+    notes: "备注",
+    links: "链接",
+    visitSite: "访问站点",
+    sourceCode: "源代码",
+    moreProjects: "更多项目",
+    present: "至今",
+  },
+  services: {
+    eyebrow: "我提供",
+    heading: "服务",
+    filters: {
+      all: "全部服务",
+      build: "构建",
+      protect: "保护",
+      grow: "增长",
+    },
+    categoryMeta: {
+      build: { label: "构建", desc: "设计与开发" },
+      protect: { label: "保护", desc: "安全与可靠性" },
+      grow: { label: "增长", desc: "可见度与性能" },
+    },
+    ctaTitle: "让我们一起打造点什么",
+    ctaEyebrow: "脑海里有项目想法？",
+    ctaButton: "立即联系",
+    getInTouch: "立即联系",
+    items: {
+      webDev: {
+        title: "网页开发",
+        description: "端到端的网站构建——响应式、高速、面向转化设计。",
+        features: ["响应式设计", "SEO 友好", "快速加载", "跨浏览器"],
+      },
+      customSoftware: {
+        title: "定制软件",
+        description: "根据您的具体业务需求量身打造的软件。",
+        features: ["需求分析", "定制架构", "完整测试", "交付移交"],
+      },
+      serverSetup: {
+        title: "服务器配置",
+        description: "生产级服务器配置，内置安全与监控。",
+        features: ["安装", "安全加固", "性能调优", "监控"],
+      },
+      security: {
+        title: "安全咨询",
+        description: "在攻击者之前发现漏洞，提供可执行的修复建议。",
+        features: ["安全审计", "漏洞扫描", "风险缓解", "合规"],
+      },
+      maintenance: {
+        title: "网站维护",
+        description: "保持您的网站每月安全、已修补且运行顺畅。",
+        features: ["安全更新", "缺陷修复", "正常运行监控", "内容更新"],
+      },
+      backup: {
+        title: "备份与恢复",
+        description: "自动化备份与经过测试的恢复——数据丢失不在选项之内。",
+        features: ["自动备份", "云存储", "恢复协议", "实时告警"],
+      },
+      seo: {
+        title: "SEO 优化",
+        description: "通过技术 SEO、关键词与性能提升自然排名。",
+        features: ["关键词研究", "页面 SEO", "技术审计", "报告"],
+      },
+      cms: {
+        title: "内容管理",
+        description: "持续的内容更新与 CMS 维护，让网站常新。",
+        features: ["CMS 维护", "图片优化", "排版更新", "SEO 内容"],
+      },
+      support: {
+        title: "技术支持",
+        description: "在出现问题或需要优化时提供快速、可靠的帮助。",
+        features: ["快速响应", "缺陷修复", "代码优化", "集成支持"],
+      },
+    },
+    inquiry: {
+      subjectPrefix: "项目咨询 →",
+      greeting: "Dominik 你好，",
+      intro: "看到了你的作品，越看越觉得{service}就是我项目正需要的方向。",
+      discuss: "其中最打动我的几点：",
+      closing:
+        "方便简单聊一下、把细节过一遍吗？告诉我你方便的时间就行。\n\n— 期待回音",
+    },
+  },
+  contact: {
+    headlineLine1: "一起",
+    headlineLine2: "合作。",
+    intro:
+      "有项目、有想法，或只是想打个招呼？我始终乐于接受新工作与有趣的交流。",
+    emailLabel: "邮箱",
+    basedLabel: "所在地",
+    basedLocation: "瑞士苏黎世",
+    form: {
+      nameLabel: "姓名",
+      namePlaceholder: "您的姓名",
+      emailLabel: "邮箱",
+      emailPlaceholder: "your@email.com",
+      subjectLabel: "主题",
+      subjectPlaceholder: "关于什么？",
+      messageLabel: "留言",
+      messagePlaceholder: "告诉我您的项目或想法...",
+      send: "发送留言",
+      sending: "发送中...",
+      successTitle: "已收到留言。",
+      successBody: "感谢您的联系，我会在 24 小时内回复您。",
+      sendAnother: "再发一条 →",
+      errorTitle: "出错了",
+      errorBody: "请重试，或直接通过邮件联系我。",
+    },
+  },
+  donate: {
+    eyebrow: "打赏",
+    headlineLine1: "如果有什么",
+    headlineLine2: "打动了你。",
+    intro:
+      "打赏靠的是信任与小心意。如果这里的某个项目帮你省了时间、教了你点东西，或者只是让你笑了一下——随手投几个法郎进来就好。没有压力，只有感谢。",
+    pickAmount: "选一个金额",
+    currency: "CHF",
+    tiers: {
+      tier5: { label: "心意我收到了" },
+      tier15: { label: "真的帮上忙了" },
+      tier30: { label: "太慷慨了" },
+    },
+    anyAmount: {
+      symbol: "∞",
+      title: "随心",
+      label: "凭心意就好",
+    },
+    sponsorBiggerLead: "想聊更大的合作？",
+    sponsorBiggerCta: "直接联系我",
+    paypalNote: "由 PayPal 安全处理。真心感谢你。",
+  },
+  github: {
+    contributionsSuffix: "次贡献（过去一年）",
+    activityNote: "过去 12 个月的 GitHub 活动",
+    recentActivity: "近期活动",
+    loadError: "加载 GitHub 贡献失败",
+    less: "更少",
+    more: "更多",
+    contribution: "次贡献",
+    contributions: "次贡献",
+  },
+  footer: {
+    tagline: "创意网页开发者",
+    rights: "保留所有权利。",
+    privacyPolicy: "隐私政策",
+  },
+  privacy: {
+    title: "隐私政策",
+    sections: {
+      intro: {
+        heading: "简介",
+        body: "这是一个个人作品集网站，展示我的项目与服务。本隐私政策说明您访问本站时数据的处理方式。",
+        controllerLabel: "数据控制者：",
+        controllerValue: "Dominik Könitzer，瑞士",
+        contactLabel: "联系方式：",
+      },
+      collection: {
+        heading: "数据收集",
+        hostingLabel: "托管与统计：",
+        hostingBody:
+          "本站由 Vercel 托管。服务器日志（IP 地址、浏览器类型、访问时间）出于安全与可靠性目的而保存。访客统计通过 Vercel Analytics 仅以匿名形式收集——不使用任何 Cookie 或追踪标识符。",
+        contactLabel: "联系表单：",
+        contactBody:
+          "如果您通过联系表单或邮件与我联系，我仅会保存您提供的信息（姓名、邮箱、留言）以处理您的请求并回复后续问题。",
+      },
+      rights: {
+        heading: "您的权利",
+        body: "您有权访问、更正或删除您的个人数据。您也可以要求限制处理或反对处理。",
+        contactPrompt: "如需行使这些权利，请通过以下方式联系我：",
+      },
+      impressum: {
+        heading: "网站信息",
+        responsibleFor: "本网站负责人：",
+        name: "Dominik Könitzer",
+        city: "瑞士苏黎世",
+        emailLabel: "邮箱：",
+      },
+      lastUpdated: "最近更新：",
+    },
+  },
+  seo: {
+    home: {
+      title: "软件工程师 & 网页开发者",
+      description:
+        "Dominik Könitzer - 专注于现代网页开发的软件工程师。常驻瑞士，目前就读于 WISS。React、TypeScript 与全栈开发专家。查看我的作品集、项目与技能。",
+      keywords:
+        "Dominik Könitzer, 软件工程师, 网页开发者, React 开发者, TypeScript 开发者, 全栈开发者, 瑞士, 瑞士开发者, 瑞士软件工程师, 网页开发服务, 前端开发者, 后端开发者, 作品集",
+    },
+    about: {
+      title: "关于我",
+      description:
+        "了解 Dominik Könitzer——一位 17 岁的软件工程师，就读于 WISS Schulen für Wirtschaft Informatik Immobilien。目前处于为期四年的软件工程项目的第六学期，专注于现代网页开发。",
+      keywords:
+        "关于 Dominik Könitzer, 软件工程师简介, WISS 学生, 瑞士软件工程学生, 网页开发者背景, 软件工程教育",
+    },
+    skills: {
+      title: "技能与技术",
+      description:
+        "了解 Dominik Könitzer 的技术技能与专长。精通 React、TypeScript、JavaScript、Node.js 与现代网页开发技术。具备前后端经验的全栈开发者。",
+      keywords:
+        "软件工程师技能, React 技能, TypeScript 技能, JavaScript 开发者, Node.js 开发者, 全栈开发者技能, 网页开发技术, 编程语言, 软件工程专长",
+    },
+    projects: {
+      title: "项目",
+      description:
+        "探索 Dominik Konitzer 注重影响力的软件项目，包括 Zephyr、Spectrum 与 Entropy。查看在线部署与源代码，了解真实的产品思维、性能优化与专业工程执行。",
+      keywords:
+        "软件工程师作品集, 高影响力网页开发项目, Zephyr 项目, Spectrum 项目, Entropy 项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
+    },
+    services: {
+      title: "服务",
+      description:
+        "Dominik Könitzer 提供的专业软件工程与网页开发服务，涵盖前端开发、后端开发、全栈解决方案与现代网页应用开发。常驻瑞士，服务全球客户。",
+      keywords:
+        "软件工程服务, 网页开发服务, 前端开发服务, 后端开发服务, 全栈开发, React 开发服务, TypeScript 开发, 定制网页应用, 瑞士软件开发",
+    },
+    contact: {
+      title: "联系",
+      description:
+        "联系 Dominik Könitzer 进行软件工程与网页开发项目合作。常驻瑞士，提供自由职业、合作与咨询机会。",
+      keywords:
+        "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 雇用软件工程师, 瑞士自由职业开发者, 软件工程咨询",
+    },
+    donate: {
+      title: "捐赠",
+      description:
+        "通过捐款支持 Dominik Konitzer 的软件项目。您的贡献将用于新项目、改进、托管以及长期开发工作。",
+      keywords:
+        "向开发者捐款, 支持软件项目, 支持开源开发者, PayPal 捐款, 支持 Dominik Konitzer",
+    },
+    privacy: {
+      title: "隐私政策",
+      description:
+        "dominikkoenitzer.ch 的隐私政策。了解您访问本站时数据如何被收集、使用与保护，符合瑞士 FADP 与欧盟 GDPR 法规。",
+      keywords: "隐私政策, 数据保护, GDPR, FADP, 隐私声明, 数据隐私, 瑞士隐私",
+    },
+    projectDetailsKeywordsSuffix: "项目, 软件工程案例研究, 网页开发作品集",
+  },
+} as const;
