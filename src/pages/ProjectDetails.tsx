@@ -127,9 +127,6 @@ const ProjectDetails = () => {
       <div className="min-h-screen">
         {/* Hero — content floats on the page's flowing veil background */}
         <section className="relative overflow-hidden">
-          <div
-            className={`pointer-events-none absolute inset-0 opacity-50 ${project.toneClass}`}
-          />
           <div className="relative mx-auto max-w-5xl px-6 pt-4 pb-10 sm:px-8 sm:pb-12 md:px-12">
             <div className="mb-12 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide">
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -238,10 +235,10 @@ const ProjectDetails = () => {
             hero/body boundary is veil-on-veil (no hard seam) and the fade to
             solid happens lower down, away from the boundary. */}
         <div
-          className="relative pt-44 pb-24"
+          className="relative pt-72 pb-24"
           style={{
             background:
-              "linear-gradient(to bottom, hsl(var(--background) / 0) 0px, hsl(var(--background)) 200px)",
+              "linear-gradient(to bottom, hsl(var(--background) / 0) 0px, hsl(var(--background) / 0.1) 80px, hsl(var(--background) / 0.92) 220px, hsl(var(--background)) 320px)",
           }}
         >
           <div className="mx-auto max-w-3xl px-6 sm:px-8 md:px-12">
