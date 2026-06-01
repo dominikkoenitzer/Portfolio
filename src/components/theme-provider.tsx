@@ -26,10 +26,10 @@ const initialState: ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 const THEME_META_HEX: Record<Theme, string> = {
-  glass: "#fbfdff",
+  glass: "#080c16",
   bloom: "#fdf0f2",
   forest: "#f6faf2",
-  coffee: "#faf4ea",
+  sunset: "#fdf6f1",
 };
 
 const isTheme = (v: string | null): v is Theme =>

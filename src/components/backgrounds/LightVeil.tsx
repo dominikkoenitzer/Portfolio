@@ -22,6 +22,8 @@ uniform float uGamma;
 uniform float uFloor;
 uniform float uSaturation;
 uniform float uIntensity;
+uniform float uCaustic;
+uniform float uGlow;
 
 out vec4 fragColor;
 
@@ -57,15 +59,23 @@ float fbm(vec2 p) {
   return sum;
 }
 
+// Ridged noise — folds the field at its peaks into thin bright crests, the
+// building block for the caustic veins of light.
+float ridge(vec2 x) { return 1.0 - abs(2.0 * valueNoise(x) - 1.0); }
+
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution;
   float aspect = uResolution.x / max(uResolution.y, 1.0);
 
-  vec2 p = vec2(uv.x * aspect, uv.y) * (2.5 * uScale);
-  float t = uTime * 0.2;
+  vec2 base = vec2(uv.x * aspect, uv.y) * (2.5 * uScale);
 
-  // Two-pass domain warp: the field is sampled at coordinates that are
-  // themselves displaced by noise, folding it into slow drifting ribbons.
+  // Continuous pan — the whole field translates like a camera gliding over
+  // moving water, so it never settles back into the same arrangement.
+  vec2 drift = uTime * vec2(0.05, 0.018);
+  vec2 p = base + drift;
+  float t = uTime * 0.18;
+
+  // Two-pass domain warp folds the drifting field into ribbons.
   vec2 q = vec2(fbm(p + vec2(1.7, 9.2)), fbm(p + vec2(8.3, 2.8)));
   vec2 r = vec2(
     fbm(p + 1.8 * q + vec2(t, 0.4)),
@@ -73,20 +83,38 @@ void main() {
   );
   float field = clamp(fbm(p + 2.2 * r) * 1.15, 0.0, 1.0);
 
+  // Caustics: overlapping ridged ripples advected along the same drift as the
+  // field, so the light flows like a current instead of boiling in place. The
+  // product keeps only the crossings bright; smoothstep cleans them into
+  // distinct veins rather than a muddy haze.
+  vec2 cflow = drift * 1.6;
+  float c1 = ridge(p * 1.8 + cflow + r);
+  float c2 = ridge(p * 2.4 - cflow * 0.7 + r * 0.8 + 7.0);
+  float caustic = smoothstep(0.35, 0.95, c1 * c2);
+
   // Walk across the three theme colours via the field plus a gentle
-  // left-to-right bias, so the hue also shifts horizontally as it flows.
+  // left-to-right bias, then lift the caustic crests toward the brightest
+  // stop so the glints read as light on water.
   float mixT = clamp(field + (uv.x - 0.5) * 0.35, 0.0, 1.0);
   vec3 col = mix(uStops[0], uStops[1], smoothstep(0.0, 0.6, mixT));
   col = mix(col, uStops[2], smoothstep(0.4, 1.0, mixT));
 
+  // Caustic crests deepen the light themes (toward the darkest stop, which
+  // shows under multiply) and brighten the dark theme (toward the lightest
+  // stop, which glows under screen). uGlow picks the direction per theme.
+  float causticAmt = clamp(caustic * uCaustic, 0.0, 1.0);
+  vec3 causticTint = mix(uStops[0], uStops[2], uGlow);
+  col = mix(col, causticTint, causticAmt);
+
   float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
   col = mix(vec3(luma), col, uSaturation);
 
-  // Opacity peaks along a soft band the field nudges up and down, then
-  // feathers away from it; uFloor keeps a faint wash everywhere.
+  // Opacity peaks along a soft band the field nudges up and down, lifted
+  // where caustics shine; uFloor keeps a faint wash everywhere.
   float band = uCenter + field * uMotion;
   float fade = 1.0 - smoothstep(uFeather, uFeather + uSpread + 1e-3, abs(uv.y - band));
-  float alpha = pow(max(fade, uFloor), uGamma) * uIntensity;
+  float alpha = pow(max(fade, uFloor), uGamma);
+  alpha = clamp(alpha + causticAmt * 0.5, 0.0, 1.0) * uIntensity;
 
   // Premultiplied output to match the renderer's blend configuration.
   fragColor = vec4(col * alpha, alpha);
@@ -165,6 +193,8 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
         uFloor: { value: 0.04 },
         uSaturation: { value: 1 },
         uIntensity: { value: 0.5 },
+        uCaustic: { value: 0.6 },
+        uGlow: { value: 0 },
       },
     });
 
@@ -196,6 +226,8 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
       u.uFloor.value = preset.minAlpha;
       u.uSaturation.value = preset.saturation;
       u.uIntensity.value = preset.intensity;
+      u.uCaustic.value = preset.caustic;
+      u.uGlow.value = preset.blendMode === "screen" ? 1 : 0;
     };
 
     const themeWatcher = new MutationObserver(applyPreset);
