@@ -27,7 +27,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 const THEME_META_HEX: Record<Theme, string> = {
   glass: "#fbfdff",
-  cyberpunk: "#fef6fb",
+  bloom: "#fdf0f2",
   forest: "#f6faf2",
   coffee: "#faf4ea",
 };
