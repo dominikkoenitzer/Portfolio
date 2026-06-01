@@ -18,23 +18,8 @@ export const THEMES: ThemeConfig[] = [
 
 export const ALL_THEME_VALUES: Theme[] = THEMES.map((t) => t.value);
 
-type BlendMode =
-  | "normal"
-  | "multiply"
-  | "screen"
-  | "overlay"
-  | "darken"
-  | "lighten"
-  | "color-dodge"
-  | "color-burn"
-  | "hard-light"
-  | "soft-light"
-  | "difference"
-  | "exclusion"
-  | "hue"
-  | "saturation"
-  | "color"
-  | "luminosity";
+// Only the two compositing modes the veil actually uses.
+type BlendMode = "multiply" | "screen";
 
 export type VeilPreset = {
   colorStops: [string, string, string];
