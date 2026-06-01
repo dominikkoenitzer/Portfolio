@@ -1,7 +1,7 @@
-import { Coffee, Flower2, Sparkles, TreePine } from "lucide-react";
+import { Flower2, Sparkles, Sunset, TreePine } from "lucide-react";
 import type { ElementType } from "react";
 
-export type Theme = "glass" | "bloom" | "forest" | "coffee";
+export type Theme = "glass" | "bloom" | "forest" | "sunset";
 
 export interface ThemeConfig {
   value: Theme;
@@ -13,7 +13,7 @@ export const THEMES: ThemeConfig[] = [
   { value: "glass", label: "Glass", icon: Sparkles },
   { value: "bloom", label: "Bloom", icon: Flower2 },
   { value: "forest", label: "Forest", icon: TreePine },
-  { value: "coffee", label: "Coffee", icon: Coffee },
+  { value: "sunset", label: "Sunset", icon: Sunset },
 ];
 
 export const ALL_THEME_VALUES: Theme[] = THEMES.map((t) => t.value);
@@ -47,56 +47,62 @@ export type VeilPreset = {
   saturation: number;
   minAlpha: number;
   base: number;
+  /** Strength of the caustic veins (0 = none). */
+  caustic: number;
 };
 
 export const VEIL_PRESETS: Record<Theme, VeilPreset> = {
   glass: {
-    colorStops: ["#BFD7FF", "#D9C8FF", "#B4ECFF"],
-    blendMode: "multiply",
-    intensity: 0.5,
-    blend: 0.6,
-    scale: 0.85,
-    feather: 0.45,
-    alphaGamma: 1.15,
-    saturation: 1.05,
-    minAlpha: 0.04,
-    base: 0.22,
+    colorStops: ["#1E5BFF", "#8B5CF6", "#22D3EE"],
+    blendMode: "screen",
+    intensity: 0.7,
+    blend: 0.7,
+    scale: 0.9,
+    feather: 0.5,
+    alphaGamma: 1.1,
+    saturation: 1.15,
+    minAlpha: 0.0,
+    base: 0.3,
+    caustic: 0.6,
   },
   bloom: {
     colorStops: ["#453161", "#B6D088", "#FFE8EA"],
     blendMode: "multiply",
-    intensity: 0.45,
+    intensity: 0.5,
     blend: 0.62,
     scale: 0.85,
     feather: 0.48,
-    alphaGamma: 1.2,
-    saturation: 1.0,
+    alphaGamma: 1.1,
+    saturation: 1.05,
     base: 0.22,
     minAlpha: 0.03,
+    caustic: 1.0,
   },
   forest: {
-    colorStops: ["#C8F2D6", "#A8E6C5", "#E0F5E3"],
+    colorStops: ["#3E7A4A", "#8C5E3C", "#E2EFD2"],
     blendMode: "multiply",
-    intensity: 0.5,
+    intensity: 0.48,
     blend: 0.55,
     scale: 0.88,
     feather: 0.5,
-    alphaGamma: 1.15,
-    saturation: 1.02,
-    minAlpha: 0.04,
+    alphaGamma: 1.1,
+    saturation: 1.05,
     base: 0.24,
+    minAlpha: 0.03,
+    caustic: 1.0,
   },
-  coffee: {
-    colorStops: ["#F4D9BA", "#E8C49A", "#FFEEDC"],
+  sunset: {
+    colorStops: ["#7A2E5D", "#FF7E5F", "#FFD27D"],
     blendMode: "multiply",
-    intensity: 0.42,
-    blend: 0.62,
-    scale: 0.82,
-    feather: 0.5,
-    alphaGamma: 1.12,
-    saturation: 1.0,
-    minAlpha: 0.05,
-    base: 0.28,
+    intensity: 0.5,
+    blend: 0.6,
+    scale: 0.85,
+    feather: 0.48,
+    alphaGamma: 1.1,
+    saturation: 1.05,
+    base: 0.24,
+    minAlpha: 0.03,
+    caustic: 1.0,
   },
 };
 

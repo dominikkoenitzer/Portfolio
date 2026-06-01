@@ -334,15 +334,15 @@
     <script>
     "use strict";
     (() => {
-      const THEMES = ["glass", "bloom", "forest", "coffee"];
+      const THEMES = ["glass", "bloom", "forest", "sunset"];
       const stored = localStorage.getItem("portfolio-theme");
       const theme = THEMES.indexOf(stored) >= 0 ? stored : "glass";
 
       const bgHex = {
-        glass: "#fbfdff",
+        glass: "#080c16",
         bloom: "#fdf0f2",
         forest: "#f6faf2",
-        coffee: "#faf4ea",
+        sunset: "#fdf6f1",
       }[theme];
 
       // Add theme class so CSS variables resolve before paint
