@@ -19,9 +19,13 @@ export interface PortfolioProject {
   year: string;
   repoUrl: string;
   liveUrl: string;
+  /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
+  downloadUrl?: string;
   priority: number;
   toneClass: string;
   image?: string;
+  /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
+  imagePortrait?: boolean;
   tags: string[];
   impactHeading: string;
   impactPoints: string[];
@@ -51,8 +55,12 @@ export type ProjectBase = {
   year: string;
   repoUrl: string;
   liveUrl: string;
+  /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
+  downloadUrl?: string;
   priority: number;
   toneClass: string;
   /** Optional screenshot path under /public (e.g. /projects/zephyr.png). */
   image?: string;
+  /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
+  imagePortrait?: boolean;
 };
