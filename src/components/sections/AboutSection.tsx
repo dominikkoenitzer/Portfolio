@@ -5,9 +5,9 @@ import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";
-import GitHubContributions from "./GitHubContributions";
+import { GitHubContributions } from "./GitHubContributions";
 
-export default function AboutSection() {
+export function AboutSection() {
   const { language } = useLanguage();
   const t = translations[language].about;
   return (

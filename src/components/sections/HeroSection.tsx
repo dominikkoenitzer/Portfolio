@@ -97,7 +97,7 @@ function Stat({ value, label }: { value: string; label: string }) {
 }
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
-export default function HeroSection() {
+export function HeroSection() {
   const { language } = useLanguage();
   const t = translations[language];
   const { scrollY } = useScroll();

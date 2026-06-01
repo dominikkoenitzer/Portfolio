@@ -1,6 +1,6 @@
 // Re-export all custom hooks
 
-export * from "./motion-hooks";
+export * from "./use-body-scroll-lock";
 export * from "./use-haptic";
 export * from "./use-mobile";
 export * from "./use-scroll-direction";

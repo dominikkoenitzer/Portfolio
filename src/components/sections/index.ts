@@ -1,8 +1,8 @@
-export { default as AboutSection } from "./AboutSection";
-export { default as ContactSection } from "./ContactSection";
-export { default as DonateSection } from "./DonateSection";
-export { default as GitHubContributions } from "./GitHubContributions";
-export { default as HeroSection } from "./HeroSection";
-export { default as ProjectsSection } from "./ProjectsSection";
-export { default as ServicesSection } from "./ServicesSection";
-export { default as SkillsSection } from "./SkillsSection";
+export { AboutSection } from "./AboutSection";
+export { ContactSection } from "./ContactSection";
+export { DonateSection } from "./DonateSection";
+export { GitHubContributions } from "./GitHubContributions";
+export { HeroSection } from "./HeroSection";
+export { ProjectsSection } from "./ProjectsSection";
+export { ServicesSection } from "./ServicesSection";
+export { SkillsSection } from "./SkillsSection";

@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Github, Linkedin } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
-import ContactForm from "../forms/ContactForm";
+import { ContactForm } from "../forms/ContactForm";
 
-export default function ContactSection() {
+export function ContactSection() {
   const { language } = useLanguage();
   const t = translations[language].contact;
   return (
