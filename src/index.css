@@ -40,35 +40,36 @@
     --scrollbar-thumb-hover: 217 90% 60%;
   }
 
-  /* Cyberpunk — electric neon magenta/cyan on pink-tinted white */
-  .cyberpunk {
-    --background: 320 80% 99%;
-    --foreground: 280 75% 8%;
+  /* Bloom — deep violet, sage green, and blush pink (from reference art) */
+  .bloom {
+    --background: 350 70% 97%;
+    --foreground: 265 35% 14%;
     --card: 0 0% 100%;
-    --card-foreground: 280 75% 8%;
+    --card-foreground: 265 35% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 280 75% 8%;
-    --primary: 316 95% 48%;
+    --popover-foreground: 265 35% 14%;
+    --primary: 265 33% 31%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 280 22% 95%;
-    --secondary-foreground: 280 60% 18%;
-    --muted: 280 18% 94%;
-    --muted-foreground: 280 28% 36%;
-    --accent: 190 92% 92%;
-    --accent-foreground: 195 90% 22%;
-    --border: 280 18% 86%;
-    --input: 280 18% 86%;
-    --ring: 316 95% 48%;
+    --secondary: 82 38% 90%;
+    --secondary-foreground: 265 30% 24%;
+    --muted: 90 25% 93%;
+    --muted-foreground: 265 12% 40%;
+    --accent: 82 44% 84%;
+    --accent-foreground: 100 45% 18%;
+    --border: 300 20% 89%;
+    --input: 300 20% 89%;
+    --ring: 265 42% 46%;
     --destructive: 0 75% 50%;
     --destructive-foreground: 0 0% 100%;
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(316 95% 48%) 0%,
-      hsl(190 90% 48%) 100%
+      hsl(265 40% 42%) 0%,
+      hsl(330 65% 72%) 50%,
+      hsl(82 45% 62%) 100%
     );
-    --theme-shadow-color: 316 95% 48%;
-    --scrollbar-thumb: 280 22% 80%;
-    --scrollbar-thumb-hover: 316 92% 60%;
+    --theme-shadow-color: 265 33% 35%;
+    --scrollbar-thumb: 300 16% 82%;
+    --scrollbar-thumb-hover: 265 35% 52%;
   }
 
   /* Forest — organic, earthy green on off-white */
@@ -1049,72 +1050,6 @@
   box-shadow: 0 0 12px hsl(var(--primary) / 0.6);
 }
 
-/* ── Cyberpunk neon glass morphism ─────────────────────────────────────────── */
-
-[data-theme="cyberpunk"] .aurora-orb {
-  opacity: 1;
-}
-
-[data-theme="cyberpunk"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -30;
-  opacity: 0.03;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-
-[data-theme="cyberpunk"] .glass-card {
-  background: rgba(60, 0, 100, 0.3) !important;
-  backdrop-filter: blur(20px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
-  border-color: hsl(316 100% 67% / 0.18) !important;
-  box-shadow:
-    0 0 0 1px hsl(316 100% 67% / 0.08),
-    0 4px 24px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-}
-
-[data-theme="cyberpunk"] .glass-card:hover {
-  border-color: hsl(316 100% 67% / 0.42) !important;
-  box-shadow:
-    0 0 0 1px hsl(316 100% 67% / 0.2),
-    0 0 28px hsl(316 100% 67% / 0.14),
-    0 0 56px hsl(180 100% 60% / 0.07),
-    0 8px 32px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
-}
-
-[data-theme="cyberpunk"] .hero-name-gradient {
-  background-image: linear-gradient(
-    135deg,
-    hsl(316 100% 72%) 0%,
-    hsl(270 100% 78%) 40%,
-    hsl(180 100% 65%) 100%
-  ) !important;
-  background-size: 200% 200% !important;
-}
-
-[data-theme="cyberpunk"] .scrolled-nav {
-  background: rgba(28, 0, 52, 0.55) !important;
-  backdrop-filter: blur(32px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
-  border-bottom-color: hsl(316 100% 67% / 0.15) !important;
-  box-shadow:
-    0 1px 0 hsl(316 100% 67% / 0.08),
-    0 8px 32px rgba(0, 0, 0, 0.5) !important;
-}
-
-[data-theme="cyberpunk"] .section-heading-line {
-  box-shadow: 0 0 14px hsl(316 100% 67% / 0.55);
-}
-
-[data-theme="cyberpunk"] .bg-grid-pattern {
-  opacity: 0.04;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1408,8 +1343,7 @@ section h4 {
    composited layer for a ~2.5% texture that's invisible on small screens and
    only adds GPU/memory cost during scroll. */
 @media (hover: none) and (pointer: coarse) {
-  [data-theme="glass"] body::after,
-  [data-theme="cyberpunk"] body::after {
+  [data-theme="glass"] body::after {
     display: none !important;
   }
 }
