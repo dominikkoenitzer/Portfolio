@@ -92,7 +92,11 @@ const ProjectDetails = () => {
               {project.image ? (
                 <img
                   alt={`${project.title} screenshot`}
-                  className="mt-8 w-full rounded-xl border border-border/40 object-cover"
+                  className={
+                    project.imagePortrait
+                      ? "mx-auto mt-8 max-h-[640px] w-auto rounded-xl border border-border/40 shadow-lg shadow-primary/5"
+                      : "mt-8 w-full rounded-xl border border-border/40 object-cover"
+                  }
                   loading="lazy"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
@@ -159,9 +163,15 @@ const ProjectDetails = () => {
               <section className="mt-10 border-border/30 border-t pt-8">
                 <h2 className="font-heading text-2xl tracking-tight">{t.links}</h2>
                 <div className="mt-4 space-y-3 text-foreground/90 leading-8">
-                  <p>
-                    {t.visitSite}: <a className="text-primary underline-offset-4 hover:underline" href={project.liveUrl} rel="noopener noreferrer" target="_blank">{project.liveUrl}</a>
-                  </p>
+                  {project.downloadUrl ? (
+                    <p>
+                      {t.download}: <a className="text-primary underline-offset-4 hover:underline" download href={project.downloadUrl} rel="noopener noreferrer" target="_blank">{project.downloadUrl}</a>
+                    </p>
+                  ) : (
+                    <p>
+                      {t.visitSite}: <a className="text-primary underline-offset-4 hover:underline" href={project.liveUrl} rel="noopener noreferrer" target="_blank">{project.liveUrl}</a>
+                    </p>
+                  )}
                   <p>
                     {t.sourceCode}: <a className="text-primary underline-offset-4 hover:underline" href={project.repoUrl} rel="noopener noreferrer" target="_blank">{project.repoUrl}</a>
                   </p>
