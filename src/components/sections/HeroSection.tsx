@@ -18,8 +18,17 @@ function BlurMorphTitle() {
   const PHRASES = translations[language].hero.roles;
   const [idx, setIdx] = useState(0);
   const [blurOut, setBlurOut] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduceMotion(mq.matches);
+    // Honour reduced-motion: hold one static role rather than auto-cycling the
+    // blur morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
+    if (mq.matches) {
+      return;
+    }
+
     let swapTimer: ReturnType<typeof setTimeout>;
     const cycleTimer = setInterval(() => {
       setBlurOut(true);
@@ -32,16 +41,18 @@ function BlurMorphTitle() {
       clearTimeout(swapTimer);
       clearInterval(cycleTimer);
     };
-  }, []);
+  }, [PHRASES.length]);
 
-  const morphStyle: React.CSSProperties = {
-    opacity: blurOut ? 0 : 1,
-    filter: blurOut ? "blur(18px)" : "blur(0px)",
-    transform: blurOut ? "scale(0.97)" : "scale(1)",
-    transition: blurOut
-      ? "opacity 0.32s ease-in, filter 0.32s ease-in, transform 0.32s ease-in"
-      : "opacity 0.55s cubic-bezier(0.25,1,0.4,1), filter 0.55s cubic-bezier(0.25,1,0.4,1), transform 0.55s cubic-bezier(0.25,1,0.4,1)",
-  };
+  const morphStyle: React.CSSProperties = reduceMotion
+    ? {}
+    : {
+        opacity: blurOut ? 0 : 1,
+        filter: blurOut ? "blur(18px)" : "blur(0px)",
+        transform: blurOut ? "scale(0.97)" : "scale(1)",
+        transition: blurOut
+          ? "opacity 0.32s ease-in, filter 0.32s ease-in, transform 0.32s ease-in"
+          : "opacity 0.55s cubic-bezier(0.25,1,0.4,1), filter 0.55s cubic-bezier(0.25,1,0.4,1), transform 0.55s cubic-bezier(0.25,1,0.4,1)",
+      };
 
   return (
     <h1
@@ -172,19 +183,10 @@ export function HeroSection() {
                 label: "Email",
                 icon: <Mail className="h-[18px] w-[18px]" />,
               },
-              {
-                href: "https://www.paypal.com/paypalme/dominikkoenitzer",
-                label: "PayPal",
-                icon: (
-                  <svg className="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.93 4.778-4.005 7.201-9.138 7.201h-2.19a.563.563 0 0 0-.556.479l-1.187 7.527h-.506l-.24 1.516a.56.56 0 0 0 .554.647h3.882c.46 0 .85-.334.922-.788.06-.26.76-4.852.816-5.09a.932.932 0 0 1 .923-.788h.58c3.76 0 6.705-1.528 7.565-5.946.36-1.847.174-3.388-.777-4.471z" />
-                  </svg>
-                ),
-              },
             ].map(({ href, label, icon }) => (
               <a
                 aria-label={label}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/30 text-muted-foreground/60 transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 href={href}
                 key={label}
                 rel="noopener noreferrer"
