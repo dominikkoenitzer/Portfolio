@@ -39,7 +39,7 @@ React 18 + TypeScript + Vite (SWC plugin), single-page portfolio site deployed o
 
 When adding a language, project, or page, add a module and wire it into that folder's `index.ts` — **keep the index's exported API stable** so consumers don't change. A new language additionally requires updating `config/languages.ts`.
 
-**Build is manually chunked** (`vite.config.ts`): `react-vendor`, `framer-motion`, `ui-vendor`, `form-vendor`, `query-vendor`. Keep heavy/optional things (e.g. the WebGL background) lazy so they stay off the critical path.
+**Build is manually chunked** (`vite.config.ts`): `react-vendor`, `framer-motion`, `ui-vendor`, `query-vendor`. Keep heavy/optional things (e.g. the WebGL background) lazy so they stay off the critical path.
 
 ## Conventions
 
