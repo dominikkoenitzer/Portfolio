@@ -106,6 +106,9 @@ export function ProjectsSection() {
                   </span>
                 </div>
 
+                <p className="mb-2.5 font-medium text-foreground/90 text-sm leading-snug">
+                  {project.tagline}
+                </p>
                 <p className="mb-5 flex-1 text-muted-foreground text-sm leading-relaxed">
                   {project.description}
                 </p>
