@@ -4,249 +4,251 @@ import type { LocalizedContent } from "./types";
 export const zephyr: Record<Language, LocalizedContent> = {
   en: {
     tagline:
-      "A performance-first product experience designed to help people navigate complex information quickly.",
+      "A focus-first productivity app for capturing tasks, planning your day, and tracking progress — built to stay fast as it grows.",
     description:
-      "Zephyr helps you stay focused, manage tasks, plan your schedule, and track your progress.",
+      "Zephyr is a productivity web app for managing tasks, planning a schedule, and tracking progress, with a focus mode that keeps the core flow distraction-free.",
     overview:
-      "Zephyr was built to reduce friction for users who need fast access to key information. I focused on clear UI structure, responsive behavior, and maintainable frontend architecture so the product can grow without losing usability.",
+      "Zephyr is a solo project I designed and built end to end in React with Vite, Tailwind CSS, and Radix UI, deployed on Vercel. Across 200+ commits it grew from a simple task list into a focus-oriented productivity tool — tasks, scheduling, and progress tracking — while staying fast and uncluttered.",
     roleSummary:
-      "Product-focused frontend engineer responsible for UX architecture, component system design, and delivery quality.",
+      "Sole designer and developer: product direction, UI/UX, React component architecture, state, and deployment.",
     problemStatement:
-      "Most productivity tools become noisy over time. Zephyr was designed to keep the core flow fast and readable even as feature depth grows.",
+      "Most task apps get noisier as features pile up. I wanted Zephyr's day-to-day loop — capture a task, plan it, check progress — to stay fast and readable even as capability grows.",
     objectives: [
-      "Create a single-flow experience for task capture, scheduling, and progress checks.",
-      "Keep interactions low-friction on both desktop and mobile breakpoints.",
-      "Establish reusable UI and state patterns that scale without adding cognitive load.",
+      "Make task capture, scheduling, and progress tracking feel like one continuous flow.",
+      "Keep the interface fast and low-friction on both desktop and mobile.",
+      "Build a reusable React component system so features can be added without bloat.",
     ],
     architectureDecisions: [
-      "Modular component boundaries around task operations, schedule views, and progress summaries.",
-      "Token-driven styling for theme consistency and maintainable visual updates.",
-      "Clear route and section separation so features can evolve independently.",
+      "React 18 + Vite (SWC) for a fast, component-driven front end.",
+      "Tailwind CSS with Radix UI primitives for an accessible, consistent design system.",
+      "Composable, single-responsibility components split across task, schedule, and progress views.",
     ],
     implementationHighlights: [
-      "Built high-signal dashboard surfaces with concise hierarchy and fast scanability.",
-      "Introduced reusable interaction patterns for list actions and status handling.",
-      "Implemented subtle motion cues to guide focus without distracting from content.",
+      "A focus surface that foregrounds the current task and the day's plan.",
+      "Reusable list and status interactions for fast task operations.",
+      "Subtle motion cues that guide attention without distracting from content.",
     ],
     qualityAndSecurity: [
-      "Semantic structure and readable contrast to support accessibility requirements.",
-      "Defensive UI behavior for empty and edge states to avoid broken interaction loops.",
-      "Consistent responsiveness validated across common viewport groups.",
+      "Responsive across mobile and desktop breakpoints.",
+      "Defensive handling of empty and edge states so flows never dead-end.",
+      "Sustained over 200+ commits — iterated and maintained, not a throwaway demo.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Balancing feature depth with a calm interface as more task utilities were added.",
+          "Keeping the interface calm as more task utilities were added.",
         solution:
-          "Created a layered hierarchy where primary actions remain persistent and advanced actions are progressively disclosed.",
+          "A layered hierarchy: primary actions stay persistent, advanced ones are progressively disclosed.",
       },
       {
         challenge:
-          "Preventing visual inconsistency while iterating quickly on new sections.",
+          "Staying visually consistent while iterating quickly on new sections.",
         solution:
-          "Standardized card, spacing, and typography primitives to preserve system-level coherence.",
+          "Standardized Tailwind card, spacing, and typography primitives for system-level coherence.",
       },
     ],
     hiringSignals: [
-      "Demonstrates product judgment, not only component implementation.",
-      "Shows ability to scale UI systems while preserving speed and clarity.",
-      "Reflects ownership from concept through production-ready polish.",
+      "Shows product judgment, not just component implementation.",
+      "Demonstrates sustained ownership — 200+ commits from concept to deployed product.",
+      "Comfortable owning a full React + Vite + Tailwind front end end to end.",
     ],
     nextIterations: [
-      "Add analytics-informed prioritization for high-frequency workflows.",
-      "Introduce collaborative planning primitives for shared task ownership.",
-      "Expand automated interaction tests for critical productivity paths.",
+      "Persistence and sync so plans carry across devices.",
+      "Keyboard-first quick capture for power users.",
+      "Automated interaction tests for the core task flow.",
     ],
-    tags: ["Frontend", "Performance", "UI/UX"],
+    tags: ["React", "Vite", "Tailwind CSS", "Vercel"],
     impactHeading: "How This Project Creates Impact",
     impactPoints: [
-      "Improves day-to-day usability by simplifying navigation and reducing interaction overhead.",
-      "Helps people complete tasks faster through clearer hierarchy and better responsiveness.",
-      "Supports long-term growth with reusable components and predictable patterns for team collaboration.",
+      "Keeps the daily plan-and-do loop fast by reducing interaction overhead.",
+      "Helps people stay focused through clear hierarchy and a distraction-free core flow.",
+      "Stays maintainable and extensible thanks to a reusable component system.",
     ],
   },
   de: {
     tagline:
-      "Eine performance-orientierte Produkterfahrung, die Menschen hilft, sich schnell durch komplexe Informationen zu bewegen.",
+      "Eine fokus-orientierte Produktivitäts-App zum Erfassen von Aufgaben, Planen des Tages und Verfolgen des Fortschritts — gebaut, um schnell zu bleiben, während sie wächst.",
     description:
-      "Zephyr hilft dir, fokussiert zu bleiben, Aufgaben zu verwalten, deinen Tag zu planen und Fortschritt nachzuverfolgen.",
+      "Zephyr ist eine Produktivitäts-Web-App zum Verwalten von Aufgaben, Planen eines Zeitplans und Verfolgen des Fortschritts, mit einem Fokus-Modus, der den Kern-Flow ablenkungsfrei hält.",
     overview:
-      "Zephyr wurde gebaut, um die Reibung für Nutzer zu reduzieren, die schnell auf wichtige Informationen zugreifen müssen. Ich habe auf klare UI-Struktur, responsives Verhalten und wartbare Frontend-Architektur geachtet, damit das Produkt wachsen kann, ohne an Usability zu verlieren.",
+      "Zephyr ist ein Solo-Projekt, das ich von Anfang bis Ende in React mit Vite, Tailwind CSS und Radix UI entworfen und gebaut habe, deployed auf Vercel. Über 200+ Commits wuchs es von einer einfachen Aufgabenliste zu einem fokus-orientierten Produktivitäts-Tool — Aufgaben, Planung und Fortschritts-Tracking — und blieb dabei schnell und aufgeräumt.",
     roleSummary:
-      "Produktfokussierter Frontend Engineer mit Verantwortung für UX-Architektur, Komponenten-System-Design und Lieferqualität.",
+      "Alleiniger Designer und Entwickler: Produktrichtung, UI/UX, React-Komponenten-Architektur, State und Deployment.",
     problemStatement:
-      "Die meisten Produktivitäts-Tools werden mit der Zeit überladen. Zephyr wurde so gestaltet, dass der Kern-Flow auch bei wachsender Funktionstiefe schnell und lesbar bleibt.",
+      "Die meisten Aufgaben-Apps werden lauter, je mehr Funktionen sich anhäufen. Ich wollte, dass Zephyrs täglicher Ablauf — Aufgabe erfassen, planen, Fortschritt prüfen — schnell und lesbar bleibt, auch wenn die Funktionalität wächst.",
     objectives: [
-      "Einen durchgängigen Flow für Aufgabenerfassung, Planung und Fortschrittsprüfung schaffen.",
-      "Interaktionen sowohl auf Desktop- als auch Mobile-Breakpoints reibungsarm halten.",
-      "Wiederverwendbare UI- und State-Patterns etablieren, die ohne zusätzliche kognitive Last skalieren.",
+      "Aufgabenerfassung, Planung und Fortschritts-Tracking als einen durchgängigen Flow erlebbar machen.",
+      "Das Interface auf Desktop und Mobile schnell und reibungsarm halten.",
+      "Ein wiederverwendbares React-Komponenten-System bauen, damit Features ohne Ballast ergänzt werden können.",
     ],
     architectureDecisions: [
-      "Modulare Komponenten-Grenzen rund um Task-Operationen, Schedule-Ansichten und Fortschritts-Zusammenfassungen.",
-      "Token-getriebenes Styling für Theme-Konsistenz und wartbare visuelle Updates.",
-      "Klare Routen- und Bereichstrennung, damit Features unabhängig wachsen können.",
+      "React 18 + Vite (SWC) für ein schnelles, komponenten-getriebenes Frontend.",
+      "Tailwind CSS mit Radix-UI-Primitiven für ein barrierefreies, konsistentes Design-System.",
+      "Komponierbare Komponenten mit klarer Einzelverantwortung, aufgeteilt auf Aufgaben-, Plan- und Fortschritts-Ansichten.",
     ],
     implementationHighlights: [
-      "High-Signal-Dashboard-Oberflächen mit klarer Hierarchie und schneller Scanability gebaut.",
-      "Wiederverwendbare Interaktionsmuster für Listen-Aktionen und Status-Handling eingeführt.",
-      "Dezente Motion-Cues implementiert, die Fokus lenken, ohne vom Inhalt abzulenken.",
+      "Eine Fokus-Oberfläche, die die aktuelle Aufgabe und den Tagesplan in den Vordergrund stellt.",
+      "Wiederverwendbare Listen- und Status-Interaktionen für schnelle Aufgaben-Operationen.",
+      "Dezente Bewegungs-Cues, die die Aufmerksamkeit lenken, ohne vom Inhalt abzulenken.",
     ],
     qualityAndSecurity: [
-      "Semantische Struktur und lesbarer Kontrast, um Accessibility-Anforderungen zu erfüllen.",
-      "Defensives UI-Verhalten für leere und Edge-States, um kaputte Interaktionsschleifen zu vermeiden.",
-      "Konsistente Responsiveness, validiert über übliche Viewport-Gruppen.",
+      "Responsiv über Mobile- und Desktop-Breakpoints.",
+      "Defensives Handling von leeren und Edge-States, damit Abläufe nie in eine Sackgasse laufen.",
+      "Über 200+ Commits gepflegt — iteriert und gewartet, kein Wegwerf-Demo.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Feature-Tiefe mit einem ruhigen Interface ausbalancieren, während mehr Task-Utilities hinzukommen.",
+          "Das Interface ruhig halten, während mehr Aufgaben-Funktionen hinzukamen.",
         solution:
-          "Eine geschichtete Hierarchie eingeführt, in der Primäraktionen sichtbar bleiben und fortgeschrittene Aktionen progressiv enthüllt werden.",
+          "Eine geschichtete Hierarchie: Primäraktionen bleiben sichtbar, fortgeschrittene werden progressiv enthüllt.",
       },
       {
         challenge:
-          "Visuelle Inkonsistenzen vermeiden, während neue Bereiche schnell iteriert werden.",
+          "Visuell konsistent bleiben, während neue Bereiche schnell iteriert wurden.",
         solution:
-          "Card-, Spacing- und Typografie-Primitiven standardisiert, um system-weite Kohärenz zu erhalten.",
+          "Standardisierte Tailwind-Karten-, Abstands- und Typografie-Primitiven für system-weite Kohärenz.",
       },
     ],
     hiringSignals: [
-      "Zeigt Produktverständnis — nicht nur Komponenten-Implementierung.",
-      "Beweist die Fähigkeit, UI-Systeme zu skalieren und dabei Tempo und Klarheit zu bewahren.",
-      "Spiegelt Ownership vom Konzept bis zum produktionsreifen Feinschliff.",
+      "Zeigt Produktverständnis, nicht nur Komponenten-Implementierung.",
+      "Beweist nachhaltige Ownership — 200+ Commits vom Konzept bis zum deployten Produkt.",
+      "Souverän im Verantworten eines vollständigen React + Vite + Tailwind Frontends, Ende zu Ende.",
     ],
     nextIterations: [
-      "Analytics-informierte Priorisierung für hochfrequente Workflows einführen.",
-      "Kollaborative Planungs-Primitiven für geteilte Task-Verantwortung ergänzen.",
-      "Automatisierte Interaktionstests für kritische Produktivitätspfade ausbauen.",
+      "Persistenz und Sync, damit Pläne geräteübergreifend erhalten bleiben.",
+      "Tastatur-First-Schnellerfassung für Power-User.",
+      "Automatisierte Interaktionstests für den zentralen Aufgaben-Flow.",
     ],
-    tags: ["Frontend", "Performance", "UI/UX"],
+    tags: ["React", "Vite", "Tailwind CSS", "Vercel"],
     impactHeading: "Wie dieses Projekt Wirkung erzeugt",
     impactPoints: [
-      "Verbessert die tägliche Usability durch einfachere Navigation und reduzierten Interaktions-Overhead.",
-      "Hilft Menschen, Aufgaben schneller zu erledigen — durch klarere Hierarchie und bessere Responsiveness.",
-      "Unterstützt langfristiges Wachstum mit wiederverwendbaren Komponenten und vorhersehbaren Patterns für Team-Kollaboration.",
+      "Hält die tägliche Plan-und-Erledige-Schleife schnell, indem Interaktions-Overhead reduziert wird.",
+      "Hilft Menschen, fokussiert zu bleiben — durch klare Hierarchie und einen ablenkungsfreien Kern-Flow.",
+      "Bleibt wartbar und erweiterbar dank eines wiederverwendbaren Komponenten-Systems.",
     ],
   },
   fr: {
     tagline:
-      "Une expérience produit axée performance, conçue pour aider les utilisateurs à naviguer rapidement dans une information complexe.",
+      "Une app de productivité axée focus pour capturer des tâches, planifier sa journée et suivre ses progrès — conçue pour rester rapide à mesure qu'elle grandit.",
     description:
-      "Zephyr vous aide à rester concentré, gérer vos tâches, planifier votre emploi du temps et suivre vos progrès.",
+      "Zephyr est une app web de productivité pour gérer des tâches, planifier un emploi du temps et suivre les progrès, avec un mode focus qui garde le flux principal sans distraction.",
     overview:
-      "Zephyr a été conçu pour réduire la friction pour les utilisateurs qui ont besoin d'un accès rapide à des informations clés. J'ai mis l'accent sur une structure UI claire, un comportement responsive et une architecture frontend maintenable afin que le produit puisse évoluer sans perdre en utilisabilité.",
+      "Zephyr est un projet solo que j'ai conçu et développé de bout en bout en React avec Vite, Tailwind CSS et Radix UI, déployé sur Vercel. Au fil de 200+ commits, il est passé d'une simple liste de tâches à un outil de productivité axé focus — tâches, planification et suivi de progression — tout en restant rapide et épuré.",
     roleSummary:
-      "Ingénieur frontend axé produit, responsable de l'architecture UX, de la conception du système de composants et de la qualité de livraison.",
+      "Seul concepteur et développeur : direction produit, UI/UX, architecture de composants React, état et déploiement.",
     problemStatement:
-      "La plupart des outils de productivité deviennent bruyants avec le temps. Zephyr est pensé pour garder le flux principal rapide et lisible, même quand les fonctionnalités s'enrichissent.",
+      "La plupart des apps de tâches deviennent bruyantes à mesure que les fonctionnalités s'accumulent. Je voulais que la boucle quotidienne de Zephyr — capturer une tâche, la planifier, vérifier les progrès — reste rapide et lisible même quand les capacités grandissent.",
     objectives: [
-      "Créer un flux unique pour la saisie de tâches, la planification et le suivi des progrès.",
-      "Garder les interactions fluides sur les breakpoints desktop et mobile.",
-      "Établir des patterns UI et de state réutilisables qui passent à l'échelle sans charge cognitive supplémentaire.",
+      "Faire de la capture de tâches, de la planification et du suivi de progression un seul flux continu.",
+      "Garder l'interface rapide et fluide sur desktop comme sur mobile.",
+      "Construire un système de composants React réutilisable pour ajouter des fonctionnalités sans alourdir.",
     ],
     architectureDecisions: [
-      "Frontières de composants modulaires autour des opérations sur les tâches, des vues de planning et des résumés de progression.",
-      "Styling piloté par tokens pour une cohérence des thèmes et des mises à jour visuelles maintenables.",
-      "Séparation claire des routes et des sections pour que les fonctionnalités évoluent indépendamment.",
+      "React 18 + Vite (SWC) pour un frontend rapide et orienté composants.",
+      "Tailwind CSS avec les primitives Radix UI pour un design system accessible et cohérent.",
+      "Des composants composables à responsabilité unique, répartis entre les vues tâches, planning et progression.",
     ],
     implementationHighlights: [
-      "Construction de surfaces de tableau de bord à fort signal, hiérarchie concise et lisibilité rapide.",
-      "Introduction de patterns d'interaction réutilisables pour les actions de liste et la gestion d'état.",
-      "Mise en place d'indices de mouvement subtils pour guider le focus sans distraire du contenu.",
+      "Une surface focus qui met en avant la tâche en cours et le plan du jour.",
+      "Des interactions de liste et de statut réutilisables pour des opérations de tâches rapides.",
+      "Des indices de mouvement subtils qui guident l'attention sans distraire du contenu.",
     ],
     qualityAndSecurity: [
-      "Structure sémantique et contraste lisible pour répondre aux exigences d'accessibilité.",
-      "Comportement UI défensif pour les états vides et limites afin d'éviter les boucles d'interaction cassées.",
-      "Responsive cohérente, validée sur les groupes de viewports usuels.",
+      "Responsive sur les breakpoints mobile et desktop.",
+      "Gestion défensive des états vides et limites pour que les flux ne mènent jamais à une impasse.",
+      "Maintenu sur 200+ commits — itéré et entretenu, pas une démo jetable.",
     ],
     challengesAndSolutions: [
       {
         challenge:
-          "Équilibrer la profondeur fonctionnelle et une interface calme à mesure que des utilitaires de tâches s'ajoutent.",
+          "Garder l'interface calme à mesure que des utilitaires de tâches s'ajoutaient.",
         solution:
-          "Création d'une hiérarchie en couches où les actions primaires restent persistantes et les actions avancées sont dévoilées progressivement.",
+          "Une hiérarchie en couches : les actions primaires restent persistantes, les avancées sont dévoilées progressivement.",
       },
       {
         challenge:
-          "Éviter l'incohérence visuelle tout en itérant rapidement sur de nouvelles sections.",
+          "Rester visuellement cohérent tout en itérant vite sur de nouvelles sections.",
         solution:
-          "Standardisation des primitives de cartes, d'espacement et de typographie pour préserver la cohérence au niveau système.",
+          "Primitives Tailwind de cartes, d'espacement et de typographie standardisées pour une cohérence au niveau système.",
       },
     ],
     hiringSignals: [
-      "Démontre un jugement produit, pas seulement de l'implémentation de composants.",
-      "Montre la capacité de passer à l'échelle des systèmes UI tout en préservant rapidité et clarté.",
-      "Reflète une vraie ownership, du concept jusqu'au polish prêt pour la production.",
+      "Montre du jugement produit, pas seulement de l'implémentation de composants.",
+      "Démontre une ownership durable — 200+ commits du concept au produit déployé.",
+      "À l'aise pour porter un frontend React + Vite + Tailwind complet, de bout en bout.",
     ],
     nextIterations: [
-      "Ajouter une priorisation guidée par l'analytics pour les workflows à forte fréquence.",
-      "Introduire des primitives de planification collaborative pour la propriété partagée des tâches.",
-      "Étendre les tests d'interaction automatisés pour les chemins de productivité critiques.",
+      "Persistance et synchronisation pour que les plans suivent d'un appareil à l'autre.",
+      "Capture rapide au clavier pour les power-users.",
+      "Tests d'interaction automatisés pour le flux de tâches central.",
     ],
-    tags: ["Frontend", "Performance", "UI/UX"],
+    tags: ["React", "Vite", "Tailwind CSS", "Vercel"],
     impactHeading: "Comment ce projet crée de l'impact",
     impactPoints: [
-      "Améliore l'utilisabilité quotidienne en simplifiant la navigation et en réduisant la charge d'interaction.",
-      "Aide les utilisateurs à accomplir leurs tâches plus rapidement grâce à une hiérarchie plus claire et une meilleure réactivité.",
-      "Soutient une croissance à long terme avec des composants réutilisables et des patterns prévisibles pour la collaboration en équipe.",
+      "Garde la boucle quotidienne planifier-et-faire rapide en réduisant la charge d'interaction.",
+      "Aide à rester concentré grâce à une hiérarchie claire et un flux central sans distraction.",
+      "Reste maintenable et extensible grâce à un système de composants réutilisable.",
     ],
   },
   zh: {
-    tagline: "以性能为先的产品体验，帮助人们快速在复杂信息中导航。",
-    description: "Zephyr 帮助你保持专注、管理任务、规划日程并追踪进度。",
+    tagline:
+      "一款以专注为核心的生产力应用，用于捕获任务、规划一天并追踪进度——并在不断成长时依然保持快速。",
+    description:
+      "Zephyr 是一款生产力 Web 应用，用于管理任务、规划日程与追踪进度，并通过专注模式让核心流程保持无干扰。",
     overview:
-      "Zephyr 旨在为需要快速访问关键信息的用户降低使用阻力。我专注于清晰的 UI 结构、响应式行为与可维护的前端架构，让产品在不损失易用性的前提下持续成长。",
+      "Zephyr 是我独立从头到尾设计与开发的项目，使用 React、Vite、Tailwind CSS 与 Radix UI，部署在 Vercel 上。在 200+ 次提交中，它从一个简单的任务清单成长为以专注为核心的生产力工具——任务、日程与进度追踪——同时保持快速与简洁。",
     roleSummary:
-      "以产品为导向的前端工程师，负责 UX 架构、组件系统设计与交付质量。",
+      "唯一的设计者与开发者：产品方向、UI/UX、React 组件架构、状态管理与部署。",
     problemStatement:
-      "多数生产力工具会随着时间变得繁杂。Zephyr 的设计保证核心流程在功能增加后依然快速且易读。",
+      "大多数任务应用会随着功能堆叠而变得嘈杂。我希望 Zephyr 的日常循环——捕获任务、规划、查看进度——即使功能增长也依然快速、易读。",
     objectives: [
-      "为任务捕获、日程安排与进度查看打造统一流程的体验。",
-      "在桌面与移动断点上都保持低摩擦的交互。",
-      "建立可复用的 UI 与状态模式，在不增加认知负担的前提下扩展。",
+      "让任务捕获、日程规划与进度追踪成为一个连贯的流程。",
+      "在桌面与移动端都保持界面快速、低摩擦。",
+      "构建可复用的 React 组件体系，让功能可以在不臃肿的前提下扩展。",
     ],
     architectureDecisions: [
-      "围绕任务操作、日程视图与进度概要划分模块化组件边界。",
-      "以设计 token 驱动样式，保证主题一致与可维护的视觉更新。",
-      "清晰的路由与区段划分，便于功能独立演进。",
+      "React 18 + Vite（SWC），打造快速、以组件驱动的前端。",
+      "Tailwind CSS 搭配 Radix UI 基元，构建无障碍、一致的设计系统。",
+      "职责单一、可组合的组件，分布在任务、日程与进度视图中。",
     ],
     implementationHighlights: [
-      "构建高信噪比的仪表盘界面，层次精炼、易于快速扫读。",
-      "为列表操作与状态处理引入可复用的交互模式。",
-      "实现细腻的动效线索，引导注意力而不干扰内容。",
+      "专注界面，将当前任务与当天计划置于前台。",
+      "可复用的列表与状态交互，支持快速的任务操作。",
+      "细腻的动效线索，引导注意力而不干扰内容。",
     ],
     qualityAndSecurity: [
-      "采用语义化结构与可读对比度，满足可访问性要求。",
-      "对空态与边界态进行防御式 UI 处理，避免交互闭环被打断。",
-      "在常见视口组合上验证一致的响应式表现。",
+      "在移动与桌面断点上保持响应式。",
+      "对空态与边界态进行防御式处理，让流程不会走入死胡同。",
+      "历经 200+ 次提交的持续维护——经过迭代与维护，而非一次性 demo。",
     ],
     challengesAndSolutions: [
       {
-        challenge: "在任务工具不断增加的情况下，平衡功能深度与平静的界面。",
+        challenge: "在不断加入任务功能时，保持界面的平静。",
         solution:
-          "构建分层结构：主操作常驻可见，高级操作以渐进披露的方式呈现。",
+          "采用分层结构：主操作常驻可见，高级操作以渐进披露的方式呈现。",
       },
       {
         challenge: "在快速迭代新模块时保持视觉一致性。",
-        solution: "标准化卡片、间距与排版基元，保持系统级一致性。",
+        solution: "标准化 Tailwind 的卡片、间距与排版基元，保持系统级一致性。",
       },
     ],
     hiringSignals: [
       "体现产品判断力，而不仅是组件实现。",
-      "证明可在保持速度与清晰度的同时扩展 UI 系统。",
-      "展示从概念到生产级打磨的全程主导能力。",
+      "展示持续的主导能力——从概念到上线产品的 200+ 次提交。",
+      "能够端到端地独立负责完整的 React + Vite + Tailwind 前端。",
     ],
     nextIterations: [
-      "为高频工作流加入由分析驱动的优先级排序。",
-      "引入用于共享任务所有权的协作规划基元。",
-      "扩展关键生产力路径的自动化交互测试。",
+      "加入持久化与同步，让计划在多设备间保留。",
+      "为高级用户提供键盘优先的快速捕获。",
+      "为核心任务流程加入自动化交互测试。",
     ],
-    tags: ["前端", "性能", "UI/UX"],
+    tags: ["React", "Vite", "Tailwind CSS", "Vercel"],
     impactHeading: "本项目如何创造价值",
     impactPoints: [
-      "通过简化导航与减少交互负担，提升日常可用性。",
-      "通过更清晰的层次与更好的响应性，帮助用户更快完成任务。",
-      "通过可复用组件与可预期的模式，支持长期增长与团队协作。",
+      "通过减少交互负担，让每天的“规划—执行”循环保持快速。",
+      "通过清晰的层次与无干扰的核心流程，帮助人们保持专注。",
+      "凭借可复用的组件体系，保持可维护与可扩展。",
     ],
   },
 };
