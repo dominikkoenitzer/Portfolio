@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export function CustomCursor() {
   const [mounted, setMounted] = useState(false);
@@ -50,7 +51,10 @@ export function CustomCursor() {
 
   if (!mounted) return null;
 
-  return (
+  // Portal to <body> so the dot shares the same stacking context as Radix
+  // popovers/dropdowns (which also portal to body). Its z-[9999] then wins
+  // over their z-50, keeping the cursor visible on top of open menus.
+  return createPortal(
     <div className="pointer-events-none select-none" aria-hidden="true">
       <motion.div
         className="fixed z-[9999] rounded-full bg-foreground"
@@ -66,6 +70,7 @@ export function CustomCursor() {
           scale: springDotScale,
         }}
       />
-    </div>
+    </div>,
+    document.body
   );
 }
