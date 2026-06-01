@@ -2,10 +2,11 @@
 Software Engineer: Dominik Könitzer
 Contact: dominik.koenitzer [at] gmail.com
 GitHub: @dominikkoenitzer
+LinkedIn: linkedin.com/in/dominik-koenitzer
 From: Switzerland
 
 /* SITE */
-Last update: 2026/05/26
+Last update: 2026/06/01
 Language: English / Deutsch / Français / 中文
 Doctype: HTML5
 Standards: HTML5, CSS3, ECMAScript 2022+

@@ -85,7 +85,7 @@
     <meta name="application-name" content="Dominik Könitzer Portfolio">
     <meta name="msapplication-TileColor" content="#2563eb">
     <meta name="msapplication-config" content="/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+    <meta name="theme-color" content="#080c16" id="theme-color-meta">
 
     <!-- Geographic SEO -->
     <meta name="geo.region" content="CH">
@@ -107,6 +107,7 @@
 
     <!-- Identity / Webmentions / IndieWeb -->
     <link rel="me" href="https://github.com/dominikkoenitzer">
+    <link rel="me" href="https://linkedin.com/in/dominik-koenitzer">
     <link rel="author" href="https://dominikkoenitzer.ch/about">
 
     <!-- Sitemap & feeds -->
@@ -143,8 +144,7 @@
     >
     <meta name="twitter:image" content="https://dominikkoenitzer.ch/og-image.png">
     <meta name="twitter:image:alt" content="Dominik Könitzer — Software Engineer Portfolio">
-    <meta name="twitter:creator" content="@dominikkoenitzer">
-    <meta name="twitter:site" content="@dominikkoenitzer">
+    <!-- No X/Twitter account — twitter:card still renders rich link previews without a handle -->
 
     <!-- Dublin Core (helps generic crawlers + AI entity recognition) -->
     <meta name="DC.title" content="Dominik Könitzer — Software Engineer Portfolio">
@@ -191,10 +191,12 @@
         "height": 630
       },
       "sameAs": [
-        "https://github.com/dominikkoenitzer"
+        "https://github.com/dominikkoenitzer",
+        "https://linkedin.com/in/dominik-koenitzer"
       ],
       "jobTitle": "Software Engineer",
-      "description": "Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js and full-stack engineering.",
+      "email": "dominik.koenitzer@gmail.com",
+      "description": "Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js and full-stack engineering. Currently open to software engineering roles, internships, and freelance opportunities — in Switzerland or remote.",
       "knowsLanguage": ["en", "de", "fr"],
       "knowsAbout": [
         "Software Engineering",
@@ -217,10 +219,16 @@
         "@type": "Country",
         "name": "Switzerland"
       },
-      "worksFor": {
-        "@type": "EducationalOrganization",
-        "name": "WISS Schulen für Wirtschaft Informatik Immobilien",
-        "url": "https://www.wiss.ch"
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Software Engineer",
+        "occupationalCategory": "15-1252.00",
+        "occupationLocation": { "@type": "Country", "name": "Switzerland" },
+        "skills": "React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, Full-Stack Development, Docker, PostgreSQL"
+      },
+      "seeks": {
+        "@type": "Demand",
+        "name": "Software engineering roles, internships, and freelance opportunities"
       },
       "alumniOf": {
         "@type": "EducationalOrganization",
@@ -320,7 +328,7 @@
         "height": 630
       },
       "founder": { "@id": "https://dominikkoenitzer.ch/#person" },
-      "sameAs": ["https://github.com/dominikkoenitzer"],
+      "sameAs": ["https://github.com/dominikkoenitzer", "https://linkedin.com/in/dominik-koenitzer"],
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer support",

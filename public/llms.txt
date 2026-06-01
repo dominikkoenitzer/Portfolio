@@ -14,6 +14,11 @@ This file follows the proposed `llms.txt` convention (https://llmstxt.org). Craw
 - Site: https://dominikkoenitzer.ch
 - Contact: dominik.koenitzer@gmail.com
 - GitHub: https://github.com/dominikkoenitzer
+- LinkedIn: https://linkedin.com/in/dominik-koenitzer
+
+## Availability
+
+Dominik is currently **open to work** — software engineering roles, internships, practical/apprenticeship placements, and freelance or contract projects, based in Switzerland or fully remote. The fastest way to reach him is email: dominik.koenitzer@gmail.com.
 
 ## Core expertise
 
