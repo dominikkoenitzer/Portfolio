@@ -4,8 +4,8 @@ import { Footer, Navbar } from "@/components";
 
 // Decorative WebGL background — defer it (and the ~70KB ogl lib) off the
 // critical path so first paint isn't blocked by it.
-const AuroraBackground = lazy(
-  () => import("@/components/backgrounds/AuroraBackground")
+const LightVeilBackground = lazy(
+  () => import("@/components/backgrounds/LightVeilBackground")
 );
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -41,7 +41,7 @@ export function PageLayout({ children }: PageLayoutProps) {
     <ThemeProvider defaultTheme="glass">
       <LanguageProvider defaultLanguage="en">
         <Suspense fallback={null}>
-          <AuroraBackground />
+          <LightVeilBackground />
         </Suspense>
         <CustomCursor />
 
