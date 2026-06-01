@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ArrowRight, Download, ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
@@ -121,16 +121,30 @@ export function ProjectsSection() {
                     <Github className="h-3.5 w-3.5" />
                     {t.source}
                   </a>
-                  <a
-                    aria-label={t.openLive.replace("{name}", project.title)}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
-                    href={project.liveUrl}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {t.live}
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+                  {project.downloadUrl ? (
+                    <a
+                      aria-label={t.openDownload.replace("{name}", project.title)}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                      download
+                      href={project.downloadUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {t.download}
+                      <Download className="h-3.5 w-3.5" />
+                    </a>
+                  ) : (
+                    <a
+                      aria-label={t.openLive.replace("{name}", project.title)}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                      href={project.liveUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {t.live}
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
                   <Link
                     aria-label={t.viewDetails.replace("{name}", project.title)}
                     className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.06]"

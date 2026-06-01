@@ -85,6 +85,19 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/zephyr" />
   </url>
 
+  <!-- Project: Flow -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/flow</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/flow" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/flow" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/flow" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/flow" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/flow" />
+  </url>
+
   <!-- Project: Spectrum -->
   <url>
     <loc>https://dominikkoenitzer.ch/projects/spectrum</loc>

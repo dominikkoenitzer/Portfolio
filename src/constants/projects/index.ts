@@ -1,5 +1,6 @@
 import type { Language } from "@/config/languages";
 import { entropy } from "./entropy";
+import { flow } from "./flow";
 import { remnants } from "./remnants";
 import { spectrum } from "./spectrum";
 import { zephyr } from "./zephyr";
@@ -22,12 +23,25 @@ const PROJECT_BASE: ProjectBase[] = [
     image: "/projects/zephyr.png",
   },
   {
+    slug: "flow",
+    title: "Flow",
+    year: "2026",
+    repoUrl: "https://github.com/dominikkoenitzer/Flow",
+    liveUrl: "https://github.com/dominikkoenitzer/Flow",
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Flow/releases/download/Download/FLOW.exe",
+    priority: 2,
+    toneClass: TONE_RADIAL,
+    image: "/projects/flow.png",
+    imagePortrait: true,
+  },
+  {
     slug: "spectrum",
     title: "Spectrum",
     year: "2026",
     repoUrl: "https://github.com/dominikkoenitzer/Spectrum",
     liveUrl: "https://spectrum.punds.ch/",
-    priority: 2,
+    priority: 3,
     toneClass: TONE_RADIAL,
     image: "/projects/spectrum.png",
   },
@@ -37,7 +51,7 @@ const PROJECT_BASE: ProjectBase[] = [
     year: "2026",
     repoUrl: "https://github.com/dominikkoenitzer/Entropy",
     liveUrl: "https://entropy.punds.ch/",
-    priority: 3,
+    priority: 4,
     toneClass: TONE_RADIAL,
     image: "/projects/entropy.png",
   },
@@ -47,7 +61,7 @@ const PROJECT_BASE: ProjectBase[] = [
     year: "2026",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://remnants.punds.ch/",
-    priority: 4,
+    priority: 5,
     toneClass: TONE_RADIAL,
     image: "/projects/remnants.png",
   },
@@ -58,6 +72,7 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   spectrum,
   entropy,
   remnants,
+  flow,
 };
 
 const resolveContent = (slug: string, lang: Language): LocalizedContent => {
