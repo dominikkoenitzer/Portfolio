@@ -2,12 +2,12 @@ import { ContactSection } from "@/components";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
-import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
+import { translations } from "@/lib/translations";
 
 const Contact = () => {
   const { language } = useLanguage();

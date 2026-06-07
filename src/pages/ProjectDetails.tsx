@@ -90,7 +90,7 @@ const ProjectDetails = () => {
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
   const projectTimeline = `${project.year} — ${t.present}`;
   const otherProjects = getProjects(language).filter(
-    (item) => item.slug !== project.slug
+    (item) => item.slug !== project.slug,
   );
 
   return (
@@ -130,7 +130,10 @@ const ProjectDetails = () => {
           <div className="relative mx-auto max-w-5xl px-6 pt-4 pb-10 sm:px-8 sm:pb-12 md:px-12">
             <div className="mb-12 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <Link className="transition-colors hover:text-foreground" to="/">
+                <Link
+                  className="transition-colors hover:text-foreground"
+                  to="/"
+                >
                   {t.home}
                 </Link>
                 <span>/</span>
@@ -243,114 +246,114 @@ const ProjectDetails = () => {
         >
           <div className="mx-auto max-w-3xl px-6 sm:px-8 md:px-12">
             <article>
-            <Section divider={false} title={t.overview}>
-              <p className="border-primary/40 border-l-2 pl-4 text-foreground/80 italic leading-8">
-                {project.roleSummary}
-              </p>
-              <p className="mt-5 text-foreground/90 leading-8">
-                {project.overview}
-              </p>
-            </Section>
+              <Section divider={false} title={t.overview}>
+                <p className="border-primary/40 border-l-2 pl-4 text-foreground/80 italic leading-8">
+                  {project.roleSummary}
+                </p>
+                <p className="mt-5 text-foreground/90 leading-8">
+                  {project.overview}
+                </p>
+              </Section>
 
-            <Section title={t.problem}>
-              <p className="text-foreground/90 leading-8">
-                {project.problemStatement}
-              </p>
-            </Section>
+              <Section title={t.problem}>
+                <p className="text-foreground/90 leading-8">
+                  {project.problemStatement}
+                </p>
+              </Section>
 
-            <Section title={t.objectives}>
-              <ol className="space-y-4">
-                {project.objectives.map((objective, index) => (
-                  <li className="flex gap-4" key={objective}>
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-primary text-xs">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="pt-1 text-foreground/90 leading-7">
-                      {objective}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </Section>
+              <Section title={t.objectives}>
+                <ol className="space-y-4">
+                  {project.objectives.map((objective, index) => (
+                    <li className="flex gap-4" key={objective}>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-primary text-xs">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="pt-1 text-foreground/90 leading-7">
+                        {objective}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </Section>
 
-            <Section title={t.architecture}>
-              <BulletList items={project.architectureDecisions} />
-            </Section>
+              <Section title={t.architecture}>
+                <BulletList items={project.architectureDecisions} />
+              </Section>
 
-            <Section title={t.implementation}>
-              <BulletList items={project.implementationHighlights} />
-            </Section>
+              <Section title={t.implementation}>
+                <BulletList items={project.implementationHighlights} />
+              </Section>
 
-            <Section title={t.quality}>
-              <BulletList items={project.qualityAndSecurity} />
-            </Section>
+              <Section title={t.quality}>
+                <BulletList items={project.qualityAndSecurity} />
+              </Section>
 
-            <Section title={t.challenges}>
-              <div className="grid gap-5 sm:grid-cols-2">
-                {project.challengesAndSolutions.map((item) => (
-                  <div
-                    className="glass-deep rounded-2xl border border-border/30 p-5"
-                    key={item.challenge}
-                  >
-                    <p className="font-mono text-[10px] text-destructive uppercase tracking-[0.18em]">
-                      {t.challengeLabel}
-                    </p>
-                    <p className="mt-2 text-foreground/90 text-sm leading-7">
-                      {item.challenge}
-                    </p>
-                    <div className="my-4 h-px bg-border/40" />
-                    <p className="font-mono text-[10px] text-primary uppercase tracking-[0.18em]">
-                      {t.solutionLabel}
-                    </p>
-                    <p className="mt-2 text-foreground/80 text-sm leading-7">
-                      {item.solution}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </Section>
+              <Section title={t.challenges}>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {project.challengesAndSolutions.map((item) => (
+                    <div
+                      className="glass-deep rounded-2xl border border-border/30 p-5"
+                      key={item.challenge}
+                    >
+                      <p className="font-mono text-[10px] text-destructive uppercase tracking-[0.18em]">
+                        {t.challengeLabel}
+                      </p>
+                      <p className="mt-2 text-foreground/90 text-sm leading-7">
+                        {item.challenge}
+                      </p>
+                      <div className="my-4 h-px bg-border/40" />
+                      <p className="font-mono text-[10px] text-primary uppercase tracking-[0.18em]">
+                        {t.solutionLabel}
+                      </p>
+                      <p className="mt-2 text-foreground/80 text-sm leading-7">
+                        {item.solution}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </Section>
 
-            <Section title={project.impactHeading}>
-              <CheckList items={project.impactPoints} />
-            </Section>
+              <Section title={project.impactHeading}>
+                <CheckList items={project.impactPoints} />
+              </Section>
 
-            <Section title={t.moreProjects}>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {otherProjects.map((item) => (
-                  <Link
-                    className="group glass-deep flex flex-col rounded-2xl border border-border/30 p-5 transition hover:border-primary/30"
-                    key={item.slug}
-                    to={`/projects/${item.slug}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-heading text-xl tracking-tight transition-colors group-hover:text-primary">
-                          {item.title}
-                        </p>
-                        <p className="mt-1 text-[11px] text-muted-foreground/70 uppercase tracking-wide">
-                          {item.year}
-                        </p>
+              <Section title={t.moreProjects}>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {otherProjects.map((item) => (
+                    <Link
+                      className="group glass-deep flex flex-col rounded-2xl border border-border/30 p-5 transition hover:border-primary/30"
+                      key={item.slug}
+                      to={`/projects/${item.slug}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-heading text-xl tracking-tight transition-colors group-hover:text-primary">
+                            {item.title}
+                          </p>
+                          <p className="mt-1 text-[11px] text-muted-foreground/70 uppercase tracking-wide">
+                            {item.year}
+                          </p>
+                        </div>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                       </div>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-                    </div>
-                    <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-6">
-                      {item.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {item.tags.slice(0, 3).map((tag) => (
-                        <span
-                          className="rounded-full border border-border/40 bg-secondary/40 px-2 py-0.5 text-[11px] text-muted-foreground"
-                          key={tag}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </Section>
-          </article>
+                      <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-6">
+                        {item.description}
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {item.tags.slice(0, 3).map((tag) => (
+                          <span
+                            className="rounded-full border border-border/40 bg-secondary/40 px-2 py-0.5 text-[11px] text-muted-foreground"
+                            key={tag}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </Section>
+            </article>
           </div>
         </div>
       </div>
