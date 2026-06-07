@@ -11,8 +11,12 @@ export function useBodyScrollLock(locked: boolean) {
       return;
     }
 
-    requestAnimationFrame(() => {
-      const scrollY = window.scrollY;
+    // Capture the scroll position now and restore it on unlock. Applying the
+    // lock in rAF avoids a layout read during commit — but the returned id is
+    // cancelled in cleanup so a quick lock→unlock can never leave the styles
+    // applied with no pending cleanup (which would freeze the page for good).
+    const scrollY = window.scrollY;
+    const raf = requestAnimationFrame(() => {
       const html = document.documentElement;
       const body = document.body;
 
@@ -24,7 +28,7 @@ export function useBodyScrollLock(locked: boolean) {
     });
 
     return () => {
-      const scrollY = Number.parseInt(document.body.style.top || "0", 10) * -1;
+      cancelAnimationFrame(raf);
       const html = document.documentElement;
       const body = document.body;
 
@@ -34,9 +38,7 @@ export function useBodyScrollLock(locked: boolean) {
       body.style.overflow = "";
       html.style.overflow = "";
 
-      if (!Number.isNaN(scrollY)) {
-        window.scrollTo(0, scrollY);
-      }
+      window.scrollTo(0, scrollY);
     };
   }, [locked]);
 }
