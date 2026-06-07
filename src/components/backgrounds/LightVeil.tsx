@@ -163,8 +163,9 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
       premultipliedAlpha: true,
       // A soft, blurry haze gains nothing from MSAA — skip it on phones.
       antialias: !coarsePointer,
-      // Phones report dpr 3; a full-screen blur doesn't need that density.
-      dpr: Math.min(window.devicePixelRatio || 1, coarsePointer ? 1.5 : 2),
+      // Phones report dpr 3; a soft full-screen blur reads identically at 1×, so
+      // rendering at native density would just burn the mobile GPU for nothing.
+      dpr: Math.min(window.devicePixelRatio || 1, coarsePointer ? 1 : 2),
     });
     const { gl } = renderer;
     gl.clearColor(0, 0, 0, 0);
@@ -257,9 +258,16 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
     };
     window.addEventListener("resize", onResize);
 
+    // The drift is glacial (~0.05 units/sec), so 30fps is indistinguishable
+    // from 60 — but on phones it halves the per-frame cost of an already heavy
+    // fragment shader. Throttle there; render every frame on desktop.
+    const minFrameMs = coarsePointer ? 1000 / 30 : 0;
+    let lastRender = 0;
     let frame = 0;
     const render = (ms: number) => {
       frame = requestAnimationFrame(render);
+      if (ms - lastRender < minFrameMs) return;
+      lastRender = ms;
       const u = program.uniforms;
       u.uTime.value = ms * 0.001 * (live.current.speed ?? 1);
       u.uMotion.value = live.current.motion ?? DEFAULT_MOTION;

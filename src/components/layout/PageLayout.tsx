@@ -1,5 +1,5 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { lazy, type ReactNode, Suspense, useEffect } from "react";
+import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { Footer, Navbar } from "@/components";
 
 // Decorative WebGL background — defer it (and the ~70KB ogl lib) off the
@@ -29,6 +29,20 @@ export function PageLayout({ children }: PageLayoutProps) {
   // don't overshoot iOS Safari's collapsing toolbar.
   useViewportHeight();
 
+  // Hold the WebGL veil (GL context + shader compile) until the browser is idle
+  // so it never competes with first paint / hydration — critical on phones,
+  // where that work otherwise lands right in the middle of the initial render.
+  const [showVeil, setShowVeil] = useState(false);
+  useEffect(() => {
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      const id = idle(() => setShowVeil(true), { timeout: 2000 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const t = setTimeout(() => setShowVeil(true), 200);
+    return () => clearTimeout(t);
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.style.fontFamily =
@@ -40,9 +54,11 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <ThemeProvider defaultTheme="glass">
       <LanguageProvider defaultLanguage="en">
-        <Suspense fallback={null}>
-          <LightVeilBackground />
-        </Suspense>
+        {showVeil && (
+          <Suspense fallback={null}>
+            <LightVeilBackground />
+          </Suspense>
+        )}
         <CustomCursor />
 
       {/* Scroll progress bar */}
@@ -51,7 +67,10 @@ export function PageLayout({ children }: PageLayoutProps) {
         style={{ scaleX, transformOrigin: "0%" }}
       />
 
-      {/* Aurora background — only visible on glass theme via CSS */}
+      {/* Aurora background — only visible on glass theme via CSS. Each orb is a
+          radial-gradient glow rather than a solid circle behind `filter: blur()`:
+          visually identical at these low alphas, but it skips the large offscreen
+          blur buffers that make first paint crawl on mobile Safari. */}
       <div className="aurora-layer pointer-events-none fixed inset-0 -z-50 overflow-hidden" aria-hidden="true">
         <div
           className="aurora-orb absolute"
@@ -60,9 +79,8 @@ export function PageLayout({ children }: PageLayoutProps) {
             left: "-8%",
             width: "900px",
             height: "900px",
-            background: "hsl(var(--primary) / 0.18)",
-            filter: "blur(160px)",
-            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, transparent 72%)",
           }}
         />
         <div
@@ -72,9 +90,8 @@ export function PageLayout({ children }: PageLayoutProps) {
             right: "-8%",
             width: "750px",
             height: "750px",
-            background: "hsl(260 100% 68% / 0.13)",
-            filter: "blur(150px)",
-            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, hsl(260 100% 68% / 0.13) 0%, transparent 72%)",
           }}
         />
         <div
@@ -84,9 +101,8 @@ export function PageLayout({ children }: PageLayoutProps) {
             right: "15%",
             width: "550px",
             height: "550px",
-            background: "hsl(185 100% 58% / 0.09)",
-            filter: "blur(130px)",
-            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, hsl(185 100% 58% / 0.09) 0%, transparent 72%)",
           }}
         />
         <div
@@ -96,9 +112,8 @@ export function PageLayout({ children }: PageLayoutProps) {
             left: "30%",
             width: "400px",
             height: "400px",
-            background: "hsl(210 100% 70% / 0.07)",
-            filter: "blur(110px)",
-            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, hsl(210 100% 70% / 0.07) 0%, transparent 72%)",
           }}
         />
       </div>
