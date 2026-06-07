@@ -29,15 +29,60 @@ interface Service {
 }
 
 const services: Service[] = [
-  { itemKey: "webDev", price: "300 CHF", icon: <Code className="h-5 w-5" />, category: "build" },
-  { itemKey: "customSoftware", price: "500 CHF", icon: <Settings className="h-5 w-5" />, category: "build" },
-  { itemKey: "serverSetup", price: "350 CHF", icon: <Server className="h-5 w-5" />, category: "build" },
-  { itemKey: "security", price: "60 CHF/hr", icon: <Shield className="h-5 w-5" />, category: "protect" },
-  { itemKey: "maintenance", price: "50 CHF/mo", icon: <Wrench className="h-5 w-5" />, category: "protect" },
-  { itemKey: "backup", price: "200 CHF + 50/mo", icon: <HardDrive className="h-5 w-5" />, category: "protect" },
-  { itemKey: "seo", price: "150 CHF", icon: <Search className="h-5 w-5" />, category: "grow" },
-  { itemKey: "cms", price: "40 CHF/hr", icon: <FileText className="h-5 w-5" />, category: "grow" },
-  { itemKey: "support", price: "30 CHF/hr", icon: <Laptop className="h-5 w-5" />, category: "grow" },
+  {
+    itemKey: "webDev",
+    price: "300 CHF",
+    icon: <Code className="h-5 w-5" />,
+    category: "build",
+  },
+  {
+    itemKey: "customSoftware",
+    price: "500 CHF",
+    icon: <Settings className="h-5 w-5" />,
+    category: "build",
+  },
+  {
+    itemKey: "serverSetup",
+    price: "350 CHF",
+    icon: <Server className="h-5 w-5" />,
+    category: "build",
+  },
+  {
+    itemKey: "security",
+    price: "60 CHF/hr",
+    icon: <Shield className="h-5 w-5" />,
+    category: "protect",
+  },
+  {
+    itemKey: "maintenance",
+    price: "50 CHF/mo",
+    icon: <Wrench className="h-5 w-5" />,
+    category: "protect",
+  },
+  {
+    itemKey: "backup",
+    price: "200 CHF + 50/mo",
+    icon: <HardDrive className="h-5 w-5" />,
+    category: "protect",
+  },
+  {
+    itemKey: "seo",
+    price: "150 CHF",
+    icon: <Search className="h-5 w-5" />,
+    category: "grow",
+  },
+  {
+    itemKey: "cms",
+    price: "40 CHF/hr",
+    icon: <FileText className="h-5 w-5" />,
+    category: "grow",
+  },
+  {
+    itemKey: "support",
+    price: "30 CHF/hr",
+    icon: <Laptop className="h-5 w-5" />,
+    category: "grow",
+  },
 ];
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
@@ -47,11 +92,11 @@ export function ServicesSection() {
   const t = translations[language].services;
   const [active, setActive] = useState<Category>("all");
 
-  const filtered = active === "all" ? services : services.filter((s) => s.category === active);
+  const filtered =
+    active === "all" ? services : services.filter((s) => s.category === active);
 
   return (
     <section className="section-padding" id="services">
-
       {/* Header */}
       <motion.div
         className="mb-10 md:mb-12"
@@ -64,8 +109,13 @@ export function ServicesSection() {
           {t.eyebrow}
         </p>
         <div className="flex items-end justify-between">
-          <h2 className="font-bold text-4xl tracking-tight md:text-5xl">{t.heading}</h2>
-          <span aria-hidden="true" className="font-mono text-5xl font-bold text-muted-foreground/10 md:text-7xl">
+          <h2 className="font-bold text-4xl tracking-tight md:text-5xl">
+            {t.heading}
+          </h2>
+          <span
+            aria-hidden="true"
+            className="font-mono text-5xl font-bold text-muted-foreground/10 md:text-7xl"
+          >
             {String(services.length).padStart(2, "0")}
           </span>
         </div>
@@ -85,7 +135,7 @@ export function ServicesSection() {
               "relative rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200",
               active === id
                 ? "bg-primary text-primary-foreground shadow-[0_2px_12px_hsl(var(--primary)/0.3)]"
-                : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground"
+                : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground",
             )}
             key={id}
             onClick={() => setActive(id)}
@@ -198,7 +248,6 @@ export function ServicesSection() {
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </a>
       </motion.div>
-
     </section>
   );
 }

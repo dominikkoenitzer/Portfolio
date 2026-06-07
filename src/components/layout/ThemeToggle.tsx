@@ -73,7 +73,7 @@ export function ThemeToggle({
                   "flex flex-col gap-2 rounded-xl border p-2 transition-colors",
                   isActive
                     ? "border-primary/60 bg-primary/5"
-                    : "border-border/60 hover:bg-muted"
+                    : "border-border/60 hover:bg-muted",
                 )}
                 key={option.value}
                 onClick={(e) => {

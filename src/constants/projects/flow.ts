@@ -3,8 +3,7 @@ import type { LocalizedContent } from "./types";
 
 export const flow: Record<Language, LocalizedContent> = {
   en: {
-    tagline:
-      "Ultra-low-latency input automation for Windows, built in C++.",
+    tagline: "Ultra-low-latency input automation for Windows, built in C++.",
     description:
       "Flow is a Windows automation tool for recording and replaying user input with minimal delay — frame-accurate macro playback and rapid auto-click execution, built in C++ for performance-critical workflows.",
     overview:
@@ -197,7 +196,8 @@ export const flow: Record<Language, LocalizedContent> = {
       "Flow 是一款 Windows 自动化工具，用于以极小延迟录制并回放用户输入——帧级精确的宏回放与高速自动点击，以 C++ 为性能关键型工作流构建。",
     overview:
       "Flow 捕获键盘与鼠标输入，并以帧级精确的时序回放，使录制的宏完全按照操作时的方式执行。以 C++ 为 Windows 平台编写，专注于超低延迟执行——在重复任务、测试与高速自动点击中，尽量缩小意图与动作之间的间隔。",
-    roleSummary: "系统工程师，从零用 C++ 打造性能关键型的原生 Windows 自动化工具。",
+    roleSummary:
+      "系统工程师，从零用 C++ 打造性能关键型的原生 Windows 自动化工具。",
     problemStatement:
       "基于浏览器或脚本的自动化工具会引入延迟，破坏对时序敏感的工作流。Flow 以 C++ 在 Windows 上原生运行，以帧级精度和极小开销录制并回放输入。",
     objectives: [
@@ -227,7 +227,8 @@ export const flow: Record<Language, LocalizedContent> = {
           "为每个事件采集高分辨率时间戳，并在回放时重建原始节奏，实现帧级精确结果。",
       },
       {
-        challenge: "在不丢失事件的前提下，将执行延迟保持得足够低以支持高速自动点击。",
+        challenge:
+          "在不丢失事件的前提下，将执行延迟保持得足够低以支持高速自动点击。",
         solution:
           "将热路径保持在原生 C++ 中，尽量减少分配与开销，使输入派发在快速重复下依然紧凑。",
       },

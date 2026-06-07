@@ -18,7 +18,7 @@ export function AboutSection() {
   const [isMobile] = useState(
     () =>
       typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px)").matches
+      window.matchMedia("(max-width: 767px)").matches,
   );
   const avatarReveal = isMobile ? fadeInUp : fadeInLeft;
   const bioReveal = isMobile ? fadeInUp : fadeInRight;
@@ -129,11 +129,17 @@ export function AboutSection() {
                 whileInView={{ opacity: 1, y: 0 }}
               >
                 {t.intro3Before}
-                <span className="font-medium text-foreground">{t.intro3Word1}</span>
+                <span className="font-medium text-foreground">
+                  {t.intro3Word1}
+                </span>
                 {t.intro3Comma1}
-                <span className="font-medium text-foreground">{t.intro3Word2}</span>
+                <span className="font-medium text-foreground">
+                  {t.intro3Word2}
+                </span>
                 {t.intro3Comma2}
-                <span className="font-medium text-foreground">{t.intro3Word3}</span>
+                <span className="font-medium text-foreground">
+                  {t.intro3Word3}
+                </span>
                 {t.intro3After}
               </motion.p>
             </div>

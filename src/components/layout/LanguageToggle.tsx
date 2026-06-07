@@ -16,7 +16,9 @@ export function LanguageToggle() {
   const t = translations[language];
   const [open, setOpen] = useState(false);
 
-  const systemLanguage = LANGUAGES.find(({ code }) => code === detectedLanguage);
+  const systemLanguage = LANGUAGES.find(
+    ({ code }) => code === detectedLanguage,
+  );
 
   return (
     <Popover onOpenChange={setOpen} open={open}>
@@ -40,7 +42,7 @@ export function LanguageToggle() {
                 aria-pressed={isActive}
                 className={cn(
                   "flex items-center gap-2.5 rounded-lg p-1.5 text-left text-sm transition-colors",
-                  isActive ? "bg-primary/5" : "hover:bg-muted"
+                  isActive ? "bg-primary/5" : "hover:bg-muted",
                 )}
                 key={code}
                 onClick={() => {
@@ -54,7 +56,7 @@ export function LanguageToggle() {
                     "flex h-7 w-7 shrink-0 items-center justify-center rounded-md font-semibold text-[11px] uppercase tracking-wide",
                     isActive
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
+                      : "bg-muted text-muted-foreground",
                   )}
                 >
                   {code}

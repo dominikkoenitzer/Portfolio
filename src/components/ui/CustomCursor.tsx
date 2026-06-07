@@ -20,13 +20,21 @@ export function CustomCursor() {
     };
 
     const onOver = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('a, button, [role="button"], input, textarea, select')) {
+      if (
+        (e.target as HTMLElement).closest(
+          'a, button, [role="button"], input, textarea, select',
+        )
+      ) {
         dotScale.set(1.8);
       }
     };
 
     const onOut = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest('a, button, [role="button"], input, textarea, select')) {
+      if (
+        !(e.target as HTMLElement).closest(
+          'a, button, [role="button"], input, textarea, select',
+        )
+      ) {
         dotScale.set(1);
       }
     };
@@ -71,6 +79,6 @@ export function CustomCursor() {
         }}
       />
     </div>,
-    document.body
+    document.body,
   );
 }

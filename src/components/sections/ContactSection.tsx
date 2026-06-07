@@ -9,9 +9,7 @@ export function ContactSection() {
   const t = translations[language].contact;
   return (
     <section className="section-padding relative overflow-hidden" id="contact">
-
       <div className="grid gap-12 sm:gap-16 md:grid-cols-12 md:gap-12 lg:gap-20">
-
         {/* Left — editorial info */}
         <motion.div
           className="flex min-w-0 flex-col md:col-span-5"
@@ -88,7 +86,9 @@ export function ContactSection() {
               target="_blank"
             >
               <Linkedin className="h-4 w-4 shrink-0" />
-              <span className="break-all">linkedin.com/in/dominik-koenitzer</span>
+              <span className="break-all">
+                linkedin.com/in/dominik-koenitzer
+              </span>
               <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70" />
             </a>
           </div>
@@ -104,7 +104,6 @@ export function ContactSection() {
         >
           <ContactForm />
         </motion.div>
-
       </div>
     </section>
   );
