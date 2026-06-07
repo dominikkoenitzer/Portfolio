@@ -3,12 +3,12 @@ import { SEO } from "@/components/seo";
 import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
-import { translations } from "@/lib/translations";
 import {
   createPersonSchema,
   generateAlternateLanguages,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
+import { translations } from "@/lib/translations";
 
 const About = () => {
   const { language } = useLanguage();
