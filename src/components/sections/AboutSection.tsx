@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Award, GraduationCap } from "lucide-react";
-import { fadeInLeft, fadeInRight } from "@/lib/framer-animations";
+import { useState } from "react";
+import { fadeInLeft, fadeInRight, fadeInUp } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
@@ -10,12 +11,24 @@ import { GitHubContributions } from "./GitHubContributions";
 export function AboutSection() {
   const { language } = useLanguage();
   const t = translations[language].about;
+
+  // When the columns stack on mobile, the desktop left/right slide-ins read as
+  // the content drifting sideways (the avatar visibly slides right on load). Use
+  // a plain vertical fade there; keep the horizontal slides on the wide layout.
+  const [isMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+  );
+  const avatarReveal = isMobile ? fadeInUp : fadeInLeft;
+  const bioReveal = isMobile ? fadeInUp : fadeInRight;
+
   return (
     <section className="section-padding" id="about">
       <SectionHeading subtitle={t.subheading} title={t.heading} />
 
       <div className="grid items-center gap-8 md:grid-cols-12 md:gap-10">
-        <motion.div className="md:col-span-5 lg:col-span-5" {...fadeInLeft}>
+        <motion.div className="md:col-span-5 lg:col-span-5" {...avatarReveal}>
           <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
               {/* LCP element on /about — fetchPriority high + async decode so it
@@ -34,13 +47,13 @@ export function AboutSection() {
             <motion.div
               animate={{ opacity: 1, x: 0, y: 0 }}
               className="-bottom-4 -right-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10 bg-primary/5 backdrop-blur-sm"
-              initial={{ opacity: 0, x: 20, y: 20 }}
+              initial={{ opacity: 0, x: isMobile ? 0 : 20, y: 20 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             />
             <motion.div
               animate={{ opacity: 1, x: 0, y: 0 }}
               className="-top-4 -left-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10"
-              initial={{ opacity: 0, x: -20, y: -20 }}
+              initial={{ opacity: 0, x: isMobile ? 0 : -20, y: -20 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             />
           </div>
@@ -62,7 +75,7 @@ export function AboutSection() {
           </div>
         </motion.div>
 
-        <motion.div className="md:col-span-7 lg:col-span-7" {...fadeInRight}>
+        <motion.div className="md:col-span-7 lg:col-span-7" {...bioReveal}>
           <motion.div
             className="glass-card rounded-2xl border border-border/20 p-6 shadow-sm backdrop-blur-sm sm:p-8"
             initial={{ opacity: 0, y: 20 }}

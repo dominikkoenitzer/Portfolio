@@ -59,7 +59,7 @@ export function NavbarMobileMenu({
             initial={{ x: "100%" }}
             onDragEnd={(_, info) => {
               if (info.offset.x > 100 || info.velocity.x > 500) {
-                closeMobileMenu();
+                onClose();
               }
             }}
             ref={menuRef}

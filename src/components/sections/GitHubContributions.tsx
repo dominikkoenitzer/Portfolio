@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { AlertCircle, GitCommit, Loader2 } from "lucide-react";
+import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -60,6 +61,17 @@ export function GitHubContributions() {
   const { language } = useLanguage();
   const t = translations[language].github;
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
+
+  // The ~365-cell calendar wraps every cell in a Radix Tooltip + motion node.
+  // That's fine to mount on desktop but blocks the first scroll on a phone —
+  // and touch devices can't hover, so those tooltips never show anyway. Resolve
+  // the pointer type synchronously (lazy initial state) so the grid's very first
+  // render on mobile already uses the cheap path, never the heavy one.
+  const [isCoarsePointer] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: coarse)").matches
+  );
 
   const { data, isLoading, error } = useQuery<GitHubData>({
     queryKey: ["github-contributions", username],
@@ -156,136 +168,106 @@ export function GitHubContributions() {
       {/* Contribution Calendar Grid */}
       <div className="mb-4 w-full sm:mb-6">
         <TooltipProvider delayDuration={200}>
-          <div className="w-full overflow-x-auto">
+          <div className="w-full">
+            {/* Month labels — one grid track per week, sharing the grid's columns */}
             <div
-              className="w-full"
-              style={
-                {
-                  "--cell-size": "clamp(10px, calc((100vw - 4rem) / 60), 14px)",
-                } as React.CSSProperties
-              }
+              className="mb-1 grid gap-[2px]"
+              style={{
+                gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
+              }}
             >
-              {/* Month labels row */}
-              <div
-                className="mb-1.5 flex w-full"
-                style={{
-                  gap: "2px",
-                  paddingLeft: "clamp(20px, 2.5vw, 30px)",
-                }}
-              >
-                {weeks.map((week, weekIndex) => {
-                  const monthLabel = monthLabels.find(
-                    (m) => m.index === weekIndex
-                  );
-                  return (
-                    <div
-                      className="flex items-start"
-                      key={weekIndex}
-                      style={{
-                        width: "var(--cell-size)",
-                        minWidth: "var(--cell-size)",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {monthLabel && (
-                        <span
-                          className="whitespace-nowrap font-medium text-muted-foreground leading-none"
-                          style={{ fontSize: "clamp(9px, 1vw, 11px)" }}
-                        >
-                          {monthLabel.label}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              {weeks.map((week, weekIndex) => {
+                const monthLabel = monthLabels.find(
+                  (m) => m.index === weekIndex
+                );
+                return (
+                  <span
+                    className="overflow-visible whitespace-nowrap font-medium text-[8px] text-muted-foreground leading-none sm:text-[10px]"
+                    key={weekIndex}
+                  >
+                    {monthLabel?.label ?? ""}
+                  </span>
+                );
+              })}
+            </div>
 
-              {/* Calendar grid */}
-              <div className="flex w-full" style={{ gap: "2px" }}>
-                {/* Day labels (Sun-Sat) */}
-                <div
-                  className="mr-1.5 flex flex-shrink-0 flex-col"
-                  style={{ gap: "2px", width: "clamp(20px, 2.5vw, 30px)" }}
-                >
-                  {["", "M", "", "W", "", "F", ""].map((day, index) => (
-                    <div
-                      className="flex items-center justify-end pr-1"
-                      key={index}
-                      style={{
-                        height: "var(--cell-size)",
-                        minHeight: "var(--cell-size)",
-                      }}
-                    >
-                      {day && (
-                        <span
-                          className="font-medium text-muted-foreground leading-none"
-                          style={{ fontSize: "clamp(9px, 1vw, 11px)" }}
-                        >
-                          {day}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Calendar cells - weeks as columns */}
-                <div className="flex" style={{ gap: "2px" }}>
-                  {weeks.map((week, weekIndex) => (
-                    <div
-                      className="flex flex-col"
-                      key={weekIndex}
-                      style={{ gap: "2px" }}
-                    >
-                      {week.contributionDays.map((day, dayIndex) => {
-                        const color = getColorIntensity(day.contributionCount);
-                        const date = new Date(day.date);
-                        const formattedDate = date.toLocaleDateString("en-US", {
-                          weekday: "long",
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        });
-
+            {/* Heatmap — 53 equal columns fill the width with square cells, so it
+                never overflows or hijacks vertical scroll on touch. */}
+            <div
+              className="grid gap-[2px]"
+              style={{
+                gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
+              }}
+            >
+              {weeks.map((week, weekIndex) => {
+                // Place each day at its weekday row so partial first/last weeks
+                // stay aligned and every column keeps the same height.
+                const slots: (ContributionDay | null)[] = Array(7).fill(null);
+                for (const day of week.contributionDays) {
+                  slots[day.weekday] = day;
+                }
+                return (
+                  <div className="grid gap-[2px]" key={weekIndex}>
+                    {slots.map((day, dayIndex) => {
+                      if (!day) {
                         return (
-                          <Tooltip key={`${weekIndex}-${dayIndex}`}>
-                            <TooltipTrigger asChild>
-                              <motion.div
-                                className="cursor-pointer rounded-sm border border-transparent transition-all duration-200 hover:border-border/60"
-                                style={{
-                                  backgroundColor: color,
-                                  width: "var(--cell-size)",
-                                  height: "var(--cell-size)",
-                                  minWidth: "var(--cell-size)",
-                                  minHeight: "var(--cell-size)",
-                                  flexShrink: 0,
-                                }}
-                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                whileHover={{ scale: 1.15, zIndex: 10 }}
-                                whileTap={{ scale: 1.05 }}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent
-                              className="border border-border/50 bg-popover/95 px-3 py-2 text-xs shadow-xl backdrop-blur-sm"
-                              side="top"
-                              sideOffset={8}
-                            >
-                              <div className="font-semibold text-foreground">
-                                {day.contributionCount}{" "}
-                                {day.contributionCount === 1
-                                  ? t.contribution
-                                  : t.contributions}
-                              </div>
-                              <div className="mt-0.5 text-muted-foreground">
-                                {formattedDate}
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
+                          <div className="aspect-square w-full" key={dayIndex} />
                         );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              </div>
+                      }
+                      const color = getColorIntensity(day.contributionCount);
+                      const countLabel =
+                        day.contributionCount === 1
+                          ? t.contribution
+                          : t.contributions;
+
+                      // Touch: plain square + native title (no Radix/motion node).
+                      if (isCoarsePointer) {
+                        return (
+                          <div
+                            className="aspect-square w-full rounded-[2px]"
+                            key={dayIndex}
+                            style={{ backgroundColor: color }}
+                            title={`${day.contributionCount} ${countLabel} · ${day.date}`}
+                          />
+                        );
+                      }
+
+                      const formattedDate = new Date(
+                        day.date
+                      ).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+
+                      return (
+                        <Tooltip key={dayIndex}>
+                          <TooltipTrigger asChild>
+                            <motion.div
+                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 hover:border-border/60"
+                              style={{ backgroundColor: color }}
+                              whileHover={{ scale: 1.35, zIndex: 10 }}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className="border border-border/50 bg-popover/95 px-3 py-2 text-xs shadow-xl backdrop-blur-sm"
+                            side="top"
+                            sideOffset={8}
+                          >
+                            <div className="font-semibold text-foreground">
+                              {day.contributionCount} {countLabel}
+                            </div>
+                            <div className="mt-0.5 text-muted-foreground">
+                              {formattedDate}
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </TooltipProvider>

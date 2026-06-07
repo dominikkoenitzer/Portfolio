@@ -133,10 +133,23 @@ export function HeroSection() {
       className="relative flex min-h-[calc(100vh-6rem)] flex-col justify-center overflow-hidden sm:min-h-[calc(100vh-7rem)] md:min-h-[calc(100vh-8rem)]"
       id="hero"
     >
-      {/* Ambient */}
+      {/* Ambient — radial-gradient glows instead of solid circles under a heavy
+          `blur()`; same soft look, no costly blur pass on mobile. */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-[5%] top-[15%] h-[700px] w-[700px] rounded-full bg-primary/[0.09] blur-[150px]" />
-        <div className="absolute bottom-[10%] right-[5%] h-[500px] w-[500px] rounded-full bg-primary/[0.06] blur-[130px]" />
+        <div
+          className="absolute left-[5%] top-[15%] h-[700px] w-[700px]"
+          style={{
+            background:
+              "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, transparent 72%)",
+          }}
+        />
+        <div
+          className="absolute right-[5%] bottom-[10%] h-[500px] w-[500px]"
+          style={{
+            background:
+              "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, transparent 72%)",
+          }}
+        />
       </div>
       <div className="pointer-events-none absolute inset-0 -z-10 bg-grid-pattern opacity-[0.018]" />
 

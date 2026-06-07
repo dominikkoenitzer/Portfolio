@@ -8,7 +8,7 @@ Package manager is **pnpm**.
 
 | Task | Command |
 | --- | --- |
-| Dev server (port **8080**) | `pnpm dev` |
+| Dev server (port **1000**) | `pnpm dev` |
 | Production build | `pnpm build` |
 | Build in development mode | `pnpm build:dev` |
 | Preview the production build | `pnpm preview` |
