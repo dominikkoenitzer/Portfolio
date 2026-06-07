@@ -53,7 +53,6 @@ export function ProjectsSection() {
             </span>
 
             <div className="grid min-h-[300px] md:grid-cols-[1fr_1.15fr]">
-
               {/* Left visual panel */}
               <div className="shimmer-on-hover relative overflow-hidden border-b border-border/20 md:border-b-0 md:border-r">
                 <div className={`absolute inset-0 ${project.toneClass}`} />
@@ -96,7 +95,9 @@ export function ProjectsSection() {
               <div className="flex flex-col p-5 sm:p-6">
                 <div className="mb-3.5 flex items-start justify-between gap-2 border-b border-border/25 pb-3.5">
                   <div>
-                    <p className="font-semibold text-xl leading-tight">{project.title}</p>
+                    <p className="font-semibold text-xl leading-tight">
+                      {project.title}
+                    </p>
                     <p className="mt-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60">
                       {project.year}
                     </p>
@@ -126,7 +127,10 @@ export function ProjectsSection() {
                   </a>
                   {project.downloadUrl ? (
                     <a
-                      aria-label={t.openDownload.replace("{name}", project.title)}
+                      aria-label={t.openDownload.replace(
+                        "{name}",
+                        project.title,
+                      )}
                       className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
                       download
                       href={project.downloadUrl}
@@ -158,7 +162,6 @@ export function ProjectsSection() {
                   </Link>
                 </div>
               </div>
-
             </div>
           </motion.article>
         ))}

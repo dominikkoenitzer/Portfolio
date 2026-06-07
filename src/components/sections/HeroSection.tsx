@@ -7,7 +7,8 @@ import {
   useVelocity,
 } from "framer-motion";
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -63,8 +64,12 @@ function BlurMorphTitle() {
       className="mb-7 overflow-visible font-bold leading-[0.95] tracking-[-0.03em] sm:mb-9 md:mb-11"
       style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
     >
-      <span className="block hero-name-gradient pb-[0.12em]" style={morphStyle}>{PHRASES[idx].line1}</span>
-      <span className="block hero-name-gradient pb-[0.25em]" style={morphStyle}>{PHRASES[idx].line2}</span>
+      <span className="block hero-name-gradient pb-[0.12em]" style={morphStyle}>
+        {PHRASES[idx].line1}
+      </span>
+      <span className="block hero-name-gradient pb-[0.25em]" style={morphStyle}>
+        {PHRASES[idx].line2}
+      </span>
     </h1>
   );
 }
@@ -101,8 +106,12 @@ function Magnetic({ children }: { children: React.ReactNode }) {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="font-bold text-xl text-primary sm:text-2xl md:text-3xl">{value}</span>
-      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground sm:text-[10px] sm:tracking-[0.18em]">{label}</span>
+      <span className="font-bold text-xl text-primary sm:text-2xl md:text-3xl">
+        {value}
+      </span>
+      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground sm:text-[10px] sm:tracking-[0.18em]">
+        {label}
+      </span>
     </div>
   );
 }
@@ -113,7 +122,10 @@ export function HeroSection() {
   const t = translations[language];
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 40, stiffness: 280 });
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 40,
+    stiffness: 280,
+  });
   const skewY = useTransform(smoothVelocity, [-2500, 0, 2500], [2.5, 0, -2.5]);
   const contentY = useTransform(scrollY, [0, 600], [0, -60]);
 
@@ -122,9 +134,8 @@ export function HeroSection() {
   const [reduceFx, setReduceFx] = useState(false);
   useEffect(() => {
     setReduceFx(
-      window.matchMedia(
-        "(pointer: coarse), (prefers-reduced-motion: reduce)"
-      ).matches
+      window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)")
+        .matches,
     );
   }, []);
 
@@ -158,7 +169,6 @@ export function HeroSection() {
         style={{ skewY: reduceFx ? 0 : skewY }}
       >
         <motion.div style={{ y: reduceFx ? 0 : contentY }}>
-
           {/* Name */}
           <motion.p
             animate={{ opacity: 1, y: 0 }}
@@ -252,7 +262,6 @@ export function HeroSection() {
             <div className="h-8 w-px bg-border/20 sm:h-10" />
             <Stat value="30+" label={t.hero.stats.technologies} />
           </motion.div>
-
         </motion.div>
       </motion.div>
     </section>

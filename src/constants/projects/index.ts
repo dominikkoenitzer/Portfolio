@@ -3,8 +3,8 @@ import { entropy } from "./entropy";
 import { flow } from "./flow";
 import { remnants } from "./remnants";
 import { spectrum } from "./spectrum";
-import { zephyr } from "./zephyr";
 import type { LocalizedContent, PortfolioProject, ProjectBase } from "./types";
+import { zephyr } from "./zephyr";
 
 export type { PortfolioProject } from "./types";
 

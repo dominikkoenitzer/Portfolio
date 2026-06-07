@@ -63,7 +63,7 @@ type LanguageContextValue = {
 };
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 type LanguageProviderProps = {
@@ -78,7 +78,7 @@ export function LanguageProvider({
   const detected = useMemo(detectFromBrowser, []);
 
   const [language, setLanguageState] = useState<Language>(
-    () => readStored() ?? detected.resolved ?? defaultLanguage
+    () => readStored() ?? detected.resolved ?? defaultLanguage,
   );
 
   const setLanguage = useCallback((next: Language) => {
@@ -124,7 +124,7 @@ export function LanguageProvider({
       detectedLanguage: detected.resolved,
       detectedLanguageCode: detected.raw,
     }),
-    [language, setLanguage, detected]
+    [language, setLanguage, detected],
   );
 
   return (

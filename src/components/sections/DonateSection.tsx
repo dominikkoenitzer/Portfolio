@@ -1,5 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Infinity as InfinityIcon, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  Infinity as InfinityIcon,
+  ShieldCheck,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -20,7 +24,6 @@ export function DonateSection() {
   return (
     <section className="section-padding" id="donate">
       <div className="grid gap-12 sm:gap-16 md:grid-cols-12 md:gap-12 lg:gap-20">
-
         {/* Left — editorial intro */}
         <motion.div
           className="flex min-w-0 flex-col md:col-span-5"
@@ -71,7 +74,11 @@ export function DonateSection() {
                   key={tier.amount}
                   rel="noopener noreferrer"
                   target="_blank"
-                  transition={{ duration: 0.45, delay: 0.05 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    duration: 0.45,
+                    delay: 0.05 + i * 0.06,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   viewport={{ once: true }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
@@ -95,14 +102,21 @@ export function DonateSection() {
               initial={{ opacity: 0, y: 12 }}
               rel="noopener noreferrer"
               target="_blank"
-              transition={{ duration: 0.45, delay: 0.05 + tiers.length * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.45,
+                delay: 0.05 + tiers.length * 0.06,
+                ease: [0.22, 1, 0.36, 1],
+              }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/65">
                 {t.anyAmount.title}
               </span>
-              <InfinityIcon className="h-7 w-7 text-primary sm:h-8 sm:w-8" strokeWidth={1.75} />
+              <InfinityIcon
+                className="h-7 w-7 text-primary sm:h-8 sm:w-8"
+                strokeWidth={1.75}
+              />
               <span className="text-foreground/80 text-xs leading-snug">
                 {t.anyAmount.label}
               </span>
@@ -123,7 +137,9 @@ export function DonateSection() {
 
           {/* Bigger collab nudge */}
           <div className="mb-8 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className="text-foreground/85 text-sm">{t.sponsorBiggerLead}</span>
+            <span className="text-foreground/85 text-sm">
+              {t.sponsorBiggerLead}
+            </span>
             <Link
               className="group/cta inline-flex items-center gap-1 text-primary text-sm transition-colors duration-200 hover:text-primary/80"
               to="/contact"
@@ -139,7 +155,6 @@ export function DonateSection() {
             <p>{t.paypalNote}</p>
           </div>
         </motion.div>
-
       </div>
     </section>
   );
