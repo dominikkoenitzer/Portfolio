@@ -49,7 +49,7 @@ const GITHUB_COLORS = {
 
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   const response = await fetch(
-    `/api/github-contributions?username=${username}`
+    `/api/github-contributions?username=${username}`,
   );
   if (!response.ok) {
     throw new Error("Failed to fetch GitHub contributions");
@@ -70,7 +70,7 @@ export function GitHubContributions() {
   const [isCoarsePointer] = useState(
     () =>
       typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches
+      window.matchMedia("(pointer: coarse)").matches,
   );
 
   const { data, isLoading, error } = useQuery<GitHubData>({
@@ -176,9 +176,9 @@ export function GitHubContributions() {
                 gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
               }}
             >
-              {weeks.map((week, weekIndex) => {
+              {weeks.map((_week, weekIndex) => {
                 const monthLabel = monthLabels.find(
-                  (m) => m.index === weekIndex
+                  (m) => m.index === weekIndex,
                 );
                 return (
                   <span
@@ -211,7 +211,10 @@ export function GitHubContributions() {
                     {slots.map((day, dayIndex) => {
                       if (!day) {
                         return (
-                          <div className="aspect-square w-full" key={dayIndex} />
+                          <div
+                            className="aspect-square w-full"
+                            key={dayIndex}
+                          />
                         );
                       }
                       const color = getColorIntensity(day.contributionCount);
@@ -233,7 +236,7 @@ export function GitHubContributions() {
                       }
 
                       const formattedDate = new Date(
-                        day.date
+                        day.date,
                       ).toLocaleDateString("en-US", {
                         weekday: "long",
                         month: "long",
