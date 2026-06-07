@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -17,13 +17,25 @@ interface FieldProps {
   type?: string;
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
   required?: boolean;
   multiline?: boolean;
   delay?: number;
 }
 
-function Field({ id, label, type = "text", placeholder, value, onChange, required, multiline, delay = 0 }: FieldProps) {
+function Field({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  required,
+  multiline,
+  delay = 0,
+}: FieldProps) {
   const [focused, setFocused] = useState(false);
   const base =
     "w-full bg-transparent pt-1 pb-3 text-base placeholder:text-muted-foreground/55 text-foreground focus:outline-none transition-colors duration-200 resize-none";
@@ -99,7 +111,9 @@ export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -133,14 +147,22 @@ export function ContactForm() {
           key="success"
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <CheckCircle2 className="mb-6 h-10 w-10 text-primary" strokeWidth={1.5} />
-          <h3 className="mb-3 font-semibold text-2xl tracking-tight">{t.successTitle}</h3>
+          <CheckCircle2
+            className="mb-6 h-10 w-10 text-primary"
+            strokeWidth={1.5}
+          />
+          <h3 className="mb-3 font-semibold text-2xl tracking-tight">
+            {t.successTitle}
+          </h3>
           <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
             {t.successBody}
           </p>
           <button
             className="mt-8 font-medium font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors duration-200 hover:text-foreground"
-            onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", subject: "", message: "" }); }}
+            onClick={() => {
+              setSubmitted(false);
+              setFormData({ name: "", email: "", subject: "", message: "" });
+            }}
           >
             {t.sendAnother}
           </button>
@@ -199,7 +221,11 @@ export function ContactForm() {
 
           <motion.div
             initial={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.5, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              duration: 0.5,
+              delay: 0.28,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
@@ -208,7 +234,9 @@ export function ContactForm() {
               disabled={isSubmitting}
               type="submit"
             >
-              <span className="truncate">{isSubmitting ? t.sending : t.send}</span>
+              <span className="truncate">
+                {isSubmitting ? t.sending : t.send}
+              </span>
               {isSubmitting ? (
                 <div className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (

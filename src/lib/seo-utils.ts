@@ -36,7 +36,7 @@ export const getDefaultGeoLocation = () => ({
  * right variant per user.
  */
 export const generateAlternateLanguages = (
-  path = ""
+  path = "",
 ): { lang: string; url: string }[] => {
   const url = `${SITE_CONFIG.url}${path}`;
   const links: { lang: string; url: string }[] = LANGUAGES.map(({ code }) => ({
@@ -61,7 +61,7 @@ export const getDefaultCitations = (): CitationLink[] => [
  */
 export const createFAQSchema = (
   faqs: FAQItem[],
-  citations?: CitationLink[]
+  citations?: CitationLink[],
 ) => {
   if (!faqs || faqs.length === 0) return null;
 
@@ -88,7 +88,7 @@ export const createFAQSchema = (
  */
 export const createHowToSchema = (
   howTo: HowToSchema,
-  citations?: CitationLink[]
+  citations?: CitationLink[],
 ) => {
   if (!howTo) return null;
 
@@ -152,7 +152,7 @@ export const createBreadcrumbSchema = (url: string) => {
  * Pass per-page extras (knowsAbout, hasCredential, etc.) via `additionalData`.
  */
 export const createPersonSchema = (
-  additionalData?: Record<string, unknown>
+  additionalData?: Record<string, unknown>,
 ) => ({
   "@context": "https://schema.org",
   "@type": "Person",

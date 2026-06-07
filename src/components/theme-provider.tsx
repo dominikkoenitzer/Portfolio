@@ -68,7 +68,7 @@ export function ThemeProvider({
       };
 
       const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
+        "(prefers-reduced-motion: reduce)",
       ).matches;
 
       if (
@@ -85,7 +85,7 @@ export function ThemeProvider({
       const y = event.clientY;
       const endRadius = Math.hypot(
         Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
+        Math.max(y, window.innerHeight - y),
       );
 
       const transition = (
@@ -106,11 +106,11 @@ export function ThemeProvider({
             duration: 480,
             easing: "cubic-bezier(0.4, 0, 0.2, 1)",
             pseudoElement: "::view-transition-new(root)",
-          }
+          },
         );
       });
     },
-    [storageKey, theme]
+    [storageKey, theme],
   );
 
   return (

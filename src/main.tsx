@@ -8,5 +8,5 @@ createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <App />
     <SpeedInsights />
-  </HelmetProvider>
+  </HelmetProvider>,
 );
