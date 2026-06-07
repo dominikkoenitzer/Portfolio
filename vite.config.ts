@@ -1,5 +1,5 @@
-import path from "path";
-import { pathToFileURL } from "url";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import {
   defineConfig,
@@ -34,7 +34,7 @@ function localGithubApi(env: Record<string, string>): Plugin {
 
       try {
         const handlerUrl = pathToFileURL(
-          path.resolve(__dirname, "api/github-contributions.js")
+          path.resolve(__dirname, "api/github-contributions.js"),
         ).href;
         const mod = await import(handlerUrl);
         const parsed = new URL(reqUrl, "http://localhost");
@@ -69,7 +69,7 @@ function localGithubApi(env: Record<string, string>): Plugin {
           JSON.stringify({
             error: "Local dev API failed",
             details: err instanceof Error ? err.message : String(err),
-          })
+          }),
         );
       }
     });
@@ -89,38 +89,38 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-  server: {
-    host: "::",
-    port: 1000,
-  },
-  plugins: [react(), localGithubApi(env)],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+    server: {
+      host: "::",
+      port: 1000,
     },
-  },
-  esbuild: {
-    target: "es2020",
-    legalComments: "none",
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Vendor chunks
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "framer-motion": ["framer-motion"],
-          "ui-vendor": [
-            "@radix-ui/react-popover",
-            "@radix-ui/react-slot",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-tooltip",
-          ],
-          "query-vendor": ["@tanstack/react-query"],
-        },
+    plugins: [react(), localGithubApi(env)],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
       },
     },
-    chunkSizeWarningLimit: 600,
-  },
+    esbuild: {
+      target: "es2020",
+      legalComments: "none",
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Vendor chunks
+            "react-vendor": ["react", "react-dom", "react-router-dom"],
+            "framer-motion": ["framer-motion"],
+            "ui-vendor": [
+              "@radix-ui/react-popover",
+              "@radix-ui/react-slot",
+              "@radix-ui/react-toast",
+              "@radix-ui/react-tooltip",
+            ],
+            "query-vendor": ["@tanstack/react-query"],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 600,
+    },
   };
 });
