@@ -118,7 +118,7 @@ export function SEO({
 
   const currentLocale = getOgLocale(language);
   const alternateLocales = LANGUAGES.map((l) => getOgLocale(l.code)).filter(
-    (l) => l !== currentLocale
+    (l) => l !== currentLocale,
   );
 
   return (
@@ -209,7 +209,7 @@ export function SEO({
       {alternateLanguages.map((alt) => (
         <link
           href={alt.url}
-          hreflang={alt.lang}
+          hrefLang={alt.lang}
           key={alt.lang}
           rel="alternate"
         />

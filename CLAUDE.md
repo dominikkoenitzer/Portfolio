@@ -14,11 +14,11 @@ Package manager is **pnpm**.
 | Preview the production build | `pnpm preview` |
 | Lint | `pnpm lint` (ultracite/Biome) |
 | Auto-fix + format | `pnpm format` |
-| Typecheck | `npx tsc --noEmit` |
+| Typecheck | `pnpm typecheck` (runs `tsc -b`) |
 
-There is **no test suite** (no test runner is configured) — verify changes with `npx tsc --noEmit` and `pnpm build`.
+There is **no test suite** (no test runner is configured) — verify changes with `pnpm typecheck` and `pnpm build`. **Important:** a bare `tsc --noEmit` is a **no-op** here because the root `tsconfig.json` uses `files: []` + project references, so it checks nothing; always go through `pnpm typecheck` (which runs `tsc -b`). CI (`.github/workflows/ci.yml`) runs lint (non-blocking) + typecheck + build on every push and PR.
 
-The dev server proxies `/api` → `http://localhost:3000`. The GitHub-contributions endpoint (`api/github-contributions.js`) is a Vercel serverless function; to exercise it locally run `vercel dev` alongside, otherwise that one widget just degrades gracefully.
+The GitHub-contributions endpoint (`api/github-contributions.js`) is a Vercel serverless function. Locally, a small Vite plugin in `vite.config.ts` (`local-github-contributions-api`) runs that same handler in-process for both `pnpm dev` and `pnpm preview`, reading `GITHUB_TOKEN` from `.env.local` (server-side only — never bundled into the client). Without a token the widget degrades gracefully. On Vercel the platform serves the function and injects the token from the project's env vars.
 
 ## Stack
 
