@@ -158,6 +158,8 @@ export const fr = {
     visitSite: "Visiter le site",
     download: "Télécharger",
     sourceCode: "Code source",
+    downloadNote:
+      "Premier lancement : Windows SmartScreen peut s’afficher — choisissez « Informations complémentaires » → « Exécuter quand même », puis approuvez l’invite administrateur UAC (nécessaire pour les hooks d’entrée globaux).",
     moreProjects: "Plus de projets",
     present: "Présent",
     role: "Rôle",

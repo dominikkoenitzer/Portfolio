@@ -154,6 +154,8 @@ export const en = {
     visitSite: "Visit Site",
     download: "Download",
     sourceCode: "Source Code",
+    downloadNote:
+      "First launch: Windows SmartScreen may appear — choose “More info” → “Run anyway”, then approve the UAC admin prompt (needed for global input hooks).",
     moreProjects: "More Projects",
     present: "Present",
     role: "Role",

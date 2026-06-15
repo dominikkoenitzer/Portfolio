@@ -67,7 +67,7 @@ Soft / professional skills
 - Summary: A productivity product that stays fast and readable as feature depth grows. Modular component boundaries, token-driven styling, progressive disclosure for advanced actions.
 
 ### Flow — ultra-low-latency Windows automation
-- Download: https://github.com/dominikkoenitzer/Flow/releases/download/Download/FLOW.exe
+- Download: https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe
 - Repo: https://github.com/dominikkoenitzer/Flow
 - Year: 2026
 - Tags: Automation, C++, Windows

@@ -150,6 +150,8 @@ export const zh = {
     visitSite: "访问站点",
     download: "下载",
     sourceCode: "源代码",
+    downloadNote:
+      "首次启动：Windows SmartScreen 可能会提示——选择“更多信息”→“仍要运行”，然后允许 UAC 管理员提示（全局输入挂钩所需）。",
     moreProjects: "更多项目",
     present: "至今",
     role: "角色",
