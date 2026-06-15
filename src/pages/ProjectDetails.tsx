@@ -204,6 +204,12 @@ const ProjectDetails = () => {
                 </a>
               </div>
 
+              {project.downloadUrl ? (
+                <p className="mx-auto mt-4 max-w-prose text-muted-foreground text-xs leading-relaxed">
+                  {t.downloadNote}
+                </p>
+              ) : null}
+
               <div className="mt-6 flex flex-wrap justify-center gap-2">
                 {project.tags.map((tag) => (
                   <span
