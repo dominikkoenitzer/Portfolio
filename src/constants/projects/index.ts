@@ -29,7 +29,7 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Flow",
     liveUrl: "https://github.com/dominikkoenitzer/Flow",
     downloadUrl:
-      "https://github.com/dominikkoenitzer/Flow/releases/download/Download/FLOW.exe",
+      "https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe",
     priority: 2,
     toneClass: TONE_RADIAL,
     image: "/projects/flow.png",
