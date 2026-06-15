@@ -155,6 +155,8 @@ export const de = {
     visitSite: "Website besuchen",
     download: "Download",
     sourceCode: "Quellcode",
+    downloadNote:
+      "Erster Start: Windows SmartScreen kann warnen — „Weitere Informationen“ → „Trotzdem ausführen“ wählen, dann die UAC-Administratoranfrage bestätigen (für globale Eingabe-Hooks erforderlich).",
     moreProjects: "Weitere Projekte",
     present: "Heute",
     role: "Rolle",

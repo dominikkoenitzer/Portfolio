@@ -42,7 +42,7 @@ Dominik is currently **open to work** — software engineering roles, internship
 ## Featured projects
 
 - [Zephyr](https://dominikkoenitzer.ch/projects/zephyr) — Performance-first productivity product. Live: https://zephyr.punds.ch · Source: https://github.com/dominikkoenitzer/Zephyr
-- [Flow](https://dominikkoenitzer.ch/projects/flow) — Ultra-low-latency Windows input automation in C++: frame-accurate macro recording, playback, and rapid auto-clicking. Download: https://github.com/dominikkoenitzer/Flow/releases/download/Download/FLOW.exe · Source: https://github.com/dominikkoenitzer/Flow
+- [Flow](https://dominikkoenitzer.ch/projects/flow) — Ultra-low-latency Windows input automation in C++: frame-accurate macro recording, playback, and rapid auto-clicking. Download: https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe · Source: https://github.com/dominikkoenitzer/Flow
 - [Spectrum](https://dominikkoenitzer.ch/projects/spectrum) — Color exploration and accessibility tooling. Live: https://spectrum.punds.ch · Source: https://github.com/dominikkoenitzer/Spectrum
 - [Entropy](https://dominikkoenitzer.ch/projects/entropy) — Secure password generation and strength analysis. Live: https://entropy.punds.ch · Source: https://github.com/dominikkoenitzer/Entropy
 - [Remnants](https://dominikkoenitzer.ch/projects/remnants) — Browser-native IDE with persistent file tree and syntax highlighting. Live: https://remnants.punds.ch · Source: https://github.com/dominikkoenitzer/Remnants
