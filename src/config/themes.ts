@@ -1,4 +1,4 @@
-import { Flower2, Sparkles, Sunset, TreePine } from "lucide-react";
+import { Droplets, Film, Flower2, Sparkles, Sunset, TreePine } from "lucide-react";
 import type { ElementType } from "react";
 
 export type Theme = "glass" | "bloom" | "forest" | "sunset";
@@ -17,6 +17,29 @@ export const THEMES: ThemeConfig[] = [
 ];
 
 export const ALL_THEME_VALUES: Theme[] = THEMES.map((t) => t.value);
+
+/**
+ * Background style is a second, orthogonal axis to the colour palette: every
+ * variant renders the *same* palette colour stops, just through a different
+ * full-viewport effect. "caustic" is the original water-caustic veil; "grainient"
+ * is the grainy-gradient field.
+ */
+export type BackgroundVariant = "caustic" | "grainient";
+
+export interface BackgroundVariantConfig {
+  value: BackgroundVariant;
+  label: string;
+  icon: ElementType;
+}
+
+export const BACKGROUND_VARIANTS: BackgroundVariantConfig[] = [
+  { value: "caustic", label: "Water Caustic", icon: Droplets },
+  { value: "grainient", label: "Grainy Gradient", icon: Film },
+];
+
+export const ALL_VARIANT_VALUES: BackgroundVariant[] = BACKGROUND_VARIANTS.map(
+  (v) => v.value,
+);
 
 // Only the two compositing modes the veil actually uses.
 type BlendMode = "multiply" | "screen";

@@ -17,6 +17,7 @@ export const en = {
   toggles: {
     theme: "Toggle theme",
     themes: "Themes",
+    background: "Background",
     language: "Toggle language",
     useSystem: "Use system language",
   },
