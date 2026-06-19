@@ -29,7 +29,7 @@ React 18 + TypeScript + Vite (SWC plugin), single-page portfolio site deployed o
 
 ## Architecture
 
-**Composition root.** `main.tsx` → `App.tsx` (QueryClient, Tooltip, Toasters, Router) → `PageLayout` (Theme + Language providers, `Navbar`, `Footer`, a lazy WebGL `LightVeilBackground`) → `AnimatedRoutes`. All page routes except Home are `React.lazy`-loaded in `AnimatedRoutes.tsx` and wrapped in framer-motion page transitions (`lib/transitions.ts`).
+**Composition root.** `main.tsx` → `App.tsx` (QueryClient, Tooltip, Toasters, Router) → `PageLayout` (Theme + Language providers, `Navbar`, `Footer`, a lazy WebGL `ThemedBackground` that renders the active background variant — `grainient` (default) or `caustic`) → `AnimatedRoutes`. All page routes except Home are `React.lazy`-loaded in `AnimatedRoutes.tsx` and wrapped in framer-motion page transitions (`lib/transitions.ts`).
 
 **i18n is hand-rolled — there is no i18n library.** `src/config/languages.ts` is the source of truth for supported languages (`en`, `de`, `zh`, `fr`) and exports the `Language` type. UI copy lives in `src/lib/translations/` (one module per language, recomposed in `index.ts` into a single `translations` object). Components read copy with `const t = translations[useLanguage().language]`.
 
