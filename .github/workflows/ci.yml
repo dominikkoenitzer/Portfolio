@@ -16,25 +16,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Reads the `packageManager` field in package.json for the pnpm version.
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      # Pinned to match the `packageManager` field in package.json.
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: pnpm
+          bun-version: 1.3.14
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       # Non-blocking: the legacy files predate the style rules, so lint still
       # reports many opinion-level findings. Surfaced here, but not a gate.
       - name: Lint
-        run: pnpm lint
+        run: bun run lint
         continue-on-error: true
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: bun run typecheck
 
       - name: Build
-        run: pnpm build
+        run: bun run build
