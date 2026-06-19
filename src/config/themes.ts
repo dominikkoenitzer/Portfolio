@@ -33,8 +33,8 @@ export interface BackgroundVariantConfig {
 }
 
 export const BACKGROUND_VARIANTS: BackgroundVariantConfig[] = [
-  { value: "caustic", label: "Water Caustic", icon: Droplets },
   { value: "grainient", label: "Grainy Gradient", icon: Film },
+  { value: "caustic", label: "Water Caustic", icon: Droplets },
 ];
 
 export const ALL_VARIANT_VALUES: BackgroundVariant[] = BACKGROUND_VARIANTS.map(
