@@ -17,6 +17,7 @@ export const de = {
   toggles: {
     theme: "Theme wechseln",
     themes: "Themes",
+    background: "Hintergrund",
     language: "Sprache wechseln",
     useSystem: "Systemsprache verwenden",
   },

@@ -1,13 +1,7 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Footer, Navbar } from "@/components";
-
-// Decorative WebGL background — defer it (and the ~70KB ogl lib) off the
-// critical path so first paint isn't blocked by it.
-const LightVeilBackground = lazy(
-  () => import("@/components/backgrounds/LightVeilBackground"),
-);
-
+import { ThemedBackground } from "@/components/backgrounds/ThemedBackground";
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -30,8 +24,8 @@ export function PageLayout({ children }: PageLayoutProps) {
   // don't overshoot iOS Safari's collapsing toolbar.
   useViewportHeight();
 
-  // Hold the WebGL veil (GL context + shader compile) until the browser is idle
-  // so it never competes with first paint / hydration — critical on phones,
+  // Hold the WebGL background (GL context + shader compile) until the browser is
+  // idle so it never competes with first paint / hydration — critical on phones,
   // where that work otherwise lands right in the middle of the initial render.
   const [showVeil, setShowVeil] = useState(false);
   useEffect(() => {
@@ -55,11 +49,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <ThemeProvider defaultTheme="glass">
       <LanguageProvider defaultLanguage="en">
-        {showVeil && (
-          <Suspense fallback={null}>
-            <LightVeilBackground />
-          </Suspense>
-        )}
+        {showVeil && <ThemedBackground />}
         <CustomCursor />
 
         {/* Scroll progress bar */}

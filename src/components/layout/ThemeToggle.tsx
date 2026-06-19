@@ -6,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getVeilPreset, THEMES } from "@/config/themes";
+import { BACKGROUND_VARIANTS, getVeilPreset, THEMES } from "@/config/themes";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
@@ -18,7 +18,7 @@ export function ThemeToggle({
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, variant, setVariant } = useTheme();
   const { language } = useLanguage();
   const t = translations[language];
   const [mounted, setMounted] = useState(false);
@@ -93,6 +93,36 @@ export function ThemeToggle({
                   <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                   <span className="truncate">{option.label}</span>
                 </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="px-1 pt-3 pb-2 font-medium text-muted-foreground text-xs">
+          {t.toggles.background}
+        </p>
+        <div className="grid grid-cols-1 gap-2">
+          {BACKGROUND_VARIANTS.map((option) => {
+            const Icon = option.icon;
+            const isActive = variant === option.value;
+            return (
+              <button
+                aria-pressed={isActive}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl border p-2 text-sm transition-colors",
+                  isActive
+                    ? "border-primary/60 bg-primary/5"
+                    : "border-border/60 hover:bg-muted",
+                )}
+                key={option.value}
+                onClick={(e) => {
+                  setVariant(option.value, e);
+                  setOpen(false);
+                }}
+                type="button"
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                <span className="truncate">{option.label}</span>
               </button>
             );
           })}
