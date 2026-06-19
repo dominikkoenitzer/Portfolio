@@ -17,6 +17,7 @@ export const zh = {
   toggles: {
     theme: "切换主题",
     themes: "主题",
+    background: "背景",
     language: "切换语言",
     useSystem: "使用系统语言",
   },
