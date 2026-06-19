@@ -74,7 +74,7 @@ export function PageLayout({ children }: PageLayoutProps) {
               width: "900px",
               height: "900px",
               background:
-                "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, transparent 72%)",
+                "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, hsl(var(--primary) / 0) 72%)",
             }}
           />
           <div
@@ -85,7 +85,7 @@ export function PageLayout({ children }: PageLayoutProps) {
               width: "750px",
               height: "750px",
               background:
-                "radial-gradient(circle, hsl(260 100% 68% / 0.13) 0%, transparent 72%)",
+                "radial-gradient(circle, hsl(260 100% 68% / 0.13) 0%, hsl(260 100% 68% / 0) 72%)",
             }}
           />
           <div
@@ -96,7 +96,7 @@ export function PageLayout({ children }: PageLayoutProps) {
               width: "550px",
               height: "550px",
               background:
-                "radial-gradient(circle, hsl(185 100% 58% / 0.09) 0%, transparent 72%)",
+                "radial-gradient(circle, hsl(185 100% 58% / 0.09) 0%, hsl(185 100% 58% / 0) 72%)",
             }}
           />
           <div
@@ -107,7 +107,7 @@ export function PageLayout({ children }: PageLayoutProps) {
               width: "400px",
               height: "400px",
               background:
-                "radial-gradient(circle, hsl(210 100% 70% / 0.07) 0%, transparent 72%)",
+                "radial-gradient(circle, hsl(210 100% 70% / 0.07) 0%, hsl(210 100% 70% / 0) 72%)",
             }}
           />
         </div>

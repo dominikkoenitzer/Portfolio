@@ -81,3 +81,7 @@ temp/
 
 # Scratch screenshot originals — optimized copies live in public/projects/
 Screenshots/
+
+# Agent tooling (agent-browser skill) — installed locally, not product code
+.agents/
+skills-lock.json

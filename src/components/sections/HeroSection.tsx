@@ -151,14 +151,14 @@ export function HeroSection() {
           className="absolute left-[5%] top-[15%] h-[700px] w-[700px]"
           style={{
             background:
-              "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, transparent 72%)",
+              "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, hsl(var(--primary) / 0) 72%)",
           }}
         />
         <div
           className="absolute right-[5%] bottom-[10%] h-[500px] w-[500px]"
           style={{
             background:
-              "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, transparent 72%)",
+              "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, hsl(var(--primary) / 0) 72%)",
           }}
         />
       </div>

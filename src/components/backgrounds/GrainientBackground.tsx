@@ -34,8 +34,8 @@ export default function GrainientBackground() {
         color1={color1}
         color2={color2}
         color3={color3}
-        contrast={1.25}
-        grainAmount={0.08}
+        contrast={1.2}
+        grainAmount={0.13}
         saturation={preset.saturation}
         timeSpeed={0.2}
         zoom={1.05}
