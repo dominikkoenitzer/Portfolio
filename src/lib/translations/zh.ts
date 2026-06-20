@@ -342,56 +342,56 @@ export const zh = {
     home: {
       title: "软件工程师 & 网页开发者",
       description:
-        "Dominik Könitzer - 专注于现代网页开发的软件工程师。常驻瑞士，目前就读于 WISS。React、TypeScript 与全栈开发专家。查看我的作品集、项目与技能。",
+        "Dominik Könitzer，常驻瑞士苏黎世的软件工程师，专注 React、TypeScript 与全栈网页开发。浏览作品集、项目与技能。",
       keywords:
         "Dominik Könitzer, 软件工程师, 网页开发者, React 开发者, TypeScript 开发者, 全栈开发者, 瑞士, 瑞士开发者, 瑞士软件工程师, 网页开发服务, 前端开发者, 后端开发者, 作品集",
     },
     about: {
-      title: "关于我",
+      title: "苏黎世软件工程师",
       description:
-        "了解 Dominik Könitzer——一位 17 岁的软件工程师，就读于 WISS Schulen für Wirtschaft Informatik Immobilien。目前处于为期四年的软件工程项目的第六学期，专注于现代网页开发。",
+        "认识 Dominik Könitzer，一位常驻瑞士苏黎世的软件工程师，就读于 WISS，专注现代网页开发与全栈工程。",
       keywords:
         "关于 Dominik Könitzer, 软件工程师简介, WISS 学生, 瑞士软件工程学生, 网页开发者背景, 软件工程教育",
     },
     skills: {
       title: "技能与技术",
       description:
-        "了解 Dominik Könitzer 的技术技能与专长。精通 React、TypeScript、JavaScript、Node.js 与现代网页开发技术。具备前后端经验的全栈开发者。",
+        "Dominik Könitzer 的技术专长：精通 React、TypeScript、JavaScript 与 Node.js 的瑞士全栈软件工程师。",
       keywords:
         "软件工程师技能, React 技能, TypeScript 技能, JavaScript 开发者, Node.js 开发者, 全栈开发者技能, 网页开发技术, 编程语言, 软件工程专长",
     },
     projects: {
-      title: "项目",
+      title: "软件工程项目",
       description:
-        "探索 Dominik Konitzer 注重影响力的软件项目，包括 Zephyr、Spectrum 与 Entropy。查看在线部署与源代码，了解真实的产品思维、性能优化与专业工程执行。",
+        "探索 Dominik Könitzer 的软件工程项目，如 Zephyr 与 Spectrum。瑞士 React 与 TypeScript 工程，附部署与源码。",
       keywords:
         "软件工程师作品集, 高影响力网页开发项目, Zephyr 项目, Spectrum 项目, Entropy 项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
     },
     services: {
-      title: "服务",
+      title: "网页开发与软件服务",
       description:
-        "Dominik Könitzer 提供的专业软件工程与网页开发服务，涵盖前端开发、后端开发、全栈解决方案与现代网页应用开发。常驻瑞士，服务全球客户。",
+        "Dominik Könitzer 提供专业网页开发与软件工程服务：React、TypeScript 全栈解决方案。常驻瑞士苏黎世，服务全球客户。",
       keywords:
         "软件工程服务, 网页开发服务, 前端开发服务, 后端开发服务, 全栈开发, React 开发服务, TypeScript 开发, 定制网页应用, 瑞士软件开发",
     },
     contact: {
-      title: "联系",
+      title: "联系软件工程师",
       description:
-        "联系 Dominik Könitzer 进行软件工程与网页开发项目合作。常驻瑞士，提供自由职业、合作与咨询机会。",
+        "联系 Dominik Könitzer，瑞士苏黎世软件工程师，洽谈网页开发与全栈项目合作、自由职业及咨询机会。",
       keywords:
         "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 雇用软件工程师, 瑞士自由职业开发者, 软件工程咨询",
     },
     donate: {
       title: "捐赠",
       description:
-        "通过捐款支持 Dominik Konitzer 的软件项目。您的贡献将用于新项目、改进、托管以及长期开发工作。",
+        "通过捐款支持 Dominik Könitzer 的软件项目。您的贡献将用于新项目、功能改进、托管及长期开发工作。",
       keywords:
         "向开发者捐款, 支持软件项目, 支持开源开发者, PayPal 捐款, 支持 Dominik Konitzer",
     },
     privacy: {
       title: "隐私政策",
       description:
-        "dominikkoenitzer.ch 的隐私政策。了解您访问本站时数据如何被收集、使用与保护，符合瑞士 FADP 与欧盟 GDPR 法规。",
+        "dominikkoenitzer.ch 隐私政策：了解访问本站时数据如何收集、使用与保护，符合瑞士 FADP 与欧盟 GDPR 法规。",
       keywords: "隐私政策, 数据保护, GDPR, FADP, 隐私声明, 数据隐私, 瑞士隐私",
     },
     projectDetailsKeywordsSuffix: "项目, 软件工程案例研究, 网页开发作品集",
