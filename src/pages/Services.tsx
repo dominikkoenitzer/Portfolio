@@ -17,6 +17,7 @@ const Services = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
+        image={`${SITE_CONFIG.url}/og/services.png`}
         faqSchema={getServicesFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         howToSchema={getServicesHowTo(language)}

@@ -17,6 +17,7 @@ const About = () => {
     <>
       <SEO        citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
         description={seo.description}
+        image={`${SITE_CONFIG.url}/og/about.png`}
         faqSchema={getAboutFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
