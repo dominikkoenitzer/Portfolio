@@ -8,6 +8,10 @@ Disallow: /api/
 # Sitemap
 Sitemap: https://dominikkoenitzer.ch/sitemap.xml
 
+# AI / LLM resources (llms.txt convention)
+# LLM: https://dominikkoenitzer.ch/llms.txt
+# Full text: https://dominikkoenitzer.ch/llms-full.txt
+
 # ---------- Major search engines ----------
 User-agent: Googlebot
 Allow: /
@@ -109,6 +113,3 @@ Allow: /
 # DeepSeek
 User-agent: DeepSeekBot
 Allow: /
-
-# ---------- Crawl rate ----------
-Crawl-delay: 1

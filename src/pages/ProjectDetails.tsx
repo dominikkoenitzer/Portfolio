@@ -98,7 +98,7 @@ const ProjectDetails = () => {
       <SEO
         alternateLanguages={generateAlternateLanguages(projectPath)}
         citationLinks={getDefaultCitations()}
-        description={`${project.title}: ${project.description}`}
+        description={`${project.title} — ${project.tagline}`}
         geoLocation={getDefaultGeoLocation()}
         keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
         speakableSelectors={["h1", "h2"]}
@@ -120,7 +120,7 @@ const ProjectDetails = () => {
           createSoftwareSourceCodeSchema(project),
           createSoftwareApplicationSchema(project),
         ]}
-        title={`${project.title} Project`}
+        title={project.title}
         url={projectUrl}
       />
 

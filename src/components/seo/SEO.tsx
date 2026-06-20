@@ -133,18 +133,6 @@ export function SEO({
       <meta content={robotsContent} name="googlebot" />
       <meta content={robotsContent} name="bingbot" />
 
-      {/* AI / LLM crawler directives — explicit so GEO/AEO bots index the page */}
-      <meta content={robotsContent} name="GPTBot" />
-      <meta content={robotsContent} name="ChatGPT-User" />
-      <meta content={robotsContent} name="OAI-SearchBot" />
-      <meta content={robotsContent} name="ClaudeBot" />
-      <meta content={robotsContent} name="anthropic-ai" />
-      <meta content={robotsContent} name="Claude-Web" />
-      <meta content={robotsContent} name="PerplexityBot" />
-      <meta content={robotsContent} name="Google-Extended" />
-      <meta content={robotsContent} name="Applebot-Extended" />
-      <meta content={robotsContent} name="CCBot" />
-
       {/* Canonical URL */}
       <link href={canonicalUrl} rel="canonical" />
 
@@ -163,9 +151,6 @@ export function SEO({
           />
         </>
       )}
-
-      {/* Language */}
-      <meta content={language} httpEquiv="content-language" />
 
       {/* Open Graph / Facebook */}
       <meta content={type} property="og:type" />
