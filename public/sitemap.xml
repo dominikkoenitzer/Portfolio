@@ -6,7 +6,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://dk.punds.ch/</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/" />
@@ -23,7 +23,7 @@
   <!-- About -->
   <url>
     <loc>https://dk.punds.ch/about</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/about" />
@@ -36,7 +36,7 @@
   <!-- Skills -->
   <url>
     <loc>https://dk.punds.ch/skills</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/skills" />
@@ -49,7 +49,7 @@
   <!-- Services -->
   <url>
     <loc>https://dk.punds.ch/services</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/services" />
@@ -62,7 +62,7 @@
   <!-- Projects -->
   <url>
     <loc>https://dk.punds.ch/projects</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects" />
@@ -75,7 +75,7 @@
   <!-- Project: Zephyr -->
   <url>
     <loc>https://dk.punds.ch/projects/zephyr</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects/zephyr" />
@@ -83,12 +83,16 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://dk.punds.ch/projects/zephyr" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://dk.punds.ch/projects/zephyr" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dk.punds.ch/projects/zephyr" />
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/zephyr.png</image:loc>
+      <image:title>Zephyr — software project by Dominik Könitzer</image:title>
+    </image:image>
   </url>
 
   <!-- Project: Flow -->
   <url>
     <loc>https://dk.punds.ch/projects/flow</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects/flow" />
@@ -96,12 +100,16 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://dk.punds.ch/projects/flow" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://dk.punds.ch/projects/flow" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dk.punds.ch/projects/flow" />
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/flow.png</image:loc>
+      <image:title>Flow — software project by Dominik Könitzer</image:title>
+    </image:image>
   </url>
 
   <!-- Project: Spectrum -->
   <url>
     <loc>https://dk.punds.ch/projects/spectrum</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects/spectrum" />
@@ -109,12 +117,16 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://dk.punds.ch/projects/spectrum" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://dk.punds.ch/projects/spectrum" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dk.punds.ch/projects/spectrum" />
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/spectrum.png</image:loc>
+      <image:title>Spectrum — software project by Dominik Könitzer</image:title>
+    </image:image>
   </url>
 
   <!-- Project: Entropy -->
   <url>
     <loc>https://dk.punds.ch/projects/entropy</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects/entropy" />
@@ -122,12 +134,16 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://dk.punds.ch/projects/entropy" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://dk.punds.ch/projects/entropy" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dk.punds.ch/projects/entropy" />
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/entropy.png</image:loc>
+      <image:title>Entropy — software project by Dominik Könitzer</image:title>
+    </image:image>
   </url>
 
   <!-- Project: Remnants -->
   <url>
     <loc>https://dk.punds.ch/projects/remnants</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/projects/remnants" />
@@ -135,12 +151,16 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://dk.punds.ch/projects/remnants" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://dk.punds.ch/projects/remnants" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dk.punds.ch/projects/remnants" />
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/remnants.png</image:loc>
+      <image:title>Remnants — software project by Dominik Könitzer</image:title>
+    </image:image>
   </url>
 
   <!-- Contact -->
   <url>
     <loc>https://dk.punds.ch/contact</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/contact" />
@@ -153,7 +173,7 @@
   <!-- Donate -->
   <url>
     <loc>https://dk.punds.ch/donate</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/donate" />
@@ -166,7 +186,7 @@
   <!-- Privacy -->
   <url>
     <loc>https://dk.punds.ch/privacy</loc>
-    <lastmod>2026-06-01</lastmod>
+    <lastmod>2026-06-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dk.punds.ch/privacy" />
