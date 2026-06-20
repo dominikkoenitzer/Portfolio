@@ -18,6 +18,7 @@ const Skills = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
+        image={`${SITE_CONFIG.url}/og/skills.png`}
         faqSchema={getSkillsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}

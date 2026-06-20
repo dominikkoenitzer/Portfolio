@@ -95,6 +95,7 @@ const ProjectDetails = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={`${project.title} — ${project.tagline}`}
+        image={`${SITE_CONFIG.url}/og/projects/${project.slug}.png`}
         geoLocation={getDefaultGeoLocation()}
         keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
         speakableSelectors={["h1", "h2"]}
