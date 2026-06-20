@@ -2,7 +2,6 @@
 Software Engineer: Dominik Könitzer
 Contact: dominik.koenitzer [at] gmail.com
 GitHub: @dominikkoenitzer
-LinkedIn: linkedin.com/in/dominik-koenitzer
 From: Switzerland
 
 /* SITE */
