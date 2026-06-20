@@ -185,9 +185,9 @@ export function SEO({
       {/* Structured Data */}
       {allStructuredData.map((data, index) => (
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: required to inject JSON-LD into <head>
+          // JSON-LD must be injected as raw HTML so it renders as a <script> in <head>
           dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-          // biome-ignore lint/suspicious/noArrayIndexKey: order-stable list within a single render
+          // order-stable list within a single render, so the array index is a safe key
           key={index}
           type="application/ld+json"
         />

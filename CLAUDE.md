@@ -13,13 +13,11 @@ Package manager is **bun** (lockfile: `bun.lock`).
 | Production build | `bun run build` |
 | Build in development mode | `bun run build:dev` |
 | Preview the production build | `bun run preview` |
-| Lint | `bun run lint` (ultracite/Biome) |
-| Auto-fix + format | `bun run format` |
 | Typecheck | `bun run typecheck` (runs `tsc -b`) |
 
 **Always use `bun run <script>`, not `bun <script>`, for `build`/`test`** — `bun build` and `bun test` are bun's own built-in bundler/test-runner and would bypass the package.json scripts. (`bun install` is the built-in installer and is correct.)
 
-There is **no test suite** (no test runner is configured) — verify changes with `bun run typecheck` and `bun run build`. **Important:** a bare `tsc --noEmit` is a **no-op** here because the root `tsconfig.json` uses `files: []` + project references, so it checks nothing; always go through `bun run typecheck` (which runs `tsc -b`). CI (`.github/workflows/ci.yml`) runs lint (non-blocking) + typecheck + build on every push and PR.
+There is **no test suite** (no test runner is configured) — verify changes with `bun run typecheck` and `bun run build`. **Important:** a bare `tsc --noEmit` is a **no-op** here because the root `tsconfig.json` uses `files: []` + project references, so it checks nothing; always go through `bun run typecheck` (which runs `tsc -b`). CI (`.github/workflows/ci.yml`) runs typecheck + build on every push and PR.
 
 The GitHub-contributions endpoint (`api/github-contributions.js`) is a Vercel serverless function. Locally, a small Vite plugin in `vite.config.ts` (`local-github-contributions-api`) runs that same handler in-process for both `bun run dev` and `bun run preview`, reading `GITHUB_TOKEN` from `.env.local` (server-side only — never bundled into the client). Without a token the widget degrades gracefully. On Vercel the platform serves the function and injects the token from the project's env vars.
 
@@ -51,5 +49,3 @@ When adding a language, project, or page, add a module and wire it into that fol
 - **Pages** and any **`React.lazy`-loaded** component (currently every page + `LightVeilBackground`) use **default** exports — `lazy(() => import(...))` requires it. Do not convert these to named exports.
 
 **Adding a nav route** touches four places: a page in `src/pages/`, a lazy route in `AnimatedRoutes.tsx`, an entry in `NAV_LINKS` (`src/constants/index.ts`), and the `NAV_KEY_BY_PATH` map + a `nav` translation key used by `Navbar`.
-
-**Linting caveats.** `bun run lint` runs ultracite (a Biome wrapper); `biome.jsonc` makes it respect `.gitignore` (so it skips `dist/`) and pins 2-space indentation. Two known quirks: ultracite bundles Biome 2.4.16 while the dev dependency is 2.3.8, and `bun run lint` prints a cosmetic `Failed to parse Biome output` line — diagnostics still come through. The existing code predates strict formatting, so lint surfaces many style-level findings on untouched files; these are opinions, not build errors.
