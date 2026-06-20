@@ -5,7 +5,7 @@ GitHub: @dominikkoenitzer
 From: Switzerland
 
 /* SITE */
-Last update: 2026/06/01
+Last update: 2026/06/20
 Language: English / Deutsch / Français / 中文
 Doctype: HTML5
 Standards: HTML5, CSS3, ECMAScript 2022+

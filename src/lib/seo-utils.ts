@@ -26,7 +26,7 @@ export const getOgLocale = (lang: Language): string =>
 export const getDefaultGeoLocation = () => ({
   latitude: SITE_CONFIG.location.latitude,
   longitude: SITE_CONFIG.location.longitude,
-  placename: SITE_CONFIG.location.country,
+  placename: `${SITE_CONFIG.location.city}, ${SITE_CONFIG.location.country}`,
   region: SITE_CONFIG.location.region,
 });
 
@@ -160,11 +160,34 @@ export const createPersonSchema = (
   name: SITE_CONFIG.name,
   alternateName: ["Dominik Konitzer", "D. Könitzer"],
   url: SITE_CONFIG.url,
-  image: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
+  image: {
+    "@type": "ImageObject",
+    url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
+    width: 1200,
+    height: 630,
+  },
   sameAs: [SITE_CONFIG.github],
   jobTitle: "Software Engineer",
   knowsLanguage: ["en", "de", "fr"],
+  knowsAbout: [
+    "Software Engineering",
+    "Web Development",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "Node.js",
+    "Java",
+    "Spring Framework",
+    "Full-Stack Development",
+    "Frontend Architecture",
+    "DevOps",
+    "Docker",
+    "PostgreSQL",
+    "MongoDB",
+  ],
   email: SITE_CONFIG.email,
+  nationality: { "@type": "Country", name: "Switzerland" },
   hasOccupation: {
     "@type": "Occupation",
     name: "Software Engineer",
@@ -173,6 +196,7 @@ export const createPersonSchema = (
     skills:
       "React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, Full-Stack Development, Docker, PostgreSQL",
   },
+  worksFor: { "@id": `${SITE_CONFIG.url}/#organization` },
   seeks: {
     "@type": "Demand",
     name: "Software engineering roles, internships, and freelance opportunities",
@@ -180,11 +204,13 @@ export const createPersonSchema = (
   address: {
     "@type": "PostalAddress",
     addressCountry: "CH",
-    addressLocality: "Switzerland",
+    addressRegion: "Zürich",
+    addressLocality: "Zürich",
   },
   alumniOf: {
     "@type": "EducationalOrganization",
     name: "WISS Schulen für Wirtschaft Informatik Immobilien",
+    url: "https://www.wiss.ch",
   },
   ...additionalData,
 });
@@ -218,6 +244,8 @@ export const createSoftwareSourceCodeSchema = (project: {
   repoUrl: string;
   tags: string[];
   year: string;
+  programmingLanguages?: string[];
+  operatingSystem?: string;
 }) => ({
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
@@ -226,10 +254,13 @@ export const createSoftwareSourceCodeSchema = (project: {
   url: project.liveUrl,
   codeRepository: project.repoUrl,
   codeSampleType: "full",
-  programmingLanguage: ["TypeScript", "JavaScript"],
-  runtimePlatform: "Web",
+  programmingLanguage: project.programmingLanguages ?? [
+    "TypeScript",
+    "JavaScript",
+  ],
+  runtimePlatform: project.operatingSystem ?? "Web",
   keywords: project.tags.join(", "),
-  datePublished: `${project.year}-01-01`,
+  datePublished: project.year,
   author: { "@id": `${SITE_CONFIG.url}/#person` },
   creator: { "@id": `${SITE_CONFIG.url}/#person` },
   maintainer: { "@id": `${SITE_CONFIG.url}/#person` },
@@ -244,14 +275,18 @@ export const createSoftwareApplicationSchema = (project: {
   description: string;
   liveUrl: string;
   tags: string[];
+  downloadUrl?: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
 }) => ({
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: project.title,
   description: project.description,
-  url: project.liveUrl,
-  applicationCategory: "WebApplication",
-  operatingSystem: "Any",
+  url: project.downloadUrl ?? project.liveUrl,
+  ...(project.downloadUrl && { downloadUrl: project.downloadUrl }),
+  applicationCategory: project.applicationCategory ?? "WebApplication",
+  operatingSystem: project.operatingSystem ?? "Any",
   keywords: project.tags.join(", "),
   offers: {
     "@type": "Offer",

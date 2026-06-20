@@ -2,7 +2,7 @@
 
 This document is a dense, plain-text snapshot of the portfolio of Dominik Könitzer (https://dominikkoenitzer.ch). It is intended for LLMs and AI search engines that prefer plain-text ingestion over JavaScript-rendered HTML.
 
-Last reviewed: 2026-05-26.
+Last reviewed: 2026-06-20.
 
 ---
 

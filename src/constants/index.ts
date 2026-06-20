@@ -22,9 +22,10 @@ export const SITE_CONFIG = {
   location: {
     country: "Switzerland",
     countryCode: "CH",
-    region: "CH",
-    latitude: 46.8182,
-    longitude: 8.2275,
+    region: "CH-ZH",
+    city: "Zürich",
+    latitude: 47.3769,
+    longitude: 8.5417,
   },
 } as const;
 

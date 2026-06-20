@@ -26,6 +26,12 @@ export interface PortfolioProject {
   image?: string;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
+  /** Real implementation languages for SoftwareSourceCode JSON-LD (defaults to TS/JS for web projects). */
+  programmingLanguages?: string[];
+  /** Target OS for SoftwareApplication JSON-LD (defaults to "Any"). */
+  operatingSystem?: string;
+  /** schema.org applicationCategory (defaults to "WebApplication"). */
+  applicationCategory?: string;
   tags: string[];
   impactHeading: string;
   impactPoints: string[];
@@ -63,4 +69,10 @@ export type ProjectBase = {
   image?: string;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
+  /** Real implementation languages for SoftwareSourceCode JSON-LD (defaults to TS/JS for web projects). */
+  programmingLanguages?: string[];
+  /** Target OS for SoftwareApplication JSON-LD (defaults to "Any"). */
+  operatingSystem?: string;
+  /** schema.org applicationCategory (defaults to "WebApplication"). */
+  applicationCategory?: string;
 };

@@ -21,14 +21,7 @@
       name="keywords"
       content="Dominik Könitzer, Dominik Konitzer, software engineer, web developer, React developer, TypeScript developer, Next.js, full-stack developer, Switzerland, Swiss developer, WISS, frontend engineer, backend engineer, portfolio, web development services Switzerland, hire software engineer Switzerland, software engineer Zurich, software engineer Bern"
     >
-    <meta name="subject" content="Software Engineering & Web Development Portfolio">
     <meta name="author" content="Dominik Könitzer">
-    <meta name="copyright" content="© Dominik Könitzer">
-    <meta name="owner" content="Dominik Könitzer">
-    <meta name="reply-to" content="dominik.koenitzer@gmail.com">
-    <meta name="distribution" content="global">
-    <meta name="audience" content="all">
-    <meta name="rating" content="general">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="generator" content="Vite + React">
     <meta name="format-detection" content="telephone=no">
@@ -46,7 +39,6 @@
       name="bingbot"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
-    <meta name="google" content="notranslate">
     <meta name="google" content="nositelinkssearchbox">
 
     <!-- Performance / Preconnect -->
@@ -76,7 +68,8 @@
 
     <!-- Icons & PWA -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/android-chrome-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -88,14 +81,12 @@
     <meta name="theme-color" content="#080c16" id="theme-color-meta">
 
     <!-- Geographic SEO -->
-    <meta name="geo.region" content="CH">
+    <meta name="geo.region" content="CH-ZH">
     <meta name="geo.country" content="CH">
-    <meta name="geo.placename" content="Switzerland">
-    <meta name="ICBM" content="46.8182, 8.2275">
-    <meta name="geo.position" content="46.8182;8.2275">
+    <meta name="geo.placename" content="Zürich, Switzerland">
+    <meta name="ICBM" content="47.3769, 8.5417">
+    <meta name="geo.position" content="47.3769;8.5417">
 
-    <!-- Language and Locale -->
-    <meta http-equiv="content-language" content="en">
     <!-- NOTE: canonical is injected per-route by react-helmet (see SEO.tsx).
          Do NOT add a static <link rel="canonical"> here — it can't be removed
          on sub-routes and produces "multiple conflicting canonical URLs". -->
@@ -111,6 +102,10 @@
 
     <!-- Sitemap & feeds -->
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+
+    <!-- AI / LLM discovery (llms.txt convention) -->
+    <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt">
+    <link rel="alternate" type="text/plain" title="llms-full.txt" href="/llms-full.txt">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -158,16 +153,6 @@
     <meta name="DC.language" content="en">
     <meta name="DC.coverage" content="Switzerland">
     <meta name="DC.rights" content="© Dominik Könitzer">
-
-    <!-- Article entity hints (root site) -->
-    <meta property="article:author" content="Dominik Könitzer">
-    <meta property="article:section" content="Portfolio">
-    <meta property="article:tag" content="Software Engineering">
-    <meta property="article:tag" content="Web Development">
-    <meta property="article:tag" content="React">
-    <meta property="article:tag" content="TypeScript">
-    <meta property="article:tag" content="Next.js">
-    <meta property="article:tag" content="Full-Stack">
 
     <!-- ============================================================== -->
     <!-- JSON-LD structured data — AI search engines & LLMs use these   -->
@@ -236,12 +221,14 @@
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "CH",
-        "addressLocality": "Switzerland"
-      }
+        "addressRegion": "Zürich",
+        "addressLocality": "Zürich"
+      },
+      "worksFor": { "@id": "https://dominikkoenitzer.ch/#organization" }
     }
     </script>
 
-    <!-- WebSite (with SearchAction for site-search rich results) -->
+    <!-- WebSite (site identity + entity graph links) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -254,15 +241,7 @@
       "inLanguage": ["en", "de", "fr", "zh"],
       "publisher": { "@id": "https://dominikkoenitzer.ch/#person" },
       "author": { "@id": "https://dominikkoenitzer.ch/#person" },
-      "copyrightHolder": { "@id": "https://dominikkoenitzer.ch/#person" },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://dominikkoenitzer.ch/?s={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
+      "copyrightHolder": { "@id": "https://dominikkoenitzer.ch/#person" }
     }
     </script>
 
@@ -276,8 +255,7 @@
       "description": "Professional software engineering and web development services delivered from Switzerland to clients worldwide.",
       "url": "https://dominikkoenitzer.ch",
       "image": "https://dominikkoenitzer.ch/og-image.png",
-      "priceRange": "30 CHF - 500 CHF",
-      "telephone": "",
+      "priceRange": "CHF 30–500",
       "email": "dominik.koenitzer@gmail.com",
       "provider": { "@id": "https://dominikkoenitzer.ch/#person" },
       "areaServed": [
@@ -300,12 +278,13 @@
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "CH",
-        "addressLocality": "Switzerland"
+        "addressRegion": "Zürich",
+        "addressLocality": "Zürich"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 46.8182,
-        "longitude": 8.2275
+        "latitude": 47.3769,
+        "longitude": 8.5417
       }
     }
     </script>

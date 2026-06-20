@@ -34,6 +34,9 @@ const PROJECT_BASE: ProjectBase[] = [
     toneClass: TONE_RADIAL,
     image: "/projects/flow.png",
     imagePortrait: true,
+    programmingLanguages: ["C++"],
+    operatingSystem: "Windows",
+    applicationCategory: "UtilitiesApplication",
   },
   {
     slug: "spectrum",
