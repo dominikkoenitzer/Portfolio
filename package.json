@@ -5,7 +5,15 @@
   "description": "Personal portfolio website for Dominik Könitzer - Software Engineer",
   "type": "module",
   "author": "Dominik Könitzer",
-  "license": "MIT",
+  "license": "UNLICENSED",
+  "homepage": "https://dominikkoenitzer.ch",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dominikkoenitzer/Portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dominikkoenitzer/Portfolio/issues"
+  },
   "packageManager": "bun@1.3.14",
   "scripts": {
     "dev": "vite",
