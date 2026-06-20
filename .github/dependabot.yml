@@ -1,19 +1,39 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"         # Change this based on your ecosystem (see below)
-    directory: "/"                   # Location of your package.json or manifest file
+  # JavaScript/TypeScript dependencies (managed with bun — bun.lock).
+  # Dependabot's "bun" ecosystem (GA 2025-02-13) reads package.json and
+  # regenerates the text-based bun.lock, keeping `bun install --frozen-lockfile`
+  # (used in CI) green on every update PR.
+  - package-ecosystem: "bun"
+    directory: "/"
     schedule:
-      interval: "weekly"             # Options: "daily", "weekly", "monthly"
-    open-pull-requests-limit: 5     # Limit open PRs from Dependabot to avoid overload
-    allow:
-      - dependency-type: "all"      # Update both direct and indirect dependencies
-    ignore:
-      - dependency-name: "lodash"   # Example: ignore specific dependencies if needed
-        versions:
-          - "4.x"
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # Batch minor/patch bumps so the PR list stays small; majors still arrive
+    # as individual PRs that warrant a manual look.
+    groups:
+      production-minor-patch:
+        dependency-type: "production"
+        update-types: ["minor", "patch"]
+      dev-minor-patch:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
     commit-message:
-      prefix: "deps"                # Prefix for commit messages from Dependabot
-      include: "scope"              # Include scope if applicable
+      prefix: "deps"
+      include: "scope"
     labels:
       - "dependencies"
-      - "automated update"
+
+  # Keep the CI workflow's actions (checkout, setup-bun) current and patched.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "github-actions"
