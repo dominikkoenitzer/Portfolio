@@ -12,6 +12,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "typecheck": "tsc -b",
+    "check:sitemap": "bun scripts/check-sitemap.ts",
+    "check:jsonld": "bun scripts/validate-jsonld.ts",
     "lint": "ultracite check",
     "format": "ultracite fix",
     "preview": "vite preview"
