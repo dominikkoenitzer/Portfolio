@@ -132,7 +132,7 @@ export interface LightVeilProps {
 
 const themeFromDom = (): Theme => {
   const { classList } = document.documentElement;
-  return ALL_THEME_VALUES.find((name) => classList.contains(name)) ?? "glass";
+  return ALL_THEME_VALUES.find((name) => classList.contains(name)) ?? "bloom";
 };
 
 const DEFAULT_MOTION = 0.4;
