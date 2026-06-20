@@ -1,16 +1,16 @@
 /**
- * CI guard: validate the JSON-LD structured data baked into index.html.
+ * CI guard: validate the JSON-LD baked into the prerendered homepage.
  *
  * Structured data is this site's primary lever for Google rich results and AI
- * answer engines, but typecheck/build never parse the inline <script
- * type="application/ld+json"> blocks — a stray comma or unescaped character
- * ships to prod and silently disqualifies the page. This parses every block
- * and asserts the minimum shape (@context + @type), failing the build on any
- * malformed graph.
+ * answer engines. This parses every inline <script type="application/ld+json">
+ * block in the prerendered build/client/index.html (site-wide graphs from
+ * root.tsx + per-route graphs injected by <SEO>) and asserts the minimum shape
+ * (@context + @type), failing the build on any malformed graph. Runs after the
+ * build so it validates the actual shipped output.
  */
 import { readFileSync } from "node:fs";
 
-const html = readFileSync("index.html", "utf8");
+const html = readFileSync("build/client/index.html", "utf8");
 const blocks = [
   ...html.matchAll(
     /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g
@@ -18,7 +18,9 @@ const blocks = [
 ].map((m) => m[1]);
 
 if (blocks.length === 0) {
-  console.error("✗ No JSON-LD blocks found in index.html");
+  console.error(
+    "✗ No JSON-LD blocks found in build/client/index.html (did the build run first?)"
+  );
   process.exit(1);
 }
 

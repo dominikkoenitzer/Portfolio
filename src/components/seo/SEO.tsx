@@ -117,7 +117,8 @@ export function SEO({
   const currentLocale = getOgLocale(language);
 
   return (
-    <Helmet htmlAttributes={{ lang: language }}>
+    <>
+      <Helmet htmlAttributes={{ lang: language }}>
       {/* Primary Meta Tags */}
       <title>{siteTitle}</title>
       <meta content={siteTitle} name="title" />
@@ -130,22 +131,6 @@ export function SEO({
 
       {/* Canonical URL */}
       <link href={canonicalUrl} rel="canonical" />
-
-      {/* Geographic SEO */}
-      {geoLocation && (
-        <>
-          <meta content={geoLocation.region} name="geo.region" />
-          <meta content={geoLocation.placename} name="geo.placename" />
-          <meta
-            content={`${geoLocation.latitude}, ${geoLocation.longitude}`}
-            name="ICBM"
-          />
-          <meta
-            content={`${geoLocation.latitude};${geoLocation.longitude}`}
-            name="geo.position"
-          />
-        </>
-      )}
 
       {/* Open Graph / Facebook */}
       <meta content={type} property="og:type" />
@@ -182,21 +167,23 @@ export function SEO({
       <meta content={siteTitle} name="twitter:image:alt" />
       {/* No X/Twitter account — card still renders without a handle */}
 
-      {/* Structured Data */}
-      {allStructuredData.map((data, index) => (
-        <script
-          // JSON-LD must be injected as raw HTML so it renders as a <script> in <head>
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-          // order-stable list within a single render, so the array index is a safe key
-          key={index}
-          type="application/ld+json"
-        />
-      ))}
-
       {/* Citations for GEO — AI engines use these for authority signals */}
       {citationLinks?.map((citation) => (
         <link href={citation.url} key={citation.url} rel="citation" />
       ))}
-    </Helmet>
+      </Helmet>
+
+      {/* Structured data is rendered in-tree (not via Helmet) so prerendering
+          captures it in the static HTML. JSON-LD is valid anywhere in the
+          document, and per-route scripts unmount/mount on client navigation. */}
+      {allStructuredData.map((data, index) => (
+        <script
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+          // order-stable list within a single render, so the index key is safe
+          key={index}
+          type="application/ld+json"
+        />
+      ))}
+    </>
   );
 }

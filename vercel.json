@@ -1,8 +1,10 @@
 {
+  "buildCommand": "bun run build",
+  "outputDirectory": "build/client",
   "rewrites": [
     {
-      "source": "/((?!api|_next/static|_next/image|robots.txt|sitemap.xml|llms.txt|llms-full.txt|humans.txt|browserconfig.xml|.well-known/.*|.*\\..*).*)",
-      "destination": "/index.html"
+      "source": "/((?!api|.well-known/.*|.*\\..*).*)",
+      "destination": "/__spa-fallback.html"
     }
   ],
   "headers": [

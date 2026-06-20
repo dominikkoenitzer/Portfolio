@@ -1,6 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import react from "@vitejs/plugin-react-swc";
+import { reactRouter } from "@react-router/dev/vite";
 import {
   defineConfig,
   loadEnv,
@@ -93,34 +93,20 @@ export default defineConfig(({ mode }) => {
       host: "::",
       port: 1000,
     },
-    plugins: [react(), localGithubApi(env)],
+    plugins: [reactRouter(), localGithubApi(env)],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+    // react-helmet-async ships CommonJS; bundle it into the SSR/prerender build
+    // so its named exports resolve under Node ESM at build time.
+    ssr: {
+      noExternal: ["react-helmet-async"],
+    },
     esbuild: {
       target: "es2020",
       legalComments: "none",
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Vendor chunks
-            "react-vendor": ["react", "react-dom", "react-router-dom"],
-            "framer-motion": ["framer-motion"],
-            "ui-vendor": [
-              "@radix-ui/react-popover",
-              "@radix-ui/react-slot",
-              "@radix-ui/react-toast",
-              "@radix-ui/react-tooltip",
-            ],
-            "query-vendor": ["@tanstack/react-query"],
-          },
-        },
-      },
-      chunkSizeWarningLimit: 600,
     },
   };
 });

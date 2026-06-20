@@ -16,10 +16,13 @@ const BASE = "https://dominikkoenitzer.ch";
 
 const norm = (p: string): string => (p === "/" ? "/" : p.replace(/\/$/, ""));
 
-const routesSrc = readFileSync("src/components/AnimatedRoutes.tsx", "utf8");
-const staticRoutes = [...routesSrc.matchAll(/path="([^"]+)"/g)]
-  .map((m) => m[1])
-  .filter((p) => p !== "*" && !p.includes(":"));
+const routesSrc = readFileSync("src/routes.ts", "utf8");
+const staticRoutes = [
+  "/", // index() route
+  ...[...routesSrc.matchAll(/route\("([^"]+)"/g)]
+    .map((m) => `/${m[1]}`)
+    .filter((p) => p !== "/*" && !p.includes(":")),
+];
 
 const projectsSrc = readFileSync("src/constants/projects/index.ts", "utf8");
 const slugs = [...projectsSrc.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);

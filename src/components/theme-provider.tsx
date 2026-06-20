@@ -109,11 +109,19 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
+    // SSR/prerender has no localStorage; fall back to the default (the inline
+    // bootstrap script in root.tsx applies the real theme class before paint).
+    if (typeof localStorage === "undefined") {
+      return defaultTheme;
+    }
     const stored = localStorage.getItem(storageKey);
     return isTheme(stored) ? stored : defaultTheme;
   });
 
   const [variant, setVariantState] = useState<BackgroundVariant>(() => {
+    if (typeof localStorage === "undefined") {
+      return defaultVariant;
+    }
     const stored = localStorage.getItem(variantStorageKey);
     return isVariant(stored) ? stored : defaultVariant;
   });

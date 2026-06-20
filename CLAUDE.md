@@ -10,8 +10,7 @@ Package manager is **bun** (lockfile: `bun.lock`).
 | --- | --- |
 | Install deps | `bun install` |
 | Dev server (port **1000**) | `bun run dev` |
-| Production build | `bun run build` |
-| Build in development mode | `bun run build:dev` |
+| Production build | `bun run build` (React Router build → `build/client/`) |
 | Preview the production build | `bun run preview` |
 | Typecheck | `bun run typecheck` (runs `tsc -b`) |
 
@@ -23,11 +22,11 @@ The GitHub-contributions endpoint (`api/github-contributions.js`) is a Vercel se
 
 ## Stack
 
-React 18 + TypeScript + Vite (SWC plugin), single-page portfolio site deployed on **Vercel** (deploys from `main`). Tailwind CSS + shadcn/ui (Radix) for UI, framer-motion for animation, `@tanstack/react-query` for async data. Path alias `@/` → `src/`.
+React 18 + TypeScript + Vite + **React Router v7 framework mode** (SSG), portfolio site deployed on **Vercel** (deploys from `main`). Every route is prerendered to static HTML at build time (`build/client/`) so non-JS crawlers and AI engines see full per-route content. Tailwind CSS + shadcn/ui (Radix) for UI, framer-motion for animation, `@tanstack/react-query` for async data. Path alias `@/` → `src/`.
 
 ## Architecture
 
-**Composition root.** `main.tsx` → `App.tsx` (QueryClient, Tooltip, Toasters, Router) → `PageLayout` (Theme + Language providers, `Navbar`, `Footer`, a lazy WebGL `ThemedBackground` that renders the active background variant — `grainient` (default) or `caustic`) → `AnimatedRoutes`. All page routes except Home are `React.lazy`-loaded in `AnimatedRoutes.tsx` and wrapped in framer-motion page transitions (`lib/transitions.ts`).
+**Composition root.** React Router v7 framework mode. `entry.client.tsx` / `entry.server.tsx` → `root.tsx`, whose `Layout` is the HTML document (constant `<head>` + the site-wide JSON-LD graphs) and whose default export wraps the providers (QueryClient, Tooltip, Toasters) → `PageLayout` (Theme + Language providers, `Navbar`, `Footer`, a lazy WebGL `ThemedBackground` — variant `grainient` (default) or `caustic`) → a framer-motion-wrapped `<Outlet />` (`lib/transitions.ts`). Routes are declared in `src/routes.ts` (code-split automatically); pages are route modules with **default** exports. `entry.server.tsx` splices react-helmet-async's per-route head into the prerendered HTML.
 
 **i18n is hand-rolled — there is no i18n library.** `src/config/languages.ts` is the source of truth for supported languages (`en`, `de`, `zh`, `fr`) and exports the `Language` type. UI copy lives in `src/lib/translations/` (one module per language, recomposed in `index.ts` into a single `translations` object). Components read copy with `const t = translations[useLanguage().language]`.
 
@@ -40,12 +39,12 @@ React 18 + TypeScript + Vite (SWC plugin), single-page portfolio site deployed o
 
 When adding a language, project, or page, add a module and wire it into that folder's `index.ts` — **keep the index's exported API stable** so consumers don't change. A new language additionally requires updating `config/languages.ts`.
 
-**Build is manually chunked** (`vite.config.ts`): `react-vendor`, `framer-motion`, `ui-vendor`, `query-vendor`. Keep heavy/optional things (e.g. the WebGL background) lazy so they stay off the critical path.
+**Chunking is handled by the React Router/Vite build** (per-route code-splitting); there is no manual `manualChunks` config. Keep heavy/optional things (e.g. the WebGL background) lazy/client-only so they stay off the critical path — and **SSR-safe**, since routes are prerendered at build time: no `window`/`localStorage`/`navigator` access during render (guard with `typeof window !== "undefined"` or move it into an effect).
 
 ## Conventions
 
 **Export style is deliberate and load-bearing:**
 - **Components** use **named** exports, re-exported through barrels (`components/<group>/index.ts`).
-- **Pages** and any **`React.lazy`-loaded** component (currently every page + `LightVeilBackground`) use **default** exports — `lazy(() => import(...))` requires it. Do not convert these to named exports.
+- **Route modules** (every page in `src/pages/`) and any **lazily-imported** component (e.g. `LightVeilBackground`) use **default** exports — React Router route modules and `lazy(() => import(...))` both require it. Do not convert these to named exports.
 
-**Adding a nav route** touches four places: a page in `src/pages/`, a lazy route in `AnimatedRoutes.tsx`, an entry in `NAV_LINKS` (`src/constants/index.ts`), and the `NAV_KEY_BY_PATH` map + a `nav` translation key used by `Navbar`.
+**Adding a nav route** touches: a page in `src/pages/`, a `route(...)` entry in `src/routes.ts`, the `prerender` list in `react-router.config.ts`, a `<loc>` in `public/sitemap.xml` (the CI sitemap-parity guard enforces this), an entry in `NAV_LINKS` (`src/constants/index.ts`), and the `NAV_KEY_BY_PATH` map + a `nav` translation key used by `Navbar`.
