@@ -25,7 +25,7 @@ Dominik is currently **open to work** — software engineering roles, internship
 - Backend: Node.js, Java, Spring Framework, REST APIs, GraphQL
 - DevOps & infra: Docker, Jenkins, Linux/Windows Server, Grafana
 - Databases: PostgreSQL, MongoDB, SQLite, Redis
-- Tooling: Git, Vite, Biome, Vercel
+- Tooling: Git, Vite, Vercel
 
 ## Key pages
 
