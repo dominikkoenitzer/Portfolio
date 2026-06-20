@@ -1,7 +1,6 @@
 import type { Language } from "@/config/languages";
 import { entropy } from "./entropy";
 import { flow } from "./flow";
-import { remnants } from "./remnants";
 import { spectrum } from "./spectrum";
 import type { LocalizedContent, PortfolioProject, ProjectBase } from "./types";
 import { zephyr } from "./zephyr";
@@ -58,23 +57,12 @@ const PROJECT_BASE: ProjectBase[] = [
     toneClass: TONE_RADIAL,
     image: "/projects/entropy.png",
   },
-  {
-    slug: "remnants",
-    title: "Remnants",
-    year: "2026",
-    repoUrl: "https://github.com/dominikkoenitzer/Remnants",
-    liveUrl: "https://remnants.punds.ch/",
-    priority: 5,
-    toneClass: TONE_RADIAL,
-    image: "/projects/remnants.png",
-  },
 ];
 
 const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   zephyr,
   spectrum,
   entropy,
-  remnants,
   flow,
 };
 
