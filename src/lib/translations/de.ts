@@ -407,56 +407,56 @@ export const de = {
     home: {
       title: "Software Engineer & Webentwickler",
       description:
-        "Dominik Könitzer - Software Engineer mit Spezialisierung auf moderne Webentwicklung. Sitz in der Schweiz, derzeit Studium an der WISS. Experte für React, TypeScript und Full-Stack-Entwicklung. Portfolio, Projekte und Skills entdecken.",
+        "Dominik Könitzer, Software Engineer in Zürich für moderne Webentwicklung mit React, TypeScript und Full-Stack. Portfolio, Projekte und Skills entdecken.",
       keywords:
         "Dominik Könitzer, Software Engineer, Webentwickler, React Entwickler, TypeScript Entwickler, Full-Stack-Entwickler, Schweiz, Schweizer Entwickler, Software Engineer Schweiz, Webentwicklungs-Dienstleistungen, Frontend-Entwickler, Backend-Entwickler, Portfolio",
     },
     about: {
-      title: "Über mich",
+      title: "Software Engineer in Zürich",
       description:
-        "Erfahre mehr über Dominik Könitzer - 17-jähriger Software Engineer an der WISS Schule für Wirtschaft Informatik Immobilien. Aktuell im sechsten Semester eines vierjährigen Software-Engineering-Programms, spezialisiert auf moderne Webentwicklung.",
+        "Dominik Könitzer, Software Engineer aus Zürich, spezialisiert auf moderne Webentwicklung mit React und Full-Stack. Software-Studium an der WISS Zürich.",
       keywords:
         "Über Dominik Könitzer, Software-Engineer-Biografie, WISS-Schüler, Software-Engineering-Student Schweiz, Webentwickler-Hintergrund, Software-Engineer-Ausbildung",
     },
     skills: {
       title: "Skills & Technologien",
       description:
-        "Entdecke Dominik Könitzers technische Skills und Expertise. Versiert in React, TypeScript, JavaScript, Node.js und modernen Webentwicklungs-Technologien. Full-Stack-Entwickler mit Expertise in Frontend- und Backend-Entwicklung.",
+        "Dominik Könitzers technische Skills: React, TypeScript, JavaScript und Node.js. Full-Stack-Entwickler mit Expertise in Frontend- und Backend-Entwicklung.",
       keywords:
         "Software-Engineer-Skills, React-Skills, TypeScript-Skills, JavaScript-Entwickler, Node.js-Entwickler, Full-Stack-Entwickler-Skills, Webentwicklungs-Technologien, Programmiersprachen, Software-Engineering-Expertise",
     },
     projects: {
-      title: "Projekte",
+      title: "Software-Engineering-Projekte",
       description:
-        "Entdecke wirkungsorientierte Software-Projekte von Dominik Konitzer, darunter Zephyr, Spectrum und Entropy. Live-Deployments und Quellcode zeigen Produktdenken, Performance-Optimierung und professionelle Engineering-Umsetzung.",
+        "Software-Projekte von Dominik Könitzer wie Zephyr, Spectrum und Entropy. Live-Deployments und Quellcode in React und TypeScript mit Fokus auf Performance.",
       keywords:
         "Software-Engineer-Portfolio, wirkungsvolle Webentwicklungs-Projekte, Zephyr Projekt, Spectrum Projekt, Entropy Projekt, React TypeScript Portfolio, Frontend-Engineer Schweiz, Software-Engineer anstellen",
     },
     services: {
-      title: "Leistungen",
+      title: "Webentwicklung & Software",
       description:
-        "Professionelle Software-Engineering- und Webentwicklungs-Leistungen von Dominik Könitzer. Frontend, Backend, Full-Stack und moderne Webanwendungsentwicklung. Sitz in der Schweiz, weltweite Kundenbetreuung.",
+        "Dominik Könitzer bietet Webentwicklung und Software-Engineering aus Zürich: Frontend, Backend und Full-Stack mit React und TypeScript, weltweit verfügbar.",
       keywords:
         "Software-Engineering-Leistungen, Webentwicklungs-Leistungen, Frontend-Entwicklungs-Leistungen, Backend-Entwicklungs-Leistungen, Full-Stack-Entwicklung, React-Entwicklungs-Leistungen, TypeScript-Entwicklung, individuelle Webanwendungen, Software-Entwicklung Schweiz",
     },
     contact: {
-      title: "Kontakt",
+      title: "Software Engineer kontaktieren",
       description:
-        "Nimm Kontakt mit Dominik Könitzer für Software-Engineering- und Webentwicklungs-Projekte auf. Sitz in der Schweiz, verfügbar für Freelance-Arbeit, Kollaborationen und Beratungsprojekte.",
+        "Kontaktiere Dominik Könitzer, Software Engineer aus Zürich, für Web- und Software-Projekte. Verfügbar für Freelance, Kollaborationen und Beratung.",
       keywords:
         "Dominik Könitzer kontaktieren, Software-Engineer-Kontakt, Webentwickler-Kontakt, Software-Engineer anstellen, Freelance-Entwickler Schweiz, Software-Engineering-Beratung",
     },
     donate: {
       title: "Spenden",
       description:
-        "Unterstütze Dominik Konitzers Software-Projekte mit einer Spende. Dein Beitrag finanziert neue Builds, Verbesserungen, Hosting und langfristige Entwicklungsarbeit.",
+        "Unterstütze Dominik Könitzers Software-Projekte mit einer Spende. Dein Beitrag finanziert neue Builds, Hosting und langfristige Entwicklungsarbeit.",
       keywords:
         "Entwickler unterstützen, Software-Projekte unterstützen, Open-Source-Entwickler unterstützen, PayPal-Spende, Dominik Konitzer unterstützen",
     },
     privacy: {
       title: "Datenschutzerklärung",
       description:
-        "Datenschutzerklärung für dominikkoenitzer.ch. Erfahre, wie deine Daten beim Besuch dieser Website erhoben, verwendet und geschützt werden. Konform mit Schweizer DSG und EU-DSGVO.",
+        "Datenschutzerklärung für dominikkoenitzer.ch: wie deine Daten erhoben, verwendet und geschützt werden. Konform mit Schweizer DSG und EU-DSGVO.",
       keywords:
         "Datenschutzerklärung, Datenschutz, DSGVO, DSG, Privacy Statement, Datensicherheit, Datenschutz Schweiz",
     },

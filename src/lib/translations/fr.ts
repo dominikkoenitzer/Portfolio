@@ -405,56 +405,56 @@ export const fr = {
     home: {
       title: "Ingénieur logiciel & développeur web",
       description:
-        "Dominik Könitzer - Ingénieur logiciel spécialisé en développement web moderne. Basé en Suisse, actuellement étudiant à la WISS. Expert en React, TypeScript et développement full-stack. Découvrez mon portfolio, mes projets et mes compétences.",
+        "Dominik Könitzer, ingénieur logiciel et développeur web full-stack en Suisse. Expert React et TypeScript. Découvrez mon portfolio et mes projets.",
       keywords:
         "Dominik Könitzer, ingénieur logiciel, développeur web, développeur React, développeur TypeScript, développeur full-stack, Suisse, développeur suisse, ingénieur logiciel Suisse, services de développement web, développeur frontend, développeur backend, portfolio",
     },
     about: {
-      title: "À propos de moi",
+      title: "Ingénieur logiciel à Zürich",
       description:
-        "Découvrez Dominik Könitzer - ingénieur logiciel de 17 ans étudiant à la WISS Schulen für Wirtschaft Informatik Immobilien. Actuellement dans le sixième semestre d'un programme d'ingénierie logicielle de 4 ans, spécialisé en développement web moderne.",
+        "Dominik Könitzer, ingénieur logiciel à Zürich, Suisse, étudiant à la WISS et spécialisé en développement web moderne avec React et TypeScript.",
       keywords:
         "à propos de Dominik Könitzer, biographie ingénieur logiciel, étudiant WISS, étudiant ingénierie logicielle Suisse, parcours développeur web, formation ingénieur logiciel",
     },
     skills: {
       title: "Compétences & technologies",
       description:
-        "Explorez les compétences techniques et l'expertise de Dominik Könitzer. Maîtrise de React, TypeScript, JavaScript, Node.js et des technologies modernes de développement web. Développeur full-stack avec expertise frontend et backend.",
+        "Compétences techniques de Dominik Könitzer, ingénieur full-stack : React, TypeScript, JavaScript et Node.js pour le développement web moderne.",
       keywords:
         "compétences ingénieur logiciel, compétences React, compétences TypeScript, développeur JavaScript, développeur Node.js, compétences développeur full-stack, technologies de développement web, langages de programmation, expertise ingénierie logicielle",
     },
     projects: {
-      title: "Projets",
+      title: "Projets d'ingénierie logicielle",
       description:
-        "Explorez les projets logiciels à fort impact de Dominik Konitzer, incluant Zephyr, Spectrum et Entropy. Consultez les déploiements live et le code source qui démontrent une réflexion produit réelle, l'optimisation des performances et une exécution d'ingénierie professionnelle.",
+        "Projets logiciels de Dominik Könitzer en React et TypeScript : Zephyr, Spectrum et Entropy. Déploiements live et code source d'un ingénieur suisse.",
       keywords:
         "portfolio ingénieur logiciel, projets de développement web à fort impact, projet Zephyr, projet Spectrum, projet Entropy, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
     },
     services: {
-      title: "Services",
+      title: "Développement web & logiciel",
       description:
-        "Services professionnels d'ingénierie logicielle et de développement web par Dominik Könitzer. Développement frontend, backend, solutions full-stack et applications web modernes. Basé en Suisse, au service de clients dans le monde entier.",
+        "Services de développement web et logiciel de Dominik Könitzer : frontend, backend et solutions full-stack React. Basé en Suisse, clients partout.",
       keywords:
         "services d'ingénierie logicielle, services de développement web, services de développement frontend, services de développement backend, développement full-stack, services de développement React, développement TypeScript, applications web sur mesure, développement logiciel Suisse",
     },
     contact: {
-      title: "Contact",
+      title: "Contacter un ingénieur logiciel",
       description:
-        "Contactez Dominik Könitzer pour des projets d'ingénierie logicielle et de développement web. Basé en Suisse, disponible pour du freelance, des collaborations et des missions de conseil.",
+        "Contactez Dominik Könitzer, ingénieur logiciel en Suisse, pour vos projets web. Disponible pour freelance, collaborations et missions de conseil.",
       keywords:
         "contacter Dominik Könitzer, contact ingénieur logiciel, contact développeur web, engager un ingénieur logiciel, développeur freelance Suisse, conseil en ingénierie logicielle",
     },
     donate: {
       title: "Faire un don",
       description:
-        "Soutenez les projets logiciels de Dominik Konitzer par un don. Votre contribution finance de nouvelles réalisations, des améliorations, l'hébergement et un travail de développement à long terme.",
+        "Soutenez les projets logiciels de Dominik Könitzer par un don. Votre contribution finance nouveaux projets, améliorations, hébergement et maintenance.",
       keywords:
         "donner à un développeur, soutenir des projets logiciels, soutenir un développeur open source, don PayPal, soutenir Dominik Konitzer",
     },
     privacy: {
       title: "Politique de confidentialité",
       description:
-        "Politique de confidentialité pour dominikkoenitzer.ch. Découvrez comment vos données sont collectées, utilisées et protégées lorsque vous visitez ce site. Conforme à la LPD suisse et au RGPD de l'UE.",
+        "Politique de confidentialité de dominikkoenitzer.ch : comment vos données sont collectées, utilisées et protégées. Conforme à la LPD suisse et au RGPD.",
       keywords:
         "politique de confidentialité, protection des données, RGPD, LPD, déclaration de confidentialité, confidentialité des données, confidentialité Suisse",
     },
