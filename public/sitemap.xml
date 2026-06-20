@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Single URL per route: language is resolved client-side, so there are no
+       distinct per-language URLs to declare via hreflang. Each route is
+       self-canonical (see SEO.tsx). -->
 
   <!-- Homepage -->
   <url>
@@ -9,11 +12,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/og-image.png</image:loc>
       <image:title>Dominik Könitzer — Software Engineer Portfolio</image:title>
@@ -26,11 +24,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/about" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/about" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/about" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/about" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/about" />
   </url>
 
   <!-- Skills -->
@@ -39,11 +32,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/skills" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/skills" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/skills" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/skills" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/skills" />
   </url>
 
   <!-- Services -->
@@ -52,11 +40,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/services" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/services" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/services" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/services" />
   </url>
 
   <!-- Projects -->
@@ -65,11 +48,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects" />
   </url>
 
   <!-- Project: Zephyr -->
@@ -78,11 +56,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/zephyr" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/zephyr" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/zephyr" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/zephyr" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/zephyr" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/projects/zephyr.png</image:loc>
       <image:title>Zephyr — software project by Dominik Könitzer</image:title>
@@ -95,11 +68,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/flow" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/flow" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/flow" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/flow" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/flow" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/projects/flow.png</image:loc>
       <image:title>Flow — software project by Dominik Könitzer</image:title>
@@ -112,11 +80,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/spectrum" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/spectrum" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/spectrum" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/spectrum" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/spectrum" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/projects/spectrum.png</image:loc>
       <image:title>Spectrum — software project by Dominik Könitzer</image:title>
@@ -129,11 +92,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/entropy" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/entropy" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/entropy" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/entropy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/entropy" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/projects/entropy.png</image:loc>
       <image:title>Entropy — software project by Dominik Könitzer</image:title>
@@ -146,11 +104,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/projects/remnants" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/projects/remnants" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/projects/remnants" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/projects/remnants" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/projects/remnants" />
     <image:image>
       <image:loc>https://dominikkoenitzer.ch/projects/remnants.png</image:loc>
       <image:title>Remnants — software project by Dominik Könitzer</image:title>
@@ -163,11 +116,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/contact" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/contact" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/contact" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/contact" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/contact" />
   </url>
 
   <!-- Donate -->
@@ -176,11 +124,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/donate" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/donate" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/donate" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/donate" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/donate" />
   </url>
 
   <!-- Privacy -->
@@ -189,11 +132,6 @@
     <lastmod>2026-06-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://dominikkoenitzer.ch/privacy" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://dominikkoenitzer.ch/privacy" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://dominikkoenitzer.ch/privacy" />
-    <xhtml:link rel="alternate" hreflang="zh" href="https://dominikkoenitzer.ch/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://dominikkoenitzer.ch/privacy" />
   </url>
 
 </urlset>

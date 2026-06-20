@@ -33,7 +33,7 @@ React 18 + TypeScript + Vite (SWC plugin), single-page portfolio site deployed o
 
 **i18n is hand-rolled — there is no i18n library.** `src/config/languages.ts` is the source of truth for supported languages (`en`, `de`, `zh`, `fr`) and exports the `Language` type. UI copy lives in `src/lib/translations/` (one module per language, recomposed in `index.ts` into a single `translations` object). Components read copy with `const t = translations[useLanguage().language]`.
 
-**SEO is a first-class concern, not an afterthought.** Each page renders the `<SEO>` component (`components/seo/`) which, via `lib/seo-utils.ts`, emits JSON-LD structured data (Person / FAQ / HowTo schemas), hreflang alternates, and Helmet tags. The FAQ/HowTo content that feeds these schemas lives in `src/config/seo-data/` (one module per page). When changing page content, check whether its structured data in `seo-data/` needs to match.
+**SEO is a first-class concern, not an afterthought.** Each page renders the `<SEO>` component (`components/seo/`) which, via `lib/seo-utils.ts`, emits JSON-LD structured data (Person / FAQ / HowTo schemas) and Helmet tags. The FAQ/HowTo content that feeds these schemas lives in `src/config/seo-data/` (one module per page). When changing page content, check whether its structured data in `seo-data/` needs to match.
 
 **Content data uses a split-module + recomposing-index pattern.** Large datasets are folders of small modules with an `index.ts` that rebuilds a stable public API:
 - `src/lib/translations/` → `{ en, de, fr, zh }` (per language)

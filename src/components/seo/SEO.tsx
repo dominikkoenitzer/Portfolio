@@ -1,5 +1,4 @@
 import { Helmet } from "react-helmet-async";
-import { LANGUAGES } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
@@ -28,7 +27,6 @@ export function SEO({
   noindex = false,
   nofollow = false,
   canonical,
-  alternateLanguages = [],
   structuredData,
   geoLocation,
   faqSchema,
@@ -117,9 +115,6 @@ export function SEO({
   }
 
   const currentLocale = getOgLocale(language);
-  const alternateLocales = LANGUAGES.map((l) => getOgLocale(l.code)).filter(
-    (l) => l !== currentLocale,
-  );
 
   return (
     <Helmet htmlAttributes={{ lang: language }}>
@@ -165,9 +160,6 @@ export function SEO({
       <meta content={siteTitle} property="og:image:alt" />
       <meta content={SITE_CONFIG.name} property="og:site_name" />
       <meta content={currentLocale} property="og:locale" />
-      {alternateLocales.map((loc) => (
-        <meta content={loc} key={loc} property="og:locale:alternate" />
-      ))}
       {author && <meta content={author} property="article:author" />}
       {publishedTime && (
         <meta content={publishedTime} property="article:published_time" />
@@ -189,16 +181,6 @@ export function SEO({
       <meta content={siteImage} name="twitter:image" />
       <meta content={siteTitle} name="twitter:image:alt" />
       {/* No X/Twitter account — card still renders without a handle */}
-
-      {/* Alternate Languages (hreflang) */}
-      {alternateLanguages.map((alt) => (
-        <link
-          href={alt.url}
-          hrefLang={alt.lang}
-          key={alt.lang}
-          rel="alternate"
-        />
-      ))}
 
       {/* Structured Data */}
       {allStructuredData.map((data, index) => (

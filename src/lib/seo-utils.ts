@@ -2,13 +2,13 @@
  * SEO utility functions for generating structured data and meta tags
  */
 
-import { LANGUAGES, type Language } from "@/config/languages";
+import type { Language } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
 import type { CitationLink, FAQItem, HowToSchema } from "@/types/seo";
 
 /**
  * Map a UI language code to an Open Graph locale string.
- * Used for og:locale and og:locale:alternate emission.
+ * Used for og:locale emission.
  */
 const OG_LOCALES: Record<Language, string> = {
   en: "en_US",
@@ -29,23 +29,6 @@ export const getDefaultGeoLocation = () => ({
   placename: `${SITE_CONFIG.location.city}, ${SITE_CONFIG.location.country}`,
   region: SITE_CONFIG.location.region,
 });
-
-/**
- * Generate alternate language links for a given path. Includes all supported
- * languages plus x-default so search engines and AI crawlers can resolve the
- * right variant per user.
- */
-export const generateAlternateLanguages = (
-  path = "",
-): { lang: string; url: string }[] => {
-  const url = `${SITE_CONFIG.url}${path}`;
-  const links: { lang: string; url: string }[] = LANGUAGES.map(({ code }) => ({
-    lang: code,
-    url,
-  }));
-  links.push({ lang: "x-default", url });
-  return links;
-};
 
 /**
  * Default citation links used as authority signals for AI search engines.

@@ -4,9 +4,7 @@ import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
-  createPersonSchema,
-  generateAlternateLanguages,
-  getDefaultGeoLocation,
+  createPersonSchema,  getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
@@ -17,9 +15,7 @@ const About = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/about")}
-        citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
+      <SEO        citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
         description={seo.description}
         faqSchema={getAboutFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
