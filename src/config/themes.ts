@@ -10,8 +10,8 @@ export interface ThemeConfig {
 }
 
 export const THEMES: ThemeConfig[] = [
-  { value: "glass", label: "Glass", icon: Sparkles },
   { value: "bloom", label: "Bloom", icon: Flower2 },
+  { value: "glass", label: "Glass", icon: Sparkles },
   { value: "forest", label: "Forest", icon: TreePine },
   { value: "sunset", label: "Sunset", icon: Sunset },
 ];

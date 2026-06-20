@@ -47,7 +47,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="glass">
+    <ThemeProvider defaultTheme="bloom">
       <LanguageProvider defaultLanguage="en">
         {showVeil && <ThemedBackground />}
         <CustomCursor />
