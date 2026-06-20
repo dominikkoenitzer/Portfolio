@@ -6,7 +6,7 @@ import {
   useTransform,
   useVelocity,
 } from "framer-motion";
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Github, Mail } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -195,11 +195,6 @@ export function HeroSection() {
                 href: "https://github.com/dominikkoenitzer",
                 label: "GitHub",
                 icon: <Github className="h-[18px] w-[18px]" />,
-              },
-              {
-                href: "https://linkedin.com/in/dominik-koenitzer",
-                label: "LinkedIn",
-                icon: <Linkedin className="h-[18px] w-[18px]" />,
               },
               {
                 href: "mailto:dominik.koenitzer@gmail.com",

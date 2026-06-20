@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Github, Linkedin } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { ContactForm } from "../forms/ContactForm";
@@ -77,18 +77,6 @@ export function ContactSection() {
             >
               <Github className="h-4 w-4 shrink-0" />
               <span className="break-all">github.com/dominikkoenitzer</span>
-              <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70" />
-            </a>
-            <a
-              className="group inline-flex items-center gap-2.5 text-foreground/75 text-sm transition-colors duration-200 hover:text-foreground"
-              href="https://linkedin.com/in/dominik-koenitzer"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Linkedin className="h-4 w-4 shrink-0" />
-              <span className="break-all">
-                linkedin.com/in/dominik-koenitzer
-              </span>
               <ArrowUpRight className="h-3 w-3 opacity-0 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-70" />
             </a>
           </div>
