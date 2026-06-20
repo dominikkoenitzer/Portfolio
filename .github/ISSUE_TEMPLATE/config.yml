@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Email Dominik
+    url: mailto:dominik.koenitzer@gmail.com
+    about: For private questions, security reports, or hiring.
+  - name: Live site
+    url: https://dominikkoenitzer.ch
+    about: See the portfolio in action.
