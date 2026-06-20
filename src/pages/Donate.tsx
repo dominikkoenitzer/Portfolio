@@ -16,6 +16,7 @@ const Donate = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
+        image={`${SITE_CONFIG.url}/og/donate.png`}
         faqSchema={getDonateFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         howToSchema={getDonateHowTo(language)}

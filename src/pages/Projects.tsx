@@ -19,6 +19,7 @@ const Projects = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
+        image={`${SITE_CONFIG.url}/og/projects.png`}
         faqSchema={getProjectsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
