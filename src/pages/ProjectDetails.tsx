@@ -15,9 +15,7 @@ import { getProject, getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
 import {
   createSoftwareApplicationSchema,
-  createSoftwareSourceCodeSchema,
-  generateAlternateLanguages,
-  getDefaultCitations,
+  createSoftwareSourceCodeSchema,  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
@@ -95,9 +93,7 @@ const ProjectDetails = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages(projectPath)}
-        citationLinks={getDefaultCitations()}
+      <SEO        citationLinks={getDefaultCitations()}
         description={`${project.title} — ${project.tagline}`}
         geoLocation={getDefaultGeoLocation()}
         keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}

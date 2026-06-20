@@ -31,11 +31,6 @@ export interface CitationLink {
   url: string;
 }
 
-export interface AlternateLanguage {
-  lang: string;
-  url: string;
-}
-
 export interface SEOProps {
   title?: string;
   description?: string;
@@ -51,7 +46,6 @@ export interface SEOProps {
   noindex?: boolean;
   nofollow?: boolean;
   canonical?: string;
-  alternateLanguages?: AlternateLanguage[];
   structuredData?: object | object[];
   geoLocation?: GeoLocation;
   faqSchema?: FAQItem[];

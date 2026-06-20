@@ -4,9 +4,7 @@ import { getHomeFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
-  createPersonSchema,
-  generateAlternateLanguages,
-  getDefaultCitations,
+  createPersonSchema,  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
@@ -17,9 +15,7 @@ const Home = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/")}
-        citationLinks={getDefaultCitations()}
+      <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
         faqSchema={getHomeFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
