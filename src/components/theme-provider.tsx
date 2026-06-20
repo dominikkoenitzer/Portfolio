@@ -31,7 +31,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: "glass",
+  theme: "bloom",
   setTheme: () => null,
   variant: "grainient",
   setVariant: () => null,
@@ -102,7 +102,7 @@ const commitWithReveal = (
 
 export function ThemeProvider({
   children,
-  defaultTheme = "glass",
+  defaultTheme = "bloom",
   defaultVariant = "grainient",
   storageKey = "portfolio-theme",
   variantStorageKey = "portfolio-bg-variant",
