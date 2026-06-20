@@ -3,9 +3,7 @@ import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
-  createPersonSchema,
-  generateAlternateLanguages,
-  getDefaultGeoLocation,
+  createPersonSchema,  getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
@@ -16,9 +14,7 @@ const Contact = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/contact")}
-        description={seo.description}
+      <SEO        description={seo.description}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
         structuredData={{

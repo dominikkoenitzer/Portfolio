@@ -4,9 +4,7 @@ import { getProjectsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
-import {
-  generateAlternateLanguages,
-  getDefaultCitations,
+import {  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
@@ -19,9 +17,7 @@ const Projects = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/projects")}
-        citationLinks={getDefaultCitations()}
+      <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
         faqSchema={getProjectsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
