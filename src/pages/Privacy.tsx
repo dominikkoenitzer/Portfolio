@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
-import { generateAlternateLanguages } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
 const Privacy = () => {
@@ -14,9 +13,7 @@ const Privacy = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/privacy")}
-        description={seo.description}
+      <SEO        description={seo.description}
         keywords={seo.keywords}
         structuredData={{
           "@context": "https://schema.org",
