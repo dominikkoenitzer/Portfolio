@@ -14,7 +14,6 @@ He builds production-grade web products with a frontend emphasis (React, Next.js
 
 Contact: dominik.koenitzer@gmail.com
 GitHub: https://github.com/dominikkoenitzer
-LinkedIn: https://linkedin.com/in/dominik-koenitzer
 
 ---
 
