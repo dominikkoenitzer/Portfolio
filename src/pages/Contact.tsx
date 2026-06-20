@@ -15,6 +15,7 @@ const Contact = () => {
   return (
     <>
       <SEO        description={seo.description}
+        image={`${SITE_CONFIG.url}/og/contact.png`}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
         structuredData={{
