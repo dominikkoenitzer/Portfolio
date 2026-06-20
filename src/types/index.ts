@@ -40,7 +40,6 @@ export interface SocialLink {
 
 // Re-export SEO types
 export type {
-  AlternateLanguage,
   CitationLink,
   FAQItem,
   GeoLocation,

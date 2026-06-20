@@ -3,9 +3,7 @@ import { SEO } from "@/components/seo";
 import { getDonateFaqs, getDonateHowTo } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
-import {
-  generateAlternateLanguages,
-  getDefaultCitations,
+import {  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
@@ -16,9 +14,7 @@ const Donate = () => {
 
   return (
     <>
-      <SEO
-        alternateLanguages={generateAlternateLanguages("/donate")}
-        citationLinks={getDefaultCitations()}
+      <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
         faqSchema={getDonateFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
