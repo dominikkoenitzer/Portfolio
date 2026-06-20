@@ -51,7 +51,6 @@ const CARDS: { out: string; title: string; subtitle: string }[] = [
   { out: "public/og/projects/flow.png", title: "Flow", subtitle: "Ultra-low-latency input automation for Windows, in C++" },
   { out: "public/og/projects/spectrum.png", title: "Spectrum", subtitle: "A fast, accessible color workbench with contrast checks" },
   { out: "public/og/projects/entropy.png", title: "Entropy", subtitle: "Strong passwords from secure randomness" },
-  { out: "public/og/projects/remnants.png", title: "Remnants", subtitle: "A browser-native code editor for file-first devs" },
 ];
 
 for (const c of CARDS) {
