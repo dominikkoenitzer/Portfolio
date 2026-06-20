@@ -289,7 +289,7 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
       if (gl.canvas.parentNode === node) node.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-    // biome-ignore lint/correctness/useExhaustiveDependencies: live props are read through a ref so the GL context is built once and never on rerender
+    // live props are read through a ref, so the GL context is built once and never on rerender
   }, []);
 
   return <div className="h-full w-full" ref={host} />;
