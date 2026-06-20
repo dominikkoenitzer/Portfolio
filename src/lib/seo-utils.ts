@@ -161,7 +161,7 @@ export const createPersonSchema = (
   alternateName: ["Dominik Konitzer", "D. Könitzer"],
   url: SITE_CONFIG.url,
   image: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
-  sameAs: [SITE_CONFIG.github, SITE_CONFIG.linkedin],
+  sameAs: [SITE_CONFIG.github],
   jobTitle: "Software Engineer",
   knowsLanguage: ["en", "de", "fr"],
   email: SITE_CONFIG.email,
