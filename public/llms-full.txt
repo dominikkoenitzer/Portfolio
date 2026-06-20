@@ -86,13 +86,6 @@ Soft / professional skills
 - Tags: Experimental, Responsive, Engineering
 - Summary: Configurable password generation backed by cryptographic randomness, transparent strength scoring, and accessible custom-rule controls.
 
-### Remnants — browser-native IDE
-- Live: https://remnants.punds.ch
-- Repo: https://github.com/dominikkoenitzer/Remnants
-- Year: 2026
-- Tags: Dev Tools, TypeScript, Browser IDE
-- Summary: A full in-browser code editor with persistent file tree, multi-panel layouts, quick-open navigation, and real-time syntax highlighting — all backed by localStorage.
-
 ---
 
 ## 4. Services (priced in CHF, delivered remotely from Switzerland)
