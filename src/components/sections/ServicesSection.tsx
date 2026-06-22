@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { SectionHeading } from "@/components/layout/SectionHeading";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
@@ -98,28 +101,7 @@ export function ServicesSection() {
   return (
     <section className="section-padding" id="services">
       {/* Header */}
-      <motion.div
-        className="mb-10 md:mb-12"
-        initial={{ opacity: 0, y: 16 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/35">
-          {t.eyebrow}
-        </p>
-        <div className="flex items-end justify-between">
-          <h2 className="font-bold text-4xl tracking-tight md:text-5xl">
-            {t.heading}
-          </h2>
-          <span
-            aria-hidden="true"
-            className="font-mono text-5xl font-bold text-muted-foreground/10 md:text-7xl"
-          >
-            {String(services.length).padStart(2, "0")}
-          </span>
-        </div>
-      </motion.div>
+      <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
 
       {/* Category filter */}
       <motion.div
@@ -193,7 +175,7 @@ export function ServicesSection() {
                   {t.categoryMeta[service.category].label}
                 </span>
 
-                <h3 className="mb-2 font-semibold text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
+                <h3 className="mb-2 font-semibold text-lg transition-colors duration-200 group-hover:text-primary">
                   {item.title}
                 </h3>
 
@@ -203,12 +185,7 @@ export function ServicesSection() {
 
                 <div className="mb-5 flex flex-wrap gap-1.5">
                   {item.features.map((f) => (
-                    <span
-                      className="rounded-full border border-border/20 bg-muted/15 px-2.5 py-0.5 text-[11px] text-muted-foreground/60"
-                      key={f}
-                    >
-                      {f}
-                    </span>
+                    <Badge key={f}>{f}</Badge>
                   ))}
                 </div>
 
@@ -234,19 +211,14 @@ export function ServicesSection() {
         viewport={{ once: true }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/35">
-          {t.ctaEyebrow}
-        </p>
-        <h3 className="font-bold text-2xl tracking-tight md:text-3xl">
-          {t.ctaTitle}
-        </h3>
-        <Link
-          className="group mt-2 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]"
-          to="/contact"
-        >
-          {t.ctaButton}
-          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </Link>
+        <p className="eyebrow">{t.ctaEyebrow}</p>
+        <h3 className="font-bold text-2xl md:text-3xl">{t.ctaTitle}</h3>
+        <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
+          <Link to="/contact">
+            {t.ctaButton}
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          </Link>
+        </Button>
       </motion.div>
     </section>
   );

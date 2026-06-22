@@ -23,7 +23,7 @@ export function ContactSection() {
               "zusammen-arbeiten" instead of the dictionary "zusammenar-beiten".
               pb on the gradient span ensures descenders ("g") aren't clipped. */}
           <h1
-            className="mb-6 break-words font-bold leading-[1.02] tracking-tight [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
+            className="mb-6 break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
             style={{ fontSize: "clamp(2rem, 7vw, 3.75rem)" }}
           >
             {t.headlineLine1}
