@@ -9,6 +9,7 @@ import {
 import { ArrowRight, Github, Mail } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -227,10 +228,10 @@ export function HeroSection() {
                 asChild
                 className="group h-10 rounded-lg px-6 text-sm font-medium shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]"
               >
-                <a className="flex items-center gap-1.5" href="/contact">
+                <Link className="flex items-center gap-1.5" to="/contact">
                   {t.hero.hireMe}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-                </a>
+                </Link>
               </Button>
             </Magnetic>
             <Magnetic>
@@ -239,7 +240,7 @@ export function HeroSection() {
                 className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium transition-all duration-200 hover:border-primary/25 hover:bg-primary/[0.04]"
                 variant="outline"
               >
-                <a href="/projects">{t.hero.viewWork}</a>
+                <Link to="/projects">{t.hero.viewWork}</Link>
               </Button>
             </Magnetic>
           </motion.div>
