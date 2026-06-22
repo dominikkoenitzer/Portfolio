@@ -39,6 +39,13 @@ export function PageLayout({ children }: PageLayoutProps) {
   }, []);
 
   useEffect(() => {
+    // Own scroll position ourselves: the browser's automatic restore on reload/
+    // back-forward would otherwise fight Lenis (leaving its internal target out
+    // of sync). We always land at the top on load and reset on every route
+    // change (see AnimatedRoutes), so manual restoration is consistent.
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
     window.scrollTo(0, 0);
     document.body.style.fontFamily =
       "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";

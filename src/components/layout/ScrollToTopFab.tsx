@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useLenis } from "lenis/react";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { haptic } from "@/hooks/use-haptic";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /**
  * Floating action button that appears once the user has scrolled past a
@@ -10,6 +12,7 @@ import { haptic } from "@/hooks/use-haptic";
  */
 export function ScrollToTopFab() {
   const [visible, setVisible] = useState(false);
+  const lenis = useLenis();
 
   useEffect(() => {
     let ticking = false;
@@ -30,7 +33,19 @@ export function ScrollToTopFab() {
 
   const handleClick = () => {
     haptic("light");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Drive the return through Lenis when it's active so the smooth scroll and
+    // Lenis's internal target stay in sync. Without Lenis (reduced motion), jump
+    // instantly — an explicit behavior:"smooth" would animate despite the
+    // reduced-motion CSS, since it overrides the `scroll-behavior` property.
+    if (lenis) {
+      lenis.scrollTo(0);
+    } else {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+    }
   };
 
   return (
