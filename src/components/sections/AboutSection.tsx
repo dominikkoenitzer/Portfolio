@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Award, GraduationCap } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { fadeInLeft, fadeInRight, fadeInUp } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -152,7 +153,7 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
             >
               <Button asChild className="group" variant="default">
-                <a href="/skills">
+                <Link to="/skills">
                   {t.exploreSkills}
                   <svg
                     className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
@@ -168,7 +169,7 @@ export function AboutSection() {
                       strokeWidth={2}
                     />
                   </svg>
-                </a>
+                </Link>
               </Button>
               <Button asChild className="group" variant="outline">
                 <a
