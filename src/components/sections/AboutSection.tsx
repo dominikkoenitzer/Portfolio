@@ -78,14 +78,14 @@ export function AboutSection() {
 
         <motion.div className="md:col-span-7 lg:col-span-7" {...bioReveal}>
           <motion.div
-            className="glass-card rounded-2xl border border-border/20 p-6 shadow-sm backdrop-blur-sm sm:p-8"
+            className="glass-card rounded-2xl p-6 sm:p-8"
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
             <motion.h3
-              className="mb-4 font-heading font-semibold text-xl tracking-tight sm:mb-6 sm:text-2xl"
+              className="mb-4 font-semibold text-xl sm:mb-6 sm:text-2xl"
               initial={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.4, delay: 0.1 }}
               viewport={{ once: true }}
