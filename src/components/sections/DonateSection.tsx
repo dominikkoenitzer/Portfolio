@@ -32,11 +32,11 @@ export function DonateSection() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40">
+          <p className="eyebrow mb-3">
             {t.eyebrow}
           </p>
           <h1
-            className="mb-6 break-words font-bold leading-[1.02] tracking-tight [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
+            className="mb-6 break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
             style={{ fontSize: "clamp(2rem, 7vw, 3.75rem)" }}
           >
             {t.headlineLine1}

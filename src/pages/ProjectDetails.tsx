@@ -10,6 +10,8 @@ import {
 import type { ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { getProject, getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
@@ -39,9 +41,7 @@ function Section({
       viewport={{ once: true, margin: "-80px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <h2 className="font-heading text-2xl tracking-tight sm:text-3xl">
-        {title}
-      </h2>
+      <h2 className="text-2xl sm:text-3xl">{title}</h2>
       <div className="mt-5">{children}</div>
     </motion.section>
   );
@@ -51,7 +51,10 @@ function BulletList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-3">
       {items.map((item) => (
-        <li className="flex gap-3 text-foreground/90 leading-7" key={item}>
+        <li
+          className="flex gap-3 text-foreground/90 leading-relaxed"
+          key={item}
+        >
           <span className="mt-[0.6rem] h-1.5 w-1.5 shrink-0 rounded-full bg-primary/80" />
           <span>{item}</span>
         </li>
@@ -64,7 +67,10 @@ function CheckList({ items }: { items: string[] }) {
   return (
     <ul className="space-y-3">
       {items.map((item) => (
-        <li className="flex gap-3 text-foreground/90 leading-7" key={item}>
+        <li
+          className="flex gap-3 text-foreground/90 leading-relaxed"
+          key={item}
+        >
           <Check className="mt-1 h-4 w-4 shrink-0 text-primary" />
           <span>{item}</span>
         </li>
@@ -124,7 +130,7 @@ const ProjectDetails = () => {
       <div className="min-h-screen">
         {/* Hero — content floats on the page's flowing veil background */}
         <section className="relative overflow-hidden">
-          <div className="relative mx-auto max-w-5xl px-6 pt-4 pb-10 sm:px-8 sm:pb-12 md:px-12">
+          <div className="relative mx-auto max-w-5xl px-4 pt-4 pb-10 sm:px-6 sm:pb-12 md:px-8 lg:px-16">
             <div className="mb-12 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Link
@@ -157,48 +163,51 @@ const ProjectDetails = () => {
               <p className="font-mono text-[11px] text-primary/70 uppercase tracking-[0.22em]">
                 {projectTimeline}
               </p>
-              <h1 className="mt-3 font-heading font-semibold text-5xl tracking-tight sm:text-6xl">
+              <h1 className="mt-3 font-bold text-5xl sm:text-6xl">
                 {project.title}
               </h1>
-              <p className="mt-5 text-lg text-muted-foreground leading-8">
+              <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
                 {project.tagline}
               </p>
-              <p className="mt-4 text-foreground/90 leading-8">
+              <p className="mt-4 text-foreground/90 leading-relaxed">
                 {project.description}
               </p>
 
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 {project.downloadUrl ? (
-                  <a
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow-sm transition hover:bg-primary/90 hover:shadow-[0_4px_20px_hsl(var(--primary)/0.25)]"
-                    download
-                    href={project.downloadUrl}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <Download className="h-4 w-4" />
-                    {t.download}
-                  </a>
+                  <Button asChild className="rounded-lg px-6" variant="cta">
+                    <a
+                      download
+                      href={project.downloadUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Download className="h-4 w-4" />
+                      {t.download}
+                    </a>
+                  </Button>
                 ) : (
+                  <Button asChild className="rounded-lg px-6" variant="cta">
+                    <a
+                      href={project.liveUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {t.visitSite}
+                    </a>
+                  </Button>
+                )}
+                <Button asChild className="rounded-lg px-5" variant="outline">
                   <a
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow-sm transition hover:bg-primary/90 hover:shadow-[0_4px_20px_hsl(var(--primary)/0.25)]"
-                    href={project.liveUrl}
+                    href={project.repoUrl}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    <ExternalLink className="h-4 w-4" />
-                    {t.visitSite}
+                    <Github className="h-4 w-4" />
+                    {t.sourceCode}
                   </a>
-                )}
-                <a
-                  className="inline-flex items-center gap-2 rounded-xl border border-border/50 bg-background/60 px-5 py-2.5 font-medium text-sm backdrop-blur-sm transition hover:border-border hover:bg-secondary/60"
-                  href={project.repoUrl}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <Github className="h-4 w-4" />
-                  {t.sourceCode}
-                </a>
+                </Button>
               </div>
 
               {project.downloadUrl ? (
@@ -209,12 +218,7 @@ const ProjectDetails = () => {
 
               <div className="mt-6 flex flex-wrap justify-center gap-2">
                 {project.tags.map((tag) => (
-                  <span
-                    className="rounded-full border border-border/40 bg-background/40 px-3 py-1 text-muted-foreground text-xs backdrop-blur-sm"
-                    key={tag}
-                  >
-                    {tag}
-                  </span>
+                  <Badge key={tag}>{tag}</Badge>
                 ))}
               </div>
             </div>
@@ -247,19 +251,19 @@ const ProjectDetails = () => {
               "linear-gradient(to bottom, hsl(var(--background) / 0) 0px, hsl(var(--background) / 0.1) 80px, hsl(var(--background) / 0.92) 220px, hsl(var(--background)) 320px)",
           }}
         >
-          <div className="mx-auto max-w-3xl px-6 sm:px-8 md:px-12">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 md:px-8 lg:px-16">
             <article>
               <Section divider={false} title={t.overview}>
-                <p className="border-primary/40 border-l-2 pl-4 text-foreground/80 italic leading-8">
+                <p className="border-primary/40 border-l-2 pl-4 text-foreground/80 italic leading-relaxed">
                   {project.roleSummary}
                 </p>
-                <p className="mt-5 text-foreground/90 leading-8">
+                <p className="mt-5 text-foreground/90 leading-relaxed">
                   {project.overview}
                 </p>
               </Section>
 
               <Section title={t.problem}>
-                <p className="text-foreground/90 leading-8">
+                <p className="text-foreground/90 leading-relaxed">
                   {project.problemStatement}
                 </p>
               </Section>
@@ -271,7 +275,7 @@ const ProjectDetails = () => {
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-primary text-xs">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="pt-1 text-foreground/90 leading-7">
+                      <span className="pt-1 text-foreground/90 leading-relaxed">
                         {objective}
                       </span>
                     </li>
@@ -295,20 +299,20 @@ const ProjectDetails = () => {
                 <div className="grid gap-5 sm:grid-cols-2">
                   {project.challengesAndSolutions.map((item) => (
                     <div
-                      className="glass-deep rounded-2xl border border-border/30 p-5"
+                      className="glass-deep rounded-2xl p-5"
                       key={item.challenge}
                     >
                       <p className="font-mono text-[10px] text-destructive uppercase tracking-[0.18em]">
                         {t.challengeLabel}
                       </p>
-                      <p className="mt-2 text-foreground/90 text-sm leading-7">
+                      <p className="mt-2 text-foreground/90 text-sm leading-relaxed">
                         {item.challenge}
                       </p>
                       <div className="my-4 h-px bg-border/40" />
                       <p className="font-mono text-[10px] text-primary uppercase tracking-[0.18em]">
                         {t.solutionLabel}
                       </p>
-                      <p className="mt-2 text-foreground/80 text-sm leading-7">
+                      <p className="mt-2 text-foreground/80 text-sm leading-relaxed">
                         {item.solution}
                       </p>
                     </div>
@@ -324,7 +328,7 @@ const ProjectDetails = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {otherProjects.map((item) => (
                     <Link
-                      className="group glass-deep flex flex-col rounded-2xl border border-border/30 p-5 transition hover:border-primary/30"
+                      className="group glass-deep flex flex-col rounded-2xl p-5 transition hover:border-primary/30"
                       key={item.slug}
                       to={`/projects/${item.slug}`}
                     >
@@ -339,17 +343,12 @@ const ProjectDetails = () => {
                         </div>
                         <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                       </div>
-                      <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-6">
+                      <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
                         {item.description}
                       </p>
                       <div className="mt-4 flex flex-wrap gap-1.5">
                         {item.tags.slice(0, 3).map((tag) => (
-                          <span
-                            className="rounded-full border border-border/40 bg-secondary/40 px-2 py-0.5 text-[11px] text-muted-foreground"
-                            key={tag}
-                          >
-                            {tag}
-                          </span>
+                          <Badge key={tag}>{tag}</Badge>
                         ))}
                       </div>
                     </Link>

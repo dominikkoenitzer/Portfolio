@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Download, ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -21,10 +22,8 @@ export function ProjectsSection() {
         viewport={{ once: true }}
         whileInView={{ opacity: 1, x: 0 }}
       >
-        <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
-          {t.disclosureEyebrow}
-        </p>
-        <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-[15px]">
+        <p className="eyebrow mb-2.5">{t.disclosureEyebrow}</p>
+        <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-base">
           {t.disclosureBody}
         </p>
       </motion.div>
@@ -32,7 +31,7 @@ export function ProjectsSection() {
       <div className="space-y-5 sm:space-y-6">
         {projects.map((project, index) => (
           <motion.article
-            className="glass-deep group relative overflow-hidden rounded-2xl border border-border/30 bg-background/60 backdrop-blur-xl"
+            className="glass-deep group relative overflow-hidden rounded-2xl"
             initial={{ opacity: 0, y: 28 }}
             key={project.slug}
             transition={{
@@ -75,17 +74,12 @@ export function ProjectsSection() {
                 ) : null}
 
                 <div className="relative flex h-full min-h-[220px] flex-col items-center justify-center px-8 py-10 text-center">
-                  <h3 className="font-heading font-bold text-4xl tracking-tight sm:text-5xl">
+                  <h3 className="font-bold text-2xl tracking-tight sm:text-3xl">
                     {project.title}
                   </h3>
                   <div className="mt-4 flex flex-wrap justify-center gap-1.5">
                     {project.tags.slice(0, 2).map((tag) => (
-                      <span
-                        className="rounded-full border border-border/40 bg-background/30 px-2.5 py-0.5 text-muted-foreground text-xs backdrop-blur-sm"
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
+                      <Badge key={tag}>{tag}</Badge>
                     ))}
                   </div>
                 </div>
@@ -95,16 +89,17 @@ export function ProjectsSection() {
               <div className="flex flex-col p-5 sm:p-6">
                 <div className="mb-3.5 flex items-start justify-between gap-2 border-b border-border/25 pb-3.5">
                   <div>
-                    <p className="font-semibold text-xl leading-tight">
+                    <p
+                      aria-hidden
+                      className="font-semibold text-xl leading-tight"
+                    >
                       {project.title}
                     </p>
                     <p className="mt-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60">
                       {project.year}
                     </p>
                   </div>
-                  <span className="rounded-full border border-border/40 bg-secondary/50 px-2.5 py-1 text-muted-foreground/70 text-xs backdrop-blur-sm">
-                    {project.tags[0]}
-                  </span>
+                  <Badge>{project.tags[0]}</Badge>
                 </div>
 
                 <p className="mb-2.5 font-medium text-foreground/90 text-sm leading-snug">

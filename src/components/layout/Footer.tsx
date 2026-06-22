@@ -15,7 +15,7 @@ export function Footer() {
           <motion.div
             className="mb-6 md:mb-0"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
@@ -30,7 +30,7 @@ export function Footer() {
           <motion.div
             className="mb-6 flex space-x-6 md:mb-0"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
@@ -87,7 +87,7 @@ export function Footer() {
         <motion.div
           className="mt-8 flex flex-col items-center justify-between border-border/40 border-t pt-8 sm:flex-row"
           initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
