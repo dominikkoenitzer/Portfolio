@@ -1,3 +1,4 @@
+import { useLenis } from "lenis/react";
 import { useEffect } from "react";
 
 /**
@@ -6,10 +7,17 @@ import { useEffect } from "react";
  * does not move.
  */
 export function useBodyScrollLock(locked: boolean) {
+  const lenis = useLenis();
+
   useEffect(() => {
     if (!locked) {
       return;
     }
+
+    // Pause Lenis while locked: its rAF would otherwise keep writing scrollTop
+    // and fight the fixed <body>. Resumed in cleanup, after the native scroll
+    // position is restored, so Lenis re-syncs to it. No-op when Lenis is off.
+    lenis?.stop();
 
     // Capture the scroll position now and restore it on unlock. Applying the
     // lock in rAF avoids a layout read during commit — but the returned id is
@@ -38,7 +46,11 @@ export function useBodyScrollLock(locked: boolean) {
       body.style.overflow = "";
       html.style.overflow = "";
 
-      window.scrollTo(0, scrollY);
+      // Restore instantly and explicitly — a bare scrollTo would inherit the
+      // page's `scroll-behavior` and could animate, which would desync Lenis on
+      // the start() below (it reads the live scroll position synchronously).
+      window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+      lenis?.start();
     };
-  }, [locked]);
+  }, [locked, lenis]);
 }
