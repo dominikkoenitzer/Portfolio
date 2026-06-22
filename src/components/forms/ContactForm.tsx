@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -151,7 +152,7 @@ export function ContactForm() {
             className="mb-6 h-10 w-10 text-primary"
             strokeWidth={1.5}
           />
-          <h3 className="mb-3 font-semibold text-2xl tracking-tight">
+          <h3 className="mb-3 font-semibold text-2xl">
             {t.successTitle}
           </h3>
           <p className="max-w-sm text-muted-foreground text-sm leading-relaxed">
@@ -229,10 +230,11 @@ export function ContactForm() {
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <button
-              className="group flex w-full items-center justify-center gap-3 rounded-lg bg-primary px-6 py-3.5 font-medium text-primary-foreground text-sm shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_28px_hsl(var(--primary)/0.38)] disabled:opacity-60"
+            <Button
+              className="group w-full gap-3 rounded-lg px-6 py-3.5"
               disabled={isSubmitting}
               type="submit"
+              variant="cta"
             >
               <span className="truncate">
                 {isSubmitting ? t.sending : t.send}
@@ -242,7 +244,7 @@ export function ContactForm() {
               ) : (
                 <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
               )}
-            </button>
+            </Button>
           </motion.div>
         </motion.form>
       )}

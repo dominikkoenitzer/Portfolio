@@ -226,7 +226,8 @@ export function HeroSection() {
             <Magnetic>
               <Button
                 asChild
-                className="group h-10 rounded-lg px-6 text-sm font-medium shadow-[0_2px_16px_hsl(var(--primary)/0.25)] transition-shadow duration-200 hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]"
+                className="group h-10 rounded-lg px-6 text-sm font-medium"
+                variant="cta"
               >
                 <Link className="flex items-center gap-1.5" to="/contact">
                   {t.hero.hireMe}

@@ -125,7 +125,7 @@ export function GitHubContributions() {
   if (isLoading) {
     return (
       <motion.div
-        className="glass-card rounded-2xl border border-border/20 p-6 shadow-sm backdrop-blur-sm sm:p-8"
+        className="glass-card rounded-2xl p-6 sm:p-8"
         {...fadeInUp}
       >
         {/* Reserve ~the loaded height so the calendar/commits popping in after
@@ -140,7 +140,7 @@ export function GitHubContributions() {
   if (error) {
     return (
       <motion.div
-        className="glass-card rounded-2xl border border-border/20 p-6 shadow-sm backdrop-blur-sm sm:p-8"
+        className="glass-card rounded-2xl p-6 sm:p-8"
         {...fadeInUp}
       >
         <div className="flex items-center gap-3 text-destructive">
@@ -153,7 +153,7 @@ export function GitHubContributions() {
 
   return (
     <motion.div
-      className="glass-card w-full rounded-2xl border border-border/20 p-3 shadow-sm backdrop-blur-sm sm:p-4 md:p-6"
+      className="glass-card w-full rounded-2xl p-3 sm:p-4 md:p-6"
       {...fadeInUp}
     >
       <div className="mb-3 sm:mb-4">
