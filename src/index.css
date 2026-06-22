@@ -252,7 +252,9 @@
     font-family:
       "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
       "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
-    font-weight: 600;
+    /* Single source of truth for the default heading weight (the duplicate
+       @layer components rule that used to set font-bold has been removed). */
+    font-weight: 700;
     /* Defensive wrapping for long German compounds (Zusammenarbeit,
        Datenschutzerklärung, Webentwicklung). hyphens: auto relies on the
        html[lang] attribute that LanguageProvider keeps in sync. */
@@ -309,8 +311,8 @@
     height: 5px;
     background: linear-gradient(
       to right,
-      rgba(var(--primary-rgb), 0.2),
-      rgba(var(--primary-rgb), 0.05)
+      hsl(var(--primary) / 0.2),
+      hsl(var(--primary) / 0.05)
     );
     border-radius: 4px;
     z-index: -1;
@@ -326,9 +328,9 @@
     inset: -1px;
     background: linear-gradient(
       45deg,
-      rgba(var(--primary-rgb), 0.3),
+      hsl(var(--primary) / 0.3),
       transparent,
-      rgba(var(--primary-rgb), 0.3)
+      hsl(var(--primary) / 0.3)
     );
     border-radius: inherit;
     z-index: -1;
@@ -387,18 +389,6 @@
     background-color: hsl(var(--background));
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-bold;
-    font-family:
-      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
-  }
-
   /* Enhanced card styles */
   .glass-card {
     @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-all duration-300;
@@ -407,6 +397,17 @@
   /* Section styles with improved responsive padding */
   .section-padding {
     @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-7xl mx-auto;
+  }
+
+  /* Narrower reading column for long-form/legal pages (Privacy, etc.) — shares
+     the section-padding rhythm/gutters but caps the measure for readability. */
+  .reading-padding {
+    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto;
+  }
+
+  /* Mono uppercase micro-label (the "eyebrow" above section titles). */
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40;
   }
 
   /* Text styles */
@@ -580,12 +581,12 @@
     background-image:
       linear-gradient(
         to right,
-        rgba(var(--foreground) / 0.05) 1px,
+        hsl(var(--foreground) / 0.05) 1px,
         transparent 1px
       ),
       linear-gradient(
         to bottom,
-        rgba(var(--foreground) / 0.05) 1px,
+        hsl(var(--foreground) / 0.05) 1px,
         transparent 1px
       );
   }

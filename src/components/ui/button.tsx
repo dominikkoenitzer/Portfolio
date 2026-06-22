@@ -5,7 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm ring-offset-background transition-[color,background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -18,6 +18,12 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Primary call-to-action: filled with the canonical shadow-glow hover
+        // used site-wide (Hero, Services, ContactForm, ProjectDetails) instead
+        // of each surface hand-rolling its own glow magnitude.
+        cta: "bg-primary text-primary-foreground shadow-[0_2px_16px_hsl(var(--primary)/0.25)] hover:shadow-[0_4px_24px_hsl(var(--primary)/0.38)]",
+        // Soft, primary-tinted secondary action (e.g. in-card "Live" links).
+        soft: "bg-primary/10 text-primary hover:bg-primary/15",
       },
       size: {
         default: "h-10 px-4 py-2",
