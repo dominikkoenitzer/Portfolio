@@ -282,7 +282,7 @@ export function SkillsSection() {
       <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {skillCategories.map((category, catIndex) => (
           <motion.div
-            className="glass-card h-full rounded-xl p-5 sm:p-6"
+            className="glass-card h-full rounded-2xl p-5 sm:p-6"
             initial={{ opacity: 0, y: 20 }}
             key={category.key}
             transition={{
@@ -297,7 +297,7 @@ export function SkillsSection() {
               <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12">
                 {category.icon}
               </div>
-              <h3 className="font-heading font-semibold text-lg sm:text-xl">
+              <h3 className="font-semibold text-lg sm:text-xl">
                 {t.categories[category.key]}
               </h3>
             </div>
@@ -334,7 +334,7 @@ export function SkillsSection() {
 
         {/* Languages category — skill name itself is translated */}
         <motion.div
-          className="glass-card h-full rounded-xl p-5 sm:p-6"
+          className="glass-card h-full rounded-2xl p-5 sm:p-6"
           initial={{ opacity: 0, y: 20 }}
           transition={{
             duration: 0.6,
@@ -348,7 +348,7 @@ export function SkillsSection() {
             <div className="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary sm:h-12 sm:w-12">
               {languagesIcon}
             </div>
-            <h3 className="font-heading font-semibold text-lg sm:text-xl">
+            <h3 className="font-semibold text-lg sm:text-xl">
               {t.categories.languages}
             </h3>
           </div>
