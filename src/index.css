@@ -162,6 +162,30 @@
     scrollbar-color: hsl(var(--scrollbar-thumb)) transparent;
   }
 
+  /* Lenis smooth scroll (see components/layout/SmoothScroll.tsx). Lenis toggles
+     these classes on <html>; opt an inner scroll container out of Lenis with
+     `data-lenis-prevent`. The `scroll-behavior: auto` override is keyed on the
+     persistent base `.lenis` class (NOT `.lenis-smooth`, which Lenis only adds
+     mid-scroll) so the native `scroll-behavior: smooth` above can't turn an
+     idle/stopped programmatic scroll — e.g. the mobile-drawer position restore
+     in use-body-scroll-lock — into an unwanted animation that desyncs Lenis. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  html.lenis {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
   /* WebKit / Blink scrollbar */
   ::-webkit-scrollbar {
     width: 0.375rem;

@@ -110,6 +110,7 @@ export default defineConfig(({ mode }) => {
             // Vendor chunks
             "react-vendor": ["react", "react-dom", "react-router-dom"],
             "framer-motion": ["framer-motion"],
+            lenis: ["lenis", "lenis/react"],
             "ui-vendor": [
               "@radix-ui/react-popover",
               "@radix-ui/react-slot",
