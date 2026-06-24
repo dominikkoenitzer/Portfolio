@@ -140,6 +140,11 @@ export const zh = {
     openLive: "打开 {name} 在线站点",
     openDownload: "下载 {name}",
     viewDetails: "查看 {name} 的详情",
+    wipEyebrow: "施工中",
+    wipTitle: "新项目即将上线",
+    wipBody:
+      "我正在从头重做这个板块。新的项目正在打磨中，很快就会出现在这里——请稍后再来看看。",
+    wipCta: "联系我",
   },
   projectDetails: {
     home: "首页",
@@ -363,9 +368,9 @@ export const zh = {
     projects: {
       title: "软件工程项目",
       description:
-        "探索 Dominik Könitzer 的软件工程项目，如 Zephyr 与 Spectrum。瑞士 React 与 TypeScript 工程，附部署与源码。",
+        "探索 Dominik Könitzer 的软件工程项目。瑞士 React 与 TypeScript 工程，附部署与源码。",
       keywords:
-        "软件工程师作品集, 高影响力网页开发项目, Zephyr 项目, Spectrum 项目, Entropy 项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
+        "软件工程师作品集, 高影响力网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
     },
     services: {
       title: "网页开发与软件服务",

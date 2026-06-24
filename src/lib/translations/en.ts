@@ -144,6 +144,11 @@ export const en = {
     openLive: "Open {name} live site",
     openDownload: "Download {name}",
     viewDetails: "View details about {name}",
+    wipEyebrow: "Work in progress",
+    wipTitle: "New projects on the way",
+    wipBody:
+      "I'm reworking this section from the ground up. Fresh projects are being polished and will land here soon — check back shortly.",
+    wipCta: "Get in touch",
   },
   projectDetails: {
     home: "Home",
@@ -423,9 +428,9 @@ export const en = {
     projects: {
       title: "Software Engineering Projects",
       description:
-        "Software engineering projects by Dominik Könitzer, including Zephyr, Spectrum, and Entropy. Explore live React and TypeScript builds with source code.",
+        "Software engineering projects by Dominik Könitzer. Explore live React and TypeScript builds with source code.",
       keywords:
-        "software engineer portfolio, impactful web development projects, Zephyr project, Spectrum project, Entropy project, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer",
+        "software engineer portfolio, impactful web development projects, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer",
     },
     services: {
       title: "Web Development & Software Services",

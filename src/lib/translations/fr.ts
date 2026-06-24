@@ -148,6 +148,11 @@ export const fr = {
     openLive: "Ouvrir le site live de {name}",
     openDownload: "Télécharger {name}",
     viewDetails: "Voir les détails de {name}",
+    wipEyebrow: "En cours",
+    wipTitle: "De nouveaux projets arrivent",
+    wipBody:
+      "Je retravaille cette section de fond en comble. De nouveaux projets sont en cours de finition et arriveront bientôt ici — revenez d'ici peu.",
+    wipCta: "Me contacter",
   },
   projectDetails: {
     home: "Accueil",
@@ -426,9 +431,9 @@ export const fr = {
     projects: {
       title: "Projets d'ingénierie logicielle",
       description:
-        "Projets logiciels de Dominik Könitzer en React et TypeScript : Zephyr, Spectrum et Entropy. Déploiements live et code source d'un ingénieur suisse.",
+        "Projets logiciels de Dominik Könitzer en React et TypeScript. Déploiements live et code source d'un ingénieur suisse.",
       keywords:
-        "portfolio ingénieur logiciel, projets de développement web à fort impact, projet Zephyr, projet Spectrum, projet Entropy, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
+        "portfolio ingénieur logiciel, projets de développement web à fort impact, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
     },
     services: {
       title: "Développement web & logiciel",
