@@ -50,54 +50,6 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Project: Zephyr -->
-  <url>
-    <loc>https://dominikkoenitzer.ch/projects/zephyr</loc>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://dominikkoenitzer.ch/projects/zephyr.png</image:loc>
-      <image:title>Zephyr — software project by Dominik Könitzer</image:title>
-    </image:image>
-  </url>
-
-  <!-- Project: Flow -->
-  <url>
-    <loc>https://dominikkoenitzer.ch/projects/flow</loc>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://dominikkoenitzer.ch/projects/flow.png</image:loc>
-      <image:title>Flow — software project by Dominik Könitzer</image:title>
-    </image:image>
-  </url>
-
-  <!-- Project: Spectrum -->
-  <url>
-    <loc>https://dominikkoenitzer.ch/projects/spectrum</loc>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://dominikkoenitzer.ch/projects/spectrum.png</image:loc>
-      <image:title>Spectrum — software project by Dominik Könitzer</image:title>
-    </image:image>
-  </url>
-
-  <!-- Project: Entropy -->
-  <url>
-    <loc>https://dominikkoenitzer.ch/projects/entropy</loc>
-    <lastmod>2026-06-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://dominikkoenitzer.ch/projects/entropy.png</image:loc>
-      <image:title>Entropy — software project by Dominik Könitzer</image:title>
-    </image:image>
-  </url>
-
   <!-- Contact -->
   <url>
     <loc>https://dominikkoenitzer.ch/contact</loc>
