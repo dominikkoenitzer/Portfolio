@@ -65,7 +65,7 @@ export type ProjectBase = {
   downloadUrl?: string;
   priority: number;
   toneClass: string;
-  /** Optional screenshot path under /public (e.g. /projects/zephyr.png). */
+  /** Optional screenshot path under /public (e.g. /projects/<slug>.png). */
   image?: string;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
