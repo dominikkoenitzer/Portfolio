@@ -2,7 +2,7 @@
  * One-off generator for per-page Open Graph / social share images.
  *
  * Every route shared the single static /og-image.png, so links to /about,
- * /projects/flow, etc. looked identical when shared (Slack/Discord/X) or shown
+ * /projects, etc. looked identical when shared (Slack/Discord/X) or shown
  * in AI answer cards. This renders a distinct 1200x630 card per section + per
  * project in the same dark-brand style as og-image.png, served statically and
  * wired through the <SEO image=...> prop.
@@ -47,10 +47,6 @@ const CARDS: { out: string; title: string; subtitle: string }[] = [
   { out: "public/og/services.png", title: "Services", subtitle: "Web development & software engineering" },
   { out: "public/og/contact.png", title: "Contact", subtitle: "Let's build something — Zürich or remote" },
   { out: "public/og/donate.png", title: "Support My Work", subtitle: "Fund new builds, hosting & development" },
-  { out: "public/og/projects/zephyr.png", title: "Zephyr", subtitle: "Focus-first productivity — tasks, planning & progress" },
-  { out: "public/og/projects/flow.png", title: "Flow", subtitle: "Ultra-low-latency input automation for Windows, in C++" },
-  { out: "public/og/projects/spectrum.png", title: "Spectrum", subtitle: "A fast, accessible color workbench with contrast checks" },
-  { out: "public/og/projects/entropy.png", title: "Entropy", subtitle: "Strong passwords from secure randomness" },
 ];
 
 for (const c of CARDS) {

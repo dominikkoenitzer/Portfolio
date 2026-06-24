@@ -58,33 +58,7 @@ Soft / professional skills
 
 ## 3. Projects (case studies)
 
-### Zephyr — performance-first productivity
-- Live: https://zephyr.punds.ch
-- Repo: https://github.com/dominikkoenitzer/Zephyr
-- Year: 2024
-- Tags: Frontend, Performance, UI/UX
-- Summary: A productivity product that stays fast and readable as feature depth grows. Modular component boundaries, token-driven styling, progressive disclosure for advanced actions.
-
-### Flow — ultra-low-latency Windows automation
-- Download: https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe
-- Repo: https://github.com/dominikkoenitzer/Flow
-- Year: 2026
-- Tags: Automation, C++, Windows
-- Summary: A native Windows automation tool written in C++ for recording and replaying user input with minimal delay — ultra-low-latency macro recording, frame-accurate playback, and rapid auto-click execution.
-
-### Spectrum — design-system color tooling
-- Live: https://spectrum.punds.ch
-- Repo: https://github.com/dominikkoenitzer/Spectrum
-- Year: 2026
-- Tags: Scalable, Design System, Web App
-- Summary: Unifies color exploration, contrast checks, gradients, and lookup into a coherent tool. Emphasizes accessibility-aware defaults and composable UI primitives.
-
-### Entropy — secure credential tooling
-- Live: https://entropy.punds.ch
-- Repo: https://github.com/dominikkoenitzer/Entropy
-- Year: 2026
-- Tags: Experimental, Responsive, Engineering
-- Summary: Configurable password generation backed by cryptographic randomness, transparent strength scoring, and accessible custom-rule controls.
+The project catalog is currently being reworked and is temporarily unavailable. See https://dominikkoenitzer.ch/projects for the latest set.
 
 ---
 
