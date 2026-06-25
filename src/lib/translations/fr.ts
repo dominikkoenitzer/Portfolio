@@ -1,6 +1,7 @@
 export const fr = {
   nav: {
     about: "À propos",
+    timeline: "Parcours",
     skills: "Compétences",
     projects: "Projets",
     services: "Services",
@@ -420,6 +421,13 @@ export const fr = {
         "Dominik Könitzer, ingénieur logiciel à Zürich, Suisse, étudiant à la WISS et spécialisé en développement web moderne avec React et TypeScript.",
       keywords:
         "à propos de Dominik Könitzer, biographie ingénieur logiciel, étudiant WISS, étudiant ingénierie logicielle Suisse, parcours développeur web, formation ingénieur logiciel",
+    },
+    timeline: {
+      title: "Parcours & formation",
+      description:
+        "Le parcours de Dominik Könitzer – stage en ingénierie logicielle chez MPAI, développement web en freelance et formation à la WISS en Suisse.",
+      keywords:
+        "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage MPAI, WISS, développeur web freelance, ingénieur logiciel Suisse",
     },
     skills: {
       title: "Compétences & technologies",

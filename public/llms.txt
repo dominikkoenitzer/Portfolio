@@ -31,6 +31,7 @@ Dominik is currently **open to work** — software engineering roles, internship
 
 - [Home](https://dominikkoenitzer.ch/): Overview, hero, recent highlights
 - [About](https://dominikkoenitzer.ch/about): Biography, education, motivation
+- [Timeline](https://dominikkoenitzer.ch/timeline): Career and education timeline — work experience and academic background
 - [Skills](https://dominikkoenitzer.ch/skills): Detailed technical skill matrix with proficiency levels
 - [Projects](https://dominikkoenitzer.ch/projects): Featured production-grade software projects
 - [Services](https://dominikkoenitzer.ch/services): Professional software engineering services with pricing in CHF

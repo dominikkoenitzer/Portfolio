@@ -1,6 +1,7 @@
 export const en = {
   nav: {
     about: "About",
+    timeline: "Timeline",
     skills: "Skills",
     projects: "Projects",
     services: "Services",
@@ -417,6 +418,13 @@ export const en = {
         "Dominik Könitzer is a software engineer in Zürich, Switzerland, studying at WISS and specializing in modern React and TypeScript web development.",
       keywords:
         "about Dominik Könitzer, software engineer biography, WISS student, software engineering student Switzerland, web developer background, software engineer education",
+    },
+    timeline: {
+      title: "Career & Education Timeline",
+      description:
+        "The career and education timeline of Dominik Könitzer — software engineering internship at MPAI, freelance web development, and studies at WISS in Switzerland.",
+      keywords:
+        "Dominik Könitzer timeline, career timeline, work experience, education, MPAI internship, WISS, freelance web developer, software engineer Switzerland",
     },
     skills: {
       title: "Skills & Technologies",
