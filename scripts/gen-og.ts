@@ -49,7 +49,22 @@ const CARDS: { out: string; title: string; subtitle: string }[] = [
   { out: "public/og/donate.png", title: "Support My Work", subtitle: "Fund new builds, hosting & development" },
 ];
 
-for (const c of CARDS) {
+// Per-project share cards (wired through ProjectDetails' <SEO image=...>, which
+// points at /og/projects/<slug>.png). Subtitles are short, plain summaries.
+const PROJECT_CARDS: { out: string; title: string; subtitle: string }[] = [
+  { out: "public/og/projects/time.png", title: "Time", subtitle: "NTP-synced clock, accurate to 1/100 of a second" },
+  { out: "public/og/projects/spectrum.png", title: "Spectrum", subtitle: "Color picker, palettes & WCAG contrast tools" },
+  { out: "public/og/projects/entropy.png", title: "Entropy", subtitle: "Local-only password generator & strength analyzer" },
+  { out: "public/og/projects/zephyr.png", title: "Zephyr", subtitle: "Local-first focus & productivity app" },
+  { out: "public/og/projects/senbon.png", title: "Senbon", subtitle: "A digital garden — one thousand entries" },
+  { out: "public/og/projects/punds.png", title: "Punds", subtitle: "Everything I build, in one place" },
+  { out: "public/og/projects/flow.png", title: "Flow", subtitle: "Ultra-low-latency Windows automation (C++)" },
+  { out: "public/og/projects/jester.png", title: "Jester", subtitle: "A lightweight Windows notepad (C# · WPF)" },
+  { out: "public/og/projects/remnants.png", title: "Remnants", subtitle: "A clean, AI-free fork of VS Code" },
+  { out: "public/og/projects/portfolio.png", title: "Portfolio", subtitle: "This site — React, TypeScript, multilingual" },
+];
+
+for (const c of [...CARDS, ...PROJECT_CARDS]) {
   mkdirSync(dirname(c.out), { recursive: true });
   const resvg = new Resvg(card(c.title, c.subtitle), {
     fitTo: { mode: "width", value: 1200 },
@@ -58,4 +73,4 @@ for (const c of CARDS) {
   writeFileSync(c.out, resvg.render().asPng());
   console.log("✓", c.out);
 }
-console.log(`Generated ${CARDS.length} OG cards.`);
+console.log(`Generated ${CARDS.length + PROJECT_CARDS.length} OG cards.`);

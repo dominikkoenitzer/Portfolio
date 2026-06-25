@@ -50,6 +50,126 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Project: Zephyr -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/zephyr</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/zephyr.jpg</image:loc>
+      <image:title>Zephyr — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Portfolio -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/portfolio</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/portfolio.jpg</image:loc>
+      <image:title>Portfolio — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Entropy -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/entropy</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/entropy.jpg</image:loc>
+      <image:title>Entropy — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Spectrum -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/spectrum</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/spectrum.jpg</image:loc>
+      <image:title>Spectrum — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Remnants -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/remnants</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/remnants.png</image:loc>
+      <image:title>Remnants — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Time -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/time</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/time.jpg</image:loc>
+      <image:title>Time — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Jester -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/jester</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/jester.png</image:loc>
+      <image:title>Jester — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Flow -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/flow</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/flow.png</image:loc>
+      <image:title>Flow — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Punds -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/punds</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/punds.jpg</image:loc>
+      <image:title>Punds — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Senbon -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/senbon</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/senbon.jpg</image:loc>
+      <image:title>Senbon — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
   <!-- Contact -->
   <url>
     <loc>https://dominikkoenitzer.ch/contact</loc>
