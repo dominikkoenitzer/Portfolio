@@ -31,6 +31,7 @@ Dominik is currently **open to work** — software engineering roles, internship
 
 - [Home](https://dk.punds.ch/): Overview, hero, recent highlights
 - [About](https://dk.punds.ch/about): Biography, education, motivation
+- [Timeline](https://dk.punds.ch/timeline): Career and education timeline — work experience and academic background
 - [Skills](https://dk.punds.ch/skills): Detailed technical skill matrix with proficiency levels
 - [Projects](https://dk.punds.ch/projects): Featured production-grade software projects
 - [Services](https://dk.punds.ch/services): Professional software engineering services with pricing in CHF
