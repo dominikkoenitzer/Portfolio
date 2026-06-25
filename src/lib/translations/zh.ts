@@ -66,14 +66,14 @@ export const zh = {
     },
   },
   skills: {
-    heading: "技术技能",
+    heading: "技能",
     subheading: "我的专长覆盖多种技术，聚焦于构建高效且优雅的解决方案。",
     categories: {
-      frontend: "前端开发",
+      frontend: "前端",
       professional: "职业技能",
-      backend: "后端开发",
-      devops: "操作系统与 DevOps",
-      databases: "数据库管理与版本控制",
+      backend: "后端",
+      devops: "基础设施",
+      databases: "数据与工具",
       languages: "语言",
     },
     descriptions: {

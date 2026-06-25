@@ -67,15 +67,15 @@ export const en = {
     },
   },
   skills: {
-    heading: "Technical Skills",
+    heading: "Skills",
     subheading:
       "My expertise spans across various technologies with a focus on creating efficient and elegant solutions.",
     categories: {
-      frontend: "Frontend Development",
-      professional: "Professional Skills",
-      backend: "Backend Development",
-      devops: "Operating Systems & DevOps",
-      databases: "Database Management & Version Control",
+      frontend: "Frontend",
+      professional: "Professional",
+      backend: "Backend",
+      devops: "Infrastructure",
+      databases: "Data & Tooling",
       languages: "Languages",
     },
     descriptions: {
