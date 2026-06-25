@@ -1,18 +1,25 @@
-import { motion } from "framer-motion";
+import {
+  MotionConfig,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import {
   ArrowUpRight,
   Briefcase,
   CalendarDays,
   Download,
+  FileText,
   GraduationCap,
   MapPin,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { useLanguage } from "@/lib/language-provider";
 import { SectionHeading } from "../layout/SectionHeading";
-import { Button } from "../ui/button";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const MAX_TAGS = 7;
@@ -68,11 +75,15 @@ function formatDuration(
   return parts.join(" ");
 }
 
+// Shared hover transition for the logo tile (also reacts to the card's hover).
+const LOGO_HOVER =
+  "transition-all duration-300 group-hover/card:-translate-y-0.5 group-hover/card:scale-[1.04] group-hover/card:border-primary/40 group-hover/card:shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.35)]";
+
 function LogoTile({ entry }: { entry: TimelineEntry }) {
   if (entry.logo) {
     return (
       <div
-        className={`h-12 w-12 flex-none overflow-hidden rounded-xl border border-border/50 shadow-sm sm:h-14 sm:w-14 ${
+        className={`h-12 w-12 overflow-hidden rounded-xl border border-border/50 shadow-sm sm:h-14 sm:w-14 ${LOGO_HOVER} ${
           entry.logoFill ? "" : "flex items-center justify-center bg-white p-1.5"
         }`}
       >
@@ -89,7 +100,9 @@ function LogoTile({ entry }: { entry: TimelineEntry }) {
   }
 
   return (
-    <div className="flex h-12 w-12 flex-none items-center justify-center rounded-xl border border-border/50 bg-primary/10 font-bold text-primary text-sm tracking-tight sm:h-14 sm:w-14 sm:text-base">
+    <div
+      className={`flex h-12 w-12 items-center justify-center rounded-xl border border-border/50 bg-primary/10 font-bold text-primary text-sm tracking-tight sm:h-14 sm:w-14 sm:text-base ${LOGO_HOVER}`}
+    >
       {entry.monogram}
     </div>
   );
@@ -104,23 +117,45 @@ function TimelineCard({
   index: number;
   language: Language;
 }) {
+  const ref = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  // Scroll-linked parallax: the logo tile drifts vertically as the card moves
+  // through the viewport, so it floats a touch behind the text. Spring-smoothed.
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [14, -14]), {
+    stiffness: 120,
+    damping: 30,
+    mass: 0.4,
+  });
+
   const duration = formatDuration(entry.start, entry.end, language);
   const visibleTags = entry.tags.slice(0, MAX_TAGS);
   const overflow = entry.tags.length - visibleTags.length;
 
   return (
     <motion.article
-      className="flex gap-4 sm:gap-5"
+      className="group/card flex gap-4 sm:gap-5"
       initial={{ opacity: 0, y: 18 }}
+      ref={ref}
       transition={{
         duration: 0.5,
         delay: Math.min(index * 0.06, 0.3),
         ease: EASE,
       }}
       viewport={{ once: true, margin: "-60px" }}
+      whileHover={{ y: -4, transition: { duration: 0.25, ease: EASE } }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <LogoTile entry={entry} />
+      <motion.div
+        className="flex-none"
+        style={reduceMotion ? undefined : { y: parallaxY }}
+      >
+        <LogoTile entry={entry} />
+      </motion.div>
 
       <div className="min-w-0 flex-1">
         <h3 className="font-bold text-lg leading-tight sm:text-xl">
@@ -128,7 +163,7 @@ function TimelineCard({
         </h3>
 
         <a
-          className="group mt-1 inline-flex items-center gap-1 font-medium text-foreground/90 text-sm transition-colors hover:text-primary"
+          className="group mt-1 inline-flex items-center gap-1 rounded-sm font-medium text-foreground/90 text-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           href={entry.organizationUrl}
           rel="noopener noreferrer"
           target="_blank"
@@ -136,11 +171,11 @@ function TimelineCard({
           {entry.organization}
           <ArrowUpRight
             aria-hidden
-            className="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-primary"
+            className="h-3.5 w-3.5 text-muted-foreground transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
           />
         </a>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs">
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs transition-colors duration-300 group-hover/card:text-foreground/70">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays aria-hidden className="h-3.5 w-3.5 opacity-80" />
             <span>{entry.period}</span>
@@ -148,6 +183,15 @@ function TimelineCard({
               ·
             </span>
             <span>{duration}</span>
+            {!entry.end && (
+              <span
+                aria-hidden
+                className="relative ml-0.5 inline-flex h-1.5 w-1.5"
+              >
+                <span className="absolute inline-flex h-full w-full animate-status-ping rounded-full bg-primary/60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+            )}
           </span>
           <span className="inline-flex items-center gap-1.5 sm:ml-2">
             <MapPin aria-hidden className="h-3.5 w-3.5 opacity-80" />
@@ -192,7 +236,7 @@ function TimelineCard({
           <div className="mt-4 flex flex-wrap gap-2">
             {visibleTags.map((tag) => (
               <span
-                className="rounded-full border border-border/40 bg-secondary/40 px-3 py-1 text-foreground/80 text-xs"
+                className="rounded-full border border-border/40 bg-secondary/40 px-3 py-1 text-foreground/80 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
                 key={tag}
               >
                 {tag}
@@ -224,13 +268,13 @@ function TimelineGroup({
   return (
     <div>
       <motion.div
-        className="mb-8 flex items-center gap-3"
+        className="group/head mb-8 flex items-center gap-3"
         initial={{ opacity: 0, y: 16 }}
         transition={{ duration: 0.5, ease: EASE }}
         viewport={{ once: true, margin: "-60px" }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover/head:scale-110 group-hover/head:bg-primary/15">
           {icon}
         </span>
         <h2 className="font-bold text-xl sm:text-2xl">{title}</h2>
@@ -250,56 +294,87 @@ function TimelineGroup({
   );
 }
 
+function CvDownload({
+  href,
+  title,
+  subtitle,
+}: {
+  href: string;
+  title: string;
+  subtitle: string;
+}) {
+  return (
+    <a
+      className="group/cv flex items-center gap-3 rounded-xl border border-border/50 bg-secondary/30 px-4 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.06] hover:shadow-[0_12px_32px_-12px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover/cv:bg-primary/15">
+        <FileText aria-hidden className="h-4 w-4" />
+      </span>
+      <span className="min-w-0 flex-1 text-left">
+        <span className="block font-medium text-foreground text-sm leading-tight">
+          {title}
+        </span>
+        <span className="block text-muted-foreground text-xs">{subtitle}</span>
+      </span>
+      <Download
+        aria-hidden
+        className="h-4 w-4 flex-none text-muted-foreground transition-all duration-300 group-hover/cv:translate-y-0.5 group-hover/cv:text-primary"
+      />
+    </a>
+  );
+}
+
 export function TimelineSection() {
   const { language } = useLanguage();
   const t = getTimeline(language);
 
   return (
-    <section className="section-padding" id="timeline">
-      <SectionHeading
-        className="mb-8"
-        eyebrow={t.eyebrow}
-        subtitle={t.subheading}
-        title={t.heading}
-      />
+    <MotionConfig reducedMotion="user">
+      <section className="section-padding" id="timeline">
+        <SectionHeading
+          className="mb-8"
+          eyebrow={t.eyebrow}
+          subtitle={t.subheading}
+          title={t.heading}
+        />
 
-      <div className="mb-14 flex flex-wrap items-center justify-center gap-3 sm:mb-16">
-        <Button asChild variant={language === "de" ? "outline" : "default"}>
-          <a
+        <motion.div
+          className="mx-auto mb-14 grid max-w-xl grid-cols-1 gap-3 sm:mb-16 sm:grid-cols-2"
+          initial={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.5, ease: EASE }}
+          viewport={{ once: true, margin: "-60px" }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <CvDownload
             href="/cv/curriculum-vitae.html"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <Download aria-hidden className="mr-2 h-4 w-4" />
-            Curriculum Vitae (EN)
-          </a>
-        </Button>
-        <Button asChild variant={language === "de" ? "default" : "outline"}>
-          <a
+            subtitle="English"
+            title="Curriculum Vitae"
+          />
+          <CvDownload
             href="/cv/lebenslauf.html"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <Download aria-hidden className="mr-2 h-4 w-4" />
-            Lebenslauf (DE)
-          </a>
-        </Button>
-      </div>
+            subtitle="German"
+            title="Lebenslauf"
+          />
+        </motion.div>
 
-      <div className="mx-auto max-w-3xl space-y-14 sm:space-y-16">
-        <TimelineGroup
-          entries={t.experience}
-          icon={<Briefcase className="h-5 w-5" />}
-          language={language}
-          title={t.experienceTitle}
-        />
-        <TimelineGroup
-          entries={t.education}
-          icon={<GraduationCap className="h-5 w-5" />}
-          language={language}
-          title={t.educationTitle}
-        />
-      </div>
-    </section>
+        <div className="mx-auto max-w-3xl space-y-14 sm:space-y-16">
+          <TimelineGroup
+            entries={t.experience}
+            icon={<Briefcase className="h-5 w-5" />}
+            language={language}
+            title={t.experienceTitle}
+          />
+          <TimelineGroup
+            entries={t.education}
+            icon={<GraduationCap className="h-5 w-5" />}
+            language={language}
+            title={t.educationTitle}
+          />
+        </div>
+      </section>
+    </MotionConfig>
   );
 }
