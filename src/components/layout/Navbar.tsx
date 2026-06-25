@@ -13,6 +13,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
   "/about": "about",
+  "/timeline": "timeline",
   "/skills": "skills",
   "/projects": "projects",
   "/services": "services",

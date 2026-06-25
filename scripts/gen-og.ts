@@ -42,6 +42,7 @@ const card = (title: string, subtitle: string) =>
 
 const CARDS: { out: string; title: string; subtitle: string }[] = [
   { out: "public/og/about.png", title: "About", subtitle: "Software engineer in Zürich, Switzerland" },
+  { out: "public/og/timeline.png", title: "Timeline", subtitle: "Career & education — experience and studies" },
   { out: "public/og/skills.png", title: "Skills & Technologies", subtitle: "React · TypeScript · Node.js · full-stack" },
   { out: "public/og/projects.png", title: "Projects", subtitle: "Impact-focused software & web builds" },
   { out: "public/og/services.png", title: "Services", subtitle: "Web development & software engineering" },
