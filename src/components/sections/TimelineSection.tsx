@@ -3,6 +3,7 @@ import {
   ArrowUpRight,
   Briefcase,
   CalendarDays,
+  Download,
   GraduationCap,
   MapPin,
 } from "lucide-react";
@@ -11,6 +12,7 @@ import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { useLanguage } from "@/lib/language-provider";
 import { SectionHeading } from "../layout/SectionHeading";
+import { Button } from "../ui/button";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const MAX_TAGS = 7;
@@ -255,10 +257,34 @@ export function TimelineSection() {
   return (
     <section className="section-padding" id="timeline">
       <SectionHeading
+        className="mb-8"
         eyebrow={t.eyebrow}
         subtitle={t.subheading}
         title={t.heading}
       />
+
+      <div className="mb-14 flex flex-wrap items-center justify-center gap-3 sm:mb-16">
+        <Button asChild variant={language === "de" ? "outline" : "default"}>
+          <a
+            href="/cv/curriculum-vitae.html"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Download aria-hidden className="mr-2 h-4 w-4" />
+            Curriculum Vitae (EN)
+          </a>
+        </Button>
+        <Button asChild variant={language === "de" ? "default" : "outline"}>
+          <a
+            href="/cv/lebenslauf.html"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Download aria-hidden className="mr-2 h-4 w-4" />
+            Lebenslauf (DE)
+          </a>
+        </Button>
+      </div>
 
       <div className="mx-auto max-w-3xl space-y-14 sm:space-y-16">
         <TimelineGroup
