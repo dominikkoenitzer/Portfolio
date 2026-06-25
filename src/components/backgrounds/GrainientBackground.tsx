@@ -6,7 +6,7 @@ import Grainient from "./Grainient";
  * Full-viewport grainy-gradient background. A sibling variant to the water
  * caustic veil: it renders the *same* per-theme colour stops, and borrows the
  * preset's `intensity` (as opacity) and `blendMode` so it sits as a wash over
- * the page base — keeping text readable on the light palettes (bloom/forest)
+ * the page base — keeping text readable on the light palette (bloom)
  * instead of painting an opaque field over them.
  */
 export default function GrainientBackground() {

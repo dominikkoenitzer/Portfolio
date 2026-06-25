@@ -1,7 +1,7 @@
-import { Droplets, Film, Flower2, Sparkles, Sunset, TreePine } from "lucide-react";
+import { Droplets, Film, Flower2, Sparkles } from "lucide-react";
 import type { ElementType } from "react";
 
-export type Theme = "glass" | "bloom" | "forest" | "sunset";
+export type Theme = "glass" | "bloom";
 
 export interface ThemeConfig {
   value: Theme;
@@ -12,8 +12,6 @@ export interface ThemeConfig {
 export const THEMES: ThemeConfig[] = [
   { value: "bloom", label: "Bloom", icon: Flower2 },
   { value: "glass", label: "Glass", icon: Sparkles },
-  { value: "forest", label: "Forest", icon: TreePine },
-  { value: "sunset", label: "Sunset", icon: Sunset },
 ];
 
 export const ALL_THEME_VALUES: Theme[] = THEMES.map((t) => t.value);
@@ -85,32 +83,6 @@ export const VEIL_PRESETS: Record<Theme, VeilPreset> = {
     base: 0.22,
     minAlpha: 0.03,
     caustic: 1.0,
-  },
-  forest: {
-    colorStops: ["#2F6B43", "#7A5230", "#CDE8C4"],
-    blendMode: "multiply",
-    intensity: 0.5,
-    blend: 0.58,
-    scale: 0.88,
-    feather: 0.5,
-    alphaGamma: 1.1,
-    saturation: 1.0,
-    base: 0.24,
-    minAlpha: 0.03,
-    caustic: 0.9,
-  },
-  sunset: {
-    colorStops: ["#FF4D8D", "#FF7E5F", "#FFD27D"],
-    blendMode: "screen",
-    intensity: 0.7,
-    blend: 0.7,
-    scale: 0.9,
-    feather: 0.5,
-    alphaGamma: 1.1,
-    saturation: 1.15,
-    minAlpha: 0.0,
-    base: 0.3,
-    caustic: 0.6,
   },
 };
 

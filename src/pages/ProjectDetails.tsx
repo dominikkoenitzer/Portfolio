@@ -604,7 +604,7 @@ const ProjectDetails = () => {
 
                 {/* Impact — the focal climax tile: brand-gradient wash + a soft
                     primary glow over glass-deep. Overlays kept low-opacity so the
-                    checklist stays legible in the light themes (bloom/forest). */}
+                    checklist stays legible in the light theme (bloom). */}
                 <FeatureSection index={10} title={project.impactHeading}>
                   <SpotlightCard
                     className="glass-deep overflow-hidden rounded-3xl p-7 sm:p-9"
