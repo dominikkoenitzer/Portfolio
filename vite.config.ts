@@ -110,6 +110,9 @@ export default defineConfig(({ mode }) => {
             // Vendor chunks
             "react-vendor": ["react", "react-dom", "react-router-dom"],
             "framer-motion": ["framer-motion"],
+            // three.js + r3f isolated in their own chunk, fetched lazily with the
+            // SkillSphere — kept out of the main bundle.
+            "three-vendor": ["three", "@react-three/fiber"],
             lenis: ["lenis", "lenis/react"],
             "ui-vendor": [
               "@radix-ui/react-popover",

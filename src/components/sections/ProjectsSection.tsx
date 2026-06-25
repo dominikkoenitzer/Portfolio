@@ -92,7 +92,7 @@ export function ProjectsSection() {
                     <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.025)_50%,_transparent_80%)]" />
                     <div className="absolute inset-0 opacity-40 [background:repeating-linear-gradient(135deg,transparent,transparent_22px,hsl(var(--foreground)/0.025)_22px,hsl(var(--foreground)/0.025)_23px)]" />
 
-                    {project.image ? (
+                    {project.image && !project.imageIcon ? (
                       <>
                         <img
                           alt={`${project.title} screenshot`}
@@ -108,6 +108,17 @@ export function ProjectsSection() {
                     ) : null}
 
                     <div className="relative flex h-full min-h-[220px] flex-col items-center justify-center px-8 py-10 text-center">
+                      {project.imageIcon && project.image ? (
+                        <img
+                          alt={`${project.title} logo`}
+                          className="mb-5 h-20 w-20 object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                          src={project.image}
+                        />
+                      ) : null}
                       <h3 className="font-bold text-2xl tracking-tight sm:text-3xl">
                         {project.title}
                       </h3>
