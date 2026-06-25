@@ -30,7 +30,7 @@ import {
   StatStrip,
   TiltFigure,
 } from "@/components/effects/project-effects";
-import { TECH_LOGOS } from "@/components/effects/tech-stack";
+import { getProjectLogos } from "@/components/effects/tech-stack";
 
 /* ------------------------------------------------------------------ */
 /* Canonical motion                                                    */
@@ -414,11 +414,11 @@ const ProjectDetails = () => {
                 the strip blends into whatever theme/veil sits behind it. */}
             <div className="relative mb-12 overflow-hidden [-webkit-mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)] [mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)]">
               <LogoLoop
-                ariaLabel="My tech stack"
+                ariaLabel={`${project.title} tech stack`}
                 className="text-foreground/50"
                 gap={56}
                 logoHeight={30}
-                logos={TECH_LOGOS}
+                logos={getProjectLogos(project.slug)}
                 pauseOnHover
                 scaleOnHover
                 speed={34}
