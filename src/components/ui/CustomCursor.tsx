@@ -20,8 +20,8 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * window / the tab loses focus and reappears on re-entry.
  *
  * Theme: pure `hsl(var(--primary))`, the active theme's signature accent, so the
- * dot is distinctly colored per theme (glass blue, bloom violet, forest green,
- * sunset rose) and recolors automatically when the theme changes — the theme
+ * dot is distinctly colored per theme (glass blue, bloom violet) and recolors
+ * automatically when the theme changes — the theme
  * class lives on <html>, this portals into <body> and inherits the variable, so
  * the CSS value re-resolves on its own with no JS.
  *
