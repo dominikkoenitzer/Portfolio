@@ -1,6 +1,7 @@
 export const zh = {
   nav: {
     about: "关于",
+    timeline: "履历",
     skills: "技能",
     projects: "项目",
     services: "服务",
@@ -357,6 +358,13 @@ export const zh = {
         "认识 Dominik Könitzer，一位常驻瑞士苏黎世的软件工程师，就读于 WISS，专注现代网页开发与全栈工程。",
       keywords:
         "关于 Dominik Könitzer, 软件工程师简介, WISS 学生, 瑞士软件工程学生, 网页开发者背景, 软件工程教育",
+    },
+    timeline: {
+      title: "履历与教育",
+      description:
+        "Dominik Könitzer 的履历——在 MPAI 的软件工程实习、自由网页开发，以及在瑞士 WISS 的学业。",
+      keywords:
+        "Dominik Könitzer 履历, 简历, 工作经历, 教育, MPAI 实习, WISS, 自由网页开发者, 瑞士软件工程师",
     },
     skills: {
       title: "技能与技术",
