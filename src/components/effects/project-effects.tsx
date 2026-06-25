@@ -190,10 +190,10 @@ export function CountUp({
 export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
   if (!stats?.length) return null;
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-y-8 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center">
       {stats.map((s, i) => (
         <motion.div
-          className="rounded-2xl border border-border/40 bg-card/30 px-4 py-5 text-center backdrop-blur-sm"
+          className={`px-4 text-center sm:px-10 ${i > 0 ? "sm:border-border/40 sm:border-l" : ""}`}
           initial={{ opacity: 0, y: 18 }}
           key={s.label}
           transition={{ duration: 0.5, ease: EASE, delay: Math.min(i, 6) * 0.07 }}
@@ -201,10 +201,10 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <CountUp
-            className="block font-bold font-heading text-3xl text-primary tabular-nums sm:text-4xl"
+            className="block font-bold font-heading text-4xl text-primary tabular-nums sm:text-5xl"
             value={s.value}
           />
-          <span className="mt-1.5 block font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.16em]">
+          <span className="mt-2 block font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.18em]">
             {s.label}
           </span>
         </motion.div>
