@@ -336,7 +336,7 @@
 
   /* Mono uppercase micro-label (the "eyebrow" above section titles). */
   .eyebrow {
-    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/40;
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70;
   }
 
   /* Text styles */
@@ -774,6 +774,26 @@
   *::before,
   *::after {
     cursor: none !important;
+  }
+
+  /* Preserve the native I-beam on text-entry fields (the custom dot hides over
+     them — see CustomCursor) so the typing affordance is never lost. */
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
+      [type="checkbox"]
+    ):not([type="radio"]),
+  textarea,
+  [contenteditable="true"] {
+    cursor: text !important;
+  }
+}
+
+/* Opt out of the custom cursor for reduced-motion users: restore the native
+   cursor everywhere (CustomCursor renders nothing for them). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    cursor: auto !important;
   }
 }
 
