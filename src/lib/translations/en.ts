@@ -153,6 +153,7 @@ export const en = {
     ctaButton: "Get in Touch",
     getInTouch: "Get in touch",
     close: "Close",
+    loading: "Growing the tree…",
     items: {
       webDev: {
         title: "Web Development",
