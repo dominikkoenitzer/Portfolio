@@ -288,6 +288,10 @@ export const en = {
       sendAnother: "Send another →",
       errorTitle: "Something went wrong",
       errorBody: "Please try again or email me directly.",
+      nameRequired: "Please enter your name.",
+      emailInvalid: "Please enter a valid email address.",
+      messageRequired: "Please enter a message.",
+      emailDirectly: "email me directly",
     },
   },
   donate: {
