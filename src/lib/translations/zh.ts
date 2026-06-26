@@ -214,6 +214,9 @@ export const zh = {
     emailLabel: "邮箱",
     basedLabel: "所在地",
     basedLocation: "瑞士苏黎世",
+    wipEyebrow: "即将推出",
+    wipTitle: "联系表单正在开发中",
+    wipBody: "我正在重做联系表单。目前最快的联系方式是电子邮件，我会尽快回复你。",
   },
   donate: {
     eyebrow: "打赏",
