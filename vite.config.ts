@@ -82,78 +82,6 @@ function localGithubApi(env: Record<string, string>): Plugin {
   };
 }
 
-/**
- * Runs the real `/api/contact` serverless handler in-process for local dev and
- * preview, mirroring `localGithubApi` but reading a POST JSON body. RESEND_API_KEY
- * is read server-side from the environment and never reaches the client bundle.
- */
-function localContactApi(env: Record<string, string>): Plugin {
-  const attach = (server: ViteDevServer | PreviewServer) => {
-    if (env.RESEND_API_KEY) {
-      process.env.RESEND_API_KEY = env.RESEND_API_KEY;
-    }
-
-    server.middlewares.use(async (req, res, next) => {
-      if (!(req.url || "").startsWith("/api/contact")) {
-        next();
-        return;
-      }
-
-      try {
-        const chunks: Buffer[] = [];
-        for await (const chunk of req) {
-          chunks.push(chunk as Buffer);
-        }
-        const raw = Buffer.concat(chunks).toString("utf8");
-        let parsedBody: unknown = {};
-        try {
-          parsedBody = raw ? JSON.parse(raw) : {};
-        } catch {
-          parsedBody = {};
-        }
-
-        const handlerUrl = pathToFileURL(
-          path.resolve(__dirname, "api/contact.js"),
-        ).href;
-        const mod = await import(handlerUrl);
-        const vreq = { method: req.method, body: parsedBody, query: {} };
-        const vres = {
-          setHeader: (key: string, value: string) => res.setHeader(key, value),
-          status(code: number) {
-            res.statusCode = code;
-            return this;
-          },
-          json(body: unknown) {
-            res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify(body));
-            return this;
-          },
-          end() {
-            res.end();
-            return this;
-          },
-        };
-        await mod.default(vreq, vres);
-      } catch (err) {
-        res.statusCode = 500;
-        res.setHeader("Content-Type", "application/json");
-        res.end(
-          JSON.stringify({
-            error: "Local dev API failed",
-            details: err instanceof Error ? err.message : String(err),
-          }),
-        );
-      }
-    });
-  };
-
-  return {
-    name: "local-contact-api",
-    configureServer: attach,
-    configurePreviewServer: attach,
-  };
-}
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Empty prefix loads every var (incl. the non-public GITHUB_TOKEN) from
@@ -165,7 +93,7 @@ export default defineConfig(({ mode }) => {
       host: "::",
       port: 1000,
     },
-    plugins: [react(), localGithubApi(env), localContactApi(env)],
+    plugins: [react(), localGithubApi(env)],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
