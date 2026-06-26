@@ -38,7 +38,6 @@ const About = () => {
                 name: "WISS Schulen für Wirtschaft Informatik Immobilien",
                 url: "https://www.wiss.ch",
               },
-              age: 17,
               knowsAbout: [
                 "Software Engineering",
                 "Web Development",
@@ -50,7 +49,7 @@ const About = () => {
           },
           createPersonSchema({
             description:
-              "17-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien, currently in sixth semester of 4-year program",
+              "18-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien, currently in sixth semester of 4-year program",
             educationalCredentialAwarded:
               "Software Engineering Degree (In Progress)",
             hasCredential: {
