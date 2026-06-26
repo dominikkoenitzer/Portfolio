@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { NAV_LINKS } from "@/constants";
+import { isActivePath } from "@/lib/active-path";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useHaptic } from "@/hooks/use-haptic";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
@@ -98,7 +99,7 @@ export function Navbar() {
 
           <nav className="hidden items-center space-x-2 md:flex">
             {navLinks.map((link, index) => {
-              const isActive = location.pathname === link.targetId;
+              const isActive = isActivePath(location.pathname, link.targetId);
               return (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
