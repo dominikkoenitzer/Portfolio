@@ -13,6 +13,7 @@ export const zh = {
     privacyPolicy: "隐私政策",
     openMenu: "打开菜单",
     closeMenu: "关闭菜单",
+    skipToContent: "跳到主要内容",
     goHome: "前往首页",
   },
   toggles: {

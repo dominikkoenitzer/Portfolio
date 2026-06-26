@@ -539,6 +539,7 @@ export default function ServiceExplorer({
   return (
     <SceneBoundary>
       <div
+        aria-hidden="true"
         className={`relative h-full w-full [touch-action:none] ${hovered ? "cursor-pointer" : "cursor-default"}`}
         onPointerMove={onMove}
         ref={containerRef}

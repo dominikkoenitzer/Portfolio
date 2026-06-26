@@ -213,6 +213,7 @@ export default function SkillSphere() {
   return (
     <SceneBoundary>
       <div
+        aria-hidden="true"
         className="h-full w-full cursor-grab [touch-action:none] active:cursor-grabbing"
         onPointerDown={onDown}
         onPointerLeave={onUp}

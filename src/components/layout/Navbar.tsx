@@ -97,7 +97,10 @@ export function Navbar() {
             </Link>
           </div>
 
-          <nav className="hidden items-center space-x-2 md:flex">
+          <nav
+            aria-label={t.nav.navigation}
+            className="hidden items-center space-x-2 md:flex"
+          >
             {navLinks.map((link, index) => {
               const isActive = isActivePath(location.pathname, link.targetId);
               return (
