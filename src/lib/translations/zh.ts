@@ -150,6 +150,7 @@ export const zh = {
     ctaButton: "立即联系",
     getInTouch: "立即联系",
     close: "关闭",
+    loading: "正在生长…",
     items: {
       webDev: {
         title: "网页开发",
