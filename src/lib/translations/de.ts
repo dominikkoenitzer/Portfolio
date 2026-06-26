@@ -274,28 +274,6 @@ export const de = {
     emailLabel: "E-Mail",
     basedLabel: "Sitz",
     basedLocation: "Zürich, Schweiz",
-    form: {
-      nameLabel: "Name",
-      namePlaceholder: "Dein Name",
-      emailLabel: "E-Mail",
-      emailPlaceholder: "deine@email.com",
-      subjectLabel: "Betreff",
-      subjectPlaceholder: "Worum geht es?",
-      messageLabel: "Nachricht",
-      messagePlaceholder: "Erzähl mir von deinem Projekt oder deiner Idee...",
-      send: "Nachricht senden",
-      sending: "Senden...",
-      successTitle: "Nachricht erhalten.",
-      successBody:
-        "Danke für deine Anfrage. Ich melde mich innerhalb von 24 Stunden.",
-      sendAnother: "Weitere senden →",
-      errorTitle: "Etwas ist schiefgelaufen",
-      errorBody:
-        "Bitte erneut versuchen oder mich direkt per E-Mail kontaktieren.",
-      nameRequired: "Bitte gib deinen Namen ein.",
-      emailInvalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
-      messageRequired: "Bitte gib eine Nachricht ein.",
-    },
   },
   donate: {
     eyebrow: "Trinkgeld",
