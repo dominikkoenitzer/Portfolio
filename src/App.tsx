@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import { AnimatedRoutes } from "@/components/AnimatedRoutes";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -19,7 +18,6 @@ const App = () => (
     <MotionConfig reducedMotion="user">
       <TooltipProvider>
         <Toaster />
-        <Sonner />
         <BrowserRouter>
           <SmoothScroll>
             <PageLayout>
