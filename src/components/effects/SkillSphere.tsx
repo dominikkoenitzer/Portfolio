@@ -4,8 +4,10 @@ import {
   type MutableRefObject,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { IconType } from "react-icons";
@@ -193,6 +195,35 @@ class SceneBoundary extends Component<
 export default function SkillSphere() {
   const vel = useRef<Vel>({ x: 0.0012, y: AUTO_Y });
   const drag = useRef<Drag>({ active: false, x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Pause the WebGL loop while the sphere is off-screen or the tab is hidden —
+  // it auto-rotates, so otherwise it renders every frame for the page's life.
+  const [live, setLive] = useState(true);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let onScreen = true;
+    let pageVisible = !document.hidden;
+    const sync = () => setLive(onScreen && pageVisible);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0 },
+    );
+    io.observe(el);
+    const onVisibility = () => {
+      pageVisible = !document.hidden;
+      sync();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   const onDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     drag.current = { active: true, x: e.clientX, y: e.clientY };
@@ -219,10 +250,12 @@ export default function SkillSphere() {
         onPointerLeave={onUp}
         onPointerMove={onMove}
         onPointerUp={onUp}
+        ref={containerRef}
       >
         <Canvas
           camera={{ position: [0, 0, CAM_Z], fov: 50 }}
           dpr={[1, 2]}
+          frameloop={live ? "always" : "never"}
           gl={{ alpha: true, antialias: true }}
         >
           <Cloud drag={drag} vel={vel} />

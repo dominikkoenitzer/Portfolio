@@ -384,6 +384,7 @@ const ProjectDetails = () => {
                       alt={`${project.title} screenshot`}
                       className="w-full max-w-xl"
                       label={liveHost}
+                      priority
                       src={project.image}
                     />
                   )}
