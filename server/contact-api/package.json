@@ -8,6 +8,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "nodemailer": "^6.9.15"
+    "nodemailer": "^9.0.1"
   }
 }
