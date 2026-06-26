@@ -207,6 +207,7 @@ const ProjectDetails = () => {
       <SEO
         citationLinks={getDefaultCitations()}
         description={`${project.title} — ${project.tagline}`}
+        type="article"
         image={`${SITE_CONFIG.url}/og/projects/${project.slug}.png`}
         geoLocation={getDefaultGeoLocation()}
         keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
