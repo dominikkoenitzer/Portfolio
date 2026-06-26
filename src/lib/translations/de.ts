@@ -291,6 +291,10 @@ export const de = {
       errorTitle: "Etwas ist schiefgelaufen",
       errorBody:
         "Bitte erneut versuchen oder mich direkt per E-Mail kontaktieren.",
+      nameRequired: "Bitte gib deinen Namen ein.",
+      emailInvalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
+      messageRequired: "Bitte gib eine Nachricht ein.",
+      emailDirectly: "schreib mir direkt",
     },
   },
   donate: {

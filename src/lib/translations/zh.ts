@@ -229,6 +229,10 @@ export const zh = {
       sendAnother: "再发一条 →",
       errorTitle: "出错了",
       errorBody: "请重试，或直接通过邮件联系我。",
+      nameRequired: "请输入你的姓名。",
+      emailInvalid: "请输入有效的电子邮箱地址。",
+      messageRequired: "请输入留言内容。",
+      emailDirectly: "直接给我发邮件",
     },
   },
   donate: {

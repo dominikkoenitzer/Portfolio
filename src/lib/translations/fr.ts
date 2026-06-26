@@ -287,6 +287,10 @@ export const fr = {
       sendAnother: "Envoyer un autre →",
       errorTitle: "Une erreur est survenue",
       errorBody: "Veuillez réessayer ou m'envoyer un email directement.",
+      nameRequired: "Veuillez saisir votre nom.",
+      emailInvalid: "Veuillez saisir une adresse e-mail valide.",
+      messageRequired: "Veuillez saisir un message.",
+      emailDirectly: "écrivez-moi directement",
     },
   },
   donate: {
