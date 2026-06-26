@@ -13,6 +13,7 @@ export const de = {
     privacyPolicy: "Datenschutz",
     openMenu: "Menü öffnen",
     closeMenu: "Menü schliessen",
+    skipToContent: "Zum Inhalt springen",
     goHome: "Zur Startseite",
   },
   toggles: {

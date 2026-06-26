@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight, Code, X } from "lucide-react";
-import { useRef } from "react";
+import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useSwipe } from "@/hooks/use-swipe";
@@ -25,8 +25,40 @@ export function NavbarMobileMenu({
   open,
 }: NavbarMobileMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
   // Swipe-right inside the drawer closes it — feels native on iOS/Android.
   const swipeHandlers = useSwipe({ onSwipeRight: onClose, threshold: 70 });
+
+  // Move focus to the close button when the drawer opens and restore it to the
+  // trigger (hamburger) when it closes — standard modal-dialog behaviour.
+  useEffect(() => {
+    if (!open) return;
+    previousFocus.current = document.activeElement as HTMLElement | null;
+    const id = window.setTimeout(() => closeBtnRef.current?.focus(), 60);
+    return () => {
+      window.clearTimeout(id);
+      previousFocus.current?.focus?.();
+    };
+  }, [open]);
+
+  // Keep Tab focus inside the open drawer.
+  const trapTab = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const focusables = menuRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+    if (!focusables || focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   if (typeof window === "undefined") {
     return null;
@@ -50,8 +82,12 @@ export function NavbarMobileMenu({
           {/* Drawer — swipe right to close */}
           <motion.div
             animate={{ x: 0 }}
+            aria-label={nav.menu}
+            aria-modal="true"
             className="overflow-y-auto overscroll-contain border-border/50 border-l bg-gradient-to-br from-background via-background to-background/95 shadow-2xl shadow-primary/10 backdrop-blur-2xl md:hidden"
             data-mobile-scroll
+            onKeyDown={trapTab}
+            role="dialog"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={{ left: 0, right: 0.5 }}
@@ -119,6 +155,7 @@ export function NavbarMobileMenu({
                   aria-label={nav.closeMenu}
                   className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors hover:bg-muted"
                   onClick={onClose}
+                  ref={closeBtnRef}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -127,7 +164,7 @@ export function NavbarMobileMenu({
               </div>
             </motion.div>
 
-            <nav className="relative z-10 px-6 py-6">
+            <nav aria-label={nav.menu} className="relative z-10 px-6 py-6">
               <motion.div
                 animate="open"
                 className="space-y-3"
