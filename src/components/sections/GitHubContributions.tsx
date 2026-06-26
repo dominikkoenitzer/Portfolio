@@ -40,12 +40,15 @@ interface GitHubData {
   recentCommits: RecentCommit[];
 }
 
+// Theme-aware heatmap scale: a neutral empty cell that blends into the card in
+// both themes, then a ramp of the site's primary colour (blue on glass, violet
+// on bloom) instead of fixed GitHub greens that looked pasted-in on dark.
 const GITHUB_COLORS = {
-  "0": "#ebedf0",
-  "1": "#9be9a8",
-  "2": "#40c463",
-  "3": "#30a14e",
-  "4": "#216e39",
+  "0": "hsl(var(--foreground) / 0.08)",
+  "1": "hsl(var(--primary) / 0.3)",
+  "2": "hsl(var(--primary) / 0.5)",
+  "3": "hsl(var(--primary) / 0.72)",
+  "4": "hsl(var(--primary))",
 };
 
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
