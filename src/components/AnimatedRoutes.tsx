@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useLenis } from "lenis/react";
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { pageTransition, pageTransitionVariants } from "@/lib/transitions";
 import Home from "@/pages/Home";
 
@@ -14,6 +15,7 @@ const Services = lazy(() => import("@/pages/Services"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Donate = lazy(() => import("@/pages/Donate"));
 const Privacy = lazy(() => import("@/pages/Privacy"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 export const AnimatedRoutes = () => {
   const location = useLocation();
@@ -47,21 +49,33 @@ export const AnimatedRoutes = () => {
         transition={pageTransition}
         variants={pageTransitionVariants}
       >
-        <Suspense fallback={null}>
-          <Routes location={location}>
-            <Route element={<Home />} path="/" />
-            <Route element={<About />} path="/about" />
-            <Route element={<Timeline />} path="/timeline" />
-            <Route element={<Skills />} path="/skills" />
-            <Route element={<Projects />} path="/projects" />
-            <Route element={<ProjectDetails />} path="/projects/:projectSlug" />
-            <Route element={<Services />} path="/services" />
-            <Route element={<Contact />} path="/contact" />
-            <Route element={<Donate />} path="/donate" />
-            <Route element={<Privacy />} path="/privacy" />
-            <Route element={<Navigate replace to="/" />} path="*" />
-          </Routes>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <div className="flex min-h-[60vh] items-center justify-center">
+                <div
+                  aria-label="Loading"
+                  className="h-6 w-6 animate-spin rounded-full border-2 border-muted border-t-primary"
+                  role="status"
+                />
+              </div>
+            }
+          >
+            <Routes location={location}>
+              <Route element={<Home />} path="/" />
+              <Route element={<About />} path="/about" />
+              <Route element={<Timeline />} path="/timeline" />
+              <Route element={<Skills />} path="/skills" />
+              <Route element={<Projects />} path="/projects" />
+              <Route element={<ProjectDetails />} path="/projects/:projectSlug" />
+              <Route element={<Services />} path="/services" />
+              <Route element={<Contact />} path="/contact" />
+              <Route element={<Donate />} path="/donate" />
+              <Route element={<Privacy />} path="/privacy" />
+              <Route element={<NotFound />} path="*" />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </motion.div>
     </AnimatePresence>
   );

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useSwipe } from "@/hooks/use-swipe";
+import { isActivePath } from "@/lib/active-path";
 import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
 
@@ -147,7 +148,7 @@ export function NavbarMobileMenu({
                 }}
               >
                 {navLinks.map((link, index) => {
-                  const isActive = activePath === link.targetId;
+                  const isActive = isActivePath(activePath, link.targetId);
                   return (
                     <motion.div
                       key={link.name}
