@@ -272,6 +272,9 @@ export const en = {
     emailLabel: "Email",
     basedLabel: "Based",
     basedLocation: "Zürich, Switzerland",
+    wipEyebrow: "Coming soon",
+    wipTitle: "Contact form in the works",
+    wipBody: "I'm rebuilding the contact form. For now, the fastest way to reach me is email — I'll get back to you quickly.",
   },
   donate: {
     eyebrow: "Tip jar",
