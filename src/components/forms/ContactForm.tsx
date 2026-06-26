@@ -3,7 +3,6 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 
@@ -121,14 +120,8 @@ export function ContactForm() {
     subject: inquiry?.subject ?? "",
     message: inquiry?.message ?? "",
   });
-  // Honeypot: bots fill this hidden field, humans never see it.
-  const [company, setCompany] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [sendError, setSendError] = useState(false);
-  const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
 
   // Move focus to the confirmation when the form is replaced by the success view.
@@ -158,44 +151,25 @@ export function ContactForm() {
     return next;
   };
 
-  const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    formData.subject || "Portfolio inquiry",
-  )}&body=${encodeURIComponent(
-    `${formData.message}\n\n— ${formData.name} (${formData.email})`,
-  )}`;
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const next = validate();
     setErrors(next);
     if (Object.keys(next).length > 0) {
       const first = next.name ? "name" : next.email ? "email" : "message";
-      formRef.current?.querySelector<HTMLElement>(`#${first}`)?.focus();
+      document.getElementById(first)?.focus();
       return;
     }
 
-    setIsSubmitting(true);
-    setSendError(false);
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, company }),
-      });
-      if (!res.ok) {
-        throw new Error(`Request failed: ${res.status}`);
-      }
-      setSubmitted(true);
-    } catch {
-      setSendError(true);
-      toast({
-        title: t.errorTitle,
-        description: t.errorBody,
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Open the visitor's email client with the inquiry prefilled — no backend,
+    // no third-party service, and the lead is never silently lost.
+    const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+      formData.subject || "Portfolio inquiry",
+    )}&body=${encodeURIComponent(
+      `${formData.message}\n\n— ${formData.name} (${formData.email})`,
+    )}`;
+    window.location.href = mailtoHref;
+    setSubmitted(true);
   };
 
   return (
@@ -229,7 +203,6 @@ export function ContactForm() {
             className="mt-8 font-medium font-mono text-[11px] text-muted-foreground uppercase tracking-[0.2em] transition-colors duration-200 hover:text-foreground"
             onClick={() => {
               setSubmitted(false);
-              setSendError(false);
               setErrors({});
               setFormData({ name: "", email: "", subject: "", message: "" });
             }}
@@ -247,20 +220,8 @@ export function ContactForm() {
           className="min-w-0 space-y-8"
           noValidate
           onSubmit={handleSubmit}
-          ref={formRef}
           transition={{ duration: 0.3 }}
         >
-          {/* Honeypot — visually hidden, off-screen, skipped by AT and tab order */}
-          <input
-            aria-hidden="true"
-            autoComplete="off"
-            className="absolute left-[-9999px] h-0 w-0 overflow-hidden opacity-0"
-            name="company"
-            onChange={(e) => setCompany(e.target.value)}
-            tabIndex={-1}
-            value={company}
-          />
-
           <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
             <Field
               autoComplete="name"
@@ -316,40 +277,13 @@ export function ContactForm() {
             whileInView={{ opacity: 1, y: 0 }}
           >
             <Button
-              aria-busy={isSubmitting}
               className="group w-full gap-3 rounded-lg px-6 py-3.5"
-              disabled={isSubmitting}
               type="submit"
               variant="cta"
             >
-              <span className="truncate">
-                {isSubmitting ? t.sending : t.send}
-              </span>
-              {isSubmitting ? (
-                <div
-                  aria-hidden="true"
-                  className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-white/30 border-t-white"
-                />
-              ) : (
-                <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
-              )}
+              <span className="truncate">{t.send}</span>
+              <ArrowRight className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
             </Button>
-
-            {sendError ? (
-              <p
-                className="mt-4 text-muted-foreground text-sm"
-                role="alert"
-              >
-                {t.errorBody}{" "}
-                <a
-                  className="text-primary underline underline-offset-4 hover:text-primary/80"
-                  href={mailtoHref}
-                >
-                  {t.emailDirectly}
-                </a>
-                .
-              </p>
-            ) : null}
           </motion.div>
         </motion.form>
       )}
