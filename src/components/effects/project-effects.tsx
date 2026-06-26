@@ -21,11 +21,13 @@ export function TiltFigure({
   alt,
   label,
   className,
+  priority = false,
 }: {
   src?: string;
   alt: string;
   label?: string;
   className?: string;
+  priority?: boolean;
 }) {
   const reduced = useMemo(() => prefersReducedMotion(), []);
   const mx = useMotionValue(0);
@@ -76,7 +78,9 @@ export function TiltFigure({
         <img
           alt={alt}
           className="block w-full"
-          loading="lazy"
+          decoding="async"
+          fetchPriority={priority ? "high" : "auto"}
+          loading={priority ? "eager" : "lazy"}
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}

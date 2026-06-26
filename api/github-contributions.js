@@ -70,18 +70,30 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Fetch contributions calendar
-    const contributionsRes = await fetch(GQL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        query: contributionsQuery,
-        variables: { login: username },
+    // The calendar and commits queries are independent — fire them together to
+    // save a round-trip instead of awaiting one then the other.
+    const ghHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const [contributionsRes, commitsRes] = await Promise.all([
+      fetch(GQL, {
+        method: "POST",
+        headers: ghHeaders,
+        body: JSON.stringify({
+          query: contributionsQuery,
+          variables: { login: username },
+        }),
       }),
-    });
+      fetch(GQL, {
+        method: "POST",
+        headers: ghHeaders,
+        body: JSON.stringify({
+          query: recentCommitsQuery,
+          variables: { login: username, first: 10 },
+        }),
+      }),
+    ]);
 
     if (!contributionsRes.ok) {
       const txt = await contributionsRes.text();
@@ -96,19 +108,6 @@ export default async function handler(req, res) {
         ?.contributionCalendar;
     if (!calendar)
       return res.status(404).json({ error: "User or calendar not found" });
-
-    // Fetch recent commits from repositories
-    const commitsRes = await fetch(GQL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        query: recentCommitsQuery,
-        variables: { login: username, first: 10 },
-      }),
-    });
 
     let recentCommits = [];
     if (commitsRes.ok) {
@@ -139,6 +138,11 @@ export default async function handler(req, res) {
         .slice(0, 5);
     }
 
+    // Cache at the edge — the calendar changes a few times a day at most.
+    res.setHeader(
+      "Cache-Control",
+      "public, s-maxage=3600, stale-while-revalidate=86400",
+    );
     return res.status(200).json({
       total: calendar.totalContributions,
       weeks: calendar.weeks,
