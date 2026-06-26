@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, Github, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
-import { ContactForm } from "../forms/ContactForm";
 
 export function ContactSection() {
   const { language } = useLanguage();
@@ -82,7 +82,7 @@ export function ContactSection() {
           </div>
         </motion.div>
 
-        {/* Right — form */}
+        {/* Right — direct email CTA */}
         <motion.div
           className="min-w-0 md:col-span-7"
           initial={{ opacity: 0, y: 20 }}
@@ -90,7 +90,20 @@ export function ContactSection() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <ContactForm />
+          <div className="flex h-full min-h-[260px] flex-col items-center justify-center rounded-2xl border border-border/40 bg-card/30 p-8 text-center sm:p-12">
+            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <Mail className="h-7 w-7" />
+            </div>
+            <p className="mb-3 font-mono text-[10px] text-muted-foreground/60 uppercase tracking-[0.18em]">
+              {t.emailLabel}
+            </p>
+            <Button asChild className="group gap-2 rounded-lg px-6" variant="cta">
+              <a href="mailto:dominik.koenitzer@gmail.com">
+                dominik.koenitzer@gmail.com
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </Button>
+          </div>
         </motion.div>
       </div>
     </section>
