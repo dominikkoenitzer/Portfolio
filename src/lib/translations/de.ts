@@ -295,7 +295,6 @@ export const de = {
       nameRequired: "Bitte gib deinen Namen ein.",
       emailInvalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
       messageRequired: "Bitte gib eine Nachricht ein.",
-      emailDirectly: "schreib mir direkt",
     },
   },
   donate: {

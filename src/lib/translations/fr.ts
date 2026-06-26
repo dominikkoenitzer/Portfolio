@@ -291,7 +291,6 @@ export const fr = {
       nameRequired: "Veuillez saisir votre nom.",
       emailInvalid: "Veuillez saisir une adresse e-mail valide.",
       messageRequired: "Veuillez saisir un message.",
-      emailDirectly: "écrivez-moi directement",
     },
   },
   donate: {
