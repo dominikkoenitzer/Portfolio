@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Footer, Navbar } from "@/components";
 import { ThemedBackground } from "@/components/backgrounds/ThemedBackground";
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
+import { SkipLink } from "@/components/layout/SkipLink";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { useViewportHeight } from "@/hooks/use-viewport-height";
@@ -54,6 +55,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <ThemeProvider defaultTheme="bloom">
       <LanguageProvider defaultLanguage="en">
+        <SkipLink />
         {showVeil && <ThemedBackground />}
         <CustomCursor />
 
@@ -119,7 +121,11 @@ export function PageLayout({ children }: PageLayoutProps) {
 
         <Navbar />
 
-        <main className="min-h-screen-mobile w-full overflow-x-hidden pt-24 sm:pt-28 md:pt-32">
+        <main
+          className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-none sm:pt-28 md:pt-32"
+          id="main-content"
+          tabIndex={-1}
+        >
           {children}
         </main>
 

@@ -42,7 +42,12 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * per-event `closest()` lookup stays a single cheap ancestor walk.
  */
 const INTERACTIVE_SELECTOR =
-  'a, button, [role="button"], input, textarea, select, label, [data-cursor], .cursor-pointer';
+  'a, button, [role="button"], [data-cursor], .cursor-pointer';
+
+// Text-entry fields keep the native I-beam (restored via CSS); the dot collapses
+// over them so the two don't fight.
+const TEXT_FIELD_SELECTOR =
+  'input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]';
 
 /** Scale spring — snappy and lively, settles fast (this is the only motion). */
 const SCALE_SPRING = { stiffness: 700, damping: 30, mass: 0.45 } as const;
@@ -67,6 +72,8 @@ export function CustomCursor() {
   // them never re-renders React.
   const hover = useMotionValue(0);
   const press = useMotionValue(0);
+  // 1 while over a text-entry field — collapses the dot so the native I-beam shows.
+  const textField = useMotionValue(0);
 
   // Reduced motion is read once during render (synchronous, render-safe). When
   // true we drop the scale easing so the dot snaps instantly.
@@ -80,8 +87,8 @@ export function CustomCursor() {
   const p = reduced ? press : pressSpring;
 
   // Single scale: pops to ~1.8 over interactive targets, dips on press.
-  const scale = useTransform([h, p], ([hv, pv]: number[]) =>
-    Math.max(0.001, (1 + hv * 0.8) * (1 - pv * 0.3)),
+  const scale = useTransform([h, p, textField], ([hv, pv, tf]: number[]) =>
+    Math.max(0.001, (1 + hv * 0.8) * (1 - pv * 0.3) * (1 - tf)),
   );
 
   useEffect(() => {
@@ -89,7 +96,8 @@ export function CustomCursor() {
     // the native cursor stays as-is and this component renders nothing.
     if (
       typeof window === "undefined" ||
-      !window.matchMedia("(pointer: fine)").matches
+      !window.matchMedia("(pointer: fine)").matches ||
+      reduced
     ) {
       return;
     }
@@ -110,6 +118,7 @@ export function CustomCursor() {
     const onOver = (e: MouseEvent) => {
       const target = e.target as Element | null;
       hover.set(target?.closest(INTERACTIVE_SELECTOR) ? 1 : 0);
+      textField.set(target?.closest(TEXT_FIELD_SELECTOR) ? 1 : 0);
     };
 
     const onDown = () => press.set(1);
@@ -160,9 +169,9 @@ export function CustomCursor() {
       document.documentElement.removeEventListener("mouseleave", onWindowLeave);
       document.documentElement.removeEventListener("mouseenter", onWindowEnter);
     };
-  }, [x, y, hover, press]);
+  }, [x, y, hover, press, textField, reduced]);
 
-  if (!enabled) return null;
+  if (!enabled || reduced) return null;
 
   // Portal to <body> so the cursor shares the stacking context of Radix
   // popovers/dropdowns (which also portal to body); z-[9999] then beats their
