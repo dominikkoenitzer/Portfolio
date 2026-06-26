@@ -274,6 +274,9 @@ export const de = {
     emailLabel: "E-Mail",
     basedLabel: "Sitz",
     basedLocation: "Zürich, Schweiz",
+    wipEyebrow: "Bald verfügbar",
+    wipTitle: "Kontaktformular in Arbeit",
+    wipBody: "Ich überarbeite gerade das Kontaktformular. Bis dahin erreichst du mich am schnellsten per E-Mail — ich melde mich zügig zurück.",
   },
   donate: {
     eyebrow: "Trinkgeld",
