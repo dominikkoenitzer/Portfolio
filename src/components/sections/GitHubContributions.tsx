@@ -12,6 +12,7 @@ import {
 import { SITE_CONFIG } from "@/constants";
 import { fadeInUp } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-provider";
+import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
 import { translations } from "@/lib/translations";
 
 interface ContributionDay {
@@ -60,6 +61,8 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
 export function GitHubContributions() {
   const { language } = useLanguage();
   const t = translations[language].github;
+  const localeTag = LOCALE_TAG[language];
+  const dfLocale = DATE_FNS_LOCALE[language];
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
 
   // The ~365-cell calendar wraps every cell in a Radix Tooltip + motion node.
@@ -83,22 +86,8 @@ export function GitHubContributions() {
   // Use weeks directly from API (each week is a column)
   const weeks = data?.weeks || [];
 
-  // Get month labels for the top row
+  // Get month labels for the top row (localized to the active language)
   const monthLabels: { index: number; label: string }[] = [];
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
   let lastMonth = -1;
 
   weeks.forEach((week, weekIndex) => {
@@ -108,7 +97,10 @@ export function GitHubContributions() {
 
       // Show label at the start of each month
       if (month !== lastMonth) {
-        monthLabels.push({ index: weekIndex, label: monthNames[month] });
+        monthLabels.push({
+          index: weekIndex,
+          label: firstDay.toLocaleDateString(localeTag, { month: "short" }),
+        });
         lastMonth = month;
       }
     }
@@ -237,7 +229,7 @@ export function GitHubContributions() {
 
                       const formattedDate = new Date(
                         day.date,
-                      ).toLocaleDateString("en-US", {
+                      ).toLocaleDateString(localeTag, {
                         weekday: "long",
                         month: "long",
                         day: "numeric",
@@ -338,6 +330,7 @@ export function GitHubContributions() {
                       <span className="text-[10px] text-muted-foreground sm:text-xs">
                         {formatDistanceToNow(new Date(commit.date), {
                           addSuffix: true,
+                          locale: dfLocale,
                         })}
                       </span>
                     </div>
