@@ -13,17 +13,15 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import {
-  lazy,
-  type RefObject,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import type { ServiceTreeNode } from "@/components/effects/ServiceExplorer";
+import {
+  CATEGORY_ACCENT_HEX,
+  SERVICE_TREE_THEMES,
+  SERVICE_TREE_VIGNETTE,
+  serviceTreeThemeFor,
+} from "@/components/effects/service-tree-theme";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { useTheme } from "@/components/theme-provider";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +30,8 @@ import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
-// The Services page IS a 3D skill tree on desktop — lazy (three.js), desktop-only.
+// The Services page IS a 3D skill-tree sapling on desktop — lazy (three.js),
+// desktop + motion only.
 const ServiceExplorer = lazy(
   () => import("@/components/effects/ServiceExplorer"),
 );
@@ -45,7 +44,6 @@ type ServiceCopy = {
   description: string;
   features: readonly string[];
 };
-type ScreenPos = { x: number; y: number };
 type Inquiry = { subject: string; message: string };
 
 interface Service {
@@ -57,6 +55,8 @@ interface Service {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Order within a category maps onto the tree's three leaf slots (see
+// ServiceExplorer's LEAVES layout), so keep build/protect/grow grouped.
 const services: Service[] = [
   { itemKey: "webDev", price: "300 CHF", icon: Code, category: "build" },
   {
@@ -86,87 +86,112 @@ const services: Service[] = [
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
 
-const POPUP_W = 300;
-const POPUP_H = 320;
+// The immersive 3D tree is desktop + motion only; everything else is cards.
+const DESKTOP_QUERY = "(min-width: 1024px)";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
-/** A card that pops up anchored to the clicked node, clamped inside the tree. */
-function ServicePopup({
+/** Hex colour with an appended 8-bit alpha (#RRGGBB + AA). */
+const withAlpha = (hex: string, alpha: number) =>
+  hex +
+  Math.round(alpha * 255)
+    .toString(16)
+    .padStart(2, "0");
+
+/**
+ * The detail card that flies up bottom-left when a leaf is clicked — design
+ * tokens (dark glass, accent bar + pill), enriched with the real price,
+ * feature chips, and the inquiry CTA.
+ */
+function DetailCard({
   service,
   item,
-  inquiry,
+  accent,
   categoryLabel,
+  inquiry,
   closeLabel,
   getInTouchLabel,
-  pos,
-  containerRef,
   onClose,
 }: {
   service: Service;
   item: ServiceCopy;
-  inquiry: Inquiry;
+  accent: string;
   categoryLabel: string;
+  inquiry: Inquiry;
   closeLabel: string;
   getInTouchLabel: string;
-  pos: ScreenPos;
-  containerRef: RefObject<HTMLDivElement>;
   onClose: () => void;
 }) {
-  const w = containerRef.current?.clientWidth ?? 0;
-  const h = containerRef.current?.clientHeight ?? 0;
-  const left = Math.min(Math.max(pos.x - POPUP_W / 2, 12), Math.max(12, w - POPUP_W - 12));
-  const placeBelow = pos.y + POPUP_H + 28 < h;
-  const top = placeBelow
-    ? pos.y + 22
-    : Math.max(12, pos.y - POPUP_H - 22);
   const Icon = service.icon;
-
   return (
     <motion.div
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="absolute z-20 w-[300px] rounded-2xl border border-border/60 bg-background/95 p-5 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.55)] backdrop-blur-md"
-      exit={{ opacity: 0, scale: 0.92, y: 6 }}
-      initial={{ opacity: 0, scale: 0.92, y: 6 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      className="absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] rounded-[20px] border border-white/[0.14] p-[22px] text-white shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
+      exit={{ opacity: 0, y: 14, scale: 0.98 }}
+      initial={{ opacity: 0, y: 14, scale: 0.98 }}
       onPointerDown={(e) => e.stopPropagation()}
-      style={{ left, top }}
-      transition={{ duration: 0.25, ease: EASE }}
+      style={{
+        background: "rgba(8,16,42,0.62)",
+        backdropFilter: "blur(20px) saturate(140%)",
+        WebkitBackdropFilter: "blur(20px) saturate(140%)",
+      }}
+      transition={{ duration: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
     >
       <button
         aria-label={closeLabel}
-        className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
+        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-white/[0.09] text-white/75 transition-colors hover:bg-white/20 hover:text-white"
         onClick={onClose}
         type="button"
       >
         <X className="h-4 w-4" />
       </button>
 
-      <div className="mb-4 flex items-start gap-3">
-        <div className="flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="min-w-0">
-          <span className="block font-mono text-[10px] text-muted-foreground/50 uppercase tracking-[0.18em]">
-            {categoryLabel}
-          </span>
-          <h3 className="font-semibold text-lg leading-tight">{item.title}</h3>
-        </div>
+      <div
+        className="mb-4 h-1 w-11 rounded-full"
+        style={{ background: accent, boxShadow: `0 0 16px ${withAlpha(accent, 0.85)}` }}
+      />
+
+      <div className="mb-[13px] flex items-center gap-2">
+        <span
+          className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-xl"
+          style={{ background: withAlpha(accent, 0.14), color: accent }}
+        >
+          <Icon className="h-[18px] w-[18px]" />
+        </span>
+        <span
+          className="inline-flex items-center rounded-full px-[11px] py-1 font-bold text-[11.5px] uppercase tracking-[0.06em]"
+          style={{
+            background: withAlpha(accent, 0.16),
+            color: accent,
+            border: `1px solid ${withAlpha(accent, 0.35)}`,
+          }}
+        >
+          {categoryLabel}
+        </span>
       </div>
 
-      <span className="mb-3 inline-flex rounded-lg border border-border/20 bg-muted/20 px-2.5 py-1 font-medium font-mono text-foreground/70 text-xs">
-        {service.price}
-      </span>
-
-      <p className="mb-4 text-muted-foreground text-sm leading-relaxed">
+      <h3 className="mb-[9px] font-bold text-[22px] text-white leading-tight tracking-[-0.01em]">
+        {item.title}
+      </h3>
+      <p className="mb-3 text-[15px] text-white/[0.72] leading-[1.55]">
         {item.description}
       </p>
 
-      <div className="mb-5 flex flex-wrap gap-1.5">
+      <div className="mb-4 flex flex-wrap items-center gap-1.5">
+        <span className="rounded-md border border-white/15 bg-white/[0.06] px-2 py-1 font-medium font-mono text-[11px] text-white/80">
+          {service.price}
+        </span>
         {item.features.map((f) => (
-          <Badge key={f}>{f}</Badge>
+          <span
+            className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-0.5 text-[11px] text-white/70"
+            key={f}
+          >
+            {f}
+          </span>
         ))}
       </div>
 
       <Link
-        className="group/btn flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-muted-foreground text-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
+        className="group/btn flex items-center justify-between rounded-lg border border-white/15 px-4 py-2.5 text-[13px] text-white/80 transition-all duration-200 hover:border-white/30 hover:bg-white/[0.06] hover:text-white"
         state={inquiry}
         to="/contact"
       >
@@ -181,19 +206,41 @@ export function ServicesSection() {
   const { language } = useLanguage();
   const { theme } = useTheme();
   const t = translations[language].services;
+  const designTheme = serviceTreeThemeFor(theme);
+  const palette = SERVICE_TREE_THEMES[designTheme];
+
   const [active, setActive] = useState<Category>("all");
   const [selectedKey, setSelectedKey] = useState<ItemKey | null>(null);
-  const [selectedPos, setSelectedPos] = useState<ScreenPos | null>(null);
-  const treeRef = useRef<HTMLDivElement>(null);
+  const [treeReady, setTreeReady] = useState(false);
+  const [treeFailed, setTreeFailed] = useState(false);
 
-  // The 3D tree is the desktop experience; mobile / reduced-motion get the card
-  // grid. Resolved on first (client) render → no layout shift, no mobile cost.
-  const [showExplorer] = useState(
+  // The 3D tree is purely the desktop experience; mobile / narrow viewports /
+  // reduced-motion get the card grid only (three.js never even loads there).
+  // Seeded on first client render (no layout shift, no mobile cost) and kept
+  // reactive so crossing the breakpoint — resize, DevTools, device rotation —
+  // swaps cleanly and tears down the WebGL panel on the way down.
+  const [showExplorer, setShowExplorer] = useState(
     () =>
       typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 1024px)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      window.matchMedia(DESKTOP_QUERY).matches &&
+      !window.matchMedia(REDUCED_MOTION_QUERY).matches,
   );
+  useEffect(() => {
+    const desktop = window.matchMedia(DESKTOP_QUERY);
+    const motion = window.matchMedia(REDUCED_MOTION_QUERY);
+    const update = () => {
+      const next = desktop.matches && !motion.matches;
+      setShowExplorer(next);
+      if (!next) setSelectedKey(null); // no card lingering once the tree is gone
+    };
+    update();
+    desktop.addEventListener("change", update);
+    motion.addEventListener("change", update);
+    return () => {
+      desktop.removeEventListener("change", update);
+      motion.removeEventListener("change", update);
+    };
+  }, []);
 
   const buildInquiry = (item: ServiceCopy): Inquiry => ({
     subject: `${t.inquiry.subjectPrefix} ${item.title}`,
@@ -212,49 +259,35 @@ export function ServicesSection() {
   const selectCategory = (id: Category) => {
     setActive(id);
     setSelectedKey(null);
-    setSelectedPos(null);
   };
 
-  const closePopup = useCallback(() => {
-    setSelectedKey(null);
-    setSelectedPos(null);
+  const closeCard = useCallback(() => setSelectedKey(null), []);
+
+  // Stable so the imperative scene's pointer handlers never see a stale setter.
+  const handleSelect = useCallback((key: string | null) => {
+    setSelectedKey(key as ItemKey | null);
   }, []);
 
-  // Stable so the memoised 3D Node children don't re-render when the section does.
-  const handleSelect = useCallback((key: string, pos: ScreenPos) => {
-    setSelectedKey(key as ItemKey);
-    setSelectedPos(pos);
-  }, []);
+  const handleError = useCallback(() => setTreeFailed(true), []);
+  const handleReady = useCallback(() => setTreeReady(true), []);
 
-  // Esc closes the open service card (matches the Navbar mobile-menu pattern).
+  // Esc closes the open card (matches the Navbar mobile-menu pattern).
   useEffect(() => {
     if (!selectedKey) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closePopup();
+      if (e.key === "Escape") closeCard();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedKey, closePopup]);
+  }, [selectedKey, closeCard]);
 
-  // The popup is anchored to a screen position captured at click time; a viewport
-  // resize reframes the canvas and moves the node, so close the card to keep it
-  // from detaching from its node.
-  useEffect(() => {
-    const el = treeRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => closePopup());
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [closePopup]);
-
-  // Stable across selection so the 3D scene bakes its textures once.
-  const explorerNodes = useMemo(
+  // Stable identity across selection so the scene builds its textures once.
+  const explorerNodes = useMemo<ServiceTreeNode[]>(
     () =>
       services.map((s) => ({
         key: s.itemKey,
         category: s.category,
-        title: t.items[s.itemKey].title,
-        price: s.price,
+        name: t.items[s.itemKey].title,
         icon: s.icon,
       })),
     [t],
@@ -262,131 +295,189 @@ export function ServicesSection() {
 
   const filtered =
     active === "all" ? services : services.filter((s) => s.category === active);
-
   const selected =
-    selectedKey && services.find((s) => s.itemKey === selectedKey);
+    (selectedKey && services.find((s) => s.itemKey === selectedKey)) || null;
+
+  const showPanel = showExplorer && !treeFailed;
 
   return (
     <section className="section-padding" id="services">
-      <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
-
-      {/* Category filter — lights up a path (or filters the cards) */}
-      <motion.div
-        className="mb-8 flex flex-wrap justify-center gap-2 md:mb-10"
-        initial={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.5, delay: 0.1, ease: EASE }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        {FILTER_IDS.map((id) => (
-          <button
-            className={cn(
-              "relative rounded-full px-4 py-1.5 font-medium text-sm transition-all duration-200",
-              active === id
-                ? "bg-primary text-primary-foreground shadow-[0_2px_12px_hsl(var(--primary)/0.3)]"
-                : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground",
-            )}
-            key={id}
-            onClick={() => selectCategory(id)}
-            type="button"
-          >
-            {t.filters[id]}
-            {active === id && id !== "all" && (
-              <span className="ml-1.5 hidden font-mono text-[10px] opacity-70 sm:inline">
-                — {t.categoryMeta[id].desc}
-              </span>
-            )}
-          </button>
-        ))}
-      </motion.div>
-
-      {/* Desktop: an interactive 3D skill tree, shown above the scannable grid. */}
-      {showExplorer ? (
+      {showPanel ? (
+        // ── Immersive desktop panel ──────────────────────────────────────
         <div
-          className="relative mx-auto mb-12 aspect-square w-full max-w-[min(88vh,1000px)]"
-          ref={treeRef}
+          className="relative mb-14 w-full overflow-hidden rounded-[28px] border border-white/10 shadow-[0_30px_80px_-30px_rgba(8,16,42,0.7)]"
+          style={{ background: palette.bg }}
         >
-          <Suspense fallback={null}>
-            <ServiceExplorer
-              activeCategory={active}
-              nodes={explorerNodes}
-              onClose={closePopup}
-              onSelect={handleSelect}
-              selectedKey={selectedKey ?? ""}
-              theme={theme}
-            />
-          </Suspense>
-
-          <AnimatePresence>
-            {selected && selectedPos ? (
-              <ServicePopup
-                categoryLabel={t.categoryMeta[selected.category].label}
-                closeLabel={t.close}
-                containerRef={treeRef}
-                getInTouchLabel={t.getInTouch}
-                inquiry={buildInquiry(t.items[selected.itemKey])}
-                item={t.items[selected.itemKey]}
-                key={selected.itemKey}
-                onClose={closePopup}
-                pos={selectedPos}
-                service={selected}
+          <div
+            className="relative w-full"
+            style={{ height: "clamp(560px, 70vh, 760px)" }}
+          >
+            <Suspense fallback={null}>
+              <ServiceExplorer
+                activeCategory={active}
+                designTheme={designTheme}
+                nodes={explorerNodes}
+                onError={handleError}
+                onReady={handleReady}
+                onSelect={handleSelect}
+                selectedKey={selectedKey}
               />
-            ) : null}
-          </AnimatePresence>
+            </Suspense>
+
+            {/* Vignette sinks the far branches into the backdrop. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 z-[1]"
+              style={{ background: SERVICE_TREE_VIGNETTE }}
+            />
+
+            {/* Eyebrow + title + tabs, overlaid top-centre. */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 pt-11 text-center">
+              <p className="font-semibold text-[13px] text-white/55 uppercase tracking-[0.24em]">
+                {t.eyebrow}
+              </p>
+              <h1
+                className="mt-2.5 font-bold text-white tracking-[-0.025em]"
+                style={{
+                  fontSize: "clamp(38px, 4.4vw, 58px)",
+                  textShadow: "0 4px 40px rgba(120,160,255,0.35)",
+                }}
+              >
+                {t.heading}
+              </h1>
+              <div className="pointer-events-auto mt-6 inline-flex flex-wrap justify-center gap-1.5">
+                {FILTER_IDS.map((id) => {
+                  const on = active === id;
+                  return (
+                    <button
+                      className="rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-all duration-200"
+                      key={id}
+                      onClick={() => selectCategory(id)}
+                      style={
+                        on
+                          ? {
+                              background: "rgba(255,255,255,0.16)",
+                              color: "#fff",
+                              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.22)",
+                            }
+                          : { background: "transparent", color: "rgba(255,255,255,0.55)" }
+                      }
+                      type="button"
+                    >
+                      {t.filters[id]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Detail card. */}
+            <AnimatePresence>
+              {selected ? (
+                <DetailCard
+                  accent={CATEGORY_ACCENT_HEX[selected.category]}
+                  categoryLabel={t.categoryMeta[selected.category].label}
+                  closeLabel={t.close}
+                  getInTouchLabel={t.getInTouch}
+                  inquiry={buildInquiry(t.items[selected.itemKey])}
+                  item={t.items[selected.itemKey]}
+                  key={selected.itemKey}
+                  onClose={closeCard}
+                  service={selected}
+                />
+              ) : null}
+            </AnimatePresence>
+
+            {/* Loading shimmer (fades once the first frame renders). */}
+            <div
+              aria-hidden
+              className={cn(
+                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3.5 transition-opacity duration-500",
+                treeReady && "opacity-0",
+              )}
+            >
+              <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-[#bcd6ff] shadow-[0_0_22px_6px_rgba(120,160,255,0.6)]" />
+              <span className="text-[13px] text-white/50 tracking-[0.06em]">
+                {t.loading}
+              </span>
+            </div>
+          </div>
         </div>
-      ) : null}
+      ) : (
+        // ── Mobile / reduced-motion / fallback header ────────────────────
+        <>
+          <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
+          <div className="mb-8 flex flex-wrap justify-center gap-2 md:mb-10">
+            {FILTER_IDS.map((id) => (
+              <button
+                className={cn(
+                  "relative rounded-full px-4 py-1.5 font-medium text-sm transition-all duration-200",
+                  active === id
+                    ? "bg-primary text-primary-foreground shadow-[0_2px_12px_hsl(var(--primary)/0.3)]"
+                    : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground",
+                )}
+                key={id}
+                onClick={() => selectCategory(id)}
+                type="button"
+              >
+                {t.filters[id]}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Scannable cards — always visible: the at-a-glance view, and the
           crawlable + keyboard-accessible equivalent of the 3D tree above. */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((service, i) => {
-              const item = t.items[service.itemKey];
-              const inquiry = buildInquiry(item);
-              const Icon = service.icon;
-              return (
-                <motion.div
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  className="glass-card group flex flex-col rounded-2xl p-5 sm:p-6"
-                  exit={{ opacity: 0, scale: 0.94, y: 6 }}
-                  initial={{ opacity: 0, scale: 0.94, y: 6 }}
-                  key={service.itemKey}
-                  layout
-                  transition={{ duration: 0.35, delay: i * 0.04, ease: EASE }}
-                >
-                  <div className="mb-4 flex items-start justify-between">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="rounded-lg border border-border/20 bg-muted/20 px-2.5 py-1 font-medium font-mono text-foreground/70 text-xs">
-                      {service.price}
-                    </span>
+        <AnimatePresence mode="popLayout">
+          {filtered.map((service, i) => {
+            const item = t.items[service.itemKey];
+            const inquiry = buildInquiry(item);
+            const Icon = service.icon;
+            return (
+              <motion.div
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="glass-card group flex flex-col rounded-2xl p-5 sm:p-6"
+                exit={{ opacity: 0, scale: 0.94, y: 6 }}
+                initial={{ opacity: 0, scale: 0.94, y: 6 }}
+                key={service.itemKey}
+                layout
+                transition={{ duration: 0.35, delay: i * 0.04, ease: EASE }}
+              >
+                <div className="mb-4 flex items-start justify-between">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <span className="mb-1.5 font-mono text-[10px] text-muted-foreground/35 uppercase tracking-[0.18em]">
-                    {t.categoryMeta[service.category].label}
+                  <span className="rounded-lg border border-border/20 bg-muted/20 px-2.5 py-1 font-medium font-mono text-foreground/70 text-xs">
+                    {service.price}
                   </span>
-                  <h3 className="mb-2 font-semibold text-lg">{item.title}</h3>
-                  <p className="mb-4 flex-1 text-muted-foreground text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                  <div className="mb-5 flex flex-wrap gap-1.5">
-                    {item.features.map((f) => (
-                      <Badge key={f}>{f}</Badge>
-                    ))}
-                  </div>
-                  <Link
-                    className="group/btn mt-auto flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-muted-foreground text-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
-                    state={inquiry}
-                    to="/contact"
-                  >
-                    {t.getInTouch}
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
+                </div>
+                <span className="mb-1.5 font-mono text-[10px] text-muted-foreground/35 uppercase tracking-[0.18em]">
+                  {t.categoryMeta[service.category].label}
+                </span>
+                <h3 className="mb-2 font-semibold text-lg">{item.title}</h3>
+                <p className="mb-4 flex-1 text-muted-foreground text-sm leading-relaxed">
+                  {item.description}
+                </p>
+                <div className="mb-5 flex flex-wrap gap-1.5">
+                  {item.features.map((f) => (
+                    <Badge key={f}>{f}</Badge>
+                  ))}
+                </div>
+                <Link
+                  className="group/btn mt-auto flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-muted-foreground text-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
+                  state={inquiry}
+                  to="/contact"
+                >
+                  {t.getInTouch}
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
+                </Link>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
 
       {/* Bottom CTA */}
       <motion.div
