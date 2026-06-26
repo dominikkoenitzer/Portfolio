@@ -228,6 +228,15 @@ const Grainient = ({
       const w = Math.max(1, Math.floor(rect.width));
       const h = Math.max(1, Math.floor(rect.height));
       renderer.setSize(w, h);
+      // OGL's setSize writes the floored size back as an explicit px width/height
+      // on the canvas. On fractional-DPR displays (Windows at 125% / 150%) the
+      // container width is fractional, so that floored value lands up to ~1px
+      // short of the container and reveals a thin seam of the darker page base
+      // at the right edge (over the screen/multiply-blended background). Force
+      // the canvas to always fill its container — the drawing buffer (sized
+      // above) just up-scales by <1px, which is invisible. Mirrors LightVeil.
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
       const res = program.uniforms.iResolution.value;
       res[0] = gl.drawingBufferWidth;
       res[1] = gl.drawingBufferHeight;
