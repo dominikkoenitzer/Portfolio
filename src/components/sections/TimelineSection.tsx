@@ -19,6 +19,7 @@ import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { useLanguage } from "@/lib/language-provider";
+import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -330,6 +331,7 @@ function CvDownload({
 export function TimelineSection() {
   const { language } = useLanguage();
   const t = getTimeline(language);
+  const langNames = translations[language].skills.langNames;
 
   return (
     <MotionConfig reducedMotion="user">
@@ -350,12 +352,12 @@ export function TimelineSection() {
         >
           <CvDownload
             href="/cv/curriculum-vitae.html"
-            subtitle="English"
+            subtitle={langNames.english}
             title="Curriculum Vitae"
           />
           <CvDownload
             href="/cv/lebenslauf.html"
-            subtitle="German"
+            subtitle={langNames.german}
             title="Lebenslauf"
           />
         </motion.div>
