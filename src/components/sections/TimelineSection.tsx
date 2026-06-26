@@ -10,7 +10,7 @@ import {
   ArrowUpRight,
   Briefcase,
   CalendarDays,
-  Download,
+  ExternalLink,
   FileText,
   GraduationCap,
   MapPin,
@@ -320,9 +320,9 @@ function CvDownload({
         </span>
         <span className="block text-muted-foreground text-xs">{subtitle}</span>
       </span>
-      <Download
+      <ExternalLink
         aria-hidden
-        className="h-4 w-4 flex-none text-muted-foreground transition-all duration-300 group-hover/cv:translate-y-0.5 group-hover/cv:text-primary"
+        className="h-4 w-4 flex-none text-muted-foreground transition-all duration-300 group-hover/cv:-translate-y-0.5 group-hover/cv:translate-x-0.5 group-hover/cv:text-primary"
       />
     </a>
   );

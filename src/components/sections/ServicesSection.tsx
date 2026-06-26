@@ -300,67 +300,45 @@ export function ServicesSection() {
         ))}
       </motion.div>
 
+      {/* Desktop: an interactive 3D skill tree, shown above the scannable grid. */}
       {showExplorer ? (
-        <>
-          {/* Desktop: the whole page IS the skill tree; a card pops up on click. */}
-          <div
-            className="relative mx-auto aspect-square w-full max-w-[min(88vh,1000px)]"
-            ref={treeRef}
-          >
-            <Suspense fallback={null}>
-              <ServiceExplorer
-                activeCategory={active}
-                nodes={explorerNodes}
+        <div
+          className="relative mx-auto mb-12 aspect-square w-full max-w-[min(88vh,1000px)]"
+          ref={treeRef}
+        >
+          <Suspense fallback={null}>
+            <ServiceExplorer
+              activeCategory={active}
+              nodes={explorerNodes}
+              onClose={closePopup}
+              onSelect={handleSelect}
+              selectedKey={selectedKey ?? ""}
+              theme={theme}
+            />
+          </Suspense>
+
+          <AnimatePresence>
+            {selected && selectedPos ? (
+              <ServicePopup
+                categoryLabel={t.categoryMeta[selected.category].label}
+                closeLabel={t.close}
+                containerRef={treeRef}
+                getInTouchLabel={t.getInTouch}
+                inquiry={buildInquiry(t.items[selected.itemKey])}
+                item={t.items[selected.itemKey]}
+                key={selected.itemKey}
                 onClose={closePopup}
-                onSelect={handleSelect}
-                selectedKey={selectedKey ?? ""}
-                theme={theme}
+                pos={selectedPos}
+                service={selected}
               />
-            </Suspense>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      ) : null}
 
-            <AnimatePresence>
-              {selected && selectedPos ? (
-                <ServicePopup
-                  categoryLabel={t.categoryMeta[selected.category].label}
-                  closeLabel={t.close}
-                  containerRef={treeRef}
-                  getInTouchLabel={t.getInTouch}
-                  inquiry={buildInquiry(t.items[selected.itemKey])}
-                  item={t.items[selected.itemKey]}
-                  key={selected.itemKey}
-                  onClose={closePopup}
-                  pos={selectedPos}
-                  service={selected}
-                />
-              ) : null}
-            </AnimatePresence>
-          </div>
-
-          {/* Full, crawlable + keyboard-reachable list of every service. */}
-          <ul className="sr-only">
-            {services.map((service) => {
-              const item = t.items[service.itemKey];
-              return (
-                <li key={service.itemKey}>
-                  <h3>{item.title}</h3>
-                  <p>{service.price}</p>
-                  <p>{item.description}</p>
-                  <ul>
-                    {item.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                  <Link state={buildInquiry(item)} to="/contact">
-                    {t.getInTouch} — {item.title}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      ) : (
-        /* Mobile / reduced-motion fallback: the card grid. */
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Scannable cards — always visible: the at-a-glance view, and the
+          crawlable + keyboard-accessible equivalent of the 3D tree above. */}
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {filtered.map((service, i) => {
               const item = t.items[service.itemKey];
@@ -409,7 +387,6 @@ export function ServicesSection() {
             })}
           </AnimatePresence>
         </div>
-      )}
 
       {/* Bottom CTA */}
       <motion.div
