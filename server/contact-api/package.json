@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-contact-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tiny SMTP-relay endpoint for the portfolio contact form (runs on a VPS)",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.15"
+  }
+}
