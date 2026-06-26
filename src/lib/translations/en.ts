@@ -292,7 +292,6 @@ export const en = {
       nameRequired: "Please enter your name.",
       emailInvalid: "Please enter a valid email address.",
       messageRequired: "Please enter a message.",
-      emailDirectly: "email me directly",
     },
   },
   donate: {
