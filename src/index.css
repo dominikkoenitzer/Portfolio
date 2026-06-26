@@ -35,8 +35,6 @@
       hsl(260 95% 70%) 100%
     );
     --theme-shadow-color: 217 95% 58%;
-    --scrollbar-thumb: 217 28% 26%;
-    --scrollbar-thumb-hover: 217 90% 62%;
   }
 
   /* Bloom — deep violet, sage green, and blush pink (from reference art) */
@@ -67,8 +65,6 @@
       hsl(82 45% 62%) 100%
     );
     --theme-shadow-color: 265 33% 35%;
-    --scrollbar-thumb: 300 16% 82%;
-    --scrollbar-thumb-hover: 265 35% 52%;
   }
 
   /* Smooth theme transitions */
@@ -93,9 +89,14 @@
     min-height: 100%;
     position: relative;
     transition: background-color 0.15s ease;
-    /* Firefox scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--scrollbar-thumb)) transparent;
+    /* Scrollbar hidden (Firefox). The page scroller is the root element, whose
+       reserved scrollbar gutter sits OUTSIDE the content box that fixed
+       `inset-0` background layers (grainient veil, aurora) cover — so the gutter
+       exposed a strip of the bare dark base at the right edge, reading as a
+       vertical seam in both themes. Removing the gutter lets the backgrounds
+       run flush to the window edge. Scrolling stays fully functional (wheel /
+       touch / keyboard / Lenis); this site drives scroll through Lenis anyway. */
+    scrollbar-width: none;
   }
 
   /* Lenis smooth scroll (see components/layout/SmoothScroll.tsx). Lenis toggles
@@ -122,21 +123,13 @@
     pointer-events: none;
   }
 
-  /* WebKit / Blink scrollbar */
+  /* WebKit / Blink scrollbar hidden — no reserved gutter, so the fixed
+     background layers reach the window's right edge with no seam (see the
+     note on `html` above). */
   ::-webkit-scrollbar {
-    width: 0.375rem;
-    height: 0.375rem;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--scrollbar-thumb));
-    border-radius: 9999px;
-    transition: background-color 200ms;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--scrollbar-thumb-hover));
+    width: 0;
+    height: 0;
+    display: none;
   }
 
   /* Body - inherits background from html::before pseudo-element */
