@@ -153,6 +153,7 @@ export const de = {
     ctaButton: "Jetzt Kontakt aufnehmen",
     getInTouch: "Kontakt aufnehmen",
     close: "Schließen",
+    loading: "Der Baum wächst…",
     items: {
       webDev: {
         title: "Webentwicklung",
