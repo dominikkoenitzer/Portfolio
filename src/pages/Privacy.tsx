@@ -2,7 +2,11 @@ import { motion } from "framer-motion";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
+import { LOCALE_TAG } from "@/lib/locale";
 import { translations } from "@/lib/translations";
+
+// Bump this when the policy text actually changes (rendered in the active locale).
+const PRIVACY_REVISED = "2026-06-26";
 
 const Privacy = () => {
   const { language } = useLanguage();
@@ -10,6 +14,10 @@ const Privacy = () => {
   const seo = translations[language].seo.privacy;
   const s = t.sections;
   const privacyUrl = `${SITE_CONFIG.url}/privacy`;
+  const lastRevised = new Date(PRIVACY_REVISED).toLocaleDateString(
+    LOCALE_TAG[language],
+    { year: "numeric", month: "long", day: "numeric" },
+  );
 
   return (
     <>
@@ -168,7 +176,7 @@ const Privacy = () => {
             >
               <p className="text-muted-foreground text-xs sm:text-sm">
                 {s.lastUpdated}
-                {new Date().getFullYear()}
+                {lastRevised}
               </p>
             </motion.div>
           </motion.div>
