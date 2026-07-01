@@ -8,6 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { magnetRectOf } from "@/lib/cursor-magnet";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /**
@@ -232,39 +233,51 @@ export function CustomCursor() {
     // / pointer strayed far outside) so the caller can fall back to a dot.
     function glueMagnet(el: Element): boolean {
       if (!el.isConnected) return false;
-      const rect = el.getBoundingClientRect();
+
+      // Prefer an override sub-rect (e.g. the hovered services leaf) over the
+      // element's bounding box. `undefined` ⇒ no override; explicit `null` ⇒ the
+      // override source is active but has no live target ⇒ release the morph.
+      const override = magnetRectOf(el);
+      let left: number;
+      let top: number;
+      let width: number;
+      let height: number;
+      if (override !== undefined) {
+        if (!override) return false;
+        ({ left, top, width, height } = override);
+      } else {
+        const rect = el.getBoundingClientRect();
+        left = rect.left;
+        top = rect.top;
+        width = rect.width;
+        height = rect.height;
+      }
       // Release on ANY degenerate rect (either axis collapsed) — a collapsed
       // accordion / max-height:0 target would otherwise render a thin sliver.
-      if (rect.width < 1 || rect.height < 1) return false;
+      if (width < 1 || height < 1) return false;
+      const right = left + width;
+      const bottom = top + height;
 
       const { x: pxp, y: pyp } = pointerRef.current;
       // Release if the pointer has drifted well outside the target — covers
       // scroll-away, gaps between elements, and cases where mouseout never fires.
       if (
-        pxp < rect.left - MAGNET_RELEASE_MARGIN ||
-        pxp > rect.right + MAGNET_RELEASE_MARGIN ||
-        pyp < rect.top - MAGNET_RELEASE_MARGIN ||
-        pyp > rect.bottom + MAGNET_RELEASE_MARGIN
+        pxp < left - MAGNET_RELEASE_MARGIN ||
+        pxp > right + MAGNET_RELEASE_MARGIN ||
+        pyp < top - MAGNET_RELEASE_MARGIN ||
+        pyp > bottom + MAGNET_RELEASE_MARGIN
       ) {
         return false;
       }
 
-      const boxW = rect.width + MAGNET_PAD * 2;
-      const boxH = rect.height + MAGNET_PAD * 2;
-      const centreX = rect.left + rect.width / 2;
-      const centreY = rect.top + rect.height / 2;
+      const boxW = width + MAGNET_PAD * 2;
+      const boxH = height + MAGNET_PAD * 2;
+      const centreX = left + width / 2;
+      const centreY = top + height / 2;
       // Magnetic pull: base at the centre, nudged toward the pointer, but clamped
       // inside the target so the box never slides off it.
-      const nudgedX = clamp(
-        centreX + (pxp - centreX) * MAGNET_PULL,
-        rect.left,
-        rect.right,
-      );
-      const nudgedY = clamp(
-        centreY + (pyp - centreY) * MAGNET_PULL,
-        rect.top,
-        rect.bottom,
-      );
+      const nudgedX = clamp(centreX + (pxp - centreX) * MAGNET_PULL, left, right);
+      const nudgedY = clamp(centreY + (pyp - centreY) * MAGNET_PULL, top, bottom);
 
       const maxR = Math.min(boxW, boxH) / 2;
       const rad = magnetRadiusRef.current;
@@ -340,12 +353,18 @@ export function CustomCursor() {
     function enterMagnet(el: Element) {
       activeTargetRef.current = el;
       // Read the target radius ONCE (constant while hovered); pills (percentage
-      // radii) round to half the short side each frame from the live rect.
-      const cs = getComputedStyle(el);
-      const rr = cs.borderTopLeftRadius;
-      magnetRadiusRef.current = rr.includes("%")
-        ? { pct: true, px: 0 }
-        : { pct: false, px: parseFloat(rr) || 0 };
+      // radii) round to half the short side each frame from the live rect. An
+      // override target (a round services leaf on a square-cornered <canvas>)
+      // has no meaningful CSS radius, so treat it as a pill for a snug halo.
+      if (magnetRectOf(el) !== undefined) {
+        magnetRadiusRef.current = { pct: true, px: 0 };
+      } else {
+        const cs = getComputedStyle(el);
+        const rr = cs.borderTopLeftRadius;
+        magnetRadiusRef.current = rr.includes("%")
+          ? { pct: true, px: 0 }
+          : { pct: false, px: parseFloat(rr) || 0 };
+      }
       destFill.set(MAGNET_FILL);
       destRing.set(MAGNET_RING_W);
       fieldMV.set(0);
@@ -363,25 +382,10 @@ export function CustomCursor() {
     }
 
     // ── Listeners ─────────────────────────────────────────────────────────────
-    const onMove = (e: MouseEvent) => {
-      pointerRef.current.x = e.clientX;
-      pointerRef.current.y = e.clientY;
-      inside = true;
-
-      if (!hasMoved) {
-        hasMoved = true;
-        // Land exactly on the pointer: jump the position springs so the cursor
-        // never "flies in" from the -100 origin on its first appearance.
-        destX.set(e.clientX);
-        destY.set(e.clientY);
-        cx.jump(e.clientX);
-        cy.jump(e.clientY);
-        setEnabled(true);
-      }
-      showCursor();
-
-      const el = e.target as Element | null;
-
+    // Resolve what's under the pointer and morph accordingly. Free (non-magnetic)
+    // modes read the position from `pointerRef`, so this can also be driven by a
+    // synthetic `mouseover` that carries no coordinates (see `onOver`).
+    const applyContext = (el: Element | null) => {
       // 1) Magnetic wins over everything (e.g. a link inside a paragraph).
       const interactive = el ? el.closest(INTERACTIVE_SELECTOR) : null;
       if (interactive) {
@@ -403,8 +407,38 @@ export function CustomCursor() {
       }
 
       // Free (non-magnetic) modes track the pointer directly.
-      destX.set(e.clientX);
-      destY.set(e.clientY);
+      destX.set(pointerRef.current.x);
+      destY.set(pointerRef.current.y);
+    };
+
+    const onMove = (e: MouseEvent) => {
+      pointerRef.current.x = e.clientX;
+      pointerRef.current.y = e.clientY;
+      inside = true;
+
+      if (!hasMoved) {
+        hasMoved = true;
+        // Land exactly on the pointer: jump the position springs so the cursor
+        // never "flies in" from the -100 origin on its first appearance.
+        destX.set(e.clientX);
+        destY.set(e.clientY);
+        cx.jump(e.clientX);
+        cy.jump(e.clientY);
+        setEnabled(true);
+      }
+      showCursor();
+      applyContext(e.target as Element | null);
+    };
+
+    // A canvas scene can't emit a real pointer move when its interactivity
+    // changes under a STILL cursor (the object drifts under the pixel, not the
+    // pixel onto the object). It toggles `.cursor-pointer` / a magnet rect and
+    // fires a synthetic `mouseover`; re-evaluate here so the morph acquires or
+    // releases without waiting for the user to jog the mouse. Real hovers are
+    // already covered by `mousemove`, so only handle untrusted (synthetic) ones.
+    const onOver = (e: MouseEvent) => {
+      if (e.isTrusted || !hasMoved) return;
+      applyContext(e.target as Element | null);
     };
 
     const onDown = () => press.set(1);
@@ -455,6 +489,7 @@ export function CustomCursor() {
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mouseover", onOver, { passive: true });
     window.addEventListener("mousedown", onDown, { passive: true });
     window.addEventListener("mouseup", onUp, { passive: true });
     document.addEventListener("mouseout", onWindowOut, { passive: true });
@@ -466,6 +501,7 @@ export function CustomCursor() {
 
     return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseover", onOver);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
       document.removeEventListener("mouseout", onWindowOut);
