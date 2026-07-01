@@ -885,6 +885,15 @@ export default function ServiceExplorer({
       treeGroup.rotation.x = Math.sin(el * 0.42 + 0.6) * 0.013 * sw;
 
       updateCamera(dt);
+      // Re-raycast every frame, not just on pointer-move. The scene is never
+      // still — breeze sway (treeGroup rotation above), auto-rotate, the easing
+      // mouse-parallax camera offset and the fly-to all keep moving the leaves
+      // under a stationary cursor. Hover computed only at move-time therefore
+      // goes stale the instant the pointer stops and the leaf drifts off it, so
+      // the lock-on latches the wrong leaf (or none). Recomputing here against
+      // the live camera keeps it glued to whatever leaf is actually under the
+      // cursor and gives click-selection a fresh `hovered`.
+      updateHover();
       updateTooltip();
       renderer.render(scene, camera);
 
