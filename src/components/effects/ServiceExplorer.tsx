@@ -9,6 +9,7 @@ import {
   type ServiceTreeTheme,
   TRUNK_COLOR,
 } from "@/components/effects/service-tree-theme";
+import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 
 /**
  * ServiceExplorer — the Services page rendered AS a glowing 3D skill-tree
@@ -648,8 +649,56 @@ export default function ServiceExplorer({
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
+    // ── Cursor magnet (pin the site cursor to the hovered leaf) ───────────
+    // The custom cursor morphs onto interactive elements by their bounding box.
+    // For the <canvas> that box is the WHOLE panel, so instead we hand it the
+    // hovered leaf's live screen rect and it hugs just the leaf. Scratch vectors
+    // reused every frame — the hover path never allocates.
+    const magCenter = new THREE.Vector3();
+    const magEdge = new THREE.Vector3();
+    const magRight = new THREE.Vector3();
+    const writeMagnetRect = (idx: number | null) => {
+      const n = idx != null ? nodeObjs[idx] : null;
+      if (!n) {
+        setCursorMagnetRect(canvas, null);
+        return;
+      }
+      n.group.getWorldPosition(magCenter);
+      // Leaf half-extent in world units: sprite half (0.8) × the live group
+      // scale (pops to ~1.34 when focused), so the halo grows with the leaf.
+      const halfWorld = 0.8 * n.scale;
+      magRight.setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+      magEdge.copy(magCenter).addScaledVector(magRight, halfWorld);
+      magCenter.project(camera);
+      if (magCenter.z > 1) {
+        setCursorMagnetRect(canvas, null); // leaf is behind the camera
+        return;
+      }
+      magEdge.project(camera);
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      const cxPx = (magCenter.x * 0.5 + 0.5) * cw;
+      const cyPx = (-magCenter.y * 0.5 + 0.5) * ch;
+      const exPx = (magEdge.x * 0.5 + 0.5) * cw;
+      const eyPx = (-magEdge.y * 0.5 + 0.5) * ch;
+      const rPx = Math.max(Math.hypot(exPx - cxPx, eyPx - cyPx), 10);
+      const box = container.getBoundingClientRect(); // → viewport coords
+      setCursorMagnetRect(canvas, {
+        left: box.left + cxPx - rPx,
+        top: box.top + cyPx - rPx,
+        width: rPx * 2,
+        height: rPx * 2,
+      });
+    };
+
     // ── Hover (raycast against the invisible hit spheres) ─────────────────
     const updateHover = () => {
+      // Sync the camera's world matrices to THIS frame before we raycast/project.
+      // updateCamera() sets position + lookAt() but never refreshes
+      // matrixWorldInverse (renderer.render does that at frame end), so without
+      // this the raycast, the leaf halo and the tooltip would all project through
+      // the PREVIOUS frame's camera — a ~1–2px lag that grows with camera speed.
+      camera.updateMatrixWorld();
       raycaster.setFromCamera(ndc, camera);
       const hits = raycaster.intersectObjects(hitMeshes, false);
       let idx: number | null = null;
@@ -661,6 +710,10 @@ export default function ServiceExplorer({
         }
       }
       hovered = idx;
+      // Hand the custom cursor the hovered leaf's live screen rect (or clear it)
+      // BEFORE the synthetic mouseover below, so when the cursor re-evaluates it
+      // reads a fresh rect and hugs the leaf — never the whole <canvas> box.
+      writeMagnetRect(idx);
       // Native cursors are defeated site-wide by `cursor:none` on fine pointers
       // (the custom dot takes over), and the dot only re-evaluates interactivity
       // on `mouseover` — which never re-fires while moving within one canvas. So
@@ -956,6 +1009,9 @@ export default function ServiceExplorer({
       canvas.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
+      // Drop any leaf magnet so the custom cursor doesn't keep a stale rect.
+      canvas.classList.remove("cursor-pointer");
+      setCursorMagnetRect(canvas, null);
       sceneApi.current = null;
       for (const d of disposables) d.dispose();
       renderer.dispose();
