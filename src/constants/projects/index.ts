@@ -2,6 +2,7 @@ import type { Language } from "@/config/languages";
 import { entropy } from "./entropy";
 import { flow } from "./flow";
 import { jester } from "./jester";
+import { oxidize } from "./oxidize";
 import { portfolio } from "./portfolio";
 import { punds } from "./punds";
 import { remnants } from "./remnants";
@@ -163,6 +164,21 @@ const PROJECT_BASE: ProjectBase[] = [
       "/projects/senbon-2.jpg",
     ],
   },
+  {
+    slug: "oxidize",
+    title: "Oxidize",
+    year: "2026",
+    repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
+    liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
+    priority: 11,
+    toneClass: TONE_RADIAL,
+    image: "/projects/oxidize.png",
+    programmingLanguages: ["Rust"],
+    operatingSystem: "Windows",
+    applicationCategory: "UtilitiesApplication",
+  },
 ];
 
 const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
@@ -176,6 +192,7 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   flow,
   punds,
   senbon,
+  oxidize,
 };
 
 const resolveContent = (slug: string, lang: Language): LocalizedContent => {
