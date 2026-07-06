@@ -178,6 +178,18 @@
     </image:image>
   </url>
 
+  <!-- Project: Oxidize -->
+  <url>
+    <loc>https://dominikkoenitzer.ch/projects/oxidize</loc>
+    <lastmod>2026-07-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dominikkoenitzer.ch/projects/oxidize.png</image:loc>
+      <image:title>Oxidize — software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
   <!-- Contact -->
   <url>
     <loc>https://dominikkoenitzer.ch/contact</loc>

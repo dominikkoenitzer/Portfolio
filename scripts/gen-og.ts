@@ -63,6 +63,7 @@ const PROJECT_CARDS: { out: string; title: string; subtitle: string }[] = [
   { out: "public/og/projects/jester.png", title: "Jester", subtitle: "A lightweight Windows notepad (C# · WPF)" },
   { out: "public/og/projects/remnants.png", title: "Remnants", subtitle: "A clean, AI-free fork of VS Code" },
   { out: "public/og/projects/portfolio.png", title: "Portfolio", subtitle: "This site — React, TypeScript, multilingual" },
+  { out: "public/og/projects/oxidize.png", title: "Oxidize", subtitle: "A thorough Windows uninstaller (Rust)" },
 ];
 
 for (const c of [...CARDS, ...PROJECT_CARDS]) {
