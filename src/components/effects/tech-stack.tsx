@@ -13,6 +13,7 @@ import {
   SiPwa,
   SiRadixui,
   SiReact,
+  SiRust,
   SiShadcnui,
   SiSharp,
   SiTailwindcss,
@@ -115,6 +116,11 @@ const TECH: Record<string, LogoItem> = {
     title: "C#",
     href: "https://learn.microsoft.com/dotnet/csharp/",
   },
+  Rust: {
+    node: <SiRust />,
+    title: "Rust",
+    href: "https://www.rust-lang.org",
+  },
   ".NET": {
     node: <SiDotnet />,
     title: ".NET",
@@ -171,6 +177,7 @@ const PROJECT_STACKS: Record<string, string[]> = {
     "Markdown",
     "Vercel",
   ],
+  oxidize: ["Rust", "Windows"],
 };
 
 /** The LogoLoop items for a given project's real stack. */
