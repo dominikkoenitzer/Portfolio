@@ -19,14 +19,15 @@ const TONE_RADIAL =
 
 // Array order is display order (getProjects maps over this list as-is) and is
 // kept sorted by repository creation date, oldest first. To add a project:
-// insert it at the position matching its GitHub creation date, renumber
-// `priority` to stay 1-based, and add a localized content module (keyed by slug)
-// to PROJECT_CONTENT. The public API below rebuilds automatically.
+// insert it at the position matching its GitHub creation date, set `date` to
+// that repo's created_at year-month (YYYY-MM), renumber `priority` to stay
+// 1-based, and add a localized content module (keyed by slug) to
+// PROJECT_CONTENT. The public API below rebuilds automatically.
 const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "zephyr",
     title: "Zephyr",
-    year: "2024",
+    date: "2024-12",
     repoUrl: "https://github.com/dominikkoenitzer/Zephyr",
     liveUrl: "https://zephyr.punds.ch/",
     priority: 1,
@@ -41,7 +42,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "portfolio",
     title: "Portfolio",
-    year: "2025",
+    date: "2025-05",
     repoUrl: "https://github.com/dominikkoenitzer/Portfolio",
     liveUrl: "https://dominikkoenitzer.ch/",
     priority: 2,
@@ -55,7 +56,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "entropy",
     title: "Entropy",
-    year: "2026",
+    date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Entropy",
     liveUrl: "https://entropy.punds.ch/",
     priority: 3,
@@ -68,7 +69,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "spectrum",
     title: "Spectrum",
-    year: "2026",
+    date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Spectrum",
     liveUrl: "https://spectrum.punds.ch/",
     priority: 4,
@@ -83,7 +84,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "remnants",
     title: "Remnants",
-    year: "2026",
+    date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://github.com/dominikkoenitzer/Remnants",
     downloadUrl:
@@ -99,7 +100,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "time",
     title: "Time",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Time",
     liveUrl: "https://time.punds.ch/",
     priority: 6,
@@ -113,7 +114,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "jester",
     title: "Jester",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Jester",
     liveUrl: "https://github.com/dominikkoenitzer/Jester",
     downloadUrl:
@@ -128,7 +129,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "flow",
     title: "Flow",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Flow",
     liveUrl: "https://github.com/dominikkoenitzer/Flow",
     downloadUrl:
@@ -144,7 +145,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "punds",
     title: "Punds",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Punds",
     liveUrl: "https://punds.ch/",
     priority: 9,
@@ -154,7 +155,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "senbon",
     title: "Senbon",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Senbon",
     liveUrl: "https://senbon.ch/",
     priority: 10,
@@ -167,7 +168,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "oxidize",
     title: "Oxidize",
-    year: "2026",
+    date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
     liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
     downloadUrl:
@@ -200,11 +201,31 @@ const resolveContent = (slug: string, lang: Language): LocalizedContent => {
   return entry[lang] ?? entry.en;
 };
 
+const LOCALE_BY_LANG: Record<Language, string> = {
+  en: "en-US",
+  de: "de-CH",
+  fr: "fr-CH",
+  zh: "zh-CN",
+};
+
+const DATE_FORMATTERS: Partial<Record<Language, Intl.DateTimeFormat>> = {};
+
+// "2024-12" → "Dec 2024" / "Dez. 2024" / "déc. 2024" / "2024年12月"
+const formatProjectDate = (date: string, lang: Language): string => {
+  const formatter = (DATE_FORMATTERS[lang] ??= new Intl.DateTimeFormat(
+    LOCALE_BY_LANG[lang],
+    { month: "short", year: "numeric", timeZone: "UTC" },
+  ));
+  return formatter.format(new Date(`${date}-01T00:00:00Z`));
+};
+
 const buildProject = (base: ProjectBase, lang: Language): PortfolioProject => {
   const content = resolveContent(base.slug, lang);
   return {
     ...base,
     ...content,
+    year: base.date.slice(0, 4),
+    dateLabel: formatProjectDate(base.date, lang),
   };
 };
 
