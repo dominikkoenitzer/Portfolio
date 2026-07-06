@@ -19,7 +19,12 @@ export interface PortfolioProject {
   }>;
   hiringSignals: string[];
   nextIterations: string[];
+  /** ISO year-month (YYYY-MM) the project's GitHub repo was created. */
+  date: string;
+  /** Four-digit year derived from `date`. */
   year: string;
+  /** Localized month + year label derived from `date` (e.g. "Dec 2024"). */
+  dateLabel: string;
   repoUrl: string;
   liveUrl: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
@@ -68,7 +73,8 @@ export type LocalizedContent = {
 export type ProjectBase = {
   slug: string;
   title: string;
-  year: string;
+  /** ISO year-month (YYYY-MM) the GitHub repo was created — array order should match. */
+  date: string;
   repoUrl: string;
   liveUrl: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
