@@ -226,7 +226,8 @@ export const createSoftwareSourceCodeSchema = (project: {
   liveUrl: string;
   repoUrl: string;
   tags: string[];
-  year: string;
+  /** ISO year-month (YYYY-MM) — a valid ISO 8601 partial date for datePublished. */
+  date: string;
   programmingLanguages?: string[];
   operatingSystem?: string;
 }) => ({
@@ -243,7 +244,7 @@ export const createSoftwareSourceCodeSchema = (project: {
   ],
   runtimePlatform: project.operatingSystem ?? "Web",
   keywords: project.tags.join(", "),
-  datePublished: project.year,
+  datePublished: project.date,
   author: { "@id": `${SITE_CONFIG.url}/#person` },
   creator: { "@id": `${SITE_CONFIG.url}/#person` },
   maintainer: { "@id": `${SITE_CONFIG.url}/#person` },
