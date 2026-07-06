@@ -175,7 +175,7 @@ const ProjectDetails = () => {
 
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
-  const projectTimeline = `${project.year} — ${t.present}`;
+  const projectTimeline = `${project.dateLabel} — ${t.present}`;
   const otherProjects = getProjects(language).filter(
     (item) => item.slug !== project.slug,
   );
@@ -733,7 +733,7 @@ const ProjectDetails = () => {
                           {item.title}
                         </p>
                         <p className="mt-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.18em]">
-                          {item.year}
+                          {item.dateLabel}
                         </p>
                       </div>
                       <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
