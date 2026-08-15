@@ -283,14 +283,35 @@ export const fr = {
   contact: {
     headlineLine1: "Travaillons",
     headlineLine2: "ensemble.",
-    intro:
-      "Un projet, une idée, ou juste envie de dire bonjour ? Je suis toujours ouvert à de nouvelles missions et à des conversations intéressantes.",
-    emailLabel: "Email",
-    basedLabel: "Basé à",
-    basedLocation: "Zurich, Suisse",
-    wipEyebrow: "Bientôt disponible",
-    wipTitle: "Formulaire de contact en préparation",
-    wipBody: "Je refais le formulaire de contact. En attendant, le plus rapide pour me joindre, c'est l'e-mail — je réponds vite.",
+    sentenceLead: "Mon message concerne",
+    changeSubject: "Changer de sujet",
+    intents: {
+      job: {
+        label: "un poste",
+        subject: "Poste chez [entreprise]",
+        body: "Bonjour Dominik,\n\nnous recrutons [poste] chez [entreprise] et votre profil correspond bien.\n\n· Poste : \n· Équipe et stack : \n· Lieu / télétravail : \n· Date de début : \n\nCordialement,\n[nom]",
+      },
+      freelance: {
+        label: "une mission freelance",
+        subject: "Mission freelance — [brève description]",
+        body: "Bonjour Dominik,\n\nj'aimerais travailler avec vous sur [projet].\n\n· Ce dont nous avons besoin : \n· Calendrier approximatif : \n· Budget envisagé : \n· Liens : \n\nCordialement,\n[nom]",
+      },
+      collab: {
+        label: "une collaboration",
+        subject: "Collaboration — [idée]",
+        body: "Bonjour Dominik,\n\nje travaille sur [projet] et je me disais que nous pourrions construire quelque chose ensemble.\n\n· L'idée : \n· Ce que j'apporte : \n· Liens : \n\nCordialement,\n[nom]",
+      },
+      other: {
+        label: "autre chose",
+        subject: "Bonjour Dominik",
+        body: "Bonjour Dominik,\n\n",
+      },
+    },
+    emailHint: "Ouvre votre messagerie avec l'objet pré-rempli.",
+    copyEmail: "Ou copier l'adresse.",
+    copied: "Copié.",
+    copyFailed:
+      "Copie impossible — l'adresse est dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "Pourboire",
