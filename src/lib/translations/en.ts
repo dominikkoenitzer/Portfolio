@@ -169,6 +169,9 @@ export const en = {
     getInTouch: "Get in touch",
     close: "Close",
     loading: "Growing the tree…",
+    fromPrice: "from {price}",
+    processTitle: "How it works",
+    faqTitle: "Questions",
     items: {
       webDev: {
         title: "Web Development",

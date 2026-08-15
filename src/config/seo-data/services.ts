@@ -146,7 +146,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Contact for Consultation",
-        text: "Use the contact form at dominikkoenitzer.ch/contact to discuss your project requirements, timeline, and budget. Provide details about your current website or software needs.",
+        text: "Head to dominikkoenitzer.ch/contact and pick what your message is about — it opens an email with the subject and a short template already filled in. Describe your project requirements, timeline, and budget, plus details about your current website or software needs.",
       },
       {
         name: "Receive Proposal",
@@ -173,7 +173,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Kontakt für Beratung",
-        text: "Nutze das Kontaktformular unter dominikkoenitzer.ch/contact, um deine Projektanforderungen, deinen Zeitplan und dein Budget zu besprechen. Beschreibe deine aktuellen Website- oder Software-Anforderungen.",
+        text: "Geh auf dominikkoenitzer.ch/contact und wähl aus, worum es geht — damit öffnet sich eine E-Mail mit fertigem Betreff und kurzer Vorlage. Beschreib darin deine Projektanforderungen, deinen Zeitplan und dein Budget sowie deine aktuellen Website- oder Software-Anforderungen.",
       },
       {
         name: "Angebot erhalten",
@@ -200,7 +200,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Contacter pour consultation",
-        text: "Utilisez le formulaire de contact sur dominikkoenitzer.ch/contact pour discuter de vos besoins, du calendrier et du budget. Précisez vos besoins actuels en site web ou en logiciel.",
+        text: "Rendez-vous sur dominikkoenitzer.ch/contact et choisissez l'objet de votre message — un e-mail s'ouvre avec l'objet et un court modèle déjà prêts. Précisez vos besoins, le calendrier et le budget, ainsi que vos besoins actuels en site web ou en logiciel.",
       },
       {
         name: "Recevoir une proposition",
@@ -226,7 +226,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "联系咨询",
-        text: "通过 dominikkoenitzer.ch/contact 上的联系表单沟通您的项目需求、时间安排与预算。请详细描述您现有的网站或软件需求。",
+        text: "前往 dominikkoenitzer.ch/contact 并选择你想聊的主题 —— 系统会打开一封主题和简短模板都已填好的邮件。请在其中说明项目需求、时间安排与预算，以及你现有的网站或软件情况。",
       },
       {
         name: "获取方案",
