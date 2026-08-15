@@ -7,7 +7,7 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "What are Dominik Könitzer's top technical skills?",
       answer:
-        "Dominik Könitzer's top technical skills include React (95% proficiency), Next.js (90%), Java (90%), shadcn/ui (90%), TypeScript (80%), Node.js (85%), Spring Framework (85%), and Tailwind CSS (85%). He also has strong skills in Git, Docker, and various database systems.",
+        "Dominik Könitzer's top technical skills include React, Next.js, Java, shadcn/ui, TypeScript, Node.js, Spring Framework, and Tailwind CSS. He also has strong skills in Git, Docker, and various database systems.",
     },
     {
       question: "What programming languages does Dominik Könitzer know?",
@@ -17,19 +17,19 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Does Dominik Könitzer have DevOps experience?",
       answer:
-        "Yes, Dominik Könitzer has DevOps experience including Windows Server (85%), Linux Server (80%), Ubuntu (80%), Jenkins (80%), Docker (85%), and Grafana (65%). He also has experience with hardware installation and server management.",
+        "Yes, Dominik Könitzer has DevOps experience including Windows Server, Linux Server, Ubuntu, Jenkins, Docker, and Grafana. He also has experience with hardware installation and server management.",
     },
     {
       question: "What databases does Dominik Könitzer work with?",
       answer:
-        "Dominik Könitzer works with multiple database systems including SQLite (85%), PostgreSQL (80%), MongoDB (80%), and Redis (75%). He has experience in both relational and NoSQL database management.",
+        "Dominik Könitzer works with multiple database systems including SQLite, PostgreSQL, MongoDB, and Redis. He has experience in both relational and NoSQL database management.",
     },
   ],
   de: [
     {
       question: "Was sind Dominik Könitzers wichtigste technische Skills?",
       answer:
-        "Zu Dominik Könitzers wichtigsten technischen Skills zählen React (95 %), Next.js (90 %), Java (90 %), shadcn/ui (90 %), TypeScript (80 %), Node.js (85 %), Spring Framework (85 %) und Tailwind CSS (85 %). Zudem ist er stark in Git, Docker und verschiedenen Datenbanksystemen.",
+        "Zu Dominik Könitzers wichtigsten technischen Skills zählen React, Next.js, Java, shadcn/ui, TypeScript, Node.js, Spring Framework und Tailwind CSS. Zudem ist er stark in Git, Docker und verschiedenen Datenbanksystemen.",
     },
     {
       question: "Welche Programmiersprachen kennt Dominik Könitzer?",
@@ -39,12 +39,12 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Hat Dominik Könitzer DevOps-Erfahrung?",
       answer:
-        "Ja, Dominik Könitzer hat DevOps-Erfahrung, darunter Windows Server (85 %), Linux Server (80 %), Ubuntu (80 %), Jenkins (80 %), Docker (85 %) und Grafana (65 %). Er hat zudem Erfahrung mit Hardware-Installation und Server-Management.",
+        "Ja, Dominik Könitzer hat DevOps-Erfahrung, darunter Windows Server, Linux Server, Ubuntu, Jenkins, Docker und Grafana. Er hat zudem Erfahrung mit Hardware-Installation und Server-Management.",
     },
     {
       question: "Mit welchen Datenbanken arbeitet Dominik Könitzer?",
       answer:
-        "Dominik Könitzer arbeitet mit mehreren Datenbanksystemen, darunter SQLite (85 %), PostgreSQL (80 %), MongoDB (80 %) und Redis (75 %). Er hat Erfahrung sowohl mit relationalen als auch mit NoSQL-Datenbanken.",
+        "Dominik Könitzer arbeitet mit mehreren Datenbanksystemen, darunter SQLite, PostgreSQL, MongoDB und Redis. Er hat Erfahrung sowohl mit relationalen als auch mit NoSQL-Datenbanken.",
     },
   ],
   fr: [
@@ -52,7 +52,7 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
       question:
         "Quelles sont les principales compétences techniques de Dominik Könitzer ?",
       answer:
-        "Les principales compétences techniques de Dominik Könitzer incluent React (95 %), Next.js (90 %), Java (90 %), shadcn/ui (90 %), TypeScript (80 %), Node.js (85 %), Spring Framework (85 %) et Tailwind CSS (85 %). Il maîtrise également Git, Docker et divers systèmes de bases de données.",
+        "Les principales compétences techniques de Dominik Könitzer incluent React, Next.js, Java, shadcn/ui, TypeScript, Node.js, Spring Framework et Tailwind CSS. Il maîtrise également Git, Docker et divers systèmes de bases de données.",
     },
     {
       question: "Quels langages de programmation Dominik Könitzer connaît-il ?",
@@ -62,20 +62,20 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Dominik Könitzer a-t-il une expérience DevOps ?",
       answer:
-        "Oui, Dominik Könitzer a une expérience DevOps incluant Windows Server (85 %), Linux Server (80 %), Ubuntu (80 %), Jenkins (80 %), Docker (85 %) et Grafana (65 %). Il a également de l'expérience en installation matérielle et en gestion de serveurs.",
+        "Oui, Dominik Könitzer a une expérience DevOps incluant Windows Server, Linux Server, Ubuntu, Jenkins, Docker et Grafana. Il a également de l'expérience en installation matérielle et en gestion de serveurs.",
     },
     {
       question:
         "Avec quelles bases de données Dominik Könitzer travaille-t-il ?",
       answer:
-        "Dominik Könitzer travaille avec plusieurs systèmes de bases de données dont SQLite (85 %), PostgreSQL (80 %), MongoDB (80 %) et Redis (75 %). Il a de l'expérience à la fois en bases de données relationnelles et NoSQL.",
+        "Dominik Könitzer travaille avec plusieurs systèmes de bases de données dont SQLite, PostgreSQL, MongoDB et Redis. Il a de l'expérience à la fois en bases de données relationnelles et NoSQL.",
     },
   ],
   zh: [
     {
       question: "Dominik Könitzer 的核心技术技能有哪些？",
       answer:
-        "Dominik Könitzer 的核心技术技能包括 React（95%）、Next.js（90%）、Java（90%）、shadcn/ui（90%）、TypeScript（80%）、Node.js（85%）、Spring Framework（85%）与 Tailwind CSS（85%）。他在 Git、Docker 与多种数据库系统方面也具备扎实能力。",
+        "Dominik Könitzer 的核心技术技能包括 React、Next.js、Java、shadcn/ui、TypeScript、Node.js、Spring Framework 与 Tailwind CSS。他在 Git、Docker 与多种数据库系统方面也具备扎实能力。",
     },
     {
       question: "Dominik Könitzer 熟悉哪些编程语言？",
@@ -85,12 +85,12 @@ export const SKILLS_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Dominik Könitzer 是否具备 DevOps 经验？",
       answer:
-        "是的，Dominik Könitzer 具备 DevOps 经验，包括 Windows Server（85%）、Linux Server（80%）、Ubuntu（80%）、Jenkins（80%）、Docker（85%）与 Grafana（65%）。他也有硬件安装与服务器管理的经验。",
+        "是的，Dominik Könitzer 具备 DevOps 经验，包括 Windows Server、Linux Server、Ubuntu、Jenkins、Docker 与 Grafana。他也有硬件安装与服务器管理的经验。",
     },
     {
       question: "Dominik Könitzer 使用哪些数据库？",
       answer:
-        "Dominik Könitzer 使用多种数据库系统，包括 SQLite（85%）、PostgreSQL（80%）、MongoDB（80%）与 Redis（75%）。他对关系型与 NoSQL 数据库均有经验。",
+        "Dominik Könitzer 使用多种数据库系统，包括 SQLite、PostgreSQL、MongoDB 与 Redis。他对关系型与 NoSQL 数据库均有经验。",
     },
   ],
 };

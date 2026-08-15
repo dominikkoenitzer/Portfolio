@@ -17,7 +17,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "What technologies do you use for web development?",
       answer:
-        "I specialize in modern web technologies including React (95% proficiency), Next.js (90%), TypeScript (80%), JavaScript, Node.js (85%), Java (90%), Spring Framework (85%), and various frontend and backend frameworks. I also work with databases like PostgreSQL, MongoDB, and SQLite, and DevOps tools including Docker, Jenkins, and Git.",
+        "I specialize in modern web technologies including React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, and various frontend and backend frameworks. I also work with databases like PostgreSQL, MongoDB, and SQLite, and DevOps tools including Docker, Jenkins, and Git.",
     },
     {
       question: "How much does website maintenance cost?",
@@ -49,7 +49,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Welche Technologien nutzt du für die Webentwicklung?",
       answer:
-        "Ich bin spezialisiert auf moderne Web-Technologien wie React (95 %), Next.js (90 %), TypeScript (80 %), JavaScript, Node.js (85 %), Java (90 %), Spring Framework (85 %) sowie verschiedene Frontend- und Backend-Frameworks. Ich arbeite zudem mit Datenbanken wie PostgreSQL, MongoDB und SQLite sowie DevOps-Tools wie Docker, Jenkins und Git.",
+        "Ich bin spezialisiert auf moderne Web-Technologien wie React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework sowie verschiedene Frontend- und Backend-Frameworks. Ich arbeite zudem mit Datenbanken wie PostgreSQL, MongoDB und SQLite sowie DevOps-Tools wie Docker, Jenkins und Git.",
     },
     {
       question: "Wie viel kostet Website-Wartung?",
@@ -82,7 +82,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
       question:
         "Quelles technologies utilisez-vous pour le développement web ?",
       answer:
-        "Je suis spécialisé dans les technologies web modernes : React (95 %), Next.js (90 %), TypeScript (80 %), JavaScript, Node.js (85 %), Java (90 %), Spring Framework (85 %) et divers frameworks frontend et backend. Je travaille aussi avec des bases de données comme PostgreSQL, MongoDB et SQLite, et des outils DevOps tels que Docker, Jenkins et Git.",
+        "Je suis spécialisé dans les technologies web modernes : React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework et divers frameworks frontend et backend. Je travaille aussi avec des bases de données comme PostgreSQL, MongoDB et SQLite, et des outils DevOps tels que Docker, Jenkins et Git.",
     },
     {
       question: "Combien coûte la maintenance de site web ?",
@@ -114,7 +114,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "您使用哪些技术进行网页开发？",
       answer:
-        "我擅长现代网页技术，包括 React（95%）、Next.js（90%）、TypeScript（80%）、JavaScript、Node.js（85%）、Java（90%）、Spring Framework（85%）以及多种前后端框架。我也使用 PostgreSQL、MongoDB、SQLite 等数据库，以及 Docker、Jenkins、Git 等 DevOps 工具。",
+        "我擅长现代网页技术，包括 React、Next.js、TypeScript、JavaScript、Node.js、Java、Spring Framework 以及多种前后端框架。我也使用 PostgreSQL、MongoDB、SQLite 等数据库，以及 Docker、Jenkins、Git 等 DevOps 工具。",
     },
     {
       question: "网站维护费用是多少？",
