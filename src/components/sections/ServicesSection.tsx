@@ -19,8 +19,8 @@ import { Link } from "react-router-dom";
 import type { ServiceTreeNode } from "@/components/effects/ServiceExplorer";
 import {
   CATEGORY_ACCENT_HEX,
-  SERVICE_TREE_THEMES,
-  SERVICE_TREE_VIGNETTE,
+  CATEGORY_ACCENT_TEXT,
+  isDarkTheme,
   serviceTreeThemeFor,
 } from "@/components/effects/service-tree-theme";
 import { ServiceOffers } from "@/components/effects/service-offers";
@@ -123,14 +123,16 @@ const withAlpha = (hex: string, alpha: number) =>
     .padStart(2, "0");
 
 /**
- * The detail card that flies up bottom-left when a leaf is clicked — design
- * tokens (dark glass, accent bar + pill), enriched with the real price,
- * feature chips, and the inquiry CTA.
+ * The detail card that flies up bottom-left when a leaf is clicked. Surfaces use
+ * theme tokens so the card reads on either page brightness; `accent` stays the
+ * saturated hue for the glowing bar, while `accentText` carries anything with
+ * words in it.
  */
 function DetailCard({
   service,
   item,
   accent,
+  accentText,
   categoryLabel,
   inquiry,
   closeLabel,
@@ -140,6 +142,7 @@ function DetailCard({
   service: Service;
   item: ServiceCopy;
   accent: string;
+  accentText: string;
   categoryLabel: string;
   inquiry: Inquiry;
   closeLabel: string;
@@ -150,20 +153,15 @@ function DetailCard({
   return (
     <motion.div
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] rounded-[20px] border border-white/[0.14] p-[22px] text-white shadow-[0_24px_70px_rgba(0,0,0,0.45)]"
+      className="glass-deep absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] rounded-[20px] p-[22px] text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
       exit={{ opacity: 0, y: 14, scale: 0.98 }}
       initial={{ opacity: 0, y: 14, scale: 0.98 }}
       onPointerDown={(e) => e.stopPropagation()}
-      style={{
-        background: "rgba(8,16,42,0.62)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
-      }}
       transition={{ duration: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
     >
       <button
         aria-label={closeLabel}
-        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-white/[0.09] text-white/75 transition-colors hover:bg-white/20 hover:text-white"
+        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-muted/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         onClick={onClose}
         type="button"
       >
@@ -178,36 +176,36 @@ function DetailCard({
       <div className="mb-[13px] flex items-center gap-2">
         <span
           className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-xl"
-          style={{ background: withAlpha(accent, 0.14), color: accent }}
+          style={{ background: withAlpha(accentText, 0.12), color: accentText }}
         >
           <Icon className="h-[18px] w-[18px]" />
         </span>
         <span
           className="inline-flex items-center rounded-full px-[11px] py-1 font-bold text-[11.5px] uppercase tracking-[0.06em]"
           style={{
-            background: withAlpha(accent, 0.16),
-            color: accent,
-            border: `1px solid ${withAlpha(accent, 0.35)}`,
+            background: withAlpha(accentText, 0.12),
+            color: accentText,
+            border: `1px solid ${withAlpha(accentText, 0.32)}`,
           }}
         >
           {categoryLabel}
         </span>
       </div>
 
-      <h3 className="mb-[9px] font-bold text-[22px] text-white leading-tight tracking-[-0.01em]">
+      <h3 className="mb-[9px] font-bold text-[22px] text-foreground leading-tight tracking-[-0.01em]">
         {item.title}
       </h3>
-      <p className="mb-3 text-[15px] text-white/[0.72] leading-[1.55]">
+      <p className="mb-3 text-[15px] text-muted-foreground leading-[1.55]">
         {item.description}
       </p>
 
       <div className="mb-4 flex flex-wrap items-center gap-1.5">
-        <span className="rounded-md border border-white/15 bg-white/[0.06] px-2 py-1 font-medium font-mono text-[11px] text-white/80">
+        <span className="rounded-md border border-border/40 bg-muted/40 px-2 py-1 font-medium font-mono text-[11px] text-foreground/80">
           {service.price}
         </span>
         {item.features.map((f) => (
           <span
-            className="rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-0.5 text-[11px] text-white/70"
+            className="rounded-full border border-border/40 bg-muted/30 px-2.5 py-0.5 text-[11px] text-muted-foreground"
             key={f}
           >
             {f}
@@ -216,7 +214,7 @@ function DetailCard({
       </div>
 
       <Link
-        className="group/btn flex items-center justify-between rounded-lg border border-white/15 px-4 py-2.5 text-[13px] text-white/80 transition-all duration-200 hover:border-white/30 hover:bg-white/[0.06] hover:text-white"
+        className="group/btn flex items-center justify-between rounded-lg border border-border/40 px-4 py-2.5 text-[13px] text-foreground/80 transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.06] hover:text-foreground"
         state={inquiry}
         to="/contact"
       >
@@ -236,7 +234,10 @@ export function ServicesSection() {
   // visible content and the structured data can't drift apart.
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
-  const palette = SERVICE_TREE_THEMES[designTheme];
+  const isDark = isDarkTheme(theme);
+  // The decorative accents glow on dark but are unreadable as small text on a
+  // light page (cyan on #fdf0f2 is about 1.5:1) — words use the text set.
+  const accentText = CATEGORY_ACCENT_TEXT[isDark ? "dark" : "light"];
 
   const [active, setActive] = useState<Category>("all");
   const [selectedKey, setSelectedKey] = useState<ItemKey | null>(null);
@@ -332,10 +333,10 @@ export function ServicesSection() {
     <section className="section-padding" id="services">
       {showPanel ? (
         // ── Immersive desktop panel ──────────────────────────────────────
-        <div
-          className="relative mb-14 w-full overflow-hidden rounded-[28px] border border-white/10 shadow-[0_30px_80px_-30px_rgba(8,16,42,0.7)]"
-          style={{ background: palette.bg }}
-        >
+        // No panel, no border, no vignette — the plant renders straight onto
+        // the page. The canvas was always transparent (alpha renderer, zero
+        // clear alpha); the dark slab was this wrapper.
+        <div className="relative mb-14 w-full">
           <div
             className="relative w-full"
             style={{ height: "clamp(560px, 70vh, 760px)" }}
@@ -343,6 +344,7 @@ export function ServicesSection() {
             <Suspense fallback={null}>
               <ServiceExplorer
                 activeCategory={active}
+                key={designTheme}
                 designTheme={designTheme}
                 nodes={explorerNodes}
                 onError={handleError}
@@ -352,23 +354,18 @@ export function ServicesSection() {
               />
             </Suspense>
 
-            {/* Vignette sinks the far branches into the backdrop. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 z-[1]"
-              style={{ background: SERVICE_TREE_VIGNETTE }}
-            />
-
             {/* Eyebrow + title + tabs, overlaid top-centre. */}
             <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 pt-11 text-center">
-              <p className="font-semibold text-[13px] text-white/55 uppercase tracking-[0.24em]">
+              <p className="font-semibold text-[13px] text-muted-foreground uppercase tracking-[0.24em]">
                 {t.eyebrow}
               </p>
               <h1
-                className="mt-2.5 font-bold text-white tracking-[-0.025em]"
+                className="mt-2.5 font-bold text-foreground tracking-[-0.025em]"
                 style={{
                   fontSize: "clamp(38px, 4.4vw, 58px)",
-                  textShadow: "0 4px 40px rgba(120,160,255,0.35)",
+                  textShadow: isDark
+                    ? "0 4px 40px rgba(120,160,255,0.35)"
+                    : "0 2px 30px hsl(var(--background))",
                 }}
               >
                 {t.heading}
@@ -378,18 +375,14 @@ export function ServicesSection() {
                   const on = active === id;
                   return (
                     <button
-                      className="rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-all duration-200"
                       key={id}
                       onClick={() => selectCategory(id)}
-                      style={
+                      className={cn(
+                        "rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-all duration-200",
                         on
-                          ? {
-                              background: "rgba(255,255,255,0.16)",
-                              color: "#fff",
-                              boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.22)",
-                            }
-                          : { background: "transparent", color: "rgba(255,255,255,0.55)" }
-                      }
+                          ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.35)]"
+                          : "bg-transparent text-muted-foreground hover:text-foreground",
+                      )}
                       type="button"
                     >
                       {t.filters[id]}
@@ -404,6 +397,7 @@ export function ServicesSection() {
               {selected ? (
                 <DetailCard
                   accent={CATEGORY_ACCENT_HEX[selected.category]}
+                  accentText={accentText[selected.category]}
                   categoryLabel={t.categoryMeta[selected.category].label}
                   closeLabel={t.close}
                   getInTouchLabel={t.getInTouch}
@@ -425,7 +419,7 @@ export function ServicesSection() {
               )}
             >
               <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-[#bcd6ff] shadow-[0_0_22px_6px_rgba(120,160,255,0.6)]" />
-              <span className="text-[13px] text-white/50 tracking-[0.06em]">
+              <span className="text-[13px] text-muted-foreground tracking-[0.06em]">
                 {t.loading}
               </span>
             </div>
@@ -451,6 +445,7 @@ export function ServicesSection() {
             label: meta.label,
             desc: meta.desc,
             accent: CATEGORY_ACCENT_HEX[category],
+            accentText: accentText[category],
             fromLabel: t.fromPrice.replace("{price}", entryPrice(items)),
             services: items.map((service) => ({
               key: service.itemKey,

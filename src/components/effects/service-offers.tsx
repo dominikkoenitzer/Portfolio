@@ -40,7 +40,10 @@ export type OfferCategory = {
   key: string;
   label: string;
   desc: string;
+  /** Decorative accent — glows, washes, icon tiles. Tuned for saturation. */
   accent: string;
+  /** The same hue at text contrast. Anything carrying words uses this. */
+  accentText: string;
   fromLabel: string;
   services: OfferService[];
 };
@@ -58,6 +61,7 @@ const rgba = (hex: string, alpha: number) => {
  * price verbatim — "200 CHF + 50/mo" animates the 200 and leaves the tail alone.
  */
 function PriceCounter({ price, accent }: { price: string; accent: string }) {
+  // `accent` here is already the text-contrast variant (see OfferCategory).
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15%" });
   const reduce = useReducedMotion();
@@ -96,11 +100,13 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
 function ServiceRow({
   service,
   accent,
+  accentText,
   index,
   skew,
 }: {
   service: OfferService;
   accent: string;
+  accentText: string;
   index: number;
   skew: ReturnType<typeof useTransform<number, number>> | null;
 }) {
@@ -142,7 +148,7 @@ function ServiceRow({
             aria-hidden
             className="-inset-x-4 -inset-y-1 pointer-events-none absolute origin-left scale-x-0 rounded-2xl opacity-0 transition-all duration-500 ease-out group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100 group-focus-visible:opacity-100"
             style={{
-              background: `linear-gradient(90deg, ${rgba(accent, 0.1)} 0%, transparent 70%)`,
+              background: `linear-gradient(90deg, ${rgba(accentText, 0.09)} 0%, transparent 70%)`,
             }}
           />
 
@@ -151,9 +157,9 @@ function ServiceRow({
               aria-hidden
               className="mt-0.5 flex h-10 w-10 flex-none items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110"
               style={{
-                background: rgba(accent, 0.12),
-                color: accent,
-                boxShadow: `0 0 0 1px ${rgba(accent, 0.2)}`,
+                background: rgba(accentText, 0.1),
+                color: accentText,
+                boxShadow: `0 0 0 1px ${rgba(accentText, 0.22)}`,
               }}
             >
               <Icon className="h-5 w-5" />
@@ -165,7 +171,7 @@ function ServiceRow({
                   {service.title}
                 </span>
                 <span className="text-muted-foreground">
-                  <PriceCounter accent={accent} price={service.price} />
+                  <PriceCounter accent={accentText} price={service.price} />
                 </span>
               </span>
               <span className="mt-1.5 block text-muted-foreground text-sm leading-relaxed">
@@ -246,7 +252,7 @@ function CategoryStage({
           <div className="min-w-0">
             <h2
               className="font-bold text-3xl tracking-tight sm:text-4xl"
-              style={{ textShadow: `0 0 44px ${rgba(category.accent, 0.35)}` }}
+              style={{ textShadow: `0 0 44px ${rgba(category.accent, 0.3)}` }}
             >
               {category.label}
             </h2>
@@ -254,10 +260,7 @@ function CategoryStage({
               {category.desc}
             </p>
           </div>
-          <p
-            className="font-mono text-xs"
-            style={{ color: rgba(category.accent, 0.9) }}
-          >
+          <p className="font-mono text-xs" style={{ color: category.accentText }}>
             {category.fromLabel}
           </p>
         </motion.div>
@@ -267,7 +270,7 @@ function CategoryStage({
           className="h-px origin-left"
           initial={{ scaleX: 0 }}
           style={{
-            background: `linear-gradient(90deg, ${category.accent} 0%, ${rgba(category.accent, 0)} 100%)`,
+            background: `linear-gradient(90deg, ${category.accentText} 0%, ${rgba(category.accentText, 0)} 100%)`,
           }}
           transition={{ duration: 0.9, ease: EASE }}
           viewport={{ once: true, margin: "-15%" }}
@@ -279,6 +282,7 @@ function CategoryStage({
         {category.services.map((service, i) => (
           <ServiceRow
             accent={category.accent}
+            accentText={category.accentText}
             index={i}
             key={service.key}
             service={service}
@@ -341,7 +345,7 @@ export function ServiceOffers({
                 <stop
                   key={c.key}
                   offset={`${(i / Math.max(categories.length - 1, 1)) * 100}%`}
-                  stopColor={c.accent}
+                  stopColor={c.accentText}
                 />
               ))}
             </linearGradient>
