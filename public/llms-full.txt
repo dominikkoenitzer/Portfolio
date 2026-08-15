@@ -20,33 +20,33 @@ GitHub: https://github.com/dominikkoenitzer
 ## 2. Skills matrix
 
 Frontend
-- React — 95% — building dynamic UIs and component systems
-- Next.js — 90% — production-grade React framework
-- shadcn/ui — 90% — accessible, customizable component library
-- TypeScript — 80% — static typing for safer code
-- JavaScript (ES6+) — 90% — modern language features
-- Tailwind CSS — 85% — utility-first styling
-- Framer Motion — 85% — interactive UI animation
+- React — building dynamic UIs and component systems
+- Next.js — production-grade React framework
+- shadcn/ui — accessible, customizable component library
+- TypeScript — static typing for safer code
+- JavaScript (ES6+) — modern language features
+- Tailwind CSS — utility-first styling
+- Framer Motion — interactive UI animation
 - Lighthouse — performance / accessibility / SEO auditing
 
 Backend
-- Java — 90%
-- Spring Framework — 85%
-- Node.js — 85%
+- Java
+- Spring Framework
+- Node.js
 - GraphQL & REST APIs
 
 DevOps & infrastructure
-- Docker — 85%
-- Jenkins — 80%
-- Linux Server — 80% · Ubuntu — 80%
-- Windows Server — 85%
-- Grafana — 65%
+- Docker
+- Jenkins
+- Linux Server · Ubuntu
+- Windows Server
+- Grafana
 
 Databases
-- SQLite — 85%
-- PostgreSQL — 80%
-- MongoDB — 80%
-- Redis — 75%
+- SQLite
+- PostgreSQL
+- MongoDB
+- Redis
 
 Languages
 - JavaScript, TypeScript, Java, Python, C#, C++, Bash
