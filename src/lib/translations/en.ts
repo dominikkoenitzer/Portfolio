@@ -283,14 +283,34 @@ export const en = {
   contact: {
     headlineLine1: "Let's work",
     headlineLine2: "together.",
-    intro:
-      "Have a project, an idea, or just want to say hi? I'm always open to new work and interesting conversations.",
-    emailLabel: "Email",
-    basedLabel: "Based",
-    basedLocation: "Zürich, Switzerland",
-    wipEyebrow: "Coming soon",
-    wipTitle: "Contact form in the works",
-    wipBody: "I'm rebuilding the contact form. For now, the fastest way to reach me is email — I'll get back to you quickly.",
+    sentenceLead: "I'm here about",
+    changeSubject: "Change what this is about",
+    intents: {
+      job: {
+        label: "a role",
+        subject: "Role at [company]",
+        body: "Hi Dominik,\n\nWe're hiring a [role] at [company] and your work looks like a good fit.\n\n· Role: \n· Team and stack: \n· Location / remote: \n· Start date: \n\nBest,\n[name]",
+      },
+      freelance: {
+        label: "a freelance project",
+        subject: "Freelance project — [short description]",
+        body: "Hi Dominik,\n\nI'd like to work with you on [project].\n\n· What we need: \n· Rough timeline: \n· Budget range: \n· Links: \n\nBest,\n[name]",
+      },
+      collab: {
+        label: "building something together",
+        subject: "Collaboration — [idea]",
+        body: "Hi Dominik,\n\nI'm working on [project] and thought we might build something together.\n\n· The idea: \n· What I'd bring: \n· Links: \n\nBest,\n[name]",
+      },
+      other: {
+        label: "something else",
+        subject: "Hi Dominik",
+        body: "Hi Dominik,\n\n",
+      },
+    },
+    emailHint: "Opens your mail app with a prefilled subject.",
+    copyEmail: "Or copy the address.",
+    copied: "Copied.",
+    copyFailed: "Couldn't copy — the address is dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "Tip jar",

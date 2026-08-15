@@ -44,7 +44,12 @@ type ServiceCopy = {
   description: string;
   features: readonly string[];
 };
-type Inquiry = { subject: string; message: string };
+/**
+ * Handed to /contact as router state. `label` is the service title on its own,
+ * so the contact page can drop it straight into its draft sentence ("I'm here
+ * about Web Development") without having to parse it back out of `subject`.
+ */
+type Inquiry = { label: string; subject: string; message: string };
 
 interface Service {
   itemKey: ItemKey;
@@ -243,6 +248,7 @@ export function ServicesSection() {
   }, []);
 
   const buildInquiry = (item: ServiceCopy): Inquiry => ({
+    label: item.title,
     subject: `${t.inquiry.subjectPrefix} ${item.title}`,
     message: [
       t.inquiry.greeting,
@@ -490,7 +496,9 @@ export function ServicesSection() {
         <p className="eyebrow">{t.ctaEyebrow}</p>
         <h3 className="font-bold text-2xl md:text-3xl">{t.ctaTitle}</h3>
         <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
-          <Link to="/contact">
+          {/* No specific service picked — land on /contact set to "a freelance
+              project" rather than its default of "a role". */}
+          <Link state={{ intent: "freelance" }} to="/contact">
             {t.ctaButton}
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>

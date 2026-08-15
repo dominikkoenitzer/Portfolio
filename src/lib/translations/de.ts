@@ -285,14 +285,35 @@ export const de = {
     // U+00AD is a soft hyphen — invisible when the word fits, used as the
     // preferred break point ("zusammen-arbeiten") when it wraps.
     headlineLine2: "zusammen­arbeiten.",
-    intro:
-      "Ein Projekt, eine Idee oder einfach nur Hallo sagen? Ich bin immer offen für neue Aufträge und spannende Gespräche.",
-    emailLabel: "E-Mail",
-    basedLabel: "Sitz",
-    basedLocation: "Zürich, Schweiz",
-    wipEyebrow: "Bald verfügbar",
-    wipTitle: "Kontaktformular in Arbeit",
-    wipBody: "Ich überarbeite gerade das Kontaktformular. Bis dahin erreichst du mich am schnellsten per E-Mail — ich melde mich zügig zurück.",
+    sentenceLead: "Es geht um",
+    changeSubject: "Thema wechseln",
+    intents: {
+      job: {
+        label: "eine Stelle",
+        subject: "Stelle bei [Firma]",
+        body: "Hallo Dominik,\n\nwir suchen [Position] bei [Firma] und deine Arbeit passt gut dazu.\n\n· Position: \n· Team und Stack: \n· Standort / Remote: \n· Startdatum: \n\nBeste Grüsse,\n[Name]",
+      },
+      freelance: {
+        label: "ein Freelance-Projekt",
+        subject: "Freelance-Projekt — [kurze Beschreibung]",
+        body: "Hallo Dominik,\n\nich würde gerne mit dir an [Projekt] arbeiten.\n\n· Was wir brauchen: \n· Grober Zeitrahmen: \n· Budgetrahmen: \n· Links: \n\nBeste Grüsse,\n[Name]",
+      },
+      collab: {
+        label: "eine Zusammenarbeit",
+        subject: "Zusammenarbeit — [Idee]",
+        body: "Hallo Dominik,\n\nich arbeite an [Projekt] und dachte, wir könnten zusammen etwas aufbauen.\n\n· Die Idee: \n· Was ich einbringe: \n· Links: \n\nBeste Grüsse,\n[Name]",
+      },
+      other: {
+        label: "etwas anderes",
+        subject: "Hallo Dominik",
+        body: "Hallo Dominik,\n\n",
+      },
+    },
+    emailHint: "Öffnet dein Mailprogramm mit fertigem Betreff.",
+    copyEmail: "Oder Adresse kopieren.",
+    copied: "Kopiert.",
+    copyFailed:
+      "Kopieren fehlgeschlagen — die Adresse lautet dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "Trinkgeld",
