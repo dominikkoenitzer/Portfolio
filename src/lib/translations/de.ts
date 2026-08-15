@@ -169,6 +169,9 @@ export const de = {
     getInTouch: "Kontakt aufnehmen",
     close: "Schließen",
     loading: "Der Baum wächst…",
+    fromPrice: "ab {price}",
+    processTitle: "So läuft's ab",
+    faqTitle: "Fragen",
     items: {
       webDev: {
         title: "Webentwicklung",
