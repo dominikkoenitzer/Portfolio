@@ -1,12 +1,18 @@
 import type { Theme } from "@/config/themes";
 
 /**
- * Design tokens for the Services skill-tree sapling, lifted verbatim from the
- * `Services Skill Tree` handoff. Kept in a three.js-free module so the eagerly
- * loaded {@link ServicesSection} can read the CSS gradient / accent colours
- * without pulling the lazy WebGL `ServiceExplorer` (and three.js) into its
- * chunk — the section paints the gradient backdrop, the explorer paints the
- * transparent canvas on top.
+ * Design tokens for the Services skill-tree sapling.
+ *
+ * Kept in a three.js-free module so the eagerly loaded {@link ServicesSection}
+ * can read the accent colours without pulling the lazy WebGL `ServiceExplorer`
+ * (and three.js) into its chunk.
+ *
+ * The sapling used to sit inside its own dark panel, so every element could be
+ * additive glow. It now renders directly on the page, which means on a light
+ * theme there is nothing to add light *to* — additive blending is invisible
+ * against near-white. Each palette therefore declares `onLight`, and the
+ * explorer swaps blending and colour weights accordingly: emissive on dark,
+ * drawn on light.
  */
 
 export type Group3 = "build" | "protect" | "grow";
@@ -14,9 +20,13 @@ export type Group3 = "build" | "protect" | "grow";
 export type ServiceTreeTheme = "Blue" | "Violet" | "Midnight";
 
 export interface ServiceTreePalette {
-  /** CSS background gradient for the section panel (behind the canvas). */
-  bg: string;
-  /** Scene fog colour — also the colour dimmed branches lerp toward. */
+  /**
+   * The plant is drawing onto a light page. Turns off additive blending (which
+   * cannot darken) and selects the darker, saturated colour set.
+   */
+  onLight: boolean;
+  /** Scene fog colour — also the colour dimmed branches lerp toward, so it
+   *  should match the page behind the canvas for branches to fade *out*. */
   fog: number;
   /** Seed / core / ground-ring colour. */
   core: number;
@@ -24,63 +34,73 @@ export interface ServiceTreePalette {
   halo: number;
   /** Ambient particle colour. */
   particle: number;
+  /** Trunk colour, tying the stem to the sprout at the seed. */
+  trunk: number;
+  /** Category accents — darker on a light page so the branches read. */
+  accent: Record<Group3, number>;
 }
 
-/**
- * Only background, fog, core, halo and particle change between themes — the
- * three category accents stay constant (see {@link CATEGORY_ACCENT_NUM}).
- */
 export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
   {
+    // Bloom — a light page. Saturated mid-tones that hold against near-white.
     Blue: {
-      bg: "radial-gradient(110% 80% at 100% 100%, rgba(20,180,210,0.55) 0%, rgba(20,180,210,0) 50%),radial-gradient(90% 70% at 0% 35%, rgba(120,70,200,0.45) 0%, rgba(120,70,200,0) 55%),radial-gradient(120% 90% at 75% 0%, rgba(60,90,230,0.5) 0%, rgba(60,90,230,0) 60%),linear-gradient(150deg,#16267a 0%,#21399c 45%,#2b62c6 100%)",
-      fog: 0x21399c,
-      core: 0xbcd6ff,
-      halo: 0x4f7bff,
-      particle: 0xacc8ff,
+      onLight: true,
+      fog: 0xfdf0f2,
+      core: 0x1e4fd8,
+      halo: 0x8fb4ff,
+      particle: 0x7089c4,
+      trunk: 0x1f9e7a,
+      accent: { build: 0x0e7490, protect: 0xbe185d, grow: 0x047857 },
     },
     Violet: {
-      bg: "radial-gradient(100% 80% at 100% 100%, rgba(210,70,170,0.45) 0%, rgba(210,70,170,0) 55%),radial-gradient(90% 80% at 0% 30%, rgba(90,40,170,0.6) 0%, rgba(90,40,170,0) 55%),linear-gradient(150deg,#2a1066 0%,#4a1f8f 50%,#7a2bb0 100%)",
+      onLight: false,
       fog: 0x4a1f8f,
       core: 0xe9ccff,
       halo: 0x9b5cff,
       particle: 0xceb0ff,
+      trunk: 0x8fe9cf,
+      accent: { build: 0x36d0ff, protect: 0xff5fa2, grow: 0x46e08f },
     },
+    // Glass — a dark page. The original luminous scene.
     Midnight: {
-      bg: "radial-gradient(100% 80% at 90% 100%, rgba(30,90,200,0.35) 0%, rgba(30,90,200,0) 55%),radial-gradient(90% 80% at 10% 20%, rgba(40,30,120,0.45) 0%, rgba(40,30,120,0) 55%),linear-gradient(160deg,#05060f 0%,#0a1330 55%,#101c44 100%)",
+      onLight: false,
       fog: 0x0a1330,
       core: 0x9fd0ff,
       halo: 0x2f6bff,
       particle: 0x6f9fff,
+      trunk: 0x8fe9cf,
+      accent: { build: 0x36d0ff, protect: 0xff5fa2, grow: 0x46e08f },
     },
   };
 
-/** Radial vignette painted above the canvas to sink the far branches. */
-export const SERVICE_TREE_VIGNETTE =
-  "radial-gradient(120% 90% at 50% 32%, transparent 52%, rgba(3,7,28,0.55) 100%)";
-
-/** Category accents — constant across themes. `*_NUM` feeds three.js. */
-export const CATEGORY_ACCENT_NUM: Record<Group3, number> = {
-  build: 0x36d0ff,
-  protect: 0xff5fa2,
-  grow: 0x46e08f,
-};
-
-/** Category accents as CSS hex — for the card accent bar / pill / tab dot. */
+/** Category accents as CSS hex — decorative use (glows, washes, icon tiles). */
 export const CATEGORY_ACCENT_HEX: Record<Group3, string> = {
   build: "#36d0ff",
   protect: "#ff5fa2",
   grow: "#46e08f",
 };
 
-/** Mint trunk colour, tying the stem to the sprout at the seed. */
-export const TRUNK_COLOR = 0x8fe9cf;
+/**
+ * The same accents at text contrast. The decorative set above is tuned to glow
+ * on dark and is unreadable as small text on a light background — cyan #36d0ff
+ * on #fdf0f2 is roughly 1.5:1. Use these wherever an accent carries words.
+ */
+export const CATEGORY_ACCENT_TEXT: Record<
+  "light" | "dark",
+  Record<Group3, string>
+> = {
+  // On a light page: darkened, still recognisably the same hue.
+  light: { build: "#0e7490", protect: "#be185d", grow: "#047857" },
+  // On a dark page: the decorative accents already pass comfortably.
+  dark: { build: "#5adcff", protect: "#ff86bb", grow: "#6ceaa7" },
+};
+
+/** Whether the site theme paints a dark page behind the plant. */
+export const isDarkTheme = (theme: Theme) => theme === "glass";
 
 /**
- * Map the site palette onto a design theme: the light "Bloom" theme gets the
- * brighter default Blue sapling; the dark "Glass" theme gets deep Midnight so
- * the panel sits naturally against the rest of the dark UI. (The sapling is a
- * luminous dark scene either way — it never renders on a light backdrop.)
+ * Map the site palette onto a design theme: light "Bloom" gets the drawn Blue
+ * sapling, dark "Glass" gets the luminous Midnight one.
  */
 export const serviceTreeThemeFor = (theme: Theme): ServiceTreeTheme =>
-  theme === "glass" ? "Midnight" : "Blue";
+  isDarkTheme(theme) ? "Midnight" : "Blue";
