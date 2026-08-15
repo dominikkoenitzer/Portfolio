@@ -1,4 +1,4 @@
-import { DonateSection } from "@/components";
+import { DonateSection } from "@/components/sections/DonateSection";
 import { SEO } from "@/components/seo";
 import { getDonateFaqs, getDonateHowTo } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";

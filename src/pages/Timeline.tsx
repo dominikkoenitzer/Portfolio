@@ -1,4 +1,4 @@
-import { TimelineSection } from "@/components";
+import { TimelineSection } from "@/components/sections/TimelineSection";
 import { SEO } from "@/components/seo";
 import { getTimelineFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
