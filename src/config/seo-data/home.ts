@@ -22,7 +22,7 @@ export const HOME_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "What technologies does Dominik Könitzer specialize in?",
       answer:
-        "Dominik Könitzer specializes in React (95% proficiency), Next.js (90%), TypeScript (80%), Node.js (85%), Java (90%), Spring Framework (85%), and various frontend and backend technologies. He also has expertise in DevOps tools like Docker, Jenkins, and database management systems including PostgreSQL and MongoDB.",
+        "Dominik Könitzer specializes in React, Next.js, TypeScript, Node.js, Java, Spring Framework, and various frontend and backend technologies. He also has expertise in DevOps tools like Docker, Jenkins, and database management systems including PostgreSQL and MongoDB.",
     },
     {
       question: "How can I contact Dominik Könitzer for a project?",
@@ -55,7 +55,7 @@ export const HOME_FAQS: LocaleRecord<FAQItem[]> = {
       question:
         "Auf welche Technologien hat sich Dominik Könitzer spezialisiert?",
       answer:
-        "Dominik Könitzer ist spezialisiert auf React (95 % Niveau), Next.js (90 %), TypeScript (80 %), Node.js (85 %), Java (90 %), Spring Framework (85 %) sowie verschiedene Frontend- und Backend-Technologien. Zudem verfügt er über Expertise in DevOps-Tools wie Docker, Jenkins und Datenbanksystemen wie PostgreSQL und MongoDB.",
+        "Dominik Könitzer ist spezialisiert auf React, Next.js, TypeScript, Node.js, Java, Spring Framework sowie verschiedene Frontend- und Backend-Technologien. Zudem verfügt er über Expertise in DevOps-Tools wie Docker, Jenkins und Datenbanksystemen wie PostgreSQL und MongoDB.",
     },
     {
       question: "Wie kann ich Dominik Könitzer für ein Projekt kontaktieren?",
@@ -88,7 +88,7 @@ export const HOME_FAQS: LocaleRecord<FAQItem[]> = {
       question:
         "Dans quelles technologies Dominik Könitzer est-il spécialisé ?",
       answer:
-        "Dominik Könitzer est spécialisé en React (95 % de maîtrise), Next.js (90 %), TypeScript (80 %), Node.js (85 %), Java (90 %), Spring Framework (85 %) et diverses technologies frontend et backend. Il possède également une expertise des outils DevOps tels que Docker, Jenkins et des systèmes de bases de données comme PostgreSQL et MongoDB.",
+        "Dominik Könitzer est spécialisé en React, Next.js, TypeScript, Node.js, Java, Spring Framework et diverses technologies frontend et backend. Il possède également une expertise des outils DevOps tels que Docker, Jenkins et des systèmes de bases de données comme PostgreSQL et MongoDB.",
     },
     {
       question: "Comment contacter Dominik Könitzer pour un projet ?",
@@ -120,7 +120,7 @@ export const HOME_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Dominik Könitzer 擅长哪些技术？",
       answer:
-        "Dominik Könitzer 擅长 React（熟练度 95%）、Next.js（90%）、TypeScript（80%）、Node.js（85%）、Java（90%）、Spring Framework（85%）以及多种前后端技术。他还熟悉 Docker、Jenkins 等 DevOps 工具，以及 PostgreSQL、MongoDB 等数据库系统。",
+        "Dominik Könitzer 擅长 React、Next.js、TypeScript、Node.js、Java、Spring Framework 以及多种前后端技术。他还熟悉 Docker、Jenkins 等 DevOps 工具，以及 PostgreSQL、MongoDB 等数据库系统。",
     },
     {
       question: "如何就项目联系 Dominik Könitzer？",
