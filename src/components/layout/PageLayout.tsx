@@ -1,7 +1,8 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import { type ReactNode, useEffect, useState } from "react";
-import { Footer, Navbar } from "@/components";
 import { ThemedBackground } from "@/components/backgrounds/ThemedBackground";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { ThemeProvider } from "@/components/theme-provider";

@@ -1,4 +1,4 @@
-import { ContactSection } from "@/components";
+import { ContactSection } from "@/components/sections/ContactSection";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
