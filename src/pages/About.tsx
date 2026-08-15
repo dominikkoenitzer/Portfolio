@@ -1,4 +1,4 @@
-import { AboutSection } from "@/components";
+import { AboutSection } from "@/components/sections/AboutSection";
 import { SEO } from "@/components/seo";
 import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
