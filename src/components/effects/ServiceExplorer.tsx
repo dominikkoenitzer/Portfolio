@@ -3,11 +3,9 @@ import { useEffect, useRef } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import * as THREE from "three";
 import {
-  CATEGORY_ACCENT_NUM,
   type Group3,
   SERVICE_TREE_THEMES,
   type ServiceTreeTheme,
-  TRUNK_COLOR,
 } from "@/components/effects/service-tree-theme";
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 
@@ -295,6 +293,11 @@ export default function ServiceExplorer({
     const palette = SERVICE_TREE_THEMES[themeRef.current];
 
     const scene = new THREE.Scene();
+    // Additive cannot darken, so it is invisible on a light page — the plant
+    // is drawn rather than emissive there.
+    const glowBlend = palette.onLight
+      ? THREE.NormalBlending
+      : THREE.AdditiveBlending;
     scene.fog = new THREE.FogExp2(palette.fog, 0.04);
     let dimColor = new THREE.Color(palette.fog);
 
@@ -376,12 +379,15 @@ export default function ServiceExplorer({
       const tubSeg = isTrunk ? 40 : kind === "sub" ? 44 : 56;
 
       const base = new THREE.Color(color);
-      const lineCol = base.clone().lerp(new THREE.Color(0xffffff), 0.32);
+      const lineCol = palette.onLight
+        ? base.clone().lerp(new THREE.Color(0x000000), 0.28)
+        : base.clone().lerp(new THREE.Color(0xffffff), 0.32);
       // Three concentric tubes: two additive shells bloom, a near-white normal
       // core gives a crisp line so it reads as light, not a matte cylinder.
       const defs = [
-        { r: thickness * 3.0, col: base, op: 0.18, additive: true, core: false, ro: 1 },
-        { r: thickness * 1.5, col: base, op: 0.45, additive: true, core: false, ro: 2 },
+        // The two outer shells are a bloom on dark and a soft body on light.
+        { r: thickness * 3.0, col: base, op: palette.onLight ? 0.1 : 0.18, additive: true, core: false, ro: 1 },
+        { r: thickness * 1.5, col: base, op: palette.onLight ? 0.3 : 0.45, additive: true, core: false, ro: 2 },
         { r: thickness * 0.6, col: lineCol, op: 0.98, additive: false, core: true, ro: 3 },
       ];
       const layers: BranchLayer[] = [];
@@ -392,9 +398,7 @@ export default function ServiceExplorer({
           transparent: true,
           opacity: 0,
           depthWrite: false,
-          blending: d.additive
-            ? THREE.AdditiveBlending
-            : THREE.NormalBlending,
+          blending: d.additive ? glowBlend : THREE.NormalBlending,
         });
         const mesh = new THREE.Mesh(g, m);
         mesh.renderOrder = d.ro;
@@ -427,7 +431,7 @@ export default function ServiceExplorer({
       hub: [number, number, number],
       growAt: number,
     ) => {
-      const col = new THREE.Color(CATEGORY_ACCENT_NUM[node.category]);
+      const col = new THREE.Color(palette.accent[node.category]);
       const p = V(pos);
       const group = new THREE.Group();
       group.position.copy(p);
@@ -442,7 +446,7 @@ export default function ServiceExplorer({
         map: glowTex,
         color: col.clone(),
         transparent: true,
-        blending: THREE.AdditiveBlending,
+        blending: glowBlend,
         depthWrite: false,
         opacity: 0.5,
       });
@@ -453,7 +457,7 @@ export default function ServiceExplorer({
         map: leafTex,
         color: col.clone(),
         transparent: true,
-        blending: THREE.AdditiveBlending,
+        blending: glowBlend,
         depthWrite: false,
         fog: false,
         opacity: 0.95,
@@ -514,7 +518,7 @@ export default function ServiceExplorer({
         map: glowTex,
         color: new THREE.Color(color),
         transparent: true,
-        blending: THREE.AdditiveBlending,
+        blending: glowBlend,
         depthWrite: false,
         fog,
         opacity,
@@ -530,7 +534,7 @@ export default function ServiceExplorer({
     // ── Build the sapling ─────────────────────────────────────────────────
     const root = V(ROOT);
     const fork = V(FORK);
-    addBranch(root, fork, 0.075, TRUNK_COLOR, "trunk", 0.0, 0.5, "trunk");
+    addBranch(root, fork, 0.075, palette.trunk, "trunk", 0.0, 0.5, "trunk");
 
     const forkGlow = addSprite(0xcfeede, 0.95, 0.4, 2, false, treeGroup);
     forkGlow.position.copy(fork);
@@ -538,7 +542,7 @@ export default function ServiceExplorer({
     for (const cat of CATS) {
       const hub = HUBS[cat];
       const hubV = V(hub);
-      const accent = CATEGORY_ACCENT_NUM[cat];
+      const accent = palette.accent[cat];
       const { t0, t1 } = TIMING[cat];
       addBranch(fork, hubV, 0.052, accent, cat, t0, t1, "main");
 
@@ -566,7 +570,7 @@ export default function ServiceExplorer({
       transparent: true,
       opacity: 0.6,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
+      blending: glowBlend,
       side: THREE.DoubleSide,
     });
     const groundRing = new THREE.Mesh(groundRingGeo, groundRingMat);
@@ -591,7 +595,7 @@ export default function ServiceExplorer({
       size: 0.045,
       transparent: true,
       opacity: 0.55,
-      blending: THREE.AdditiveBlending,
+      blending: glowBlend,
       depthWrite: false,
     });
     const points = new THREE.Points(pgeo, pmat);
@@ -605,7 +609,7 @@ export default function ServiceExplorer({
         map: glowTex,
         color: b.base.clone(),
         transparent: true,
-        blending: THREE.AdditiveBlending,
+        blending: glowBlend,
         depthWrite: false,
         fog: false,
         opacity: 0,
@@ -1039,7 +1043,7 @@ export default function ServiceExplorer({
         style={{ cursor: "grab" }}
       />
       <div
-        className="pointer-events-none absolute top-0 left-0 z-[3] whitespace-nowrap rounded-full border border-white/[0.16] px-[13px] py-1.5 font-semibold text-[13px] text-white opacity-0 shadow-[0_8px_26px_rgba(0,0,0,0.4)] backdrop-blur-[10px]"
+        className="glass-deep pointer-events-none absolute top-0 left-0 z-[3] whitespace-nowrap rounded-full px-[13px] py-1.5 font-semibold text-[13px] text-foreground opacity-0 shadow-[0_8px_26px_-10px_rgba(0,0,0,0.4)]"
         ref={tooltipRef}
         style={{ background: "rgba(8,16,42,0.72)", transition: "opacity 160ms" }}
       />
