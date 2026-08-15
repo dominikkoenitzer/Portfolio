@@ -48,4 +48,6 @@ When adding a language, project, or page, add a module and wire it into that fol
 - **Components** use **named** exports, re-exported through barrels (`components/<group>/index.ts`).
 - **Pages** and any **`React.lazy`-loaded** component (currently every page + `LightVeilBackground`) use **default** exports — `lazy(() => import(...))` requires it. Do not convert these to named exports.
 
+**Import sections by module path, never through a barrel** (`@/components/sections/HeroSection`, not `@/components`). The pages are `React.lazy`-loaded, but a barrel re-export makes every section a *static* dependency of whichever chunk imports it — dragging `ProjectsSection` → `constants/projects` → all project content in all four languages into the entry chunk. That cost +281 kB (+113 kB gzip) on first load until it was fixed; `components/index.ts` therefore re-exports `./layout` only. Layout components (`Footer`, `Navbar`, …) mount on every page, so their barrel is free.
+
 **Adding a nav route** touches four places: a page in `src/pages/`, a lazy route in `AnimatedRoutes.tsx`, an entry in `NAV_LINKS` (`src/constants/index.ts`), and the `NAV_KEY_BY_PATH` map + a `nav` translation key used by `Navbar`.
