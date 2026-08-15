@@ -169,6 +169,9 @@ export const fr = {
     getInTouch: "Prendre contact",
     close: "Fermer",
     loading: "L'arbre pousse…",
+    fromPrice: "à partir de {price}",
+    processTitle: "Comment ça se passe",
+    faqTitle: "Questions fréquentes",
     items: {
       webDev: {
         title: "Développement web",

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
+  ChevronDown,
   Code,
   FileText,
   HardDrive,
@@ -22,9 +23,10 @@ import {
   SERVICE_TREE_VIGNETTE,
   serviceTreeThemeFor,
 } from "@/components/effects/service-tree-theme";
+import { ServiceOffers } from "@/components/effects/service-offers";
 import { SectionHeading } from "@/components/layout/SectionHeading";
+import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { useTheme } from "@/components/theme-provider";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
@@ -90,6 +92,24 @@ const services: Service[] = [
 ];
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
+
+// The page's structure, and the tree's branch order.
+const CATEGORY_ORDER: CategoryGroup[] = ["build", "protect", "grow"];
+
+/**
+ * The "from" price for a category: the lowest headline number, carrying its own
+ * unit. Taking a numeric minimum across the raw strings would be wrong — they
+ * mix models ("300 CHF", "60 CHF/hr", "50 CHF/mo", "200 CHF + 50/mo") — so we
+ * pick the cheapest entry figure and show that service's price verbatim. Derived
+ * rather than hard-coded so it can't drift when a price changes.
+ */
+const entryPrice = (items: Service[]) =>
+  items.reduce((cheapest, s) =>
+    Number(s.price.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY) <
+    Number(cheapest.price.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY)
+      ? s
+      : cheapest,
+  ).price;
 
 // The immersive 3D tree is desktop + motion only; everything else is cards.
 const DESKTOP_QUERY = "(min-width: 1024px)";
@@ -212,6 +232,10 @@ export function ServicesSection() {
   const { theme } = useTheme();
   const t = translations[language].services;
   const designTheme = serviceTreeThemeFor(theme);
+  // Same source the page's JSON-LD is built from — rendered here so the
+  // visible content and the structured data can't drift apart.
+  const howTo = getServicesHowTo(language);
+  const faqs = getServicesFaqs(language);
   const palette = SERVICE_TREE_THEMES[designTheme];
 
   const [active, setActive] = useState<Category>("all");
@@ -299,8 +323,6 @@ export function ServicesSection() {
     [t],
   );
 
-  const filtered =
-    active === "all" ? services : services.filter((s) => s.category === active);
   const selected =
     (selectedKey && services.find((s) => s.itemKey === selectedKey)) || null;
 
@@ -413,76 +435,105 @@ export function ServicesSection() {
         // ── Mobile / reduced-motion / fallback header ────────────────────
         <>
           <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
-          <div className="mb-8 flex flex-wrap justify-center gap-2 md:mb-10">
-            {FILTER_IDS.map((id) => (
-              <button
-                className={cn(
-                  "relative rounded-full px-4 py-1.5 font-medium text-sm transition-all duration-200",
-                  active === id
-                    ? "bg-primary text-primary-foreground shadow-[0_2px_12px_hsl(var(--primary)/0.3)]"
-                    : "border border-border/30 text-muted-foreground hover:border-primary/25 hover:text-foreground",
-                )}
-                key={id}
-                onClick={() => selectCategory(id)}
-                type="button"
-              >
-                {t.filters[id]}
-              </button>
-            ))}
-          </div>
         </>
       )}
 
-      {/* Scannable cards — always visible: the at-a-glance view, and the
-          crawlable + keyboard-accessible equivalent of the 3D tree above. */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((service, i) => {
-            const item = t.items[service.itemKey];
-            const inquiry = buildInquiry(item);
-            const Icon = service.icon;
-            return (
-              <motion.div
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="glass-card group flex flex-col rounded-2xl p-5 sm:p-6"
-                exit={{ opacity: 0, scale: 0.94, y: 6 }}
-                initial={{ opacity: 0, scale: 0.94, y: 6 }}
-                key={service.itemKey}
-                layout
-                transition={{ duration: 0.35, delay: i * 0.04, ease: EASE }}
-              >
-                <div className="mb-4 flex items-start justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <span className="rounded-lg border border-border/20 bg-muted/20 px-2.5 py-1 font-medium font-mono text-foreground/70 text-xs">
-                    {service.price}
-                  </span>
-                </div>
-                <span className="mb-1.5 font-mono text-[10px] text-muted-foreground/35 uppercase tracking-[0.18em]">
-                  {t.categoryMeta[service.category].label}
+      {/* Three offers, not nine line items. The categories that used to be
+          filter-only are now the page's structure. `ServiceOffers` carries the
+          scroll act: a branch drawing down the page out of the tree above, each
+          category blooming in its own accent as it passes. */}
+      <ServiceOffers
+        categories={CATEGORY_ORDER.map((category) => {
+          const items = services.filter((s) => s.category === category);
+          const meta = t.categoryMeta[category];
+          return {
+            key: category,
+            label: meta.label,
+            desc: meta.desc,
+            accent: CATEGORY_ACCENT_HEX[category],
+            fromLabel: t.fromPrice.replace("{price}", entryPrice(items)),
+            services: items.map((service) => ({
+              key: service.itemKey,
+              title: t.items[service.itemKey].title,
+              description: t.items[service.itemKey].description,
+              price: service.price,
+              icon: service.icon,
+              inquiry: buildInquiry(t.items[service.itemKey]),
+            })),
+          };
+        })}
+      />
+
+      {/* Process + FAQ. This copy already existed in `seo-data/services.ts`,
+          fully translated, but was only ever emitted as JSON-LD — Google
+          requires FAQ/HowTo content to be visible to users, so the markup was
+          being ignored and the visitor was told less than the crawler. */}
+      <div className="mt-20 sm:mt-24">
+        <h2 className="font-bold text-xl tracking-tight sm:text-2xl">
+          {t.processTitle}
+        </h2>
+        <ol className="relative mt-8 max-w-2xl space-y-7 pl-6 sm:pl-8">
+          {/* The rule draws itself as the steps arrive. */}
+          <motion.span
+            aria-hidden
+            className="absolute top-0 left-0 w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
+            initial={{ scaleY: 0 }}
+            style={{ bottom: 0 }}
+            transition={{ duration: 1.2, ease: EASE }}
+            viewport={{ once: true, margin: "-20%" }}
+            whileInView={{ scaleY: 1 }}
+          />
+          {howTo.step.map((step, i) => (
+            <motion.li
+              initial={{ opacity: 0, x: -18, filter: "blur(6px)" }}
+              key={step.name}
+              transition={{ duration: 0.6, delay: i * 0.1, ease: EASE }}
+              viewport={{ once: true, margin: "-15%" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            >
+              <p className="flex items-baseline gap-3">
+                <span className="font-mono text-muted-foreground/40 text-xs">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mb-2 font-semibold text-lg">{item.title}</h3>
-                <p className="mb-4 flex-1 text-muted-foreground text-sm leading-relaxed">
-                  {item.description}
-                </p>
-                <div className="mb-5 flex flex-wrap gap-1.5">
-                  {item.features.map((f) => (
-                    <Badge key={f}>{f}</Badge>
-                  ))}
-                </div>
-                <Link
-                  className="group/btn mt-auto flex items-center justify-between rounded-lg border border-border/20 px-4 py-2.5 text-muted-foreground text-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.04] hover:text-primary"
-                  state={inquiry}
-                  to="/contact"
-                >
-                  {t.getInTouch}
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                </Link>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                <span className="font-medium text-base">{step.name}</span>
+              </p>
+              <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+                {step.text}
+              </p>
+            </motion.li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="mt-20 max-w-2xl sm:mt-24">
+        <h2 className="font-bold text-xl tracking-tight sm:text-2xl">
+          {t.faqTitle}
+        </h2>
+        {/* Native <details>: no JS, keyboard and screen-reader correct, and it
+            keeps the answers in the DOM for crawlers even while collapsed. */}
+        <div className="mt-6 divide-y divide-border/15 border-border/15 border-t">
+          {faqs.map((faq, i) => (
+            <motion.details
+              className="group py-4"
+              initial={{ opacity: 0, y: 14 }}
+              key={faq.question}
+              transition={{ duration: 0.5, delay: i * 0.06, ease: EASE }}
+              viewport={{ once: true, margin: "-10%" }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-medium text-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+                {faq.question}
+                <ChevronDown
+                  aria-hidden
+                  className="mt-0.5 h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+                {faq.answer}
+              </p>
+            </motion.details>
+          ))}
+        </div>
       </div>
 
       {/* Bottom CTA */}

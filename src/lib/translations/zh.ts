@@ -165,6 +165,9 @@ export const zh = {
     getInTouch: "立即联系",
     close: "关闭",
     loading: "正在生长…",
+    fromPrice: "{price} 起",
+    processTitle: "合作流程",
+    faqTitle: "常见问题",
     items: {
       webDev: {
         title: "网页开发",
