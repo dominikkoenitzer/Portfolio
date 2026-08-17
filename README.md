@@ -84,3 +84,9 @@ are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md). For security reports, 
 **All rights reserved.** The code is published for reference and learning; it —
 along with the personal content and branding — is **not** licensed for reuse or
 redistribution. See [LICENSE](./LICENSE).
+
+## Author
+
+**Dominik Könitzer** — software engineer in Zürich, Switzerland.
+
+[dominikkoenitzer.ch](https://dominikkoenitzer.ch) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [dominik.koenitzer@gmail.com](mailto:dominik.koenitzer@gmail.com)
