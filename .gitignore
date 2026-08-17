@@ -85,3 +85,10 @@ Screenshots/
 # Agent tooling (agent-browser skill) — installed locally, not product code
 .agents/
 skills-lock.json
+
+# AI agent tooling (local only)
+CLAUDE.md
+AGENTS.md
+.claude/
+.agents/
+skills-lock.json
