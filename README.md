@@ -24,7 +24,8 @@ widget.
 - ⚡ **Fast SPA** — React 18 + Vite, manually code-split, lazy WebGL background kept off the critical path
 - 🌍 **Four languages** — English, German, French, Chinese (hand-rolled i18n, no library)
 - 🎨 **Theme system** — Bloom (default), Glass, Forest, Sunset, with two animated background variants
-- 🔎 **SEO / AI-SEO as a first-class concern** — JSON-LD (Person / FAQ / HowTo / Service), self-canonical routes, `llms.txt`, and per-page Open Graph cards
+- 🔎 **SEO / AI-SEO as a first-class concern** — JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards
+- 📄 **Prerendered routes** — the build emits a real HTML document per route (20 of them) with that route's own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview
 - 📊 **Live GitHub contributions** widget via a Vercel serverless function
 - ♿ **Accessible & responsive**, with reduced-motion-aware animation
 

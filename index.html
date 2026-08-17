@@ -89,8 +89,10 @@
     <meta name="geo.position" content="47.3769;8.5417">
 
     <!-- NOTE: canonical is injected per-route by react-helmet (see SEO.tsx).
-         Do NOT add a static <link rel="canonical"> here — it can't be removed
-         on sub-routes and produces "multiple conflicting canonical URLs". -->
+         Do NOT add a static <link rel="canonical"> here — this file is the
+         shared shell, so one here would claim the home URL on every route and
+         produce "multiple conflicting canonical URLs". Per-route canonicals are
+         emitted into dist/<route>/index.html by scripts/prerender.ts. -->
 
     <!-- Identity / Webmentions / IndieWeb -->
     <link rel="me" href="https://github.com/dominikkoenitzer">
