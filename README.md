@@ -90,4 +90,4 @@ redistribution. See [LICENSE](./LICENSE).
 
 **Dominik Könitzer** — software engineer in Zürich, Switzerland.
 
-[dk.punds.ch](https://dk.punds.ch) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [dominik.koenitzer@gmail.com](mailto:dominik.koenitzer@gmail.com)
+[dk.punds.ch](https://dk.punds.ch) · [CV](https://dk.punds.ch/cv) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [dominik.koenitzer@gmail.com](mailto:dominik.koenitzer@gmail.com)
