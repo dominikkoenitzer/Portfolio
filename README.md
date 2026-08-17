@@ -57,8 +57,7 @@ bun run dev     # → http://localhost:1000
 
 > The GitHub-contributions widget reads a `GITHUB_TOKEN` from `.env.local`
 > (server-side only — never bundled into the client). Without one it degrades
-> gracefully. There is **no test suite**; `typecheck` + `build` are the gates,
-> and CI runs both on every push and PR.
+> gracefully. CI runs `typecheck` + `build` on every push and PR.
 
 ## Project structure
 
