@@ -10,6 +10,8 @@
 
 [**Live → dk.punds.ch**](https://dk.punds.ch)
 
+<img src="docs/screenshot.jpg" alt="The portfolio landing page: the hero headline over the WebGL grainient background." width="900">
+
 </div>
 
 ---
