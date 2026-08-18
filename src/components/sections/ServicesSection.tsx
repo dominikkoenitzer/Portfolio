@@ -16,13 +16,13 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { ServiceTreeNode } from "@/components/effects/ServiceExplorer";
+import type { ServiceTreeNode } from "@/components/effects/service-tree/types";
 import {
   CATEGORY_ACCENT_HEX,
   CATEGORY_ACCENT_TEXT,
   isDarkTheme,
   serviceTreeThemeFor,
-} from "@/components/effects/service-tree-theme";
+} from "@/components/effects/service-tree/theme";
 import { ServiceOffers } from "@/components/effects/service-offers";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";

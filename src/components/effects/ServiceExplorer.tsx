@@ -1,12 +1,17 @@
-import type { LucideIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import * as THREE from "three";
+import { buildSapling } from "@/components/effects/service-tree/build";
+import { clamp, easeOutCubic, lerpAngle } from "@/components/effects/service-tree/easing";
+import { CATS, HUBS } from "@/components/effects/service-tree/layout";
 import {
-  type Group3,
   SERVICE_TREE_THEMES,
   type ServiceTreeTheme,
-} from "@/components/effects/service-tree-theme";
+} from "@/components/effects/service-tree/theme";
+import type {
+  BranchCat,
+  Category,
+  ServiceTreeNode,
+} from "@/components/effects/service-tree/types";
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 
 /**
@@ -25,16 +30,6 @@ import { setCursorMagnetRect } from "@/lib/cursor-magnet";
  * scene graph). Default-exported for React.lazy (desktop + motion only).
  */
 
-type Category = "all" | Group3;
-
-export interface ServiceTreeNode {
-  key: string;
-  category: Group3;
-  /** Localized service name — shown in the hover tooltip. */
-  name: string;
-  icon: LucideIcon;
-}
-
 interface ServiceExplorerProps {
   nodes: ServiceTreeNode[];
   activeCategory: Category;
@@ -48,181 +43,6 @@ interface ServiceExplorerProps {
   onReady?: () => void;
   /** Fired if WebGL setup throws — the section then drops the panel. */
   onError?: () => void;
-}
-
-// ── Design-space layout (handoff spec) ──────────────────────────────────────
-const ROOT: [number, number, number] = [0, -3.25, 0];
-const FORK: [number, number, number] = [0, -1.3, 0];
-const CATS: Group3[] = ["build", "protect", "grow"];
-const HUBS: Record<Group3, [number, number, number]> = {
-  build: [-2.3, 0.3, 0.5],
-  protect: [0.2, 1.7, -1.3],
-  grow: [2.4, 0.1, 0.8],
-};
-// Three leaf slots per bough, filled in service order (handoff positions).
-const LEAVES: Record<Group3, [number, number, number][]> = {
-  build: [
-    [-4.0, 1.4, 1.0],
-    [-3.7, -0.5, -0.4],
-    [-2.7, 1.8, -0.9],
-  ],
-  protect: [
-    [-0.9, 3.0, -1.6],
-    [1.6, 2.8, -2.0],
-    [0.3, 2.5, -3.0],
-  ],
-  grow: [
-    [4.1, 1.1, 1.4],
-    [3.8, -0.9, 0.3],
-    [3.0, 1.5, 2.2],
-  ],
-};
-// Per-bough grow-in window (the main bough's draw-range reveal).
-const TIMING: Record<Group3, { t0: number; t1: number }> = {
-  build: { t0: 0.45, t1: 1.05 },
-  protect: { t0: 0.5, t1: 1.15 },
-  grow: { t0: 0.55, t1: 1.2 },
-};
-
-const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
-const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
-const lerpAngle = (a: number, b: number, t: number) => {
-  const d =
-    (((b - a + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) -
-    Math.PI;
-  return a + d * t;
-};
-
-// ── Procedural textures (module-cached: shared, never disposed) ─────────────
-let glowTexCache: THREE.Texture | null = null;
-function glowTexture(): THREE.Texture {
-  if (glowTexCache) return glowTexCache;
-  const S = 256;
-  const cv = document.createElement("canvas");
-  cv.width = S;
-  cv.height = S;
-  const ctx = cv.getContext("2d");
-  if (ctx) {
-    const g = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-    g.addColorStop(0, "rgba(255,255,255,1)");
-    g.addColorStop(0.16, "rgba(255,255,255,0.95)");
-    g.addColorStop(0.38, "rgba(255,255,255,0.42)");
-    g.addColorStop(0.62, "rgba(255,255,255,0.14)");
-    g.addColorStop(0.82, "rgba(255,255,255,0.04)");
-    g.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, S, S);
-  }
-  const tex = new THREE.CanvasTexture(cv);
-  tex.minFilter = THREE.LinearFilter;
-  glowTexCache = tex;
-  return tex;
-}
-
-let leafTexCache: THREE.Texture | null = null;
-function leafTexture(): THREE.Texture {
-  if (leafTexCache) return leafTexCache;
-  const S = 256;
-  const cv = document.createElement("canvas");
-  cv.width = S;
-  cv.height = S;
-  const ctx = cv.getContext("2d");
-  if (ctx) {
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    const path = () => {
-      ctx.beginPath();
-      ctx.moveTo(128, 242);
-      ctx.quadraticCurveTo(36, 150, 128, 14);
-      ctx.quadraticCurveTo(220, 150, 128, 242);
-      ctx.closePath();
-    };
-    ctx.fillStyle = "rgba(255,255,255,0.13)";
-    path();
-    ctx.fill();
-    ctx.shadowColor = "rgba(255,255,255,0.8)";
-    ctx.shadowBlur = 16;
-    ctx.strokeStyle = "rgba(255,255,255,0.92)";
-    ctx.lineWidth = 7;
-    path();
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.strokeStyle = "rgba(255,255,255,0.4)";
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(128, 226);
-    ctx.lineTo(128, 40);
-    ctx.stroke();
-  }
-  leafTexCache = new THREE.CanvasTexture(cv);
-  return leafTexCache;
-}
-
-// Icon textures depend only on the icon component (white, language-agnostic),
-// so cache them at module scope — a language/theme switch reuses them instead
-// of re-running renderToStaticMarkup + re-uploading to the GPU.
-const iconTexCache = new Map<string, THREE.Texture>();
-function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {
-  const cached = iconTexCache.get(cacheKey);
-  if (cached) return cached;
-  // Rasterize at ~the prototype's texture size so the glyph stays crisp when a
-  // node is focused (leaf scales 1.34 and the camera flies to radius 7.5).
-  const svg = renderToStaticMarkup(
-    <Icon color="#ffffff" size={256} strokeWidth={1.7} />,
-  );
-  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-  const tex = new THREE.TextureLoader().load(url);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  iconTexCache.set(cacheKey, tex);
-  return tex;
-}
-
-// ── Scene object types ──────────────────────────────────────────────────────
-type BranchKind = "trunk" | "main" | "sub";
-type BranchCat = "trunk" | Group3;
-
-interface BranchLayer {
-  mesh: THREE.Mesh;
-  mat: THREE.MeshBasicMaterial;
-  baseOp: number;
-  core: boolean;
-  idxFull: number;
-}
-interface Branch {
-  layers: BranchLayer[];
-  base: THREE.Color;
-  coreCol: THREE.Color;
-  cat: BranchCat;
-  t0: number;
-  t1: number;
-  curve: THREE.QuadraticBezierCurve3;
-  kind: BranchKind;
-}
-interface NodeObj {
-  key: string;
-  cat: Group3;
-  group: THREE.Group;
-  glow: THREE.Sprite;
-  glowMat: THREE.SpriteMaterial;
-  leafMat: THREE.SpriteMaterial;
-  iconMat: THREE.SpriteMaterial;
-  baseColor: THREE.Color;
-  pos: THREE.Vector3;
-  growAt: number;
-  scale: number;
-}
-interface HubGlow {
-  sp: THREE.Sprite;
-  cat: Group3;
-  growAt: number;
-}
-interface PulseObj {
-  sprite: THREE.Sprite;
-  curve: THREE.QuadraticBezierCurve3;
-  cat: BranchCat;
-  speed: number;
-  offset: number;
 }
 
 export default function ServiceExplorer({
@@ -334,300 +154,26 @@ export default function ServiceExplorer({
     let lastFrameMs = 0;
     const nowSec = () => elapsedTime;
 
-    const glowTex = glowTexture();
-    const leafTex = leafTexture();
-
-    const branches: Branch[] = [];
-    const nodeObjs: NodeObj[] = [];
-    const hitMeshes: THREE.Mesh[] = [];
-    const pulseObjs: PulseObj[] = [];
-    const hubGlows: HubGlow[] = [];
-    const posByKey = new Map<string, THREE.Vector3>();
-
-    const treeGroup = new THREE.Group();
-    scene.add(treeGroup);
-
-    const V = (a: [number, number, number]) =>
-      new THREE.Vector3(a[0], a[1], a[2]);
-
-    // ── Build helpers ─────────────────────────────────────────────────────
-    const addBranch = (
-      a: THREE.Vector3,
-      b: THREE.Vector3,
-      thickness: number,
-      color: number,
-      cat: BranchCat,
-      t0: number,
-      t1: number,
-      kind: BranchKind,
-    ) => {
-      const mid = a.clone().add(b).multiplyScalar(0.5);
-      const outward = new THREE.Vector3(mid.x, 0, mid.z);
-      if (outward.lengthSq() > 0.0001) outward.normalize();
-      else outward.set(0, 0, 0);
-      const isTrunk = kind === "trunk";
-      const ctrl = mid
-        .clone()
-        .add(
-          new THREE.Vector3(0, 1, 0).multiplyScalar(
-            isTrunk ? 0.18 : kind === "sub" ? 0.66 : 0.52,
-          ),
-        )
-        .add(outward.multiplyScalar(isTrunk ? 0 : kind === "sub" ? 0.5 : 0.45));
-      const curve = new THREE.QuadraticBezierCurve3(a, ctrl, b);
-      const radSeg = isTrunk ? 14 : kind === "sub" ? 10 : 12;
-      const tubSeg = isTrunk ? 40 : kind === "sub" ? 44 : 56;
-
-      const base = new THREE.Color(color);
-      const lineCol = palette.onLight
-        ? base.clone().lerp(new THREE.Color(0x000000), 0.28)
-        : base.clone().lerp(new THREE.Color(0xffffff), 0.32);
-      // Three concentric tubes: two additive shells bloom, a near-white normal
-      // core gives a crisp line so it reads as light, not a matte cylinder.
-      const defs = [
-        // The two outer shells are a bloom on dark and a soft body on light.
-        { r: thickness * 3.0, col: base, op: palette.onLight ? 0.1 : 0.18, additive: true, core: false, ro: 1 },
-        { r: thickness * 1.5, col: base, op: palette.onLight ? 0.3 : 0.45, additive: true, core: false, ro: 2 },
-        { r: thickness * 0.6, col: lineCol, op: 0.98, additive: false, core: true, ro: 3 },
-      ];
-      const layers: BranchLayer[] = [];
-      for (const d of defs) {
-        const g = new THREE.TubeGeometry(curve, tubSeg, d.r, radSeg, false);
-        const m = new THREE.MeshBasicMaterial({
-          color: d.col.clone(),
-          transparent: true,
-          opacity: 0,
-          depthWrite: false,
-          blending: d.additive ? glowBlend : THREE.NormalBlending,
-        });
-        const mesh = new THREE.Mesh(g, m);
-        mesh.renderOrder = d.ro;
-        g.setDrawRange(0, 0);
-        treeGroup.add(mesh);
-        disposables.push(g, m);
-        layers.push({
-          mesh,
-          mat: m,
-          baseOp: d.op,
-          core: d.core,
-          idxFull: g.index ? g.index.count : 0,
-        });
-      }
-      branches.push({
-        layers,
-        base: base.clone(),
-        coreCol: lineCol,
-        cat,
-        t0,
-        t1,
-        curve,
-        kind,
-      });
-    };
-
-    const addNode = (
-      node: ServiceTreeNode,
-      pos: [number, number, number],
-      hub: [number, number, number],
-      growAt: number,
-    ) => {
-      const col = new THREE.Color(palette.accent[node.category]);
-      const p = V(pos);
-      const group = new THREE.Group();
-      group.position.copy(p);
-      group.scale.setScalar(0.001);
-
-      // Leaf points outward, continuing the branch line (screen-space rotation).
-      const dx = pos[0] - hub[0];
-      const dy = pos[1] - hub[1];
-      const rot = -Math.atan2(dx, dy);
-
-      const glowMat = new THREE.SpriteMaterial({
-        map: glowTex,
-        color: col.clone(),
-        transparent: true,
-        blending: glowBlend,
-        depthWrite: false,
-        opacity: 0.5,
-      });
-      const glow = new THREE.Sprite(glowMat);
-      glow.scale.set(1.15, 1.15, 1);
-      glow.renderOrder = 2;
-      const leafMat = new THREE.SpriteMaterial({
-        map: leafTex,
-        color: col.clone(),
-        transparent: true,
-        blending: glowBlend,
-        depthWrite: false,
-        fog: false,
-        opacity: 0.95,
-        rotation: rot,
-      });
-      const leaf = new THREE.Sprite(leafMat);
-      leaf.scale.set(1.6, 1.6, 1);
-      leaf.renderOrder = 3;
-      const iconMat = new THREE.SpriteMaterial({
-        map: iconTexture(node.key, node.icon),
-        transparent: true,
-        depthWrite: false,
-        fog: false,
-        opacity: 1,
-      });
-      const icon = new THREE.Sprite(iconMat);
-      icon.scale.set(0.6, 0.6, 1);
-      icon.position.z = 0.03;
-      icon.renderOrder = 4;
-      group.add(glow, leaf, icon);
-      treeGroup.add(group);
-      disposables.push(glowMat, leafMat, iconMat);
-
-      const hitGeo = new THREE.SphereGeometry(0.6, 12, 12);
-      const hitMat = new THREE.MeshBasicMaterial({ visible: false });
-      const hit = new THREE.Mesh(hitGeo, hitMat);
-      hit.position.copy(p);
-      hit.userData.idx = nodeObjs.length;
-      treeGroup.add(hit);
-      hitMeshes.push(hit);
-      disposables.push(hitGeo, hitMat);
-
-      posByKey.set(node.key, p.clone());
-      nodeObjs.push({
-        key: node.key,
-        cat: node.category,
-        group,
-        glow,
-        glowMat,
-        leafMat,
-        iconMat,
-        baseColor: col.clone(),
-        pos: p,
-        growAt,
-        scale: 0.001,
-      });
-    };
-
-    const addSprite = (
-      color: number,
-      scale: number,
-      opacity: number,
-      renderOrder: number,
-      fog: boolean,
-      parent: THREE.Object3D,
-    ) => {
-      const mat = new THREE.SpriteMaterial({
-        map: glowTex,
-        color: new THREE.Color(color),
-        transparent: true,
-        blending: glowBlend,
-        depthWrite: false,
-        fog,
-        opacity,
-      });
-      const sp = new THREE.Sprite(mat);
-      sp.scale.set(scale, scale, 1);
-      sp.renderOrder = renderOrder;
-      parent.add(sp);
-      disposables.push(mat);
-      return sp;
-    };
-
-    // ── Build the sapling ─────────────────────────────────────────────────
-    const root = V(ROOT);
-    const fork = V(FORK);
-    addBranch(root, fork, 0.075, palette.trunk, "trunk", 0.0, 0.5, "trunk");
-
-    const forkGlow = addSprite(0xcfeede, 0.95, 0.4, 2, false, treeGroup);
-    forkGlow.position.copy(fork);
-
-    for (const cat of CATS) {
-      const hub = HUBS[cat];
-      const hubV = V(hub);
-      const accent = palette.accent[cat];
-      const { t0, t1 } = TIMING[cat];
-      addBranch(fork, hubV, 0.052, accent, cat, t0, t1, "main");
-
-      const hubGlow = addSprite(accent, 0.85, 0, 2, false, treeGroup);
-      hubGlow.position.copy(hubV);
-      hubGlows.push({ sp: hubGlow, cat, growAt: t1 });
-
-      const branchNodes = nodes.filter((n) => n.category === cat);
-      branchNodes.forEach((node, i) => {
-        const pos = LEAVES[cat][i] ?? LEAVES[cat][LEAVES[cat].length - 1];
-        const st0 = t1 + 0.05 + i * 0.06;
-        const st1 = st0 + 0.5;
-        addBranch(hubV, V(pos), 0.034, accent, cat, st0, st1, "sub");
-        addNode(node, pos, hub, st1);
-      });
-    }
-
-    // Ground: a small flat circle the sapling is planted in — lies flat on the
-    // floor at the root (not the old tilted, spinning hoop). Just the crisp
-    // circle rim, no fill glow (that would spill under/in front of the ring).
-    const groundColor = new THREE.Color(palette.core);
-    const groundRingGeo = new THREE.RingGeometry(0.58, 0.7, 64);
-    const groundRingMat = new THREE.MeshBasicMaterial({
-      color: groundColor.clone(),
-      transparent: true,
-      opacity: 0.6,
-      depthWrite: false,
-      blending: glowBlend,
-      side: THREE.DoubleSide,
+    // Construction lives in service-tree/build.ts; what comes back is the set
+    // of handles the render loop, the raycaster and the theme switch need.
+    const {
+      treeGroup,
+      branches,
+      nodeObjs,
+      hitMeshes,
+      hubGlows,
+      pulseObjs,
+      posByKey,
+      points,
+      groundRingMat,
+      particleMat,
+    } = buildSapling({
+      scene,
+      palette,
+      glowBlend,
+      nodes: nodesRef.current,
+      disposables,
     });
-    const groundRing = new THREE.Mesh(groundRingGeo, groundRingMat);
-    groundRing.position.copy(root);
-    groundRing.rotation.x = -Math.PI / 2;
-    groundRing.renderOrder = 1;
-    treeGroup.add(groundRing);
-    disposables.push(groundRingGeo, groundRingMat);
-
-    // Ambient particles.
-    const N = 320;
-    const parr = new Float32Array(N * 3);
-    for (let i = 0; i < N; i++) {
-      parr[i * 3] = (Math.random() - 0.5) * 15;
-      parr[i * 3 + 1] = (Math.random() - 0.4) * 12;
-      parr[i * 3 + 2] = (Math.random() - 0.5) * 12;
-    }
-    const pgeo = new THREE.BufferGeometry();
-    pgeo.setAttribute("position", new THREE.BufferAttribute(parr, 3));
-    const pmat = new THREE.PointsMaterial({
-      color: new THREE.Color(palette.particle),
-      size: 0.045,
-      transparent: true,
-      opacity: 0.55,
-      blending: glowBlend,
-      depthWrite: false,
-    });
-    const points = new THREE.Points(pgeo, pmat);
-    scene.add(points);
-    disposables.push(pgeo, pmat);
-
-    // Energy pulses on the trunk + the three main boughs.
-    for (const b of branches) {
-      if (b.kind === "sub") continue;
-      const mat = new THREE.SpriteMaterial({
-        map: glowTex,
-        color: b.base.clone(),
-        transparent: true,
-        blending: glowBlend,
-        depthWrite: false,
-        fog: false,
-        opacity: 0,
-      });
-      const sp = new THREE.Sprite(mat);
-      sp.scale.set(0.5, 0.5, 1);
-      sp.visible = false;
-      sp.renderOrder = 5;
-      treeGroup.add(sp);
-      disposables.push(mat);
-      pulseObjs.push({
-        sprite: sp,
-        curve: b.curve,
-        cat: b.cat,
-        speed: 0.26 + Math.random() * 0.12,
-        offset: Math.random(),
-      });
-    }
 
     // ── Theme (re-tint without rebuild) ───────────────────────────────────
     const applyTheme = (name: ServiceTreeTheme) => {
@@ -636,7 +182,7 @@ export default function ServiceExplorer({
       dimColor = new THREE.Color(th.fog);
       if (scene.fog) (scene.fog as THREE.FogExp2).color.set(th.fog);
       groundRingMat.color.set(th.core);
-      pmat.color.set(th.particle);
+      particleMat.color.set(th.particle);
     };
     sceneApi.current = { applyTheme };
 
