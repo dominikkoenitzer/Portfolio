@@ -1,12 +1,11 @@
-import { Droplets, Film, Flower2, Sparkles } from "lucide-react";
-import type { ElementType } from "react";
+import { Droplets, Film, Flower2, Sparkles, type LucideIcon } from "lucide-react";
 
 export type Theme = "glass" | "bloom";
 
 export interface ThemeConfig {
   value: Theme;
   label: string;
-  icon: ElementType;
+  icon: LucideIcon;
 }
 
 export const THEMES: ThemeConfig[] = [
@@ -27,7 +26,7 @@ export type BackgroundVariant = "caustic" | "grainient";
 export interface BackgroundVariantConfig {
   value: BackgroundVariant;
   label: string;
-  icon: ElementType;
+  icon: LucideIcon;
 }
 
 export const BACKGROUND_VARIANTS: BackgroundVariantConfig[] = [
