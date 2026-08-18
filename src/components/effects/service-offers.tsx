@@ -99,13 +99,11 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
 
 function ServiceRow({
   service,
-  accent,
   accentText,
   index,
   skew,
 }: {
   service: OfferService;
-  accent: string;
   accentText: string;
   index: number;
   skew: ReturnType<typeof useTransform<number, number>> | null;
@@ -281,7 +279,6 @@ function CategoryStage({
       <ul className="divide-y divide-border/10">
         {category.services.map((service, i) => (
           <ServiceRow
-            accent={category.accent}
             accentText={category.accentText}
             index={i}
             key={service.key}
