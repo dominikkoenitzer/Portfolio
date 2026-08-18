@@ -23,7 +23,7 @@ widget.
 
 ## Features
 
-- ⚡ **Fast SPA** — React 18 + Vite, manually code-split, lazy WebGL background kept off the critical path
+- ⚡ **Fast SPA** — React 19 + Vite, manually code-split, lazy WebGL background kept off the critical path
 - 🌍 **Four languages** — English, German, French, Chinese (hand-rolled i18n, no library)
 - 🎨 **Theme system** — Bloom (default), Glass, Forest, Sunset, with two animated background variants
 - 🔎 **SEO / AI-SEO as a first-class concern** — JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards
@@ -35,7 +35,7 @@ widget.
 
 | | |
 | --- | --- |
-| Framework | React 18 + TypeScript + Vite (SWC) |
+| Framework | React 19 + TypeScript + Vite (SWC) |
 | Styling | Tailwind CSS + shadcn/ui (Radix) |
 | Animation | framer-motion + WebGL (`ogl`) |
 | Data | `@tanstack/react-query` |
