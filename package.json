@@ -43,7 +43,7 @@
     "lucide-react": "^0.462.0",
     "ogl": "^1.0.11",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.8",
     "react-helmet-async": "^3.0.0",
     "react-icons": "^5.7.0",
     "react-router-dom": "^7.18.2",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react-dom": "^19.2.4",
     "@types/three": "^0.171.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.5.4",
