@@ -1,4 +1,6 @@
-import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
+import { Color, Mesh, Program, Triangle } from "ogl";
+
+import { createRenderer } from "./createRenderer";
 import { useEffect, useRef } from "react";
 import { ALL_THEME_VALUES, getVeilPreset, type Theme } from "@/config/themes";
 
@@ -158,7 +160,7 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
       typeof window !== "undefined" &&
       window.matchMedia("(pointer: coarse)").matches;
 
-    const renderer = new Renderer({
+    const renderer = createRenderer({
       alpha: true,
       premultipliedAlpha: true,
       // A soft, blurry haze gains nothing from MSAA — skip it on phones.
@@ -167,6 +169,12 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
       // rendering at native density would just burn the mobile GPU for nothing.
       dpr: Math.min(window.devicePixelRatio || 1, coarsePointer ? 1 : 2),
     });
+    // No WebGL on this machine: leave the container empty and let the page's
+    // own background show through, rather than throwing out of the effect.
+    if (!renderer) {
+      return;
+    }
+
     const { gl } = renderer;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
