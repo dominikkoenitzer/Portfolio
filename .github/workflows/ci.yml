@@ -27,6 +27,9 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Test
+        run: bun run test
+
       # SEO guards: a forgotten sitemap route or malformed JSON-LD passes
       # typecheck/build but silently breaks crawl discovery / rich results.
       - name: Sitemap parity
