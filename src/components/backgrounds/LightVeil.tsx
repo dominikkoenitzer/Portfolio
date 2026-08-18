@@ -146,9 +146,12 @@ const DEFAULT_MOTION = 0.4;
  */
 export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
   // Live props are read through a ref so changing them never tears down the
-  // GL context (which the effect intentionally creates only once).
+  // GL context (which the effect intentionally creates only once). Synced after
+  // commit rather than during render: the shader samples it per frame.
   const live = useRef({ speed, motion, colorStops });
-  live.current = { speed, motion, colorStops };
+  useEffect(() => {
+    live.current = { speed, motion, colorStops };
+  }, [speed, motion, colorStops]);
 
   const host = useRef<HTMLDivElement>(null);
 
