@@ -75,7 +75,7 @@ export function LanguageProvider({
   children,
   defaultLanguage = "en",
 }: LanguageProviderProps) {
-  const detected = useMemo(detectFromBrowser, []);
+  const detected = useMemo(() => detectFromBrowser(), []);
 
   const [language, setLanguageState] = useState<Language>(
     () => readStored() ?? detected.resolved ?? defaultLanguage,
