@@ -23,7 +23,6 @@ const Home = () => {
         speakableSelectors={["h1", "h2", "[data-speakable]"]}
         structuredData={[createPersonSchema()]}
         title={seo.title}
-        url={SITE_CONFIG.url}
       />
       <HeroSection />
     </>
