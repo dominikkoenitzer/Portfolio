@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { useLocation } from "react-router-dom";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
@@ -35,12 +36,20 @@ export function SEO({
   speakableSelectors,
 }: SEOProps) {
   const { language } = useLanguage();
+  const { pathname } = useLocation();
   const siteTitle = title
     ? `${title} | ${SITE_CONFIG.name}`
     : `${SITE_CONFIG.title} | ${SITE_CONFIG.name}`;
 
   const siteDescription = description || SITE_CONFIG.description;
-  const siteUrl = url || SITE_CONFIG.url;
+  // Default to the route being viewed rather than the site root. Pages pass
+  // `url` today, but a page that forgets would silently claim the home URL as
+  // its canonical -- and the served HTML already carries a prerendered
+  // canonical, so the two would disagree and Google would see "multiple
+  // conflicting canonical URLs". Built the same way scripts/prerender.ts builds
+  // them (and the same way sitemap.xml lists them), so the two always agree.
+  const routeUrl = `${SITE_CONFIG.url}${pathname === "/" ? "/" : pathname}`;
+  const siteUrl = url || routeUrl;
   const siteImage = image || `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`;
   const canonicalUrl = canonical || siteUrl;
 
