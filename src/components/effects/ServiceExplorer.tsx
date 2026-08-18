@@ -62,21 +62,27 @@ export default function ServiceExplorer({
 
   // Live props the render loop reads without re-subscribing (effect runs once).
   const activeRef = useRef(activeCategory);
-  activeRef.current = activeCategory;
   const selectedRef = useRef(selectedKey);
-  selectedRef.current = selectedKey;
   const autoRotateRef = useRef(autoRotate);
-  autoRotateRef.current = autoRotate;
   const pulsesRef = useRef(pulses);
-  pulsesRef.current = pulses;
   const nodesRef = useRef(nodes);
-  nodesRef.current = nodes;
   const onSelectRef = useRef(onSelect);
-  onSelectRef.current = onSelect;
   const onReadyRef = useRef(onReady);
-  onReadyRef.current = onReady;
   const onErrorRef = useRef(onError);
-  onErrorRef.current = onError;
+
+  // Refreshed after each commit rather than during render. The loop reads them
+  // on animation frames, so a value landing one paint later is indistinguishable,
+  // and a render React throws away can no longer leave a write behind.
+  useEffect(() => {
+    activeRef.current = activeCategory;
+    selectedRef.current = selectedKey;
+    autoRotateRef.current = autoRotate;
+    pulsesRef.current = pulses;
+    nodesRef.current = nodes;
+    onSelectRef.current = onSelect;
+    onReadyRef.current = onReady;
+    onErrorRef.current = onError;
+  });
 
   // Re-tint the theme-driven objects when the site palette flips, without a
   // full rebuild. Read by the live theme effect below.

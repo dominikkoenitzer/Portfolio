@@ -41,15 +41,16 @@ export default tseslint.config(
       ],
       /*
        * The React Compiler rules in eslint-plugin-react-hooks v7 flag real
-       * things — refs read during render, setState called straight out of an
-       * effect, locals mutated after render — but every remaining site is in
-       * the WebGL and motion components, where the fix changes what the
-       * animation does and has to be watched in a browser to confirm. They
-       * report as warnings so the gate stays honest about them instead of
-       * either failing on work that is not done or hiding it behind a disable
-       * comment. Fix a file, then promote its rule.
+       * things — refs written during render, setState called straight out of an
+       * effect, locals mutated after render. The remaining sites are in the
+       * WebGL and motion components, where the fix changes what the animation
+       * does and has to be watched in a browser to confirm. They report as
+       * warnings so the gate stays honest about them instead of either failing
+       * on work that is not done or hiding it behind a disable comment. Fix a
+       * file, then promote its rule — as `refs` was once ServiceExplorer and
+       * LightVeil moved their live-prop writes into post-commit effects.
        */
-      "react-hooks/refs": "warn",
+      "react-hooks/refs": "error",
       "react-hooks/set-state-in-effect": "warn",
       "react-hooks/immutability": "warn",
     },
