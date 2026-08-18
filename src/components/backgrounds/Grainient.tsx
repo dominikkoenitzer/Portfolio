@@ -1,4 +1,6 @@
-import { Mesh, Program, Renderer, Triangle } from "ogl";
+import { Mesh, Program, Triangle, type Renderer } from "ogl";
+
+import { createRenderer } from "./createRenderer";
 import { useEffect, useRef } from "react";
 import "./Grainient.css";
 
@@ -175,12 +177,17 @@ const Grainient = ({
       return;
     }
 
-    const renderer = new Renderer({
+    const renderer = createRenderer({
       webgl: 2,
       alpha: true,
       antialias: false,
       dpr: Math.min(window.devicePixelRatio || 1, 2),
     });
+    // No WebGL on this machine: leave the container empty and let the page's
+    // own background show through, rather than throwing out of the effect.
+    if (!renderer) {
+      return;
+    }
 
     const { gl } = renderer;
     const canvas = gl.canvas;
