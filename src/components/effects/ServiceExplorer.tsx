@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { buildSapling } from "@/components/effects/service-tree/build";
 import { clamp, easeOutCubic, lerpAngle } from "@/components/effects/service-tree/easing";
-import { CATS, HUBS } from "@/components/effects/service-tree/layout";
+import { HUBS } from "@/components/effects/service-tree/layout";
 import {
   SERVICE_TREE_THEMES,
   type ServiceTreeTheme,

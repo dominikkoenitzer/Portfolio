@@ -1,7 +1,6 @@
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SEO } from "@/components/seo";
 import { getHomeFaqs } from "@/config/seo-data";
-import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-provider";
 import {
   createPersonSchema,  getDefaultCitations,
