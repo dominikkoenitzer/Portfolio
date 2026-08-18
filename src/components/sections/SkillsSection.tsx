@@ -7,7 +7,7 @@ import {
   Network,
   Server,
 } from "lucide-react";
-import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
+import { type JSX, lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
