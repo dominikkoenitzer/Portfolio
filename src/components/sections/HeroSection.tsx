@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-provider";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
 // ─── Blur morph title ─────────────────────────────────────────────────────────
@@ -20,14 +21,13 @@ function BlurMorphTitle() {
   const PHRASES = translations[language].hero.roles;
   const [idx, setIdx] = useState(0);
   const [blurOut, setBlurOut] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  // Honour reduced-motion: hold one static role rather than auto-cycling the
+  // blur morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
+  // Seeded on the first client render so the static branch never flashes a cycle.
+  const [reduceMotion] = useState(prefersReducedMotion);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    // Honour reduced-motion: hold one static role rather than auto-cycling the
-    // blur morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
-    if (mq.matches) {
+    if (reduceMotion) {
       return;
     }
 
@@ -43,7 +43,7 @@ function BlurMorphTitle() {
       clearTimeout(swapTimer);
       clearInterval(cycleTimer);
     };
-  }, [PHRASES.length]);
+  }, [PHRASES.length, reduceMotion]);
 
   const morphStyle: React.CSSProperties = reduceMotion
     ? {}
@@ -140,13 +140,12 @@ export function HeroSection() {
 
   // The velocity-driven skew + parallax shear the hero during touch momentum
   // scrolling — it reads as the content being thrown off-center. Desktop only.
-  const [reduceFx, setReduceFx] = useState(false);
-  useEffect(() => {
-    setReduceFx(
+  const [reduceFx] = useState(
+    () =>
+      typeof window !== "undefined" &&
       window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)")
         .matches,
-    );
-  }, []);
+  );
 
   return (
     <section
