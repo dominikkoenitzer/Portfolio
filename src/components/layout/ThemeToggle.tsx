@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,16 +21,7 @@ export function ThemeToggle({
   const { theme, setTheme, variant, setVariant } = useTheme();
   const { language } = useLanguage();
   const t = translations[language];
-  const [mounted, setMounted] = useState(false);
   const [internalOpen, setInternalOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   // Support both controlled (Navbar may drive it) and standalone use.
   const isControlled = open !== undefined;
