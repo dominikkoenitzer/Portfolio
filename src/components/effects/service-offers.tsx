@@ -298,13 +298,13 @@ export function ServiceOffers({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const [fine, setFine] = useState(false);
-
   // Velocity skew shears badly during touch-momentum scrolling — desktop only,
   // matching HeroSection's `reduceFx` gate.
-  useEffect(() => {
-    setFine(window.matchMedia("(pointer: fine)").matches);
-  }, []);
+  const [fine] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: fine)").matches,
+  );
 
   const { scrollY } = useScroll();
   const velocity = useVelocity(scrollY);
