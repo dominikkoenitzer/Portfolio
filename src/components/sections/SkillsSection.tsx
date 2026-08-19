@@ -7,7 +7,7 @@ import {
   Network,
   Server,
 } from "lucide-react";
-import { type JSX, lazy, type ReactNode, Suspense, useEffect, useState } from "react";
+import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
@@ -167,14 +167,12 @@ export function SkillsSection() {
   const t = translations[language].skills;
 
   // The 3D sphere is desktop-only and skipped for reduced-motion users.
-  const [showSphere, setShowSphere] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const ok =
+  const [showSphere] = useState(
+    () =>
+      typeof window !== "undefined" &&
       window.matchMedia("(min-width: 768px)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (ok) setShowSphere(true);
-  }, []);
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   return (
     <section className="section-padding relative overflow-hidden" id="skills">
