@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/((?!api|_next/static|_next/image|robots.txt|sitemap.xml|llms.txt|llms-full.txt|humans.txt|browserconfig.xml|.well-known/.*|.*\\..*).*)",
-      "destination": "/index.html"
+      "destination": "/404.html"
     }
   ],
   "headers": [

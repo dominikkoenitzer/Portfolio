@@ -126,4 +126,31 @@ for (const page of pages) {
   written++;
 }
 
-console.log(`prerender: wrote ${written} route documents into dist/`);
+/*
+ * The SPA fallback in vercel.json points unmatched URLs here rather than at
+ * index.html. Serving the home document meant every junk URL advertised
+ * `index, follow` in all three bot tags and claimed the home page as its
+ * canonical, so the client-side 404's own `noindex` was arguing with a
+ * bot-specific tag that outranks it. This file is the same shell — the app
+ * still boots and client-routes normally — it just tells crawlers the truth
+ * before any JavaScript runs.
+ */
+let notFound = shell;
+notFound = notFound.replace(
+  /<title>[\s\S]*?<\/title>/i,
+  `<title>Page not found | ${esc(SITE_CONFIG.name)}</title>`,
+);
+for (const [k, v] of [
+  ["description", "This page does not exist."],
+  ["title", `Page not found | ${SITE_CONFIG.name}`],
+  ["og:title", `Page not found | ${SITE_CONFIG.name}`],
+  ["og:description", "This page does not exist."],
+  ["robots", "noindex, nofollow"],
+  ["googlebot", "noindex, nofollow"],
+  ["bingbot", "noindex, nofollow"],
+] as const) {
+  notFound = setMeta(notFound, k, v);
+}
+await writeFile(join(DIST, "404.html"), notFound);
+
+console.log(`prerender: wrote ${written} route documents and 404.html into dist/`);
