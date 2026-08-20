@@ -319,7 +319,7 @@ export function ProjectsSection() {
                             {project.title}
                           </h3>
                           <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-                            {project.tags.slice(0, 2).map((tag) => (
+                            {project.tags.map((tag) => (
                               <Badge key={tag}>{tag}</Badge>
                             ))}
                           </div>
