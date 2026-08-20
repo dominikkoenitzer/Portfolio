@@ -1,20 +1,24 @@
 import { ArrowLeft } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/seo";
 import { Button } from "@/components/ui/button";
 
 /**
- * 404 page for unmatched routes. Default-exported for React.lazy. Marked
- * noindex so crawlers don't index soft-404s, but follow so they keep crawling
- * the links back into the site.
+ * 404 page for unmatched routes. Default-exported for React.lazy.
+ *
+ * The SEO component is what marks it noindex, rather than a bare robots meta:
+ * Google reads the bot-specific `googlebot` tag ahead of the generic `robots`
+ * one, so setting only the latter left the page indexable. dist/404.html says
+ * the same thing statically for crawlers that never run the app.
  */
 export default function NotFound() {
   return (
     <section className="section-padding flex min-h-[60vh] flex-col items-center justify-center text-center">
-      <Helmet>
-        <title>Page not found — Dominik Könitzer</title>
-        <meta content="noindex, follow" name="robots" />
-      </Helmet>
+      <SEO
+        description="This page does not exist."
+        noindex
+        title="Page not found"
+      />
       <p className="eyebrow">404</p>
       <h1 className="mt-3 font-bold text-4xl md:text-5xl">Page not found</h1>
       <p className="mt-4 max-w-md text-muted-foreground leading-relaxed">
