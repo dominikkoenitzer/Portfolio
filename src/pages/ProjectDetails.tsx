@@ -742,7 +742,7 @@ const ProjectDetails = () => {
                       {item.description}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-1.5">
-                      {item.tags.slice(0, 3).map((tag) => (
+                      {item.tags.map((tag) => (
                         <Badge key={tag}>{tag}</Badge>
                       ))}
                     </div>
