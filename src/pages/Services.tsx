@@ -2,7 +2,7 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SEO } from "@/components/seo";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";

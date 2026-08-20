@@ -5,7 +5,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 
 type TierKey = keyof typeof translations.en.donate.tiers;

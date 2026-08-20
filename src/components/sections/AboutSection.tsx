@@ -3,7 +3,7 @@ import { Award, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { fadeInLeft, fadeInRight, fadeInUp } from "@/lib/framer-animations";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";

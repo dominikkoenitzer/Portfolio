@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SEO } from "@/components/seo";
 import { getHomeFaqs } from "@/config/seo-data";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {
   createPersonSchema,  getDefaultCitations,
   getDefaultGeoLocation,
