@@ -54,14 +54,14 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^10",
     "@types/node": "^22.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.171.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.5.4",
-    "eslint": "^10.8.1",
+    "eslint": "^10",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
