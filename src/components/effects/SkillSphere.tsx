@@ -1,8 +1,6 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Component,
-  type MutableRefObject,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
   useEffect,
   useMemo,
@@ -117,13 +115,7 @@ function fibonacciSphere(n: number, r: number): [number, number, number][] {
 type Vel = { x: number; y: number };
 type Drag = { active: boolean; x: number; y: number };
 
-function Cloud({
-  vel,
-  drag,
-}: {
-  vel: MutableRefObject<Vel>;
-  drag: MutableRefObject<Drag>;
-}) {
+function Cloud() {
   const textures = useMemo(
     () => ICONS.map(({ Icon, color }) => makeTexture(Icon, color)),
     [],
@@ -135,6 +127,39 @@ function Cloud({
   const group = useRef<THREE.Group>(null);
   const sprites = useRef<(THREE.Sprite | null)[]>([]);
   const world = useMemo(() => new THREE.Vector3(), []);
+  const vel = useRef<Vel>({ x: 0.0012, y: AUTO_Y });
+  const drag = useRef<Drag>({ active: false, x: 0, y: 0 });
+
+  // Drag is wired to the canvas element rather than the wrapper so the velocity
+  // the frame loop integrates is owned by the component that writes it.
+  const canvas = useThree((state) => state.gl.domElement);
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      drag.current = { active: true, x: e.clientX, y: e.clientY };
+    };
+    const onUp = () => {
+      drag.current.active = false;
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!drag.current.active) return;
+      const dx = e.clientX - drag.current.x;
+      const dy = e.clientY - drag.current.y;
+      drag.current.x = e.clientX;
+      drag.current.y = e.clientY;
+      vel.current.y = dx * 0.005;
+      vel.current.x = dy * 0.005;
+    };
+    canvas.addEventListener("pointerdown", onDown);
+    canvas.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointerleave", onUp);
+    return () => {
+      canvas.removeEventListener("pointerdown", onDown);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointerleave", onUp);
+    };
+  }, [canvas]);
 
   useFrame(() => {
     const g = group.current;
@@ -193,8 +218,6 @@ class SceneBoundary extends Component<
 }
 
 export default function SkillSphere() {
-  const vel = useRef<Vel>({ x: 0.0012, y: AUTO_Y });
-  const drag = useRef<Drag>({ active: false, x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Pause the WebGL loop while the sphere is off-screen or the tab is hidden —
@@ -225,31 +248,11 @@ export default function SkillSphere() {
     };
   }, []);
 
-  const onDown = (e: ReactPointerEvent<HTMLDivElement>) => {
-    drag.current = { active: true, x: e.clientX, y: e.clientY };
-  };
-  const onUp = () => {
-    drag.current.active = false;
-  };
-  const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (!drag.current.active) return;
-    const dx = e.clientX - drag.current.x;
-    const dy = e.clientY - drag.current.y;
-    drag.current.x = e.clientX;
-    drag.current.y = e.clientY;
-    vel.current.y = dx * 0.005;
-    vel.current.x = dy * 0.005;
-  };
-
   return (
     <SceneBoundary>
       <div
         aria-hidden="true"
         className="h-full w-full cursor-grab [touch-action:none] active:cursor-grabbing"
-        onPointerDown={onDown}
-        onPointerLeave={onUp}
-        onPointerMove={onMove}
-        onPointerUp={onUp}
         ref={containerRef}
       >
         <Canvas
@@ -258,7 +261,7 @@ export default function SkillSphere() {
           frameloop={live ? "always" : "never"}
           gl={{ alpha: true, antialias: true }}
         >
-          <Cloud drag={drag} vel={vel} />
+          <Cloud />
         </Canvas>
       </div>
     </SceneBoundary>
