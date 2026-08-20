@@ -21,9 +21,9 @@ import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { useLanguage } from "@/lib/language-provider";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
+import { TimelineTags } from "./TimelineTags";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const MAX_TAGS = 7;
 
 const DURATION_UNITS: Record<
   Language,
@@ -134,8 +134,7 @@ function TimelineCard({
   });
 
   const duration = formatDuration(entry.start, entry.end, language);
-  const visibleTags = entry.tags.slice(0, MAX_TAGS);
-  const overflow = entry.tags.length - visibleTags.length;
+  const moreLabel = getTimeline(language).moreTags;
 
   return (
     <motion.article
@@ -234,21 +233,7 @@ function TimelineCard({
         )}
 
         {entry.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {visibleTags.map((tag) => (
-              <span
-                className="rounded-full border border-border/40 bg-secondary/40 px-3 py-1 text-foreground/80 text-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
-                key={tag}
-              >
-                {tag}
-              </span>
-            ))}
-            {overflow > 0 && (
-              <span className="rounded-full border border-border/40 bg-secondary/30 px-3 py-1 text-muted-foreground text-xs">
-                +{overflow}
-              </span>
-            )}
-          </div>
+          <TimelineTags moreLabel={moreLabel} tags={entry.tags} />
         )}
       </div>
     </motion.article>
