@@ -47,7 +47,10 @@ const MPAI_URL = "https://mpai.ch/";
 const FREELANCE_URL = "https://dominikkoenitzer.ch/services";
 const WISS_URL = "https://wiss.ch";
 const MPS_URL = "https://bezirksschulenschwyz.ch/oberarth/profil-oberarth";
-const DSP_URL = "https://dspeking.de";
+// http, deliberately: the school's TLS certificate expired on 2024-10-13 and
+// has not been renewed, so https serves a full-page browser interstitial. Plain
+// http reaches the site. Re-check before "fixing" this back.
+const DSP_URL = "http://dspeking.de/";
 const SSS_URL = "https://swiss-school.edu.sg";
 
 const WISS_LOGO = "/timeline/wiss.ico";
