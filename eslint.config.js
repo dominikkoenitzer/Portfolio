@@ -42,20 +42,18 @@ export default tseslint.config(
       /*
        * The React Compiler rules in eslint-plugin-react-hooks v7 flag real
        * things — refs written during render, setState called straight out of an
-       * effect, locals mutated after render. The one remaining site is the
-       * WebGL sphere, where the fix changes what the animation does and has to
-       * be watched in a browser to confirm. It reports as a warning so the gate
-       * stays honest about it instead of either failing on work that is not
-       * done or hiding it behind a disable comment. Fix a file, then promote
-       * its rule — as `refs` was once ServiceExplorer and LightVeil moving
-       * their live-prop writes into post-commit effects, and
+       * effect, a child mutating what its parent owns. Fix a file, then promote
+       * its rule; never a disable comment. `refs` was ServiceExplorer and
+       * LightVeil moving their live-prop writes into post-commit effects,
        * `set-state-in-effect` was the hero, skills and services sections
        * seeding their media queries in the initial state instead of assigning
-       * it from an effect on mount.
+       * it from an effect on mount, and `immutability` was the WebGL sphere
+       * taking its drag wiring off the wrapper so the velocity the frame loop
+       * integrates belongs to the component that writes it.
        */
       "react-hooks/refs": "error",
       "react-hooks/set-state-in-effect": "error",
-      "react-hooks/immutability": "warn",
+      "react-hooks/immutability": "error",
     },
   },
   {
