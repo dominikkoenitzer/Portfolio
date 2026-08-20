@@ -3,7 +3,7 @@ import { SEO } from "@/components/seo";
 import { getProjectsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { getProjects } from "@/constants/projects";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";

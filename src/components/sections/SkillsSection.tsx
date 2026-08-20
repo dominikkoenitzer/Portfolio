@@ -8,7 +8,7 @@ import {
   Server,
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";

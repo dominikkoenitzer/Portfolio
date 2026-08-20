@@ -2,7 +2,7 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { SEO } from "@/components/seo";
 import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {
   createPersonSchema,  getDefaultGeoLocation,
 } from "@/lib/seo-utils";

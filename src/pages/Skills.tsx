@@ -2,7 +2,7 @@ import { SkillsSection } from "@/components/sections/SkillsSection";
 import { SEO } from "@/components/seo";
 import { getSkillsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {
   createPersonSchema,  getDefaultCitations,
   getDefaultGeoLocation,

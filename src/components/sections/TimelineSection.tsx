@@ -18,7 +18,7 @@ import {
 import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { TimelineTags } from "./TimelineTags";
