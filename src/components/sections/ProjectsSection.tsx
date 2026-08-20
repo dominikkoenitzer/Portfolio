@@ -160,7 +160,10 @@ export function ProjectsSection() {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
               <div className="relative flex-1 lg:max-w-sm">
                 <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
+                {/* The placeholder is the only visible label, and it
+                    vanishes as soon as anything is typed — name the field. */}
                 <input
+                  aria-label={t.searchPlaceholder}
                   className="h-11 w-full rounded-xl border border-border/40 bg-secondary/50 pr-10 pl-10 text-sm backdrop-blur-sm transition-colors placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
                   onChange={(event) => updateParams({ q: event.target.value })}
                   placeholder={t.searchPlaceholder}
