@@ -160,7 +160,7 @@ function CategoryCard({
         >
           {icon}
         </span>
-        <h3 className="font-semibold text-base sm:text-lg">{title}</h3>
+        <h2 className="font-semibold text-base sm:text-lg">{title}</h2>
         <span className="ml-auto font-mono text-muted-foreground/50 text-xs tabular-nums">
           {count}
         </span>

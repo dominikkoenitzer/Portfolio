@@ -84,7 +84,7 @@ export function AboutSection() {
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <motion.h3
+            <motion.h2
               className="mb-4 font-semibold text-xl sm:mb-6 sm:text-2xl"
               initial={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.4, delay: 0.1 }}
@@ -95,7 +95,7 @@ export function AboutSection() {
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                 {t.passionateRole}
               </span>
-            </motion.h3>
+            </motion.h2>
 
             <div className="space-y-4 sm:space-y-5">
               <motion.p
@@ -248,7 +248,7 @@ function InfoCard({ icon, title, subtitle, delay }: InfoCardProps) {
         {icon}
       </div>
       <div>
-        <h3 className="font-medium text-sm sm:text-base">{title}</h3>
+        <h2 className="font-medium text-sm sm:text-base">{title}</h2>
         <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>
       </div>
     </motion.div>
