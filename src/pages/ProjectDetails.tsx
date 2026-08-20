@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { getProject, getProjects } from "@/constants/projects";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {
   createSoftwareApplicationSchema,
   createSoftwareSourceCodeSchema,

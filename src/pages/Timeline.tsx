@@ -2,7 +2,7 @@ import { TimelineSection } from "@/components/sections/TimelineSection";
 import { SEO } from "@/components/seo";
 import { getTimelineFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import {
   createPersonSchema,
   getDefaultCitations,

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/theme-context";
 
 // Both variants pull in the ~70KB ogl lib, so keep them lazy — only the active
 // one is ever fetched, and never on the critical path.

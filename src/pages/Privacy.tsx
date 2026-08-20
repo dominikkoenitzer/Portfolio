@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { LOCALE_TAG } from "@/lib/locale";
 import { translations } from "@/lib/translations";
 

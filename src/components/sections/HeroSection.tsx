@@ -11,7 +11,7 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 

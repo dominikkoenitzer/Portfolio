@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ThemeProviderContext } from "@/components/theme-context";
 import {
   ALL_THEME_VALUES,
   ALL_VARIANT_VALUES,
@@ -19,25 +14,6 @@ type ThemeProviderProps = {
   storageKey?: string;
   variantStorageKey?: string;
 };
-
-type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme, event?: React.MouseEvent | MouseEvent) => void;
-  variant: BackgroundVariant;
-  setVariant: (
-    variant: BackgroundVariant,
-    event?: React.MouseEvent | MouseEvent,
-  ) => void;
-};
-
-const initialState: ThemeProviderState = {
-  theme: "bloom",
-  setTheme: () => null,
-  variant: "grainient",
-  setVariant: () => null,
-};
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 const THEME_META_HEX: Record<Theme, string> = {
   glass: "#080c16",
@@ -163,9 +139,3 @@ export function ThemeProvider({
     </ThemeProviderContext.Provider>
   );
 }
-
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
-  if (!context) throw new Error("useTheme must be used within a ThemeProvider");
-  return context;
-};

@@ -6,7 +6,7 @@ import { isActivePath } from "@/lib/active-path";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useHaptic } from "@/hooks/use-haptic";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { LanguageToggle } from "./LanguageToggle";
 import { NavbarMobileMenu } from "./NavbarMobileMenu";

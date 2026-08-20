@@ -1,12 +1,14 @@
 import {
-  createContext,
   type ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
+import {
+  LanguageContext,
+  type LanguageContextValue,
+} from "@/lib/language-context";
 import { type Language, SUPPORTED_LANGUAGE_CODES } from "@/config/languages";
 
 const STORAGE_KEY = "preferred-language";
@@ -54,17 +56,6 @@ const readStored = (): Language | null => {
     return null;
   }
 };
-
-type LanguageContextValue = {
-  language: Language;
-  setLanguage: (language: Language) => void;
-  detectedLanguage: Language;
-  detectedLanguageCode: string | null;
-};
-
-const LanguageContext = createContext<LanguageContextValue | undefined>(
-  undefined,
-);
 
 type LanguageProviderProps = {
   children: ReactNode;
@@ -133,11 +124,3 @@ export function LanguageProvider({
     </LanguageContext.Provider>
   );
 }
-
-export const useLanguage = () => {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
-  return ctx;
-};

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/theme-context";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { BACKGROUND_VARIANTS, getVeilPreset, THEMES } from "@/config/themes";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
