@@ -5,7 +5,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 import { magnetRectOf } from "@/lib/cursor-magnet";
@@ -52,10 +52,10 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * animate only GPU-friendly transform / opacity / size. Visibility is a motion
  * value (not React state + AnimatePresence), so window-leave / blur / tab-hide /
  * form-field fades never re-render. The scroll-glue rAF loop runs ONLY while a
- * magnetic target is active and self-cancels the instant it isn't. The ONLY
- * React state is `enabled`: a one-shot mount gate flipped true after the first
- * real move (which also avoids the top-left mount flash). It never reverts, so
- * the element stays permanently mounted and the springs keep integrating.
+ * magnetic target is active and self-cancels the instant it isn't. There is no
+ * React state at all: the element mounts with the component and hides itself
+ * with `opacity: 0` until the first real move, which is what keeps the springs
+ * attached — see the note on the opacity spring below.
  *
  * ── Robustness / SSR ───────────────────────────────────────────────────────
  * Renders nothing (return null) for reduced-motion or coarse/touch pointers —
@@ -128,13 +128,20 @@ function readCaretHeight(el: Element): number {
 const clamp = (v: number, lo: number, hi: number) =>
   v < lo ? lo : v > hi ? hi : v;
 
+/**
+ * A fine pointer means a mouse or trackpad. Read during render, like
+ * `prefersReducedMotion` — a synchronous media-query read is render-safe.
+ */
+const hasFinePointer = (): boolean =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(pointer: fine)").matches;
+
 export function CustomCursor() {
-  // `enabled` gates the very first render: true only on a fine pointer AND after
-  // the first real mousemove — this avoids the classic top-left mount flash.
-  // Once true it never reverts, so the element stays mounted (springs keep
-  // integrating) and the user is never left cursor-less (the native one is
-  // hidden via global CSS). This is the ONLY React state.
-  const [enabled, setEnabled] = useState(false);
+  // Both read during render (synchronous media-query reads, render-safe). On a
+  // coarse pointer or with reduced motion we render nothing and the CSS leaves
+  // the native cursor alone.
+  const fine = hasFinePointer();
 
   // Reduced motion is read once during render (synchronous, render-safe). When
   // true we render nothing at all — the CSS restores the native cursor.
@@ -176,6 +183,15 @@ export function CustomCursor() {
     [visMV, fieldMV],
     ([v, f]: number[]) => v * (1 - f),
   );
+  /*
+   * The element must be mounted before this spring is ever given a target.
+   * It used to be gated behind a `return null` until the first mousemove — the
+   * same event that revealed the cursor — so the 0 → 1 arrived with nothing
+   * rendered to drive it: the spring ticked once to ~0.006 and stalled there
+   * forever, leaving the site with no cursor at all (the native one is hidden
+   * globally). Mounting unconditionally costs an invisible 9px div parked
+   * off-screen at -100,-100 and keeps the spring attached from the first frame.
+   */
   const opacity = useSpring(opacityTarget, FADE_SPRING);
   // Colour re-resolves `--primary` from the live theme; alpha/width ride springs.
   const background = useMotionTemplate`hsl(var(--primary) / ${fill})`;
@@ -424,7 +440,6 @@ export function CustomCursor() {
         destY.set(e.clientY);
         cx.jump(e.clientX);
         cy.jump(e.clientY);
-        setEnabled(true);
       }
       showCursor();
       applyContext(e.target as Element | null);
@@ -533,7 +548,7 @@ export function CustomCursor() {
   // Reduced-motion / coarse-pointer users (and SSR) get nothing — the CSS
   // restores the native cursor. This is the ONLY opt-out; all hooks above ran
   // unconditionally, so hook order is stable across every render.
-  if (!enabled || reduced || typeof document === "undefined") return null;
+  if (!fine || reduced || typeof document === "undefined") return null;
 
   // Portal to <body> so we share the stacking context of Radix popovers/menus
   // (which also portal to body at z-50); z-[9999] keeps the cursor above them.
