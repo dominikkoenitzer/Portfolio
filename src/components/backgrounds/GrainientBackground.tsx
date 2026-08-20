@@ -1,4 +1,4 @@
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/theme-context";
 import { getVeilPreset } from "@/config/themes";
 import Grainient from "./Grainient";
 

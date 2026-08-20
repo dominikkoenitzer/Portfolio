@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { SITE_CONFIG } from "@/constants";
 import { fadeInUp } from "@/lib/framer-animations";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
 import { translations } from "@/lib/translations";
 

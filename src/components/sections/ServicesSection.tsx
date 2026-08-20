@@ -26,9 +26,9 @@ import {
 import { ServiceOffers } from "@/components/effects/service-offers";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/components/theme-context";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/lib/language-provider";
+import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
