@@ -385,6 +385,13 @@ export const LogoLoop = memo(
           <ul
             aria-hidden={copyIndex > 0}
             className="logoloop__list"
+            /*
+             * The extra copies exist only so the marquee can wrap seamlessly.
+             * aria-hidden alone leaves their links in the tab order, which
+             * strands a keyboard user on something a screen reader never
+             * announces; inert takes them out of both.
+             */
+            inert={copyIndex > 0}
             key={`copy-${copyIndex}`}
             ref={copyIndex === 0 ? seqRef : undefined}
             role="list"
