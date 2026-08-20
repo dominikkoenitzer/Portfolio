@@ -118,7 +118,12 @@ function Chip({
       viewport={{ once: true, margin: "-40px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center text-foreground/80 transition-transform duration-200 group-hover:scale-110">
+      {/* Decorative: the skill's name is the text right beside it, and the
+          react-icons glyphs carry role="img" without a name of their own. */}
+      <span
+        aria-hidden="true"
+        className="flex h-[18px] w-[18px] shrink-0 items-center justify-center text-foreground/80 transition-transform duration-200 group-hover:scale-110"
+      >
         {icon}
       </span>
       <span className="font-medium text-foreground/90 transition-colors duration-200 group-hover:text-primary">
@@ -149,7 +154,10 @@ function CategoryCard({
       whileInView={{ opacity: 1, y: 0 }}
     >
       <div className="mb-4 flex items-center gap-3 border-border/40 border-b pb-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary [&_svg]:h-[18px] [&_svg]:w-[18px]">
+        <span
+          aria-hidden="true"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary [&_svg]:h-[18px] [&_svg]:w-[18px]"
+        >
           {icon}
         </span>
         <h3 className="font-semibold text-base sm:text-lg">{title}</h3>
