@@ -37,6 +37,8 @@ export interface TimelineContent {
   subheading: string;
   experienceTitle: string;
   educationTitle: string;
+  /** Accessible name for the chip that reveals the tags a card had no room for. */
+  moreTags: (count: number) => string;
   experience: TimelineEntry[];
   education: TimelineEntry[];
 }
@@ -87,6 +89,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
       "The path that shaped me as a software engineer — from an international school upbringing to building production software today.",
     experienceTitle: "Work Experience",
     educationTitle: "Education",
+    moreTags: (n) => `Show ${n} more skill${n === 1 ? "" : "s"}`,
     experience: [
       {
         role: "MPAI Intern",
@@ -212,6 +215,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
       "Der Weg, der mich als Software Engineer geprägt hat – von einer internationalen Schulzeit bis zur Entwicklung von Produktivsoftware heute.",
     experienceTitle: "Berufserfahrung",
     educationTitle: "Ausbildung",
+    moreTags: (n) => `${n} weitere Fähigkeit${n === 1 ? "" : "en"} anzeigen`,
     experience: [
       {
         role: "Praktikant MPAI",
@@ -337,6 +341,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
       "Le parcours qui m'a façonné en tant qu'ingénieur logiciel – d'une scolarité internationale au développement de logiciels en production aujourd'hui.",
     experienceTitle: "Expérience professionnelle",
     educationTitle: "Formation",
+    moreTags: (n) => `Afficher ${n} compétence${n === 1 ? "" : "s"} de plus`,
     experience: [
       {
         role: "Stagiaire MPAI",
@@ -462,6 +467,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
       "塑造我成为软件工程师的历程——从国际化的求学经历，到如今打造生产级软件。",
     experienceTitle: "工作经历",
     educationTitle: "教育经历",
+    moreTags: (n) => `显示另外 ${n} 项技能`,
     experience: [
       {
         role: "MPAI 实习生",
