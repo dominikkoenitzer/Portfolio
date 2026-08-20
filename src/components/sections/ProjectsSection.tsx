@@ -122,9 +122,9 @@ export function ProjectsSection() {
             <Wrench className="h-6 w-6" />
           </span>
           <p className="eyebrow mb-3">{t.wipEyebrow}</p>
-          <h3 className="font-bold text-2xl tracking-tight sm:text-3xl">
+          <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
             {t.wipTitle}
-          </h3>
+          </h2>
           <p className="mt-4 max-w-md text-balance text-muted-foreground leading-relaxed">
             {t.wipBody}
           </p>
@@ -237,9 +237,9 @@ export function ProjectsSection() {
               <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary">
                 <SearchX className="h-5 w-5" />
               </span>
-              <h3 className="font-semibold text-xl tracking-tight">
+              <h2 className="font-semibold text-xl tracking-tight">
                 {t.noResultsTitle}
-              </h3>
+              </h2>
               <p className="mt-3 max-w-sm text-muted-foreground text-sm leading-relaxed">
                 {t.noResultsBody}
               </p>
@@ -318,9 +318,9 @@ export function ProjectsSection() {
                               src={project.image}
                             />
                           ) : null}
-                          <h3 className="font-bold text-2xl tracking-tight sm:text-3xl">
+                          <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
                             {project.title}
-                          </h3>
+                          </h2>
                           <div className="mt-4 flex flex-wrap justify-center gap-1.5">
                             {project.tags.map((tag) => (
                               <Badge key={tag}>{tag}</Badge>

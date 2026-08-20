@@ -152,9 +152,9 @@ export function GitHubContributions() {
       {...fadeInUp}
     >
       <div className="mb-3 sm:mb-4">
-        <h3 className="mb-0.5 font-semibold text-foreground text-sm sm:text-base md:text-lg">
+        <h2 className="mb-0.5 font-semibold text-foreground text-sm sm:text-base md:text-lg">
           {data?.total?.toLocaleString() || 0} {t.contributionsSuffix}
-        </h3>
+        </h2>
         <p className="text-muted-foreground text-xs sm:text-sm">
           {t.activityNote}
         </p>
@@ -301,9 +301,9 @@ export function GitHubContributions() {
         <div className="mt-4 border-border/20 border-t pt-4 sm:mt-6 sm:pt-6">
           <div className="mb-2 flex items-center gap-2 sm:mb-3">
             <GitCommit className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
-            <h4 className="font-semibold text-foreground text-sm sm:text-base">
+            <h3 className="font-semibold text-foreground text-sm sm:text-base">
               {t.recentActivity}
-            </h4>
+            </h3>
           </div>
           <div className="space-y-1 sm:space-y-1.5">
             {data.recentCommits.map((commit, index) => (
