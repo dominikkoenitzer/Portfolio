@@ -285,7 +285,7 @@ export const de = {
   },
   contact: {
     headlineLine1: "Lass uns",
-    // U+00AD is a soft hyphen — invisible when the word fits, used as the
+    // U+00AD is a soft hyphen: invisible when the word fits, used as the
     // preferred break point ("zusammen-arbeiten") when it wraps.
     headlineLine2: "zusammen­arbeiten.",
     sentenceLead: "Es geht um",

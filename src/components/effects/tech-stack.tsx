@@ -135,7 +135,7 @@ const TECH: Record<string, LogoItem> = {
 
 /**
  * The real stack per project (slug → tech keys), derived from each repo's
- * languages, package.json, and topics — only the icon-able tech each one
+ * languages, package.json, and topics: only the icon-able tech each one
  * actually uses. Keep these accurate to the repo.
  */
 const PROJECT_STACKS: Record<string, string[]> = {

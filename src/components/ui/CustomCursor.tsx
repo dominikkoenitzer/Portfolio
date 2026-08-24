@@ -12,31 +12,31 @@ import { magnetRectOf } from "@/lib/cursor-magnet";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /**
- * CustomCursor — a free-stack re-implementation of Motion+ `<Cursor/>`.
+ * CustomCursor, a free-stack re-implementation of Motion+ `<Cursor/>`.
  *
  * Motion+'s cursor is a paid component (`motion-plus`); this reproduces its
- * *behaviour* using only framer-motion v12 — no `motion-plus` import, no new
+ * *behaviour* using only framer-motion v12: no `motion-plus` import, no new
  * deps. It runs in "replace-default" mode: the native cursor is hidden globally
  * in index.css (`@media (pointer: fine){ *{cursor:none} }`) and we portal a
  * single custom element into <body> that follows the pointer and MORPHS to
  * context:
  *
- *   • DEFAULT  — a small solid dot in the theme accent, tracked with a snappy
+ *   • DEFAULT: a small solid dot in the theme accent, tracked with a snappy
  *                (responsive, lightly-smoothed) spring. The Motion feel: not
  *                floaty, but not a rigid 1:1 either.
- *   • MAGNETIC — over an interactive target (link/button/…), the dot SNAPS onto
+ *   • MAGNETIC: over an interactive target (link/button/…), the dot SNAPS onto
  *                the target and morphs into a rounded rectangle matching its
  *                bounding rect (+padding) and border-radius, with a translucent
  *                accent fill and an inset accent ring so the label stays legible.
  *                A subtle magnetic PULL nudges the box from the target centre
  *                toward the real pointer for a tactile feel. It stays GLUED to
  *                the target during Lenis smooth-scroll and on resize.
- *   • CARET    — over non-input selectable text, morphs to a thin tall I-beam
+ *   • CARET: over non-input selectable text, morphs to a thin tall I-beam
  *                whose height is derived from the text's font/line metrics.
- *   • FIELD    — over a real form field it fades out (opacity 0) so the native
+ *   • FIELD: over a real form field it fades out (opacity 0) so the native
  *                I-beam (kept by index.css) owns the typing / selection / IME /
  *                blink affordance a synthetic caret can't represent.
- *   • PRESS    — scale dips on mousedown, restores on mouseup.
+ *   • PRESS: scale dips on mousedown, restores on mouseup.
  *
  * ── Theme ──────────────────────────────────────────────────────────────────
  * Every colour is `hsl(var(--primary))`. The theme class lives on <html> and we
@@ -55,10 +55,10 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * magnetic target is active and self-cancels the instant it isn't. There is no
  * React state at all: the element mounts with the component and hides itself
  * with `opacity: 0` until the first real move, which is what keeps the springs
- * attached — see the note on the opacity spring below.
+ * attached; see the note on the opacity spring below.
  *
  * ── Robustness / SSR ───────────────────────────────────────────────────────
- * Renders nothing (return null) for reduced-motion or coarse/touch pointers —
+ * Renders nothing (return null) for reduced-motion or coarse/touch pointers,
  * the CSS restores the native cursor in those cases. All window/document access
  * is inside the effect or guarded, so SSR never crashes. Springs are ALWAYS
  * constructed (stable hook order); the reduced-motion opt-out is the render-time
@@ -91,15 +91,15 @@ const TEXT_FIELD_SELECTOR =
 const TEXT_SELECTOR =
   "p, h1, h2, h3, h4, h5, h6, li, blockquote, figcaption, dt, dd, code, pre, strong, em, small";
 
-/** Snappy position spring — responsive, lightly smoothed, never floaty. */
+/** Snappy position spring: responsive, lightly smoothed, never floaty. */
 const POS_SPRING = { stiffness: 620, damping: 34, mass: 0.55 } as const;
 /** Slightly softer spring for the size/shape morph so it reads as a "melt". */
 const SIZE_SPRING = { stiffness: 520, damping: 40, mass: 0.7 } as const;
-/** Fill/ring alpha — smooth cross-fade between shapes. */
+/** Fill/ring alpha: smooth cross-fade between shapes. */
 const ALPHA_SPRING = { stiffness: 500, damping: 40 } as const;
-/** Press dip — snappy, settles fast. */
+/** Press dip: snappy, settles fast. */
 const SCALE_SPRING = { stiffness: 700, damping: 30, mass: 0.45 } as const;
-/** Opacity fade for visibility / form-field hand-off — gentle, no overshoot. */
+/** Opacity fade for visibility / form-field hand-off, gentle, no overshoot. */
 const FADE_SPRING = { stiffness: 420, damping: 40, mass: 1 } as const;
 
 const DOT_SIZE = 9; // px — dot diameter at rest
@@ -130,7 +130,7 @@ const clamp = (v: number, lo: number, hi: number) =>
 
 /**
  * A fine pointer means a mouse or trackpad. Read during render, like
- * `prefersReducedMotion` — a synchronous media-query read is render-safe.
+ * `prefersReducedMotion`: a synchronous media-query read is render-safe.
  */
 const hasFinePointer = (): boolean =>
   typeof window !== "undefined" &&
@@ -144,7 +144,7 @@ export function CustomCursor() {
   const fine = hasFinePointer();
 
   // Reduced motion is read once during render (synchronous, render-safe). When
-  // true we render nothing at all — the CSS restores the native cursor.
+  // true we render nothing at all: the CSS restores the native cursor.
   const reduced = prefersReducedMotion();
 
   // ── Raw motion values (written imperatively, never re-render React) ────────
@@ -162,7 +162,7 @@ export function CustomCursor() {
   const visMV = useMotionValue(0); // 0 hidden / 1 shown (window-leave, blur, tab)
   const press = useMotionValue(0); // 1 while the primary button is held
 
-  // ── Springs (ALWAYS constructed — stable hook order) ──────────────────────
+  // ── Springs (ALWAYS constructed: stable hook order) ──────────────────────
   const cx = useSpring(destX, POS_SPRING);
   const cy = useSpring(destY, POS_SPRING);
   const w = useSpring(destW, SIZE_SPRING);
@@ -176,7 +176,7 @@ export function CustomCursor() {
   // the live (spring) size. Keeping it a transform (`x`/`y`) stays composited.
   const cornerX = useTransform([cx, w], ([c, ww]: number[]) => c - ww / 2);
   const cornerY = useTransform([cy, h], ([c, hh]: number[]) => c - hh / 2);
-  // Press dip only — scales about the box centre.
+  // Press dip only: scales about the box centre.
   const scale = useTransform(pressSpring, (pv: number) => 1 - pv * PRESS_DIP);
   // Visibility × (not over a form field), spring-smoothed into one opacity.
   const opacityTarget = useTransform(
@@ -185,8 +185,8 @@ export function CustomCursor() {
   );
   /*
    * The element must be mounted before this spring is ever given a target.
-   * It used to be gated behind a `return null` until the first mousemove — the
-   * same event that revealed the cursor — so the 0 → 1 arrived with nothing
+   * It used to be gated behind a `return null` until the first mousemove, the
+   * same event that revealed the cursor, so the 0 → 1 arrived with nothing
    * rendered to drive it: the spring ticked once to ~0.006 and stalled there
    * forever, leaving the site with no cursor at all (the native one is hidden
    * globally). Mounting unconditionally costs an invisible 9px div parked
@@ -219,7 +219,7 @@ export function CustomCursor() {
 
     let hasMoved = false;
     // Mirror of visibility so the move path only ever writes visMV on a real
-    // false→true edge — never per-frame. Boundary handlers keep it in sync.
+    // false→true edge: never per-frame. Boundary handlers keep it in sync.
     let shown = false;
     // Whether the pointer is currently within the viewport. Tracked ONLY by
     // pointer boundary events (enter/move → true, leave → false); blur / tab-
@@ -228,7 +228,7 @@ export function CustomCursor() {
     let inside = false;
 
     // Visibility rides a motion value, so show/hide are cheap edge-guarded
-    // writes — never React state, never per-frame.
+    // writes, never React state, never per-frame.
     const showCursor = () => {
       if (hasMoved && !shown) {
         shown = true;
@@ -268,14 +268,14 @@ export function CustomCursor() {
         width = rect.width;
         height = rect.height;
       }
-      // Release on ANY degenerate rect (either axis collapsed) — a collapsed
+      // Release on ANY degenerate rect (either axis collapsed), a collapsed
       // accordion / max-height:0 target would otherwise render a thin sliver.
       if (width < 1 || height < 1) return false;
       const right = left + width;
       const bottom = top + height;
 
       const { x: pxp, y: pyp } = pointerRef.current;
-      // Release if the pointer has drifted well outside the target — covers
+      // Release if the pointer has drifted well outside the target, covers
       // scroll-away, gaps between elements, and cases where mouseout never fires.
       if (
         pxp < left - MAGNET_RELEASE_MARGIN ||
@@ -460,7 +460,7 @@ export function CustomCursor() {
     const onUp = () => press.set(0);
 
     // Pointer physically left the viewport: mark it outside, release any magnet
-    // (so re-entry starts fresh — never a stale box) and fade out.
+    // (so re-entry starts fresh: never a stale box) and fade out.
     const pointerLeave = () => {
       inside = false;
       if (activeTargetRef.current) releaseMagnet();
@@ -472,11 +472,11 @@ export function CustomCursor() {
       if (!e.relatedTarget) pointerLeave();
     };
     // `mouseleave` on <html> is a reliable non-bubbling "left the viewport"
-    // signal — belt-and-suspenders with the mouseout check above.
+    // signal, belt-and-suspenders with the mouseout check above.
     const onWindowLeave = () => pointerLeave();
     // Pointer re-entered the viewport (mouseenter carries coordinates): hard-sync
-    // the position springs to the entry point so the dot lands exactly there —
-    // no fade-in "streak" across from the stale last-exit position — then reveal.
+    // the position springs to the entry point so the dot lands exactly there,
+    // no fade-in "streak" across from the stale last-exit position, then reveal.
     const onWindowEnter = (e: MouseEvent) => {
       inside = true;
       pointerRef.current.x = e.clientX;
@@ -490,8 +490,8 @@ export function CustomCursor() {
 
     // Window/tab focus changes hide the cursor in the background and re-show it
     // on return IF the pointer is still over the page. These events carry no
-    // coordinates and don't move the pointer, so we DON'T touch `inside` here —
-    // a keyboard app/tab switch keeps the pointer where it was — and re-show at
+    // coordinates and don't move the pointer, so we DON'T touch `inside` here,
+    // a keyboard app/tab switch keeps the pointer where it was, and re-show at
     // the last position without repositioning (no streak, no stale reveal when
     // the pointer had genuinely left the viewport first).
     const onBlur = () => hideCursor();
@@ -545,7 +545,7 @@ export function CustomCursor() {
     cy,
   ]);
 
-  // Reduced-motion / coarse-pointer users (and SSR) get nothing — the CSS
+  // Reduced-motion / coarse-pointer users (and SSR) get nothing, the CSS
   // restores the native cursor. This is the ONLY opt-out; all hooks above ran
   // unconditionally, so hook order is stable across every render.
   if (!fine || reduced || typeof document === "undefined") return null;

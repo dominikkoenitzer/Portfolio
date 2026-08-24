@@ -15,7 +15,7 @@ import type {
 
 /** Everything the render loop, the raycaster and the theme switch need back. */
 export interface Sapling {
-  /** Parent of the whole plant — the breeze sway and auto-rotate turn this. */
+  /** Parent of the whole plant: the breeze sway and auto-rotate turn this. */
   treeGroup: THREE.Group;
   branches: Branch[];
   nodeObjs: NodeObj[];
@@ -36,7 +36,7 @@ export interface Sapling {
  * Builds the sapling: trunk, three category boughs, a leaf per service, the
  * ground ring, ambient dust and the energy pulses that travel the boughs.
  *
- * Construction only — nothing here animates. Every mesh starts at zero draw
+ * Construction only: nothing here animates. Every mesh starts at zero draw
  * range or zero scale and the render loop reveals it against the grow-in
  * timings in `layout.ts`. Geometries and materials are pushed onto the caller's
  * `disposables` so unmounting stays one loop in the effect cleanup.
@@ -275,7 +275,7 @@ export function buildSapling(opts: {
     });
   }
 
-  // Ground: a small flat circle the sapling is planted in — lies flat on the
+  // Ground: a small flat circle the sapling is planted in, lies flat on the
   // floor at the root (not the old tilted, spinning hoop). Just the crisp
   // circle rim, no fill glow (that would spill under/in front of the ring).
   const groundColor = new THREE.Color(palette.core);

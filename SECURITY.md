@@ -5,8 +5,8 @@ This repository is the source for a personal portfolio website
 
 ## Reporting a vulnerability
 
-If you find a security issue — exposed data, an XSS vector, a dependency or
-configuration problem, or anything that could harm visitors — please report it
+If you find a security issue (exposed data, an XSS vector, a dependency or
+configuration problem, or anything that could harm visitors) please report it
 **privately**:
 
 **Email:** dominik.koenitzer@gmail.com
@@ -17,8 +17,8 @@ open a public issue for security problems.
 
 ## Scope
 
-The live site and this repository. There is no paid bug-bounty program — this is
-a personal project — but responsible disclosure is genuinely appreciated and
+The live site and this repository. There is no paid bug-bounty program, since
+this is a personal project, but responsible disclosure is genuinely appreciated and
 credited where welcome.
 
 ## Supported versions

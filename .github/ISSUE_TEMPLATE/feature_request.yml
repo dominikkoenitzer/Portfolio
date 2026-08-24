@@ -5,7 +5,7 @@ labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
-      value: Ideas and suggestions are welcome — thanks!
+      value: Ideas and suggestions are welcome. Thanks!
   - type: textarea
     id: problem
     attributes:

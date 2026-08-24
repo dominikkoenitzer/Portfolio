@@ -7,8 +7,8 @@
  * known-good gradient PNG (no SVG/font re-rasterization) into 16/32/48 frames
  * and pack them into one .ico.
  *
- * Run: `bun scripts/gen-favicon.ts` (needs `sharp` + `png-to-ico`; installed
- * transiently — not kept in package.json since the icon rarely changes).
+ * Run: `bun scripts/gen-favicon.ts` (needs `sharp` + `png-to-ico`, installed
+ * transiently and not kept in package.json since the icon rarely changes).
  */
 import { writeFileSync } from "node:fs";
 import pngToIco from "png-to-ico";

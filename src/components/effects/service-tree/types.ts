@@ -7,7 +7,7 @@ export type Category = "all" | Group3;
 export interface ServiceTreeNode {
   key: string;
   category: Group3;
-  /** Localized service name — shown in the hover tooltip. */
+  /** Localized service name: shown in the hover tooltip. */
   name: string;
   icon: LucideIcon;
 }

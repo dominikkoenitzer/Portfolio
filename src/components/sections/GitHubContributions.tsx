@@ -69,7 +69,7 @@ export function GitHubContributions() {
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
 
   // The ~365-cell calendar wraps every cell in a Radix Tooltip + motion node.
-  // That's fine to mount on desktop but blocks the first scroll on a phone —
+  // That's fine to mount on desktop but blocks the first scroll on a phone,
   // and touch devices can't hover, so those tooltips never show anyway. Resolve
   // the pointer type synchronously (lazy initial state) so the grid's very first
   // render on mobile already uses the cheap path, never the heavy one.

@@ -13,7 +13,7 @@ import {
  * Runs the real `/api/github-contributions` serverless handler in-process for
  * local `vite dev` AND `vite preview`, so the contributions widget works without
  * `vercel dev`. The GitHub token is read server-side from the environment
- * (`.env.local`) and used only here — it is never exposed to the client bundle.
+ * (`.env.local`) and used only here: it is never exposed to the client bundle.
  * On Vercel the platform serves the function itself; this plugin is dev/preview
  * only (the hooks don't run during `vite build`).
  */
@@ -111,7 +111,7 @@ export default defineConfig(({ mode }) => {
             "react-vendor": ["react", "react-dom", "react-router-dom"],
             "framer-motion": ["framer-motion"],
             // three.js + r3f isolated in their own chunk, fetched lazily with the
-            // SkillSphere — kept out of the main bundle.
+            // SkillSphere, kept out of the main bundle.
             "three-vendor": ["three", "@react-three/fiber"],
             lenis: ["lenis", "lenis/react"],
             "ui-vendor": [

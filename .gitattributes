@@ -2,10 +2,10 @@
 # Stops the "LF will be replaced by CRLF" churn on Windows checkouts.
 * text=auto eol=lf
 
-# Generated / lockfiles — keep out of diffs and language stats.
+# Generated files and lockfiles: keep out of diffs and language stats.
 bun.lock -diff linguist-generated
 
-# Binary assets — never normalize or diff.
+# Binary assets: never normalize or diff.
 *.png  binary
 *.jpg  binary
 *.jpeg binary

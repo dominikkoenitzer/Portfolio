@@ -27,7 +27,7 @@ export function PageLayout({ children }: PageLayoutProps) {
   useViewportHeight();
 
   // Hold the WebGL background (GL context + shader compile) until the browser is
-  // idle so it never competes with first paint / hydration — critical on phones,
+  // idle so it never competes with first paint / hydration, critical on phones,
   // where that work otherwise lands right in the middle of the initial render.
   const [showVeil, setShowVeil] = useState(false);
   useEffect(() => {

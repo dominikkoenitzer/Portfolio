@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 @layer base {
-  /* Glass — dark futuristic neon: deep blue-black glass, electric blue & violet */
+  /* Glass: dark futuristic neon. Deep blue-black glass, electric blue and violet */
   :root,
   .glass {
     --radius: 0.75rem;
@@ -37,7 +37,7 @@
     --theme-shadow-color: 217 95% 58%;
   }
 
-  /* Bloom — deep violet, sage green, and blush pink (from reference art) */
+  /* Bloom: deep violet, sage green and blush pink (from reference art) */
   .bloom {
     --background: 350 70% 97%;
     --foreground: 265 35% 14%;
@@ -123,7 +123,7 @@
     pointer-events: none;
   }
 
-  /* WebKit / Blink scrollbar hidden — no reserved gutter, so the fixed
+  /* WebKit / Blink scrollbar hidden: no reserved gutter, so the fixed
      background layers reach the window's right edge with no seam (see the
      note on `html` above). */
   ::-webkit-scrollbar {
@@ -191,7 +191,7 @@
     word-wrap: break-word;
     hyphens: auto;
     -webkit-hyphens: auto;
-    /* Never clip descenders — affects "g", "j", "p", "q", "y" and accented
+    /* Never clip descenders: affects "g", "j", "p", "q", "y" and accented
        descenders ("ç" in français). Without this, Chrome with
        -webkit-background-clip: text + tight line-height shaves their bottoms. */
     overflow: visible;
@@ -328,7 +328,7 @@
     @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-7xl mx-auto;
   }
 
-  /* Narrower reading column for long-form/legal pages (Privacy, etc.) — shares
+  /* Narrower reading column for long-form/legal pages (Privacy, etc.), shares
      the section-padding rhythm/gutters but caps the measure for readability. */
   .reading-padding {
     @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto;
@@ -349,7 +349,7 @@
       hsl(var(--primary)),
       hsla(var(--primary) / 0.8)
     );
-    /* Reserve descender room — see .hero-name-gradient comment for the why. */
+    /* Reserve descender room: see .hero-name-gradient comment for the why. */
     padding-bottom: 0.08em;
     line-height: 1.05;
   }
@@ -765,9 +765,7 @@
   }
 }
 
-/* =====================================================
-   CUSTOM CURSOR — hide native cursor on mouse devices
-   ===================================================== */
+/* Custom cursor: hide the native cursor on mouse devices */
 
 @media (pointer: fine) {
   *,
@@ -797,11 +795,9 @@
   }
 }
 
-/* =====================================================
-   GLASS THEME — Full Glassmorphism Override System
-   ===================================================== */
+/* Glass theme: the full glassmorphism override system */
 
-/* Aurora orbs — invisible by default, revealed on glass theme */
+/* Aurora orbs: invisible by default, revealed on glass theme */
 .aurora-orb {
   opacity: 0;
   transition: opacity 1.2s ease;
@@ -823,7 +819,7 @@
   background-size: 200px 200px;
 }
 
-/* Base glass surface override — every .glass-card becomes real glass */
+/* Base glass surface override: every .glass-card becomes real glass */
 [data-theme="glass"] .glass-card {
   background: rgba(255, 255, 255, 0.04) !important;
   backdrop-filter: blur(24px) saturate(160%) !important;
@@ -881,7 +877,7 @@
     0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Hero name — multi-color gradient on glass theme */
+/* Hero name: multi-color gradient on glass theme */
 [data-theme="glass"] .hero-name-gradient {
   background-image: linear-gradient(
     135deg,
@@ -892,7 +888,7 @@
   background-size: 200% 200% !important;
 }
 
-/* Glass badge — neon glow */
+/* Glass badge: neon glow */
 [data-theme="glass"] .glass-badge {
   background: rgba(255, 255, 255, 0.05) !important;
   border-color: hsl(var(--primary) / 0.4) !important;
@@ -902,7 +898,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Section backgrounds — subtle glass tint */
+/* Section backgrounds: subtle glass tint */
 [data-theme="glass"] section {
   position: relative;
 }
@@ -923,7 +919,7 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Tag pills — glass */
+/* Tag pills: glass */
 [data-theme="glass"] .rounded-full.border.border-border\/40,
 [data-theme="glass"] .rounded-full.border.border-border\/50 {
   background: rgba(255, 255, 255, 0.04) !important;
@@ -931,25 +927,25 @@
   backdrop-filter: blur(8px) !important;
 }
 
-/* Primary button — add neon glow */
+/* Primary button: add neon glow */
 [data-theme="glass"] .shadow-\[0_4px_24px_hsl\(var\(--primary\)\/0\.3\)\] {
   box-shadow:
     0 4px 24px hsl(var(--primary) / 0.4),
     0 0 60px hsl(var(--primary) / 0.15) !important;
 }
 
-/* No grid on glass — the square tiling read like a swimming pool over the
+/* No grid on glass: the square tiling read like a swimming pool over the
    caustics. Let the water effect carry the look on its own. */
 [data-theme="glass"] .bg-grid-pattern {
   display: none !important;
 }
 
-/* Progress bars — glowing neon */
+/* Progress bars: glowing neon */
 [data-theme="glass"] .h-full.rounded-full {
   box-shadow: 0 0 8px hsl(var(--primary) / 0.6);
 }
 
-/* Theme toggle dropdown — deep glass */
+/* Theme toggle dropdown: deep glass */
 [data-theme="glass"] .theme-dropdown-glass {
   background: rgba(6, 9, 16, 0.85) !important;
   backdrop-filter: blur(32px) saturate(180%) !important;
@@ -957,7 +953,7 @@
   border-color: rgba(255, 255, 255, 0.07) !important;
 }
 
-/* Mobile menu overlay — deep glass */
+/* Mobile menu overlay: deep glass */
 [data-theme="glass"] .bg-background\/95.backdrop-blur-xl {
   background: rgba(6, 9, 16, 0.88) !important;
 }
@@ -969,7 +965,7 @@
   border-left-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Glass theme — the drawer background flips dark, so flip every foreground
+/* Glass theme: the drawer background flips dark, so flip every foreground
    token inside it to a light palette. Without these overrides the items
    render dark-on-dark and the menu looks empty. */
 [data-theme="glass"] [data-mobile-scroll] {
@@ -1020,7 +1016,7 @@
   color: rgba(255, 255, 255, 0.85) !important;
 }
 
-/* Skill icon containers — glass */
+/* Skill icon containers: glass */
 [data-theme="glass"] .bg-primary\/10.text-primary.rounded-lg,
 [data-theme="glass"] .bg-primary\/10.text-primary.rounded-full {
   background: rgba(255, 255, 255, 0.04) !important;
@@ -1091,12 +1087,10 @@
   }
 }
 
-/* =====================================================
-   THEME TRANSITION — circular reveal animated from JS
+/* Theme transition: a circular reveal animated from JS.
    theme-provider.tsx animates a clip-path keyframe on the
    new view-transition snapshot via the Web Animations API,
-   so the default cross-fade is suppressed here.
-   ===================================================== */
+   so the default cross-fade is suppressed here. */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -1108,12 +1102,10 @@
   z-index: 1;
 }
 
-/* =====================================================
-   MOBILE QUALITY-OF-LIFE LAYER
+/* Mobile quality-of-life layer.
    Loaded last so it overrides earlier rules. Keeps touch
    UX feeling like a native app: safe areas, tap targets,
-   no input zoom, snappier feedback, reduced-motion respect.
-   ===================================================== */
+   no input zoom, snappier feedback, reduced-motion respect. */
 
 :root {
   /* JS-managed visual-viewport unit (see useViewportHeight) */
@@ -1201,7 +1193,7 @@ body {
   }
 }
 
-/* Safe-area helpers — opt-in via `pt-safe`, `pb-safe`, `px-safe` */
+/* Safe-area helpers: opt-in via `pt-safe`, `pb-safe`, `px-safe` */
 .pt-safe {
   padding-top: max(var(--safe-top), 1rem);
 }
@@ -1246,7 +1238,7 @@ body {
   height: 100dvh;
 }
 
-/* Custom cursor is hidden on touch — auto-restore native cursor for accessibility */
+/* Custom cursor is hidden on touch: auto-restore native cursor for accessibility */
 @media (hover: none), (pointer: coarse) {
   *,
   *::before,
@@ -1273,13 +1265,13 @@ body {
   border-radius: 4px;
 }
 
-/* Mobile drawer / sheet — block overscroll chaining into the body */
+/* Mobile drawer / sheet: block overscroll chaining into the body */
 [data-mobile-scroll] {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Better long-press handling — disable iOS callout for navigation elements */
+/* Better long-press handling: disable iOS callout for navigation elements */
 header,
 nav,
 [data-no-callout] {

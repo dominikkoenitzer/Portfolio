@@ -46,7 +46,7 @@ const reveal = {
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* Editorial section — big numbered marker + hairline + reading body   */
+/* Editorial section: big numbered marker + hairline + reading body   */
 /* ------------------------------------------------------------------ */
 
 function FeatureSection({
@@ -187,7 +187,7 @@ const ProjectDetails = () => {
     }
   })();
 
-  /* Spec-rail rows (year / role / languages / OS) — only render what exists. */
+  /* Spec-rail rows (year / role / languages / OS), only render what exists. */
   const specRows: Array<{ label: string; value: ReactNode }> = [
     { label: t.present, value: projectTimeline },
     { label: t.role, value: project.roleSummary },

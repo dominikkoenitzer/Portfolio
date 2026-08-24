@@ -73,7 +73,7 @@ export type LocalizedContent = {
 export type ProjectBase = {
   slug: string;
   title: string;
-  /** ISO year-month (YYYY-MM) the GitHub repo was created — array order should match. */
+  /** ISO year-month (YYYY-MM) the GitHub repo was created, array order should match. */
   date: string;
   repoUrl: string;
   liveUrl: string;

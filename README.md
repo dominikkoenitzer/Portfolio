@@ -1,6 +1,6 @@
 <div align="center">
 
-# Dominik Könitzer — Portfolio
+# Dominik Könitzer, Portfolio
 
 **A fast, multilingual, SEO-obsessed personal portfolio for a Swiss software engineer.**
 
@@ -23,13 +23,13 @@ widget.
 
 ## Features
 
-- ⚡ **Fast SPA** — React 19 + Vite, manually code-split, lazy WebGL background kept off the critical path
-- 🌍 **Four languages** — English, German, French, Chinese (hand-rolled i18n, no library)
-- 🎨 **Theme system** — Bloom (default), Glass, Forest, Sunset, with two animated background variants
-- 🔎 **SEO / AI-SEO as a first-class concern** — JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards
-- 📄 **Prerendered routes** — the build emits a real HTML document per route (20 of them) with that route's own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview
-- 📊 **Live GitHub contributions** widget via a Vercel serverless function
-- ♿ **Accessible & responsive**, with reduced-motion-aware animation
+- **Fast SPA.** React 19 and Vite, manually code-split, with the WebGL background lazy-loaded off the critical path.
+- **Four languages.** English, German, French, Chinese, on hand-rolled i18n with no library.
+- **Theme system.** Bloom (default), Glass, Forest and Sunset, with two animated background variants.
+- **SEO and AI-SEO treated as real work.** JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards.
+- **Prerendered routes.** The build emits a real HTML document per route, twenty of them, each with its own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview.
+- **Live GitHub contributions** widget, via a Vercel serverless function.
+- **Accessible and responsive**, with reduced-motion-aware animation.
 
 ## Tech stack
 
@@ -59,7 +59,7 @@ bun run dev     # → http://localhost:1000
 | Typecheck | `bun run typecheck` |
 
 > The GitHub-contributions widget reads a `GITHUB_TOKEN` from `.env.local`
-> (server-side only — never bundled into the client). Without one it degrades
+> (server-side only, never bundled into the client). Without one it degrades
 > gracefully. CI runs `typecheck` + `build` on every push and PR.
 
 ## Project structure
@@ -79,17 +79,17 @@ bun run dev     # → http://localhost:1000
 ## Contributing
 
 It's a personal project, but bug reports, accessibility issues, and suggestions
-are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md). For security reports, see
+are welcome; see [CONTRIBUTING.md](./CONTRIBUTING.md). For security reports, see
 [SECURITY.md](./SECURITY.md).
 
 ## License
 
-**All rights reserved.** The code is published for reference and learning; it —
-along with the personal content and branding — is **not** licensed for reuse or
+**All rights reserved.** The code is published for reference and learning. It,
+along with the personal content and branding, is **not** licensed for reuse or
 redistribution. See [LICENSE](./LICENSE).
 
 ## Author
 
-**Dominik Könitzer** — software engineer in Zürich, Switzerland.
+**Dominik Könitzer**, software engineer in Zürich, Switzerland.
 
 [dk.punds.ch](https://dk.punds.ch) · [CV](https://dk.punds.ch/cv) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [dominik.koenitzer@gmail.com](mailto:dominik.koenitzer@gmail.com)
