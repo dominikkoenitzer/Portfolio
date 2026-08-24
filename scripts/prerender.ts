@@ -2,14 +2,14 @@
  * Emits a real HTML file per route after `vite build`.
  *
  * The app is a client-rendered SPA, so every URL used to serve the same
- * `index.html` — meaning every route advertised the *home page's* title,
+ * `index.html`, meaning every route advertised the *home page's* title,
  * description, canonical and OG image. Google runs JS and coped, but link
  * unfurlers (LinkedIn, Slack, WhatsApp, Discord, iMessage) do not: sharing
  * /projects/oxidize previewed as the homepage.
  *
  * This writes dist/<route>/index.html for each route with that route's own
  * metadata patched into the head. The body is left exactly as Vite emitted it,
- * so React still mounts normally — there is no hydration mismatch to reason
+ * so React still mounts normally: there is no hydration mismatch to reason
  * about, and no SSR-safety requirement on any component.
  *
  * Run: bun scripts/prerender.ts   (wired into `bun run build`)
@@ -109,7 +109,7 @@ for (const page of pages) {
   }
 
   // A per-route file can finally carry a correct canonical. A static one in
-  // index.html could not — it would have claimed the home URL on every route,
+  // index.html could not: it would have claimed the home URL on every route,
   // which is exactly the "multiple conflicting canonical URLs" warning noted
   // in index.html.
   html = html.replace(
@@ -131,8 +131,8 @@ for (const page of pages) {
  * index.html. Serving the home document meant every junk URL advertised
  * `index, follow` in all three bot tags and claimed the home page as its
  * canonical, so the client-side 404's own `noindex` was arguing with a
- * bot-specific tag that outranks it. This file is the same shell — the app
- * still boots and client-routes normally — it just tells crawlers the truth
+ * bot-specific tag that outranks it. This file is the same shell, the app
+ * still boots and client-routes normally: it just tells crawlers the truth
  * before any JavaScript runs.
  */
 let notFound = shell;

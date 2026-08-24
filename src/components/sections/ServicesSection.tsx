@@ -32,7 +32,7 @@ import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
-// The Services page IS a 3D skill-tree sapling on desktop — lazy (three.js),
+// The Services page IS a 3D skill-tree sapling on desktop, lazy (three.js),
 // desktop + motion only.
 const ServiceExplorer = lazy(
   () => import("@/components/effects/ServiceExplorer"),
@@ -98,8 +98,8 @@ const CATEGORY_ORDER: CategoryGroup[] = ["build", "protect", "grow"];
 
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
- * unit. Taking a numeric minimum across the raw strings would be wrong — they
- * mix models ("300 CHF", "60 CHF/hr", "50 CHF/mo", "200 CHF + 50/mo") — so we
+ * unit. Taking a numeric minimum across the raw strings would be wrong, they
+ * mix models ("300 CHF", "60 CHF/hr", "50 CHF/mo", "200 CHF + 50/mo"), so we
  * pick the cheapest entry figure and show that service's price verbatim. Derived
  * rather than hard-coded so it can't drift when a price changes.
  */
@@ -230,13 +230,13 @@ export function ServicesSection() {
   const { theme } = useTheme();
   const t = translations[language].services;
   const designTheme = serviceTreeThemeFor(theme);
-  // Same source the page's JSON-LD is built from — rendered here so the
+  // Same source the page's JSON-LD is built from, rendered here so the
   // visible content and the structured data can't drift apart.
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
   const isDark = isDarkTheme(theme);
   // The decorative accents glow on dark but are unreadable as small text on a
-  // light page (cyan on #fdf0f2 is about 1.5:1) — words use the text set.
+  // light page (cyan on #fdf0f2 is about 1.5:1), so words use the text set.
   const accentText = CATEGORY_ACCENT_TEXT[isDark ? "dark" : "light"];
 
   const [active, setActive] = useState<Category>("all");
@@ -247,7 +247,7 @@ export function ServicesSection() {
   // The 3D tree is purely the desktop experience; mobile / narrow viewports /
   // reduced-motion get the card grid only (three.js never even loads there).
   // Seeded on first client render (no layout shift, no mobile cost) and kept
-  // reactive so crossing the breakpoint — resize, DevTools, device rotation —
+  // reactive so crossing the breakpoint (resize, DevTools, device rotation)
   // swaps cleanly and tears down the WebGL panel on the way down.
   const [showExplorer, setShowExplorer] = useState(
     () =>
@@ -333,7 +333,7 @@ export function ServicesSection() {
     <section className="section-padding" id="services">
       {showPanel ? (
         // ── Immersive desktop panel ──────────────────────────────────────
-        // No panel, no border, no vignette — the plant renders straight onto
+        // No panel, no border, no vignette: the plant renders straight onto
         // the page. The canvas was always transparent (alpha renderer, zero
         // clear alpha); the dark slab was this wrapper.
         <div className="relative mb-14 w-full">

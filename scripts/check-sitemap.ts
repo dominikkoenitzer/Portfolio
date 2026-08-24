@@ -2,7 +2,7 @@
  * CI guard: assert public/sitemap.xml stays in lockstep with the app's routes.
  *
  * The sitemap is hand-maintained and the site is client-rendered, so the
- * sitemap IS the crawl-discovery surface — a forgotten route silently rots SEO
+ * sitemap IS the crawl-discovery surface: a forgotten route silently rots SEO
  * with no other signal. This fails the build on any drift between:
  *   - the static routes declared in AnimatedRoutes.tsx, and
  *   - the project slugs in constants/projects (→ /projects/<slug>)

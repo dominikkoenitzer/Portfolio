@@ -19,12 +19,12 @@ import { Link } from "react-router-dom";
  * The tree stops at the panel edge; this continues it. A branch draws down the
  * page as you scroll, each category is a node on that branch glowing in its own
  * accent, and its services bud off one at a time. The motion vocabulary is
- * deliberately the hero's — velocity skew, magnetic pull — so the page reads as
+ * deliberately the hero's (velocity skew, magnetic pull) so the page reads as
  * one site rather than a catalogue of effects.
  *
  * Everything heavy is gated: `useReducedMotion` collapses it to a plain list,
  * and coarse pointers skip the velocity skew (it shears badly during touch
- * momentum scrolling — the same reason HeroSection disables it).
+ * momentum scrolling: the same reason HeroSection disables it).
  */
 
 export type OfferService = {
@@ -40,7 +40,7 @@ export type OfferCategory = {
   key: string;
   label: string;
   desc: string;
-  /** Decorative accent — glows, washes, icon tiles. Tuned for saturation. */
+  /** Decorative accent: glows, washes, icon tiles. Tuned for saturation. */
   accent: string;
   /** The same hue at text contrast. Anything carrying words uses this. */
   accentText: string;
@@ -58,7 +58,7 @@ const rgba = (hex: string, alpha: number) => {
 
 /**
  * Counts the leading figure up when the row arrives, keeping the rest of the
- * price verbatim — "200 CHF + 50/mo" animates the 200 and leaves the tail alone.
+ * price verbatim: "200 CHF + 50/mo" animates the 200 and leaves the tail alone.
  */
 function PriceCounter({ price, accent }: { price: string; accent: string }) {
   // `accent` here is already the text-contrast variant (see OfferCategory).
@@ -298,7 +298,7 @@ export function ServiceOffers({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  // Velocity skew shears badly during touch-momentum scrolling — desktop only,
+  // Velocity skew shears badly during touch-momentum scrolling, desktop only,
   // matching HeroSection's `reduceFx` gate.
   const [fine] = useState(
     () =>

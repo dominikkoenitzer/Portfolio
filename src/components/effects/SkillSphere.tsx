@@ -43,7 +43,7 @@ import {
 import * as THREE from "three";
 
 /**
- * SkillSphere — a draggable 3D cloud of the tech-stack logos (three.js / r3f).
+ * SkillSphere, a draggable 3D cloud of the tech-stack logos (three.js / r3f).
  *
  * Each logo is rendered (react-icons SVG → data URL → texture) onto a sprite,
  * distributed over a Fibonacci sphere. The group auto-rotates, eases toward the
@@ -203,7 +203,7 @@ function Cloud() {
   );
 }
 
-/** Renders nothing if WebGL/the scene throws — the chip list below remains. */
+/** Renders nothing if WebGL/the scene throws: the chip list below remains. */
 class SceneBoundary extends Component<
   { children: ReactNode },
   { failed: boolean }
@@ -220,7 +220,7 @@ class SceneBoundary extends Component<
 export default function SkillSphere() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Pause the WebGL loop while the sphere is off-screen or the tab is hidden —
+  // Pause the WebGL loop while the sphere is off-screen or the tab is hidden,
   // it auto-rotates, so otherwise it renders every frame for the page's life.
   const [live, setLive] = useState(true);
   useEffect(() => {

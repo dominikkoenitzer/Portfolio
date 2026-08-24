@@ -15,7 +15,7 @@ export const translations = { en, de, fr, zh } satisfies Record<
 >;
 
 // `en` is declared `as const`, so `typeof en` pins every value to a string literal
-// ("About", …) — and each other language pins *different* literals. Components read
+// ("About" and friends), and each other language pins different literals. Components read
 // `translations[lang]` (a union of all four) against this `Translation` type, so we
 // widen the leaf literals to their base types; otherwise e.g. de's "Über mich" is
 // not assignable to en's "About".

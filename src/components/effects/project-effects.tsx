@@ -13,7 +13,7 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /* ------------------------------------------------------------------ */
-/* TiltFigure — a framed screenshot that tilts toward the cursor       */
+/* TiltFigure: a framed screenshot that tilts toward the cursor       */
 /* ------------------------------------------------------------------ */
 
 export function TiltFigure({
@@ -97,7 +97,7 @@ export function TiltFigure({
 }
 
 /* ------------------------------------------------------------------ */
-/* SpotlightCard — a primary-tinted glow that tracks the cursor        */
+/* SpotlightCard: a primary-tinted glow that tracks the cursor        */
 /* ------------------------------------------------------------------ */
 
 export function SpotlightCard({
@@ -143,7 +143,7 @@ export function SpotlightCard({
 }
 
 /* ------------------------------------------------------------------ */
-/* CountUp + StatStrip — animated metric chips                          */
+/* CountUp + StatStrip: animated metric chips                          */
 /* ------------------------------------------------------------------ */
 
 export function CountUp({
@@ -158,7 +158,7 @@ export function CountUp({
   const [disp, setDisp] = useState(reduced ? (parsed?.[2] ?? "0") : "0");
 
   // Stats live in the hero (above the fold), so count up on mount. Depend ONLY
-  // on the stable `value` string — the regex match is a fresh object each render,
+  // on the stable `value` string: the regex match is a fresh object each render,
   // so keeping it in deps would restart the tween on every setDisp (stuck at 0).
   useEffect(() => {
     if (reduced) return;
@@ -218,7 +218,7 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Magnetic — children drift toward the cursor on hover                */
+/* Magnetic: children drift toward the cursor on hover                */
 /* ------------------------------------------------------------------ */
 
 export function Magnetic({

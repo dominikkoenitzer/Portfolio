@@ -20,7 +20,7 @@ export function useBodyScrollLock(locked: boolean) {
     lenis?.stop();
 
     // Capture the scroll position now and restore it on unlock. Applying the
-    // lock in rAF avoids a layout read during commit — but the returned id is
+    // lock in rAF avoids a layout read during commit, but the returned id is
     // cancelled in cleanup so a quick lock→unlock can never leave the styles
     // applied with no pending cleanup (which would freeze the page for good).
     const scrollY = window.scrollY;
@@ -46,7 +46,7 @@ export function useBodyScrollLock(locked: boolean) {
       body.style.overflow = "";
       html.style.overflow = "";
 
-      // Restore instantly and explicitly — a bare scrollTo would inherit the
+      // Restore instantly and explicitly: a bare scrollTo would inherit the
       // page's `scroll-behavior` and could animate, which would desync Lenis on
       // the start() below (it reads the live scroll position synchronously).
       window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });

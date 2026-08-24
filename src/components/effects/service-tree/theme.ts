@@ -9,7 +9,7 @@ import type { Theme } from "@/config/themes";
  *
  * The sapling used to sit inside its own dark panel, so every element could be
  * additive glow. It now renders directly on the page, which means on a light
- * theme there is nothing to add light *to* — additive blending is invisible
+ * theme there is nothing to add light *to*: additive blending is invisible
  * against near-white. Each palette therefore declares `onLight`, and the
  * explorer swaps blending and colour weights accordingly: emissive on dark,
  * drawn on light.
@@ -25,7 +25,7 @@ export interface ServiceTreePalette {
    * cannot darken) and selects the darker, saturated colour set.
    */
   onLight: boolean;
-  /** Scene fog colour — also the colour dimmed branches lerp toward, so it
+  /** Scene fog colour: also the colour dimmed branches lerp toward, so it
    *  should match the page behind the canvas for branches to fade *out*. */
   fog: number;
   /** Seed / core / ground-ring colour. */
@@ -36,13 +36,13 @@ export interface ServiceTreePalette {
   particle: number;
   /** Trunk colour, tying the stem to the sprout at the seed. */
   trunk: number;
-  /** Category accents — darker on a light page so the branches read. */
+  /** Category accents: darker on a light page so the branches read. */
   accent: Record<Group3, number>;
 }
 
 export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
   {
-    // Bloom — a light page. Saturated mid-tones that hold against near-white.
+    // Bloom, a light page. Saturated mid-tones that hold against near-white.
     Blue: {
       onLight: true,
       fog: 0xfdf0f2,
@@ -61,7 +61,7 @@ export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
       trunk: 0x8fe9cf,
       accent: { build: 0x36d0ff, protect: 0xff5fa2, grow: 0x46e08f },
     },
-    // Glass — a dark page. The original luminous scene.
+    // Glass, a dark page. The original luminous scene.
     Midnight: {
       onLight: false,
       fog: 0x0a1330,
@@ -73,7 +73,7 @@ export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
     },
   };
 
-/** Category accents as CSS hex — decorative use (glows, washes, icon tiles). */
+/** Category accents as CSS hex: decorative use (glows, washes, icon tiles). */
 export const CATEGORY_ACCENT_HEX: Record<Group3, string> = {
   build: "#36d0ff",
   protect: "#ff5fa2",
@@ -82,7 +82,7 @@ export const CATEGORY_ACCENT_HEX: Record<Group3, string> = {
 
 /**
  * The same accents at text contrast. The decorative set above is tuned to glow
- * on dark and is unreadable as small text on a light background — cyan #36d0ff
+ * on dark and is unreadable as small text on a light background, cyan #36d0ff
  * on #fdf0f2 is roughly 1.5:1. Use these wherever an accent carries words.
  */
 export const CATEGORY_ACCENT_TEXT: Record<

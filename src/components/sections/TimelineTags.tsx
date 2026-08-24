@@ -10,7 +10,7 @@ import { fitTags } from "@/lib/fit-tags";
  * The tag row on a timeline card.
  *
  * The chips are the stack a role was actually built on, so the row shows as
- * many as the card is wide enough to hold — measured, not capped at a number —
+ * many as the card is wide enough to hold: measured, not capped at a number.
  * and hands the rest to a "+N" chip that reveals them on hover, focus or tap.
  * Nothing is dropped: what does not fit is one interaction away.
  */
@@ -67,7 +67,7 @@ export function TimelineTags({
     observer.observe(row);
 
     // Inter loads with `display: swap`, and the fallback measures narrower than
-    // it does — without this the first count outlives the font it was taken in.
+    // it does: without this the first count outlives the font it was taken in.
     let live = true;
     document.fonts?.ready.then(() => {
       if (live) recount();

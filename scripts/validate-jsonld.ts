@@ -3,7 +3,7 @@
  *
  * Structured data is this site's primary lever for Google rich results and AI
  * answer engines, but typecheck/build never parse the inline <script
- * type="application/ld+json"> blocks — a stray comma or unescaped character
+ * type="application/ld+json"> blocks: a stray comma or unescaped character
  * ships to prod and silently disqualifies the page. This parses every block
  * and asserts the minimum shape (@context + @type), failing the build on any
  * malformed graph.

@@ -1,5 +1,5 @@
 /**
- * Tiny haptic-feedback helper. Safe on every platform — no-ops where the
+ * Tiny haptic-feedback helper. Safe on every platform, no-ops where the
  * Vibration API is unavailable (iOS Safari, some desktops).
  *
  * Intensities map to short, medium, and long vibration patterns that feel
@@ -23,7 +23,7 @@ export const haptic = (intensity: HapticIntensity = "light") => {
   try {
     navigator.vibrate(PATTERNS[intensity]);
   } catch {
-    /* ignore — some browsers throw on cross-origin frames */
+    /* ignore, some browsers throw on cross-origin frames */
   }
 };
 

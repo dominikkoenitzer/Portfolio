@@ -199,7 +199,7 @@ export const createPersonSchema = (
 });
 
 /**
- * Speakable specification (schema.org/SpeakableSpecification) — voice
+ * Speakable specification (schema.org/SpeakableSpecification), voice
  * assistants and AEO engines use these CSS selectors to pick the spoken
  * summary of the page.
  */
@@ -217,7 +217,7 @@ export const createSpeakableSchema = (url: string, cssSelectors: string[]) => {
 };
 
 /**
- * SoftwareSourceCode schema for project detail pages — richer than the base
+ * SoftwareSourceCode schema for project detail pages, richer than the base
  * version because AI engines surface this when answering "show me X's code".
  */
 export const createSoftwareSourceCodeSchema = (project: {
@@ -226,7 +226,7 @@ export const createSoftwareSourceCodeSchema = (project: {
   liveUrl: string;
   repoUrl: string;
   tags: string[];
-  /** ISO year-month (YYYY-MM) — a valid ISO 8601 partial date for datePublished. */
+  /** ISO year-month (YYYY-MM): a valid ISO 8601 partial date for datePublished. */
   date: string;
   programmingLanguages?: string[];
   operatingSystem?: string;
@@ -251,7 +251,7 @@ export const createSoftwareSourceCodeSchema = (project: {
 });
 
 /**
- * SoftwareApplication schema — pairs with SoftwareSourceCode to describe the
+ * SoftwareApplication schema: pairs with SoftwareSourceCode to describe the
  * deployed product behind a project.
  */
 export const createSoftwareApplicationSchema = (project: {

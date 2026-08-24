@@ -103,7 +103,7 @@ const SKILL_ICONS: Record<string, ReactNode> = {
   Git: <SiGit color="#F05032" size={S} />,
   pnpm: <SiPnpm color="#F69220" size={S} />,
 
-  // Professional (soft skills) — themed lucide marks
+  // Professional (soft skills): themed lucide marks
   "Customer Service": <Headphones size={S} />,
   Communication: <MessagesSquare size={S} />,
   "Project Management": <ListChecks size={S} />,
@@ -112,7 +112,7 @@ const SKILL_ICONS: Record<string, ReactNode> = {
   "SEO Copywriting": <Search size={S} />,
   "Video Editing": <Clapperboard size={S} />,
 
-  // Spoken languages — flags
+  // Spoken languages: flags
   english: <span className="text-[1.05rem] leading-none">🇬🇧</span>,
   german: <span className="text-[1.05rem] leading-none">🇩🇪</span>,
   chinese: <span className="text-[1.05rem] leading-none">🇨🇳</span>,

@@ -77,7 +77,7 @@ export function LanguageProvider({
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      /* private mode etc. — the in-memory choice still applies */
+      /* private mode etc., the in-memory choice still applies */
     }
   }, []);
 

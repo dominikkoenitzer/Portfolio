@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createRenderer } from "./createRenderer";
 
 // The backgrounds are decoration, but OGL's Renderer assigns `gl.renderer = this`
-// in its constructor. On a machine that cannot hand out a WebGL context — GPU
-// blocklists, hardware acceleration off, VMs, remote desktop — that assignment
+// in its constructor. On a machine that cannot hand out a WebGL context (GPU
+// blocklists, hardware acceleration off, VMs, remote desktop) that assignment
 // threw straight out of a React effect and unmounted the whole page, so the
 // site rendered blank. These cover the ways that failure arrives.
 const construct = vi.fn();

@@ -12,8 +12,8 @@ interface State {
 
 /**
  * Route-level error boundary. Catches render errors and lazy-chunk `import()`
- * failures — the latter happen when a visitor holds a stale chunk URL after a
- * redeploy — and shows a branded recovery card instead of white-screening the
+ * failures, the latter happen when a visitor holds a stale chunk URL after a
+ * redeploy, and shows a branded recovery card instead of white-screening the
  * whole SPA. Rendered inside the per-route, pathname-keyed wrapper in
  * AnimatedRoutes, so navigating elsewhere mounts a fresh boundary and clears
  * the error without a manual reset.

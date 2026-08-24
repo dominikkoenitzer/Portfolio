@@ -67,7 +67,7 @@ function BlurMorphTitle() {
       <div
         aria-hidden="true"
         // leading-[0.95] + pb-[0.25em] on each gradient span gives French/German
-        // descenders ("g" in Ingénieur, "j" in projet, etc.) enough room — at the
+        // descenders ("g" in Ingénieur, "j" in projet, etc.) enough room, at the
         // 7.5rem max font size the descender alone is ~24px.
         className="mb-7 overflow-visible font-bold leading-[0.95] tracking-[-0.03em] sm:mb-9 md:mb-11"
         style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
@@ -139,7 +139,7 @@ export function HeroSection() {
   const contentY = useTransform(scrollY, [0, 600], [0, -60]);
 
   // The velocity-driven skew + parallax shear the hero during touch momentum
-  // scrolling — it reads as the content being thrown off-center. Desktop only.
+  // scrolling; it reads as the content being thrown off-center. Desktop only.
   const [reduceFx] = useState(
     () =>
       typeof window !== "undefined" &&

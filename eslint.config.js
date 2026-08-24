@@ -41,7 +41,7 @@ export default tseslint.config(
       ],
       /*
        * The React Compiler rules in eslint-plugin-react-hooks v7 flag real
-       * things — refs written during render, setState called straight out of an
+       * things, refs written during render, setState called straight out of an
        * effect, a child mutating what its parent owns. Fix a file, then promote
        * its rule; never a disable comment. `refs` was ServiceExplorer and
        * LightVeil moving their live-prop writes into post-commit effects,

@@ -7,8 +7,8 @@
  * project in the same dark-brand style as og-image.png, served statically and
  * wired through the <SEO image=...> prop.
  *
- * Run: `bun scripts/gen-og.ts` (needs `@resvg/resvg-js`; installed transiently
- * — not kept in package.json since these change rarely).
+ * Run: `bun scripts/gen-og.ts` (needs `@resvg/resvg-js`, installed transiently
+ * and not kept in package.json since these change rarely).
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";

@@ -109,7 +109,7 @@ export function ProjectsSection() {
       <SectionHeading subtitle={t.subheading} title={t.heading} />
 
       {projects.length === 0 ? (
-        // The catalog is being reworked — show a clean placeholder instead of an
+        // The catalog is being reworked: show a clean placeholder instead of an
         // empty grid, so the page reads as intentionally in-progress.
         <motion.div
           className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-8 py-16 text-center sm:py-20"

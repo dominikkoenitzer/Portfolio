@@ -5,9 +5,9 @@ import { Renderer, type RendererOptions } from "ogl";
  * WebGL context.
  *
  * These backgrounds are decoration, but OGL's `Renderer` assigns
- * `gl.renderer = this` in its constructor. When context creation fails — GPU
+ * `gl.renderer = this` in its constructor. When context creation fails, GPU
  * blocklists, hardware acceleration switched off, VMs, remote desktop sessions,
- * some corporate-managed machines — `gl` is null and that assignment throws.
+ * some corporate-managed machines: `gl` is null and that assignment throws.
  * Thrown from an effect, React unmounts the whole tree above it and the page
  * renders blank, so a purely cosmetic gradient can take the entire site down.
  *

@@ -8,13 +8,13 @@ interface SmoothScrollProps {
 
 /**
  * App-wide smooth scrolling via Lenis. Mounted high in the tree with `root`, so
- * Lenis drives the real window scroll — `window.scrollY`, native `scroll`
+ * Lenis drives the real window scroll: `window.scrollY`, native `scroll`
  * events, and framer-motion's `useScroll` (progress bar + hero parallax) all
  * keep working downstream. Lenis runs its own rAF (`autoRaf`, on by default).
  *
  * Honors `prefers-reduced-motion`: when set, Lenis is not mounted at all, so
  * scrolling stays fully native and instant. Consumers read the instance with
- * `useLenis()`, which returns `undefined` in that case — every call site has a
+ * `useLenis()`, which returns `undefined` in that case, every call site has a
  * native fallback (see ScrollToTopFab, AnimatedRoutes, use-body-scroll-lock).
  */
 export function SmoothScroll({ children }: SmoothScrollProps) {

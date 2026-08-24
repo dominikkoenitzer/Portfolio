@@ -68,7 +68,7 @@ export function leafTexture(): THREE.Texture {
 }
 
 // Icon textures depend only on the icon component (white, language-agnostic),
-// so cache them at module scope — a language/theme switch reuses them instead
+// so cache them at module scope: a language/theme switch reuses them instead
 // of re-running renderToStaticMarkup + re-uploading to the GPU.
 const iconTexCache = new Map<string, THREE.Texture>();
 export function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {

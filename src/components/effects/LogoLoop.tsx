@@ -14,7 +14,7 @@ import {
 import "./LogoLoop.css";
 
 /**
- * LogoLoop — a smooth, infinitely-scrolling marquee of logos (React Bits),
+ * LogoLoop, a smooth, infinitely-scrolling marquee of logos (React Bits),
  * ported to TypeScript. Used for the tech-stack strip on the project pages.
  */
 

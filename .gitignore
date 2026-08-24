@@ -79,10 +79,10 @@ tmp/
 temp/
 .vercel
 
-# Scratch screenshot originals — optimized copies live in public/projects/
+# Scratch screenshot originals; optimized copies live in public/projects/
 Screenshots/
 
-# Agent tooling (agent-browser skill) — installed locally, not product code
+# Agent tooling (agent-browser skill): installed locally, not product code
 .agents/
 skills-lock.json
 

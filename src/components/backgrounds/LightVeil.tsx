@@ -29,7 +29,7 @@ uniform float uGlow;
 
 out vec4 fragColor;
 
-// Hash-based value noise: cheap, smooth, and fully self-contained — no
+// Hash-based value noise: cheap, smooth, and fully self-contained, no
 // gradient lookup tables, so the field reads differently from simplex/Perlin.
 float hash(vec2 p) {
   p = fract(p * vec2(127.1, 311.7));
@@ -61,7 +61,7 @@ float fbm(vec2 p) {
   return sum;
 }
 
-// Ridged noise — folds the field at its peaks into thin bright crests, the
+// Ridged noise: folds the field at its peaks into thin bright crests, the
 // building block for the caustic veins of light.
 float ridge(vec2 x) { return 1.0 - abs(2.0 * valueNoise(x) - 1.0); }
 
@@ -71,7 +71,7 @@ void main() {
 
   vec2 base = vec2(uv.x * aspect, uv.y) * (2.5 * uScale);
 
-  // Continuous pan — the whole field translates like a camera gliding over
+  // Continuous pan: the whole field translates like a camera gliding over
   // moving water, so it never settles back into the same arrangement.
   vec2 drift = uTime * vec2(0.05, 0.018);
   vec2 p = base + drift;
@@ -166,7 +166,7 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
     const renderer = createRenderer({
       alpha: true,
       premultipliedAlpha: true,
-      // A soft, blurry haze gains nothing from MSAA — skip it on phones.
+      // A soft, blurry haze gains nothing from MSAA, so skip it on phones.
       antialias: !coarsePointer,
       // Phones report dpr 3; a soft full-screen blur reads identically at 1×, so
       // rendering at native density would just burn the mobile GPU for nothing.
@@ -249,7 +249,7 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
     });
 
     // On touch devices the browser fires `resize` on every scroll as the URL
-    // bar collapses — but only the height changes. Reallocating the GL buffer
+    // bar collapses, but only the height changes. Reallocating the GL buffer
     // mid-scroll is what makes scrolling hitch, so there we react to real width
     // changes only (rotation etc.) and let CSS stretch over height changes.
     let prevWidth = -1;
@@ -270,7 +270,7 @@ export function LightVeil({ speed = 1, motion, colorStops }: LightVeilProps) {
     window.addEventListener("resize", onResize);
 
     // The drift is glacial (~0.05 units/sec), so 30fps is indistinguishable
-    // from 60 — but on phones it halves the per-frame cost of an already heavy
+    // from 60, but on phones it halves the per-frame cost of an already heavy
     // fragment shader. Throttle there; render every frame on desktop.
     const minFrameMs = coarsePointer ? 1000 / 30 : 0;
     let lastRender = 0;

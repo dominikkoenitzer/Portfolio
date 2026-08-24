@@ -2,7 +2,7 @@ import type { Group3 } from "./theme";
 
 /**
  * Where the sapling grows, in design space. The handoff prototype fixed these
- * positions by eye, so they are data rather than anything derived — keeping
+ * positions by eye, so they are data rather than anything derived, keeping
  * them here means the geometry can be adjusted without opening the renderer.
  */
 

@@ -1,7 +1,7 @@
 import type { Language } from "@/config/languages";
 
 /**
- * One entry on the Timeline page — a single role or stage of education,
+ * One entry on the Timeline page: a single role or stage of education,
  * rendered as an experience card (logo, role, organization, meta, bullets,
  * tags). Roles/organizations/points are extracted from the public
  * CV/Lebenslauf; locations, tags and the start/end dates (used to compute a
@@ -23,9 +23,9 @@ export interface TimelineEntry {
   /** Omit for ongoing entries → duration runs to today. */
   end?: string;
   location: string;
-  /** Work only — Hybrid / Remote (localized). */
+  /** Work only: Hybrid / Remote (localized). */
   arrangement?: string;
-  /** Work only — Internship / Part-time (localized). */
+  /** Work only: Internship / Part-time (localized). */
   commitment?: string;
   points: string[];
   tags: string[];
@@ -58,9 +58,9 @@ const MPAI_LOGO = "/timeline/mpai.png";
 const SSS_LOGO = "/timeline/sss-singapore.png";
 const MPS_LOGO = "/timeline/mps-oberarth.png";
 const DSP_LOGO = "/timeline/dsp-beijing.png";
-// The site's own brand icon — used for the self-employed / dk.punds.ch entry.
+// The site's own brand icon: used for the self-employed / dk.punds.ch entry.
 
-// Tech stacks are proper nouns — identical across languages.
+// Tech stacks are proper nouns: identical across languages.
 const MPAI_TAGS = [
   "React",
   "Next.js",

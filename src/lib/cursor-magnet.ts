@@ -21,7 +21,7 @@ export type CursorMagnetRect = {
   height: number;
 };
 
-// Stashed on the DOM element itself (a hot-path channel — no React, no events).
+// Stashed on the DOM element itself (a hot-path channel, no React, no events).
 type MagnetRectHost = { __cursorMagnetRect?: CursorMagnetRect | null };
 
 /**
@@ -37,8 +37,8 @@ export const magnetRectOf = (
   (el as unknown as MagnetRectHost).__cursorMagnetRect;
 
 /**
- * Pin the custom cursor's magnetic morph to `rect` (viewport coords) — a
- * sub-region of `el` — instead of its bounding box, or clear it with `null`.
+ * Pin the custom cursor's magnetic morph to `rect` (viewport coords), a
+ * sub-region of `el`, instead of its bounding box, or clear it with `null`.
  * Meant for canvas-based scenes where the interactive object is a fraction of
  * the element; see {@link CursorMagnetRect}.
  */
