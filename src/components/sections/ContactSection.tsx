@@ -27,7 +27,7 @@ type Draft = { label: string; subject: string; body: string };
 /**
  * The Services page hands us an enquiry through router state (see
  * `buildInquiry` there): the service title plus a fully composed subject and
- * message in the visitor's language. Read defensively — `state` is whatever the
+ * message in the visitor's language. Read defensively: `state` is whatever the
  * previous route chose to put there, and it survives reloads via history.
  */
 function readRouterState(state: unknown): {
@@ -59,7 +59,7 @@ function readRouterState(state: unknown): {
 
 /**
  * `encodeURIComponent` turns the template's newlines into %0A, which every mail
- * client understands — no need to hand-write CRLF pairs.
+ * client understands: no need to hand-write CRLF pairs.
  */
 const mailtoFor = (subject: string, body: string) =>
   `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -67,7 +67,7 @@ const mailtoFor = (subject: string, body: string) =>
 /**
  * The contact page is one sentence the visitor finishes, and one link.
  *
- * There is no backend by design — the picked subject prefills a mailto template,
+ * There is no backend by design: the picked subject prefills a mailto template,
  * so the message is sent by the visitor's own mail client. Nothing to deploy, no
  * API key, no third-party service.
  */
@@ -93,7 +93,7 @@ export function ContactSection() {
   const selected: Draft =
     intent === "service" && service ? service : t.intents[intent as IntentKey];
 
-  // The service, when there is one, leads the list — it's why they're here.
+  // The service, when there is one, leads the list; it's why they're here.
   const options: Array<{ key: IntentKey | "service"; label: string }> = [
     ...(service ? [{ key: "service" as const, label: service.label }] : []),
     ...INTENT_KEYS.map((key) => ({ key, label: t.intents[key].label })),

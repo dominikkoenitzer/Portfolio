@@ -2,7 +2,7 @@
  * Line-packing for the timeline's tag chips.
  *
  * The chips are a wrapping flex row, so how many of them fit is a question
- * about the *rendered* widths at the current viewport — not a fixed count. The
+ * about the *rendered* widths at the current viewport, not a fixed count. The
  * component measures the chips off-layout and asks these functions how many to
  * keep; whatever is left over goes behind the "+N" chip, which reveals it.
  *
@@ -48,7 +48,7 @@ export function rowsNeeded(
 
 /**
  * How many chips to render before the "+N" one. Returns every chip when they
- * all fit — the badge only appears when the row genuinely runs out of space,
+ * all fit: the badge only appears when the row genuinely runs out of space,
  * and the space it needs for itself is reserved before the cut is made.
  */
 export function fitTags({

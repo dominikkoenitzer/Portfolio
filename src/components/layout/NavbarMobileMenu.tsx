@@ -27,11 +27,11 @@ export function NavbarMobileMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
-  // Swipe-right inside the drawer closes it — feels native on iOS/Android.
+  // Swipe-right inside the drawer closes it: feels native on iOS/Android.
   const swipeHandlers = useSwipe({ onSwipeRight: onClose, threshold: 70 });
 
   // Move focus to the close button when the drawer opens and restore it to the
-  // trigger (hamburger) when it closes — standard modal-dialog behaviour.
+  // trigger (hamburger) when it closes: standard modal-dialog behaviour.
   useEffect(() => {
     if (!open) return;
     previousFocus.current = document.activeElement as HTMLElement | null;

@@ -15,7 +15,7 @@ import type {
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 
 /**
- * ServiceExplorer — the Services page rendered AS a glowing 3D skill-tree
+ * ServiceExplorer, the Services page rendered AS a glowing 3D skill-tree
  * sapling (raw three.js). A mint trunk grows up from a seed, forks into three
  * category boughs (Build / Protect / Grow), and each service sits at a branch
  * tip as a leaf with its icon baked in. The tree grows in on first view, sways
@@ -41,7 +41,7 @@ interface ServiceExplorerProps {
   onSelect: (key: string | null) => void;
   /** Fired once the scene is built and the first frame has rendered. */
   onReady?: () => void;
-  /** Fired if WebGL setup throws — the section then drops the panel. */
+  /** Fired if WebGL setup throws: the section then drops the panel. */
   onError?: () => void;
 }
 
@@ -119,7 +119,7 @@ export default function ServiceExplorer({
     const palette = SERVICE_TREE_THEMES[themeRef.current];
 
     const scene = new THREE.Scene();
-    // Additive cannot darken, so it is invisible on a light page — the plant
+    // Additive cannot darken, so it is invisible on a light page. The plant
     // is drawn rather than emissive there.
     const glowBlend = palette.onLight
       ? THREE.NormalBlending
@@ -209,7 +209,7 @@ export default function ServiceExplorer({
     // The custom cursor morphs onto interactive elements by their bounding box.
     // For the <canvas> that box is the WHOLE panel, so instead we hand it the
     // hovered leaf's live screen rect and it hugs just the leaf. Scratch vectors
-    // reused every frame — the hover path never allocates.
+    // reused every frame: the hover path never allocates.
     const magCenter = new THREE.Vector3();
     const magEdge = new THREE.Vector3();
     const magRight = new THREE.Vector3();
@@ -253,7 +253,7 @@ export default function ServiceExplorer({
       // updateCamera() sets position + lookAt() but never refreshes
       // matrixWorldInverse (renderer.render does that at frame end), so without
       // this the raycast, the leaf halo and the tooltip would all project through
-      // the PREVIOUS frame's camera — a ~1–2px lag that grows with camera speed.
+      // the PREVIOUS frame's camera: a ~1–2px lag that grows with camera speed.
       camera.updateMatrixWorld();
       raycaster.setFromCamera(ndc, camera);
       const hits = raycaster.intersectObjects(hitMeshes, false);
@@ -268,11 +268,11 @@ export default function ServiceExplorer({
       hovered = idx;
       // Hand the custom cursor the hovered leaf's live screen rect (or clear it)
       // BEFORE the synthetic mouseover below, so when the cursor re-evaluates it
-      // reads a fresh rect and hugs the leaf — never the whole <canvas> box.
+      // reads a fresh rect and hugs the leaf: never the whole <canvas> box.
       writeMagnetRect(idx);
       // Native cursors are defeated site-wide by `cursor:none` on fine pointers
       // (the custom dot takes over), and the dot only re-evaluates interactivity
-      // on `mouseover` — which never re-fires while moving within one canvas. So
+      // on `mouseover`, which never re-fires while moving within one canvas. So
       // on each hover transition, flag the canvas as interactive and dispatch a
       // synthetic mouseover so the dot pops over a leaf, like every other CTA.
       const interactive = idx != null;
@@ -332,7 +332,7 @@ export default function ServiceExplorer({
     window.addEventListener("pointerup", onPointerUp);
 
     // ── Tooltip (project the hovered leaf to screen each frame) ───────────
-    // Scratch vectors reused every frame — the loop never allocates.
+    // Scratch vectors reused every frame: the loop never allocates.
     const tmpV = new THREE.Vector3();
     const focusV = new THREE.Vector3();
     const updateTooltip = () => {
@@ -495,7 +495,7 @@ export default function ServiceExplorer({
 
       updateCamera(dt);
       // Re-raycast every frame, not just on pointer-move. The scene is never
-      // still — breeze sway (treeGroup rotation above), auto-rotate, the easing
+      // still: breeze sway (treeGroup rotation above), auto-rotate, the easing
       // mouse-parallax camera offset and the fly-to all keep moving the leaves
       // under a stationary cursor. Hover computed only at move-time therefore
       // goes stale the instant the pointer stops and the leaf drifts off it, so
@@ -535,7 +535,7 @@ export default function ServiceExplorer({
       cancelAnimationFrame(raf);
     };
 
-    // Pause while scrolled off-screen or the tab is hidden — the scene
+    // Pause while scrolled off-screen or the tab is hidden, the scene
     // self-animates, so otherwise the GPU draws every frame for nothing.
     let onScreen = false;
     let pageVisible = !document.hidden;

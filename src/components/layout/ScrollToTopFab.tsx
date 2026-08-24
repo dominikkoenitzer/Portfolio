@@ -35,7 +35,7 @@ export function ScrollToTopFab() {
     haptic("light");
     // Drive the return through Lenis when it's active so the smooth scroll and
     // Lenis's internal target stay in sync. Without Lenis (reduced motion), jump
-    // instantly — an explicit behavior:"smooth" would animate despite the
+    // instantly, an explicit behavior:"smooth" would animate despite the
     // reduced-motion CSS, since it overrides the `scroll-behavior` property.
     if (lenis) {
       lenis.scrollTo(0);

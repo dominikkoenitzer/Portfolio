@@ -70,7 +70,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // The calendar and commits queries are independent — fire them together to
+    // The calendar and commits queries are independent, fire them together to
     // save a round-trip instead of awaiting one then the other.
     const ghHeaders = {
       "Content-Type": "application/json",
@@ -138,7 +138,7 @@ export default async function handler(req, res) {
         .slice(0, 5);
     }
 
-    // Cache at the edge — the calendar changes a few times a day at most.
+    // Cache at the edge: the calendar changes a few times a day at most.
     res.setHeader(
       "Cache-Control",
       "public, s-maxage=3600, stale-while-revalidate=86400",

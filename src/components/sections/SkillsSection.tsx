@@ -15,7 +15,7 @@ import { getSkillIcon } from "./skill-icons";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// Draggable 3D logo sphere — lazy (three.js) and desktop-only.
+// Draggable 3D logo sphere: lazy (three.js) and desktop-only.
 const SkillSphere = lazy(() => import("@/components/effects/SkillSphere"));
 
 type CategoryKey = keyof typeof translations.en.skills.categories;

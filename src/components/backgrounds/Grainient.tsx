@@ -240,7 +240,7 @@ const Grainient = ({
       // container width is fractional, so that floored value lands up to ~1px
       // short of the container and reveals a thin seam of the darker page base
       // at the right edge (over the screen/multiply-blended background). Force
-      // the canvas to always fill its container — the drawing buffer (sized
+      // the canvas to always fill its container: the drawing buffer (sized
       // above) just up-scales by <1px, which is invisible. Mirrors LightVeil.
       canvas.style.width = "100%";
       canvas.style.height = "100%";
@@ -317,7 +317,7 @@ const Grainient = ({
     };
   }, []); // renderer created once
 
-  // Effect 2: sync props to uniforms — zero GPU cost, no teardown.
+  // Effect 2: sync props to uniforms: zero GPU cost, no teardown.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) {
