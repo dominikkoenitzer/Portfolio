@@ -1,4 +1,5 @@
 import type { Language } from "@/config/languages";
+import { SITE_CONFIG } from "@/constants";
 import { entropy } from "./entropy";
 import { flow } from "./flow";
 import { jester } from "./jester";
@@ -44,7 +45,7 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Portfolio",
     date: "2025-05",
     repoUrl: "https://github.com/dominikkoenitzer/Portfolio",
-    liveUrl: "https://dk.punds.ch/",
+    liveUrl: `${SITE_CONFIG.url}/`,
     priority: 2,
     toneClass: TONE_RADIAL,
     image: "/projects/portfolio.jpg",
