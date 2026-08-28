@@ -103,6 +103,21 @@ export default async function handler(req, res) {
     }
 
     const contributionsData = await contributionsRes.json();
+
+    // GitHub answers a failed GraphQL query with HTTP 200 and an `errors`
+    // array, so the status check above misses rate limits, bad credentials and
+    // missing scopes — they all fell through to the 404 below and reported
+    // themselves as a missing user. Pass GitHub's own message through instead.
+    if (contributionsData?.errors?.length) {
+      const details = contributionsData.errors.map((e) => e.message).join("; ");
+      const rateLimited = contributionsData.errors.some(
+        (e) => e.type === "RATE_LIMIT",
+      );
+      return res
+        .status(rateLimited ? 429 : 502)
+        .json({ error: "GitHub API error", details });
+    }
+
     const calendar =
       contributionsData?.data?.user?.contributionsCollection
         ?.contributionCalendar;
