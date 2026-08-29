@@ -7,19 +7,21 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
     >
 
-    <!-- Primary Meta Tags -->
-    <title>Dominik Könitzer — Software Engineer & Web Developer Portfolio</title>
+    <!-- Primary Meta Tags. These mirror the home page's own copy
+         (translations `seo.home`) so the shell and the rendered page agree;
+         scripts/prerender.ts rewrites them per route at build time. -->
+    <title>Software Engineer &amp; Web Developer | Dominik Könitzer</title>
     <meta
       name="title"
-      content="Dominik Könitzer — Software Engineer & Web Developer Portfolio"
+      content="Software Engineer &amp; Web Developer | Dominik Könitzer"
     >
     <meta
       name="description"
-      content="Dominik Könitzer is a Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js and full-stack engineering. Explore projects, skills, services and case studies."
+      content="Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Portfolio, projects, and source code."
     >
     <meta
       name="keywords"
-      content="Dominik Könitzer, Dominik Konitzer, software engineer, web developer, React developer, TypeScript developer, Next.js, full-stack developer, Switzerland, Swiss developer, WISS, frontend engineer, backend engineer, portfolio, web development services Switzerland, hire software engineer Switzerland, software engineer Zurich, software engineer Bern"
+      content="Dominik Könitzer, Dominik Konitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, web development services, frontend developer, backend developer, portfolio"
     >
     <meta name="author" content="Dominik Könitzer">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -39,7 +41,6 @@
       name="bingbot"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
-    <meta name="google" content="nositelinkssearchbox">
 
     <!-- Performance / Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,11 +48,11 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://github.com">
-    <!-- Avatar on /about is the LCP image — warm the connection early -->
+    <!-- Avatar on /about is the LCP image, so warm the connection early -->
     <link rel="preconnect" href="https://avatars.githubusercontent.com">
     <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
 
-    <!-- Fonts — loaded non-render-blocking so text paints immediately with a
+    <!-- Fonts, loaded non-render-blocking so text paints immediately with a
          system fallback, then swaps in (display=swap) once the webfont arrives -->
     <link
       rel="preload"
@@ -66,7 +67,7 @@
       >
     </noscript>
 
-    <!-- Icons & PWA — SVG for modern browsers, favicon.ico as the raster
+    <!-- Icons and PWA. SVG for modern browsers, favicon.ico as the raster
          fallback that Google's favicon crawler + legacy clients request by convention -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" href="/favicon.ico" sizes="32x32">
@@ -89,10 +90,12 @@
     <meta name="geo.position" content="47.3769;8.5417">
 
     <!-- NOTE: canonical is injected per-route by react-helmet (see SEO.tsx).
-         Do NOT add a static <link rel="canonical"> here — this file is the
+         Do NOT add a static <link rel="canonical"> here: this file is the
          shared shell, so one here would claim the home URL on every route and
          produce "multiple conflicting canonical URLs". Per-route canonicals are
-         emitted into dist/<route>/index.html by scripts/prerender.ts. -->
+         emitted into dist/<route>/index.html by scripts/prerender.ts, so the
+         served home document does carry <link rel="canonical"
+         href="https://dk.punds.ch/">. -->
 
     <!-- Identity / Webmentions / IndieWeb -->
     <link rel="me" href="https://github.com/dominikkoenitzer">
@@ -108,38 +111,44 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dk.punds.ch/">
-    <meta property="og:title" content="Dominik Könitzer — Software Engineer & Web Developer Portfolio">
+    <meta property="og:title" content="Software Engineer &amp; Web Developer | Dominik Könitzer">
     <meta
       property="og:description"
-      content="Swiss Software Engineer specializing in React, TypeScript, Next.js and full-stack web development. Explore projects, skills, services and case studies."
+      content="Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Portfolio, projects, and source code."
     >
     <meta property="og:image" content="https://dk.punds.ch/og-image.png">
     <meta property="og:image:secure_url" content="https://dk.punds.ch/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:image:alt" content="Dominik Könitzer — Software Engineer Portfolio">
+    <meta property="og:image:alt" content="Dominik Könitzer, software engineer portfolio">
     <meta property="og:site_name" content="Dominik Könitzer Portfolio">
+    <!-- One URL serves every language (the switcher is client-side), so these
+         are og:locale:alternate rather than hreflang: there is no separate
+         per-language URL for an alternate link to point at. -->
     <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="de_CH">
+    <meta property="og:locale:alternate" content="fr_CH">
+    <meta property="og:locale:alternate" content="zh_CN">
     <meta property="og:see_also" content="https://github.com/dominikkoenitzer">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://dk.punds.ch/">
-    <meta name="twitter:title" content="Dominik Könitzer — Software Engineer & Web Developer Portfolio">
+    <meta name="twitter:title" content="Software Engineer &amp; Web Developer | Dominik Könitzer">
     <meta
       name="twitter:description"
-      content="Swiss Software Engineer specializing in React, TypeScript, Next.js and full-stack web development."
+      content="Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Portfolio, projects, and source code."
     >
     <meta name="twitter:image" content="https://dk.punds.ch/og-image.png">
-    <meta name="twitter:image:alt" content="Dominik Könitzer — Software Engineer Portfolio">
-    <!-- No X/Twitter account — twitter:card still renders rich link previews without a handle -->
+    <meta name="twitter:image:alt" content="Dominik Könitzer, software engineer portfolio">
+    <!-- No X/Twitter account: twitter:card still renders rich link previews without a handle -->
 
     <!-- Dublin Core (helps generic crawlers + AI entity recognition) -->
-    <meta name="DC.title" content="Dominik Könitzer — Software Engineer Portfolio">
+    <meta name="DC.title" content="Dominik Könitzer, Software Engineer Portfolio">
     <meta name="DC.creator" content="Dominik Könitzer">
     <meta name="DC.subject" content="Software Engineering, Web Development, React, TypeScript, Next.js">
-    <meta name="DC.description" content="Portfolio of Dominik Könitzer — Software Engineer specializing in modern web development.">
+    <meta name="DC.description" content="Portfolio of Dominik Könitzer, a software engineer specializing in modern web development.">
     <meta name="DC.publisher" content="Dominik Könitzer">
     <meta name="DC.contributor" content="Dominik Könitzer">
     <meta name="DC.type" content="InteractiveResource">
@@ -149,10 +158,9 @@
     <meta name="DC.coverage" content="Switzerland">
     <meta name="DC.rights" content="© Dominik Könitzer">
 
-    <!-- ============================================================== -->
-    <!-- JSON-LD structured data — AI search engines & LLMs use these   -->
-    <!-- as ground-truth entity facts (GEO / AEO / generative SEO).     -->
-    <!-- ============================================================== -->
+    <!-- JSON-LD structured data. Search engines and LLMs read these as
+         ground-truth entity facts. Validated on every build by
+         scripts/validate-jsonld.ts. -->
 
     <!-- Person (primary entity) -->
     <script type="application/ld+json">
@@ -174,7 +182,7 @@
       ],
       "jobTitle": "Software Engineer",
       "email": "dominik.koenitzer@gmail.com",
-      "description": "Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js and full-stack engineering. Currently open to software engineering roles, internships, and freelance opportunities — in Switzerland or remote.",
+      "description": "Swiss software engineer specializing in modern web development with React, TypeScript, Next.js and full-stack engineering. Currently open to software engineering roles, internships, and freelance opportunities, in Switzerland or remote.",
       "knowsLanguage": ["en", "de", "fr"],
       "knowsAbout": [
         "Software Engineering",
@@ -230,9 +238,9 @@
       "@type": "WebSite",
       "@id": "https://dk.punds.ch/#website",
       "name": "Dominik Könitzer Portfolio",
-      "alternateName": "Dominik Könitzer — Software Engineer",
+      "alternateName": "Dominik Könitzer, Software Engineer",
       "url": "https://dk.punds.ch",
-      "description": "Portfolio of Dominik Könitzer — Swiss Software Engineer specializing in modern web development.",
+      "description": "Portfolio of Dominik Könitzer, a Swiss software engineer specializing in modern web development.",
       "inLanguage": "en",
       "publisher": { "@id": "https://dk.punds.ch/#person" },
       "author": { "@id": "https://dk.punds.ch/#person" },
@@ -246,11 +254,11 @@
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "@id": "https://dk.punds.ch/#service",
-      "name": "Dominik Könitzer — Software Engineering Services",
+      "name": "Dominik Könitzer Software Engineering Services",
       "description": "Professional software engineering and web development services delivered from Switzerland to clients worldwide.",
       "url": "https://dk.punds.ch",
       "image": "https://dk.punds.ch/og-image.png",
-      "priceRange": "CHF 30–500",
+      "priceRange": "CHF 30-500",
       "email": "dominik.koenitzer@gmail.com",
       "provider": { "@id": "https://dk.punds.ch/#person" },
       "areaServed": [

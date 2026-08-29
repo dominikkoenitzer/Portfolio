@@ -48,13 +48,38 @@ const pages: Page[] = STATIC.map(([route, key, image]) => {
   return { route, title: entry.title, description: entry.description, image };
 });
 
+// Title and description are exactly what ProjectDetails passes to <SEO>: Helmet
+// appends its tags to the ones already in the document, so anything else here
+// would put two disagreeing titles/descriptions in the same head.
 for (const p of getProjects("en")) {
   pages.push({
     route: `/projects/${p.slug}`,
-    title: `${p.title} — Project`,
+    title: p.title,
     description: (p.tagline || p.description || "").slice(0, 300),
     image: `/og/projects/${p.slug}.png`,
   });
+}
+
+// A route that reaches the router but not this list ships with no file behind
+// it, and Vercel answers 404 for a path with no file. That is invisible in dev
+// (the dev server has no prerender step) and invisible in the browser (the app
+// boots from 404.html and client-routes to the right page anyway), so fail the
+// build instead of letting the route rot as a 404 to every crawler.
+const routerSrc = await readFile(
+  join(process.cwd(), "src", "components", "AnimatedRoutes.tsx"),
+  "utf8",
+);
+const covered = new Set(pages.map((p) => p.route));
+const uncovered = [...routerSrc.matchAll(/path="([^"]+)"/g)]
+  .map((m) => m[1])
+  .filter((p) => p !== "*" && !p.includes(":") && !covered.has(p));
+
+if (uncovered.length > 0) {
+  console.error(
+    `prerender: routed but not prerendered: ${uncovered.join(", ")}\n` +
+      "  Add each one to the STATIC list in scripts/prerender.ts.",
+  );
+  process.exit(1);
 }
 
 const esc = (s: string): string =>
@@ -127,13 +152,14 @@ for (const page of pages) {
 }
 
 /*
- * The SPA fallback in vercel.json points unmatched URLs here rather than at
- * index.html. Serving the home document meant every junk URL advertised
- * `index, follow` in all three bot tags and claimed the home page as its
- * canonical, so the client-side 404's own `noindex` was arguing with a
- * bot-specific tag that outranks it. This file is the same shell, the app
- * still boots and client-routes normally: it just tells crawlers the truth
- * before any JavaScript runs.
+ * Vercel serves a 404.html from the output directory for any path that matches
+ * no other file, and does it with a real 404 status. Every route of this site
+ * is a real file (written above), so there is deliberately no catch-all rewrite
+ * in vercel.json: one would have to answer 200 and turn every junk URL into a
+ * soft 404. This document is the same shell, so the app still boots and
+ * client-routes normally, it just tells crawlers the truth before any
+ * JavaScript runs: noindex in all three bot tags, and no canonical claiming
+ * some other page.
  */
 let notFound = shell;
 notFound = notFound.replace(

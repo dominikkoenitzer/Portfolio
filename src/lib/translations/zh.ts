@@ -344,7 +344,7 @@ export const zh = {
     timeline: {
       title: "履历与教育",
       description:
-        "Dominik Könitzer 的履历——在 MPAI 的软件工程实习、自由网页开发，以及在瑞士 WISS 的学业。",
+        "Dominik Könitzer 的履历：在 MPAI 的软件工程实习、自由网页开发，以及在瑞士 WISS 的学业。",
       keywords:
         "Dominik Könitzer 履历, 简历, 工作经历, 教育, MPAI 实习, WISS, 自由网页开发者, 瑞士软件工程师",
     },
@@ -358,7 +358,7 @@ export const zh = {
     projects: {
       title: "软件工程项目",
       description:
-        "探索 Dominik Könitzer 的软件工程项目。瑞士 React 与 TypeScript 工程，附部署与源码。",
+        "Dominik Könitzer 的软件工程项目。瑞士 React 与 TypeScript 工程，附部署与源码。",
       keywords:
         "软件工程师作品集, 高影响力网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
     },
