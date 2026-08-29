@@ -390,7 +390,7 @@ export const fr = {
     home: {
       title: "Ingénieur logiciel & développeur web",
       description:
-        "Dominik Könitzer, ingénieur logiciel et développeur web full-stack en Suisse. Expert React et TypeScript. Découvrez mon portfolio et mes projets.",
+        "Dominik Könitzer, ingénieur logiciel et développeur web full-stack en Suisse. Expert React et TypeScript. Portfolio, projets et code source.",
       keywords:
         "Dominik Könitzer, ingénieur logiciel, développeur web, développeur React, développeur TypeScript, développeur full-stack, Suisse, développeur suisse, ingénieur logiciel Suisse, services de développement web, développeur frontend, développeur backend, portfolio",
     },
@@ -404,7 +404,7 @@ export const fr = {
     timeline: {
       title: "Parcours & formation",
       description:
-        "Le parcours de Dominik Könitzer – stage en ingénierie logicielle chez MPAI, développement web en freelance et formation à la WISS en Suisse.",
+        "Le parcours de Dominik Könitzer : stage en ingénierie logicielle chez MPAI, développement web en freelance et formation à la WISS en Suisse.",
       keywords:
         "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage MPAI, WISS, développeur web freelance, ingénieur logiciel Suisse",
     },

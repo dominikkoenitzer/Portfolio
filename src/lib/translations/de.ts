@@ -393,7 +393,7 @@ export const de = {
     home: {
       title: "Software Engineer & Webentwickler",
       description:
-        "Dominik Könitzer, Software Engineer in Zürich für moderne Webentwicklung mit React, TypeScript und Full-Stack. Portfolio, Projekte und Skills entdecken.",
+        "Dominik Könitzer, Software Engineer in Zürich für moderne Webentwicklung mit React, TypeScript und Full-Stack. Portfolio, Projekte, Skills und Quellcode.",
       keywords:
         "Dominik Könitzer, Software Engineer, Webentwickler, React Entwickler, TypeScript Entwickler, Full-Stack-Entwickler, Schweiz, Schweizer Entwickler, Software Engineer Schweiz, Webentwicklungs-Dienstleistungen, Frontend-Entwickler, Backend-Entwickler, Portfolio",
     },
@@ -407,7 +407,7 @@ export const de = {
     timeline: {
       title: "Werdegang & Ausbildung",
       description:
-        "Der Werdegang von Dominik Könitzer – Software-Engineering-Praktikum bei MPAI, freiberufliche Webentwicklung und Ausbildung an der WISS in der Schweiz.",
+        "Der Werdegang von Dominik Könitzer: Software-Engineering-Praktikum bei MPAI, freiberufliche Webentwicklung und Ausbildung an der WISS in der Schweiz.",
       keywords:
         "Dominik Könitzer Werdegang, Lebenslauf, Berufserfahrung, Ausbildung, MPAI Praktikum, WISS, freiberuflicher Webentwickler, Software Engineer Schweiz",
     },

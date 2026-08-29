@@ -389,7 +389,7 @@ export const en = {
     home: {
       title: "Software Engineer & Web Developer",
       description:
-        "Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Explore my portfolio and projects.",
+        "Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Portfolio, projects, and source code.",
       keywords:
         "Dominik Könitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, software engineer Switzerland, web development services, frontend developer, backend developer, portfolio",
     },
@@ -403,7 +403,7 @@ export const en = {
     timeline: {
       title: "Career & Education Timeline",
       description:
-        "The career and education timeline of Dominik Könitzer — software engineering internship at MPAI, freelance web development, and studies at WISS in Switzerland.",
+        "The career and education timeline of Dominik Könitzer: a software engineering internship at MPAI, freelance web development, and studies at WISS in Switzerland.",
       keywords:
         "Dominik Könitzer timeline, career timeline, work experience, education, MPAI internship, WISS, freelance web developer, software engineer Switzerland",
     },
@@ -417,7 +417,7 @@ export const en = {
     projects: {
       title: "Software Engineering Projects",
       description:
-        "Software engineering projects by Dominik Könitzer. Explore live React and TypeScript builds with source code.",
+        "Software engineering projects by Dominik Könitzer. Live React and TypeScript builds, each with its source code.",
       keywords:
         "software engineer portfolio, impactful web development projects, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer",
     },
