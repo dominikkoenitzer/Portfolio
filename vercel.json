@@ -1,13 +1,8 @@
 {
+  "trailingSlash": false,
   "redirects": [
     { "source": "/cv", "destination": "/cv/curriculum-vitae.html" },
     { "source": "/lebenslauf", "destination": "/cv/lebenslauf.html" }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!api|_next/static|_next/image|robots.txt|sitemap.xml|llms.txt|llms-full.txt|humans.txt|browserconfig.xml|.well-known/.*|.*\\..*).*)",
-      "destination": "/404.html"
-    }
   ],
   "headers": [
     {
@@ -29,6 +24,10 @@
         },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     },
     {
       "source": "/sitemap.xml",

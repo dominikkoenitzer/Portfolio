@@ -206,7 +206,10 @@ const ProjectDetails = () => {
     <>
       <SEO
         citationLinks={getDefaultCitations()}
-        description={`${project.title} — ${project.tagline}`}
+        // Exactly what scripts/prerender.ts writes into this route's static
+        // document. Helmet appends rather than replaces, so a different string
+        // here would leave two disagreeing description tags in one head.
+        description={project.tagline}
         type="article"
         image={`${SITE_CONFIG.url}/og/projects/${project.slug}.png`}
         geoLocation={getDefaultGeoLocation()}
