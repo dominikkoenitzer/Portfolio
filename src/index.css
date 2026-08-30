@@ -251,36 +251,6 @@
     z-index: -1;
   }
 
-  .gradient-border {
-    position: relative;
-  }
-
-  .gradient-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(
-      45deg,
-      hsl(var(--primary) / 0.3),
-      transparent,
-      hsl(var(--primary) / 0.3)
-    );
-    border-radius: inherit;
-    z-index: -1;
-    animation: border-rotate 8s linear infinite;
-  }
-
-  @keyframes border-rotate {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
 
   .link-hover {
     position: relative;
@@ -353,7 +323,7 @@
       hsl(var(--primary)),
       hsla(var(--primary) / 0.8)
     );
-    /* Reserve descender room: see .hero-name-gradient comment for the why. */
+    /* Reserve descender room: see .hero-display comment for the why. */
     padding-bottom: 0.08em;
     line-height: 1.05;
   }
@@ -404,18 +374,6 @@
   }
 
   /* Enhanced animations */
-  @keyframes gradient-shift {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
   @keyframes float-elegant {
     0%,
     100% {
@@ -509,21 +467,6 @@
     animation-delay: 1s;
   }
 
-  .bg-grid-pattern {
-    background-size: 50px 50px;
-    background-image:
-      linear-gradient(
-        to right,
-        hsl(var(--foreground) / 0.05) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        hsl(var(--foreground) / 0.05) 1px,
-        transparent 1px
-      );
-  }
-
   /* Media query adjustments for better responsiveness */
   @media (max-width: 640px) {
     html {
@@ -594,23 +537,12 @@
     color: hsl(var(--primary));
   }
 
-  /* Hero gradient text */
-  .hero-name-gradient {
-    background-image: linear-gradient(
-      120deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--primary) / 0.65) 50%,
-      hsl(var(--primary)) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-size: 200% 200%;
-    animation: gradient-shift 7s ease infinite;
-    /* -webkit-background-clip:text trims the rendered gradient to the element's
-       text box; without a baseline-aware bottom buffer, descenders ("g", "j",
-       "y", "p", "q") render with their bottoms shaved off. line-height alone
-       isn't enough because the line-box height excludes descender area. */
+  /* Hero display text. Solid on purpose: an animated gradient headline is
+     the fastest way to make a site read as template output. */
+  .hero-display {
+    color: hsl(var(--foreground));
+    /* Reserve descender room: the line-box height excludes descender area, so
+       clamp()-sized display type shaves "g", "j", "y" without this buffer. */
     padding-bottom: 0.08em;
     line-height: 1.05;
   }
@@ -711,18 +643,6 @@
 
   .highlight-text {
     @apply text-primary font-semibold;
-  }
-
-  .gradient-bg {
-    @apply bg-gradient-to-r from-primary/10 to-primary/5;
-  }
-
-  .gradient-border {
-    background:
-      linear-gradient(var(--background), var(--background)) padding-box,
-      linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 30%))
-      border-box;
-    border: 2px solid transparent;
   }
 
   .link-hover {
@@ -868,15 +788,9 @@
     0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Hero name: multi-color gradient on glass theme */
-[data-theme="glass"] .hero-name-gradient {
-  background-image: linear-gradient(
-    135deg,
-    hsl(210 100% 82%) 0%,
-    hsl(255 100% 78%) 45%,
-    hsl(183 100% 68%) 100%
-  ) !important;
-  background-size: 200% 200% !important;
+/* Hero name: cool solid on glass theme */
+[data-theme="glass"] .hero-display {
+  color: hsl(210 100% 85%);
 }
 
 /* Glass badge: neon glow */
@@ -923,12 +837,6 @@
   box-shadow:
     0 4px 24px hsl(var(--primary) / 0.4),
     0 0 60px hsl(var(--primary) / 0.15) !important;
-}
-
-/* No grid on glass: the square tiling read like a swimming pool over the
-   caustics. Let the water effect carry the look on its own. */
-[data-theme="glass"] .bg-grid-pattern {
-  display: none !important;
 }
 
 /* Progress bars: glowing neon */
@@ -1177,8 +1085,7 @@ body {
   .animate-parallax-float,
   .animate-glow-pulse,
   .animate-shimmer,
-  .animate-scroll-cue,
-  .hero-name-gradient {
+  .animate-scroll-cue {
     animation: none !important;
   }
 }
