@@ -12,17 +12,22 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
-// ─── Blur morph title ─────────────────────────────────────────────────────────
-function BlurMorphTitle() {
+const MORPH_EASE = `cubic-bezier(${EASE_OUT.join(", ")})`;
+/** The role swaps the instant the outgoing line has finished fading. */
+const MORPH_OUT_MS = DUR.fast * 1000;
+
+// ─── Role morph title ─────────────────────────────────────────────────────────
+function RoleMorphTitle() {
   const { language } = useLanguage();
   const PHRASES = translations[language].hero.roles;
   const [idx, setIdx] = useState(0);
-  const [blurOut, setBlurOut] = useState(false);
+  const [morphOut, setMorphOut] = useState(false);
   // Honour reduced-motion: hold one static role rather than auto-cycling the
-  // blur morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
+  // morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
   // Seeded on the first client render so the static branch never flashes a cycle.
   const [reduceMotion] = useState(prefersReducedMotion);
 
@@ -33,11 +38,11 @@ function BlurMorphTitle() {
 
     let swapTimer: ReturnType<typeof setTimeout>;
     const cycleTimer = setInterval(() => {
-      setBlurOut(true);
+      setMorphOut(true);
       swapTimer = setTimeout(() => {
         setIdx((i) => (i + 1) % PHRASES.length);
-        setBlurOut(false);
-      }, 400);
+        setMorphOut(false);
+      }, MORPH_OUT_MS);
     }, 4000);
     return () => {
       clearTimeout(swapTimer);
@@ -45,15 +50,18 @@ function BlurMorphTitle() {
     };
   }, [PHRASES.length, reduceMotion]);
 
+  // Transform and opacity only. The line spans the viewport at the 7.5rem max
+  // size, so a blur() on the way out repainted the whole hero every frame.
   const morphStyle: React.CSSProperties = reduceMotion
     ? {}
     : {
-        opacity: blurOut ? 0 : 1,
-        filter: blurOut ? "blur(18px)" : "blur(0px)",
-        transform: blurOut ? "scale(0.97)" : "scale(1)",
-        transition: blurOut
-          ? "opacity 0.32s ease-in, filter 0.32s ease-in, transform 0.32s ease-in"
-          : "opacity 0.55s cubic-bezier(0.25,1,0.4,1), filter 0.55s cubic-bezier(0.25,1,0.4,1), transform 0.55s cubic-bezier(0.25,1,0.4,1)",
+        opacity: morphOut ? 0 : 1,
+        transform: morphOut
+          ? "scale(0.97) translateY(-0.04em)"
+          : "scale(1) translateY(0)",
+        transition: morphOut
+          ? `opacity ${DUR.fast}s ease-in, transform ${DUR.fast}s ease-in`
+          : `opacity ${DUR.slow}s ${MORPH_EASE}, transform ${DUR.slow}s ${MORPH_EASE}`,
       };
 
   return (
@@ -88,6 +96,9 @@ function Magnetic({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  // Not SPRING_SOFT: this one tracks the cursor continuously rather than
+  // settling once, and the cushioned spring lags far enough behind the pointer
+  // to break the illusion that the button is attached to it.
   const sx = useSpring(x, { stiffness: 200, damping: 20, mass: 0.1 });
   const sy = useSpring(y, { stiffness: 200, damping: 20, mass: 0.1 });
 
@@ -183,20 +194,20 @@ export function HeroSection() {
             className="mb-3 font-semibold text-foreground/90 sm:mb-4"
             initial={{ opacity: 0, y: 8 }}
             style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.75rem)" }}
-            transition={{ duration: 0.5, delay: 0.18 }}
+            transition={{ duration: DUR.base, delay: 0.18, ease: EASE_OUT }}
           >
             {t.hero.greeting}
           </motion.p>
 
-          {/* Role — blur morph cycling title */}
-          <BlurMorphTitle />
+          {/* Role — morphing cycling title */}
+          <RoleMorphTitle />
 
           {/* Social links */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3"
             initial={{ opacity: 0, y: 6 }}
-            transition={{ duration: 0.5, delay: 0.55 }}
+            transition={{ duration: DUR.base, delay: 0.55, ease: EASE_OUT }}
           >
             {[
               {
@@ -212,7 +223,7 @@ export function HeroSection() {
             ].map(({ href, label, icon }) => (
               <a
                 aria-label={label}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border/40 text-muted-foreground transition-colors duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.06] hover:text-primary"
                 href={href}
                 key={label}
                 rel="noopener noreferrer"
@@ -228,7 +239,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-9 flex flex-wrap gap-2.5 sm:mb-11 sm:gap-3 md:mb-14"
             initial={{ opacity: 0, y: 6 }}
-            transition={{ duration: 0.5, delay: 0.65 }}
+            transition={{ duration: DUR.base, delay: 0.65, ease: EASE_OUT }}
           >
             <Magnetic>
               <Button
@@ -238,14 +249,14 @@ export function HeroSection() {
               >
                 <Link className="flex items-center gap-1.5" to="/contact">
                   {t.hero.hireMe}
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
                 </Link>
               </Button>
             </Magnetic>
             <Magnetic>
               <Button
                 asChild
-                className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium transition-all duration-200 hover:border-primary/25 hover:bg-primary/[0.04]"
+                className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium transition-colors duration-200 ease-out hover:border-primary/25 hover:bg-primary/[0.04]"
                 variant="outline"
               >
                 <Link to="/projects">{t.hero.viewWork}</Link>
@@ -258,7 +269,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-5 border-t border-border/20 pt-6 sm:gap-7 sm:pt-7 md:gap-10 md:pt-8"
             initial={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.5, delay: 0.78 }}
+            transition={{ duration: DUR.base, delay: 0.78, ease: EASE_OUT }}
           >
             <Stat value="20+" label={t.hero.stats.projects} />
             <div className="h-8 w-px bg-border/20 sm:h-10" />

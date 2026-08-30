@@ -19,9 +19,10 @@ const CHIP = "rounded-full border border-border/40 px-3 py-1 text-xs";
 /** The off-layout copies must report their natural width: never shrunk, never wrapped. */
 const MEASURED = "shrink-0 whitespace-nowrap";
 const TAG_CHIP = `${CHIP} bg-secondary/40 text-foreground/80`;
+/** Transform and colour only, so the lift stays on its own compositor layer. */
 const TAG_HOVER =
-  "transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]";
-const MORE_CHIP = `${CHIP} bg-secondary/30 text-muted-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/40 data-[state=open]:bg-primary/[0.07] data-[state=open]:text-primary`;
+  "transform-gpu transition-[transform,color,background-color,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]";
+const MORE_CHIP = `${CHIP} bg-secondary/30 text-muted-foreground ${TAG_HOVER} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/40 data-[state=open]:bg-primary/[0.07] data-[state=open]:text-primary`;
 
 /** Matches the `gap-2` on the row below; the packer needs it as a number. */
 const GAP = 8;

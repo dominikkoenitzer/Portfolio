@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProjects, type PortfolioProject } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
@@ -32,7 +33,7 @@ const isDesktopApp = (project: PortfolioProject) =>
   project.operatingSystem === "Windows";
 
 const segmentedButtonClass = (active: boolean) =>
-  `rounded-lg px-3.5 py-1.5 font-medium text-xs transition-all duration-200 ${
+  `rounded-lg px-3.5 py-1.5 font-medium text-xs transition-[color,background-color,box-shadow] duration-200 ease-out ${
     active
       ? "bg-primary/15 text-primary shadow-sm"
       : "text-muted-foreground hover:text-foreground"
@@ -114,7 +115,7 @@ export function ProjectsSection() {
         <motion.div
           className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-8 py-16 text-center sm:py-20"
           initial={{ opacity: 0, y: 24 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: DUR.slow, ease: EASE_OUT }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
@@ -137,7 +138,7 @@ export function ProjectsSection() {
           <motion.div
             className="mb-8 max-w-3xl border-l-2 border-primary/35 pl-5 sm:mb-10 sm:pl-6"
             initial={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DUR.slow, ease: EASE_OUT }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, x: 0 }}
           >
@@ -153,7 +154,7 @@ export function ProjectsSection() {
             className="mb-8 sm:mb-10"
             initial={{ opacity: 0, y: 16 }}
             role="search"
-            transition={{ duration: 0.5, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DUR.base, delay: 0.05, ease: EASE_OUT }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
@@ -164,7 +165,7 @@ export function ProjectsSection() {
                     vanishes as soon as anything is typed — name the field. */}
                 <input
                   aria-label={t.searchPlaceholder}
-                  className="h-11 w-full rounded-xl border border-border/40 bg-secondary/50 pr-10 pl-10 text-sm backdrop-blur-sm transition-colors placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
+                  className="h-11 w-full rounded-xl border border-border/40 bg-secondary/50 pr-10 pl-10 text-sm backdrop-blur-sm transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
                   onChange={(event) => updateParams({ q: event.target.value })}
                   placeholder={t.searchPlaceholder}
                   type="text"
@@ -173,7 +174,7 @@ export function ProjectsSection() {
                 {query ? (
                   <button
                     aria-label={t.clearSearch}
-                    className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground/60 transition-colors hover:bg-secondary hover:text-foreground"
+                    className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground/60 transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
                     onClick={() => updateParams({ q: "" })}
                     type="button"
                   >
@@ -232,7 +233,7 @@ export function ProjectsSection() {
               animate={{ opacity: 1, y: 0 }}
               className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-8 py-14 text-center"
               initial={{ opacity: 0, y: 12 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: DUR.base, ease: EASE_OUT }}
             >
               <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary">
                 <SearchX className="h-5 w-5" />
@@ -262,24 +263,33 @@ export function ProjectsSection() {
               className="space-y-5 sm:space-y-6"
               initial={{ opacity: 0, y: 12 }}
               key={`${query}|${type}|${sort}`}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: DUR.fast, ease: EASE_OUT }}
             >
+              {/* Entrance and hover live on separate elements: sharing one
+                  would make the card's staggered entrance delay apply to the
+                  hover lift in both directions. `.glass-deep` also transitions
+                  transform in CSS, which would fight the spring writing
+                  transform every frame, so the utility narrows the card's own
+                  transition to the colour properties. */}
               {visible.map((project, index) => (
+                <motion.div
+                  initial={{ opacity: 0, y: 28 }}
+                  key={project.slug}
+                  transition={{
+                    duration: DUR.slow,
+                    delay: 0.06 + Math.min(index, 6) * 0.08,
+                    ease: EASE_OUT,
+                  }}
+                  viewport={{ once: true }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                >
                   <motion.article
-                    className="glass-deep group relative overflow-hidden rounded-2xl"
-                    initial={{ opacity: 0, y: 28 }}
-                    key={project.slug}
-                    transition={{
-                      duration: 0.55,
-                      delay: 0.06 + Math.min(index, 6) * 0.08,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                    viewport={{ once: true }}
+                    className="glass-deep group relative transform-gpu overflow-hidden rounded-2xl transition-[box-shadow,border-color] duration-300 ease-out"
+                    transition={SPRING_SOFT}
                     whileHover={{ y: -4 }}
-                    whileInView={{ opacity: 1, y: 0 }}
                   >
                     {/* Top animated border */}
-                    <span className="absolute top-0 left-0 z-10 h-[2px] w-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-all duration-700 group-hover:w-full" />
+                    <span className="absolute top-0 left-0 z-10 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-transform duration-500 ease-out group-hover:scale-x-100" />
 
                     {/* Large faded index number */}
                     <span className="pointer-events-none absolute right-4 top-3 z-10 select-none font-bold font-mono text-6xl text-foreground/[0.04] sm:text-7xl">
@@ -314,7 +324,7 @@ export function ProjectsSection() {
                           {project.imageIcon && project.image ? (
                             <img
                               alt={`${project.title} logo`}
-                              className="mb-5 h-20 w-20 object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                              className="mb-5 h-20 w-20 object-contain drop-shadow-xl transition-transform duration-300 ease-out group-hover:scale-105"
                               loading="lazy"
                               onError={(e) => {
                                 e.currentTarget.style.display = "none";
@@ -363,7 +373,7 @@ export function ProjectsSection() {
                               "{name}",
                               project.title,
                             )}
-                            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-secondary/50 px-3 py-2.5 font-medium text-xs backdrop-blur-sm transition-all duration-200 hover:border-border/70 hover:bg-secondary"
+                            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-secondary/50 px-3 py-2.5 font-medium text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-border/70 hover:bg-secondary"
                             href={project.repoUrl}
                             rel="noopener noreferrer"
                             target="_blank"
@@ -377,7 +387,7 @@ export function ProjectsSection() {
                                 "{name}",
                                 project.title,
                               )}
-                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
                               download
                               href={project.downloadUrl}
                               rel="noopener noreferrer"
@@ -392,7 +402,7 @@ export function ProjectsSection() {
                                 "{name}",
                                 project.title,
                               )}
-                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
                               href={project.liveUrl}
                               rel="noopener noreferrer"
                               target="_blank"
@@ -406,7 +416,7 @@ export function ProjectsSection() {
                               "{name}",
                               project.title,
                             )}
-                            className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.06]"
+                            className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-primary/30 hover:bg-primary/[0.06]"
                             to={`/projects/${project.slug}`}
                           >
                             {t.details}
@@ -416,6 +426,7 @@ export function ProjectsSection() {
                       </div>
                     </div>
                   </motion.article>
+                </motion.div>
               ))}
             </motion.div>
           )}
