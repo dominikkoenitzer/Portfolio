@@ -28,8 +28,6 @@ export const de = {
     roles: [
       { line1: "Software-", line2: "Entwickler." },
       { line1: "Full-Stack", line2: "Developer." },
-      { line1: "Clean-Code-", line2: "Verfechter." },
-      { line1: "Systeme", line2: "konzipiert." },
     ] as { line1: string; line2: string }[],
     hireMe: "Anstellen",
     viewWork: "Arbeiten ansehen",
@@ -41,24 +39,23 @@ export const de = {
   },
   about: {
     heading: "Über mich",
-    subheading:
-      "Lerne mich besser kennen und erfahre, was meine Leidenschaft für Webentwicklung antreibt.",
-    passionate: "Leidenschaftlicher",
+    subheading: "Was ich lerne, und was ich damit baue.",
+    passionate: "Schweizer",
     passionateRole: "Software Engineer",
     intro1Before:
       "Ich bin Dominik Könitzer, ein 18-jähriger Software Engineer an der WISS Schule für Wirtschaft Informatik Immobilien und befinde mich derzeit im ",
     intro1Highlight: "sechsten",
     intro1After: " Semester eines vierjährigen Software-Engineering-Programms.",
     intro2:
-      "Die ersten zwei Jahre meines Programms bestehen aus theoretischem Unterricht, gefolgt von zwei Jahren praktischem Praktikum mit begleitendem Unterricht. Dabei baue ich ein solides Fundament aus theoretischem Wissen und praktischer Erfahrung auf.",
-    intro3Before: "Ich gestalte gerne ",
+      "Die ersten zwei Jahre sind Unterricht, die zwei danach ein Praktikum mit begleitendem Unterricht. Der Sinn dieser Aufteilung: Nichts bleibt lange nur Theorie.",
+    intro3Before: "Ich baue gerne ",
     intro3Word1: "sauberen",
     intro3Comma1: ", ",
-    intro3Word2: "funktionalen",
+    intro3Word2: "schnellen",
     intro3Comma2: " und ",
-    intro3Word3: "ästhetisch ansprechenden",
+    intro3Word3: "ansehnlichen",
     intro3After:
-      " Code für Websites und Anwendungen, die echten Mehrwert für Nutzer liefern. Neben den technischen Fähigkeiten lege ich Wert auf kontinuierliches Lernen, Problemlösung und klare Kommunikation.",
+      " Code für Websites und Anwendungen, die Leute wirklich benutzen wollen. Der Code ist dabei nur die Hälfte. Die andere Hälfte ist, das Problem so gut zu verstehen, dass ich meine Lösung erklären kann.",
     exploreSkills: "Meine Skills ansehen",
     readJournal: "Mein Journal lesen",
     cards: {
@@ -71,7 +68,7 @@ export const de = {
   skills: {
     heading: "Fähigkeiten",
     subheading:
-      "Meine Expertise erstreckt sich über verschiedene Technologien mit Fokus auf effiziente und elegante Lösungen.",
+      "Womit ich täglich arbeite, und worin ich noch besser werde.",
     categories: {
       frontend: "Frontend",
       professional: "Soft Skills",
@@ -90,10 +87,10 @@ export const de = {
   projects: {
     heading: "Projekte",
     subheading:
-      "Eine fokussierte Auswahl von Produkten, gebaut mit Klarheit, Konsistenz und Performance im Sinn.",
+      "Sachen, die ich gebaut und online gestellt habe, Quellcode inklusive.",
     disclosureEyebrow: "Bevor du weiterscrollst",
     disclosureBody:
-      "Diese Seite ist nur der öffentlich sichtbare Ausschnitt dessen, was ich gebaut habe. Ein paar weitere Projekte liegen hinter NDAs, in privaten Repos oder auf Kunden-Infrastruktur, die ich lieber nicht zur Schau stelle — die tauchen hier also nicht auf. Alles, was du unten siehst, ist persönlich: kleine Dinge, an denen ich abends und am Wochenende bastle, aus Neugier und der leisen Hoffnung, jemandem den Tag ein winziges Stück leichter zu machen. Wenn eines davon genau das bei dir tut — Mission erfüllt.",
+      "Diese Seite ist nur der öffentlich sichtbare Ausschnitt dessen, was ich gebaut habe. Ein paar weitere Projekte liegen hinter NDAs, in privaten Repos oder auf Kunden-Infrastruktur, die ich lieber nicht zur Schau stelle, deshalb tauchen sie hier nicht auf. Alles, was du unten siehst, ist persönlich: kleine Dinge, an denen ich abends und am Wochenende bastle, aus Neugier und der leisen Hoffnung, jemandem den Tag ein winziges Stück leichter zu machen. Wenn eines davon genau das bei dir tut: Mission erfüllt.",
     source: "Quellcode",
     live: "Live",
     download: "Download",
@@ -120,7 +117,7 @@ export const de = {
     wipEyebrow: "In Arbeit",
     wipTitle: "Neue Projekte sind unterwegs",
     wipBody:
-      "Ich überarbeite diesen Bereich von Grund auf. Neue Projekte werden gerade fertiggestellt und erscheinen bald hier — schau in Kürze wieder vorbei.",
+      "Ich baue diesen Bereich gerade von Grund auf neu. Ein paar neue Projekte sind fast fertig und erscheinen bald hier, schau also in Kürze wieder vorbei.",
     wipCta: "Kontakt aufnehmen",
   },
   projectDetails: {
@@ -134,7 +131,7 @@ export const de = {
     download: "Download",
     sourceCode: "Quellcode",
     downloadNote:
-      "Erster Start: Windows SmartScreen kann warnen — „Weitere Informationen“ → „Trotzdem ausführen“ wählen, dann die UAC-Administratoranfrage bestätigen (für globale Eingabe-Hooks erforderlich).",
+      "Erster Start: Windows SmartScreen kann warnen. Wähle „Weitere Informationen“ → „Trotzdem ausführen“ und bestätige dann die UAC-Administratoranfrage (für globale Eingabe-Hooks erforderlich).",
     moreProjects: "Weitere Projekte",
     present: "Heute",
     role: "Rolle",
@@ -163,7 +160,7 @@ export const de = {
       protect: { label: "Schützen", desc: "Sicherheit & Zuverlässigkeit" },
       grow: { label: "Wachsen", desc: "Sichtbarkeit & Performance" },
     },
-    ctaTitle: "Lass uns gemeinsam etwas bauen",
+    ctaTitle: "Erzähl mir davon",
     ctaEyebrow: "Ein Projekt im Kopf?",
     ctaButton: "Jetzt Kontakt aufnehmen",
     getInTouch: "Kontakt aufnehmen",
@@ -176,7 +173,7 @@ export const de = {
       webDev: {
         title: "Webentwicklung",
         description:
-          "End-to-End-Webentwicklung — responsiv, schnell und auf Conversion ausgelegt.",
+          "Eine ganze Website, von der ersten Skizze bis zur Live-Domain.",
         features: [
           "Responsives Design",
           "SEO-freundlich",
@@ -187,7 +184,7 @@ export const de = {
       customSoftware: {
         title: "Individuelle Software",
         description:
-          "Massgeschneiderte Software, exakt auf deine geschäftlichen Anforderungen zugeschnitten.",
+          "Software, die zu deinen bestehenden Abläufen passt.",
         features: [
           "Anforderungsanalyse",
           "Individuelle Architektur",
@@ -198,7 +195,7 @@ export const de = {
       serverSetup: {
         title: "Server-Setup",
         description:
-          "Produktionsreife Serverkonfiguration mit eingebauter Sicherheit und Monitoring.",
+          "Ein Server, der gleich beim ersten Mal richtig aufgesetzt ist, mit Sicherheit und Monitoring.",
         features: [
           "Installation",
           "Security Hardening",
@@ -209,7 +206,7 @@ export const de = {
       security: {
         title: "Security-Beratung",
         description:
-          "Schwachstellen finden, bevor Angreifer es tun. Audits mit umsetzbaren Massnahmen.",
+          "Lücken finden, bevor jemand anderes sie findet. Du bekommst einen Bericht, mit dem du arbeiten kannst.",
         features: [
           "Security-Audit",
           "Vulnerability-Scan",
@@ -220,7 +217,7 @@ export const de = {
       maintenance: {
         title: "Website-Wartung",
         description:
-          "Halte deine Website sicher, gepatcht und reibungslos am Laufen.",
+          "Monatliche Patches und Updates, plus ein Auge auf alles, was langsam wegdriftet.",
         features: [
           "Sicherheitsupdates",
           "Bugfixes",
@@ -231,7 +228,7 @@ export const de = {
       backup: {
         title: "Backup & Recovery",
         description:
-          "Automatische Backups und getestete Wiederherstellung — Datenverlust ist keine Option.",
+          "Automatische Backups, dazu getestete Wiederherstellungen, damit du weisst, dass sie funktionieren.",
         features: [
           "Automatische Backups",
           "Cloud-Speicher",
@@ -242,7 +239,7 @@ export const de = {
       seo: {
         title: "SEO-Optimierung",
         description:
-          "Verbessere organische Rankings mit technischem SEO, Keywords und Performance.",
+          "Technisches SEO und Ladezeiten, ausgerichtet auf die Suchen, die dir wirklich etwas bringen.",
         features: [
           "Keyword-Recherche",
           "On-Page-SEO",
@@ -253,7 +250,7 @@ export const de = {
       cms: {
         title: "Content-Management",
         description:
-          "Laufende Content-Updates und CMS-Pflege, damit deine Seite frisch bleibt.",
+          "Ich halte die Inhalte aktuell, damit die Seite nicht still vor sich hin altert.",
         features: [
           "CMS-Wartung",
           "Bildoptimierung",
@@ -264,7 +261,7 @@ export const de = {
       support: {
         title: "Technischer Support",
         description:
-          "Schnelle, zuverlässige Hilfe, wenn etwas kaputtgeht oder optimiert werden muss.",
+          "Hilfe, wenn etwas kaputtgeht oder einfach schneller werden muss.",
         features: [
           "Schnelle Reaktion",
           "Bugfixes",
@@ -280,7 +277,7 @@ export const de = {
         "bin auf deine Arbeit gestossen und ziemlich sicher, dass {service} genau das ist, was mein Projekt braucht.",
       discuss: "Diese Punkte sind mir besonders aufgefallen:",
       closing:
-        "Hättest du Lust auf einen kurzen Call, um die Details durchzugehen? Sag mir einfach, wann es bei dir passt.\n\n— Liebe Grüsse",
+        "Hättest du Lust auf einen kurzen Call, um die Details durchzugehen? Sag mir einfach, wann es bei dir passt.\n\nLiebe Grüsse",
     },
   },
   contact: {
@@ -298,12 +295,12 @@ export const de = {
       },
       freelance: {
         label: "ein Freelance-Projekt",
-        subject: "Freelance-Projekt — [kurze Beschreibung]",
+        subject: "Freelance-Projekt: [kurze Beschreibung]",
         body: "Hallo Dominik,\n\nich würde gerne mit dir an [Projekt] arbeiten.\n\n· Was wir brauchen: \n· Grober Zeitrahmen: \n· Budgetrahmen: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       collab: {
         label: "eine Zusammenarbeit",
-        subject: "Zusammenarbeit — [Idee]",
+        subject: "Zusammenarbeit: [Idee]",
         body: "Hallo Dominik,\n\nich arbeite an [Projekt] und dachte, wir könnten zusammen etwas aufbauen.\n\n· Die Idee: \n· Was ich einbringe: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       other: {
@@ -316,14 +313,14 @@ export const de = {
     copyEmail: "Oder Adresse kopieren.",
     copied: "Kopiert.",
     copyFailed:
-      "Kopieren fehlgeschlagen — die Adresse lautet dominik.koenitzer@gmail.com",
+      "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "Trinkgeld",
     headlineLine1: "Wenn etwas",
     headlineLine2: "den Nerv traf.",
     intro:
-      "Trinkgelder leben von Vertrauen und kleinen Gesten. Wenn ein Projekt hier dir Zeit gespart, etwas beigebracht oder einfach ein Lächeln aufs Gesicht gezaubert hat — wirf gerne ein paar Franken in den Hut. Null Druck, nur Dankbarkeit.",
+      "Trinkgelder leben von Vertrauen und kleinen Gesten. Wenn ein Projekt hier dir Zeit gespart, etwas beigebracht oder einfach ein Lächeln aufs Gesicht gezaubert hat, wirf gerne ein paar Franken in den Hut. Kein Druck, und danke so oder so.",
     pickAmount: "Wähl einen Betrag",
     currency: "CHF",
     tiers: {
@@ -337,7 +334,7 @@ export const de = {
     },
     sponsorBiggerLead: "Grösseres Projekt im Kopf?",
     sponsorBiggerCta: "Schreib mir lieber direkt",
-    paypalNote: "Sicher über PayPal abgewickelt. Danke — wirklich.",
+    paypalNote: "Sicher über PayPal abgewickelt. Danke, ehrlich.",
   },
   github: {
     contributionsSuffix: "Beiträge im letzten Jahr",
@@ -350,7 +347,7 @@ export const de = {
     contributions: "Beiträge",
   },
   footer: {
-    tagline: "Creative Web Developer",
+    tagline: "Software Engineer in Zürich",
     rights: "Alle Rechte vorbehalten.",
     privacyPolicy: "Datenschutz",
   },
@@ -368,7 +365,7 @@ export const de = {
         heading: "Datenerhebung",
         hostingLabel: "Hosting & Analytics:",
         hostingBody:
-          "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics ausschliesslich anonymisiert erhoben — es werden keine Cookies oder Tracking-Identifier verwendet.",
+          "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics ausschliesslich anonymisiert erhoben. Cookies oder Tracking-Identifier werden nicht verwendet.",
         contactLabel: "Kontaktformular:",
         contactBody:
           "Wenn du mich über das Kontaktformular oder per E-Mail kontaktierst, speichere ich die angegebenen Daten (Name, E-Mail, Nachricht) ausschliesslich zur Bearbeitung deiner Anfrage und für Rückfragen.",
@@ -421,9 +418,9 @@ export const de = {
     projects: {
       title: "Software-Engineering-Projekte",
       description:
-        "Software-Projekte von Dominik Könitzer. Live-Deployments und Quellcode in React und TypeScript mit Fokus auf Performance.",
+        "Software-Projekte von Dominik Könitzer, Software Engineer aus der Schweiz. Live-Deployments in React und TypeScript, jeweils mit Quellcode.",
       keywords:
-        "Software-Engineer-Portfolio, wirkungsvolle Webentwicklungs-Projekte, React TypeScript Portfolio, Frontend-Engineer Schweiz, Software-Engineer anstellen",
+        "Software-Engineer-Portfolio, Webentwicklungs-Projekte, React TypeScript Portfolio, Frontend-Engineer Schweiz, Software-Engineer anstellen",
     },
     services: {
       title: "Webentwicklung & Software",
@@ -442,14 +439,14 @@ export const de = {
     donate: {
       title: "Spenden",
       description:
-        "Unterstütze Dominik Könitzers Software-Projekte mit einer Spende. Dein Beitrag finanziert neue Builds, Hosting und langfristige Entwicklungsarbeit.",
+        "Unterstütze Dominik Könitzers Software-Projekte mit einer kleinen Spende. Sie deckt Hosting und die Zeit, die im Bauen und Warten steckt.",
       keywords:
         "Entwickler unterstützen, Software-Projekte unterstützen, Open-Source-Entwickler unterstützen, PayPal-Spende, Dominik Konitzer unterstützen",
     },
     privacy: {
       title: "Datenschutzerklärung",
       description:
-        "Datenschutzerklärung für dk.punds.ch: wie deine Daten erhoben, verwendet und geschützt werden. Konform mit Schweizer DSG und EU-DSGVO.",
+        "Datenschutzerklärung für dk.punds.ch: welche Daten beim Besuch erhoben werden, wie sie genutzt und geschützt werden. Nach Schweizer DSG und EU-DSGVO.",
       keywords:
         "Datenschutzerklärung, Datenschutz, DSGVO, DSG, Privacy Statement, Datensicherheit, Datenschutz Schweiz",
     },

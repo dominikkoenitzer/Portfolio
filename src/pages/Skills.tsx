@@ -26,7 +26,7 @@ const Skills = () => {
             "@type": "ItemList",
             name: "Technical Skills",
             description:
-              "Technical skills and technologies mastered by Dominik Könitzer",
+              "The technologies Dominik Könitzer works with",
             itemListElement: [
               {
                 "@type": "ListItem",

@@ -26,7 +26,8 @@ const Projects = () => {
             "@context": "https://schema.org",
             "@type": "CollectionPage",
             name: "Projects",
-            description: "Impact-focused software projects by Dominik Konitzer",
+            description:
+              "Software projects by Dominik Konitzer, each with a live site and its source code",
             url: projectsUrl,
             inLanguage: language,
             isPartOf: { "@id": `${SITE_CONFIG.url}/#website` },

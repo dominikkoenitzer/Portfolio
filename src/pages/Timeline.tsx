@@ -26,9 +26,9 @@ const Timeline = () => {
           {
             "@context": "https://schema.org",
             "@type": "ProfilePage",
-            name: "Dominik Könitzer — Career & Education Timeline",
+            name: "Dominik Könitzer, Career & Education Timeline",
             description:
-              "The career and education timeline of Dominik Könitzer, a software engineer in Switzerland — work experience and academic background.",
+              "The work experience and academic background of Dominik Könitzer, a software engineer in Switzerland.",
             url: timelineUrl,
             mainEntity: {
               "@type": "Person",

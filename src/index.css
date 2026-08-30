@@ -678,19 +678,6 @@
     animation: shimmer-sweep 0.6s ease forwards;
   }
 
-  /* Ping animation for status dot */
-  @keyframes status-ping {
-    75%,
-    100% {
-      transform: scale(2);
-      opacity: 0;
-    }
-  }
-
-  .animate-status-ping {
-    animation: status-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
-  }
-
   /* Scroll mouse indicator */
   @keyframes scroll-cue {
     0%,
@@ -1190,7 +1177,6 @@ body {
   .animate-parallax-float,
   .animate-glow-pulse,
   .animate-shimmer,
-  .animate-status-ping,
   .animate-scroll-cue,
   .hero-name-gradient {
     animation: none !important;
