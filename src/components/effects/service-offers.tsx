@@ -12,7 +12,15 @@ import {
 import { ArrowRight, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { revealOnScroll } from "@/lib/framer-animations";
+import {
+  DUR,
+  EASE_OUT,
+  REVEAL,
+  SPRING_SOFT,
+  stagger,
+  VIEWPORT,
+} from "@/lib/motion";
 
 /**
  * The scroll act that follows the 3D tree.
@@ -108,12 +116,10 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
 function ServiceRow({
   service,
   accentText,
-  index,
   skew,
 }: {
   service: OfferService;
   accentText: string;
-  index: number;
   skew: ReturnType<typeof useTransform<number, number>> | null;
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -125,13 +131,10 @@ function ServiceRow({
   const x = useSpring(mx, SPRING_SOFT);
   const y = useSpring(my, SPRING_SOFT);
 
+  // No timer of its own: the list is the stagger parent, so the rows bud off
+  // the branch in order however many services a category carries.
   return (
-    <motion.li
-      initial={{ opacity: 0, y: 34 }}
-      transition={{ duration: DUR.slow, delay: index * 0.09, ease: EASE_OUT }}
-      viewport={{ once: true, margin: "-12%" }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
+    <motion.li variants={REVEAL}>
       <motion.div style={skew ? { skewY: skew } : undefined}>
         <Link
           className="group relative flex items-start gap-4 py-6 focus-visible:outline-none sm:gap-5"
@@ -247,13 +250,10 @@ function CategoryStage({
         </motion.span>
       )}
 
-      <div>
+      <motion.div {...revealOnScroll(reduce, stagger())}>
         <motion.div
           className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pb-5"
-          initial={{ opacity: 0, y: 24 }}
-          transition={{ duration: DUR.slow, ease: EASE_OUT }}
-          viewport={{ once: true, margin: "-15%" }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={REVEAL}
         >
           <div className="min-w-0">
             <h2
@@ -271,7 +271,8 @@ function CategoryStage({
           </p>
         </motion.div>
 
-        {/* Rule that wipes in under the header, in the category accent. */}
+        {/* Rule that wipes in under the header, in the category accent. Its own
+            scaleX draw rather than a REVEAL, so it keeps its own trigger. */}
         <motion.div
           className="h-px origin-left"
           initial={{ scaleX: 0 }}
@@ -279,22 +280,24 @@ function CategoryStage({
             background: `linear-gradient(90deg, ${category.accentText} 0%, ${rgba(category.accentText, 0)} 100%)`,
           }}
           transition={{ duration: DUR.slow, ease: EASE_OUT }}
-          viewport={{ once: true, margin: "-15%" }}
+          viewport={VIEWPORT}
           whileInView={{ scaleX: 1 }}
         />
-      </div>
+      </motion.div>
 
-      <ul className="divide-y divide-border/10">
-        {category.services.map((service, i) => (
+      <motion.ul
+        className="divide-y divide-border/10"
+        {...revealOnScroll(reduce, stagger())}
+      >
+        {category.services.map((service) => (
           <ServiceRow
             accentText={category.accentText}
-            index={i}
             key={service.key}
             service={service}
             skew={skew}
           />
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 }

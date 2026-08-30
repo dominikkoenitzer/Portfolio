@@ -61,9 +61,12 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", ...fontFamily.sans],
-        heading: ["Space Grotesk", ...fontFamily.sans],
-        display: ["Space Grotesk", ...fontFamily.sans],
+        sans: ["Zen Kaku Gothic New", ...fontFamily.sans],
+        heading: ["Zen Maru Gothic", ...fontFamily.sans],
+        display: ["Zen Maru Gothic", ...fontFamily.sans],
+        // The hero name only: a small-caps title face, the one place a
+        // title-card treatment earns its keep.
+        title: ["Bowlby One SC", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {

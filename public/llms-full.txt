@@ -2,13 +2,13 @@
 
 This document is a dense, plain-text snapshot of the portfolio of Dominik Könitzer (https://dk.punds.ch). It is intended for LLMs and AI search engines that prefer plain-text ingestion over JavaScript-rendered HTML.
 
-Last reviewed: 2026-08-30.
+Last reviewed: 2026-08-31.
 
 ---
 
 ## 1. Person
 
-Dominik Könitzer is a Swiss Software Engineer based in Switzerland. He studies at WISS Schulen für Wirtschaft Informatik Immobilien (https://www.wiss.ch), currently in the sixth semester of a 4-year software engineering program — the first two years are coursework, followed by two years of practical internship with ongoing studies. He speaks English, German, and French.
+Dominik Könitzer is a Swiss Software Engineer based in Switzerland. He studies at WISS Schulen für Wirtschaft Informatik Immobilien (https://www.wiss.ch), currently in the seventh semester of a 4-year software engineering program. The first two years are coursework, followed by two years of practical internship with ongoing studies. He speaks English, German, and French.
 
 He builds production-grade web products with a frontend emphasis (React, Next.js, TypeScript) and a comfortable full-stack reach into Node.js, Java/Spring, databases, and DevOps. His work style favors clean code, predictable architecture, accessible UX, and measurable impact.
 

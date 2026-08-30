@@ -47,7 +47,7 @@ const About = () => {
           },
           createPersonSchema({
             description:
-              "18-year-old software engineer in the sixth semester of the 4-year programme at WISS Schulen für Wirtschaft Informatik Immobilien",
+              "18-year-old software engineer in the seventh semester of the 4-year programme at WISS Schulen für Wirtschaft Informatik Immobilien",
             educationalCredentialAwarded:
               "Software Engineering Degree (In Progress)",
             hasCredential: {

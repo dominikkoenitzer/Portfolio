@@ -241,7 +241,7 @@ const Grainient = ({
       // short of the container and reveals a thin seam of the darker page base
       // at the right edge (over the screen/multiply-blended background). Force
       // the canvas to always fill its container: the drawing buffer (sized
-      // above) just up-scales by <1px, which is invisible. Mirrors LightVeil.
+      // above) just up-scales by <1px, which is invisible.
       canvas.style.width = "100%";
       canvas.style.height = "100%";
       const res = program.uniforms.iResolution.value;

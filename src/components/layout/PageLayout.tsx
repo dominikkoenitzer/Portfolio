@@ -1,14 +1,17 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { type ReactNode, useEffect, useState } from "react";
-import { ThemedBackground } from "@/components/backgrounds/ThemedBackground";
+import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { SkipLink } from "@/components/layout/SkipLink";
-import { ThemeProvider } from "@/components/theme-provider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { LanguageProvider } from "@/lib/language-provider";
+
+// Pulls in the ~70KB ogl lib, so it stays lazy and off the critical path.
+const GrainientBackground = lazy(
+  () => import("@/components/backgrounds/GrainientBackground"),
+);
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -50,89 +53,37 @@ export function PageLayout({ children }: PageLayoutProps) {
     }
     window.scrollTo(0, 0);
     document.body.style.fontFamily =
-      "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
+      "'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
   }, []);
 
   return (
-    <ThemeProvider defaultTheme="bloom">
-      <LanguageProvider defaultLanguage="en">
-        <SkipLink />
-        {showVeil && <ThemedBackground />}
-        <CustomCursor />
+    <LanguageProvider defaultLanguage="en">
+      <SkipLink />
+      {showVeil && (
+        <Suspense fallback={null}>
+          <GrainientBackground />
+        </Suspense>
+      )}
+      <CustomCursor />
 
-        {/* Scroll progress bar */}
-        <motion.div
-          className="progress-bar fixed top-0 right-0 left-0 z-[100] h-[2px] bg-gradient-to-r from-primary/70 via-primary to-primary/70"
-          style={{ scaleX, transformOrigin: "0%" }}
-        />
+      {/* Scroll progress bar */}
+      <motion.div
+        className="progress-bar fixed top-0 right-0 left-0 z-[100] h-[2px] bg-gradient-to-r from-primary/70 via-primary to-primary/70"
+        style={{ scaleX, transformOrigin: "0%" }}
+      />
 
-        {/* Aurora background — only visible on glass theme via CSS. Each orb is a
-          radial-gradient glow rather than a solid circle behind `filter: blur()`:
-          visually identical at these low alphas, but it skips the large offscreen
-          blur buffers that make first paint crawl on mobile Safari. */}
-        <div
-          className="aurora-layer pointer-events-none fixed inset-0 -z-50 overflow-hidden"
-          aria-hidden="true"
-        >
-          <div
-            className="aurora-orb absolute"
-            style={{
-              top: "-15%",
-              left: "-8%",
-              width: "900px",
-              height: "900px",
-              background:
-                "radial-gradient(circle, hsl(var(--primary) / 0.18) 0%, hsl(var(--primary) / 0) 72%)",
-            }}
-          />
-          <div
-            className="aurora-orb absolute"
-            style={{
-              bottom: "-20%",
-              right: "-8%",
-              width: "750px",
-              height: "750px",
-              background:
-                "radial-gradient(circle, hsl(260 100% 68% / 0.13) 0%, hsl(260 100% 68% / 0) 72%)",
-            }}
-          />
-          <div
-            className="aurora-orb absolute"
-            style={{
-              top: "35%",
-              right: "15%",
-              width: "550px",
-              height: "550px",
-              background:
-                "radial-gradient(circle, hsl(185 100% 58% / 0.09) 0%, hsl(185 100% 58% / 0) 72%)",
-            }}
-          />
-          <div
-            className="aurora-orb absolute"
-            style={{
-              bottom: "20%",
-              left: "30%",
-              width: "400px",
-              height: "400px",
-              background:
-                "radial-gradient(circle, hsl(210 100% 70% / 0.07) 0%, hsl(210 100% 70% / 0) 72%)",
-            }}
-          />
-        </div>
+      <Navbar />
 
-        <Navbar />
+      <main
+        className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-none sm:pt-28 md:pt-32"
+        id="main-content"
+        tabIndex={-1}
+      >
+        {children}
+      </main>
 
-        <main
-          className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-none sm:pt-28 md:pt-32"
-          id="main-content"
-          tabIndex={-1}
-        >
-          {children}
-        </main>
-
-        <Footer />
-        <ScrollToTopFab />
-      </LanguageProvider>
-    </ThemeProvider>
+      <Footer />
+      <ScrollToTopFab />
+    </LanguageProvider>
   );
 }

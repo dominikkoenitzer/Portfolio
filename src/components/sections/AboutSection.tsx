@@ -1,10 +1,16 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Award, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { fadeInLeft, fadeInRight, fadeInUp } from "@/lib/framer-animations";
+import {
+  fadeInLeft,
+  fadeInRight,
+  fadeInUp,
+  revealOnScroll,
+  revealStagger,
+} from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";
@@ -24,6 +30,7 @@ export function AboutSection() {
   );
   const avatarReveal = isMobile ? fadeInUp : fadeInLeft;
   const bioReveal = isMobile ? fadeInUp : fadeInRight;
+  const reduceMotion = useReducedMotion();
 
   return (
     <section className="section-padding" id="about">
@@ -60,37 +67,35 @@ export function AboutSection() {
             />
           </div>
 
-          <div className="mt-8 space-y-4 md:mt-10 md:space-y-6">
+          <motion.div
+            className="mt-8 space-y-4 md:mt-10 md:space-y-6"
+            {...revealOnScroll(reduceMotion, stagger())}
+          >
             <InfoCard
-              delay={0.1}
               icon={<GraduationCap className="h-5 w-5" />}
               subtitle={t.cards.educationSubtitle}
               title={t.cards.educationTitle}
             />
 
             <InfoCard
-              delay={0.2}
               icon={<Award className="h-5 w-5" />}
               subtitle={t.cards.specializedSubtitle}
               title={t.cards.specializedTitle}
             />
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.div className="md:col-span-7 lg:col-span-7" {...bioReveal}>
+          {/* One trigger for the whole card: the panel rises, then the heading,
+              the three paragraphs and the buttons follow it in sequence instead
+              of each running its own hand-set delay. */}
           <motion.div
             className="glass-card rounded-2xl p-6 sm:p-8"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: DUR.base, ease: EASE_OUT }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
+            {...revealOnScroll(reduceMotion, revealStagger())}
           >
             <motion.h2
               className="mb-4 font-semibold text-xl sm:mb-6 sm:text-2xl"
-              initial={{ opacity: 0, y: 10 }}
-              transition={{ duration: DUR.base, delay: 0.1, ease: EASE_OUT }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={REVEAL}
             >
               {t.passionate}{" "}
               <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
@@ -101,10 +106,7 @@ export function AboutSection() {
             <div className="space-y-4 sm:space-y-5">
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: DUR.base, delay: 0.2, ease: EASE_OUT }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={REVEAL}
               >
                 {t.intro1Before}
                 <span className="font-medium text-foreground">
@@ -115,20 +117,14 @@ export function AboutSection() {
 
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: DUR.base, delay: 0.3, ease: EASE_OUT }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={REVEAL}
               >
                 {t.intro2}
               </motion.p>
 
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: DUR.base, delay: 0.4, ease: EASE_OUT }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={REVEAL}
               >
                 {t.intro3Before}
                 <span className="font-medium text-foreground">
@@ -148,10 +144,7 @@ export function AboutSection() {
 
             <motion.div
               className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4"
-              initial={{ opacity: 0, y: 10 }}
-              transition={{ duration: DUR.base, delay: 0.5, ease: EASE_OUT }}
-              viewport={{ once: true }}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={REVEAL}
             >
               <Button asChild className="group" variant="default">
                 <Link to="/skills">
@@ -215,13 +208,7 @@ export function AboutSection() {
       </div>
 
       {/* GitHub Contributions */}
-      <motion.div
-        className="mt-12 md:mt-16"
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
+      <motion.div className="mt-12 md:mt-16" {...revealOnScroll(reduceMotion)}>
         <GitHubContributions />
       </motion.div>
     </section>
@@ -233,19 +220,13 @@ interface InfoCardProps {
   icon: React.ReactNode;
   title: string;
   subtitle: string;
-  delay: number;
 }
 
-function InfoCard({ icon, title, subtitle, delay }: InfoCardProps) {
-  // Entrance and hover sit on separate elements so the entrance delay never
-  // applies to the hover lift.
+function InfoCard({ icon, title, subtitle }: InfoCardProps) {
+  // Entrance and hover sit on separate elements so the cascade delay never
+  // applies to the hover lift. The column above owns the timing.
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      transition={{ duration: DUR.base, delay, ease: EASE_OUT }}
-      viewport={{ once: true }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
+    <motion.div variants={REVEAL}>
       <motion.div
         className="flex transform-gpu items-center gap-2 rounded-lg border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 ease-out hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:gap-3 sm:p-4"
         transition={SPRING_SOFT}

@@ -1,5 +1,17 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { revealOnScroll } from "@/lib/framer-animations";
+import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+
+/**
+ * The title's own reveal: the line rises out of the mask around it rather than
+ * fading in place, which is the one "expensive" text move on the site. Purely a
+ * transform; the mask does the hiding, so nothing repaints per frame.
+ */
+const TITLE_LINE = {
+  hidden: { y: "110%" },
+  show: { y: 0, transition: { duration: DUR.slow, ease: EASE_OUT } },
+} as const;
 
 interface SectionHeadingProps {
   title: string;
@@ -19,7 +31,7 @@ interface SectionHeadingProps {
 
 /**
  * The shared page/section title. Fixes the element (h1 by default), font
- * (Space Grotesk via the global heading rule), weight, responsive size scale,
+ * (Zen Maru Gothic via the global heading rule), weight, responsive size scale,
  * and alignment so every page's title is typographically identical.
  */
 export function SectionHeading({
@@ -31,28 +43,40 @@ export function SectionHeading({
   className,
 }: SectionHeadingProps) {
   const centered = align === "center";
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
       className={cn("mb-16", centered ? "text-center" : "text-left", className)}
-      initial={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      viewport={{ once: true }}
-      whileInView={{ opacity: 1, y: 0 }}
+      {...revealOnScroll(reduceMotion, stagger())}
     >
-      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      {eyebrow && (
+        <motion.p className="eyebrow mb-3" variants={REVEAL}>
+          {eyebrow}
+        </motion.p>
+      )}
 
-      <Tag className="mb-3 font-bold text-3xl md:text-4xl">{title}</Tag>
+      <Tag className="mb-3 font-bold text-3xl md:text-4xl">
+        {/* The mask carries the descender room it clips (a "y" or a "g" reaches
+            below the line box) and takes the same amount back off the margin,
+            so the title sits exactly where it did and nothing below it moves. */}
+        <span className="-mb-[0.15em] block overflow-hidden pb-[0.15em]">
+          <motion.span className="block" variants={TITLE_LINE}>
+            {title}
+          </motion.span>
+        </span>
+      </Tag>
 
       {subtitle && (
-        <p
+        <motion.p
           className={cn(
             "mt-3 max-w-xl text-balance text-base text-muted-foreground",
             centered && "mx-auto",
           )}
+          variants={REVEAL}
         >
           {subtitle}
-        </p>
+        </motion.p>
       )}
     </motion.div>
   );

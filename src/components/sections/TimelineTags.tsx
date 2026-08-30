@@ -67,8 +67,8 @@ export function TimelineTags({
     const observer = new ResizeObserver(recount);
     observer.observe(row);
 
-    // Inter loads with `display: swap`, and the fallback measures narrower than
-    // it does: without this the first count outlives the font it was taken in.
+    // The webfont loads with `display: swap`, and the system fallback measures
+    // differently: without this the first count outlives the font it was taken in.
     let live = true;
     document.fonts?.ready.then(() => {
       if (live) recount();

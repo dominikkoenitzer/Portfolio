@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ChevronDown,
@@ -20,16 +20,15 @@ import type { ServiceTreeNode } from "@/components/effects/service-tree/types";
 import {
   CATEGORY_ACCENT_HEX,
   CATEGORY_ACCENT_TEXT,
-  isDarkTheme,
-  serviceTreeThemeFor,
+  SITE_SERVICE_TREE_THEME,
 } from "@/components/effects/service-tree/theme";
 import { ServiceOffers } from "@/components/effects/service-offers";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
-import { useTheme } from "@/components/theme-context";
 import { Button } from "@/components/ui/button";
+import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
@@ -226,17 +225,16 @@ function DetailCard({
 
 export function ServicesSection() {
   const { language } = useLanguage();
-  const { theme } = useTheme();
   const t = translations[language].services;
-  const designTheme = serviceTreeThemeFor(theme);
+  const designTheme = SITE_SERVICE_TREE_THEME;
+  const reduceMotion = useReducedMotion();
   // Same source the page's JSON-LD is built from, rendered here so the
   // visible content and the structured data can't drift apart.
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
-  const isDark = isDarkTheme(theme);
-  // The decorative accents glow on dark but are unreadable as small text on a
-  // light page (cyan on #fdf0f2 is about 1.5:1), so words use the text set.
-  const accentText = CATEGORY_ACCENT_TEXT[isDark ? "dark" : "light"];
+  // The decorative accents glow on dark but are unreadable as small text on the
+  // light bloom page (cyan on #fdf0f2 is about 1.5:1), so words use the text set.
+  const accentText = CATEGORY_ACCENT_TEXT.light;
 
   const [active, setActive] = useState<Category>("all");
   const [selectedKey, setSelectedKey] = useState<ItemKey | null>(null);
@@ -362,9 +360,7 @@ export function ServicesSection() {
                 className="mt-2.5 font-bold text-foreground tracking-[-0.025em]"
                 style={{
                   fontSize: "clamp(38px, 4.4vw, 58px)",
-                  textShadow: isDark
-                    ? "0 4px 40px rgba(120,160,255,0.35)"
-                    : "0 2px 30px hsl(var(--background))",
+                  textShadow: "0 2px 30px hsl(var(--background))",
                 }}
               >
                 {t.heading}
@@ -461,30 +457,33 @@ export function ServicesSection() {
       {/* Process + FAQ. This copy already existed in `seo-data/services.ts`,
           fully translated, but was only ever emitted as JSON-LD — Google
           requires FAQ/HowTo content to be visible to users, so the markup was
-          being ignored and the visitor was told less than the crawler. */}
-      <div className="mt-20 sm:mt-24">
-        <h2 className="font-bold text-xl tracking-tight sm:text-2xl">
+          being ignored and the visitor was told less than the crawler.
+          Heading and steps cascade off one parent instead of each step running
+          its own timer, so the list reads as a single sequence. */}
+      <motion.div
+        className="mt-20 sm:mt-24"
+        {...revealOnScroll(reduceMotion, stagger())}
+      >
+        <motion.h2
+          className="font-bold text-xl tracking-tight sm:text-2xl"
+          variants={REVEAL}
+        >
           {t.processTitle}
-        </h2>
+        </motion.h2>
         <ol className="relative mt-8 max-w-2xl space-y-7 pl-6 sm:pl-8">
-          {/* The rule draws itself as the steps arrive. */}
+          {/* The rule draws itself as the steps arrive. Its own scaleY wipe,
+              not a REVEAL, so it keeps its independent trigger. */}
           <motion.span
             aria-hidden
             className="absolute top-0 left-0 w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
             initial={{ scaleY: 0 }}
             style={{ bottom: 0 }}
             transition={{ duration: DUR.slow, ease: EASE_OUT }}
-            viewport={{ once: true, margin: "-20%" }}
+            viewport={VIEWPORT}
             whileInView={{ scaleY: 1 }}
           />
           {howTo.step.map((step, i) => (
-            <motion.li
-              initial={{ opacity: 0, x: -18 }}
-              key={step.name}
-              transition={{ duration: DUR.base, delay: i * 0.1, ease: EASE_OUT }}
-              viewport={{ once: true, margin: "-15%" }}
-              whileInView={{ opacity: 1, x: 0 }}
-            >
+            <motion.li key={step.name} variants={REVEAL}>
               <p className="flex items-baseline gap-3">
                 <span className="font-mono text-muted-foreground/40 text-xs">
                   {String(i + 1).padStart(2, "0")}
@@ -497,23 +496,27 @@ export function ServicesSection() {
             </motion.li>
           ))}
         </ol>
-      </div>
+      </motion.div>
 
-      <div className="mt-20 max-w-2xl sm:mt-24">
-        <h2 className="font-bold text-xl tracking-tight sm:text-2xl">
+      <motion.div
+        className="mt-20 max-w-2xl sm:mt-24"
+        {...revealOnScroll(reduceMotion, stagger())}
+      >
+        <motion.h2
+          className="font-bold text-xl tracking-tight sm:text-2xl"
+          variants={REVEAL}
+        >
           {t.faqTitle}
-        </h2>
+        </motion.h2>
         {/* Native <details>: no JS, keyboard and screen-reader correct, and it
-            keeps the answers in the DOM for crawlers even while collapsed. */}
+            keeps the answers in the DOM for crawlers even while collapsed. The
+            cascade is on the wrapper, the element itself stays native. */}
         <div className="mt-6 divide-y divide-border/15 border-border/15 border-t">
-          {faqs.map((faq, i) => (
+          {faqs.map((faq) => (
             <motion.details
               className="group py-4"
-              initial={{ opacity: 0, y: 14 }}
               key={faq.question}
-              transition={{ duration: DUR.base, delay: i * 0.06, ease: EASE_OUT }}
-              viewport={{ once: true, margin: "-10%" }}
-              whileInView={{ opacity: 1, y: 0 }}
+              variants={REVEAL}
             >
               <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
                 {faq.question}
@@ -528,26 +531,29 @@ export function ServicesSection() {
             </motion.details>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom CTA */}
       <motion.div
         className="mt-16 flex flex-col items-center gap-4 border-border/20 border-t pt-14 text-center"
-        initial={{ opacity: 0, y: 16 }}
-        transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
+        {...revealOnScroll(reduceMotion, stagger(0.2))}
       >
-        <p className="eyebrow">{t.ctaEyebrow}</p>
-        <h3 className="font-bold text-2xl md:text-3xl">{t.ctaTitle}</h3>
-        <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
-          {/* No specific service picked — land on /contact set to "a freelance
-              project" rather than its default of "a role". */}
-          <Link state={{ intent: "freelance" }} to="/contact">
-            {t.ctaButton}
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
-          </Link>
-        </Button>
+        <motion.p className="eyebrow" variants={REVEAL}>
+          {t.ctaEyebrow}
+        </motion.p>
+        <motion.h3 className="font-bold text-2xl md:text-3xl" variants={REVEAL}>
+          {t.ctaTitle}
+        </motion.h3>
+        <motion.div variants={REVEAL}>
+          <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
+            {/* No specific service picked — land on /contact set to "a freelance
+                project" rather than its default of "a role". */}
+            <Link state={{ intent: "freelance" }} to="/contact">
+              {t.ctaButton}
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+            </Link>
+          </Button>
+        </motion.div>
       </motion.div>
     </section>
   );

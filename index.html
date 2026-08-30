@@ -57,13 +57,13 @@
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700;900&family=Bowlby+One+SC&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     >
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700;900&family=Bowlby+One+SC&display=swap"
       >
     </noscript>
 
@@ -78,9 +78,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Dominik Könitzer">
     <meta name="application-name" content="Dominik Könitzer Portfolio">
-    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-TileColor" content="#513569">
     <meta name="msapplication-config" content="/browserconfig.xml">
-    <meta name="theme-color" content="#080c16" id="theme-color-meta">
+    <meta name="theme-color" content="#fdf0f2">
 
     <!-- Geographic SEO -->
     <meta name="geo.region" content="CH-ZH">
@@ -316,31 +316,6 @@
         "availableLanguage": ["English", "German", "French"]
       }
     }
-    </script>
-
-    <!-- Apply theme class before React mounts to prevent FOUC -->
-    <script>
-    "use strict";
-    (() => {
-      const THEMES = ["glass", "bloom", "forest", "sunset"];
-      const stored = localStorage.getItem("portfolio-theme");
-      const theme = THEMES.indexOf(stored) >= 0 ? stored : "bloom";
-
-      const bgHex = {
-        glass: "#080c16",
-        bloom: "#fdf0f2",
-        forest: "#f5f8f2",
-        sunset: "#190b0e",
-      }[theme];
-
-      // Add theme class so CSS variables resolve before paint
-      document.documentElement.classList.add(theme);
-      document.documentElement.setAttribute("data-theme", theme);
-
-      // Update meta theme-color for mobile browser chrome
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute("content", bgHex);
-    })();
     </script>
 
     <style>

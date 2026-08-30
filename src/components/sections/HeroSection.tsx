@@ -11,22 +11,24 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
 const MORPH_EASE = `cubic-bezier(${EASE_OUT.join(", ")})`;
-/** The role swaps the instant the outgoing line has finished fading. */
+/** The name swaps the instant the outgoing one has finished fading. */
 const MORPH_OUT_MS = DUR.fast * 1000;
 
-// ─── Role morph title ─────────────────────────────────────────────────────────
-function RoleMorphTitle() {
+// ─── Name morph title ─────────────────────────────────────────────────────────
+// Cycles the owner's identities (Dominik, Punds, DK) under the greeting.
+function NameMorphTitle() {
   const { language } = useLanguage();
   const PHRASES = translations[language].hero.roles;
   const [idx, setIdx] = useState(0);
   const [morphOut, setMorphOut] = useState(false);
-  // Honour reduced-motion: hold one static role rather than auto-cycling the
+  // Honour reduced-motion: hold one static name rather than auto-cycling the
   // morph (avoids vestibular triggers and WCAG 2.2.2 auto-update issues).
   // Seeded on the first client render so the static branch never flashes a cycle.
   const [reduceMotion] = useState(prefersReducedMotion);
@@ -56,9 +58,10 @@ function RoleMorphTitle() {
     ? {}
     : {
         opacity: morphOut ? 0 : 1,
-        transform: morphOut
-          ? "scale(0.97) translateY(-0.04em)"
-          : "scale(1) translateY(0)",
+        // Rest at `none`, not an identity matrix: a transformed layer makes
+        // Chrome rasterize this 7.5rem text through the compositor, which is
+        // visibly soft on high-density screens.
+        transform: morphOut ? "scale(0.97) translateY(-0.04em)" : "none",
         transition: morphOut
           ? `opacity ${DUR.fast}s ease-in, transform ${DUR.fast}s ease-in`
           : `opacity ${DUR.slow}s ${MORPH_EASE}, transform ${DUR.slow}s ${MORPH_EASE}`,
@@ -67,24 +70,21 @@ function RoleMorphTitle() {
   return (
     <>
       {/* Stable, SEO-friendly heading for assistive tech and crawlers. The
-          visible title below cycles purely as decoration (aria-hidden), so it
+          visible name below cycles purely as decoration (aria-hidden), so it
           never re-announces every few seconds. */}
       <h1 className="sr-only">
-        Dominik Könitzer, {PHRASES[0].line1} {PHRASES[0].line2}
+        Dominik Könitzer, {SITE_CONFIG.title}
       </h1>
       <div
         aria-hidden="true"
-        // leading-[0.95] + pb-[0.25em] on each gradient span gives French/German
-        // descenders ("g" in Ingénieur, "j" in projet, etc.) enough room, at the
-        // 7.5rem max font size the descender alone is ~24px.
-        className="mb-7 overflow-visible font-bold leading-[0.95] tracking-[-0.03em] sm:mb-9 md:mb-11"
+        className="mb-7 overflow-visible leading-[0.95] tracking-[-0.01em] sm:mb-9 md:mb-11"
         style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
       >
-        <span className="block hero-name-gradient pb-[0.12em]" style={morphStyle}>
-          {PHRASES[idx].line1}
-        </span>
-        <span className="block hero-name-gradient pb-[0.25em]" style={morphStyle}>
-          {PHRASES[idx].line2}
+        <span
+          className="hero-name-gradient font-title block pb-[0.12em]"
+          style={morphStyle}
+        >
+          {PHRASES[idx]}
         </span>
       </div>
     </>
@@ -122,20 +122,6 @@ function Magnetic({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Stat item ────────────────────────────────────────────────────────────────
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="font-bold text-xl text-primary sm:text-2xl md:text-3xl">
-        {value}
-      </span>
-      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground sm:text-[10px] sm:tracking-[0.18em]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function HeroSection() {
   const { language } = useLanguage();
@@ -148,6 +134,10 @@ export function HeroSection() {
   });
   const skewY = useTransform(smoothVelocity, [-2500, 0, 2500], [2.5, 0, -2.5]);
   const contentY = useTransform(scrollY, [0, 600], [0, -60]);
+
+  // Seeded on the first client render, like RoleMorphTitle: reduced motion gets
+  // the settled hero immediately rather than a cascade it did not ask for.
+  const [reduceMotion] = useState(prefersReducedMotion);
 
   // The velocity-driven skew + parallax shear the hero during touch momentum
   // scrolling; it reads as the content being thrown off-center. Desktop only.
@@ -187,27 +177,32 @@ export function HeroSection() {
         className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12 lg:px-16"
         style={{ skewY: reduceFx ? 0 : skewY }}
       >
-        <motion.div style={{ y: reduceFx ? 0 : contentY }}>
-          {/* Name */}
+        {/* One choreographed sequence rather than hand-tuned delays: the
+            greeting, the social row and the CTAs cascade off a single stagger
+            parent, so the order stays fixed no matter what is added between
+            them. The morph title sits in the middle without a variant of its
+            own, it is already animating on its own clock. */}
+        <motion.div
+          animate="show"
+          initial={reduceMotion ? "show" : "hidden"}
+          style={{ y: reduceFx ? 0 : contentY }}
+          variants={stagger(0.18, 0.2)}
+        >
+          {/* Greeting, completed by the rotating name below it */}
           <motion.p
-            animate={{ opacity: 1, y: 0 }}
             className="mb-3 font-semibold text-foreground/90 sm:mb-4"
-            initial={{ opacity: 0, y: 8 }}
             style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.75rem)" }}
-            transition={{ duration: DUR.base, delay: 0.18, ease: EASE_OUT }}
+            variants={REVEAL}
           >
             {t.hero.greeting}
           </motion.p>
 
-          {/* Role — morphing cycling title */}
-          <RoleMorphTitle />
+          <NameMorphTitle />
 
           {/* Social links */}
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
             className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3"
-            initial={{ opacity: 0, y: 6 }}
-            transition={{ duration: DUR.base, delay: 0.55, ease: EASE_OUT }}
+            variants={REVEAL}
           >
             {[
               {
@@ -236,10 +231,8 @@ export function HeroSection() {
 
           {/* CTAs */}
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-9 flex flex-wrap gap-2.5 sm:mb-11 sm:gap-3 md:mb-14"
-            initial={{ opacity: 0, y: 6 }}
-            transition={{ duration: DUR.base, delay: 0.65, ease: EASE_OUT }}
+            className="flex flex-wrap gap-2.5 sm:gap-3"
+            variants={REVEAL}
           >
             <Magnetic>
               <Button
@@ -256,26 +249,12 @@ export function HeroSection() {
             <Magnetic>
               <Button
                 asChild
-                className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium transition-colors duration-200 ease-out hover:border-primary/25 hover:bg-primary/[0.04]"
+                className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium hover:border-primary/25 hover:bg-primary/[0.04]"
                 variant="outline"
               >
                 <Link to="/projects">{t.hero.viewWork}</Link>
               </Button>
             </Magnetic>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-5 border-t border-border/20 pt-6 sm:gap-7 sm:pt-7 md:gap-10 md:pt-8"
-            initial={{ opacity: 0, y: 8 }}
-            transition={{ duration: DUR.base, delay: 0.78, ease: EASE_OUT }}
-          >
-            <Stat value="20+" label={t.hero.stats.projects} />
-            <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="4+" label={t.hero.stats.yearsCoding} />
-            <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="30+" label={t.hero.stats.technologies} />
           </motion.div>
         </motion.div>
       </motion.div>

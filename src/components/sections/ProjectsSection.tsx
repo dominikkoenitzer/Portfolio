@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   Download,
@@ -11,11 +11,20 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { SpotlightCard } from "@/components/effects/project-effects";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProjects, type PortfolioProject } from "@/constants/projects";
+import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import {
+  DUR,
+  EASE_OUT,
+  REVEAL,
+  SPRING_SOFT,
+  stagger,
+  VIEWPORT,
+} from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
@@ -43,6 +52,7 @@ export function ProjectsSection() {
   const { language } = useLanguage();
   const t = translations[language].projects;
   const projects = getProjects(language);
+  const reduceMotion = useReducedMotion();
 
   // Filter/sort state lives in the URL (?q=&type=&sort=) so it survives
   // back-navigation from a detail page and can be shared as a link. Defaults
@@ -114,10 +124,7 @@ export function ProjectsSection() {
         // empty grid, so the page reads as intentionally in-progress.
         <motion.div
           className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-8 py-16 text-center sm:py-20"
-          initial={{ opacity: 0, y: 24 }}
-          transition={{ duration: DUR.slow, ease: EASE_OUT }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
+          {...revealOnScroll(reduceMotion)}
         >
           <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary">
             <Wrench className="h-6 w-6" />
@@ -135,97 +142,104 @@ export function ProjectsSection() {
         </motion.div>
       ) : (
         <>
-          <motion.div
-            className="mb-8 max-w-3xl border-l-2 border-primary/35 pl-5 sm:mb-10 sm:pl-6"
-            initial={{ opacity: 0, x: -10 }}
-            transition={{ duration: DUR.slow, ease: EASE_OUT }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, x: 0 }}
-          >
-            <p className="eyebrow mb-2.5">{t.disclosureEyebrow}</p>
-            <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-base">
-              {t.disclosureBody}
-            </p>
-          </motion.div>
+          {/* The disclosure and every toolbar control hang off one stagger
+              parent, so the page head arrives as a single cascade instead of
+              four independent reveals racing each other. */}
+          <motion.div {...revealOnScroll(reduceMotion, stagger())}>
+            <motion.div
+              className="mb-8 max-w-3xl border-l-2 border-primary/35 pl-5 sm:mb-10 sm:pl-6"
+              variants={REVEAL}
+            >
+              <p className="eyebrow mb-2.5">{t.disclosureEyebrow}</p>
+              <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-base">
+                {t.disclosureBody}
+              </p>
+            </motion.div>
 
-          {/* Search / filter / sort toolbar */}
-          <motion.div
-            aria-label={t.toolbarLabel}
-            className="mb-8 sm:mb-10"
-            initial={{ opacity: 0, y: 16 }}
-            role="search"
-            transition={{ duration: DUR.base, delay: 0.05, ease: EASE_OUT }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-              <div className="relative flex-1 lg:max-w-sm">
-                <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
-                {/* The placeholder is the only visible label, and it
-                    vanishes as soon as anything is typed — name the field. */}
-                <input
-                  aria-label={t.searchPlaceholder}
-                  className="h-11 w-full rounded-xl border border-border/40 bg-secondary/50 pr-10 pl-10 text-sm backdrop-blur-sm transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
-                  onChange={(event) => updateParams({ q: event.target.value })}
-                  placeholder={t.searchPlaceholder}
-                  type="text"
-                  value={query}
-                />
-                {query ? (
-                  <button
-                    aria-label={t.clearSearch}
-                    className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground/60 transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
-                    onClick={() => updateParams({ q: "" })}
-                    type="button"
+            {/* Search / filter / sort toolbar */}
+            <motion.div
+              aria-label={t.toolbarLabel}
+              className="mb-8 sm:mb-10"
+              role="search"
+              variants={stagger(0, 0.06)}
+            >
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                <motion.div
+                  className="relative flex-1 lg:max-w-sm"
+                  variants={REVEAL}
+                >
+                  <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
+                  {/* The placeholder is the only visible label, and it
+                      vanishes as soon as anything is typed — name the field. */}
+                  <input
+                    aria-label={t.searchPlaceholder}
+                    className="h-11 w-full rounded-xl border border-border/40 bg-secondary/50 pr-10 pl-10 text-sm backdrop-blur-sm transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
+                    onChange={(event) => updateParams({ q: event.target.value })}
+                    placeholder={t.searchPlaceholder}
+                    type="text"
+                    value={query}
+                  />
+                  {query ? (
+                    <button
+                      aria-label={t.clearSearch}
+                      className="absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 text-muted-foreground/60 transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
+                      onClick={() => updateParams({ q: "" })}
+                      type="button"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  ) : null}
+                </motion.div>
+
+                <div className="flex flex-wrap items-center gap-3 lg:ml-auto">
+                  <motion.div
+                    className="inline-flex rounded-xl border border-border/40 bg-secondary/50 p-1 backdrop-blur-sm"
+                    variants={REVEAL}
                   >
-                    <X className="h-4 w-4" />
-                  </button>
-                ) : null}
-              </div>
+                    {typeOptions.map((option) => (
+                      <button
+                        aria-pressed={type === option.key}
+                        className={segmentedButtonClass(type === option.key)}
+                        key={option.key}
+                        onClick={() => updateParams({ type: option.key })}
+                        type="button"
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </motion.div>
 
-              <div className="flex flex-wrap items-center gap-3 lg:ml-auto">
-                <div className="inline-flex rounded-xl border border-border/40 bg-secondary/50 p-1 backdrop-blur-sm">
-                  {typeOptions.map((option) => (
-                    <button
-                      aria-pressed={type === option.key}
-                      className={segmentedButtonClass(type === option.key)}
-                      key={option.key}
-                      onClick={() => updateParams({ type: option.key })}
-                      type="button"
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+                  <motion.div
+                    aria-label={t.sortLabel}
+                    className="inline-flex rounded-xl border border-border/40 bg-secondary/50 p-1 backdrop-blur-sm"
+                    role="group"
+                    variants={REVEAL}
+                  >
+                    {sortOptions.map((option) => (
+                      <button
+                        aria-pressed={sort === option.key}
+                        className={segmentedButtonClass(sort === option.key)}
+                        key={option.key}
+                        onClick={() => updateParams({ sort: option.key })}
+                        type="button"
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </motion.div>
+
+                  <motion.p
+                    aria-live="polite"
+                    className="text-muted-foreground/70 text-xs tabular-nums"
+                    variants={REVEAL}
+                  >
+                    {t.showingCount
+                      .replace("{count}", String(visible.length))
+                      .replace("{total}", String(projects.length))}
+                  </motion.p>
                 </div>
-
-                <div
-                  aria-label={t.sortLabel}
-                  className="inline-flex rounded-xl border border-border/40 bg-secondary/50 p-1 backdrop-blur-sm"
-                  role="group"
-                >
-                  {sortOptions.map((option) => (
-                    <button
-                      aria-pressed={sort === option.key}
-                      className={segmentedButtonClass(sort === option.key)}
-                      key={option.key}
-                      onClick={() => updateParams({ sort: option.key })}
-                      type="button"
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-
-                <p
-                  aria-live="polite"
-                  className="text-muted-foreground/70 text-xs tabular-nums"
-                >
-                  {t.showingCount
-                    .replace("{count}", String(visible.length))
-                    .replace("{total}", String(projects.length))}
-                </p>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {visible.length === 0 ? (
@@ -280,7 +294,7 @@ export function ProjectsSection() {
                     delay: 0.06 + Math.min(index, 6) * 0.08,
                     ease: EASE_OUT,
                   }}
-                  viewport={{ once: true }}
+                  viewport={VIEWPORT}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
                   <motion.article
@@ -288,143 +302,149 @@ export function ProjectsSection() {
                     transition={SPRING_SOFT}
                     whileHover={{ y: -4 }}
                   >
-                    {/* Top animated border */}
-                    <span className="absolute top-0 left-0 z-10 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                    {/* The same cursor-following highlight the detail page
+                        uses, at its lower glow. It lives inside the article so
+                        the card's own overflow clips it to the rounded corners
+                        and so it rides along with the hover lift. */}
+                    <SpotlightCard className="rounded-[inherit]" glow={0.14}>
+                      {/* Top animated border */}
+                      <span className="absolute top-0 left-0 z-10 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-transform duration-500 ease-out group-hover:scale-x-100" />
 
-                    {/* Large faded index number */}
-                    <span className="pointer-events-none absolute right-4 top-3 z-10 select-none font-bold font-mono text-6xl text-foreground/[0.04] sm:text-7xl">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                      {/* Large faded index number */}
+                      <span className="pointer-events-none absolute right-4 top-3 z-10 select-none font-bold font-mono text-6xl text-foreground/[0.04] sm:text-7xl">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
 
-                    <div className="grid min-h-[300px] md:grid-cols-[1fr_1.15fr]">
-                      {/* Left visual panel */}
-                      <div className="shimmer-on-hover relative overflow-hidden border-b border-border/20 md:border-b-0 md:border-r">
-                        <div
-                          className={`absolute inset-0 ${project.toneClass}`}
-                        />
-                        <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.025)_50%,_transparent_80%)]" />
-                        <div className="absolute inset-0 opacity-40 [background:repeating-linear-gradient(135deg,transparent,transparent_22px,hsl(var(--foreground)/0.025)_22px,hsl(var(--foreground)/0.025)_23px)]" />
+                      <div className="grid min-h-[300px] md:grid-cols-[1fr_1.15fr]">
+                        {/* Left visual panel */}
+                        <div className="shimmer-on-hover relative overflow-hidden border-b border-border/20 md:border-b-0 md:border-r">
+                          <div
+                            className={`absolute inset-0 ${project.toneClass}`}
+                          />
+                          <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.025)_50%,_transparent_80%)]" />
+                          <div className="absolute inset-0 opacity-40 [background:repeating-linear-gradient(135deg,transparent,transparent_22px,hsl(var(--foreground)/0.025)_22px,hsl(var(--foreground)/0.025)_23px)]" />
 
-                        {project.image && !project.imageIcon ? (
-                          <>
-                            <img
-                              alt={`${project.title} screenshot`}
-                              className="absolute inset-0 h-full w-full object-cover object-top"
-                              loading="lazy"
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                              }}
-                              src={project.image}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/35 to-background/10" />
-                          </>
-                        ) : null}
-
-                        <div className="relative flex h-full min-h-[220px] flex-col items-center justify-center px-8 py-10 text-center">
-                          {project.imageIcon && project.image ? (
-                            <img
-                              alt={`${project.title} logo`}
-                              className="mb-5 h-20 w-20 object-contain drop-shadow-xl transition-transform duration-300 ease-out group-hover:scale-105"
-                              loading="lazy"
-                              onError={(e) => {
-                                e.currentTarget.style.display = "none";
-                              }}
-                              src={project.image}
-                            />
+                          {project.image && !project.imageIcon ? (
+                            <>
+                              <img
+                                alt={`${project.title} screenshot`}
+                                className="absolute inset-0 h-full w-full object-cover object-top"
+                                loading="lazy"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                                src={project.image}
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/35 to-background/10" />
+                            </>
                           ) : null}
-                          <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
-                            {project.title}
-                          </h2>
-                          <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-                            {project.tags.map((tag) => (
-                              <Badge key={tag}>{tag}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
 
-                      {/* Right content panel */}
-                      <div className="flex flex-col p-5 sm:p-6">
-                        <div className="mb-3.5 flex items-start justify-between gap-2 border-b border-border/25 pb-3.5">
-                          <div>
-                            <p
-                              aria-hidden
-                              className="font-semibold text-xl leading-tight"
-                            >
+                          <div className="relative flex h-full min-h-[220px] flex-col items-center justify-center px-8 py-10 text-center">
+                            {project.imageIcon && project.image ? (
+                              <img
+                                alt={`${project.title} logo`}
+                                className="mb-5 h-20 w-20 object-contain drop-shadow-xl transition-transform duration-300 ease-out group-hover:scale-105"
+                                loading="lazy"
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none";
+                                }}
+                                src={project.image}
+                              />
+                            ) : null}
+                            <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
                               {project.title}
-                            </p>
-                            <p className="mt-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60">
-                              {project.dateLabel}
-                            </p>
+                            </h2>
+                            <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                              {project.tags.map((tag) => (
+                                <Badge key={tag}>{tag}</Badge>
+                              ))}
+                            </div>
                           </div>
-                          <Badge>{project.tags[0]}</Badge>
                         </div>
 
-                        <p className="mb-2.5 font-medium text-foreground/90 text-sm leading-snug">
-                          {project.tagline}
-                        </p>
-                        <p className="mb-5 flex-1 text-muted-foreground text-sm leading-relaxed">
-                          {project.description}
-                        </p>
+                        {/* Right content panel */}
+                        <div className="flex flex-col p-5 sm:p-6">
+                          <div className="mb-3.5 flex items-start justify-between gap-2 border-b border-border/25 pb-3.5">
+                            <div>
+                              <p
+                                aria-hidden
+                                className="font-semibold text-xl leading-tight"
+                              >
+                                {project.title}
+                              </p>
+                              <p className="mt-1 text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60">
+                                {project.dateLabel}
+                              </p>
+                            </div>
+                            <Badge>{project.tags[0]}</Badge>
+                          </div>
 
-                        <div className="mt-auto grid grid-cols-3 gap-2 border-t border-border/25 pt-3.5">
-                          <a
-                            aria-label={t.openRepo.replace(
-                              "{name}",
-                              project.title,
-                            )}
-                            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-secondary/50 px-3 py-2.5 font-medium text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-border/70 hover:bg-secondary"
-                            href={project.repoUrl}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            <Github className="h-3.5 w-3.5" />
-                            {t.source}
-                          </a>
-                          {project.downloadUrl ? (
+                          <p className="mb-2.5 font-medium text-foreground/90 text-sm leading-snug">
+                            {project.tagline}
+                          </p>
+                          <p className="mb-5 flex-1 text-muted-foreground text-sm leading-relaxed">
+                            {project.description}
+                          </p>
+
+                          <div className="mt-auto grid grid-cols-3 gap-2 border-t border-border/25 pt-3.5">
                             <a
-                              aria-label={t.openDownload.replace(
+                              aria-label={t.openRepo.replace(
                                 "{name}",
                                 project.title,
                               )}
-                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
-                              download
-                              href={project.downloadUrl}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/40 bg-secondary/50 px-3 py-2.5 font-medium text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-border/70 hover:bg-secondary"
+                              href={project.repoUrl}
                               rel="noopener noreferrer"
                               target="_blank"
                             >
-                              {t.download}
-                              <Download className="h-3.5 w-3.5" />
+                              <Github className="h-3.5 w-3.5" />
+                              {t.source}
                             </a>
-                          ) : (
-                            <a
-                              aria-label={t.openLive.replace(
+                            {project.downloadUrl ? (
+                              <a
+                                aria-label={t.openDownload.replace(
+                                  "{name}",
+                                  project.title,
+                                )}
+                                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                                download
+                                href={project.downloadUrl}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                              >
+                                {t.download}
+                                <Download className="h-3.5 w-3.5" />
+                              </a>
+                            ) : (
+                              <a
+                                aria-label={t.openLive.replace(
+                                  "{name}",
+                                  project.title,
+                                )}
+                                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
+                                href={project.liveUrl}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                              >
+                                {t.live}
+                                <ExternalLink className="h-3.5 w-3.5" />
+                              </a>
+                            )}
+                            <Link
+                              aria-label={t.viewDetails.replace(
                                 "{name}",
                                 project.title,
                               )}
-                              className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,box-shadow] duration-200 ease-out hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)]"
-                              href={project.liveUrl}
-                              rel="noopener noreferrer"
-                              target="_blank"
+                              className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-primary/30 hover:bg-primary/[0.06]"
+                              to={`/projects/${project.slug}`}
                             >
-                              {t.live}
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-                          <Link
-                            aria-label={t.viewDetails.replace(
-                              "{name}",
-                              project.title,
-                            )}
-                            className="inline-flex items-center justify-center gap-1 rounded-xl border border-border/40 bg-background/60 px-3 py-2.5 font-medium text-primary text-xs backdrop-blur-sm transition-[background-color,border-color] duration-200 ease-out hover:border-primary/30 hover:bg-primary/[0.06]"
-                            to={`/projects/${project.slug}`}
-                          >
-                            {t.details}
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </Link>
+                              {t.details}
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </SpotlightCard>
                   </motion.article>
                 </motion.div>
               ))}

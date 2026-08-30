@@ -18,8 +18,9 @@ import {
 import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
+import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { TimelineTags } from "./TimelineTags";
@@ -110,11 +111,9 @@ function LogoTile({ entry }: { entry: TimelineEntry }) {
 
 function TimelineCard({
   entry,
-  index,
   language,
 }: {
   entry: TimelineEntry;
-  index: number;
   language: Language;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -135,19 +134,16 @@ function TimelineCard({
   const duration = formatDuration(entry.start, entry.end, language);
   const moreLabel = getTimeline(language).moreTags;
 
+  // The entry arrives as one object and then unpacks: role, employer, dates,
+  // bullets and tags follow it up the rail one after another. Each entry keeps
+  // its own trigger, because a group-wide one would spend the education group's
+  // last three reveals off-screen (the rail is taller than the viewport).
   return (
     <motion.article
       className="group/card flex gap-4 sm:gap-5"
-      initial={{ opacity: 0, y: 18 }}
       ref={ref}
-      transition={{
-        duration: DUR.base,
-        delay: Math.min(index * 0.06, 0.3),
-        ease: EASE_OUT,
-      }}
-      viewport={{ once: true, margin: "-60px" }}
       whileHover={{ y: -4, transition: SPRING_SOFT }}
-      whileInView={{ opacity: 1, y: 0 }}
+      {...revealOnScroll(reduceMotion, revealStagger(0.08, 0.05))}
     >
       <motion.div
         className="flex-none"
@@ -157,24 +153,31 @@ function TimelineCard({
       </motion.div>
 
       <div className="min-w-0 flex-1">
-        <h3 className="font-bold text-lg leading-tight sm:text-xl">
+        <motion.h3
+          className="font-bold text-lg leading-tight sm:text-xl"
+          variants={REVEAL}
+        >
           {entry.role}
-        </h3>
+        </motion.h3>
 
-        <a
+        <motion.a
           className="group mt-1 inline-flex items-center gap-1 rounded-sm font-medium text-foreground/90 text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           href={entry.organizationUrl}
           rel="noopener noreferrer"
           target="_blank"
+          variants={REVEAL}
         >
           {entry.organization}
           <ArrowUpRight
             aria-hidden
             className="h-3.5 w-3.5 text-muted-foreground transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
           />
-        </a>
+        </motion.a>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs transition-colors duration-200 ease-out group-hover/card:text-foreground/70">
+        <motion.div
+          className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs transition-colors duration-200 ease-out group-hover/card:text-foreground/70"
+          variants={REVEAL}
+        >
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays aria-hidden className="h-3.5 w-3.5 opacity-80" />
             <span>{entry.period}</span>
@@ -203,10 +206,10 @@ function TimelineCard({
               </>
             )}
           </span>
-        </div>
+        </motion.div>
 
         {entry.points.length > 0 && (
-          <ul className="mt-4 space-y-2">
+          <motion.ul className="mt-4 space-y-2" variants={REVEAL}>
             {entry.points.map((point, pointIndex) => (
               <li
                 className="relative pl-4 text-muted-foreground text-sm leading-relaxed"
@@ -219,11 +222,13 @@ function TimelineCard({
                 {point}
               </li>
             ))}
-          </ul>
+          </motion.ul>
         )}
 
         {entry.tags.length > 0 && (
-          <TimelineTags moreLabel={moreLabel} tags={entry.tags} />
+          <motion.div variants={REVEAL}>
+            <TimelineTags moreLabel={moreLabel} tags={entry.tags} />
+          </motion.div>
         )}
       </div>
     </motion.article>
@@ -241,14 +246,13 @@ function TimelineGroup({
   entries: TimelineEntry[];
   language: Language;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <div>
       <motion.div
         className="group/head mb-8 flex items-center gap-3"
-        initial={{ opacity: 0, y: 16 }}
-        transition={{ duration: DUR.base, ease: EASE_OUT }}
-        viewport={{ once: true, margin: "-60px" }}
-        whileInView={{ opacity: 1, y: 0 }}
+        {...revealOnScroll(reduceMotion)}
       >
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-[transform,background-color] duration-200 ease-out group-hover/head:scale-110 group-hover/head:bg-primary/15">
           {icon}
@@ -257,10 +261,9 @@ function TimelineGroup({
       </motion.div>
 
       <div className="space-y-10 sm:space-y-12">
-        {entries.map((entry, i) => (
+        {entries.map((entry) => (
           <TimelineCard
             entry={entry}
-            index={i}
             key={`${entry.organization}-${entry.period}`}
             language={language}
           />
@@ -279,27 +282,31 @@ function CvDownload({
   title: string;
   subtitle: string;
 }) {
+  // The reveal sits on a wrapper, not on the link: the lift on hover is a CSS
+  // transform, and an inline one from the entrance would outrank it forever.
   return (
-    <a
-      className="group/cv flex transform-gpu items-center gap-3 rounded-xl border border-border/50 bg-secondary/30 px-4 py-3 transition-[transform,border-color,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.06] hover:shadow-[0_12px_32px_-12px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      href={href}
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-200 ease-out group-hover/cv:bg-primary/15">
-        <FileText aria-hidden className="h-4 w-4" />
-      </span>
-      <span className="min-w-0 flex-1 text-left">
-        <span className="block font-medium text-foreground text-sm leading-tight">
-          {title}
+    <motion.div variants={REVEAL}>
+      <a
+        className="group/cv flex transform-gpu items-center gap-3 rounded-xl border border-border/50 bg-secondary/30 px-4 py-3 transition-[transform,border-color,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.06] hover:shadow-[0_12px_32px_-12px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        href={href}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-200 ease-out group-hover/cv:bg-primary/15">
+          <FileText aria-hidden className="h-4 w-4" />
         </span>
-        <span className="block text-muted-foreground text-xs">{subtitle}</span>
-      </span>
-      <ExternalLink
-        aria-hidden
-        className="h-4 w-4 flex-none text-muted-foreground transition-[transform,color] duration-200 ease-out group-hover/cv:-translate-y-0.5 group-hover/cv:translate-x-0.5 group-hover/cv:text-primary"
-      />
-    </a>
+        <span className="min-w-0 flex-1 text-left">
+          <span className="block font-medium text-foreground text-sm leading-tight">
+            {title}
+          </span>
+          <span className="block text-muted-foreground text-xs">{subtitle}</span>
+        </span>
+        <ExternalLink
+          aria-hidden
+          className="h-4 w-4 flex-none text-muted-foreground transition-[transform,color] duration-200 ease-out group-hover/cv:-translate-y-0.5 group-hover/cv:translate-x-0.5 group-hover/cv:text-primary"
+        />
+      </a>
+    </motion.div>
   );
 }
 
@@ -307,6 +314,7 @@ export function TimelineSection() {
   const { language } = useLanguage();
   const t = getTimeline(language);
   const langNames = translations[language].skills.langNames;
+  const reduceMotion = useReducedMotion();
 
   return (
     <MotionConfig reducedMotion="user">
@@ -320,10 +328,7 @@ export function TimelineSection() {
 
         <motion.div
           className="mx-auto mb-14 grid max-w-xl grid-cols-1 gap-3 sm:mb-16 sm:grid-cols-2"
-          initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: DUR.base, ease: EASE_OUT }}
-          viewport={{ once: true, margin: "-60px" }}
-          whileInView={{ opacity: 1, y: 0 }}
+          {...revealOnScroll(reduceMotion, stagger())}
         >
           <CvDownload
             href="/cv/curriculum-vitae.html"

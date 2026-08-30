@@ -24,18 +24,10 @@ export const en = {
     useSystem: "Use system language",
   },
   hero: {
-    greeting: "Hi, I'm Dominik Könitzer",
-    roles: [
-      { line1: "Software", line2: "Engineer." },
-      { line1: "Full-Stack", line2: "Developer." },
-    ] as { line1: string; line2: string }[],
+    greeting: "Hi, I'm",
+    roles: ["Dominik", "Punds", "DK"] as string[],
     hireMe: "Hire Me",
     viewWork: "View Work",
-    stats: {
-      projects: "Projects",
-      yearsCoding: "Years coding",
-      technologies: "Technologies",
-    },
   },
   about: {
     heading: "About Me",
@@ -44,7 +36,7 @@ export const en = {
     passionateRole: "Software Engineer",
     intro1Before:
       "I'm Dominik Könitzer, an 18-year-old software engineer at WISS Schulen für Wirtschaft Informatik Immobilien, currently in my ",
-    intro1Highlight: "sixth",
+    intro1Highlight: "seventh",
     intro1After: " semester of a 4-year software engineering program.",
     intro2:
       "The first two years are coursework; the two after that are a working internship with classes running alongside. The point of the split is that nothing stays theoretical for long.",
