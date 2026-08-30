@@ -1,5 +1,7 @@
-# robots.txt — https://dk.punds.ch
-# Allow everything by default; sitemap is canonical truth for indexing.
+# robots.txt for https://dk.punds.ch
+# One group covers every crawler, search engines and AI crawlers alike.
+# Per-bot groups would replace this one for those bots and lose the /api/
+# disallow, so all crawlers are welcomed here instead.
 
 User-agent: *
 Allow: /
@@ -11,105 +13,3 @@ Sitemap: https://dk.punds.ch/sitemap.xml
 # AI / LLM resources (llms.txt convention)
 # LLM: https://dk.punds.ch/llms.txt
 # Full text: https://dk.punds.ch/llms-full.txt
-
-# ---------- Major search engines ----------
-User-agent: Googlebot
-Allow: /
-
-User-agent: Googlebot-Image
-Allow: /
-
-User-agent: Googlebot-News
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-# ---------- AI / LLM search & training crawlers ----------
-# OpenAI
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-# Anthropic
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-# Google Gemini / AI Overviews
-User-agent: Google-Extended
-Allow: /
-
-# Apple Intelligence
-User-agent: Applebot
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-# Perplexity
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Perplexity-User
-Allow: /
-
-# Common Crawl (training data)
-User-agent: CCBot
-Allow: /
-
-# You.com
-User-agent: YouBot
-Allow: /
-
-# Meta AI
-User-agent: FacebookBot
-Allow: /
-
-User-agent: Meta-ExternalAgent
-Allow: /
-
-User-agent: Meta-ExternalFetcher
-Allow: /
-
-# Amazon
-User-agent: Amazonbot
-Allow: /
-
-# Cohere
-User-agent: cohere-ai
-Allow: /
-
-# Diffbot
-User-agent: Diffbot
-Allow: /
-
-# Mistral
-User-agent: MistralAI-User
-Allow: /
-
-# DeepSeek
-User-agent: DeepSeekBot
-Allow: /

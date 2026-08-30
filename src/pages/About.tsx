@@ -1,6 +1,5 @@
 import { AboutSection } from "@/components/sections/AboutSection";
 import { SEO } from "@/components/seo";
-import { getAboutFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
 import {
@@ -18,7 +17,6 @@ const About = () => {
       <SEO        citationLinks={[{ name: "WISS Schulen", url: "https://www.wiss.ch" }]}
         description={seo.description}
         image={`${SITE_CONFIG.url}/og/about.png`}
-        faqSchema={getAboutFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
         structuredData={[
