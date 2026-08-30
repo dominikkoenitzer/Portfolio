@@ -1,6 +1,5 @@
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { SEO } from "@/components/seo";
-import { getProjectsFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-context";
@@ -20,7 +19,6 @@ const Projects = () => {
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
         image={`${SITE_CONFIG.url}/og/projects.png`}
-        faqSchema={getProjectsFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
         structuredData={[

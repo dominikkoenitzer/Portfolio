@@ -41,7 +41,19 @@ Dominik is currently **open to work** — software engineering roles, internship
 
 ## Featured projects
 
-The project catalog is currently being reworked. See [Projects](https://dk.punds.ch/projects) for the latest set.
+Each project has a case study at https://dk.punds.ch/projects/<slug>.
+
+- [Zephyr](https://zephyr.punds.ch/): local-first productivity web app with tasks and a Pomodoro focus timer; no login, all data stays in the browser
+- [Portfolio](https://dk.punds.ch/): this site; a React single-page app localized to four languages with prerendered routes and JSON-LD structured data
+- [Entropy](https://entropy.punds.ch/): password generator and strength analyzer that runs entirely in the browser
+- [Spectrum](https://spectrum.punds.ch/): client-side color toolkit; image color picker, gradients, WCAG contrast checks and color-blindness simulation
+- [Remnants](https://github.com/dominikkoenitzer/Remnants): personal Windows build of Code - OSS with Copilot, telemetry and sign-in removed
+- [Time](https://time.punds.ch/): server-synchronized web clock, accurate to hundredths of a second
+- [Jester](https://github.com/dominikkoenitzer/Jester): native Windows notepad with tabs, find-in-files and PDF export; one portable exe
+- [Flow](https://github.com/dominikkoenitzer/Flow): C++17 Windows macro recorder and auto-clicker
+- [Punds](https://punds.ch/): single-page hub linking to every project and profile
+- [Senbon](https://senbon.ch/): zen-themed markdown journal
+- [Oxidize](https://github.com/dominikkoenitzer/Oxidize): thorough Windows uninstaller written in Rust; CLI and GUI sharing one engine
 
 ## Services & pricing (CHF)
 

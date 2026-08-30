@@ -1,6 +1,5 @@
 import { TimelineSection } from "@/components/sections/TimelineSection";
 import { SEO } from "@/components/seo";
-import { getTimelineFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
 import {
@@ -20,7 +19,6 @@ const Timeline = () => {
       <SEO
         citationLinks={getDefaultCitations()}
         description={seo.description}
-        faqSchema={getTimelineFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         image={`${SITE_CONFIG.url}/og/timeline.png`}
         keywords={seo.keywords}

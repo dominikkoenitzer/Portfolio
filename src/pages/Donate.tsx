@@ -1,6 +1,5 @@
 import { DonateSection } from "@/components/sections/DonateSection";
 import { SEO } from "@/components/seo";
-import { getDonateFaqs, getDonateHowTo } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
 import {  getDefaultCitations,
@@ -17,9 +16,7 @@ const Donate = () => {
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
         image={`${SITE_CONFIG.url}/og/donate.png`}
-        faqSchema={getDonateFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        howToSchema={getDonateHowTo(language)}
         keywords={seo.keywords}
         title={seo.title}
         url={`${SITE_CONFIG.url}/donate`}
