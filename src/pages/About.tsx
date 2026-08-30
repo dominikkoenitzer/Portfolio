@@ -25,7 +25,7 @@ const About = () => {
             "@type": "AboutPage",
             name: "About Dominik Könitzer",
             description:
-              "Learn about Dominik Könitzer, a Software Engineer specializing in modern web development",
+              "Who Dominik Könitzer is: a software engineer in Switzerland who builds for the web",
             url: aboutUrl,
             mainEntity: {
               "@type": "Person",
@@ -47,7 +47,7 @@ const About = () => {
           },
           createPersonSchema({
             description:
-              "18-year-old Software Engineer studying at WISS Schulen für Wirtschaft Informatik Immobilien, currently in sixth semester of 4-year program",
+              "18-year-old software engineer in the sixth semester of the 4-year programme at WISS Schulen für Wirtschaft Informatik Immobilien",
             educationalCredentialAwarded:
               "Software Engineering Degree (In Progress)",
             hasCredential: {

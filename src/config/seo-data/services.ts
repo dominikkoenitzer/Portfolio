@@ -7,129 +7,129 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "What web development services do you offer?",
       answer:
-        "I offer comprehensive web development services including website maintenance (50 CHF/month), technical support (30 CHF/hour), content management (40 CHF/hour), security consultation (60 CHF/hour), data backup solutions (200 CHF setup + 50 CHF/month), SEO optimization (150 CHF one-time), custom web development (300 CHF one-time), server setup (350 CHF one-time), and custom software development (500 CHF project-based).",
+        "Here they all are, with prices: website maintenance (50 CHF/month), technical support (30 CHF/hour), content management (40 CHF/hour), security consultation (60 CHF/hour), data backup solutions (200 CHF setup + 50 CHF/month), SEO optimization (150 CHF one-time), custom web development (300 CHF one-time), server setup (350 CHF one-time), and custom software development (500 CHF project-based).",
     },
     {
       question: "Do you work with clients in Switzerland?",
       answer:
-        "Yes, I am based in Switzerland and work with clients both locally and internationally. I can provide software engineering services to businesses and individuals in Switzerland and worldwide. All services are priced in Swiss Francs (CHF).",
+        "Yes. I am based in Switzerland and work with clients here and abroad, for companies and for individuals. Everything is priced in Swiss Francs (CHF).",
     },
     {
       question: "What technologies do you use for web development?",
       answer:
-        "I specialize in modern web technologies including React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, and various frontend and backend frameworks. I also work with databases like PostgreSQL, MongoDB, and SQLite, and DevOps tools including Docker, Jenkins, and Git.",
+        "Mostly React, Next.js, TypeScript, JavaScript, Node.js, Java and the Spring Framework, on the frontend and the backend alike. On the data and tooling side: PostgreSQL, MongoDB, SQLite, Docker, Jenkins and Git.",
     },
     {
       question: "How much does website maintenance cost?",
       answer:
-        "Website maintenance is priced at 50 CHF per month and includes regular security updates, bug fixes, performance monitoring, content updates, and technical support to keep your website running smoothly and securely.",
+        "50 CHF per month. That covers security updates, bug fixes, performance monitoring, content updates and technical support, so the site does not quietly rot between releases.",
     },
     {
       question: "Do you provide security consultation services?",
       answer:
-        "Yes, I offer security consultation at 60 CHF per hour, which includes security audits, vulnerability assessments, security best practices implementation, risk mitigation strategies, and compliance guidance to protect your business from cyber threats.",
+        "Yes, at 60 CHF per hour. Security audits, vulnerability assessments, hardening against the usual mistakes, and guidance on compliance. You get a written list of what I found and what to do about it.",
     },
     {
       question: "Can you help with custom software development?",
       answer:
-        "Yes, I provide end-to-end custom software development services starting at 500 CHF (project-based pricing). This includes requirements analysis, custom solution design, development and testing, deployment assistance, and maintenance support tailored to your specific business needs.",
+        "Yes, from 500 CHF, priced per project. That runs from working out the requirements through design, development, testing and deployment, and I stay available for maintenance afterwards.",
     },
   ],
   de: [
     {
       question: "Welche Webentwicklungs-Leistungen bietest du an?",
       answer:
-        "Ich biete umfassende Webentwicklungs-Leistungen an, darunter Website-Wartung (50 CHF/Monat), technischen Support (30 CHF/Stunde), Content-Management (40 CHF/Stunde), Security-Beratung (60 CHF/Stunde), Backup-Lösungen (200 CHF Setup + 50 CHF/Monat), SEO-Optimierung (150 CHF einmalig), individuelle Webentwicklung (300 CHF einmalig), Server-Setup (350 CHF einmalig) und individuelle Softwareentwicklung (ab 500 CHF, projektbezogen).",
+        "Hier sind sie alle, mit Preisen: Website-Wartung (50 CHF/Monat), technischer Support (30 CHF/Stunde), Content-Management (40 CHF/Stunde), Security-Beratung (60 CHF/Stunde), Backup-Lösungen (200 CHF Setup + 50 CHF/Monat), SEO-Optimierung (150 CHF einmalig), individuelle Webentwicklung (300 CHF einmalig), Server-Setup (350 CHF einmalig) und individuelle Softwareentwicklung (ab 500 CHF, projektbezogen).",
     },
     {
       question: "Arbeitest du mit Kunden in der Schweiz?",
       answer:
-        "Ja, ich habe meinen Sitz in der Schweiz und arbeite sowohl mit lokalen als auch internationalen Kunden. Ich biete Software-Engineering-Leistungen für Unternehmen und Privatpersonen in der Schweiz und weltweit an. Alle Preise verstehen sich in Schweizer Franken (CHF).",
+        "Ja. Ich sitze in der Schweiz und arbeite mit Kunden hier und im Ausland, für Firmen genauso wie für Privatpersonen. Alle Preise verstehen sich in Schweizer Franken (CHF).",
     },
     {
       question: "Welche Technologien nutzt du für die Webentwicklung?",
       answer:
-        "Ich bin spezialisiert auf moderne Web-Technologien wie React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework sowie verschiedene Frontend- und Backend-Frameworks. Ich arbeite zudem mit Datenbanken wie PostgreSQL, MongoDB und SQLite sowie DevOps-Tools wie Docker, Jenkins und Git.",
+        "Hauptsächlich React, Next.js, TypeScript, JavaScript, Node.js, Java und das Spring Framework, im Frontend wie im Backend. Bei Daten und Tooling: PostgreSQL, MongoDB, SQLite, Docker, Jenkins und Git.",
     },
     {
       question: "Wie viel kostet Website-Wartung?",
       answer:
-        "Die Website-Wartung kostet 50 CHF pro Monat und umfasst regelmässige Sicherheitsupdates, Bugfixes, Performance-Monitoring, Content-Updates und technischen Support, damit deine Website reibungslos und sicher läuft.",
+        "50 CHF pro Monat. Darin enthalten sind Sicherheitsupdates, Bugfixes, Performance-Monitoring, Content-Updates und technischer Support, damit die Seite zwischen zwei Releases nicht still vor sich hin verfällt.",
     },
     {
       question: "Bietest du Security-Beratungen an?",
       answer:
-        "Ja, ich biete Security-Beratungen zu 60 CHF pro Stunde an. Diese umfasst Security-Audits, Schwachstellenbewertungen, Umsetzung von Best Practices, Strategien zur Risikominderung sowie Compliance-Begleitung, um dein Geschäft vor Cyberbedrohungen zu schützen.",
+        "Ja, zu 60 CHF pro Stunde. Security-Audits, Schwachstellenbewertungen, Härtung gegen die üblichen Fehler und Begleitung bei der Compliance. Du bekommst schriftlich, was ich gefunden habe und was dagegen zu tun ist.",
     },
     {
       question: "Kannst du bei individueller Softwareentwicklung helfen?",
       answer:
-        "Ja, ich biete End-to-End-Entwicklung individueller Software ab 500 CHF (projektbasierte Preise). Das umfasst Anforderungsanalyse, individuelles Lösungsdesign, Entwicklung und Tests, Deployment-Unterstützung und Wartung — zugeschnitten auf deine geschäftlichen Anforderungen.",
+        "Ja, ab 500 CHF, projektbezogen abgerechnet. Das reicht von der Anforderungsanalyse über Design, Entwicklung und Tests bis zum Deployment, und danach bleibe ich für die Wartung erreichbar.",
     },
   ],
   fr: [
     {
       question: "Quels services de développement web proposez-vous ?",
       answer:
-        "Je propose des services complets de développement web, dont la maintenance de sites (50 CHF/mois), le support technique (30 CHF/heure), la gestion de contenu (40 CHF/heure), le conseil en sécurité (60 CHF/heure), les solutions de sauvegarde (200 CHF installation + 50 CHF/mois), l'optimisation SEO (150 CHF forfait), le développement web sur mesure (300 CHF forfait), la configuration serveur (350 CHF forfait) et le développement logiciel sur mesure (à partir de 500 CHF au projet).",
+        "Les voici tous, avec les tarifs : maintenance de sites (50 CHF/mois), support technique (30 CHF/heure), gestion de contenu (40 CHF/heure), conseil en sécurité (60 CHF/heure), solutions de sauvegarde (200 CHF installation + 50 CHF/mois), optimisation SEO (150 CHF forfait), développement web sur mesure (300 CHF forfait), configuration serveur (350 CHF forfait) et développement logiciel sur mesure (à partir de 500 CHF au projet).",
     },
     {
       question: "Travaillez-vous avec des clients en Suisse ?",
       answer:
-        "Oui, je suis basé en Suisse et je travaille avec des clients locaux et internationaux. Je peux fournir des services d'ingénierie logicielle à des entreprises et particuliers en Suisse et dans le monde entier. Tous les services sont facturés en francs suisses (CHF).",
+        "Oui. Je suis basé en Suisse et je travaille avec des clients ici comme à l'étranger, entreprises et particuliers. Tout est facturé en francs suisses (CHF).",
     },
     {
       question:
         "Quelles technologies utilisez-vous pour le développement web ?",
       answer:
-        "Je suis spécialisé dans les technologies web modernes : React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework et divers frameworks frontend et backend. Je travaille aussi avec des bases de données comme PostgreSQL, MongoDB et SQLite, et des outils DevOps tels que Docker, Jenkins et Git.",
+        "Surtout React, Next.js, TypeScript, JavaScript, Node.js, Java et Spring Framework, côté frontend comme côté backend. Pour les données et l'outillage : PostgreSQL, MongoDB, SQLite, Docker, Jenkins et Git.",
     },
     {
       question: "Combien coûte la maintenance de site web ?",
       answer:
-        "La maintenance de site web est facturée 50 CHF par mois et inclut les mises à jour de sécurité régulières, les corrections de bugs, le suivi des performances, les mises à jour de contenu et le support technique pour maintenir votre site rapide et sécurisé.",
+        "50 CHF par mois. Cela couvre les mises à jour de sécurité, les corrections de bugs, le suivi des performances, les mises à jour de contenu et le support technique, pour que le site ne se dégrade pas en silence entre deux versions.",
     },
     {
       question: "Fournissez-vous des services de conseil en sécurité ?",
       answer:
-        "Oui, je propose des consultations en sécurité à 60 CHF par heure, comprenant audits de sécurité, évaluations de vulnérabilités, mise en place de bonnes pratiques, stratégies de réduction des risques et accompagnement à la conformité pour protéger votre activité contre les cybermenaces.",
+        "Oui, à 60 CHF par heure. Audits, évaluations de vulnérabilités, durcissement contre les erreurs classiques et accompagnement à la conformité. Vous repartez avec la liste écrite de ce que j'ai trouvé et de ce qu'il faut corriger.",
     },
     {
       question: "Pouvez-vous aider au développement logiciel sur mesure ?",
       answer:
-        "Oui, je propose un service complet de développement logiciel sur mesure à partir de 500 CHF (tarification au projet). Cela inclut l'analyse des besoins, la conception sur mesure, le développement et les tests, l'aide au déploiement et le support de maintenance, adaptés à vos besoins métiers spécifiques.",
+        "Oui, à partir de 500 CHF, facturé au projet. Cela va de l'analyse des besoins à la conception, au développement, aux tests et au déploiement, et je reste disponible ensuite pour la maintenance.",
     },
   ],
   zh: [
     {
       question: "您提供哪些网页开发服务？",
       answer:
-        "我提供全面的网页开发服务，包括网站维护（50 瑞士法郎/月）、技术支持（30 瑞士法郎/小时）、内容管理（40 瑞士法郎/小时）、安全咨询（60 瑞士法郎/小时）、数据备份方案（设置 200 瑞士法郎 + 50 瑞士法郎/月）、SEO 优化（一次性 150 瑞士法郎）、定制网页开发（一次性 300 瑞士法郎）、服务器配置（一次性 350 瑞士法郎）以及定制软件开发（按项目，500 瑞士法郎起）。",
+        "全部在这里，附价格：网站维护（50 瑞士法郎/月）、技术支持（30 瑞士法郎/小时）、内容管理（40 瑞士法郎/小时）、安全咨询（60 瑞士法郎/小时）、数据备份方案（设置 200 瑞士法郎 + 50 瑞士法郎/月）、SEO 优化（一次性 150 瑞士法郎）、定制网页开发（一次性 300 瑞士法郎）、服务器配置（一次性 350 瑞士法郎）以及定制软件开发（按项目，500 瑞士法郎起）。",
     },
     {
       question: "您是否服务瑞士客户？",
       answer:
-        "是的，我常驻瑞士，同时为本地与国际客户提供服务。我可以为瑞士及全球的企业与个人提供软件工程服务。所有服务均以瑞士法郎（CHF）计价。",
+        "是的。我常驻瑞士，本地和海外的客户都接，企业和个人都可以。所有服务均以瑞士法郎（CHF）计价。",
     },
     {
       question: "您使用哪些技术进行网页开发？",
       answer:
-        "我擅长现代网页技术，包括 React、Next.js、TypeScript、JavaScript、Node.js、Java、Spring Framework 以及多种前后端框架。我也使用 PostgreSQL、MongoDB、SQLite 等数据库，以及 Docker、Jenkins、Git 等 DevOps 工具。",
+        "主要是 React、Next.js、TypeScript、JavaScript、Node.js、Java 和 Spring Framework，前端后端都写。数据和工具方面：PostgreSQL、MongoDB、SQLite、Docker、Jenkins 和 Git。",
     },
     {
       question: "网站维护费用是多少？",
       answer:
-        "网站维护费用为每月 50 瑞士法郎，包括定期安全更新、缺陷修复、性能监控、内容更新及技术支持，确保您的网站安全稳定地运行。",
+        "每月 50 瑞士法郎。包含安全更新、缺陷修复、性能监控、内容更新和技术支持，让网站不会在两次发布之间悄悄坏掉。",
     },
     {
       question: "您是否提供安全咨询服务？",
       answer:
-        "是的，我提供安全咨询服务，每小时 60 瑞士法郎，包括安全审计、漏洞评估、安全最佳实践落地、风险缓解策略与合规指导，帮助您的业务抵御网络威胁。",
+        "提供，每小时 60 瑞士法郎。安全审计、漏洞评估、针对常见疏漏的加固，以及合规方面的建议。你会拿到一份书面清单：我发现了什么，该怎么处理。",
     },
     {
       question: "您能否帮助定制软件开发？",
       answer:
-        "可以。我提供端到端的定制软件开发服务，起价为 500 瑞士法郎（按项目计价）。包含需求分析、方案设计、开发与测试、部署支持以及维护服务，根据您的具体业务需求量身打造。",
+        "可以，500 瑞士法郎起，按项目计价。从梳理需求到设计、开发、测试和部署，之后的维护我也接着管。",
     },
   ],
 };
@@ -141,24 +141,24 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       "Step-by-step guide to engaging Dominik Könitzer for software engineering and web development services",
     step: [
       {
-        name: "Review Services",
-        text: "Browse the available services on this page including website maintenance, technical support, content management, security consultation, data backup, SEO optimization, web development, server setup, and custom software development.",
+        name: "Pick what you need",
+        text: "Read through the services on this page: website maintenance, technical support, content management, security consultation, data backup, SEO optimization, web development, server setup and custom software development.",
       },
       {
-        name: "Contact for Consultation",
-        text: "Head to dk.punds.ch/contact and pick what your message is about — it opens an email with the subject and a short template already filled in. Describe your project requirements, timeline, and budget, plus details about your current website or software needs.",
+        name: "Send a message",
+        text: "Head to dk.punds.ch/contact and pick what your message is about. That opens an email with the subject and a short template already filled in. Tell me what you need, roughly when you need it, and what the budget looks like.",
       },
       {
-        name: "Receive Proposal",
-        text: "Receive a detailed proposal outlining the scope of work, timeline, pricing, and deliverables based on your specific requirements and the service packages available.",
+        name: "Get a proposal",
+        text: "I come back with a written proposal: what is in scope, how long it takes, what it costs and what you end up holding at the end.",
       },
       {
-        name: "Project Execution",
-        text: "Once approved, the project begins with regular updates and communication throughout the development process, ensuring transparency and alignment with your expectations.",
+        name: "The build",
+        text: "Once you approve it, work starts. You get regular updates, so the state of the project is never a surprise.",
       },
       {
-        name: "Delivery and Support",
-        text: "Receive the completed project with documentation, and ongoing support options including maintenance packages to keep your website or software running optimally.",
+        name: "Handover",
+        text: "You get the finished project and its documentation. If you want someone keeping an eye on it afterwards, there are maintenance packages for exactly that.",
       },
     ],
   },
@@ -168,24 +168,24 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       "Schritt-für-Schritt-Anleitung, um Dominik Könitzer für Software-Engineering- und Webentwicklungs-Leistungen zu beauftragen",
     step: [
       {
-        name: "Leistungen prüfen",
-        text: "Sieh dir die verfügbaren Leistungen auf dieser Seite an, darunter Website-Wartung, technischer Support, Content-Management, Security-Beratung, Datensicherung, SEO-Optimierung, Webentwicklung, Server-Setup und individuelle Softwareentwicklung.",
+        name: "Aussuchen, was du brauchst",
+        text: "Sieh dir die Leistungen auf dieser Seite an: Website-Wartung, technischer Support, Content-Management, Security-Beratung, Datensicherung, SEO-Optimierung, Webentwicklung, Server-Setup und individuelle Softwareentwicklung.",
       },
       {
-        name: "Kontakt für Beratung",
-        text: "Geh auf dk.punds.ch/contact und wähl aus, worum es geht — damit öffnet sich eine E-Mail mit fertigem Betreff und kurzer Vorlage. Beschreib darin deine Projektanforderungen, deinen Zeitplan und dein Budget sowie deine aktuellen Website- oder Software-Anforderungen.",
+        name: "Nachricht schreiben",
+        text: "Geh auf dk.punds.ch/contact und wähl aus, worum es geht. Damit öffnet sich eine E-Mail mit fertigem Betreff und kurzer Vorlage. Schreib rein, was du brauchst, bis wann ungefähr und wie das Budget aussieht.",
       },
       {
-        name: "Angebot erhalten",
-        text: "Erhalte ein detailliertes Angebot mit Umfang, Zeitplan, Preisen und Deliverables, basierend auf deinen Anforderungen und den verfügbaren Leistungspaketen.",
+        name: "Angebot bekommen",
+        text: "Ich melde mich mit einem schriftlichen Angebot: was dazugehört, wie lange es dauert, was es kostet und was am Ende bei dir liegt.",
       },
       {
-        name: "Projektdurchführung",
-        text: "Nach Genehmigung startet das Projekt mit regelmässigen Updates und transparenter Kommunikation während des gesamten Entwicklungsprozesses.",
+        name: "Die Umsetzung",
+        text: "Sobald du zusagst, geht es los. Du bekommst regelmässig Updates, damit der Stand des Projekts nie eine Überraschung ist.",
       },
       {
-        name: "Lieferung und Support",
-        text: "Erhalte das fertige Projekt inklusive Dokumentation sowie laufende Support-Optionen — etwa Wartungspakete, damit deine Website oder Software optimal läuft.",
+        name: "Übergabe",
+        text: "Du bekommst das fertige Projekt samt Dokumentation. Wenn danach jemand ein Auge darauf haben soll, gibt es genau dafür Wartungspakete.",
       },
     ],
   },
@@ -195,24 +195,24 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       "Guide étape par étape pour faire appel à Dominik Könitzer pour des services d'ingénierie logicielle et de développement web",
     step: [
       {
-        name: "Consulter les services",
-        text: "Parcourez les services disponibles sur cette page : maintenance de site, support technique, gestion de contenu, conseil en sécurité, sauvegarde de données, optimisation SEO, développement web, configuration serveur et développement logiciel sur mesure.",
+        name: "Choisissez ce qu'il vous faut",
+        text: "Parcourez les services de cette page : maintenance de site, support technique, gestion de contenu, conseil en sécurité, sauvegarde de données, optimisation SEO, développement web, configuration serveur et développement logiciel sur mesure.",
       },
       {
-        name: "Contacter pour consultation",
-        text: "Rendez-vous sur dk.punds.ch/contact et choisissez l'objet de votre message — un e-mail s'ouvre avec l'objet et un court modèle déjà prêts. Précisez vos besoins, le calendrier et le budget, ainsi que vos besoins actuels en site web ou en logiciel.",
+        name: "Écrivez-moi",
+        text: "Rendez-vous sur dk.punds.ch/contact et choisissez l'objet de votre message. Un e-mail s'ouvre avec l'objet et un court modèle déjà prêts. Dites-moi ce qu'il vous faut, à peu près pour quand, et le budget envisagé.",
       },
       {
-        name: "Recevoir une proposition",
-        text: "Recevez une proposition détaillée précisant la portée des travaux, le calendrier, les tarifs et les livrables, en fonction de vos besoins et des forfaits disponibles.",
+        name: "Recevez une proposition",
+        text: "Je reviens vers vous avec une proposition écrite : ce qui est compris, le délai, le prix et ce que vous aurez entre les mains à la fin.",
       },
       {
-        name: "Exécution du projet",
-        text: "Une fois approuvé, le projet démarre avec des mises à jour régulières et une communication continue tout au long du processus de développement, garantissant transparence et alignement.",
+        name: "La réalisation",
+        text: "Dès que vous validez, le travail commence. Vous recevez des nouvelles régulièrement, donc l'état du projet ne vous surprend jamais.",
       },
       {
-        name: "Livraison et support",
-        text: "Recevez le projet livré accompagné de sa documentation, ainsi que des options de support continu, dont des forfaits de maintenance, pour garder votre site ou logiciel optimal.",
+        name: "La remise",
+        text: "Vous recevez le projet terminé et sa documentation. Si vous voulez que quelqu'un continue à le surveiller, il existe des forfaits de maintenance pour ça.",
       },
     ],
   },
@@ -221,24 +221,24 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
     description: "聘请 Dominik Könitzer 进行软件工程与网页开发服务的分步指南",
     step: [
       {
-        name: "查看服务",
-        text: "浏览本页面上的服务，包括网站维护、技术支持、内容管理、安全咨询、数据备份、SEO 优化、网页开发、服务器配置以及定制软件开发。",
+        name: "挑出你需要的",
+        text: "看一遍本页的服务：网站维护、技术支持、内容管理、安全咨询、数据备份、SEO 优化、网页开发、服务器配置以及定制软件开发。",
       },
       {
-        name: "联系咨询",
-        text: "前往 dk.punds.ch/contact 并选择你想聊的主题 —— 系统会打开一封主题和简短模板都已填好的邮件。请在其中说明项目需求、时间安排与预算，以及你现有的网站或软件情况。",
+        name: "发一封邮件",
+        text: "前往 dk.punds.ch/contact 并选择你想聊的主题，系统会打开一封主题和简短模板都已填好的邮件。写清楚你需要什么、大概什么时候要、预算大致多少。",
       },
       {
-        name: "获取方案",
-        text: "根据您的具体需求与可选的服务套餐，您将收到一份包含工作范围、时间表、价格与交付物的详细方案。",
+        name: "拿到方案",
+        text: "我会回你一份书面方案：做哪些、要多久、多少钱，以及最后交到你手上的是什么。",
       },
       {
-        name: "项目执行",
-        text: "一旦确认，项目即开始，整个开发过程中将持续提供进度更新与透明沟通，确保符合您的期望。",
+        name: "开始做",
+        text: "你点头之后就开工。进度会定期同步，项目走到哪一步不会让你意外。",
       },
       {
-        name: "交付与支持",
-        text: "您将获得交付的项目及相关文档，并可选择持续的支持方案，包括维护套餐，确保您的网站或软件长期保持最佳状态。",
+        name: "交付",
+        text: "你会拿到做完的项目和配套文档。如果之后想有人继续盯着，正好有维护套餐可以选。",
       },
     ],
   },

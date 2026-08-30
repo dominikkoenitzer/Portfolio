@@ -70,7 +70,7 @@ function RoleMorphTitle() {
           visible title below cycles purely as decoration (aria-hidden), so it
           never re-announces every few seconds. */}
       <h1 className="sr-only">
-        Dominik Könitzer — {PHRASES[0].line1} {PHRASES[0].line2}
+        Dominik Könitzer, {PHRASES[0].line1} {PHRASES[0].line2}
       </h1>
       <div
         aria-hidden="true"

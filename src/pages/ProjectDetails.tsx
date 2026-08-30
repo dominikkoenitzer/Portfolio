@@ -175,7 +175,7 @@ const ProjectDetails = () => {
 
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
-  const projectTimeline = `${project.dateLabel} — ${t.present}`;
+  const projectTimeline = `${project.dateLabel} – ${t.present}`;
   const otherProjects = getProjects(language).filter(
     (item) => item.slug !== project.slug,
   );

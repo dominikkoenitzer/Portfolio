@@ -28,8 +28,6 @@ export const zh = {
     roles: [
       { line1: "软件", line2: "工程师。" },
       { line1: "全栈", line2: "开发者。" },
-      { line1: "整洁代码", line2: "工匠。" },
-      { line1: "系统", line2: "架构师。" },
     ] as { line1: string; line2: string }[],
     hireMe: "雇用我",
     viewWork: "查看作品",
@@ -41,23 +39,23 @@ export const zh = {
   },
   about: {
     heading: "关于我",
-    subheading: "更深入地了解我，以及驱动我对网页开发热情的源泉。",
-    passionate: "充满热情的",
+    subheading: "我在学什么，以及我用它做出了什么。",
+    passionate: "瑞士",
     passionateRole: "软件工程师",
     intro1Before:
       "我是 Dominik Könitzer，一名 18 岁的软件工程师，就读于 WISS Schulen für Wirtschaft Informatik Immobilien，目前处于为期四年的软件工程项目的第",
     intro1Highlight: "六",
     intro1After: "学期。",
     intro2:
-      "项目的前两年专注于课程学习，随后两年是边实习边学习的实践阶段。在这一旅程中，我不断打下扎实的理论基础与实战经验。",
-    intro3Before: "我喜欢创建",
+      "前两年是课堂学习，后两年是边实习边上课。这样切分的意义在于：没有什么会长期停留在理论上。",
+    intro3Before: "我喜欢做",
     intro3Word1: "整洁",
     intro3Comma1: "、",
-    intro3Word2: "实用",
-    intro3Comma2: "且",
-    intro3Word3: "视觉上吸引人",
+    intro3Word2: "快速",
+    intro3Comma2: "、又",
+    intro3Word3: "耐看",
     intro3After:
-      "的网站与应用，为用户提供真实价值。除了技术能力，我也重视持续学习、解决问题和有效沟通。",
+      "的网站与应用，让人真的愿意用。写代码只是其中一半，另一半是把问题想透，然后能把自己的做法讲清楚。",
     exploreSkills: "查看我的技能",
     readJournal: "阅读我的日志",
     cards: {
@@ -69,7 +67,7 @@ export const zh = {
   },
   skills: {
     heading: "技能",
-    subheading: "我的专长覆盖多种技术，聚焦于构建高效且优雅的解决方案。",
+    subheading: "我日常在用的东西，以及还在慢慢变熟的部分。",
     categories: {
       frontend: "前端",
       professional: "职业技能",
@@ -87,10 +85,10 @@ export const zh = {
   },
   projects: {
     heading: "项目",
-    subheading: "一组聚焦于清晰、一致与性能的产品作品。",
+    subheading: "我做出来并放到线上的东西，源码都在。",
     disclosureEyebrow: "在往下滑之前",
     disclosureBody:
-      "这一页只展示了我做过的东西里能公开的那一小部分。还有一些项目藏在 NDA、私有仓库，或客户的服务器里——我不太适合把它们摆出来，所以这里没有它们的身影。下面这些都是个人项目：是我在晚上和周末闲下来时折腾出来的小东西，源于好奇，也带着一点想让某个人的日子轻松那么一点点的私心。如果其中有一个真的做到了——那就刚刚好。",
+      "这一页只展示了我做过的东西里能公开的那一小部分。还有一些项目藏在 NDA、私有仓库，或客户的服务器里，不太适合摆出来，所以这里没有它们的身影。下面这些都是个人项目：是我在晚上和周末闲下来时折腾出来的小东西，源于好奇，也带着一点想让某个人的日子轻松那么一点点的私心。如果其中有一个真的做到了，那就刚刚好。",
     source: "源码",
     live: "在线",
     download: "下载",
@@ -116,7 +114,7 @@ export const zh = {
     wipEyebrow: "施工中",
     wipTitle: "新项目即将上线",
     wipBody:
-      "我正在从头重做这个板块。新的项目正在打磨中，很快就会出现在这里——请稍后再来看看。",
+      "我正在从头重做这个板块。几个新项目快收尾了，很快就会出现在这里，过阵子再来看看。",
     wipCta: "联系我",
   },
   projectDetails: {
@@ -130,7 +128,7 @@ export const zh = {
     download: "下载",
     sourceCode: "源代码",
     downloadNote:
-      "首次启动：Windows SmartScreen 可能会提示——选择“更多信息”→“仍要运行”，然后允许 UAC 管理员提示（全局输入挂钩所需）。",
+      "首次启动：Windows SmartScreen 可能会提示，选择“更多信息”→“仍要运行”，然后允许 UAC 管理员提示（全局输入挂钩所需）。",
     moreProjects: "更多项目",
     present: "至今",
     role: "角色",
@@ -159,7 +157,7 @@ export const zh = {
       protect: { label: "保护", desc: "安全与可靠性" },
       grow: { label: "增长", desc: "可见度与性能" },
     },
-    ctaTitle: "让我们一起打造点什么",
+    ctaTitle: "跟我说说吧",
     ctaEyebrow: "脑海里有项目想法？",
     ctaButton: "立即联系",
     getInTouch: "立即联系",
@@ -171,47 +169,47 @@ export const zh = {
     items: {
       webDev: {
         title: "网页开发",
-        description: "端到端的网站构建——响应式、高速、面向转化设计。",
+        description: "一个完整的网站，从第一张草图到正式上线的域名。",
         features: ["响应式设计", "SEO 友好", "快速加载", "跨浏览器"],
       },
       customSoftware: {
         title: "定制软件",
-        description: "根据您的具体业务需求量身打造的软件。",
+        description: "按你现有的做事方式来做的软件。",
         features: ["需求分析", "定制架构", "完整测试", "交付移交"],
       },
       serverSetup: {
         title: "服务器配置",
-        description: "生产级服务器配置，内置安全与监控。",
+        description: "一次就配置到位的服务器，安全与监控都装好。",
         features: ["安装", "安全加固", "性能调优", "监控"],
       },
       security: {
         title: "安全咨询",
-        description: "在攻击者之前发现漏洞，提供可执行的修复建议。",
+        description: "在别人之前先找到漏洞。你会拿到一份能直接照着做的报告。",
         features: ["安全审计", "漏洞扫描", "风险缓解", "合规"],
       },
       maintenance: {
         title: "网站维护",
-        description: "保持您的网站每月安全、已修补且运行顺畅。",
+        description: "每月打补丁、做更新，顺便盯着开始跑偏的地方。",
         features: ["安全更新", "缺陷修复", "正常运行监控", "内容更新"],
       },
       backup: {
         title: "备份与恢复",
-        description: "自动化备份与经过测试的恢复——数据丢失不在选项之内。",
+        description: "自动备份，加上真正演练过的恢复，让你知道它确实能用。",
         features: ["自动备份", "云存储", "恢复协议", "实时告警"],
       },
       seo: {
         title: "SEO 优化",
-        description: "通过技术 SEO、关键词与性能提升自然排名。",
+        description: "技术 SEO 与加载速度，针对真正对你有价值的搜索。",
         features: ["关键词研究", "页面 SEO", "技术审计", "报告"],
       },
       cms: {
         title: "内容管理",
-        description: "持续的内容更新与 CMS 维护，让网站常新。",
+        description: "我帮你把内容保持更新，网站不会悄悄变旧。",
         features: ["CMS 维护", "图片优化", "排版更新", "SEO 内容"],
       },
       support: {
         title: "技术支持",
-        description: "在出现问题或需要优化时提供快速、可靠的帮助。",
+        description: "东西坏了，或者只是想让它快一点，都可以找我。",
         features: ["快速响应", "缺陷修复", "代码优化", "集成支持"],
       },
     },
@@ -221,7 +219,7 @@ export const zh = {
       intro: "看到了你的作品，越看越觉得{service}就是我项目正需要的方向。",
       discuss: "其中最打动我的几点：",
       closing:
-        "方便简单聊一下、把细节过一遍吗？告诉我你方便的时间就行。\n\n— 期待回音",
+        "方便简单聊一下、把细节过一遍吗？告诉我你方便的时间就行。\n\n期待回音",
     },
   },
   contact: {
@@ -232,17 +230,17 @@ export const zh = {
     intents: {
       job: {
         label: "职位机会",
-        subject: "职位机会 —— [公司]",
+        subject: "职位机会：[公司]",
         body: "你好 Dominik，\n\n我们 [公司] 正在招聘 [职位]，觉得你的作品很合适。\n\n· 职位：\n· 团队与技术栈：\n· 地点 / 远程：\n· 入职时间：\n\n此致，\n[姓名]",
       },
       freelance: {
         label: "自由职业项目",
-        subject: "自由职业项目 —— [简要说明]",
+        subject: "自由职业项目：[简要说明]",
         body: "你好 Dominik，\n\n我想请你参与 [项目]。\n\n· 我们的需求：\n· 大致时间安排：\n· 预算范围：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       collab: {
         label: "合作",
-        subject: "合作 —— [想法]",
+        subject: "合作：[想法]",
         body: "你好 Dominik，\n\n我正在做 [项目]，觉得我们也许可以一起做点什么。\n\n· 这个想法：\n· 我能带来什么：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       other: {
@@ -254,14 +252,14 @@ export const zh = {
     emailHint: "将打开你的邮件应用，主题已填好。",
     copyEmail: "或复制地址。",
     copied: "已复制。",
-    copyFailed: "复制失败 —— 地址为 dominik.koenitzer@gmail.com",
+    copyFailed: "复制失败，地址为 dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "打赏",
     headlineLine1: "如果有什么",
     headlineLine2: "打动了你。",
     intro:
-      "打赏靠的是信任与小心意。如果这里的某个项目帮你省了时间、教了你点东西，或者只是让你笑了一下——随手投几个法郎进来就好。没有压力，只有感谢。",
+      "打赏靠的是信任与小心意。如果这里的某个项目帮你省了时间、教了你点东西，或者只是让你笑了一下，随手投几个法郎进来就好。没有压力，无论如何都谢谢你。",
     pickAmount: "选一个金额",
     currency: "CHF",
     tiers: {
@@ -288,7 +286,7 @@ export const zh = {
     contributions: "次贡献",
   },
   footer: {
-    tagline: "创意网页开发者",
+    tagline: "苏黎世的软件工程师",
     rights: "保留所有权利。",
     privacyPolicy: "隐私政策",
   },
@@ -306,7 +304,7 @@ export const zh = {
         heading: "数据收集",
         hostingLabel: "托管与统计：",
         hostingBody:
-          "本站由 Vercel 托管。服务器日志（IP 地址、浏览器类型、访问时间）出于安全与可靠性目的而保存。访客统计通过 Vercel Analytics 仅以匿名形式收集——不使用任何 Cookie 或追踪标识符。",
+          "本站由 Vercel 托管。服务器日志（IP 地址、浏览器类型、访问时间）出于安全与可靠性目的而保存。访客统计通过 Vercel Analytics 仅以匿名形式收集，不使用任何 Cookie 或追踪标识符。",
         contactLabel: "联系表单：",
         contactBody:
           "如果您通过联系表单或邮件与我联系，我仅会保存您提供的信息（姓名、邮箱、留言）以处理您的请求并回复后续问题。",
@@ -358,9 +356,9 @@ export const zh = {
     projects: {
       title: "软件工程项目",
       description:
-        "Dominik Könitzer 的软件工程项目。瑞士 React 与 TypeScript 工程，附部署与源码。",
+        "瑞士软件工程师 Dominik Könitzer 的项目。React 与 TypeScript 作品，每个都附上线地址与源码。",
       keywords:
-        "软件工程师作品集, 高影响力网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
+        "软件工程师作品集, 网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
     },
     services: {
       title: "网页开发与软件服务",
@@ -379,14 +377,14 @@ export const zh = {
     donate: {
       title: "捐赠",
       description:
-        "通过捐款支持 Dominik Könitzer 的软件项目。您的贡献将用于新项目、功能改进、托管及长期开发工作。",
+        "用一笔小额捐赠支持 Dominik Könitzer 的软件项目。这笔钱用于托管，以及构建和维护它们所花的时间。",
       keywords:
         "向开发者捐款, 支持软件项目, 支持开源开发者, PayPal 捐款, 支持 Dominik Konitzer",
     },
     privacy: {
       title: "隐私政策",
       description:
-        "dk.punds.ch 隐私政策：了解访问本站时数据如何收集、使用与保护，符合瑞士 FADP 与欧盟 GDPR 法规。",
+        "dk.punds.ch 隐私政策：访问本站时会收集哪些数据、如何使用与保护，符合瑞士 FADP 与欧盟 GDPR。",
       keywords: "隐私政策, 数据保护, GDPR, FADP, 隐私声明, 数据隐私, 瑞士隐私",
     },
     projectDetailsKeywordsSuffix: "项目, 软件工程案例研究, 网页开发作品集",

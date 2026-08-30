@@ -22,7 +22,8 @@ const Contact = () => {
           "@context": "https://schema.org",
           "@type": "ContactPage",
           name: "Contact Dominik Könitzer",
-          description: "Contact page for Dominik Könitzer - Software Engineer",
+          description:
+            "How to reach Dominik Könitzer, a software engineer in Switzerland.",
           url: contactUrl,
           mainEntity: createPersonSchema({
             email: SITE_CONFIG.email,
