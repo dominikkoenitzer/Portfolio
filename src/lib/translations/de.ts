@@ -24,18 +24,10 @@ export const de = {
     useSystem: "Systemsprache verwenden",
   },
   hero: {
-    greeting: "Hi, ich bin Dominik Könitzer",
-    roles: [
-      { line1: "Software-", line2: "Entwickler." },
-      { line1: "Full-Stack", line2: "Developer." },
-    ] as { line1: string; line2: string }[],
+    greeting: "Hi, ich bin",
+    roles: ["Dominik", "Punds", "DK"] as string[],
     hireMe: "Anstellen",
     viewWork: "Arbeiten ansehen",
-    stats: {
-      projects: "Projekte",
-      yearsCoding: "Jahre Coding",
-      technologies: "Technologien",
-    },
   },
   about: {
     heading: "Über mich",
@@ -44,7 +36,7 @@ export const de = {
     passionateRole: "Software Engineer",
     intro1Before:
       "Ich bin Dominik Könitzer, ein 18-jähriger Software Engineer an der WISS Schule für Wirtschaft Informatik Immobilien und befinde mich derzeit im ",
-    intro1Highlight: "sechsten",
+    intro1Highlight: "siebten",
     intro1After: " Semester eines vierjährigen Software-Engineering-Programms.",
     intro2:
       "Die ersten zwei Jahre sind Unterricht, die zwei danach ein Praktikum mit begleitendem Unterricht. Der Sinn dieser Aufteilung: Nichts bleibt lange nur Theorie.",
