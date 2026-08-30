@@ -2,7 +2,7 @@
 
 This document is a dense, plain-text snapshot of the portfolio of Dominik Könitzer (https://dk.punds.ch). It is intended for LLMs and AI search engines that prefer plain-text ingestion over JavaScript-rendered HTML.
 
-Last reviewed: 2026-06-20.
+Last reviewed: 2026-08-30.
 
 ---
 
@@ -58,7 +58,19 @@ Soft / professional skills
 
 ## 3. Projects (case studies)
 
-The project catalog is currently being reworked and is temporarily unavailable. See https://dk.punds.ch/projects for the latest set.
+Eleven projects, each with a case study at https://dk.punds.ch/projects/<slug>. Ordered by repository creation date.
+
+- Zephyr (https://zephyr.punds.ch/) - local-first productivity web app: tasks and a Pomodoro focus timer. No login, no backend; every piece of data lives in the browser. React, Vite, Tailwind, installable as a PWA.
+- Portfolio (https://dk.punds.ch/) - this site: a React single-page app with hand-rolled i18n in four languages (en, de, fr, zh), a prerendered HTML file per route, and JSON-LD structured data.
+- Entropy (https://entropy.punds.ch/) - password generator and strength analyzer that runs entirely in the browser: CSPRNG randomness, zxcvbn-grade scoring, and no round-trips to a server.
+- Spectrum (https://spectrum.punds.ch/) - client-side color toolkit: pull exact colors from an image, build gradients and palettes, check WCAG contrast, and simulate color blindness. Nothing is uploaded.
+- Remnants (https://github.com/dominikkoenitzer/Remnants) - native Windows editor: a personal build of Code - OSS with Copilot, chat, agents, telemetry, and sign-in removed, and the editor, terminal, Git, and debugger left intact.
+- Time (https://time.punds.ch/) - a web clock that silently corrects itself against the server, accurate to hundredths of a second even when the device clock is wrong.
+- Jester (https://github.com/dominikkoenitzer/Jester) - native Windows notepad with tabbed editing, a line-number gutter, find-in-files, and PDF export. One portable Jester.exe, no installer.
+- Flow (https://github.com/dominikkoenitzer/Flow) - native Windows desktop app in C++17 that records mouse and keyboard macros, replays them frame-accurately, and runs a high-speed auto-clicker.
+- Punds (https://punds.ch/) - single-page hub styled as a CRT terminal, linking to every project, profile, and site.
+- Senbon (https://senbon.ch/) - zen-themed journal where every entry is a plain markdown file rendered into an unhurried reading experience.
+- Oxidize (https://github.com/dominikkoenitzer/Oxidize) - thorough Windows uninstaller written in Rust: runs a program's own uninstaller, then removes leftover registry keys and files, always backing up first. Scriptable CLI and native GUI sharing one engine.
 
 ---
 

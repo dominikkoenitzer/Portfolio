@@ -1,6 +1,5 @@
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SEO } from "@/components/seo";
-import { getHomeFaqs } from "@/config/seo-data";
 import { useLanguage } from "@/lib/language-context";
 import {
   createPersonSchema,  getDefaultCitations,
@@ -16,7 +15,6 @@ const Home = () => {
     <>
       <SEO        citationLinks={getDefaultCitations()}
         description={seo.description}
-        faqSchema={getHomeFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
         speakableSelectors={["h1", "h2", "[data-speakable]"]}
