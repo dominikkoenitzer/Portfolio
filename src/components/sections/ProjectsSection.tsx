@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Download,
@@ -252,19 +252,23 @@ export function ProjectsSection() {
               </Button>
             </motion.div>
           ) : (
-            <div className="space-y-5 sm:space-y-6">
-              <AnimatePresence mode="popLayout">
-                {visible.map((project, index) => (
+            /* Re-keyed per filter/sort state: the whole list swaps with a
+               quick fade-and-rise. The previous version gave every card
+               `layout` + popLayout exits, so re-sorting sent full-height
+               cards flying across the page to their new positions, and quick
+               switches interrupted them mid-flight. */
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-5 sm:space-y-6"
+              initial={{ opacity: 0, y: 12 }}
+              key={`${query}|${type}|${sort}`}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {visible.map((project, index) => (
                   <motion.article
                     className="glass-deep group relative overflow-hidden rounded-2xl"
-                    exit={{
-                      opacity: 0,
-                      scale: 0.98,
-                      transition: { duration: 0.22 },
-                    }}
                     initial={{ opacity: 0, y: 28 }}
                     key={project.slug}
-                    layout
                     transition={{
                       duration: 0.55,
                       delay: 0.06 + Math.min(index, 6) * 0.08,
@@ -412,9 +416,8 @@ export function ProjectsSection() {
                       </div>
                     </div>
                   </motion.article>
-                ))}
-              </AnimatePresence>
-            </div>
+              ))}
+            </motion.div>
           )}
         </>
       )}
