@@ -1,12 +1,23 @@
-// Page-level enter/exit motion for routes. A short blur-and-lift that settles
-// with an ease-out-quint curve.
-export const pageTransitionVariants = {
-  initial: { opacity: 0, y: 12, filter: "blur(4px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -12, filter: "blur(4px)" },
-};
+import { DUR, EASE_OUT } from "./motion";
 
-export const pageTransition = {
-  duration: 0.45,
-  ease: [0.22, 1, 0.36, 1] as const,
+// Page-level enter/exit motion for routes, transform and opacity only. The
+// previous variant also animated filter: blur() across the whole route, which
+// forces a full-page repaint every frame and stuttered on mid-range hardware.
+//
+// Transitions live on the variants because the two halves deserve different
+// clocks: AnimatePresence runs exit-then-enter back to back, so a symmetric
+// duration made every navigation wait almost a second. The exit is a quick
+// step aside; the enter does the graceful part.
+export const pageTransitionVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: DUR.base, ease: EASE_OUT },
+  },
+  exit: {
+    opacity: 0,
+    y: -8,
+    transition: { duration: DUR.fast, ease: EASE_OUT },
+  },
 };

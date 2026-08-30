@@ -3,7 +3,7 @@ import { useLenis } from "lenis/react";
 import { lazy, Suspense } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { pageTransition, pageTransitionVariants } from "@/lib/transitions";
+import { pageTransitionVariants } from "@/lib/transitions";
 import Home from "@/pages/Home";
 
 const About = lazy(() => import("@/pages/About"));
@@ -46,7 +46,6 @@ export const AnimatedRoutes = () => {
         exit="exit"
         initial="initial"
         key={location.pathname}
-        transition={pageTransition}
         variants={pageTransitionVariants}
       >
         <ErrorBoundary>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { fadeInLeft, fadeInRight, fadeInUp } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";
@@ -49,13 +50,13 @@ export function AboutSection() {
               animate={{ opacity: 1, x: 0, y: 0 }}
               className="-bottom-4 -right-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10 bg-primary/5 backdrop-blur-sm"
               initial={{ opacity: 0, x: isMobile ? 0 : 20, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
             />
             <motion.div
               animate={{ opacity: 1, x: 0, y: 0 }}
               className="-top-4 -left-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10"
               initial={{ opacity: 0, x: isMobile ? 0 : -20, y: -20 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: DUR.slow, delay: 0.3, ease: EASE_OUT }}
             />
           </div>
 
@@ -80,14 +81,14 @@ export function AboutSection() {
           <motion.div
             className="glass-card rounded-2xl p-6 sm:p-8"
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: DUR.base, ease: EASE_OUT }}
             viewport={{ once: true }}
             whileInView={{ opacity: 1, y: 0 }}
           >
             <motion.h2
               className="mb-4 font-semibold text-xl sm:mb-6 sm:text-2xl"
               initial={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
+              transition={{ duration: DUR.base, delay: 0.1, ease: EASE_OUT }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
@@ -101,7 +102,7 @@ export function AboutSection() {
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
                 initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
+                transition={{ duration: DUR.base, delay: 0.2, ease: EASE_OUT }}
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
@@ -115,7 +116,7 @@ export function AboutSection() {
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
                 initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.4, delay: 0.3 }}
+                transition={{ duration: DUR.base, delay: 0.3, ease: EASE_OUT }}
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
@@ -125,7 +126,7 @@ export function AboutSection() {
               <motion.p
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
                 initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
+                transition={{ duration: DUR.base, delay: 0.4, ease: EASE_OUT }}
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
@@ -148,7 +149,7 @@ export function AboutSection() {
             <motion.div
               className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4"
               initial={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
+              transition={{ duration: DUR.base, delay: 0.5, ease: EASE_OUT }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
@@ -156,7 +157,7 @@ export function AboutSection() {
                 <Link to="/skills">
                   {t.exploreSkills}
                   <svg
-                    className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                    className="ml-2 h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -193,7 +194,7 @@ export function AboutSection() {
                   </svg>
                   {t.readJournal}
                   <svg
-                    className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                    className="ml-2 h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -217,7 +218,7 @@ export function AboutSection() {
       <motion.div
         className="mt-12 md:mt-16"
         initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
         viewport={{ once: true }}
         whileInView={{ opacity: 1, y: 0 }}
       >
@@ -236,21 +237,28 @@ interface InfoCardProps {
 }
 
 function InfoCard({ icon, title, subtitle, delay }: InfoCardProps) {
+  // Entrance and hover sit on separate elements so the entrance delay never
+  // applies to the hover lift.
   return (
     <motion.div
-      className="hover:-translate-y-1 flex transform items-center gap-2 rounded-lg border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:gap-3 sm:p-4"
       initial={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay }}
+      transition={{ duration: DUR.base, delay, ease: EASE_OUT }}
       viewport={{ once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary sm:h-10 sm:w-10">
-        {icon}
-      </div>
-      <div>
-        <h2 className="font-medium text-sm sm:text-base">{title}</h2>
-        <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>
-      </div>
+      <motion.div
+        className="flex transform-gpu items-center gap-2 rounded-lg border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 ease-out hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:gap-3 sm:p-4"
+        transition={SPRING_SOFT}
+        whileHover={{ y: -4 }}
+      >
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary sm:h-10 sm:w-10">
+          {icon}
+        </div>
+        <div>
+          <h2 className="font-medium text-sm sm:text-base">{title}</h2>
+          <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

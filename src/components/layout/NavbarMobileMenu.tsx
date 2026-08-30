@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useSwipe } from "@/hooks/use-swipe";
 import { isActivePath } from "@/lib/active-path";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
 
@@ -71,12 +72,12 @@ export function NavbarMobileMenu({
           {/* Backdrop — tap to dismiss */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-[60] transform-gpu bg-background/95 backdrop-blur-xl md:hidden"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={onClose}
             style={{ position: "fixed" }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: DUR.base, ease: EASE_OUT }}
           />
 
           {/* Drawer — swipe right to close */}
@@ -131,13 +132,13 @@ export function NavbarMobileMenu({
               animate={{ opacity: 1, y: 0 }}
               className="relative z-10 border-border/30 border-b px-6 pt-8 pb-6"
               initial={{ opacity: 0, y: -20 }}
-              transition={{ delay: 0.1, duration: 0.4 }}
+              transition={{ delay: 0.1, duration: DUR.base, ease: EASE_OUT }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <motion.div
                     className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5"
-                    transition={{ type: "spring", stiffness: 400 }}
+                    transition={SPRING_SOFT}
                     whileHover={{ scale: 1.05, rotate: 5 }}
                   >
                     <Code className="h-6 w-6 text-primary" />
@@ -153,9 +154,10 @@ export function NavbarMobileMenu({
                 </div>
                 <motion.button
                   aria-label={nav.closeMenu}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors hover:bg-muted"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors duration-200 ease-out hover:bg-muted"
                   onClick={onClose}
                   ref={closeBtnRef}
+                  transition={SPRING_SOFT}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -193,16 +195,12 @@ export function NavbarMobileMenu({
                         open: {
                           opacity: 1,
                           x: 0,
-                          transition: {
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 25,
-                          },
+                          transition: SPRING_SOFT,
                         },
                         closed: {
                           opacity: 0,
                           x: 50,
-                          transition: { duration: 0.2 },
+                          transition: { duration: DUR.fast, ease: EASE_OUT },
                         },
                       }}
                     >
@@ -212,17 +210,17 @@ export function NavbarMobileMenu({
                         to={link.targetId}
                       >
                         <motion.div
-                          className={`relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 ${
+                          className={`relative overflow-hidden rounded-2xl border p-5 transition-[background-color,border-color,box-shadow] duration-200 ease-out ${
                             isActive
                               ? "border-primary/30 bg-gradient-to-br from-primary/15 via-primary/10 to-primary/5 shadow-lg shadow-primary/10"
                               : "border-border/50 bg-muted/30 hover:border-primary/20 hover:bg-muted/50"
                           }`}
-                          transition={{ type: "spring", stiffness: 400 }}
+                          transition={SPRING_SOFT}
                           whileHover={{ scale: 1.02, x: 4 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                            className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/5 opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100"
                             initial={false}
                           />
 
@@ -234,6 +232,7 @@ export function NavbarMobileMenu({
                                     ? "border-primary/30 bg-primary/20 text-primary"
                                     : "border-border/50 bg-background/50 text-muted-foreground group-hover:border-primary/20"
                                 }`}
+                                transition={SPRING_SOFT}
                                 whileHover={{ scale: 1.1, rotate: 5 }}
                               >
                                 {String(index + 1).padStart(2, "0")}
@@ -254,6 +253,10 @@ export function NavbarMobileMenu({
                                     animate={{ opacity: 1, y: 0 }}
                                     className="font-medium text-primary/70 text-xs"
                                     initial={{ opacity: 0, y: -5 }}
+                                    transition={{
+                                      duration: DUR.fast,
+                                      ease: EASE_OUT,
+                                    }}
                                   >
                                     {nav.currentPage}
                                   </motion.p>
@@ -262,15 +265,12 @@ export function NavbarMobileMenu({
                             </div>
 
                             <motion.div
-                              className={`transition-colors ${
+                              className={`transition-colors duration-200 ease-out ${
                                 isActive
                                   ? "text-primary"
                                   : "text-muted-foreground group-hover:text-primary"
                               }`}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                              }}
+                              transition={SPRING_SOFT}
                               whileHover={{ x: 4, rotate: -45 }}
                             >
                               <ChevronRight className="h-6 w-6" />
@@ -282,7 +282,11 @@ export function NavbarMobileMenu({
                               animate={{ scaleX: 1 }}
                               className="absolute right-0 bottom-0 left-0 h-1 rounded-b-2xl bg-gradient-to-r from-primary via-primary/80 to-primary/40"
                               initial={{ scaleX: 0 }}
-                              transition={{ duration: 0.4, delay: 0.2 }}
+                              transition={{
+                                duration: DUR.base,
+                                delay: 0.2,
+                                ease: EASE_OUT,
+                              }}
                             />
                           )}
                         </motion.div>
@@ -296,15 +300,15 @@ export function NavbarMobileMenu({
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-8 border-border/20 border-t pt-6"
                 initial={{ opacity: 0, y: 10 }}
-                transition={{ delay: 0.7, duration: 0.4 }}
+                transition={{ delay: 0.7, duration: DUR.base, ease: EASE_OUT }}
               >
                 <Link
-                  className="group flex items-center justify-center gap-2 text-muted-foreground text-xs transition-colors duration-200 hover:text-foreground"
+                  className="group flex items-center justify-center gap-2 text-muted-foreground text-xs transition-colors duration-200 ease-out hover:text-foreground"
                   onClick={onClose}
                   to="/privacy"
                 >
                   <span>{nav.privacyPolicy}</span>
-                  <ChevronRight className="h-3.5 w-3.5 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                  <ChevronRight className="h-3.5 w-3.5 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-x-0.5 group-hover:opacity-100" />
                 </Link>
               </motion.div>
             </nav>

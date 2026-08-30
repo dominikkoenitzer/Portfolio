@@ -13,6 +13,7 @@ import { SITE_CONFIG } from "@/constants";
 import { fadeInUp } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 
 interface ContributionDay {
@@ -243,8 +244,9 @@ export function GitHubContributions() {
                         <Tooltip key={dayIndex}>
                           <TooltipTrigger asChild>
                             <motion.div
-                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 hover:border-border/60"
+                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 ease-out hover:border-border/60"
                               style={{ backgroundColor: color }}
+                              transition={SPRING_SOFT}
                               whileHover={{ scale: 1.35, zIndex: 10 }}
                             />
                           </TooltipTrigger>
@@ -308,19 +310,23 @@ export function GitHubContributions() {
           <div className="space-y-1 sm:space-y-1.5">
             {data.recentCommits.map((commit, index) => (
               <motion.a
-                className="group block rounded-lg border border-transparent px-2 py-1.5 transition-all duration-200 hover:border-border/30 hover:bg-muted/60 active:bg-muted/80 sm:px-3 sm:py-2"
+                className="group block rounded-lg border border-transparent px-2 py-1.5 transition-colors duration-200 ease-out hover:border-border/30 hover:bg-muted/60 active:bg-muted/80 sm:px-3 sm:py-2"
                 href={commit.url}
                 initial={{ opacity: 0, y: 10 }}
                 key={commit.sha}
                 rel="noopener noreferrer"
                 target="_blank"
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                transition={{
+                  duration: DUR.base,
+                  delay: index * 0.05,
+                  ease: EASE_OUT,
+                }}
                 viewport={{ once: true }}
                 whileInView={{ opacity: 1, y: 0 }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 font-medium text-foreground text-xs transition-colors group-hover:text-primary sm:text-sm">
+                    <p className="line-clamp-2 font-medium text-foreground text-xs transition-colors duration-200 ease-out group-hover:text-primary sm:text-sm">
                       {commit.message.split("\n")[0]}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">

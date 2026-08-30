@@ -19,11 +19,10 @@ import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { TimelineTags } from "./TimelineTags";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 const DURATION_UNITS: Record<
   Language,
@@ -78,7 +77,7 @@ function formatDuration(
 
 // Shared hover transition for the logo tile (also reacts to the card's hover).
 const LOGO_HOVER =
-  "transition-all duration-300 group-hover/card:-translate-y-0.5 group-hover/card:scale-[1.04] group-hover/card:border-primary/40 group-hover/card:shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.35)]";
+  "transform-gpu transition-[transform,border-color,box-shadow] duration-200 ease-out group-hover/card:-translate-y-0.5 group-hover/card:scale-[1.04] group-hover/card:border-primary/40 group-hover/card:shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.35)]";
 
 function LogoTile({ entry }: { entry: TimelineEntry }) {
   if (entry.logo) {
@@ -142,12 +141,12 @@ function TimelineCard({
       initial={{ opacity: 0, y: 18 }}
       ref={ref}
       transition={{
-        duration: 0.5,
+        duration: DUR.base,
         delay: Math.min(index * 0.06, 0.3),
-        ease: EASE,
+        ease: EASE_OUT,
       }}
       viewport={{ once: true, margin: "-60px" }}
-      whileHover={{ y: -4, transition: { duration: 0.25, ease: EASE } }}
+      whileHover={{ y: -4, transition: SPRING_SOFT }}
       whileInView={{ opacity: 1, y: 0 }}
     >
       <motion.div
@@ -163,7 +162,7 @@ function TimelineCard({
         </h3>
 
         <a
-          className="group mt-1 inline-flex items-center gap-1 rounded-sm font-medium text-foreground/90 text-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="group mt-1 inline-flex items-center gap-1 rounded-sm font-medium text-foreground/90 text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           href={entry.organizationUrl}
           rel="noopener noreferrer"
           target="_blank"
@@ -171,11 +170,11 @@ function TimelineCard({
           {entry.organization}
           <ArrowUpRight
             aria-hidden
-            className="h-3.5 w-3.5 text-muted-foreground transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
+            className="h-3.5 w-3.5 text-muted-foreground transition-[transform,color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
           />
         </a>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs transition-colors duration-300 group-hover/card:text-foreground/70">
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-muted-foreground text-xs transition-colors duration-200 ease-out group-hover/card:text-foreground/70">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays aria-hidden className="h-3.5 w-3.5 opacity-80" />
             <span>{entry.period}</span>
@@ -256,11 +255,11 @@ function TimelineGroup({
       <motion.div
         className="group/head mb-8 flex items-center gap-3"
         initial={{ opacity: 0, y: 16 }}
-        transition={{ duration: 0.5, ease: EASE }}
+        transition={{ duration: DUR.base, ease: EASE_OUT }}
         viewport={{ once: true, margin: "-60px" }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover/head:scale-110 group-hover/head:bg-primary/15">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-[transform,background-color] duration-200 ease-out group-hover/head:scale-110 group-hover/head:bg-primary/15">
           {icon}
         </span>
         <h2 className="font-bold text-xl sm:text-2xl">{title}</h2>
@@ -291,12 +290,12 @@ function CvDownload({
 }) {
   return (
     <a
-      className="group/cv flex items-center gap-3 rounded-xl border border-border/50 bg-secondary/30 px-4 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.06] hover:shadow-[0_12px_32px_-12px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group/cv flex transform-gpu items-center gap-3 rounded-xl border border-border/50 bg-secondary/30 px-4 py-3 transition-[transform,border-color,background-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.06] hover:shadow-[0_12px_32px_-12px_hsl(var(--primary)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       href={href}
       rel="noopener noreferrer"
       target="_blank"
     >
-      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-300 group-hover/cv:bg-primary/15">
+      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-200 ease-out group-hover/cv:bg-primary/15">
         <FileText aria-hidden className="h-4 w-4" />
       </span>
       <span className="min-w-0 flex-1 text-left">
@@ -307,7 +306,7 @@ function CvDownload({
       </span>
       <ExternalLink
         aria-hidden
-        className="h-4 w-4 flex-none text-muted-foreground transition-all duration-300 group-hover/cv:-translate-y-0.5 group-hover/cv:translate-x-0.5 group-hover/cv:text-primary"
+        className="h-4 w-4 flex-none text-muted-foreground transition-[transform,color] duration-200 ease-out group-hover/cv:-translate-y-0.5 group-hover/cv:translate-x-0.5 group-hover/cv:text-primary"
       />
     </a>
   );
@@ -331,7 +330,7 @@ export function TimelineSection() {
         <motion.div
           className="mx-auto mb-14 grid max-w-xl grid-cols-1 gap-3 sm:mb-16 sm:grid-cols-2"
           initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.5, ease: EASE }}
+          transition={{ duration: DUR.base, ease: EASE_OUT }}
           viewport={{ once: true, margin: "-60px" }}
           whileInView={{ opacity: 1, y: 0 }}
         >

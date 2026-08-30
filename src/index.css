@@ -9,6 +9,10 @@
   /* Glass: dark futuristic neon. Deep blue-black glass, electric blue and violet */
   :root,
   .glass {
+    /* The CSS half of the motion vocabulary in `lib/motion.ts`: same curve as
+       the `EASE_OUT` token, so a CSS hover and a framer entrance decelerate
+       identically. Durations stay literal (200ms feedback, 300ms standard). */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --radius: 0.75rem;
     --background: 222 47% 6%;
     --foreground: 210 40% 96%;
@@ -70,10 +74,10 @@
   /* Smooth theme transitions */
   .theme-transitioning * {
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease !important;
+      background-color 0.3s var(--ease-out),
+      color 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out),
+      box-shadow 0.3s var(--ease-out) !important;
   }
 
   * {
@@ -292,7 +296,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s var(--ease-out);
   }
 
   .link-hover:hover::after {
@@ -320,7 +324,7 @@
 
   /* Enhanced card styles */
   .glass-card {
-    @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-[background-color,border-color,box-shadow] duration-300 ease-out;
   }
 
   /* Section styles with improved responsive padding */
@@ -626,9 +630,9 @@
       0 4px 24px -4px rgba(0, 0, 0, 0.08),
       0 1px 0 0 hsl(var(--primary) / 0);
     transition:
-      box-shadow 0.5s ease,
-      border-color 0.5s ease,
-      transform 0.4s ease;
+      box-shadow 0.3s var(--ease-out),
+      border-color 0.3s var(--ease-out),
+      transform 0.2s var(--ease-out);
   }
 
   .glass-deep:hover {
@@ -671,7 +675,7 @@
   }
 
   .shimmer-on-hover:hover::after {
-    animation: shimmer-sweep 0.8s ease forwards;
+    animation: shimmer-sweep 0.6s ease forwards;
   }
 
   /* Ping animation for status dot */
@@ -735,7 +739,7 @@
   }
 
   .link-hover {
-    @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+    @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100 hover:after:origin-bottom-left;
   }
 
   .gradient-text {
@@ -830,9 +834,9 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
   transition:
-    background 0.4s ease,
-    border-color 0.4s ease,
-    box-shadow 0.4s ease !important;
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out) !important;
 }
 
 [data-theme="glass"] .glass-card:hover {

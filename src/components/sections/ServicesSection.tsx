@@ -29,6 +29,7 @@ import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { useTheme } from "@/components/theme-context";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
@@ -59,8 +60,6 @@ interface Service {
   icon: LucideIcon;
   category: CategoryGroup;
 }
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Order within a category maps onto the tree's three leaf slots (see
 // ServiceExplorer's LEAVES layout), so keep build/protect/grow grouped.
@@ -153,15 +152,15 @@ function DetailCard({
   return (
     <motion.div
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="glass-deep absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] rounded-[20px] p-[22px] text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
+      className="glass-deep absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] transform-gpu rounded-[20px] p-[22px] text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
       exit={{ opacity: 0, y: 14, scale: 0.98 }}
       initial={{ opacity: 0, y: 14, scale: 0.98 }}
       onPointerDown={(e) => e.stopPropagation()}
-      transition={{ duration: 0.35, ease: [0.2, 0.7, 0.3, 1] }}
+      transition={{ duration: DUR.base, ease: EASE_OUT }}
     >
       <button
         aria-label={closeLabel}
-        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-muted/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-muted/60 text-muted-foreground transition-colors duration-200 ease-out hover:bg-muted hover:text-foreground"
         onClick={onClose}
         type="button"
       >
@@ -214,12 +213,12 @@ function DetailCard({
       </div>
 
       <Link
-        className="group/btn flex items-center justify-between rounded-lg border border-border/40 px-4 py-2.5 text-[13px] text-foreground/80 transition-all duration-200 hover:border-primary/40 hover:bg-primary/[0.06] hover:text-foreground"
+        className="group/btn flex items-center justify-between rounded-lg border border-border/40 px-4 py-2.5 text-[13px] text-foreground/80 transition-colors duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.06] hover:text-foreground"
         state={inquiry}
         to="/contact"
       >
         {getInTouchLabel}
-        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
+        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover/btn:translate-x-0.5" />
       </Link>
     </motion.div>
   );
@@ -378,7 +377,7 @@ export function ServicesSection() {
                       key={id}
                       onClick={() => selectCategory(id)}
                       className={cn(
-                        "rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-all duration-200",
+                        "rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out",
                         on
                           ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.35)]"
                           : "bg-transparent text-muted-foreground hover:text-foreground",
@@ -414,7 +413,7 @@ export function ServicesSection() {
             <div
               aria-hidden
               className={cn(
-                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3.5 transition-opacity duration-500",
+                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3.5 transition-opacity duration-500 ease-out",
                 treeReady && "opacity-0",
               )}
             >
@@ -474,17 +473,17 @@ export function ServicesSection() {
             className="absolute top-0 left-0 w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
             initial={{ scaleY: 0 }}
             style={{ bottom: 0 }}
-            transition={{ duration: 1.2, ease: EASE }}
+            transition={{ duration: DUR.slow, ease: EASE_OUT }}
             viewport={{ once: true, margin: "-20%" }}
             whileInView={{ scaleY: 1 }}
           />
           {howTo.step.map((step, i) => (
             <motion.li
-              initial={{ opacity: 0, x: -18, filter: "blur(6px)" }}
+              initial={{ opacity: 0, x: -18 }}
               key={step.name}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: EASE }}
+              transition={{ duration: DUR.base, delay: i * 0.1, ease: EASE_OUT }}
               viewport={{ once: true, margin: "-15%" }}
-              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              whileInView={{ opacity: 1, x: 0 }}
             >
               <p className="flex items-baseline gap-3">
                 <span className="font-mono text-muted-foreground/40 text-xs">
@@ -512,15 +511,15 @@ export function ServicesSection() {
               className="group py-4"
               initial={{ opacity: 0, y: 14 }}
               key={faq.question}
-              transition={{ duration: 0.5, delay: i * 0.06, ease: EASE }}
+              transition={{ duration: DUR.base, delay: i * 0.06, ease: EASE_OUT }}
               viewport={{ once: true, margin: "-10%" }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-medium text-sm transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
                 {faq.question}
                 <ChevronDown
                   aria-hidden
-                  className="mt-0.5 h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 group-open:rotate-180"
+                  className="mt-0.5 h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 ease-out group-open:rotate-180"
                 />
               </summary>
               <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
@@ -535,7 +534,7 @@ export function ServicesSection() {
       <motion.div
         className="mt-16 flex flex-col items-center gap-4 border-border/20 border-t pt-14 text-center"
         initial={{ opacity: 0, y: 16 }}
-        transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+        transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
         viewport={{ once: true }}
         whileInView={{ opacity: 1, y: 0 }}
       >
@@ -546,7 +545,7 @@ export function ServicesSection() {
               project" rather than its default of "a role". */}
           <Link state={{ intent: "freelance" }} to="/contact">
             {t.ctaButton}
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
           </Link>
         </Button>
       </motion.div>
