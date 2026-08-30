@@ -417,7 +417,7 @@ export function ServicesSection() {
                 treeReady && "opacity-0",
               )}
             >
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-muted border-t-primary" />
+              <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-[#bcd6ff] shadow-[0_0_22px_6px_rgba(120,160,255,0.6)]" />
               <span className="text-[13px] text-muted-foreground tracking-[0.06em]">
                 {t.loading}
               </span>
