@@ -9,11 +9,10 @@ import {
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Draggable 3D logo sphere: lazy (three.js) and desktop-only.
 const SkillSphere = lazy(() => import("@/components/effects/SkillSphere"));
@@ -110,25 +109,38 @@ function Chip({
   label: string;
   index: number;
 }) {
+  // Entrance and hover sit on separate elements so the stagger delay never
+  // applies to the hover lift. The wrapper is inline-flex so the chip stays a
+  // flex item and the row keeps its exact height.
   return (
     <motion.span
-      className="group inline-flex items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 px-3.5 py-2.5 text-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
+      className="inline-flex"
       initial={{ opacity: 0, y: 8 }}
-      transition={{ duration: 0.35, delay: Math.min(index * 0.025, 0.25), ease: EASE }}
+      transition={{
+        duration: DUR.base,
+        delay: Math.min(index * 0.025, 0.25),
+        ease: EASE_OUT,
+      }}
       viewport={{ once: true, margin: "-40px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {/* Decorative: the skill's name is the text right beside it, and the
-          react-icons glyphs carry role="img" without a name of their own. */}
-      <span
-        aria-hidden="true"
-        className="flex h-[18px] w-[18px] shrink-0 items-center justify-center text-foreground/80 transition-transform duration-200 group-hover:scale-110"
+      <motion.span
+        className="group inline-flex transform-gpu items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 px-3.5 py-2.5 text-sm backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.07] hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
+        transition={SPRING_SOFT}
+        whileHover={{ y: -2 }}
       >
-        {icon}
-      </span>
-      <span className="font-medium text-foreground/90 transition-colors duration-200 group-hover:text-primary">
-        {label}
-      </span>
+        {/* Decorative: the skill's name is the text right beside it, and the
+            react-icons glyphs carry role="img" without a name of their own. */}
+        <span
+          aria-hidden="true"
+          className="flex h-[18px] w-[18px] shrink-0 items-center justify-center text-foreground/80 transition-transform duration-200 ease-out group-hover:scale-110"
+        >
+          {icon}
+        </span>
+        <span className="font-medium text-foreground/90 transition-colors duration-200 ease-out group-hover:text-primary">
+          {label}
+        </span>
+      </motion.span>
     </motion.span>
   );
 }
@@ -149,7 +161,7 @@ function CategoryCard({
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.55, delay, ease: EASE }}
+      transition={{ duration: DUR.slow, delay, ease: EASE_OUT }}
       viewport={{ once: true, margin: "-60px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >

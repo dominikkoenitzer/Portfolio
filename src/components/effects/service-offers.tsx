@@ -12,6 +12,7 @@ import {
 import { ArrowRight, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
 
 /**
  * The scroll act that follows the 3D tree.
@@ -48,7 +49,11 @@ export type OfferCategory = {
   services: OfferService[];
 };
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * The price count-up. Longer than any transition on purpose: it is a number
+ * being read, not a surface being moved, and under ~1s the digits blur past.
+ */
+const COUNT_UP = 1.1;
 
 /** `#36d0ff` + alpha → `rgba(...)`, so accents can tint backgrounds. */
 const rgba = (hex: string, alpha: number) => {
@@ -75,7 +80,10 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
 
   useEffect(() => {
     if (!(inView && match) || reduce) return;
-    const controls = animate(count, target, { duration: 1.1, ease: EASE });
+    const controls = animate(count, target, {
+      duration: COUNT_UP,
+      ease: EASE_OUT,
+    });
     return () => controls.stop();
   }, [inView, match, reduce, count, target]);
 
@@ -111,18 +119,18 @@ function ServiceRow({
   const ref = useRef<HTMLAnchorElement>(null);
   const Icon = service.icon;
 
-  // Magnetic pull, same feel as the hero's CTA buttons.
+  // Magnetic pull, same feel as the hero's CTA buttons: same spring, literally.
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const x = useSpring(mx, { stiffness: 180, damping: 18, mass: 0.1 });
-  const y = useSpring(my, { stiffness: 180, damping: 18, mass: 0.1 });
+  const x = useSpring(mx, SPRING_SOFT);
+  const y = useSpring(my, SPRING_SOFT);
 
   return (
     <motion.li
-      initial={{ opacity: 0, y: 34, filter: "blur(10px)" }}
-      transition={{ duration: 0.7, delay: index * 0.09, ease: EASE }}
+      initial={{ opacity: 0, y: 34 }}
+      transition={{ duration: DUR.slow, delay: index * 0.09, ease: EASE_OUT }}
       viewport={{ once: true, margin: "-12%" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      whileInView={{ opacity: 1, y: 0 }}
     >
       <motion.div style={skew ? { skewY: skew } : undefined}>
         <Link
@@ -144,7 +152,7 @@ function ServiceRow({
           {/* Accent wash that sweeps in from the branch side on hover. */}
           <span
             aria-hidden
-            className="-inset-x-4 -inset-y-1 pointer-events-none absolute origin-left scale-x-0 rounded-2xl opacity-0 transition-all duration-500 ease-out group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100 group-focus-visible:opacity-100"
+            className="-inset-x-4 -inset-y-1 pointer-events-none absolute origin-left scale-x-0 transform-gpu rounded-2xl opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100 group-focus-visible:opacity-100"
             style={{
               background: `linear-gradient(90deg, ${rgba(accentText, 0.09)} 0%, transparent 70%)`,
             }}
@@ -153,7 +161,7 @@ function ServiceRow({
           <motion.span className="relative flex min-w-0 flex-1 items-start gap-4 sm:gap-5" style={{ x, y }}>
             <span
               aria-hidden
-              className="mt-0.5 flex h-10 w-10 flex-none items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110"
+              className="mt-0.5 flex h-10 w-10 flex-none transform-gpu items-center justify-center rounded-xl transition-transform duration-200 ease-out group-hover:scale-110"
               style={{
                 background: rgba(accentText, 0.1),
                 color: accentText,
@@ -165,7 +173,7 @@ function ServiceRow({
 
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <span className="font-semibold text-base transition-colors duration-300 sm:text-lg">
+                <span className="font-semibold text-base transition-colors duration-200 ease-out sm:text-lg">
                   {service.title}
                 </span>
                 <span className="text-muted-foreground">
@@ -179,7 +187,7 @@ function ServiceRow({
 
             <ArrowRight
               aria-hidden
-              className="mt-3 h-4 w-4 flex-none translate-x-0 text-muted-foreground/30 transition-all duration-300 group-hover:translate-x-1"
+              className="mt-3 h-4 w-4 flex-none translate-x-0 text-muted-foreground/30 transition-transform duration-200 ease-out group-hover:translate-x-1"
               style={{ color: undefined }}
             />
           </motion.span>
@@ -243,7 +251,7 @@ function CategoryStage({
         <motion.div
           className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pb-5"
           initial={{ opacity: 0, y: 24 }}
-          transition={{ duration: 0.7, ease: EASE }}
+          transition={{ duration: DUR.slow, ease: EASE_OUT }}
           viewport={{ once: true, margin: "-15%" }}
           whileInView={{ opacity: 1, y: 0 }}
         >
@@ -270,7 +278,7 @@ function CategoryStage({
           style={{
             background: `linear-gradient(90deg, ${category.accentText} 0%, ${rgba(category.accentText, 0)} 100%)`,
           }}
-          transition={{ duration: 0.9, ease: EASE }}
+          transition={{ duration: DUR.slow, ease: EASE_OUT }}
           viewport={{ once: true, margin: "-15%" }}
           whileInView={{ scaleX: 1 }}
         />
