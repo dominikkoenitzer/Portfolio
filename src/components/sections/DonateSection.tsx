@@ -42,7 +42,7 @@ export function DonateSection() {
           >
             {t.headlineLine1}
             <br />
-            <span className="hero-display inline-block pb-[0.15em]">
+            <span className="hero-name-gradient inline-block pb-[0.15em]">
               {t.headlineLine2}
             </span>
           </h1>
