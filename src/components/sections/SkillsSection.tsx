@@ -125,7 +125,7 @@ function Chip({
       whileInView={{ opacity: 1, y: 0 }}
     >
       <motion.span
-        className="group inline-flex transform-gpu items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 px-3.5 py-2.5 text-sm backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.07] hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
+        className="group inline-flex transform-gpu items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 px-3.5 py-2.5 text-sm backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.07] hover:shadow-[0_6px_18px_-6px_hsl(var(--foreground)/0.12)]"
         transition={SPRING_SOFT}
         whileHover={{ y: -2 }}
       >

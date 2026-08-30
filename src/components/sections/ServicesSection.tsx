@@ -470,7 +470,7 @@ export function ServicesSection() {
           {/* The rule draws itself as the steps arrive. */}
           <motion.span
             aria-hidden
-            className="absolute top-0 left-0 w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
+            className="absolute top-0 left-0 w-0.5 origin-top bg-border"
             initial={{ scaleY: 0 }}
             style={{ bottom: 0 }}
             transition={{ duration: DUR.slow, ease: EASE_OUT }}
