@@ -80,10 +80,10 @@ function RoleMorphTitle() {
         className="mb-7 overflow-visible font-bold leading-[0.95] tracking-[-0.03em] sm:mb-9 md:mb-11"
         style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
       >
-        <span className="block hero-name-gradient pb-[0.12em]" style={morphStyle}>
+        <span className="block hero-display pb-[0.12em]" style={morphStyle}>
           {PHRASES[idx].line1}
         </span>
-        <span className="block hero-name-gradient pb-[0.25em]" style={morphStyle}>
+        <span className="block hero-display pb-[0.25em]" style={morphStyle}>
           {PHRASES[idx].line2}
         </span>
       </div>
@@ -122,20 +122,6 @@ function Magnetic({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Stat item ────────────────────────────────────────────────────────────────
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="font-bold text-xl text-primary sm:text-2xl md:text-3xl">
-        {value}
-      </span>
-      <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-muted-foreground sm:text-[10px] sm:tracking-[0.18em]">
-        {label}
-      </span>
-    </div>
-  );
-}
-
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 export function HeroSection() {
   const { language } = useLanguage();
@@ -163,26 +149,8 @@ export function HeroSection() {
       className="relative flex min-h-[calc(100vh-6rem)] flex-col justify-center overflow-hidden sm:min-h-[calc(100vh-7rem)] md:min-h-[calc(100vh-8rem)]"
       id="hero"
     >
-      {/* Ambient — radial-gradient glows instead of solid circles under a heavy
-          `blur()`; same soft look, no costly blur pass on mobile. */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="absolute left-[5%] top-[15%] h-[700px] w-[700px]"
-          style={{
-            background:
-              "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, hsl(var(--primary) / 0) 72%)",
-          }}
-        />
-        <div
-          className="absolute right-[5%] bottom-[10%] h-[500px] w-[500px]"
-          style={{
-            background:
-              "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, hsl(var(--primary) / 0) 72%)",
-          }}
-        />
-      </div>
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid-pattern opacity-[0.018]" />
-
+      {/* No ambient layer of its own: the WebGL background behind the page
+          already carries the atmosphere. */}
       <motion.div
         className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12 lg:px-16"
         style={{ skewY: reduceFx ? 0 : skewY }}
@@ -262,20 +230,6 @@ export function HeroSection() {
                 <Link to="/projects">{t.hero.viewWork}</Link>
               </Button>
             </Magnetic>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-5 border-t border-border/20 pt-6 sm:gap-7 sm:pt-7 md:gap-10 md:pt-8"
-            initial={{ opacity: 0, y: 8 }}
-            transition={{ duration: DUR.base, delay: 0.78, ease: EASE_OUT }}
-          >
-            <Stat value="20+" label={t.hero.stats.projects} />
-            <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="4+" label={t.hero.stats.yearsCoding} />
-            <div className="h-8 w-px bg-border/20 sm:h-10" />
-            <Stat value="30+" label={t.hero.stats.technologies} />
           </motion.div>
         </motion.div>
       </motion.div>

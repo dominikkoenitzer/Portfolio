@@ -46,18 +46,6 @@ export function AboutSection() {
                 width={480}
               />
             </div>
-            <motion.div
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              className="-bottom-4 -right-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10 bg-primary/5 backdrop-blur-sm"
-              initial={{ opacity: 0, x: isMobile ? 0 : 20, y: 20 }}
-              transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
-            />
-            <motion.div
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              className="-top-4 -left-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10"
-              initial={{ opacity: 0, x: isMobile ? 0 : -20, y: -20 }}
-              transition={{ duration: DUR.slow, delay: 0.3, ease: EASE_OUT }}
-            />
           </div>
 
           <div className="mt-8 space-y-4 md:mt-10 md:space-y-6">
@@ -93,9 +81,7 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
             >
               {t.passionate}{" "}
-              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                {t.passionateRole}
-              </span>
+              <span className="text-primary">{t.passionateRole}</span>
             </motion.h2>
 
             <div className="space-y-4 sm:space-y-5">
