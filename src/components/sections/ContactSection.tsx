@@ -127,7 +127,7 @@ export function ContactSection() {
               "zusammenar-beiten". pb keeps descenders off the clipping edge. */}
           {t.headlineLine1}
           <br />
-          <span className="hero-display inline-block pb-[0.15em]">
+          <span className="hero-name-gradient inline-block pb-[0.15em]">
             {t.headlineLine2}
           </span>
         </motion.h1>

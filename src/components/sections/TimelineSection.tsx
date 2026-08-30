@@ -77,7 +77,7 @@ function formatDuration(
 
 // Shared hover transition for the logo tile (also reacts to the card's hover).
 const LOGO_HOVER =
-  "transform-gpu transition-[transform,border-color,box-shadow] duration-200 ease-out group-hover/card:-translate-y-0.5 group-hover/card:scale-[1.04] group-hover/card:border-primary/40 group-hover/card:shadow-[0_8px_24px_-6px_hsl(var(--foreground)/0.12)]";
+  "transform-gpu transition-[transform,border-color,box-shadow] duration-200 ease-out group-hover/card:-translate-y-0.5 group-hover/card:scale-[1.04] group-hover/card:border-primary/40 group-hover/card:shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.35)]";
 
 function LogoTile({ entry }: { entry: TimelineEntry }) {
   if (entry.logo) {

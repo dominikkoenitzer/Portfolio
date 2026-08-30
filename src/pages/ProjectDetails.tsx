@@ -620,6 +620,14 @@ const ProjectDetails = () => {
                       className="pointer-events-none absolute inset-0 opacity-[0.12]"
                       style={{ backgroundImage: "var(--theme-gradient)" }}
                     />
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute -top-20 -right-16 h-64 w-64 rounded-full opacity-40 blur-3xl"
+                      style={{
+                        background:
+                          "radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%)",
+                      }}
+                    />
                     <div className="relative">
                       <CheckList items={project.impactPoints} />
                     </div>
