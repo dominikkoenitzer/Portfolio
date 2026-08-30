@@ -23,3 +23,27 @@ export const SPRING_SOFT = {
   damping: 30,
   mass: 0.9,
 } as const;
+
+/**
+ * Scroll reveal for any element: a rise and fade on the shared curve. Use as
+ * `variants={REVEAL}` with `initial="hidden" whileInView="show"`, inside a
+ * parent that carries `stagger()` so siblings cascade instead of popping in
+ * together.
+ */
+export const REVEAL = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: DUR.slow, ease: EASE_OUT },
+  },
+} as const;
+
+/** Parent variants that cascade REVEAL children. */
+export const stagger = (delayChildren = 0.08, staggerChildren = 0.07) => ({
+  hidden: {},
+  show: { transition: { delayChildren, staggerChildren } },
+});
+
+/** Shared whileInView settings so every reveal fires at the same threshold. */
+export const VIEWPORT = { once: true, margin: "-10% 0px -10% 0px" } as const;

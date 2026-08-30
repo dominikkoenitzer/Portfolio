@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Briefcase,
   Database,
@@ -8,8 +8,9 @@ import {
   Server,
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
+import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";
@@ -100,30 +101,13 @@ const skillCategories: SkillCategory[] = [
 
 const languageKeys: LangKey[] = ["english", "german", "chinese", "french"];
 
-function Chip({
-  icon,
-  label,
-  index,
-}: {
-  icon: ReactNode;
-  label: string;
-  index: number;
-}) {
-  // Entrance and hover sit on separate elements so the stagger delay never
+function Chip({ icon, label }: { icon: ReactNode; label: string }) {
+  // Entrance and hover sit on separate elements so the cascade delay never
   // applies to the hover lift. The wrapper is inline-flex so the chip stays a
-  // flex item and the row keeps its exact height.
+  // flex item and the row keeps its exact height. The row above owns the
+  // timing: the chip only says how it arrives, never when.
   return (
-    <motion.span
-      className="inline-flex"
-      initial={{ opacity: 0, y: 8 }}
-      transition={{
-        duration: DUR.base,
-        delay: Math.min(index * 0.025, 0.25),
-        ease: EASE_OUT,
-      }}
-      viewport={{ once: true, margin: "-40px" }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
+    <motion.span className="inline-flex" variants={REVEAL}>
       <motion.span
         className="group inline-flex transform-gpu items-center gap-2.5 rounded-xl border border-border/40 bg-secondary/30 px-3.5 py-2.5 text-sm backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.07] hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]"
         transition={SPRING_SOFT}
@@ -149,22 +133,20 @@ function CategoryCard({
   icon,
   title,
   children,
-  delay,
   count,
 }: {
   icon: ReactNode;
   title: string;
   children: ReactNode;
-  delay: number;
   count: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
+  // Each card reveals on its own arrival rather than off one grid-wide trigger:
+  // the grid is taller than the viewport, so a single parent would run the last
+  // row's reveal while it was still below the fold.
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      transition={{ duration: DUR.slow, delay, ease: EASE_OUT }}
-      viewport={{ once: true, margin: "-60px" }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
+    <motion.div {...revealOnScroll(reduceMotion, revealStagger())}>
       <div className="mb-4 flex items-center gap-3 border-border/40 border-b pb-3">
         <span
           aria-hidden="true"
@@ -177,7 +159,14 @@ function CategoryCard({
           {count}
         </span>
       </div>
-      <div className="flex flex-wrap gap-2.5">{children}</div>
+      {/* The chips cascade left to right inside the card, tight enough that a
+          ten-chip row still finishes just after the card itself settles. */}
+      <motion.div
+        className="flex flex-wrap gap-2.5"
+        variants={stagger(0.02, 0.03)}
+      >
+        {children}
+      </motion.div>
     </motion.div>
   );
 }
@@ -209,21 +198,15 @@ export function SkillsSection() {
       ) : null}
 
       <div className="mx-auto grid max-w-5xl grid-cols-1 items-start gap-x-12 gap-y-12 md:grid-cols-2">
-        {skillCategories.map((category, catIndex) => (
+        {skillCategories.map((category) => (
           <CategoryCard
             count={category.skills.length}
-            delay={Math.min(catIndex * 0.08, 0.4)}
             icon={category.icon}
             key={category.key}
             title={t.categories[category.key]}
           >
-            {category.skills.map((name, index) => (
-              <Chip
-                icon={getSkillIcon(name)}
-                index={index}
-                key={name}
-                label={name}
-              />
+            {category.skills.map((name) => (
+              <Chip icon={getSkillIcon(name)} key={name} label={name} />
             ))}
           </CategoryCard>
         ))}
@@ -231,14 +214,12 @@ export function SkillsSection() {
         {/* Spoken languages — names are translated, flags from the icon map */}
         <CategoryCard
           count={languageKeys.length}
-          delay={Math.min(skillCategories.length * 0.08, 0.4)}
           icon={<LanguagesIcon />}
           title={t.categories.languages}
         >
-          {languageKeys.map((langKey, index) => (
+          {languageKeys.map((langKey) => (
             <Chip
               icon={getSkillIcon(langKey)}
-              index={index}
               key={langKey}
               label={t.langNames[langKey]}
             />

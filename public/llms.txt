@@ -9,7 +9,7 @@ This file follows the proposed `llms.txt` convention (https://llmstxt.org). Craw
 - Name: Dominik Könitzer (also written: Dominik Konitzer)
 - Role: Software Engineer · Full-Stack Web Developer
 - Location: Switzerland
-- Education: WISS Schulen für Wirtschaft Informatik Immobilien — 4-year software engineering program (currently 6th semester)
+- Education: WISS Schulen für Wirtschaft Informatik Immobilien, 4-year software engineering program (currently 7th semester)
 - Languages spoken: English, German, French
 - Site: https://dk.punds.ch
 - Contact: dominik.koenitzer@gmail.com

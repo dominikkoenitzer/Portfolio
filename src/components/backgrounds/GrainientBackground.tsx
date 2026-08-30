@@ -1,33 +1,27 @@
-import { useTheme } from "@/components/theme-context";
-import { getVeilPreset } from "@/config/themes";
 import Grainient from "./Grainient";
 
 /**
- * Full-viewport grainy-gradient background. A sibling variant to the water
- * caustic veil: it renders the *same* per-theme colour stops, and borrows the
- * preset's `intensity` (as opacity) and `blendMode` so it sits as a wash over
- * the page base: keeping text readable on the light palette (bloom)
- * instead of painting an opaque field over them.
+ * Full-viewport grainy-gradient background in the bloom palette: deep violet,
+ * sage and blush, the site's only colour stops now that the theme switcher is
+ * gone. Rendered under `multiply` at a reduced opacity so it sits as a wash
+ * over the light page base and dark text stays readable.
  */
-export default function GrainientBackground() {
-  const { theme } = useTheme();
-  const preset = getVeilPreset(theme);
-  const [color1, color2, color3] = preset.colorStops;
+const COLOR_STOPS = ["#453161", "#B6D088", "#FFE8EA"] as const;
+// The veil intensity was tuned for a localized band; this field fills the
+// whole viewport, so it is dialed down further to keep dark text readable.
+const OPACITY = 0.5 * 0.55;
+const SATURATION = 1.05;
 
-  // The veil's `intensity` was tuned for a localized band; this field fills the
-  // whole viewport, so on the light palettes (multiply) we dial it down further
-  // to keep dark text readable. Dark palettes (screen) lighten the page and stay
-  // at full preset intensity.
-  const opacity =
-    preset.blendMode === "screen" ? preset.intensity : preset.intensity * 0.55;
+export default function GrainientBackground() {
+  const [color1, color2, color3] = COLOR_STOPS;
 
   return (
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 -z-10 select-none"
       style={{
-        opacity,
-        mixBlendMode: preset.blendMode,
+        opacity: OPACITY,
+        mixBlendMode: "multiply",
       }}
     >
       <Grainient
@@ -36,7 +30,7 @@ export default function GrainientBackground() {
         color3={color3}
         contrast={1.2}
         grainAmount={0.13}
-        saturation={preset.saturation}
+        saturation={SATURATION}
         timeSpeed={0.2}
         zoom={1.05}
       />

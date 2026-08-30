@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useSwipe } from "@/hooks/use-swipe";
 import { isActivePath } from "@/lib/active-path";
 import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
 
@@ -30,6 +31,23 @@ export function NavbarMobileMenu({
   const previousFocus = useRef<HTMLElement | null>(null);
   // Swipe-right inside the drawer closes it: feels native on iOS/Android.
   const swipeHandlers = useSwipe({ onSwipeRight: onClose, threshold: 70 });
+  // Motion-sensitive users get the drawer in place: it fades where it stands
+  // instead of sliding, and its rows arrive together instead of cascading.
+  const reduceMotion = prefersReducedMotion();
+  const linkVariants = {
+    open: {
+      opacity: 1,
+      x: 0,
+      transition: reduceMotion
+        ? { duration: DUR.fast, ease: EASE_OUT }
+        : SPRING_SOFT,
+    },
+    closed: {
+      opacity: 0,
+      x: reduceMotion ? 0 : 50,
+      transition: { duration: DUR.fast, ease: EASE_OUT },
+    },
+  };
 
   // Move focus to the close button when the drawer opens and restore it to the
   // trigger (hamburger) when it closes: standard modal-dialog behaviour.
@@ -82,25 +100,25 @@ export function NavbarMobileMenu({
 
           {/* Drawer — swipe right to close */}
           <motion.div
-            animate={{ x: 0 }}
+            animate={reduceMotion ? { opacity: 1, x: 0 } : { x: 0 }}
             aria-label={nav.menu}
             aria-modal="true"
             className="overflow-y-auto overscroll-contain border-border/50 border-l bg-gradient-to-br from-background via-background to-background/95 shadow-2xl shadow-primary/10 backdrop-blur-2xl md:hidden"
             data-mobile-scroll
-            onKeyDown={trapTab}
-            role="dialog"
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={{ left: 0, right: 0.5 }}
             dragMomentum={false}
-            exit={{ x: "100%" }}
-            initial={{ x: "100%" }}
+            exit={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
+            initial={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
             onDragEnd={(_, info) => {
               if (info.offset.x > 100 || info.velocity.x > 500) {
                 onClose();
               }
             }}
+            onKeyDown={trapTab}
             ref={menuRef}
+            role="dialog"
             style={{
               position: "fixed",
               top: 0,
@@ -113,12 +131,11 @@ export function NavbarMobileMenu({
               paddingTop: "var(--safe-top, 0px)",
               paddingBottom: "var(--safe-bottom, 0px)",
             }}
-            transition={{
-              type: "spring",
-              damping: 30,
-              stiffness: 300,
-              mass: 0.8,
-            }}
+            transition={
+              reduceMotion
+                ? { duration: DUR.fast, ease: EASE_OUT }
+                : SPRING_SOFT
+            }
             {...swipeHandlers}
           >
             {/* Drag affordance — small grip on the left edge */}
@@ -131,8 +148,12 @@ export function NavbarMobileMenu({
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="relative z-10 border-border/30 border-b px-6 pt-8 pb-6"
-              initial={{ opacity: 0, y: -20 }}
-              transition={{ delay: 0.1, duration: DUR.base, ease: EASE_OUT }}
+              initial={{ opacity: 0, y: reduceMotion ? 0 : -20 }}
+              transition={{
+                delay: reduceMotion ? 0 : 0.1,
+                duration: DUR.base,
+                ease: EASE_OUT,
+              }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -174,13 +195,13 @@ export function NavbarMobileMenu({
                 variants={{
                   open: {
                     transition: {
-                      staggerChildren: 0.1,
-                      delayChildren: 0.2,
+                      staggerChildren: reduceMotion ? 0 : 0.1,
+                      delayChildren: reduceMotion ? 0 : 0.2,
                     },
                   },
                   closed: {
                     transition: {
-                      staggerChildren: 0.05,
+                      staggerChildren: reduceMotion ? 0 : 0.05,
                       staggerDirection: -1,
                     },
                   },
@@ -189,21 +210,7 @@ export function NavbarMobileMenu({
                 {navLinks.map((link, index) => {
                   const isActive = isActivePath(activePath, link.targetId);
                   return (
-                    <motion.div
-                      key={link.name}
-                      variants={{
-                        open: {
-                          opacity: 1,
-                          x: 0,
-                          transition: SPRING_SOFT,
-                        },
-                        closed: {
-                          opacity: 0,
-                          x: 50,
-                          transition: { duration: DUR.fast, ease: EASE_OUT },
-                        },
-                      }}
-                    >
+                    <motion.div key={link.name} variants={linkVariants}>
                       <Link
                         className="group relative block"
                         onClick={onClose}
@@ -281,10 +288,10 @@ export function NavbarMobileMenu({
                             <motion.div
                               animate={{ scaleX: 1 }}
                               className="absolute right-0 bottom-0 left-0 h-1 rounded-b-2xl bg-gradient-to-r from-primary via-primary/80 to-primary/40"
-                              initial={{ scaleX: 0 }}
+                              initial={{ scaleX: reduceMotion ? 1 : 0 }}
                               transition={{
                                 duration: DUR.base,
-                                delay: 0.2,
+                                delay: reduceMotion ? 0 : 0.2,
                                 ease: EASE_OUT,
                               }}
                             />
@@ -299,8 +306,12 @@ export function NavbarMobileMenu({
               <motion.div
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-8 border-border/20 border-t pt-6"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ delay: 0.7, duration: DUR.base, ease: EASE_OUT }}
+                initial={{ opacity: 0, y: reduceMotion ? 0 : 10 }}
+                transition={{
+                  delay: reduceMotion ? 0 : 0.7,
+                  duration: DUR.base,
+                  ease: EASE_OUT,
+                }}
               >
                 <Link
                   className="group flex items-center justify-center gap-2 text-muted-foreground text-xs transition-colors duration-200 ease-out hover:text-foreground"

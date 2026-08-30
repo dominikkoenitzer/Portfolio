@@ -24,18 +24,10 @@ export const zh = {
     useSystem: "使用系统语言",
   },
   hero: {
-    greeting: "你好，我是 Dominik Könitzer",
-    roles: [
-      { line1: "软件", line2: "工程师。" },
-      { line1: "全栈", line2: "开发者。" },
-    ] as { line1: string; line2: string }[],
+    greeting: "你好，我是",
+    roles: ["Dominik", "Punds", "DK"] as string[],
     hireMe: "雇用我",
     viewWork: "查看作品",
-    stats: {
-      projects: "项目",
-      yearsCoding: "编程年数",
-      technologies: "技术",
-    },
   },
   about: {
     heading: "关于我",
@@ -44,7 +36,7 @@ export const zh = {
     passionateRole: "软件工程师",
     intro1Before:
       "我是 Dominik Könitzer，一名 18 岁的软件工程师，就读于 WISS Schulen für Wirtschaft Informatik Immobilien，目前处于为期四年的软件工程项目的第",
-    intro1Highlight: "六",
+    intro1Highlight: "七",
     intro1After: "学期。",
     intro2:
       "前两年是课堂学习，后两年是边实习边上课。这样切分的意义在于：没有什么会长期停留在理论上。",

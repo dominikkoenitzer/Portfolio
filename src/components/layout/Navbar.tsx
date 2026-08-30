@@ -1,17 +1,23 @@
-import { motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { NAV_LINKS } from "@/constants";
 import { isActivePath } from "@/lib/active-path";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useHaptic } from "@/hooks/use-haptic";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 import { LanguageToggle } from "./LanguageToggle";
 import { NavbarMobileMenu } from "./NavbarMobileMenu";
-import { ThemeToggle } from "./ThemeToggle";
+
+/** Offset at which the bar takes its condensed glass state. */
+const CONDENSE_AT = 50;
+/** The bar may only hide past this offset; nearer the top it always shows. */
+const HIDE_BELOW = 80;
+/** Movement smaller than this is jitter, not a direction change. */
+const DIRECTION_THRESHOLD = 8;
 
 const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
   "/about": "about",
@@ -25,20 +31,56 @@ const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollingDown, setScrollingDown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [reduceMotion] = useState(prefersReducedMotion);
   const location = useLocation();
   const { language } = useLanguage();
   const t = translations[language];
   const haptic = useHaptic();
-  const scrollDirection = useScrollDirection(8, 100);
   const navLinks = NAV_LINKS.map((link) => ({
     ...link,
     name: t.nav[NAV_KEY_BY_PATH[link.targetId]] ?? link.name,
   }));
 
-  // Hide the bar when scrolling down past the hero, show on scroll-up.
-  // Always visible while the menu is open so the user can find the close button.
-  const navHidden = !mobileMenuOpen && isScrolled && scrollDirection === "down";
+  // Lenis drives the real window scroll, so the window-level scrollY that
+  // useScroll reads stays authoritative with or without smooth scrolling.
+  const { scrollY } = useScroll();
+  // null until the first event: a reload halfway down the page must not read as
+  // one giant downward jump and swallow the bar before the user touches it.
+  const lastScrollY = useRef<number | null>(null);
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    // The drawer locks the body with position:fixed, which reports a scrollY of
+    // 0 and would flip both states. Ignoring it also keeps the last real offset,
+    // so the restore on close reads as no movement at all.
+    if (mobileMenuOpen) {
+      return;
+    }
+
+    setIsScrolled(y > CONDENSE_AT);
+
+    const previous = lastScrollY.current;
+    if (previous === null || y <= HIDE_BELOW) {
+      lastScrollY.current = y;
+      setScrollingDown(false);
+      return;
+    }
+
+    const delta = y - previous;
+    if (Math.abs(delta) < DIRECTION_THRESHOLD) {
+      return;
+    }
+    lastScrollY.current = y;
+    setScrollingDown(delta > 0);
+  });
+
+  // Off-screen while scrolling down past the hero, back the moment the user
+  // scrolls up. Never hidden while the drawer is open: the same button that
+  // closes it lives in this row, so hiding the bar would trap the user.
+  const navHidden = scrollingDown && !mobileMenuOpen && !reduceMotion;
+  // Transform-only condense: no height, padding or filter animates.
+  const isCondensed = isScrolled && !reduceMotion;
 
   const closeMobileMenu = useCallback(() => {
     haptic("light");
@@ -53,50 +95,53 @@ export function Navbar() {
   useBodyScrollLock(mobileMenuOpen);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!mobileMenuOpen) {
-        setIsScrolled(window.scrollY > 50);
-      }
-    };
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && mobileMenuOpen) {
         closeMobileMenu();
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [mobileMenuOpen, closeMobileMenu]);
 
   return (
     <motion.header
-      animate={{ y: navHidden ? -120 : 0 }}
+      animate={{ y: navHidden ? "-100%" : "0%" }}
       className={`fixed top-0 right-0 left-0 z-50 ${
         isScrolled
           ? "scrolled-nav border-border/50 border-b bg-background/90 shadow-primary/5 shadow-xl backdrop-blur-2xl"
           : "bg-transparent"
       } transition-[background-color,border-color,box-shadow] duration-300 ease-out`}
       data-no-callout
-      initial={{ y: -100 }}
+      initial={{ y: reduceMotion ? "0%" : "-100%" }}
       style={{ paddingTop: "var(--safe-top, 0px)" }}
-      transition={{ duration: DUR.base, ease: EASE_OUT }}
+      transition={SPRING_SOFT}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        <div className="flex h-20 items-center justify-between">
-          <div className="flex items-center">
+        {/* The bar keeps its height; only its contents ride a few pixels up, so
+            the condense is a transform and never a layout pass. */}
+        <motion.div
+          animate={{ y: isCondensed ? -3 : 0 }}
+          className="flex h-20 items-center justify-between"
+          transition={SPRING_SOFT}
+        >
+          <motion.div
+            animate={{ scale: isCondensed ? 0.92 : 1 }}
+            className="flex items-center"
+            style={{ transformOrigin: "left center" }}
+            transition={SPRING_SOFT}
+          >
             <Link
               className="group flex items-center font-bold text-xl tracking-tight md:text-2xl"
               to="/"
             >
               <span className="text-foreground">Dominik Könitzer</span>
             </Link>
-          </div>
+          </motion.div>
 
           <nav
             aria-label={t.nav.navigation}
@@ -146,13 +191,11 @@ export function Navbar() {
               );
             })}
             <div className="ml-4 flex items-center gap-1 border-border/30 border-l pl-4">
-              <ThemeToggle />
               <LanguageToggle />
             </div>
           </nav>
 
           <div className="flex items-center gap-2.5 sm:gap-3 md:hidden">
-            <ThemeToggle />
             <LanguageToggle />
             <motion.button
               aria-expanded={mobileMenuOpen}
@@ -200,7 +243,7 @@ export function Navbar() {
               </div>
             </motion.button>
           </div>
-        </div>
+        </motion.div>
       </div>
       <NavbarMobileMenu
         activePath={location.pathname}

@@ -6,43 +6,15 @@
 @tailwind utilities;
 
 @layer base {
-  /* Glass: dark futuristic neon. Deep blue-black glass, electric blue and violet */
-  :root,
-  .glass {
+  /* Bloom: deep violet, sage green and blush pink (from reference art). The
+     site's only palette: the glass theme and the theme toggle were removed on
+     purpose, so these are the root tokens rather than a switchable class. */
+  :root {
     /* The CSS half of the motion vocabulary in `lib/motion.ts`: same curve as
        the `EASE_OUT` token, so a CSS hover and a framer entrance decelerate
        identically. Durations stay literal (200ms feedback, 300ms standard). */
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --radius: 0.75rem;
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
-    --card: 222 44% 9%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 46% 8%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 217 95% 66%;
-    --primary-foreground: 222 47% 7%;
-    --secondary: 222 30% 16%;
-    --secondary-foreground: 210 35% 92%;
-    --muted: 222 26% 15%;
-    --muted-foreground: 215 30% 78%;
-    --accent: 213 60% 24%;
-    --accent-foreground: 197 100% 84%;
-    --border: 216 38% 22%;
-    --input: 216 36% 20%;
-    --ring: 217 95% 66%;
-    --destructive: 0 72% 48%;
-    --destructive-foreground: 0 0% 98%;
-    --theme-gradient: linear-gradient(
-      135deg,
-      hsl(217 96% 62%) 0%,
-      hsl(260 95% 70%) 100%
-    );
-    --theme-shadow-color: 217 95% 58%;
-  }
-
-  /* Bloom: deep violet, sage green and blush pink (from reference art) */
-  .bloom {
     --background: 350 70% 97%;
     --foreground: 265 35% 14%;
     --card: 0 0% 100%;
@@ -71,15 +43,6 @@
     --theme-shadow-color: 265 33% 35%;
   }
 
-  /* Smooth theme transitions */
-  .theme-transitioning * {
-    transition:
-      background-color 0.3s var(--ease-out),
-      color 0.3s var(--ease-out),
-      border-color 0.3s var(--ease-out),
-      box-shadow 0.3s var(--ease-out) !important;
-  }
-
   * {
     @apply border-border;
   }
@@ -95,7 +58,7 @@
     transition: background-color 0.15s ease;
     /* Scrollbar hidden (Firefox). The page scroller is the root element, whose
        reserved scrollbar gutter sits OUTSIDE the content box that fixed
-       `inset-0` background layers (grainient veil, aurora) cover — so the gutter
+       `inset-0` background layer (the grainient veil) covers — so the gutter
        exposed a strip of the bare dark base at the right edge, reading as a
        vertical seam in both themes. Removing the gutter lets the backgrounds
        run flush to the window edge. Scrolling stays fully functional (wheel /
@@ -140,9 +103,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family:
-      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+      "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
+    text-rendering: optimizeLegibility;
     background-color: hsl(var(--background));
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height for mobile */
@@ -183,8 +146,8 @@
   h6 {
     @apply tracking-tight;
     font-family:
-      "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
+      "Zen Maru Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     /* Single source of truth for the default heading weight (the duplicate
        @layer components rule that used to set font-bold has been removed). */
     font-weight: 700;
@@ -223,8 +186,29 @@
   pre,
   blockquote {
     font-family:
-      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-      "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
+      "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
+  }
+
+  /* The element rule above would otherwise pull spans inside a heading back
+     to the body face, so headings with inline spans rendered in two fonts. */
+  h1 span,
+  h2 span,
+  h3 span,
+  h4 span,
+  h5 span,
+  h6 span {
+    font-family: inherit !important;
+  }
+
+  /* Title face for the hero name only (Tailwind `font-title`). Bowlby One SC
+     ships a single weight, so a synthesized bold is pinned off here. */
+  .font-title,
+  .font-title * {
+    font-family:
+      "Bowlby One SC", "Zen Maru Gothic", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif !important;
+    font-weight: 400 !important;
   }
 
   /* Common utility classes */
@@ -324,7 +308,20 @@
 
   /* Enhanced card styles */
   .glass-card {
-    @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-[background-color,border-color,box-shadow] duration-300 ease-out;
+    @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-[background-color,border-color,box-shadow,translate] duration-300 ease-out;
+  }
+
+  /* A small lift to go with the shadow the card already grows on hover. It has
+     to be `translate` rather than `transform`: every `.glass-card` on the site
+     is a framer element with a `y` entrance, and framer writes the finished
+     entrance back as an inline `transform: none` that would out-rank a class
+     rule for good. The independent property composes with that instead of
+     losing to it. `.glass-deep` deliberately gets no lift: the project cards
+     animate their own `whileHover={{ y: -4 }}` spring on the same element
+     (ProjectsSection), and the Services/ServiceExplorer cards are positioned
+     by motion values, so a second source of movement would fight all three. */
+  .glass-card:hover {
+    translate: 0 -2px;
   }
 
   /* Section styles with improved responsive padding */
@@ -678,6 +675,74 @@
     animation: shimmer-sweep 0.6s ease forwards;
   }
 
+  /* Button polish. Three utilities the cva in components/ui/button.tsx opts
+     into per variant, so the palette stays in the variant strings and only the
+     motion lives here. Every one of them animates transform, translate or a
+     colour, never layout, and every duration rides `--ease-out`. */
+
+  /* The sweep is the card shimmer above, scaled to a control: narrower, faster
+     and neutral white rather than primary-tinted, so it reads as light passing
+     over the fill instead of a second glow colour. */
+  @keyframes button-shine-sweep {
+    0% {
+      transform: translateX(-150%) skewX(-20deg);
+    }
+    100% {
+      transform: translateX(150%) skewX(-20deg);
+    }
+  }
+
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 55%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    /* Parked a full width past the left edge, so nothing shows at rest and the
+       animation can restart from the same place on every hover. */
+    transform: translateX(-150%) skewX(-20deg);
+    pointer-events: none;
+  }
+
+  .btn-shine:hover::after {
+    animation: button-shine-sweep 0.6s var(--ease-out) forwards;
+  }
+
+  /* The lift uses the independent `translate` property, not `transform`: the
+     base variant already spends `transform` on `active:scale-[0.98]`, and
+     `translate` composes with it instead of replacing it, so a pressed button
+     scales without dropping back down first. Timed by the button's own
+     transition (200ms), which lists `translate`. */
+  .btn-raise:hover {
+    translate: 0 -1px;
+  }
+
+  /* A trailing icon leans into the direction it points on hover. Scoped to the
+     last child, so a leading icon (the back arrow on the 404, say) stays put,
+     and carried by the text sizes rather than the base, which is what keeps a
+     size="icon" button's lone centred glyph out of it. Call sites that already
+     hand-roll this on the icon itself (Hero, Services, About) win on
+     specificity and keep their own distance. */
+  .btn-icon-nudge > svg:last-child {
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .btn-icon-nudge:hover > svg:last-child {
+    transform: translateX(2px);
+  }
+
   /* Scroll mouse indicator */
   @keyframes scroll-cue {
     0%,
@@ -784,254 +849,6 @@
   *::after {
     cursor: auto !important;
   }
-}
-
-/* Glass theme: the full glassmorphism override system */
-
-/* Aurora orbs: invisible by default, revealed on glass theme */
-.aurora-orb {
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-
-[data-theme="glass"] .aurora-orb {
-  opacity: 1;
-}
-
-/* Subtle noise grain overlay for glass theme */
-[data-theme="glass"] body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -30;
-  opacity: 0.025;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-}
-
-/* Base glass surface override: every .glass-card becomes real glass */
-[data-theme="glass"] .glass-card {
-  background: rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(24px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
-  border-color: rgba(255, 255, 255, 0.075) !important;
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15) !important;
-  transition:
-    background-color 0.3s var(--ease-out),
-    border-color 0.3s var(--ease-out),
-    box-shadow 0.3s var(--ease-out) !important;
-}
-
-[data-theme="glass"] .glass-card:hover {
-  background: rgba(255, 255, 255, 0.065) !important;
-  border-color: hsl(var(--primary) / 0.38) !important;
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.6),
-    0 0 0 1px hsl(var(--primary) / 0.18),
-    0 0 60px hsl(var(--primary) / 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
-}
-
-/* Deep glass override */
-[data-theme="glass"] .glass-deep {
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
-}
-
-[data-theme="glass"] .glass-deep:hover {
-  background: rgba(255, 255, 255, 0.055) !important;
-  border-color: hsl(var(--primary) / 0.42) !important;
-  box-shadow:
-    0 16px 56px rgba(0, 0, 0, 0.6),
-    0 0 0 1px hsl(var(--primary) / 0.22),
-    0 0 80px hsl(var(--primary) / 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Navbar glass effect when scrolled */
-[data-theme="glass"] .scrolled-nav {
-  background: rgba(6, 9, 16, 0.5) !important;
-  backdrop-filter: blur(36px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.04),
-    0 8px 32px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Hero name: multi-color gradient on glass theme */
-[data-theme="glass"] .hero-name-gradient {
-  background-image: linear-gradient(
-    135deg,
-    hsl(210 100% 82%) 0%,
-    hsl(255 100% 78%) 45%,
-    hsl(183 100% 68%) 100%
-  ) !important;
-  background-size: 200% 200% !important;
-}
-
-/* Glass badge: neon glow */
-[data-theme="glass"] .glass-badge {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: hsl(var(--primary) / 0.4) !important;
-  box-shadow:
-    0 0 20px hsl(var(--primary) / 0.25),
-    0 0 48px hsl(var(--primary) / 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Section backgrounds: subtle glass tint */
-[data-theme="glass"] section {
-  position: relative;
-}
-
-/* All secondary-bg elements become glass */
-[data-theme="glass"] .bg-secondary\/50,
-[data-theme="glass"] .bg-secondary\/60,
-[data-theme="glass"] .bg-secondary\/70 {
-  background: rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-}
-
-/* Popover and dropdown glass effect */
-[data-theme="glass"] [class*="bg-background"] {
-  background: hsl(var(--background) / 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-/* Tag pills: glass */
-[data-theme="glass"] .rounded-full.border.border-border\/40,
-[data-theme="glass"] .rounded-full.border.border-border\/50 {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(8px) !important;
-}
-
-/* Primary button: add neon glow */
-[data-theme="glass"] .shadow-\[0_4px_24px_hsl\(var\(--primary\)\/0\.3\)\] {
-  box-shadow:
-    0 4px 24px hsl(var(--primary) / 0.4),
-    0 0 60px hsl(var(--primary) / 0.15) !important;
-}
-
-/* No grid on glass: the square tiling read like a swimming pool over the
-   caustics. Let the water effect carry the look on its own. */
-[data-theme="glass"] .bg-grid-pattern {
-  display: none !important;
-}
-
-/* Progress bars: glowing neon */
-[data-theme="glass"] .h-full.rounded-full {
-  box-shadow: 0 0 8px hsl(var(--primary) / 0.6);
-}
-
-/* Theme toggle dropdown: deep glass */
-[data-theme="glass"] .theme-dropdown-glass {
-  background: rgba(6, 9, 16, 0.85) !important;
-  backdrop-filter: blur(32px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
-  border-color: rgba(255, 255, 255, 0.07) !important;
-}
-
-/* Mobile menu overlay: deep glass */
-[data-theme="glass"] .bg-background\/95.backdrop-blur-xl {
-  background: rgba(6, 9, 16, 0.88) !important;
-}
-
-[data-theme="glass"] .border-l.bg-gradient-to-br.from-background {
-  background: rgba(6, 9, 16, 0.82) !important;
-  backdrop-filter: blur(40px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-  border-left-color: rgba(255, 255, 255, 0.06) !important;
-}
-
-/* Glass theme: the drawer background flips dark, so flip every foreground
-   token inside it to a light palette. Without these overrides the items
-   render dark-on-dark and the menu looks empty. */
-[data-theme="glass"] [data-mobile-scroll] {
-  color: rgba(255, 255, 255, 0.92);
-}
-[data-theme="glass"] [data-mobile-scroll] h1,
-[data-theme="glass"] [data-mobile-scroll] h2,
-[data-theme="glass"] [data-mobile-scroll] h3,
-[data-theme="glass"] [data-mobile-scroll] .text-foreground {
-  color: rgba(255, 255, 255, 0.96) !important;
-}
-[data-theme="glass"] [data-mobile-scroll] .text-muted-foreground,
-[data-theme="glass"] [data-mobile-scroll] .text-foreground\/70,
-[data-theme="glass"] [data-mobile-scroll] .text-muted-foreground\/70 {
-  color: rgba(255, 255, 255, 0.6) !important;
-}
-[data-theme="glass"] [data-mobile-scroll] .text-primary {
-  color: hsl(210 100% 78%) !important;
-}
-[data-theme="glass"] [data-mobile-scroll] .text-primary\/70 {
-  color: hsl(210 100% 78% / 0.75) !important;
-}
-/* Inactive item cards: light glass surface on dark drawer */
-[data-theme="glass"] [data-mobile-scroll] .bg-muted\/30,
-[data-theme="glass"] [data-mobile-scroll] .bg-muted\/50 {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
-/* Number badges */
-[data-theme="glass"] [data-mobile-scroll] .bg-background\/50 {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.75) !important;
-}
-/* Border tokens */
-[data-theme="glass"] [data-mobile-scroll] .border-border\/30,
-[data-theme="glass"] [data-mobile-scroll] .border-border\/40,
-[data-theme="glass"] [data-mobile-scroll] .border-border\/50,
-[data-theme="glass"] [data-mobile-scroll] .border-border\/20 {
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-/* Close button */
-[data-theme="glass"]
-  [data-mobile-scroll]
-  button[aria-label]:not([aria-label=""]) {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.85) !important;
-}
-
-/* Skill icon containers: glass */
-[data-theme="glass"] .bg-primary\/10.text-primary.rounded-lg,
-[data-theme="glass"] .bg-primary\/10.text-primary.rounded-full {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid hsl(var(--primary) / 0.25);
-  box-shadow: 0 0 16px hsl(var(--primary) / 0.15);
-}
-
-/* About info cards */
-[data-theme="glass"] .bg-background\/50.backdrop-blur-sm {
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
-}
-
-/* Muted tint areas */
-[data-theme="glass"] .bg-muted\/20,
-[data-theme="glass"] .bg-muted\/30 {
-  background: rgba(255, 255, 255, 0.02) !important;
-}
-
-/* SectionHeading underline */
-[data-theme="glass"] .section-heading-line {
-  box-shadow: 0 0 12px hsl(var(--primary) / 0.6);
 }
 
 @keyframes fadeIn {
@@ -1171,7 +988,6 @@ body {
     scroll-behavior: auto !important;
   }
 
-  .aurora-orb,
   .animate-blob,
   .animate-float-elegant,
   .animate-parallax-float,
@@ -1179,6 +995,14 @@ body {
   .animate-shimmer,
   .animate-scroll-cue,
   .hero-name-gradient {
+    animation: none !important;
+  }
+
+  /* The button sweep is pure decoration: cancelled outright rather than run at
+     the 0.01ms above, which would flash it across the button in a single
+     frame. With no animation it stays parked off the left edge, clipped by the
+     button's own `overflow: hidden`, so nothing of it is ever visible. */
+  .btn-shine::after {
     animation: none !important;
   }
 }
@@ -1292,11 +1116,3 @@ section h4 {
   }
 }
 
-/* Mobile: drop the fixed full-screen noise-grain overlay. It's an extra
-   composited layer for a ~2.5% texture that's invisible on small screens and
-   only adds GPU/memory cost during scroll. */
-@media (hover: none) and (pointer: coarse) {
-  [data-theme="glass"] body::after {
-    display: none !important;
-  }
-}

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -9,12 +9,13 @@ import {
 } from "@/components/ui/popover";
 import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
+import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
+import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 const EMAIL = SITE_CONFIG.email;
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -75,6 +76,7 @@ export function ContactSection() {
   const { language } = useLanguage();
   const t = translations[language].contact;
   const { toast } = useToast();
+  const reduceMotion = useReducedMotion();
 
   // Arriving from a service card ("Get in touch") pre-selects that service, so
   // the page you land on is already about the thing you clicked.
@@ -113,14 +115,16 @@ export function ContactSection() {
 
   return (
     <section className="section-padding" id="contact">
-      <div className="mx-auto max-w-3xl">
+      {/* Headline, the sentence the visitor finishes, then the address: one
+          cascade, so the page assembles itself in reading order. */}
+      <motion.div
+        className="mx-auto max-w-3xl"
+        {...revealOnScroll(reduceMotion, stagger())}
+      >
         <motion.h1
           className="break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
-          initial={{ opacity: 0, y: 20 }}
           style={{ fontSize: "clamp(2.25rem, 8vw, 4.5rem)" }}
-          transition={{ duration: 0.7, ease: EASE }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={REVEAL}
         >
           {/* hyphens: manual so German only breaks at the soft hyphen (U+00AD)
               the translation places — "zusammen-arbeiten", not the dictionary's
@@ -136,11 +140,8 @@ export function ContactSection() {
             the left marks it as their draft rather than more of the headline. */}
         <motion.p
           className="mt-10 border-primary/35 border-l-2 pl-5 text-muted-foreground leading-snug sm:pl-6"
-          initial={{ opacity: 0, y: 16 }}
           style={{ fontSize: "clamp(1.15rem, 3vw, 1.75rem)" }}
-          transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={REVEAL}
         >
           {t.sentenceLead}{" "}
           <Popover onOpenChange={setOpen} open={open}>
@@ -187,13 +188,7 @@ export function ContactSection() {
         </motion.p>
 
         {/* The address is the button — no card, no wrapper, no icon tile. */}
-        <motion.div
-          className="mt-12 sm:mt-16"
-          initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
+        <motion.div className="mt-12 sm:mt-16" variants={REVEAL}>
           <a
             className="group inline-flex max-w-full items-start gap-2 font-semibold tracking-tight transition-colors duration-200 hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:items-center"
             href={mailtoFor(selected.subject, selected.body)}
@@ -219,7 +214,7 @@ export function ContactSection() {
             </button>
           </p>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

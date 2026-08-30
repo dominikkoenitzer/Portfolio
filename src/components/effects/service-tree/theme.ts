@@ -1,5 +1,3 @@
-import type { Theme } from "@/config/themes";
-
 /**
  * Design tokens for the Services skill-tree sapling.
  *
@@ -95,12 +93,9 @@ export const CATEGORY_ACCENT_TEXT: Record<
   dark: { build: "#5adcff", protect: "#ff86bb", grow: "#6ceaa7" },
 };
 
-/** Whether the site theme paints a dark page behind the plant. */
-export const isDarkTheme = (theme: Theme) => theme === "glass";
-
 /**
- * Map the site palette onto a design theme: light "Bloom" gets the drawn Blue
- * sapling, dark "Glass" gets the luminous Midnight one.
+ * The site has one palette, bloom, which is a light page: it gets the drawn
+ * Blue sapling. Midnight and Violet stay defined as tuned token sets, nothing
+ * selects them.
  */
-export const serviceTreeThemeFor = (theme: Theme): ServiceTreeTheme =>
-  isDarkTheme(theme) ? "Midnight" : "Blue";
+export const SITE_SERVICE_TREE_THEME: ServiceTreeTheme = "Blue";

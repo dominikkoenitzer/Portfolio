@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { AlertCircle, GitCommit, Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -10,10 +10,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SITE_CONFIG } from "@/constants";
-import { fadeInUp } from "@/lib/framer-animations";
+import {
+  fadeInUp,
+  revealOnScroll,
+  revealStagger,
+} from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 
 interface ContributionDay {
@@ -68,6 +72,7 @@ export function GitHubContributions() {
   const localeTag = LOCALE_TAG[language];
   const dfLocale = DATE_FNS_LOCALE[language];
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
+  const reduceMotion = useReducedMotion();
 
   // The ~365-cell calendar wraps every cell in a Radix Tooltip + motion node.
   // That's fine to mount on desktop but blocks the first scroll on a phone,
@@ -147,22 +152,25 @@ export function GitHubContributions() {
     );
   }
 
+  // The loaded card is a sequence: the panel, its count, then the calendar. The
+  // commits block below keeps a trigger of its own, since it sits far enough
+  // down the card to still be under the fold when the card arrives.
   return (
     <motion.div
       className="glass-card w-full rounded-2xl p-3 sm:p-4 md:p-6"
-      {...fadeInUp}
+      {...revealOnScroll(reduceMotion, revealStagger())}
     >
-      <div className="mb-3 sm:mb-4">
+      <motion.div className="mb-3 sm:mb-4" variants={REVEAL}>
         <h2 className="mb-0.5 font-semibold text-foreground text-sm sm:text-base md:text-lg">
           {data?.total?.toLocaleString() || 0} {t.contributionsSuffix}
         </h2>
         <p className="text-muted-foreground text-xs sm:text-sm">
           {t.activityNote}
         </p>
-      </div>
+      </motion.div>
 
       {/* Contribution Calendar Grid */}
-      <div className="mb-4 w-full sm:mb-6">
+      <motion.div className="mb-4 w-full sm:mb-6" variants={REVEAL}>
         <TooltipProvider delayDuration={200}>
           <div className="w-full">
             {/* Month labels — one grid track per week, sharing the grid's columns */}
@@ -296,33 +304,35 @@ export function GitHubContributions() {
             {t.more}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Recent Commits */}
       {data?.recentCommits && data.recentCommits.length > 0 && (
-        <div className="mt-4 border-border/20 border-t pt-4 sm:mt-6 sm:pt-6">
-          <div className="mb-2 flex items-center gap-2 sm:mb-3">
+        // The block is one sequence: its heading, then the commits down the
+        // list. The plain list wrapper is transparent to the cascade, so the
+        // rows are still this parent's children.
+        <motion.div
+          className="mt-4 border-border/20 border-t pt-4 sm:mt-6 sm:pt-6"
+          {...revealOnScroll(reduceMotion, stagger(0.04, 0.045))}
+        >
+          <motion.div
+            className="mb-2 flex items-center gap-2 sm:mb-3"
+            variants={REVEAL}
+          >
             <GitCommit className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
             <h3 className="font-semibold text-foreground text-sm sm:text-base">
               {t.recentActivity}
             </h3>
-          </div>
+          </motion.div>
           <div className="space-y-1 sm:space-y-1.5">
-            {data.recentCommits.map((commit, index) => (
+            {data.recentCommits.map((commit) => (
               <motion.a
                 className="group block rounded-lg border border-transparent px-2 py-1.5 transition-colors duration-200 ease-out hover:border-border/30 hover:bg-muted/60 active:bg-muted/80 sm:px-3 sm:py-2"
                 href={commit.url}
-                initial={{ opacity: 0, y: 10 }}
                 key={commit.sha}
                 rel="noopener noreferrer"
                 target="_blank"
-                transition={{
-                  duration: DUR.base,
-                  delay: index * 0.05,
-                  ease: EASE_OUT,
-                }}
-                viewport={{ once: true }}
-                whileInView={{ opacity: 1, y: 0 }}
+                variants={REVEAL}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
@@ -348,7 +358,7 @@ export function GitHubContributions() {
               </motion.a>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
     </motion.div>
   );
