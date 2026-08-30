@@ -14,7 +14,7 @@ export const SITE_CONFIG = {
   name: "Dominik Könitzer",
   title: "Software Engineer & Web Developer",
   description:
-    "Passionate Software Engineer specializing in modern web development. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien. Expert in React, TypeScript, and full-stack development.",
+    "Software engineer in Switzerland, studying at WISS Schulen für Wirtschaft Informatik Immobilien and building web apps with React, TypeScript and Node.",
   author: "Dominik Könitzer",
   url: "https://dk.punds.ch",
   ogImage: "/og-image.png",

@@ -28,8 +28,6 @@ export const fr = {
     roles: [
       { line1: "Ingénieur", line2: "logiciel." },
       { line1: "Développeur", line2: "Full-Stack." },
-      { line1: "Artisan du", line2: "Clean Code." },
-      { line1: "Architecte", line2: "de systèmes." },
     ] as { line1: string; line2: string }[],
     hireMe: "Engagez-moi",
     viewWork: "Voir le travail",
@@ -41,24 +39,23 @@ export const fr = {
   },
   about: {
     heading: "À propos de moi",
-    subheading:
-      "Apprenez à mieux me connaître et découvrez ce qui anime ma passion pour le développement web.",
-    passionate: "Passionné",
-    passionateRole: "Ingénieur logiciel",
+    subheading: "Ce que j'étudie, et ce que je construis avec.",
+    passionate: "Ingénieur logiciel",
+    passionateRole: "suisse",
     intro1Before:
       "Je suis Dominik Könitzer, ingénieur logiciel de 18 ans à la WISS Schulen für Wirtschaft Informatik Immobilien, actuellement dans mon ",
     intro1Highlight: "sixième",
     intro1After: " semestre d'un programme d'ingénierie logicielle de 4 ans.",
     intro2:
-      "Les deux premières années du programme sont consacrées aux cours, suivies de deux années de stage pratique avec poursuite des études. Tout au long de ce parcours, je développe une base solide à la fois en connaissances théoriques et en expérience pratique.",
-    intro3Before: "J'aime créer des sites web et applications ",
+      "Les deux premières années sont des cours, les deux suivantes un stage en entreprise avec des cours en parallèle. L'intérêt de ce découpage : rien ne reste longtemps théorique.",
+    intro3Before: "J'aime construire des sites et des applications ",
     intro3Word1: "propres",
     intro3Comma1: ", ",
-    intro3Word2: "fonctionnels",
+    intro3Word2: "rapides",
     intro3Comma2: " et ",
-    intro3Word3: "visuellement attrayants",
+    intro3Word3: "agréables à regarder",
     intro3After:
-      " qui apportent une vraie valeur aux utilisateurs. Au-delà des compétences techniques, je valorise l'apprentissage continu, la résolution de problèmes et une communication efficace.",
+      " que les gens ont vraiment envie d'utiliser. Écrire le code n'est que la moitié du travail. L'autre moitié, c'est comprendre le problème assez bien pour expliquer ce que j'en ai fait.",
     exploreSkills: "Découvrir mes compétences",
     readJournal: "Lire mon journal",
     cards: {
@@ -71,7 +68,7 @@ export const fr = {
   skills: {
     heading: "Compétences",
     subheading:
-      "Mon expertise couvre diverses technologies, avec un accent sur des solutions efficaces et élégantes.",
+      "Ce avec quoi je travaille au quotidien, et ce que je continue d'apprendre.",
     categories: {
       frontend: "Frontend",
       professional: "Professionnel",
@@ -90,10 +87,10 @@ export const fr = {
   projects: {
     heading: "Projets",
     subheading:
-      "Une sélection ciblée de produits conçus avec clarté, cohérence et performance.",
+      "Des choses que j'ai construites et mises en ligne, code source compris.",
     disclosureEyebrow: "Avant de faire défiler",
     disclosureBody:
-      "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer — ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
+      "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer, ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
     source: "Source",
     live: "Live",
     download: "Télécharger",
@@ -120,7 +117,7 @@ export const fr = {
     wipEyebrow: "En cours",
     wipTitle: "De nouveaux projets arrivent",
     wipBody:
-      "Je retravaille cette section de fond en comble. De nouveaux projets sont en cours de finition et arriveront bientôt ici — revenez d'ici peu.",
+      "Je refais cette section de fond en comble. Quelques nouveaux projets sont presque terminés et arriveront bientôt ici, revenez d'ici peu.",
     wipCta: "Me contacter",
   },
   projectDetails: {
@@ -134,7 +131,7 @@ export const fr = {
     download: "Télécharger",
     sourceCode: "Code source",
     downloadNote:
-      "Premier lancement : Windows SmartScreen peut s’afficher — choisissez « Informations complémentaires » → « Exécuter quand même », puis approuvez l’invite administrateur UAC (nécessaire pour les hooks d’entrée globaux).",
+      "Premier lancement : Windows SmartScreen peut s’afficher. Choisissez « Informations complémentaires » → « Exécuter quand même », puis approuvez l’invite administrateur UAC (nécessaire pour les hooks d’entrée globaux).",
     moreProjects: "Plus de projets",
     present: "Présent",
     role: "Rôle",
@@ -147,7 +144,7 @@ export const fr = {
     challengeLabel: "Défi",
     solutionLabel: "Solution",
     whatsNext: "Et ensuite",
-    signals: "Ce que cela démontre",
+    signals: "Ce que ça montre",
   },
   services: {
     eyebrow: "Ce que je propose",
@@ -163,7 +160,7 @@ export const fr = {
       protect: { label: "Protéger", desc: "Sécurité & fiabilité" },
       grow: { label: "Développer", desc: "Visibilité & performance" },
     },
-    ctaTitle: "Construisons quelque chose ensemble",
+    ctaTitle: "Racontez-moi",
     ctaEyebrow: "Un projet en tête ?",
     ctaButton: "Prendre contact",
     getInTouch: "Prendre contact",
@@ -176,7 +173,7 @@ export const fr = {
       webDev: {
         title: "Développement web",
         description:
-          "Création de sites web de bout en bout — responsives, rapides et conçus pour convertir.",
+          "Un site complet, du premier croquis au domaine en ligne.",
         features: [
           "Design responsive",
           "Optimisé SEO",
@@ -187,7 +184,7 @@ export const fr = {
       customSoftware: {
         title: "Logiciel sur mesure",
         description:
-          "Logiciels sur mesure conçus précisément selon vos besoins métiers.",
+          "Un logiciel qui épouse votre façon de travailler actuelle.",
         features: [
           "Analyse des besoins",
           "Architecture sur mesure",
@@ -198,7 +195,7 @@ export const fr = {
       serverSetup: {
         title: "Configuration serveur",
         description:
-          "Configuration serveur production-ready avec sécurité et monitoring intégrés.",
+          "Un serveur configuré correctement du premier coup, sécurité et monitoring inclus.",
         features: [
           "Installation",
           "Renforcement sécurité",
@@ -209,7 +206,7 @@ export const fr = {
       security: {
         title: "Consultation en sécurité",
         description:
-          "Trouvez les vulnérabilités avant les attaquants. Audits avec correctifs concrets.",
+          "Trouver les failles avant quelqu'un d'autre. Vous repartez avec un rapport et une liste de corrections.",
         features: [
           "Audit de sécurité",
           "Scan de vulnérabilités",
@@ -220,7 +217,7 @@ export const fr = {
       maintenance: {
         title: "Maintenance de site web",
         description:
-          "Gardez votre site sécurisé, patché et performant chaque mois.",
+          "Correctifs et mises à jour chaque mois, et un œil sur ce qui commence à dériver.",
         features: [
           "Mises à jour de sécurité",
           "Corrections de bugs",
@@ -231,7 +228,7 @@ export const fr = {
       backup: {
         title: "Sauvegarde & restauration",
         description:
-          "Sauvegardes automatisées et restauration testée — la perte de données n'est pas une option.",
+          "Des sauvegardes automatiques, et des restaurations testées pour savoir qu'elles marchent.",
         features: [
           "Sauvegardes automatisées",
           "Stockage cloud",
@@ -242,7 +239,7 @@ export const fr = {
       seo: {
         title: "Optimisation SEO",
         description:
-          "Améliorez le classement organique avec SEO technique, mots-clés et performance.",
+          "SEO technique et temps de chargement, orientés vers les recherches qui comptent pour vous.",
         features: [
           "Recherche de mots-clés",
           "SEO on-page",
@@ -253,7 +250,7 @@ export const fr = {
       cms: {
         title: "Gestion de contenu",
         description:
-          "Mises à jour de contenu continues et maintenance CMS pour garder votre site frais.",
+          "Je garde le contenu à jour pour que le site ne vieillisse pas en silence.",
         features: [
           "Maintenance CMS",
           "Optimisation d'images",
@@ -264,7 +261,7 @@ export const fr = {
       support: {
         title: "Support technique",
         description:
-          "Aide rapide et fiable lorsqu'un problème survient ou qu'une optimisation est nécessaire.",
+          "De l'aide quand quelque chose casse, ou quand il faut simplement que ça aille plus vite.",
         features: [
           "Réponse rapide",
           "Corrections de bugs",
@@ -280,7 +277,7 @@ export const fr = {
         "je suis tombé sur ton travail et je suis assez convaincu que {service} est exactement ce qu'il faut à mon projet.",
       discuss: "Voici ce qui a retenu mon attention :",
       closing:
-        "Ça te dirait un court appel pour passer en revue les détails ? Dis-moi ce qui te convient.\n\n— À bientôt",
+        "Ça te dirait un court appel pour passer en revue les détails ? Dis-moi ce qui te convient.\n\nÀ bientôt",
     },
   },
   contact: {
@@ -296,12 +293,12 @@ export const fr = {
       },
       freelance: {
         label: "une mission freelance",
-        subject: "Mission freelance — [brève description]",
+        subject: "Mission freelance : [brève description]",
         body: "Bonjour Dominik,\n\nj'aimerais travailler avec vous sur [projet].\n\n· Ce dont nous avons besoin : \n· Calendrier approximatif : \n· Budget envisagé : \n· Liens : \n\nCordialement,\n[nom]",
       },
       collab: {
         label: "une collaboration",
-        subject: "Collaboration — [idée]",
+        subject: "Collaboration : [idée]",
         body: "Bonjour Dominik,\n\nje travaille sur [projet] et je me disais que nous pourrions construire quelque chose ensemble.\n\n· L'idée : \n· Ce que j'apporte : \n· Liens : \n\nCordialement,\n[nom]",
       },
       other: {
@@ -314,14 +311,14 @@ export const fr = {
     copyEmail: "Ou copier l'adresse.",
     copied: "Copié.",
     copyFailed:
-      "Copie impossible — l'adresse est dominik.koenitzer@gmail.com",
+      "Copie impossible. L'adresse est dominik.koenitzer@gmail.com",
   },
   donate: {
     eyebrow: "Pourboire",
     headlineLine1: "Si quelque chose",
     headlineLine2: "vous a parlé.",
     intro:
-      "Les pourboires reposent sur la confiance et les petites attentions. Si un projet ici vous a fait gagner du temps, appris quelque chose ou simplement souri — lâchez quelques francs. Aucune pression, juste de la gratitude.",
+      "Les pourboires reposent sur la confiance et les petites attentions. Si un projet ici vous a fait gagner du temps, appris quelque chose ou simplement souri, lâchez quelques francs. Aucune pression, et merci dans tous les cas.",
     pickAmount: "Choisissez un montant",
     currency: "CHF",
     tiers: {
@@ -335,7 +332,7 @@ export const fr = {
     },
     sponsorBiggerLead: "Un projet plus grand en tête ?",
     sponsorBiggerCta: "Écrivez-moi plutôt",
-    paypalNote: "Géré en toute sécurité par PayPal. Merci — vraiment.",
+    paypalNote: "Géré en toute sécurité par PayPal. Merci, sincèrement.",
   },
   github: {
     contributionsSuffix: "contributions sur la dernière année",
@@ -348,7 +345,7 @@ export const fr = {
     contributions: "contributions",
   },
   footer: {
-    tagline: "Développeur web créatif",
+    tagline: "Ingénieur logiciel à Zurich",
     rights: "Tous droits réservés.",
     privacyPolicy: "Politique de confidentialité",
   },
@@ -366,7 +363,7 @@ export const fr = {
         heading: "Collecte de données",
         hostingLabel: "Hébergement & analytics :",
         hostingBody:
-          "Ce site est hébergé par Vercel. Les journaux serveur (adresse IP, type de navigateur, heure d'accès) sont stockés à des fins de sécurité et de fiabilité. Les statistiques de visiteurs sont collectées via Vercel Analytics avec uniquement des données anonymisées — aucun cookie ni identifiant de suivi n'est utilisé.",
+          "Ce site est hébergé par Vercel. Les journaux serveur (adresse IP, type de navigateur, heure d'accès) sont stockés à des fins de sécurité et de fiabilité. Les statistiques de visiteurs sont collectées via Vercel Analytics avec uniquement des données anonymisées. Aucun cookie ni identifiant de suivi n'est utilisé.",
         contactLabel: "Formulaire de contact :",
         contactBody:
           "Si vous me contactez via le formulaire ou par e-mail, je conserve les informations fournies (nom, e-mail, message) uniquement pour traiter votre demande et répondre aux questions de suivi.",
@@ -418,9 +415,9 @@ export const fr = {
     projects: {
       title: "Projets d'ingénierie logicielle",
       description:
-        "Projets logiciels de Dominik Könitzer en React et TypeScript. Déploiements live et code source d'un ingénieur suisse.",
+        "Projets logiciels de Dominik Könitzer, ingénieur suisse. Déploiements en ligne en React et TypeScript, chacun avec son code source.",
       keywords:
-        "portfolio ingénieur logiciel, projets de développement web à fort impact, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
+        "portfolio ingénieur logiciel, projets de développement web, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
     },
     services: {
       title: "Développement web & logiciel",
@@ -439,14 +436,14 @@ export const fr = {
     donate: {
       title: "Faire un don",
       description:
-        "Soutenez les projets logiciels de Dominik Könitzer par un don. Votre contribution finance nouveaux projets, améliorations, hébergement et maintenance.",
+        "Soutenez les projets logiciels de Dominik Könitzer par un petit don. Il couvre l'hébergement et le temps passé à les construire et à les maintenir.",
       keywords:
         "donner à un développeur, soutenir des projets logiciels, soutenir un développeur open source, don PayPal, soutenir Dominik Konitzer",
     },
     privacy: {
       title: "Politique de confidentialité",
       description:
-        "Politique de confidentialité de dk.punds.ch : comment vos données sont collectées, utilisées et protégées. Conforme à la LPD suisse et au RGPD.",
+        "Politique de confidentialité de dk.punds.ch : les données collectées lors de votre visite, leur usage et leur protection, selon la LPD suisse et le RGPD.",
       keywords:
         "politique de confidentialité, protection des données, RGPD, LPD, déclaration de confidentialité, confidentialité des données, confidentialité Suisse",
     },
