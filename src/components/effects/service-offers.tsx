@@ -251,10 +251,11 @@ function CategoryStage({
       {!reduce && (
         <motion.span
           aria-hidden
-          className="-z-10 -left-4 -top-10 pointer-events-none absolute hidden select-none font-bold leading-none sm:block"
+          className="-z-10 -left-4 -top-7 pointer-events-none absolute hidden select-none font-bold leading-none sm:block"
           style={{
             color: rgba(category.accent, 0.09),
-            fontSize: "clamp(6rem, 12vw, 10rem)",
+            // Scaled with the heading it sits behind (24px now, not 36px).
+            fontSize: "clamp(4.5rem, 8vw, 7rem)",
             y: ghostY,
           }}
         >
@@ -265,8 +266,11 @@ function CategoryStage({
       <motion.div {...revealOnScroll(reduce, stagger())}>
         <motion.div className="pb-5" variants={REVEAL}>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {/* Section-heading scale (the Timeline groups use the same), not
+                page-title scale: three 36px headings under a 36px title read
+                as four pages. */}
             <h2
-              className="font-bold text-3xl tracking-tight sm:text-4xl"
+              className="font-bold text-xl sm:text-2xl"
               style={{ textShadow: `0 0 44px ${rgba(category.accent, 0.3)}` }}
             >
               {category.label}
