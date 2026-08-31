@@ -106,7 +106,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     ],
     education: [
       {
-        role: "Computer Scientist EFZ – Application Development",
+        role: "Computer Scientist EFZ - Application Development",
         organization: "WISS",
         organizationUrl: WISS_URL,
         logo: WISS_LOGO,
@@ -212,7 +212,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     ],
     education: [
       {
-        role: "Informatiker EFZ – Applikationsentwicklung",
+        role: "Informatiker EFZ - Applikationsentwicklung",
         organization: "WISS",
         organizationUrl: WISS_URL,
         logo: WISS_LOGO,
@@ -318,7 +318,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     ],
     education: [
       {
-        role: "Informaticien CFC – Développement d'applications",
+        role: "Informaticien CFC - Développement d'applications",
         organization: "WISS",
         organizationUrl: WISS_URL,
         logo: WISS_LOGO,
@@ -424,7 +424,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     ],
     education: [
       {
-        role: "信息技术专家 EFZ – 应用开发",
+        role: "信息技术专家 EFZ - 应用开发",
         organization: "WISS",
         organizationUrl: WISS_URL,
         logo: WISS_LOGO,
