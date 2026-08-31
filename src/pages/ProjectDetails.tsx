@@ -314,7 +314,7 @@ const ProjectDetails = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: EASE }}
               >
-                <p className="eyebrow text-primary/80">{projectTimeline}</p>
+                <p className="eyebrow text-primary">{projectTimeline}</p>
 
                 <h1 className="mt-5 font-bold text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
                   <span className="gradient-text">{project.title}</span>

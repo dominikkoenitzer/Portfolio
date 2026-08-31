@@ -97,7 +97,7 @@ export const CATEGORY_ACCENT_TEXT: Record<
   // own text-strength tokens (primary, blush-deep, sage-deep in index.css),
   // 6.8:1, 4.9:1 and 5.0:1 on the page, and still over 4.5:1 on the tinted
   // chip fill, which is the accent at 7% and near enough to the page.
-  light: { build: "#62477f", protect: "#8e5a64", grow: "#4e7040" },
+  light: { build: "#62477f", protect: "#8b5761", grow: "#4e7040" },
   // On a dark page: the pastel set, which already passes comfortably.
   dark: { build: "#c3b0dc", protect: "#e2b4bc", grow: "#b9d3ad" },
 };

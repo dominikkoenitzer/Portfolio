@@ -369,14 +369,22 @@
   }
 
   /* Section styles with improved responsive padding */
+  /* `w-full` is load-bearing, not decoration. These sections render as flex
+     items of the page wrapper in AnimatedRoutes, and in a flex column
+     `align-self: stretch` does NOT apply when a cross-axis margin is `auto`.
+     Without it, `mx-auto` makes the section a fit-content box that tracks its
+     widest child, so any state change that changes a child width resizes and
+     re-centres the whole section: picking a subject on /contact moved it from
+     598.5px to 707.2px, and an empty search on /projects moved it from 1280px
+     to 896px, sliding the heading and toolbar 192px sideways. */
   .section-padding {
-    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-7xl mx-auto;
+    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-7xl mx-auto w-full;
   }
 
   /* Narrower reading column for long-form/legal pages (Privacy, etc.), shares
      the section-padding rhythm/gutters but caps the measure for readability. */
   .reading-padding {
-    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto;
+    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto w-full;
   }
 
   /* Mono uppercase micro-label (the "eyebrow" above section titles). The one
@@ -1093,7 +1101,10 @@ body {
 .min-h-screen-mobile {
   min-height: 100vh;
   min-height: calc(var(--vh, 1vh) * 100);
-  min-height: 100dvh;
+  /* svh, not dvh: dvh tracks the collapsing mobile URL bar, which resized
+     <main> mid-scroll on the four routes whose content is shorter than the
+     viewport (/, /contact, /donate, 404) and walked the footer up the page. */
+  min-height: 100svh;
 }
 .h-screen-mobile {
   height: 100vh;
