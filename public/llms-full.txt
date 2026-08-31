@@ -146,7 +146,7 @@ Live: https://dk.punds.ch/
 Source: https://github.com/dominikkoenitzer/Portfolio
 Stack: React 19, TypeScript, Vite
 
-This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, prerendered routes for every page, 0 tokens leaked.
+This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 20 prerendered routes, 89 tests.
 
 ### Entropy, February 2026
 Case study: https://dk.punds.ch/projects/entropy
@@ -154,7 +154,7 @@ Live: https://entropy.punds.ch/
 Source: https://github.com/dominikkoenitzer/Entropy
 Stack: Next.js, TypeScript, Web Crypto
 
-A password generator and strength analyzer that runs entirely in the browser. Randomness comes from the Web Crypto API, never Math.random(), and strength is scored with zxcvbn for an honest read rather than a green bar. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random().
+A password generator and strength analyzer that runs entirely in the browser. Randomness comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random().
 
 ### Spectrum, February 2026
 Case study: https://dk.punds.ch/projects/spectrum
@@ -162,7 +162,7 @@ Live: https://spectrum.punds.ch/
 Source: https://github.com/dominikkoenitzer/Spectrum
 Stack: Next.js, TypeScript, Canvas API
 
-A client-side colour toolkit that puts five jobs in one app: pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, and simulate colour blindness. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: contrast and colour-vision-deficiency checks are "usually the tab you forget to open," so Spectrum treats accessibility as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 5 tools in one app, 100% client-side, 0 uploads, 0 backend.
+A client-side colour toolkit that puts seven jobs in one app: pick colours, pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, simulate colour blindness, and work through colour theory. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: contrast and colour-vision-deficiency checks are "usually the tab you forget to open," so Spectrum treats accessibility as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 7 tools in one app, 100% client-side, 0 uploads, 0 backend.
 
 ### Remnants, February 2026
 Case study: https://dk.punds.ch/projects/remnants
@@ -177,7 +177,7 @@ Live: https://time.punds.ch/
 Source: https://github.com/dominikkoenitzer/Time
 Stack: Next.js, TypeScript, WebGL
 
-A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within a hundredth of a second even when the local machine is set wrong. The home page is one raw WebGL scene, and scrolling falls out of the current second into the day, the year, and the Unix epoch. Numbers: 1/100s sync accuracy, 4 time scales, 0 external time APIs, 0 animation libraries.
+A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within hundredths of a second even when the local machine is set wrong. The home page is one raw WebGL scene, and scrolling falls out of the current second into the day, the year, and the Unix epoch. Numbers: 1/100s sync accuracy, 4 time scales, 0 external time APIs, 0 animation libraries.
 
 ### Jester, June 2026
 Case study: https://dk.punds.ch/projects/jester
@@ -191,7 +191,7 @@ Case study: https://dk.punds.ch/projects/flow
 Source and download: https://github.com/dominikkoenitzer/Flow
 Stack: C++17, Win32, GDI+
 
-A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 9 KB binary, 0 dependencies, under 10 ms input latency, 0 telemetry.
+A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It has to run as Administrator, because Windows only lets an elevated process install global input hooks.
 
 ### Punds, June 2026
 Case study: https://dk.punds.ch/projects/punds
@@ -199,7 +199,7 @@ Live: https://punds.ch/
 Source: https://github.com/dominikkoenitzer/Punds
 Stack: React, TypeScript, Vite
 
-A single-page link hub dressed as a glowing cathode-ray terminal: scanlines, screen curvature, glitch and a boot sequence, all hand-written CSS with no UI framework. It points at every project, profile and site he keeps online. Numbers: 1 page, 0 UI frameworks, 0 server, 3 console widgets.
+A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at every project, profile and site he keeps online. Numbers: 3 runtime dependencies, 15 scene modules, 0 UI frameworks, 1 page.
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
@@ -207,7 +207,7 @@ Live: https://senbon.ch/ (journal at https://senbon.ch/journal)
 Source: https://github.com/dominikkoenitzer/Senbon
 Stack: Next.js, React 19, Markdown
 
-A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter. No database, no CMS, no trackers. Next.js App Router and React 19 turn the files into an editorial reading experience with an auto-generated table of contents, reading-time estimates and a command palette. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 trackers, 100% markdown, noindex on purpose.
+A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter. No database, no CMS, no trackers. Next.js App Router and React 19 turn the files into an unhurried reading page. Most of the work since launch has been subtraction: a command palette, full-text search, tag filters, pagination, a table of contents and reading-time estimates were all built and then deliberately deleted. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 third-party trackers, 4 frontmatter keys, 3 CSS layers, noindex on purpose.
 
 ### Oxidize, June 2026
 Case study: https://dk.punds.ch/projects/oxidize
