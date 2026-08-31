@@ -15,9 +15,10 @@ export const de = {
     closeMenu: "Menü schliessen",
     skipToContent: "Zum Inhalt springen",
     goHome: "Zur Startseite",
+    backToTop: "Nach oben",
+    loading: "Wird geladen",
   },
   toggles: {
-    theme: "Theme wechseln",
     themes: "Themes",
     background: "Hintergrund",
     language: "Sprache wechseln",
@@ -323,6 +324,8 @@ export const de = {
     copied: "Kopiert.",
     copyFailed:
       "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
+    eyebrow: "Kontakt",
+    responseTime: "Ich antworte normalerweise innerhalb eines Tages.",
   },
   donate: {
     eyebrow: "Trinkgeld",
@@ -349,7 +352,6 @@ export const de = {
     contributionsSuffix: "Beiträge im letzten Jahr",
     activityNote: "GitHub-Aktivität der letzten 12 Monate",
     recentActivity: "Letzte Aktivität",
-    loadError: "GitHub-Beiträge konnten nicht geladen werden",
     less: "Weniger",
     more: "Mehr",
     contribution: "Beitrag",
@@ -359,6 +361,12 @@ export const de = {
     tagline: "Software Engineer in Zürich",
     rights: "Alle Rechte vorbehalten.",
     privacyPolicy: "Datenschutz",
+    journal: "Journal",
+  },
+  notFound: {
+    title: "Seite nicht gefunden",
+    body: "Die Seite, die du suchst, gibt es nicht oder sie ist umgezogen.",
+    cta: "Zur Startseite",
   },
   privacy: {
     title: "Datenschutzerklärung",
@@ -375,9 +383,9 @@ export const de = {
         hostingLabel: "Hosting & Analytics:",
         hostingBody:
           "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics ausschliesslich anonymisiert erhoben. Cookies oder Tracking-Identifier werden nicht verwendet.",
-        contactLabel: "Kontaktformular:",
+        contactLabel: "E-Mail:",
         contactBody:
-          "Wenn du mich über das Kontaktformular oder per E-Mail kontaktierst, speichere ich die angegebenen Daten (Name, E-Mail, Nachricht) ausschliesslich zur Bearbeitung deiner Anfrage und für Rückfragen.",
+          "Wenn du mir eine E-Mail schreibst, behalte ich nur, was du schickst (deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären.",
       },
       rights: {
         heading: "Deine Rechte",

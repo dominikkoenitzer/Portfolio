@@ -15,9 +15,10 @@ export const fr = {
     closeMenu: "Fermer le menu",
     skipToContent: "Aller au contenu",
     goHome: "Aller à la page d'accueil",
+    backToTop: "Retour en haut",
+    loading: "Chargement",
   },
   toggles: {
-    theme: "Changer de thème",
     themes: "Thèmes",
     background: "Arrière-plan",
     language: "Changer de langue",
@@ -321,6 +322,8 @@ export const fr = {
     copied: "Copié.",
     copyFailed:
       "Copie impossible. L'adresse est dominik.koenitzer@gmail.com",
+    eyebrow: "Contact",
+    responseTime: "Je réponds généralement dans la journée.",
   },
   donate: {
     eyebrow: "Pourboire",
@@ -347,7 +350,6 @@ export const fr = {
     contributionsSuffix: "contributions sur la dernière année",
     activityNote: "Activité GitHub sur les 12 derniers mois",
     recentActivity: "Activité récente",
-    loadError: "Échec du chargement des contributions GitHub",
     less: "Moins",
     more: "Plus",
     contribution: "contribution",
@@ -357,6 +359,12 @@ export const fr = {
     tagline: "Ingénieur logiciel à Zurich",
     rights: "Tous droits réservés.",
     privacyPolicy: "Politique de confidentialité",
+    journal: "Journal",
+  },
+  notFound: {
+    title: "Page introuvable",
+    body: "La page que vous cherchez n'existe pas ou a été déplacée.",
+    cta: "Retour à l'accueil",
   },
   privacy: {
     title: "Politique de confidentialité",
@@ -373,9 +381,9 @@ export const fr = {
         hostingLabel: "Hébergement & analytics :",
         hostingBody:
           "Ce site est hébergé par Vercel. Les journaux serveur (adresse IP, type de navigateur, heure d'accès) sont stockés à des fins de sécurité et de fiabilité. Les statistiques de visiteurs sont collectées via Vercel Analytics avec uniquement des données anonymisées. Aucun cookie ni identifiant de suivi n'est utilisé.",
-        contactLabel: "Formulaire de contact :",
+        contactLabel: "E-mail :",
         contactBody:
-          "Si vous me contactez via le formulaire ou par e-mail, je conserve les informations fournies (nom, e-mail, message) uniquement pour traiter votre demande et répondre aux questions de suivi.",
+          "Si vous m'écrivez par e-mail, je ne conserve que ce que vous envoyez (votre adresse et votre message), uniquement pour vous répondre et traiter vos questions de suivi.",
       },
       rights: {
         heading: "Vos droits",
