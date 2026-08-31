@@ -46,15 +46,17 @@ export function AboutSection() {
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
               {/* LCP element on /about — fetchPriority high + async decode so it
                   paints fast; explicit square dimensions reserve space (no CLS).
-                  &size=480 trims the payload vs the default 460→full-res avatar. */}
+                  Self-hosted copy of the GitHub avatar (public/avatar.jpg, 460px):
+                  no third-party connection on the critical path, and it keeps
+                  rendering when github.com is unreachable. */}
               <img
                 alt="Dominik Könitzer"
                 className="h-full w-full object-cover"
                 decoding="async"
                 fetchPriority="high"
-                height={480}
-                src="https://avatars.githubusercontent.com/u/82450286?v=4&size=480"
-                width={480}
+                height={460}
+                src="/avatar.jpg"
+                width={460}
               />
             </div>
             {/* One full-size frame that slides out from behind the portrait to
