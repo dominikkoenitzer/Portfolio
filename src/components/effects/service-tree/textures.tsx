@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
-import { renderToStaticMarkup } from "react-dom/server";
 import * as THREE from "three";
+import { svgDataUrl } from "@/lib/svg-string";
 
 // ── Procedural textures (module-cached: shared, never disposed) ─────────────
 let glowTexCache: THREE.Texture | null = null;
@@ -69,18 +69,16 @@ export function leafTexture(): THREE.Texture {
 
 // Icon textures depend only on the icon component (white, language-agnostic),
 // so cache them at module scope: a language/theme switch reuses them instead
-// of re-running renderToStaticMarkup + re-uploading to the GPU.
+// of re-serialising the SVG + re-uploading to the GPU.
 const iconTexCache = new Map<string, THREE.Texture>();
 export function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {
   const cached = iconTexCache.get(cacheKey);
   if (cached) return cached;
   // Rasterize at ~the prototype's texture size so the glyph stays crisp when a
   // node is focused (leaf scales 1.34 and the camera flies to radius 7.5).
-  const svg = renderToStaticMarkup(
-    <Icon color="#ffffff" size={256} strokeWidth={1.7} />,
+  const tex = new THREE.TextureLoader().load(
+    svgDataUrl(<Icon color="#ffffff" size={256} strokeWidth={1.7} />),
   );
-  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-  const tex = new THREE.TextureLoader().load(url);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
   iconTexCache.set(cacheKey, tex);

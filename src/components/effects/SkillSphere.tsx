@@ -7,7 +7,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import type { IconType } from "react-icons";
 import {
   SiBun,
@@ -41,6 +40,7 @@ import {
   SiVercel,
 } from "react-icons/si";
 import * as THREE from "three";
+import { svgDataUrl } from "@/lib/svg-string";
 
 /**
  * SkillSphere, a draggable 3D cloud of the tech-stack logos (three.js / r3f).
@@ -95,9 +95,9 @@ const ICONS: { Icon: IconType; color: string }[] = [
 ];
 
 function makeTexture(Icon: IconType, color: string): THREE.Texture {
-  const svg = renderToStaticMarkup(<Icon color={color} size={128} />);
-  const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-  const tex = new THREE.TextureLoader().load(url);
+  const tex = new THREE.TextureLoader().load(
+    svgDataUrl(<Icon color={color} size={128} />),
+  );
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 8;
   return tex;

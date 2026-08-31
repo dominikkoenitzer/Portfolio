@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion, useReducedMotion } from "framer-motion";
 import { GitCommit, Loader2 } from "lucide-react";
@@ -76,7 +80,20 @@ const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   return response.json();
 };
 
+// The calendar is the only consumer of react-query on the site, so the client
+// lives here rather than at the app root; that keeps the library out of the
+// entry chunk and loads it with the About route.
+const queryClient = new QueryClient();
+
 export function GitHubContributions() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ContributionsCalendar />
+    </QueryClientProvider>
+  );
+}
+
+function ContributionsCalendar() {
   const { language } = useLanguage();
   const t = translations[language].github;
   const localeTag = LOCALE_TAG[language];

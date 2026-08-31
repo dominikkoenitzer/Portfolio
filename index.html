@@ -42,30 +42,12 @@
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
 
-    <!-- Performance / Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- Performance / Preconnect. Fonts are self-hosted (see src/main.tsx),
+         so no font origins need warming. -->
     <link rel="dns-prefetch" href="https://github.com">
     <!-- Avatar on /about is the LCP image, so warm the connection early -->
     <link rel="preconnect" href="https://avatars.githubusercontent.com">
     <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
-
-    <!-- Fonts, loaded non-render-blocking so text paints immediately with a
-         system fallback, then swaps in (display=swap) once the webfont arrives -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700;900&family=Bowlby+One+SC&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    >
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700;900&family=Bowlby+One+SC&display=swap"
-      >
-    </noscript>
 
     <!-- Icons and PWA. SVG for modern browsers, favicon.ico as the raster
          fallback that Google's favicon crawler + legacy clients request by convention -->
