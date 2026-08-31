@@ -24,9 +24,20 @@ export const de = {
     language: "Sprache wechseln",
     useSystem: "Systemsprache verwenden",
   },
+  home: {
+    workEyebrow: "Ausgewählte Arbeiten",
+    workHeading: "Ein paar Dinge, die ich gebaut habe",
+    workBody:
+      "Kleine Tools, die ich gebaut habe, weil ich sie haben wollte. Quellcode inklusive.",
+    workCta: "Alle Projekte ansehen",
+  },
   hero: {
     greeting: "Hi, ich bin",
     roles: ["Dominik", "Punds", "DK"] as string[],
+    available: "Offen für Projekte",
+    tagline:
+      "Softwareentwickler in Zürich. Ich baue schnelle, barrierefreie Websites und die Tools dahinter.",
+    scrollCue: "Scrollen",
     hireMe: "Anstellen",
     viewWork: "Arbeiten ansehen",
   },

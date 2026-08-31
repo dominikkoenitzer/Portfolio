@@ -24,9 +24,20 @@ export const fr = {
     language: "Changer de langue",
     useSystem: "Utiliser la langue du système",
   },
+  home: {
+    workEyebrow: "Travaux sélectionnés",
+    workHeading: "Quelques projets que j'ai construits",
+    workBody:
+      "De petits outils que j'ai faits parce que je voulais qu'ils existent. Code source inclus.",
+    workCta: "Voir tous les projets",
+  },
   hero: {
     greeting: "Bonjour, je suis",
     roles: ["Dominik", "Punds", "DK"] as string[],
+    available: "Disponible pour un projet",
+    tagline:
+      "Ingénieur logiciel à Zurich. Je construis des sites rapides et accessibles, et les outils qui vont avec.",
+    scrollCue: "Défiler",
     hireMe: "Engagez-moi",
     viewWork: "Voir le travail",
   },
