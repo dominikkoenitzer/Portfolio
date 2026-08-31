@@ -54,6 +54,22 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // The illustration's own three, on top of the shadcn set (see the
+        // token table in index.css). `blush` is not a Tailwind scale, but
+        // `sage` sits next to Tailwind's `green`/`lime` ones on purpose: a
+        // `bg-lime-400` would be off-palette here, so nothing reaches for it.
+        lilac: "hsl(var(--lilac))",
+        sage: {
+          DEFAULT: "hsl(var(--sage))",
+          bright: "hsl(var(--sage-bright))",
+          deep: "hsl(var(--sage-deep))",
+          foreground: "hsl(var(--sage-foreground))",
+        },
+        blush: {
+          DEFAULT: "hsl(var(--blush))",
+          deep: "hsl(var(--blush-deep))",
+          foreground: "hsl(var(--blush-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -64,9 +80,9 @@ export default {
         sans: ["Zen Kaku Gothic New", ...fontFamily.sans],
         heading: ["Zen Maru Gothic", ...fontFamily.sans],
         display: ["Zen Maru Gothic", ...fontFamily.sans],
-        // The hero name only: a small-caps title face, the one place a
+        // The hero name only: the ExtraBold rounded face, the one place a
         // title-card treatment earns its keep.
-        title: ["Bowlby One SC", ...fontFamily.sans],
+        title: ["M PLUS Rounded 1c", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
