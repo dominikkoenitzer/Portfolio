@@ -31,7 +31,7 @@ const { Resvg } = (() => {
 
 const FONT_DIR = join(tmpdir(), "og-fonts");
 const FONT_FILES = [
-  "bowlbyonesc/BowlbyOneSC-Regular.ttf",
+  "mplusrounded1c/MPLUSRounded1c-ExtraBold.ttf",
   "zenmarugothic/ZenMaruGothic-Medium.ttf",
   "zenmarugothic/ZenMaruGothic-Bold.ttf",
   "zenkakugothicnew/ZenKakuGothicNew-Regular.ttf",
@@ -56,16 +56,20 @@ async function ensureFonts(): Promise<string[]> {
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// The bloom tokens from index.css, resolved to hex: page background, primary
-// violet, foreground, muted foreground, and the two grainient end stops.
-const BG = "#fdf0f2";
-const PRIMARY = "#513569";
-const FOREGROUND = "#221730";
-const MUTED = "#645a72";
-const VIOLET = "#453161";
-const SAGE = "#b6d088";
+// The bloom tokens from index.css, resolved to hex (see the token table
+// there): page, primary violet and its lilac highlight, ink, muted ink, the
+// deep sage the eyebrows use, and the three grainient stops.
+const BG = "#f6f0e6";
+const PRIMARY = "#62477f";
+const LILAC = "#8d74a8";
+const FOREGROUND = "#332a38";
+const MUTED = "#5f6478";
+const SAGE_DEEP = "#4e7040";
+const VIOLET = "#5a4276";
+const SAGE = "#a9c39a";
+const BLUSH = "#e4d3e0";
 
-const TITLE_FONT = "Bowlby One SC";
+const TITLE_FONT = "M PLUS Rounded 1c";
 const SUB_FONT = "Zen Maru Gothic";
 const BODY_FONT = "Zen Kaku Gothic New";
 
@@ -92,8 +96,8 @@ const backdrop = `
   <defs>
     <linearGradient id="wash" x1="0" y1="0" x2="1" y2="0.35">
       <stop offset="0" stop-color="${VIOLET}" stop-opacity="0.30"/>
-      <stop offset="0.48" stop-color="${SAGE}" stop-opacity="0.22"/>
-      <stop offset="1" stop-color="${BG}" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="${SAGE}" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="${BLUSH}" stop-opacity="0.7"/>
     </linearGradient>
     <radialGradient id="glow" cx="18%" cy="30%" r="55%">
       <stop offset="0" stop-color="${PRIMARY}" stop-opacity="0.14"/>
@@ -101,7 +105,7 @@ const backdrop = `
     </radialGradient>
     <linearGradient id="name" x1="0" y1="0" x2="1" y2="0.2">
       <stop offset="0" stop-color="${PRIMARY}"/>
-      <stop offset="0.55" stop-color="${PRIMARY}" stop-opacity="0.72"/>
+      <stop offset="0.55" stop-color="${LILAC}"/>
       <stop offset="1" stop-color="${PRIMARY}"/>
     </linearGradient>
     <filter id="grain" x="0" y="0" width="100%" height="100%">
@@ -115,7 +119,7 @@ const backdrop = `
   <rect width="1200" height="630" filter="url(#grain)"/>`;
 
 const eyebrow = (text: string, y: number) =>
-  `<text x="120" y="${y}" font-family="${BODY_FONT}" font-weight="500" font-size="24" letter-spacing="6" fill="${PRIMARY}" fill-opacity="0.8">${esc(text)}</text>`;
+  `<text x="120" y="${y}" font-family="${BODY_FONT}" font-weight="500" font-size="24" letter-spacing="6" fill="${SAGE_DEEP}">${esc(text)}</text>`;
 
 const footer = (text: string) =>
   `<text x="120" y="552" font-family="${BODY_FONT}" font-weight="400" font-size="24" fill="${MUTED}">${esc(text)}</text>`;
@@ -132,7 +136,7 @@ const card = (title: string, sub: string, path: string) =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
   ${eyebrow("DOMINIK KÖNITZER", 196)}
-  <text x="114" y="330" font-family="${TITLE_FONT}" font-size="104" fill="url(#name)">${esc(title)}</text>
+  <text x="114" y="330" font-family="${TITLE_FONT}" font-weight="800" font-size="104" fill="url(#name)">${esc(title)}</text>
   ${subtitle(sub, 404)}
   ${footer(`dk.punds.ch${path}`)}
 </svg>`;
@@ -142,8 +146,8 @@ const homeCard = () =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
   ${eyebrow("HI, I'M", 168)}
-  <text x="114" y="292" font-family="${TITLE_FONT}" font-size="112" fill="url(#name)">Dominik</text>
-  <text x="114" y="404" font-family="${TITLE_FONT}" font-size="112" fill="url(#name)">Könitzer</text>
+  <text x="114" y="292" font-family="${TITLE_FONT}" font-weight="800" font-size="112" fill="url(#name)">Dominik</text>
+  <text x="114" y="404" font-family="${TITLE_FONT}" font-weight="800" font-size="112" fill="url(#name)">Könitzer</text>
   ${subtitle("Software engineer and web developer in Zürich", 470)}
   ${footer("dk.punds.ch")}
 </svg>`;
