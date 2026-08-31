@@ -142,6 +142,52 @@ function vendorChunk(id: string): string | undefined {
   return undefined;
 }
 
+/**
+ * Preloads the woff2 files that paint the first screen (the hero name's Bowlby
+ * face and the body font's three weights) straight from the HTML. Without this
+ * the browser only learns about them after the stylesheet has arrived and been
+ * parsed, one full round trip later, and on a phone that hop sat right on the
+ * LCP text. Vite hashes the file names, so the tags are injected at build time
+ * from the emitted bundle rather than hand-written in index.html. The
+ * prerender script reuses dist/index.html as its shell, so every route gets
+ * them. Zen Maru Gothic is not preloaded: no heading is on the home page's
+ * first screen, and preloading a font that is not used within seconds earns a
+ * console warning instead of a win.
+ */
+const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
+  /^assets[\\/]bowlby-one-sc-latin-400-normal-[\w-]+\.woff2$/,
+  /^assets[\\/]zen-kaku-gothic-new-latin-(400|500|700)-normal-[\w-]+\.woff2$/,
+];
+
+function preloadFirstScreenFonts(): Plugin {
+  return {
+    name: "preload-first-screen-fonts",
+    apply: "build",
+    transformIndexHtml: {
+      order: "post",
+      handler(_html, ctx) {
+        const files = Object.keys(ctx.bundle ?? {}).filter((file) =>
+          FIRST_SCREEN_FONTS.some((re) => re.test(file)),
+        );
+        return files.map((file) => ({
+          tag: "link",
+          attrs: {
+            rel: "preload",
+            as: "font",
+            type: "font/woff2",
+            href: `/${file.replace(/\\/g, "/")}`,
+            crossorigin: true,
+          },
+          // Appended, not prepended: the charset and viewport metas keep the
+          // top of <head>, and the preload scanner finds these in the same
+          // pass either way.
+          injectTo: "head",
+        }));
+      },
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Empty prefix loads every var (incl. the non-public GITHUB_TOKEN) from
@@ -153,7 +199,7 @@ export default defineConfig(({ mode }) => {
       host: "::",
       port: 1000,
     },
-    plugins: [react(), localGithubApi(env)],
+    plugins: [react(), localGithubApi(env), preloadFirstScreenFonts()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
