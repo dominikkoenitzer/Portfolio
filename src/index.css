@@ -6,41 +6,76 @@
 @tailwind utilities;
 
 @layer base {
-  /* Bloom: deep violet, sage green and blush pink (from reference art). The
-     site's only palette: the glass theme and the theme toggle were removed on
-     purpose, so these are the root tokens rather than a switchable class. */
+  /* Bloom: the site's only palette, taken from the owner's Reze reference
+     illustrations and kept deliberately muted: the dusty, hazy version of the
+     colours rather than the saturated one, because the page is meant to be
+     easy to sit in front of. (The glass theme and the theme toggle were
+     removed on purpose, so these are the root tokens, not a switchable class.)
+
+       page        shirt / paper    #f6f0e6   warm cream, no glare
+       ink         hair             #332a38   soft plum-black, never pure black
+       primary     backdrop violet  #62477f   dusty, low saturation
+       lilac       backdrop light   #8d74a8   gradient stops only
+       sage        eyes             #97b78a   the one accent: CTAs, eyebrows,
+                                              selection, the cursor halo
+       blush       cheeks / floor   #c9a0a8   warmth; #ece2ea for chip surfaces
+       slate       choker / shorts  #5f6478   secondary text, the one cool note
+
+     Violet carries text and structure, sage is reserved for what asks to be
+     looked at, blush keeps the page warm. The `-deep` variants are the same
+     hues pulled down to AA text contrast on the page (sage #4e7040 5.0:1,
+     blush #8e5a64 4.9:1); the raw sage is a fill colour and only ever carries
+     the ink foreground (6.2:1). Every pair was checked at 4.5:1 for text and
+     3:1 for the hero's lilac (display size only). */
   :root {
     /* The CSS half of the motion vocabulary in `lib/motion.ts`: same curve as
        the `EASE_OUT` token, so a CSS hover and a framer entrance decelerate
        identically. Durations stay literal (200ms feedback, 300ms standard). */
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --radius: 0.75rem;
-    --background: 350 70% 97%;
-    --foreground: 265 35% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 265 35% 14%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 265 35% 14%;
-    --primary: 265 33% 31%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 82 38% 90%;
-    --secondary-foreground: 265 30% 24%;
-    --muted: 90 25% 93%;
-    --muted-foreground: 265 12% 40%;
-    --accent: 82 44% 84%;
-    --accent-foreground: 100 45% 18%;
-    --border: 300 20% 89%;
-    --input: 300 20% 89%;
-    --ring: 265 42% 46%;
-    --destructive: 0 75% 50%;
+    /* A touch rounder than shadcn's default: the whole type set is rounded
+       now, and square-ish corners next to it read as a different site. */
+    --radius: 0.875rem;
+    --background: 37 47% 93%;
+    --foreground: 279 14% 19%;
+    --card: 36 63% 97%;
+    --card-foreground: 279 14% 19%;
+    --popover: 36 63% 97%;
+    --popover-foreground: 279 14% 19%;
+    --primary: 267 28% 39%;
+    /* Cream rather than white on a violet fill: white glares on this page. */
+    --primary-foreground: 37 47% 93%;
+    --lilac: 269 23% 56%;
+    --secondary: 312 21% 91%;
+    --secondary-foreground: 269 23% 31%;
+    --muted: 16 26% 92%;
+    --muted-foreground: 228 12% 42%;
+    /* Accent is the soft sage tint outline/ghost controls take on hover: the
+       eye colour at surface strength, with its deep variant for the label. */
+    --accent: 80 32% 89%;
+    --accent-foreground: 103 27% 35%;
+    --sage: 103 24% 63%;
+    --sage-bright: 102 26% 68%;
+    --sage-deep: 103 27% 35%;
+    --sage-foreground: 279 14% 19%;
+    --blush: 348 28% 71%;
+    --blush-deep: 348 22% 45%;
+    --blush-foreground: 279 14% 19%;
+    --border: 324 15% 87%;
+    --input: 324 15% 87%;
+    --ring: 267 28% 39%;
+    /* Errors stay red, but a dusty rose-red rather than a stock one. */
+    --destructive: 353 42% 52%;
     --destructive-foreground: 0 0% 100%;
+    /* Violet → lilac → sage → blush: the illustration as a sweep, used for the
+       decorative washes and hairlines on the project pages. */
     --theme-gradient: linear-gradient(
       135deg,
-      hsl(265 40% 42%) 0%,
-      hsl(330 65% 72%) 50%,
-      hsl(82 45% 62%) 100%
+      hsl(267 28% 39%) 0%,
+      hsl(269 23% 56%) 38%,
+      hsl(103 24% 63%) 72%,
+      hsl(312 21% 91%) 100%
     );
-    --theme-shadow-color: 265 33% 35%;
+    --theme-shadow-color: 267 28% 39%;
   }
 
   * {
@@ -208,14 +243,16 @@
     font-family: inherit !important;
   }
 
-  /* Title face for the hero name only (Tailwind `font-title`). Bowlby One SC
-     ships a single weight, so a synthesized bold is pinned off here. */
+  /* Title face for the hero name only (Tailwind `font-title`). M PLUS Rounded
+     1c at its ExtraBold cut: the third rounded Japanese face next to the two
+     Zen ones, so the name is heavy without turning into a poster font. Only
+     the 800 subset is loaded, so the weight is pinned to it here. */
   .font-title,
   .font-title * {
     font-family:
-      "Bowlby One SC", "Zen Maru Gothic", -apple-system, BlinkMacSystemFont,
+      "M PLUS Rounded 1c", "Zen Maru Gothic", -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif !important;
-    font-weight: 400 !important;
+    font-weight: 800 !important;
   }
 
   /* Common utility classes */
@@ -342,11 +379,11 @@
     @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto;
   }
 
-  /* Mono uppercase micro-label (the "eyebrow" above section titles). */
-  /* Full muted-foreground, not /70: at 10px this is body text to WCAG, and
-     the faded version measured 3.09:1 on the page; this one is 5.9:1. */
+  /* Mono uppercase micro-label (the "eyebrow" above section titles). The one
+     place the eye colour carries words: deep sage, which is the same hue at
+     5.0:1 on the page (at 10px this is body text to WCAG, so no /70 fade). */
   .eyebrow {
-    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground;
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-sage-deep;
   }
 
   /* Text styles */
@@ -357,7 +394,7 @@
     background-image: linear-gradient(
       to right,
       hsl(var(--primary)),
-      hsla(var(--primary) / 0.8)
+      hsl(var(--lilac))
     );
     /* Reserve descender room: see .hero-name-gradient comment for the why. */
     padding-bottom: 0.08em;
@@ -595,17 +632,20 @@
     outline-offset: 2px;
   }
 
+  /* Selected text sits in the sage with the ink on top (6.2:1 at full
+     strength; the tint over cream is lighter still). */
   ::selection {
-    background-color: hsl(var(--primary) / 0.15);
-    color: hsl(var(--primary));
+    background-color: hsl(var(--sage) / 0.55);
+    color: hsl(var(--foreground));
   }
 
-  /* Hero gradient text */
+  /* Hero gradient text: the backdrop violet to its lighter patches and back,
+     so the name has some air in it rather than being one flat block. */
   .hero-name-gradient {
     background-image: linear-gradient(
       120deg,
       hsl(var(--primary)) 0%,
-      hsl(var(--primary) / 0.65) 50%,
+      hsl(var(--lilac)) 50%,
       hsl(var(--primary)) 100%
     );
     background-clip: text;
@@ -810,7 +850,7 @@
     background-image: linear-gradient(
       to right,
       hsl(var(--primary)),
-      hsla(var(--primary) / 0.8)
+      hsl(var(--lilac))
     );
     padding-bottom: 0.08em;
     line-height: 1.05;
@@ -823,7 +863,7 @@
     background-image: linear-gradient(
       to right,
       hsl(var(--primary)),
-      hsla(var(--primary) / 0.8)
+      hsl(var(--lilac))
     );
     padding-bottom: 0.08em;
     line-height: 1.05;

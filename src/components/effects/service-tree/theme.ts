@@ -15,7 +15,7 @@
 
 export type Group3 = "build" | "protect" | "grow";
 
-export type ServiceTreeTheme = "Blue" | "Violet" | "Midnight";
+export type ServiceTreeTheme = "Bloom" | "Violet" | "Midnight";
 
 export interface ServiceTreePalette {
   /**
@@ -40,15 +40,20 @@ export interface ServiceTreePalette {
 
 export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
   {
-    // Bloom, a light page. Saturated mid-tones that hold against near-white.
-    Blue: {
+    // Bloom, the light page (see the token table in index.css). The three
+    // branches wear the illustration's three colours, each a dusty mid-tone
+    // that still holds against the cream page: build is the violet backdrop,
+    // protect the blush of her cheeks, grow the sage of her eyes. Core and
+    // halo are the primary violet and its lilac; the trunk is the deep sage
+    // the eyebrows use.
+    Bloom: {
       onLight: true,
-      fog: 0xfdf0f2,
-      core: 0x1e4fd8,
-      halo: 0x8fb4ff,
-      particle: 0x7089c4,
-      trunk: 0x1f9e7a,
-      accent: { build: 0x0e7490, protect: 0xbe185d, grow: 0x047857 },
+      fog: 0xf6f0e6,
+      core: 0x62477f,
+      halo: 0xb9a6cc,
+      particle: 0x8d74a8,
+      trunk: 0x4e7040,
+      accent: { build: 0x7358a0, protect: 0xb06a7a, grow: 0x7aa36a },
     },
     Violet: {
       onLight: false,
@@ -73,31 +78,33 @@ export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
 
 /** Category accents as CSS hex: decorative use (glows, washes, icon tiles). */
 export const CATEGORY_ACCENT_HEX: Record<Group3, string> = {
-  build: "#36d0ff",
-  protect: "#ff5fa2",
-  grow: "#46e08f",
+  build: "#8d74a8",
+  protect: "#c9a0a8",
+  grow: "#97b78a",
 };
 
 /**
- * The same accents at text contrast. The decorative set above is tuned to glow
- * on dark and is unreadable as small text on a light background, cyan #36d0ff
- * on #fdf0f2 is roughly 1.5:1. Use these wherever an accent carries words.
+ * The same accents at text contrast. The decorative set above is tuned for
+ * glows and tints and is unreadable as small text on the light bloom page
+ * (the sage #97b78a on #f6f0e6 is about 2:1). Use these wherever an accent
+ * carries words.
  */
 export const CATEGORY_ACCENT_TEXT: Record<
   "light" | "dark",
   Record<Group3, string>
 > = {
-  // On a light page: darkened, still recognisably the same hue. Build sits
-  // one step darker than the tree's 0x0e7490 because as 12px chip text on
-  // the tinted chip fill that value measured 4.45:1; this one is 4.9:1.
-  light: { build: "#0c6d88", protect: "#be185d", grow: "#047857" },
-  // On a dark page: the decorative accents already pass comfortably.
-  dark: { build: "#5adcff", protect: "#ff86bb", grow: "#6ceaa7" },
+  // On a light page: the same hues pulled down to AA. These are the site's
+  // own text-strength tokens (primary, blush-deep, sage-deep in index.css),
+  // 6.8:1, 4.9:1 and 5.0:1 on the page, and still over 4.5:1 on the tinted
+  // chip fill, which is the accent at 7% and near enough to the page.
+  light: { build: "#62477f", protect: "#8e5a64", grow: "#4e7040" },
+  // On a dark page: the pastel set, which already passes comfortably.
+  dark: { build: "#c3b0dc", protect: "#e2b4bc", grow: "#b9d3ad" },
 };
 
 /**
  * The site has one palette, bloom, which is a light page: it gets the drawn
- * Blue sapling. Midnight and Violet stay defined as tuned token sets, nothing
+ * Bloom sapling. Midnight and Violet stay defined as tuned token sets, nothing
  * selects them.
  */
-export const SITE_SERVICE_TREE_THEME: ServiceTreeTheme = "Blue";
+export const SITE_SERVICE_TREE_THEME: ServiceTreeTheme = "Bloom";
