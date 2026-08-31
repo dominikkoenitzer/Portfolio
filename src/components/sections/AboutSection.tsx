@@ -36,7 +36,7 @@ export function AboutSection() {
     <section className="section-padding" id="about">
       <SectionHeading subtitle={t.subheading} title={t.heading} />
 
-      <div className="grid items-center gap-8 md:grid-cols-12 md:gap-10">
+      <div className="grid gap-8 md:grid-cols-12 md:items-start md:gap-10">
         <motion.div className="md:col-span-5 lg:col-span-5" {...avatarReveal}>
           <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
@@ -53,17 +53,16 @@ export function AboutSection() {
                 width={480}
               />
             </div>
+            {/* One full-size frame that slides out from behind the portrait to
+                its offset. Two loose corner squares used to sit here; at 96px
+                against a 348px portrait they read as tiles that failed to
+                render rather than as a frame. */}
             <motion.div
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              className="-bottom-4 -right-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10 bg-primary/5 backdrop-blur-sm"
-              initial={{ opacity: 0, x: isMobile ? 0 : 20, y: 20 }}
-              transition={{ duration: DUR.slow, delay: 0.2, ease: EASE_OUT }}
-            />
-            <motion.div
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              className="-top-4 -left-4 -z-10 absolute h-24 w-24 rounded-xl border border-primary/10"
-              initial={{ opacity: 0, x: isMobile ? 0 : -20, y: -20 }}
-              transition={{ duration: DUR.slow, delay: 0.3, ease: EASE_OUT }}
+              animate={{ opacity: 1, x: 14, y: 14 }}
+              aria-hidden="true"
+              className="-z-10 absolute inset-0 rounded-2xl border border-primary/10"
+              initial={{ opacity: 0, x: 0, y: 0 }}
+              transition={{ duration: DUR.slow, delay: 0.25, ease: EASE_OUT }}
             />
           </div>
 
@@ -207,8 +206,9 @@ export function AboutSection() {
         </motion.div>
       </div>
 
-      {/* GitHub Contributions */}
-      <motion.div className="mt-12 md:mt-16" {...revealOnScroll(reduceMotion)}>
+      {/* GitHub Contributions. The gap above lives on the card itself, so an
+          endpoint failure (the widget renders nothing) leaves no empty band. */}
+      <motion.div {...revealOnScroll(reduceMotion)}>
         <GitHubContributions />
       </motion.div>
     </section>
