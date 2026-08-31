@@ -9,8 +9,8 @@ import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { LanguageProvider } from "@/lib/language-provider";
 
 // Pulls in the ~70KB ogl lib, so it stays lazy and off the critical path.
-const GrainientBackground = lazy(
-  () => import("@/components/backgrounds/GrainientBackground"),
+const AuroraBackground = lazy(
+  () => import("@/components/backgrounds/AuroraBackground"),
 );
 
 interface PageLayoutProps {
@@ -61,7 +61,7 @@ export function PageLayout({ children }: PageLayoutProps) {
       <SkipLink />
       {showVeil && (
         <Suspense fallback={null}>
-          <GrainientBackground />
+          <AuroraBackground />
         </Suspense>
       )}
       <CustomCursor />

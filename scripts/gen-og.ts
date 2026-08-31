@@ -58,7 +58,7 @@ const esc = (s: string) =>
 
 // The bloom tokens from index.css, resolved to hex (see the token table
 // there): page, primary violet and its lilac highlight, ink, muted ink, the
-// deep sage the eyebrows use, and the three grainient stops.
+// deep sage the eyebrows use, and the three stops of the card wash.
 const BG = "#f6f0e6";
 const PRIMARY = "#62477f";
 const LILAC = "#8d74a8";
