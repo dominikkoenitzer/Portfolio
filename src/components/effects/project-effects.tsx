@@ -502,6 +502,7 @@ export function Lightbox({
               <img
                 alt=""
                 className="h-full w-full object-cover object-top"
+                decoding="async"
                 loading="lazy"
                 src={src}
               />

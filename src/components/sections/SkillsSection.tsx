@@ -154,7 +154,9 @@ function CategoryCard({
         >
           {icon}
         </span>
-        <h2 className="font-semibold text-base sm:text-lg">{title}</h2>
+        {/* Same icon-tile + title pattern as the Timeline group headers, one
+            step down the scale: bold title, 36px tile, 18px glyph, gap-3. */}
+        <h2 className="font-bold text-base sm:text-lg">{title}</h2>
         <span className="ml-auto font-mono text-muted-foreground/50 text-xs tabular-nums">
           {count}
         </span>
@@ -187,7 +189,11 @@ export function SkillsSection() {
     <section className="section-padding relative overflow-hidden" id="skills">
       <div className="-z-10 absolute inset-0 bg-gradient-to-b from-transparent via-muted/10 to-transparent" />
 
-      <SectionHeading subtitle={t.subheading} title={t.heading} />
+      <SectionHeading
+        eyebrow={t.eyebrow}
+        subtitle={t.subheading}
+        title={t.heading}
+      />
 
       {showSphere ? (
         <Suspense fallback={null}>

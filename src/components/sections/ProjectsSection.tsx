@@ -192,7 +192,11 @@ export function ProjectsSection() {
 
   return (
     <section className="section-padding" id="projects">
-      <SectionHeading subtitle={t.subheading} title={t.heading} />
+      <SectionHeading
+        eyebrow={t.eyebrow}
+        subtitle={t.subheading}
+        title={t.heading}
+      />
 
       {projects.length === 0 ? (
         // The catalog is being reworked: show a clean placeholder instead of an
@@ -390,6 +394,7 @@ export function ProjectsSection() {
                               <img
                                 alt={`${project.title} screenshot`}
                                 className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                                decoding="async"
                                 loading="lazy"
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
@@ -405,6 +410,7 @@ export function ProjectsSection() {
                               <img
                                 alt={`${project.title} logo`}
                                 className="h-20 w-20 object-contain drop-shadow-xl transition-transform duration-300 ease-out group-hover:scale-105 sm:h-24 sm:w-24"
+                                decoding="async"
                                 loading="lazy"
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
