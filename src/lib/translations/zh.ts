@@ -15,9 +15,10 @@ export const zh = {
     closeMenu: "关闭菜单",
     skipToContent: "跳到主要内容",
     goHome: "前往首页",
+    backToTop: "回到顶部",
+    loading: "加载中",
   },
   toggles: {
-    theme: "切换主题",
     themes: "主题",
     background: "背景",
     language: "切换语言",
@@ -262,6 +263,8 @@ export const zh = {
     copyEmail: "或复制地址。",
     copied: "已复制。",
     copyFailed: "复制失败，地址为 dominik.koenitzer@gmail.com",
+    eyebrow: "联系",
+    responseTime: "我通常会在一天内回复。",
   },
   donate: {
     eyebrow: "打赏",
@@ -288,7 +291,6 @@ export const zh = {
     contributionsSuffix: "次贡献（过去一年）",
     activityNote: "过去 12 个月的 GitHub 活动",
     recentActivity: "近期活动",
-    loadError: "加载 GitHub 贡献失败",
     less: "更少",
     more: "更多",
     contribution: "次贡献",
@@ -298,6 +300,12 @@ export const zh = {
     tagline: "苏黎世的软件工程师",
     rights: "保留所有权利。",
     privacyPolicy: "隐私政策",
+    journal: "日志",
+  },
+  notFound: {
+    title: "页面未找到",
+    body: "你要找的页面不存在，或者已经移动了。",
+    cta: "返回首页",
   },
   privacy: {
     title: "隐私政策",
@@ -314,9 +322,9 @@ export const zh = {
         hostingLabel: "托管与统计：",
         hostingBody:
           "本站由 Vercel 托管。服务器日志（IP 地址、浏览器类型、访问时间）出于安全与可靠性目的而保存。访客统计通过 Vercel Analytics 仅以匿名形式收集，不使用任何 Cookie 或追踪标识符。",
-        contactLabel: "联系表单：",
+        contactLabel: "邮件：",
         contactBody:
-          "如果您通过联系表单或邮件与我联系，我仅会保存您提供的信息（姓名、邮箱、留言）以处理您的请求并回复后续问题。",
+          "如果您给我发邮件，我只保留您发来的内容（您的邮箱地址和留言），仅用于回复您以及处理后续问题。",
       },
       rights: {
         heading: "您的权利",

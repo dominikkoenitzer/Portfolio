@@ -15,9 +15,10 @@ export const en = {
     closeMenu: "Close menu",
     skipToContent: "Skip to content",
     goHome: "Go to home page",
+    backToTop: "Back to top",
+    loading: "Loading",
   },
   toggles: {
-    theme: "Toggle theme",
     themes: "Themes",
     background: "Background",
     language: "Toggle language",
@@ -319,6 +320,8 @@ export const en = {
     copyEmail: "Or copy the address.",
     copied: "Copied.",
     copyFailed: "Couldn't copy. The address is dominik.koenitzer@gmail.com",
+    eyebrow: "Contact",
+    responseTime: "I usually reply within a day.",
   },
   donate: {
     eyebrow: "Tip jar",
@@ -345,7 +348,6 @@ export const en = {
     contributionsSuffix: "contributions in the last year",
     activityNote: "GitHub activity over the past 12 months",
     recentActivity: "Recent activity",
-    loadError: "Failed to load GitHub contributions",
     less: "Less",
     more: "More",
     contribution: "contribution",
@@ -355,6 +357,12 @@ export const en = {
     tagline: "Software engineer in Zürich",
     rights: "All rights reserved.",
     privacyPolicy: "Privacy Policy",
+    journal: "Journal",
+  },
+  notFound: {
+    title: "Page not found",
+    body: "The page you’re looking for doesn’t exist or may have moved.",
+    cta: "Back home",
   },
   privacy: {
     title: "Privacy Policy",
@@ -371,9 +379,9 @@ export const en = {
         hostingLabel: "Hosting & Analytics:",
         hostingBody:
           "This site is hosted by Vercel. Server logs (IP address, browser type, access time) are stored for security and reliability. Visitor statistics are collected via Vercel Analytics with anonymized data only. No cookies or tracking identifiers are used.",
-        contactLabel: "Contact Form:",
+        contactLabel: "Email:",
         contactBody:
-          "If you contact me via the contact form or email, I store your provided information (name, email, message) solely to process your enquiry and respond to follow-up questions.",
+          "If you email me, I keep what you send (your address and your message) only to answer you and any follow-up questions.",
       },
       rights: {
         heading: "Your Rights",

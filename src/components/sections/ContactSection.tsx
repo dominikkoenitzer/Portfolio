@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
@@ -114,13 +114,22 @@ export function ContactSection() {
   };
 
   return (
-    <section className="section-padding" id="contact">
+    <section
+      className="section-padding flex min-h-[60vh] flex-col justify-center"
+      id="contact"
+    >
       {/* Headline, the sentence the visitor finishes, then the address: one
-          cascade, so the page assembles itself in reading order. */}
+          cascade, so the page assembles itself in reading order. The block is
+          centred in the viewport because it is the whole page: top-aligned, it
+          left a screen of dead space under the address. */}
       <motion.div
-        className="mx-auto max-w-3xl"
+        className="mx-auto w-full max-w-3xl"
         {...revealOnScroll(reduceMotion, stagger())}
       >
+        <motion.p className="eyebrow mb-5" variants={REVEAL}>
+          {t.eyebrow}
+        </motion.p>
+
         <motion.h1
           className="break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
           style={{ fontSize: "clamp(2.25rem, 8vw, 4.5rem)" }}
@@ -148,25 +157,27 @@ export function ContactSection() {
             <PopoverTrigger asChild>
               <button
                 aria-label={t.changeSubject}
-                className="group inline-flex items-baseline gap-1.5 rounded-sm font-medium text-foreground underline decoration-primary/50 decoration-dashed underline-offset-[7px] transition-colors hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                className="group/intent inline-flex items-baseline gap-1.5 rounded-sm font-medium text-foreground underline decoration-primary/50 decoration-dashed underline-offset-[7px] transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                 type="button"
               >
                 {selected.label}
+                {/* The chevron leans down under the pointer and flips once the
+                    list is open, so the control answers before it is used. */}
                 <ChevronDown
                   aria-hidden
-                  className="h-[0.6em] w-[0.6em] shrink-0 self-center text-primary/70 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                  className="h-[0.6em] w-[0.6em] shrink-0 self-center text-primary/70 transition-transform duration-200 ease-out group-hover/intent:translate-y-[0.08em] group-data-[state=open]:rotate-180"
                 />
               </button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-64 p-2">
-              <div className="grid gap-1">
+            <PopoverContent align="start" className="w-72 p-1.5">
+              <div className="grid gap-0.5">
                 {options.map(({ key, label }) => {
                   const isActive = key === intent;
                   return (
                     <button
                       aria-pressed={isActive}
                       className={cn(
-                        "rounded-lg px-2.5 py-2 text-left text-sm transition-colors",
+                        "flex min-h-[44px] items-center justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors duration-200 ease-out",
                         isActive
                           ? "bg-primary/5 font-medium text-foreground"
                           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -178,7 +189,10 @@ export function ContactSection() {
                       }}
                       type="button"
                     >
-                      {label}
+                      <span className="min-w-0">{label}</span>
+                      {isActive ? (
+                        <Check aria-hidden className="h-4 w-4 shrink-0" />
+                      ) : null}
                     </button>
                   );
                 })}
@@ -190,28 +204,37 @@ export function ContactSection() {
         {/* The address is the button — no card, no wrapper, no icon tile. */}
         <motion.div className="mt-12 sm:mt-16" variants={REVEAL}>
           <a
-            className="group inline-flex max-w-full items-start gap-2 font-semibold tracking-tight transition-colors duration-200 hover:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:items-center"
+            className="group inline-flex max-w-full items-start gap-2 font-semibold tracking-tight transition-colors duration-200 ease-out hover:text-primary active:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:items-center"
             href={mailtoFor(selected.subject, selected.body)}
             style={{ fontSize: "clamp(1.25rem, 4.5vw, 2.25rem)" }}
           >
-            <span className="min-w-0 break-all">{EMAIL}</span>
+            {/* The site's `.link-hover` wipe, hand-rolled on the text span so
+                the whole link (arrow included) drives it: the biggest target on
+                the page now answers the pointer with a rule, not just a tint. */}
+            <span className="relative min-w-0 break-all after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-200 after:ease-out after:content-[''] group-hover:after:origin-bottom-left group-hover:after:scale-x-100">
+              {EMAIL}
+            </span>
             <ArrowUpRight
               aria-hidden
-              className="mt-[0.35em] h-[0.55em] w-[0.55em] shrink-0 text-primary transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1 sm:mt-0"
+              className="mt-[0.35em] h-[0.55em] w-[0.55em] shrink-0 text-primary transition-transform duration-200 ease-out group-hover:-translate-y-1 group-hover:translate-x-1 sm:mt-0"
             />
           </a>
 
-          {/* One quiet line. mailto: is a dead end for anyone on webmail without
-              a registered handler, so the copy fallback sits right beside it. */}
-          <p className="mt-4 text-muted-foreground text-sm">
+          {/* Two quiet lines. mailto: is a dead end for anyone on webmail
+              without a registered handler, so the copy fallback sits right
+              beside it, and what happens next sits under both. */}
+          <p className="mt-5 text-muted-foreground text-sm leading-relaxed">
             {t.emailHint}{" "}
             <button
-              className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex min-h-[44px] items-center rounded-sm underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={copyEmail}
               type="button"
             >
               {copied ? t.copied : t.copyEmail}
             </button>
+          </p>
+          <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+            {t.responseTime}
           </p>
         </motion.div>
       </motion.div>

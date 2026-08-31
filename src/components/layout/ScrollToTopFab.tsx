@@ -3,7 +3,10 @@ import { useLenis } from "lenis/react";
 import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { haptic } from "@/hooks/use-haptic";
+import { useLanguage } from "@/lib/language-context";
+import { SPRING_SOFT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { translations } from "@/lib/translations";
 
 /**
  * Floating action button that appears once the user has scrolled past a
@@ -12,7 +15,10 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  */
 export function ScrollToTopFab() {
   const [visible, setVisible] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const lenis = useLenis();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     let ticking = false;
@@ -29,6 +35,22 @@ export function ScrollToTopFab() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // The mobile drawer flags itself on <html>. Stand down while it is open: the
+  // backdrop covers this button but leaves it in the tab order, and a stray
+  // arrow floating over a full-screen menu reads as a rendering slip. One
+  // observer, filtered to the single attribute, so it fires twice per open.
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setNavOpen(root.dataset.navOpen === "true");
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, {
+      attributeFilter: ["data-nav-open"],
+      attributes: true,
+    });
+    return () => observer.disconnect();
   }, []);
 
   const handleClick = () => {
@@ -50,10 +72,10 @@ export function ScrollToTopFab() {
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && !navOpen && (
         <motion.button
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          aria-label="Scroll to top"
+          aria-label={t.nav.backToTop}
           className="fixed right-4 bottom-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 bg-background/80 text-primary shadow-lg shadow-primary/15 backdrop-blur-xl transition-colors hover:bg-primary/10 active:bg-primary/15 sm:right-6 sm:bottom-6"
           exit={{ opacity: 0, scale: 0.8, y: 16 }}
           initial={{ opacity: 0, scale: 0.8, y: 16 }}
@@ -62,7 +84,7 @@ export function ScrollToTopFab() {
             paddingBottom: "0px",
             marginBottom: "var(--safe-bottom, 0px)",
           }}
-          transition={{ type: "spring", stiffness: 400, damping: 28 }}
+          transition={SPRING_SOFT}
           whileTap={{ scale: 0.9 }}
         >
           <ArrowUp className="h-5 w-5" strokeWidth={2.4} />

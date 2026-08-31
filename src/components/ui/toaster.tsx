@@ -15,7 +15,9 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(({ id, title, description, action, ...props }) => (
         <Toast key={id} {...props}>
-          <div className="grid gap-1">
+          {/* min-w-0 lets a long line (an email address) wrap inside the toast
+              instead of forcing it wider than the viewport. */}
+          <div className="grid min-w-0 flex-1 gap-1">
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
           </div>
