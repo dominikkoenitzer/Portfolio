@@ -1,4 +1,9 @@
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  type MotionProps,
+  useReducedMotion,
+} from "framer-motion";
 import { ArrowUpRight, Check, ChevronDown } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -11,7 +16,7 @@ import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { REVEAL, stagger } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
@@ -65,6 +70,51 @@ function readRouterState(state: unknown): {
  */
 const mailtoFor = (subject: string, body: string) =>
   `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+/**
+ * Swapping the label crossfades it with a small lift, so the sentence reads as
+ * being rewritten rather than flickering. Opacity and transform only: the box
+ * the labels share is fixed by the widest of them and never animates.
+ */
+const LABEL_SWAP: MotionProps = {
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -6 },
+  initial: { opacity: 0, y: 6 },
+  transition: { duration: DUR.fast, ease: EASE_OUT },
+};
+
+/** Same exchange, cut to a hard swap when the visitor asked for less motion. */
+const LABEL_SWAP_STILL: MotionProps = {
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  initial: { opacity: 1 },
+  transition: { duration: 0 },
+};
+
+/**
+ * One option as the trigger paints it: the dashed-underlined phrase with the
+ * chevron glued to its last word. The visible copy and the invisible sizing
+ * copies both render through here, so the cell is measured against exactly the
+ * box it will later paint. The underline stays on the text (not on the button),
+ * so it wraps with the phrase and stops before the chevron, and
+ * `overflow-wrap: anywhere` keeps an unbounded service label from pushing its
+ * own min-content width past a 375px viewport.
+ */
+function IntentLabel({ label }: { label: string }) {
+  return (
+    <>
+      <span className="underline decoration-primary/50 decoration-dashed underline-offset-[7px] transition-colors duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:decoration-primary">
+        {label}
+      </span>
+      {/* The chevron leans down under the pointer and flips once the list is
+          open, so the control answers before it is used. */}
+      <ChevronDown
+        aria-hidden
+        className="ml-1.5 inline-block h-[0.6em] w-[0.6em] align-middle text-primary/70 transition-transform duration-200 ease-out group-hover/intent:translate-y-[0.08em] group-data-[state=open]/intent:rotate-180"
+      />
+    </>
+  );
+}
 
 /**
  * The contact page is one sentence the visitor finishes, and one link.
@@ -149,16 +199,38 @@ export function ContactSection() {
             <PopoverTrigger asChild>
               <button
                 aria-label={t.changeSubject}
-                className="group/intent inline-flex items-baseline gap-1.5 rounded-sm font-medium text-foreground underline decoration-primary/50 decoration-dashed underline-offset-[7px] transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                className="group/intent inline-grid items-start rounded-sm text-left align-baseline font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                 type="button"
               >
-                {selected.label}
-                {/* The chevron leans down under the pointer and flips once the
-                    list is open, so the control answers before it is used. */}
-                <ChevronDown
-                  aria-hidden
-                  className="h-[0.6em] w-[0.6em] shrink-0 self-center text-primary/70 transition-transform duration-200 ease-out group-hover/intent:translate-y-[0.08em] group-data-[state=open]:rotate-180"
-                />
+                {/* Every option is laid into the same single grid cell, so the
+                    trigger is as wide and as tall as the longest label of the
+                    current language (the service label from the Services page
+                    included) and keeps that box whatever is selected. The
+                    sentence's line count therefore never changes and nothing
+                    below it moves. Picking a subject was reflowing the page
+                    down to the response-time line before this.
+                    The copies that are not selected stay `visibility: hidden`:
+                    they still size the cell, but they are out of the
+                    accessibility tree, unselectable and unclickable, so only
+                    the chosen phrase is ever read out or copied. */}
+                {options.map(({ key, label }) => (
+                  <span
+                    aria-hidden
+                    className="invisible col-start-1 row-start-1"
+                    key={key}
+                  >
+                    <IntentLabel label={label} />
+                  </span>
+                ))}
+                <AnimatePresence initial={false}>
+                  <motion.span
+                    className="col-start-1 row-start-1"
+                    key={intent}
+                    {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
+                  >
+                    <IntentLabel label={selected.label} />
+                  </motion.span>
+                </AnimatePresence>
               </button>
             </PopoverTrigger>
             <PopoverContent align="start" className="w-72 p-1.5">
@@ -181,7 +253,9 @@ export function ContactSection() {
                       }}
                       type="button"
                     >
-                      <span className="min-w-0">{label}</span>
+                      <span className="min-w-0 [overflow-wrap:anywhere]">
+                        {label}
+                      </span>
                       {isActive ? (
                         <Check aria-hidden className="h-4 w-4 shrink-0" />
                       ) : null}
@@ -193,7 +267,7 @@ export function ContactSection() {
           </Popover>
         </motion.p>
 
-        {/* The address is the button — no card, no wrapper, no icon tile. */}
+        {/* The address is the button, with no card, wrapper or icon tile. */}
         <motion.div className="mt-12 sm:mt-16" variants={REVEAL}>
           <a
             className="group inline-flex max-w-full items-start gap-2 font-semibold tracking-tight transition-colors duration-200 ease-out hover:text-primary active:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:items-center"
@@ -218,11 +292,30 @@ export function ContactSection() {
           <p className="mt-5 text-muted-foreground text-sm leading-relaxed">
             {t.emailHint}{" "}
             <button
-              className="inline-flex min-h-[44px] items-center rounded-sm underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-grid min-h-[44px] items-center rounded-sm text-left underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={copyEmail}
               type="button"
             >
-              {copied ? t.copied : t.copyEmail}
+              {/* The same single-cell stack as the subject trigger, for the
+                  same reason: the confirmation is far shorter than the
+                  invitation, and on a 375px screen that changed this
+                  paragraph's line count and pulled the response-time line up
+                  under it. Sized to the longer of the two, it holds still. */}
+              <span aria-hidden className="invisible col-start-1 row-start-1">
+                {t.copyEmail}
+              </span>
+              <span aria-hidden className="invisible col-start-1 row-start-1">
+                {t.copied}
+              </span>
+              <AnimatePresence initial={false}>
+                <motion.span
+                  className="col-start-1 row-start-1"
+                  key={copied ? "copied" : "copy"}
+                  {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
+                >
+                  {copied ? t.copied : t.copyEmail}
+                </motion.span>
+              </AnimatePresence>
             </button>
           </p>
           <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
