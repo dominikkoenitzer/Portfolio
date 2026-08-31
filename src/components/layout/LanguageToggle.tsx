@@ -51,10 +51,13 @@ export function LanguageToggle() {
         {/* Sized to the hamburger it stands next to on mobile: same 44px box,
             same corner. It used to be a 36px circle carrying a bare glyph
             beside a boxed control, so the pair read as two unrelated bits of
-            chrome and the smaller one missed the tap-target floor. */}
+            chrome and the smaller one missed the tap-target floor. The corner
+            is now the header's: everything in that row (island, nav pills,
+            hamburger) is a pill, and a rounded square among them read as a
+            leftover. */}
         <Button
           aria-label={t.toggles.language}
-          className="h-11 w-11 rounded-xl transition-colors hover:bg-muted"
+          className="h-11 w-11 rounded-full border border-primary/15 bg-primary/[0.06] transition-colors hover:bg-primary/[0.12] focus-visible:!rounded-full"
           size="icon"
           variant="ghost"
         >
@@ -115,7 +118,7 @@ export function LanguageToggle() {
           </div>
 
           {/* Offer to match the browser language, but only when it differs from
-              the current pick — an action, not a passive readout. */}
+              the current pick, an action rather than a passive readout. */}
           {systemLanguage && detectedLanguage !== language ? (
             <div className="mt-1.5 border-border/60 border-t pt-1.5">
               <button
