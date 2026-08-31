@@ -34,7 +34,11 @@ export function AboutSection() {
 
   return (
     <section className="section-padding" id="about">
-      <SectionHeading subtitle={t.subheading} title={t.heading} />
+      <SectionHeading
+        eyebrow={t.eyebrow}
+        subtitle={t.subheading}
+        title={t.heading}
+      />
 
       <div className="grid gap-8 md:grid-cols-12 md:items-start md:gap-10">
         <motion.div className="md:col-span-5 lg:col-span-5" {...avatarReveal}>
@@ -71,13 +75,13 @@ export function AboutSection() {
             {...revealOnScroll(reduceMotion, stagger())}
           >
             <InfoCard
-              icon={<GraduationCap className="h-5 w-5" />}
+              icon={<GraduationCap />}
               subtitle={t.cards.educationSubtitle}
               title={t.cards.educationTitle}
             />
 
             <InfoCard
-              icon={<Award className="h-5 w-5" />}
+              icon={<Award />}
               subtitle={t.cards.specializedSubtitle}
               title={t.cards.specializedTitle}
             />
@@ -225,16 +229,23 @@ interface InfoCardProps {
 function InfoCard({ icon, title, subtitle }: InfoCardProps) {
   // Entrance and hover sit on separate elements so the cascade delay never
   // applies to the hover lift. The column above owns the timing.
+  //
+  // Geometry and the icon tile match the Skills category cards and the CV rows
+  // on Timeline: 36px tile, 18px glyph, gap-3, rounded-xl shell.
   return (
     <motion.div variants={REVEAL}>
       <motion.div
-        className="flex transform-gpu items-center gap-2 rounded-lg border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 ease-out hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:gap-3 sm:p-4"
+        className="flex transform-gpu items-center gap-3 rounded-xl border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 ease-out hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:p-4"
         transition={SPRING_SOFT}
         whileHover={{ y: -4 }}
       >
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary sm:h-10 sm:w-10">
+        {/* Decorative: the card's title says the same thing in words. */}
+        <span
+          aria-hidden="true"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary [&_svg]:h-[18px] [&_svg]:w-[18px]"
+        >
           {icon}
-        </div>
+        </span>
         <div>
           <h2 className="font-medium text-sm sm:text-base">{title}</h2>
           <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>

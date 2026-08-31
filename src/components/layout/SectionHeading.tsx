@@ -33,6 +33,10 @@ interface SectionHeadingProps {
  * The shared page/section title. Fixes the element (h1 by default), font
  * (Zen Maru Gothic via the global heading rule), weight, responsive size scale,
  * and alignment so every page's title is typographically identical.
+ *
+ * Overview pages pass all three parts (eyebrow, title, subtitle) and no margin
+ * override, so the block is the same height on each of them and the titles line
+ * up across routes. The bottom gap belongs to this component.
  */
 export function SectionHeading({
   title,
@@ -47,7 +51,7 @@ export function SectionHeading({
 
   return (
     <motion.div
-      className={cn("mb-16", centered ? "text-center" : "text-left", className)}
+      className={cn("mb-12", centered ? "text-center" : "text-left", className)}
       {...revealOnScroll(reduceMotion, stagger())}
     >
       {eyebrow && (
@@ -56,7 +60,10 @@ export function SectionHeading({
         </motion.p>
       )}
 
-      <Tag className="mb-3 font-bold text-3xl md:text-4xl">
+      {/* The gap under the title lives on the subtitle alone. With it on both
+          elements the two margins collapsed into one anyway, and a page that
+          passes no subtitle was left carrying the leftover. */}
+      <Tag className="font-bold text-3xl md:text-4xl">
         {/* The mask carries the descender room it clips (a "y" or a "g" reaches
             below the line box) and takes the same amount back off the margin,
             so the title sits exactly where it did and nothing below it moves. */}

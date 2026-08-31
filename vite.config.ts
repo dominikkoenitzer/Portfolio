@@ -82,6 +82,66 @@ function localGithubApi(env: Record<string, string>): Plugin {
   };
 }
 
+/**
+ * Vendor chunks, keyed by the npm package a module comes from.
+ *
+ * This is the function form of `manualChunks` on purpose. The object form
+ * (`{ "react-vendor": ["react", …] }`) matches bare specifiers, and several of
+ * ours never bound to a real module — `react` itself was landing in
+ * `query-vendor`, and `scheduler`, which react-dom needs, was being swallowed
+ * by `three-vendor`. That last one was the expensive part: it gave the entry
+ * chunk a static `import … from "./three-vendor.js"`, so **every** route
+ * modulepreloaded and evaluated 896 kB of three.js before first paint, even
+ * though SkillSphere and ServiceExplorer are the only things that use it and
+ * both are `React.lazy`. Matching resolved ids instead makes the assignment
+ * exact. Order is the assignment order: first match wins, so React's own
+ * runtime is listed before anything that depends on it.
+ */
+const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
+  // React runtime. `scheduler` and the useSyncExternalStore shim are React's
+  // own dependencies and must stay on this side of the split.
+  [
+    "react-vendor",
+    /[\\/]node_modules[\\/](react|react-dom|react-is|react-router|react-router-dom|scheduler|use-sync-external-store)[\\/]/,
+  ],
+  ["framer-motion", /[\\/]node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/],
+  // three.js + r3f and the state/measure helpers r3f pulls in. Reached only
+  // through the lazy SkillSphere (/skills) and ServiceExplorer (/services), so
+  // nothing here may be reachable from the entry chunk.
+  [
+    "three-vendor",
+    /[\\/]node_modules[\\/](three|@react-three[\\/]fiber|zustand|its-fine|react-use-measure)[\\/]/,
+  ],
+  ["lenis", /[\\/]node_modules[\\/]lenis[\\/]/],
+  // Radix primitives plus the scroll-lock / focus / floating helpers they
+  // depend on, so the popover, toast and tooltip travel as one unit.
+  [
+    "ui-vendor",
+    /[\\/]node_modules[\\/](@radix-ui[\\/]|@floating-ui[\\/]|react-remove-scroll|react-remove-scroll-bar|react-style-singleton|use-callback-ref|use-sidecar|aria-hidden|get-nonce|detect-node-es)/,
+  ],
+  ["query-vendor", /[\\/]node_modules[\\/]@tanstack[\\/]/],
+];
+
+/**
+ * react-dom's server renderer — 494 kB of source across the modern and legacy
+ * browser builds. Nothing on the critical path touches it; it is reached only
+ * from the lazy SkillSphere and ServiceExplorer, which rasterise react-icons
+ * SVGs to textures with `renderToStaticMarkup`. The `react-dom` rule above
+ * would otherwise sweep it into `react-vendor`, which every route preloads, so
+ * it is excluded here and gets its own chunk behind those two dynamic imports.
+ */
+const REACT_DOM_SERVER =
+  /[\\/]node_modules[\\/]react-dom[\\/](server|static|cjs[\\/]react-dom-(server|static))/;
+
+function vendorChunk(id: string): string | undefined {
+  if (!id.includes("node_modules")) return undefined;
+  if (REACT_DOM_SERVER.test(id)) return undefined;
+  for (const [name, test] of VENDOR_CHUNKS) {
+    if (test.test(id)) return name;
+  }
+  return undefined;
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Empty prefix loads every var (incl. the non-public GITHUB_TOKEN) from
@@ -106,22 +166,7 @@ export default defineConfig(({ mode }) => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Vendor chunks
-            "react-vendor": ["react", "react-dom", "react-router-dom"],
-            "framer-motion": ["framer-motion"],
-            // three.js + r3f isolated in their own chunk, fetched lazily with the
-            // SkillSphere, kept out of the main bundle.
-            "three-vendor": ["three", "@react-three/fiber"],
-            lenis: ["lenis", "lenis/react"],
-            "ui-vendor": [
-              "@radix-ui/react-popover",
-              "@radix-ui/react-slot",
-              "@radix-ui/react-toast",
-              "@radix-ui/react-tooltip",
-            ],
-            "query-vendor": ["@tanstack/react-query"],
-          },
+          manualChunks: vendorChunk,
         },
       },
       chunkSizeWarningLimit: 600,

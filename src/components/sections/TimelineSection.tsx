@@ -91,6 +91,7 @@ function LogoTile({ entry }: { entry: TimelineEntry }) {
         <img
           alt={`${entry.organization} logo`}
           className={`h-full w-full ${entry.logoFill ? "object-cover" : "object-contain"}`}
+          decoding="async"
           height={56}
           loading="lazy"
           src={entry.logo}
@@ -254,7 +255,12 @@ function TimelineGroup({
         className="group/head mb-8 flex items-center gap-3"
         {...revealOnScroll(reduceMotion)}
       >
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-[transform,background-color] duration-200 ease-out group-hover/head:scale-110 group-hover/head:bg-primary/15">
+        {/* Same icon-tile + title pattern as the Skills category cards, one
+            step up the scale: bold title, 40px tile, 20px glyph, gap-3. */}
+        <span
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-[transform,background-color] duration-200 ease-out group-hover/head:scale-110 group-hover/head:bg-primary/15 [&_svg]:h-5 [&_svg]:w-5"
+        >
           {icon}
         </span>
         <h2 className="font-bold text-xl sm:text-2xl">{title}</h2>
@@ -320,7 +326,6 @@ export function TimelineSection() {
     <MotionConfig reducedMotion="user">
       <section className="section-padding" id="timeline">
         <SectionHeading
-          className="mb-8"
           eyebrow={t.eyebrow}
           subtitle={t.subheading}
           title={t.heading}
@@ -345,13 +350,13 @@ export function TimelineSection() {
         <div className="mx-auto max-w-3xl space-y-14 sm:space-y-16">
           <TimelineGroup
             entries={t.experience}
-            icon={<Briefcase className="h-5 w-5" />}
+            icon={<Briefcase />}
             language={language}
             title={t.experienceTitle}
           />
           <TimelineGroup
             entries={t.education}
-            icon={<GraduationCap className="h-5 w-5" />}
+            icon={<GraduationCap />}
             language={language}
             title={t.educationTitle}
           />

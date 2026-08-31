@@ -31,6 +31,7 @@ export const zh = {
     viewWork: "查看作品",
   },
   about: {
+    eyebrow: "个人简介",
     heading: "关于我",
     subheading: "我在学什么，以及我用它做出了什么。",
     passionate: "瑞士",
@@ -59,6 +60,7 @@ export const zh = {
     },
   },
   skills: {
+    eyebrow: "技术栈与工具",
     heading: "技能",
     subheading: "我日常在用的东西，以及还在慢慢变熟的部分。",
     categories: {
@@ -77,6 +79,7 @@ export const zh = {
     },
   },
   projects: {
+    eyebrow: "个人项目",
     heading: "项目",
     subheading: "我做出来并放到线上的东西，源码都在。",
     disclosureEyebrow: "在往下滑之前",

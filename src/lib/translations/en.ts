@@ -31,6 +31,7 @@ export const en = {
     viewWork: "View Work",
   },
   about: {
+    eyebrow: "Profile",
     heading: "About Me",
     subheading: "What I'm studying, and what I build with it.",
     passionate: "Swiss",
@@ -59,6 +60,7 @@ export const en = {
     },
   },
   skills: {
+    eyebrow: "Stack & tools",
     heading: "Skills",
     subheading:
       "What I work with day to day, and what I'm still getting better at.",
@@ -78,6 +80,7 @@ export const en = {
     },
   },
   projects: {
+    eyebrow: "Personal work",
     heading: "Projects",
     subheading: "Things I've built and put online, source code included.",
     disclosureEyebrow: "Before you scroll",
