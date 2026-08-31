@@ -8,11 +8,16 @@
  * palette and the three site fonts), served statically and wired through
  * the <SEO image=...> prop.
  *
- * Run: `bun scripts/gen-og.ts`. Needs `@resvg/resvg-js`, which is not kept in
- * package.json because these change rarely: install it once into the temp
- * folder below (`cd %TEMP%/resvg && bun add @resvg/resvg-js`) or into the
- * repo transiently. The fonts are fetched from the Google Fonts repo into the
- * temp folder on first run; resvg cannot see web fonts.
+ * Run: `bun scripts/gen-og.ts`. Needs `@resvg/resvg-js` and `sharp`, which are
+ * not kept in package.json because these change rarely: install them once into
+ * the temp folder below (`cd %TEMP%/resvg && bun add @resvg/resvg-js sharp`) or
+ * into the repo transiently. The fonts are fetched from the Google Fonts repo
+ * into the temp folder on first run; resvg cannot see web fonts.
+ *
+ * The cards are written as 128-colour palette PNGs. resvg's 32-bit output is
+ * ~950 KB per card because the grain filter defeats PNG compression, and
+ * WhatsApp silently drops link previews whose image is over ~300 KB; at 128
+ * colours with dithering a card is ~120 KB and indistinguishable at share size.
  */
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -20,14 +25,16 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 
 const require = createRequire(import.meta.url);
-const RESVG_FALLBACK = join(tmpdir(), "resvg", "node_modules", "@resvg", "resvg-js");
-const { Resvg } = (() => {
+const TRANSIENT = join(tmpdir(), "resvg", "node_modules");
+const transient = <T>(name: string, ...segments: string[]): T => {
   try {
-    return require("@resvg/resvg-js");
+    return require(name) as T;
   } catch {
-    return require(RESVG_FALLBACK);
+    return require(join(TRANSIENT, ...segments)) as T;
   }
-})();
+};
+const { Resvg } = transient<typeof import("@resvg/resvg-js")>("@resvg/resvg-js", "@resvg", "resvg-js");
+const sharp = transient<typeof import("sharp")>("sharp", "sharp");
 
 const FONT_DIR = join(tmpdir(), "og-fonts");
 const FONT_FILES = [
@@ -179,19 +186,22 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
 ];
 
 const fontFiles = await ensureFonts();
-const render = (svg: string, out: string) => {
+const render = async (svg: string, out: string) => {
   mkdirSync(dirname(out), { recursive: true });
   const resvg = new Resvg(svg, {
     fitTo: { mode: "width", value: 1200 },
     font: { fontFiles, loadSystemFonts: false, defaultFontFamily: BODY_FONT },
   });
-  writeFileSync(out, resvg.render().asPng());
-  console.log("ok", out);
+  const png = await sharp(resvg.render().asPng())
+    .png({ palette: true, colours: 128, dither: 1.0, compressionLevel: 9, effort: 10 })
+    .toBuffer();
+  writeFileSync(out, png);
+  console.log("ok", out, `${Math.round(png.length / 1024)} KB`);
 };
 
-render(homeCard(), "public/og-image.png");
-for (const c of CARDS) render(card(c.title, c.subtitle, c.path), c.out);
+await render(homeCard(), "public/og-image.png");
+for (const c of CARDS) await render(card(c.title, c.subtitle, c.path), c.out);
 for (const p of PROJECT_CARDS) {
-  render(card(p.title, p.subtitle, `/projects/${p.slug}`), `public/og/projects/${p.slug}.png`);
+  await render(card(p.title, p.subtitle, `/projects/${p.slug}`), `public/og/projects/${p.slug}.png`);
 }
 console.log(`Generated ${1 + CARDS.length + PROJECT_CARDS.length} OG cards.`);

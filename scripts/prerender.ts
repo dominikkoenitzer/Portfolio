@@ -142,6 +142,16 @@ for (const page of pages) {
     `  <link rel="canonical" href="${esc(url)}">\n  </head>`,
   );
 
+  // The avatar is the LCP element on /about but lives in a lazy route chunk,
+  // so the browser would only discover it after React renders the page. A
+  // preload in the head starts that fetch alongside the entry script instead.
+  if (page.route === "/about") {
+    html = html.replace(
+      /<\/head>/i,
+      `  <link rel="preload" as="image" href="/avatar.jpg" fetchpriority="high">\n  </head>`,
+    );
+  }
+
   const out =
     page.route === "/"
       ? join(DIST, "index.html")
