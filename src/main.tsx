@@ -15,7 +15,7 @@ import "@fontsource/zen-kaku-gothic-new/latin-700.css";
 import "@fontsource/zen-maru-gothic/latin-500.css";
 import "@fontsource/zen-maru-gothic/latin-700.css";
 import "@fontsource/zen-maru-gothic/latin-900.css";
-import "@fontsource/bowlby-one-sc/latin-400.css";
+import "@fontsource/m-plus-rounded-1c/latin-800.css";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(

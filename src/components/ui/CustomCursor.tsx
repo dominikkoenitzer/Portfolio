@@ -21,13 +21,15 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * single custom element into <body> that follows the pointer and MORPHS to
  * context:
  *
- *   • DEFAULT: a small solid dot in the theme accent, tracked with a snappy
- *                (responsive, lightly-smoothed) spring. The Motion feel: not
- *                floaty, but not a rigid 1:1 either.
+ *   • DEFAULT: a small solid violet dot inside a thin sage ring (the portrait's
+ *                eye: pupil and iris), tracked with a snappy (responsive,
+ *                lightly-smoothed) spring. The Motion feel: not floaty, but not
+ *                a rigid 1:1 either.
  *   • MAGNETIC: over an interactive target (link/button/…), the dot SNAPS onto
  *                the target and morphs into a rounded rectangle matching its
  *                bounding rect (+padding) and border-radius, with a translucent
- *                accent fill and an inset accent ring so the label stays legible.
+ *                violet fill, an inset violet ring so the label stays legible,
+ *                and the sage ring thinned around the outside.
  *                A subtle magnetic PULL nudges the box from the target centre
  *                toward the real pointer for a tactile feel. It stays GLUED to
  *                the target during Lenis smooth-scroll and on resize.
@@ -39,11 +41,10 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  *   • PRESS: scale dips on mousedown, restores on mouseup.
  *
  * ── Theme ──────────────────────────────────────────────────────────────────
- * Every colour is `hsl(var(--primary))`. The theme class lives on <html> and we
- * portal into <body>, so the CSS variable re-resolves automatically on theme
- * change with zero JS. Even the animated fill/ring alpha rides a motion value
- * composed INTO the colour string via `useMotionTemplate`, so it recolours for
- * free when the theme flips.
+ * Every colour is `hsl(var(--primary))` or `hsl(var(--sage))`. The tokens live
+ * on `:root` and we portal into <body>, so the CSS variables re-resolve
+ * automatically with zero JS. Even the animated fill/ring/halo widths ride
+ * motion values composed INTO the colour strings via `useMotionTemplate`.
  *
  * ── Performance (hard requirement) ─────────────────────────────────────────
  * NOTHING on the move / hover / press / scroll path calls React setState.
@@ -102,12 +103,14 @@ const SCALE_SPRING = { stiffness: 700, damping: 30, mass: 0.45 } as const;
 /** Opacity fade for visibility / form-field hand-off, gentle, no overshoot. */
 const FADE_SPRING = { stiffness: 420, damping: 40, mass: 1 } as const;
 
-const DOT_SIZE = 9; // px — dot diameter at rest
+const DOT_SIZE = 8; // px — pupil diameter at rest (the halo sits outside it)
+const HALO_W = 2; // px — outer sage ring around the dot: the iris of the eye
 const CARET_WIDTH = 2; // px — I-beam thickness
 const MAGNET_PAD = 6; // px — padding added around the target rect
 const MAGNET_PULL = 0.22; // 0..1 — how far the box drifts toward the pointer
 const MAGNET_FILL = 0.16; // accent alpha of the translucent fill while snapped
 const MAGNET_RING_W = 1.5; // px — inset accent ring while snapped
+const MAGNET_HALO_W = 1.5; // px — the sage ring, thinner, around a snapped box
 const MAGNET_RELEASE_MARGIN = 28; // px — pointer beyond rect ⇒ release the magnet
 const PRESS_DIP = 0.2; // scale reduction on press (1 → 0.8)
 /**
@@ -172,6 +175,7 @@ export function CustomCursor() {
   const destR = useMotionValue(DOT_SIZE / 2);
   const destFill = useMotionValue(1); // accent alpha of the fill (dot/caret = 1)
   const destRing = useMotionValue(0); // inset ring width in px (only magnetic > 0)
+  const destHalo = useMotionValue(HALO_W); // outer sage ring width in px (0 for the caret)
   const fieldMV = useMotionValue(0); // 1 over a form field ⇒ fade to native I-beam
   const visMV = useMotionValue(0); // 0 hidden / 1 shown (window-leave, blur, tab)
   const press = useMotionValue(0); // 1 while the primary button is held
@@ -184,6 +188,7 @@ export function CustomCursor() {
   const r = useSpring(destR, SIZE_SPRING);
   const fill = useSpring(destFill, ALPHA_SPRING);
   const ring = useSpring(destRing, ALPHA_SPRING);
+  const halo = useSpring(destHalo, ALPHA_SPRING);
   const pressSpring = useSpring(press, SCALE_SPRING);
 
   // The element is anchored by its top-left, so convert centre → corner using
@@ -207,9 +212,11 @@ export function CustomCursor() {
    * off-screen at -100,-100 and keeps the spring attached from the first frame.
    */
   const opacity = useSpring(opacityTarget, FADE_SPRING);
-  // Colour re-resolves `--primary` from the live theme; alpha/width ride springs.
+  // Colours re-resolve the tokens from the live theme; alpha/width ride springs.
+  // Violet pupil, sage halo: the portrait's eye at twelve pixels. The halo is
+  // the second box-shadow, so it composes with the magnet's inset ring.
   const background = useMotionTemplate`hsl(var(--primary) / ${fill})`;
-  const boxShadow = useMotionTemplate`inset 0 0 0 ${ring}px hsl(var(--primary) / 0.85)`;
+  const boxShadow = useMotionTemplate`inset 0 0 0 ${ring}px hsl(var(--primary) / 0.85), 0 0 0 ${halo}px hsl(var(--sage))`;
 
   // ── Refs: hot-path state that must NOT trigger React renders ───────────────
   const pointerRef = useRef({ x: -100, y: -100 });
@@ -380,6 +387,7 @@ export function CustomCursor() {
     function setDotShape() {
       destFill.set(1);
       destRing.set(0);
+      destHalo.set(HALO_W);
       fieldMV.set(0);
       destW.set(DOT_SIZE);
       destH.set(DOT_SIZE);
@@ -388,6 +396,8 @@ export function CustomCursor() {
     function setCaretShape(height: number) {
       destFill.set(1);
       destRing.set(0);
+      // A haloed I-beam is a 6px pill, not a caret: the ring goes with the dot.
+      destHalo.set(0);
       fieldMV.set(0);
       destW.set(CARET_WIDTH);
       destH.set(height);
@@ -399,6 +409,7 @@ export function CustomCursor() {
       fieldMV.set(1);
       destFill.set(1);
       destRing.set(0);
+      destHalo.set(HALO_W);
       destW.set(DOT_SIZE);
       destH.set(DOT_SIZE);
       destR.set(DOT_SIZE / 2);
@@ -433,6 +444,7 @@ export function CustomCursor() {
       }
       destFill.set(MAGNET_FILL);
       destRing.set(MAGNET_RING_W);
+      destHalo.set(MAGNET_HALO_W);
       fieldMV.set(0);
       occlusionFrame = 0;
       occlusionBurst = 0;
@@ -598,6 +610,7 @@ export function CustomCursor() {
     destR,
     destFill,
     destRing,
+    destHalo,
     fieldMV,
     visMV,
     press,

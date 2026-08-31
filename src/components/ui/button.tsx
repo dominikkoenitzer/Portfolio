@@ -38,12 +38,15 @@ const buttonVariants = cva(
         // and a link that moves is a link that looks broken.
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Primary call-to-action: filled with the canonical shadow-glow hover
-        // used site-wide (Hero, Services, ContactForm, ProjectDetails) instead
-        // of each surface hand-rolling its own glow magnitude. That glow is
-        // kept at its exact magnitude and only gains the inset top edge; it is
-        // already deeper than the one the other filled variants grow on hover.
-        cta: "btn-shine btn-raise bg-primary text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_2px_16px_hsl(var(--primary)/0.25)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_4px_24px_hsl(var(--primary)/0.38)]",
+        // Primary call-to-action: her eyes. Sage fill with the ink on top
+        // (6.2:1), the one place on a page that wears the eye colour as a
+        // surface, so it is the thing the eye lands on among violet controls.
+        // The glow stays violet: a sage glow under a sage fill just blurs the
+        // edge, while the violet underneath sets it into the page. Same
+        // canonical magnitudes as before (Hero, Services, ContactForm,
+        // ProjectDetails all share them); the top edge is brighter than on the
+        // dark fills because a pale surface needs more light to show a bevel.
+        cta: "btn-shine btn-raise bg-sage text-sage-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_2px_16px_hsl(var(--primary)/0.22)] hover:bg-sage-bright hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_4px_24px_hsl(var(--primary)/0.32)]",
         // Soft, primary-tinted secondary action (e.g. in-card "Live" links).
         soft: "btn-raise bg-primary/10 text-primary hover:bg-primary/15",
       },

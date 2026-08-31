@@ -25,7 +25,7 @@ widget.
 
 - **Fast SPA.** React 19 and Vite, manually code-split, with the WebGL background lazy-loaded off the critical path.
 - **Four languages.** English, German, French, Chinese, on hand-rolled i18n with no library.
-- **Theme system.** Bloom (default), Glass, Forest and Sunset, with two animated background variants.
+- **One palette, lifted from an illustration.** Dusty violet, sage and blush on a warm cream page, taken from the reference art rather than picked from a scale and kept deliberately muted, under a grainy WebGL gradient in the same three colours.
 - **SEO and AI-SEO treated as real work.** JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards.
 - **Prerendered routes.** The build emits a real HTML document per route, twenty of them, each with its own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview.
 - **Live GitHub contributions** widget, via a Vercel serverless function.

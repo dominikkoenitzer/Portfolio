@@ -1,16 +1,23 @@
 import Grainient from "./Grainient";
 
 /**
- * Full-viewport grainy-gradient background in the bloom palette: deep violet,
- * sage and blush, the site's only colour stops now that the theme switcher is
- * gone. Rendered under `multiply` at a reduced opacity so it sits as a wash
- * over the light page base and dark text stays readable.
+ * Full-viewport grainy-gradient background in the bloom palette. The three
+ * stops are the illustration's three colours at their dusty strength: the
+ * violet backdrop (#5a4276), the sage of her eyes lifted to a wash (#a9c39a)
+ * and the lilac-pink of the tiled floor (#d2bfd6), so the wash is the picture
+ * itself moving behind the page. Rendered under `multiply` at a reduced
+ * opacity so it sits as a haze over the cream base and dark text stays
+ * readable.
  */
-const COLOR_STOPS = ["#453161", "#B6D088", "#FFE8EA"] as const;
+const COLOR_STOPS = ["#5a4276", "#a9c39a", "#d2bfd6"] as const;
 // The veil intensity was tuned for a localized band; this field fills the
-// whole viewport, so it is dialed down further to keep dark text readable.
-const OPACITY = 0.5 * 0.55;
-const SATURATION = 1.05;
+// whole viewport, so it is dialed down to keep dark text readable: the
+// darkest corner lands around #cbbfc4 under the ink (about 7:1) and the
+// primary violet still reads at 4:1 on it.
+const OPACITY = 0.28;
+// Neutral: the stops are muted on purpose, and pushing them back up would
+// undo that. The multiply pass greys them slightly, which is the haze.
+const SATURATION = 1.0;
 
 export default function GrainientBackground() {
   const [color1, color2, color3] = COLOR_STOPS;

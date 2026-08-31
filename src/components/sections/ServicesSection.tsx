@@ -281,7 +281,7 @@ export function ServicesSection() {
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
   // The decorative accents glow on dark but are unreadable as small text on the
-  // light bloom page (cyan on #fdf0f2 is about 1.5:1), so words use the text set.
+  // light bloom page (a pastel on #f6f0e6 is under 2:1), so words use the text set.
   const accentText = CATEGORY_ACCENT_TEXT.light;
 
   const [active, setActive] = useState<Category>("all");
@@ -484,7 +484,7 @@ export function ServicesSection() {
                 treeReady && "opacity-0",
               )}
             >
-              <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-[#bcd6ff] shadow-[0_0_22px_6px_rgba(120,160,255,0.6)]" />
+              <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-sage shadow-[0_0_22px_6px_hsl(var(--sage)/0.75)]" />
               <span className="text-[13px] text-muted-foreground tracking-[0.06em]">
                 {t.loading}
               </span>
