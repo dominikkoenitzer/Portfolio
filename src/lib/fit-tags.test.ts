@@ -55,7 +55,7 @@ describe("fitTags", () => {
     expect(fitTags({ ...base, containerWidth: 0, widths: Array(9).fill(100) })).toBe(9);
   });
 
-  it("widens with the container — the badge is a symptom of space, not a cap", () => {
+  it("widens with the container: the badge is a symptom of space, not a cap", () => {
     const widths = Array(9).fill(100);
     expect(fitTags({ ...base, containerWidth: 340, widths })).toBe(5);
     expect(fitTags({ ...base, containerWidth: 700, widths })).toBe(9);

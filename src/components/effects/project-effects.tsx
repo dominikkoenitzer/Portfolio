@@ -94,7 +94,7 @@ export function TiltFigure({
       viewport={{ once: true, margin: "-80px" }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {/* window chrome — makes a screenshot read as an app window, not a crop */}
+      {/* window chrome: makes a screenshot read as an app window, not a crop */}
       <div className="flex items-center gap-1.5 border-border/30 border-b bg-background/50 px-3 py-2 backdrop-blur-sm">
         <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
         <span className="h-2.5 w-2.5 rounded-full bg-primary/40" />

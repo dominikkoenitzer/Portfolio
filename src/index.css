@@ -93,7 +93,7 @@
     transition: background-color 0.15s ease;
     /* Scrollbar hidden (Firefox). The page scroller is the root element, whose
        reserved scrollbar gutter sits OUTSIDE the content box that fixed
-       `inset-0` background layer (the aurora) covers — so the gutter
+       `inset-0` background layer (the aurora) covers, so the gutter
        exposed a strip of the bare dark base at the right edge, reading as a
        vertical seam in both themes. Removing the gutter lets the backgrounds
        run flush to the window edge. Scrolling stays fully functional (wheel /
@@ -106,8 +106,8 @@
      `data-lenis-prevent`. The `scroll-behavior: auto` override is keyed on the
      persistent base `.lenis` class (NOT `.lenis-smooth`, which Lenis only adds
      mid-scroll) so the native `scroll-behavior: smooth` above can't turn an
-     idle/stopped programmatic scroll — e.g. the mobile-drawer position restore
-     in use-body-scroll-lock — into an unwanted animation that desyncs Lenis. */
+     idle/stopped programmatic scroll (e.g. the mobile-drawer position restore
+     in use-body-scroll-lock) into an unwanted animation that desyncs Lenis. */
   html.lenis,
   html.lenis body {
     height: auto;
@@ -880,7 +880,7 @@
   }
 
   /* Preserve the native I-beam on text-entry fields (the custom dot hides over
-     them — see CustomCursor) so the typing affordance is never lost. */
+     them, see CustomCursor) so the typing affordance is never lost. */
   input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
       [type="checkbox"]
     ):not([type="radio"]),

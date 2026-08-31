@@ -103,15 +103,15 @@ const SCALE_SPRING = { stiffness: 700, damping: 30, mass: 0.45 } as const;
 /** Opacity fade for visibility / form-field hand-off, gentle, no overshoot. */
 const FADE_SPRING = { stiffness: 420, damping: 40, mass: 1 } as const;
 
-const DOT_SIZE = 8; // px — pupil diameter at rest (the halo sits outside it)
-const HALO_W = 2; // px — outer sage ring around the dot: the iris of the eye
-const CARET_WIDTH = 2; // px — I-beam thickness
-const MAGNET_PAD = 6; // px — padding added around the target rect
-const MAGNET_PULL = 0.22; // 0..1 — how far the box drifts toward the pointer
+const DOT_SIZE = 8; // px, pupil diameter at rest (the halo sits outside it)
+const HALO_W = 2; // px, outer sage ring around the dot: the iris of the eye
+const CARET_WIDTH = 2; // px, I-beam thickness
+const MAGNET_PAD = 6; // px, padding added around the target rect
+const MAGNET_PULL = 0.22; // 0..1, how far the box drifts toward the pointer
 const MAGNET_FILL = 0.16; // accent alpha of the translucent fill while snapped
-const MAGNET_RING_W = 1.5; // px — inset accent ring while snapped
-const MAGNET_HALO_W = 1.5; // px — the sage ring, thinner, around a snapped box
-const MAGNET_RELEASE_MARGIN = 28; // px — pointer beyond rect ⇒ release the magnet
+const MAGNET_RING_W = 1.5; // px, inset accent ring while snapped
+const MAGNET_HALO_W = 1.5; // px, the sage ring, thinner, around a snapped box
+const MAGNET_RELEASE_MARGIN = 28; // px, pointer beyond rect ⇒ release the magnet
 const PRESS_DIP = 0.2; // scale reduction on press (1 → 0.8)
 /**
  * Frames between hit-tests that confirm the snapped target is still the topmost
@@ -448,7 +448,7 @@ export function CustomCursor() {
       fieldMV.set(0);
       occlusionFrame = 0;
       occlusionBurst = 0;
-      glueMagnet(el); // place it this frame — no one-frame lag
+      glueMagnet(el); // place it this frame, no one-frame lag
       ensureRaf();
     }
     // Drop magnetic mode and fall back to a dot at the current pointer; the next

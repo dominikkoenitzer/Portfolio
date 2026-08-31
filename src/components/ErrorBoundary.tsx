@@ -42,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <h1 className="font-bold text-2xl md:text-3xl">This page hit a snag</h1>
           <p className="mx-auto max-w-md text-muted-foreground text-sm leading-relaxed">
             An unexpected error occurred while loading this view. Reloading
-            usually fixes it — this can happen right after the site is updated.
+            usually fixes it. This can happen right after the site is updated.
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3">

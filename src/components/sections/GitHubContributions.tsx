@@ -196,7 +196,7 @@ function ContributionsCalendar() {
       <motion.div className="mb-4 w-full sm:mb-6" variants={REVEAL}>
         <TooltipProvider delayDuration={200}>
           <div className="w-full">
-            {/* Month labels — one grid track per week, sharing the grid's columns */}
+            {/* Month labels: one grid track per week, sharing the grid's columns */}
             <div
               className="mb-1 grid gap-[2px]"
               style={{
@@ -218,7 +218,7 @@ function ContributionsCalendar() {
               })}
             </div>
 
-            {/* Heatmap — 53 equal columns fill the width with square cells, so it
+            {/* Heatmap: 53 equal columns fill the width with square cells, so it
                 never overflows or hijacks vertical scroll on touch. */}
             <div
               className="grid gap-[2px]"

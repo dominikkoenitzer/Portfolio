@@ -31,7 +31,7 @@ blocks.forEach((raw, i) => {
     data = JSON.parse(raw) as Record<string, unknown>;
   } catch (err) {
     ok = false;
-    console.error(`✗ Block ${i + 1}: invalid JSON — ${(err as Error).message}`);
+    console.error(`✗ Block ${i + 1}: invalid JSON: ${(err as Error).message}`);
     return;
   }
   if (!data["@context"] || !data["@type"]) {
