@@ -61,7 +61,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
     stats: [
       { value: "4", label: "languages" },
       { value: "0", label: "i18n libraries" },
-      { value: "17", label: "prerendered routes" },
+      { value: "20", label: "prerendered routes" },
       { value: "0", label: "tokens leaked" },
     ],
     impactHeading: "What This Project Is Good For",
@@ -130,7 +130,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
     stats: [
       { value: "4", label: "Sprachen" },
       { value: "0", label: "i18n-Bibliotheken" },
-      { value: "17", label: "vorgerenderte Routen" },
+      { value: "20", label: "vorgerenderte Routen" },
       { value: "0", label: "geleakte Tokens" },
     ],
     impactHeading: "Wofür dieses Projekt gut ist",
@@ -199,7 +199,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
     stats: [
       { value: "4", label: "langues" },
       { value: "0", label: "bibliothèques i18n" },
-      { value: "17", label: "routes prérendues" },
+      { value: "20", label: "routes prérendues" },
       { value: "0", label: "tokens fuités" },
     ],
     impactHeading: "À quoi sert ce projet",
@@ -264,7 +264,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
     stats: [
       { value: "4", label: "种语言" },
       { value: "0", label: "个 i18n 库" },
-      { value: "17", label: "条预渲染路由" },
+      { value: "20", label: "条预渲染路由" },
       { value: "0", label: "个泄露的令牌" },
     ],
     impactHeading: "这个项目有什么用",
