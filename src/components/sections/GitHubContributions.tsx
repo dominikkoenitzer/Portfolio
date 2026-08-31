@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion, useReducedMotion } from "framer-motion";
-import { AlertCircle, GitCommit, Loader2 } from "lucide-react";
+import { GitCommit, Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
   Tooltip,
@@ -56,12 +56,22 @@ const GITHUB_COLORS = {
   "4": "hsl(var(--primary))",
 };
 
+class ContributionsError extends Error {
+  constructor(readonly status: number) {
+    super(`GitHub contributions request failed with ${status}`);
+  }
+}
+
+// Answers the endpoint gives when nothing will change on a retry: a bad
+// username, a missing or revoked server token, an unknown user.
+const PERMANENT_FAILURES = new Set([400, 401, 403, 404, 500]);
+
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   const response = await fetch(
     `/api/github-contributions?username=${username}`,
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch GitHub contributions");
+    throw new ContributionsError(response.status);
   }
   return response.json();
 };
@@ -89,7 +99,9 @@ export function GitHubContributions() {
     queryKey: ["github-contributions", username],
     queryFn: () => fetchGitHubData(username),
     staleTime: 1000 * 60 * 60, // 1 hour
-    retry: 2,
+    retry: (failureCount, err) =>
+      failureCount < 2 &&
+      !(err instanceof ContributionsError && PERMANENT_FAILURES.has(err.status)),
   });
 
   // Use weeks directly from API (each week is a column)
@@ -126,7 +138,7 @@ export function GitHubContributions() {
   if (isLoading) {
     return (
       <motion.div
-        className="glass-card rounded-2xl p-6 sm:p-8"
+        className="glass-card mt-12 rounded-2xl p-6 sm:p-8 md:mt-16"
         {...fadeInUp}
       >
         {/* Reserve ~the loaded height so the calendar/commits popping in after
@@ -138,18 +150,12 @@ export function GitHubContributions() {
     );
   }
 
+  // The calendar is a nice-to-have under the bio. When the endpoint cannot
+  // serve it (the server token was revoked once already), a visitor gets
+  // nothing rather than a red card apologising for a widget they never asked
+  // for.
   if (error) {
-    return (
-      <motion.div
-        className="glass-card rounded-2xl p-6 sm:p-8"
-        {...fadeInUp}
-      >
-        <div className="flex items-center gap-3 text-destructive">
-          <AlertCircle className="h-5 w-5" />
-          <p className="text-sm">{t.loadError}</p>
-        </div>
-      </motion.div>
-    );
+    return null;
   }
 
   // The loaded card is a sequence: the panel, its count, then the calendar. The
@@ -157,7 +163,7 @@ export function GitHubContributions() {
   // down the card to still be under the fold when the card arrives.
   return (
     <motion.div
-      className="glass-card w-full rounded-2xl p-3 sm:p-4 md:p-6"
+      className="glass-card mt-12 w-full rounded-2xl p-3 sm:p-4 md:mt-16 md:p-6"
       {...revealOnScroll(reduceMotion, revealStagger())}
     >
       <motion.div className="mb-3 sm:mb-4" variants={REVEAL}>

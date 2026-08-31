@@ -191,7 +191,7 @@ export function SkillsSection() {
 
       {showSphere ? (
         <Suspense fallback={null}>
-          <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-3xl sm:mb-16 sm:h-[460px]">
+          <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
             <SkillSphere />
           </div>
         </Suspense>

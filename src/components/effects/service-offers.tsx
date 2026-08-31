@@ -7,39 +7,37 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  useVelocity,
 } from "framer-motion";
 import { ArrowRight, type LucideIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { revealOnScroll } from "@/lib/framer-animations";
-import {
-  DUR,
-  EASE_OUT,
-  REVEAL,
-  SPRING_SOFT,
-  stagger,
-  VIEWPORT,
-} from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
 
 /**
- * The scroll act that follows the 3D tree.
+ * The offer stack that follows the 3D tree.
  *
  * The tree stops at the panel edge; this continues it. A branch draws down the
- * page as you scroll, each category is a node on that branch glowing in its own
- * accent, and its services bud off one at a time. The motion vocabulary is
- * deliberately the hero's (velocity skew, magnetic pull) so the page reads as
- * one site rather than a catalogue of effects.
+ * page as you scroll, each category is a stop on that branch glowing in its own
+ * accent, and its three offers bud off as cards.
  *
- * Everything heavy is gated: `useReducedMotion` collapses it to a plain list,
- * and coarse pointers skip the velocity skew (it shears badly during touch
- * momentum scrolling: the same reason HeroSection disables it).
+ * The cards are a grid rather than a list so a row's cards share a height and
+ * their prices land on one line: a price you can compare across three offers
+ * without moving your eye is most of what makes a rate card read as considered.
+ * Each card is one link, so there is one focus stop and one 44px-plus target per
+ * offer, and it carries the same `/contact` router state the tree's detail card
+ * does.
+ *
+ * Everything decorative is gated behind `useReducedMotion`, which collapses the
+ * section to a static grid.
  */
 
 export type OfferService = {
   key: string;
   title: string;
   description: string;
+  /** The short capability chips shown under the description. */
+  features: readonly string[];
   price: string;
   icon: LucideIcon;
   inquiry: { label: string; subject: string; message: string };
@@ -70,7 +68,7 @@ const rgba = (hex: string, alpha: number) => {
 };
 
 /**
- * Counts the leading figure up when the row arrives, keeping the rest of the
+ * Counts the leading figure up when the card arrives, keeping the rest of the
  * price verbatim: "200 CHF + 50/mo" animates the 200 and leaves the tail alone.
  */
 function PriceCounter({ price, accent }: { price: string; accent: string }) {
@@ -95,119 +93,127 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
     return () => controls.stop();
   }, [inView, match, reduce, count, target]);
 
+  // Same colour either way, so the settled price looks identical whether it
+  // counted up or was painted straight in.
   if (!match || reduce) {
     return (
-      <span className="font-mono text-xs" ref={ref}>
+      <span
+        className="font-mono text-[13px] tabular-nums"
+        ref={ref}
+        style={{ color: accent }}
+      >
         {price}
       </span>
     );
   }
 
   return (
-    <span className="font-mono text-xs tabular-nums" ref={ref}>
-      <motion.span style={{ color: inView ? accent : undefined }}>
-        {rounded}
-      </motion.span>
+    <span
+      className="font-mono text-[13px] tabular-nums"
+      ref={ref}
+      style={{ color: accent }}
+    >
+      {/* A motion value only renders as text inside a motion component. */}
+      <motion.span>{rounded}</motion.span>
       {tail}
     </span>
   );
 }
 
-function ServiceRow({
-  service,
+function ServiceCard({
   accentText,
-  skew,
+  ctaLabel,
+  includesLabel,
+  inquireLabel,
+  service,
 }: {
-  service: OfferService;
   accentText: string;
-  skew: ReturnType<typeof useTransform<number, number>> | null;
+  ctaLabel: string;
+  includesLabel: string;
+  inquireLabel: string;
+  service: OfferService;
 }) {
-  const ref = useRef<HTMLAnchorElement>(null);
   const Icon = service.icon;
 
-  // Magnetic pull, same feel as the hero's CTA buttons: same spring, literally.
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const x = useSpring(mx, SPRING_SOFT);
-  const y = useSpring(my, SPRING_SOFT);
-
-  // No timer of its own: the list is the stagger parent, so the rows bud off
-  // the branch in order however many services a category carries.
+  // The link wraps the title only and stretches a pseudo-element over the whole
+  // card. Wrapping the card in one <a> instead would fold the description, the
+  // chips and the price into the link's accessible name, so a screen reader
+  // would hear one long run-on string and lose the structure; this way the card
+  // keeps a real heading and readable prose, while the click target is still the
+  // entire card. No timer of its own: the grid is the stagger parent, so the
+  // cards bud off the branch in order however many offers a category carries.
   return (
-    <motion.li variants={REVEAL}>
-      <motion.div style={skew ? { skewY: skew } : undefined}>
+    <motion.li
+      className="glass-card group relative flex h-full transform-gpu flex-col rounded-2xl p-5"
+      variants={REVEAL}
+    >
+      <span
+        aria-hidden
+        className="mb-4 inline-flex h-11 w-11 flex-none transform-gpu items-center justify-center rounded-xl transition-transform duration-200 ease-out group-hover:scale-105"
+        style={{
+          background: rgba(accentText, 0.1),
+          boxShadow: `0 0 0 1px ${rgba(accentText, 0.22)}`,
+          color: accentText,
+        }}
+      >
+        <Icon className="h-5 w-5" />
+      </span>
+
+      <h3 className="font-semibold text-[17px] leading-snug">
         <Link
-          className="group relative flex items-start gap-4 py-6 focus-visible:outline-none sm:gap-5"
-          onMouseLeave={() => {
-            mx.set(0);
-            my.set(0);
-          }}
-          onMouseMove={(e) => {
-            const r = ref.current?.getBoundingClientRect();
-            if (!r) return;
-            mx.set((e.clientX - (r.left + r.width / 2)) * 0.03);
-            my.set((e.clientY - (r.top + r.height / 2)) * 0.12);
-          }}
-          ref={ref}
+          aria-label={inquireLabel.replace("{service}", service.title)}
+          className="rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-primary/70"
           state={service.inquiry}
           to="/contact"
         >
-          {/* Accent wash that sweeps in from the branch side on hover. */}
-          <span
-            aria-hidden
-            className="-inset-x-4 -inset-y-1 pointer-events-none absolute origin-left scale-x-0 transform-gpu rounded-2xl opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100 group-focus-visible:scale-x-100 group-focus-visible:opacity-100"
-            style={{
-              background: `linear-gradient(90deg, ${rgba(accentText, 0.09)} 0%, transparent 70%)`,
-            }}
-          />
-
-          <motion.span className="relative flex min-w-0 flex-1 items-start gap-4 sm:gap-5" style={{ x, y }}>
-            <span
-              aria-hidden
-              className="mt-0.5 flex h-10 w-10 flex-none transform-gpu items-center justify-center rounded-xl transition-transform duration-200 ease-out group-hover:scale-110"
-              style={{
-                background: rgba(accentText, 0.1),
-                color: accentText,
-                boxShadow: `0 0 0 1px ${rgba(accentText, 0.22)}`,
-              }}
-            >
-              <Icon className="h-5 w-5" />
-            </span>
-
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <span className="font-semibold text-base transition-colors duration-200 ease-out sm:text-lg">
-                  {service.title}
-                </span>
-                <span className="text-muted-foreground">
-                  <PriceCounter accent={accentText} price={service.price} />
-                </span>
-              </span>
-              <span className="mt-1.5 block text-muted-foreground text-sm leading-relaxed">
-                {service.description}
-              </span>
-            </span>
-
-            <ArrowRight
-              aria-hidden
-              className="mt-3 h-4 w-4 flex-none translate-x-0 text-muted-foreground/30 transition-transform duration-200 ease-out group-hover:translate-x-1"
-              style={{ color: undefined }}
-            />
-          </motion.span>
+          {service.title}
         </Link>
-      </motion.div>
+      </h3>
+      <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+        {service.description}
+      </p>
+
+      <p className="sr-only">{includesLabel}</p>
+      <ul className="mt-4 flex flex-wrap gap-1.5">
+        {service.features.map((feature) => (
+          <li
+            className="rounded-full border border-border/40 bg-muted/40 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
+            key={feature}
+          >
+            {feature}
+          </li>
+        ))}
+      </ul>
+
+      {/* `mt-auto` pins the footer to the card's bottom, and grid stretch makes
+          the cards in a row the same height, so the three prices in a row sit on
+          one line without a hard-coded height anywhere. */}
+      <div className="mt-auto flex items-center justify-between gap-3 border-border/30 border-t pt-4">
+        <PriceCounter accent={accentText} price={service.price} />
+        <span
+          aria-hidden
+          className="inline-flex items-center gap-1.5 font-medium text-[13px] text-foreground/70 transition-colors duration-200 ease-out group-hover:text-primary"
+        >
+          {ctaLabel}
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+        </span>
+      </div>
     </motion.li>
   );
 }
 
 function CategoryStage({
   category,
+  ctaLabel,
+  includesLabel,
   index,
-  skew,
+  inquireLabel,
 }: {
   category: OfferCategory;
+  ctaLabel: string;
+  includesLabel: string;
   index: number;
-  skew: ReturnType<typeof useTransform<number, number>> | null;
+  inquireLabel: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
@@ -223,27 +229,31 @@ function CategoryStage({
 
   return (
     <div className="relative" ref={ref}>
-      {/* Accent bloom — the section's colour breathing behind the content. */}
+      {/* Accent bloom, the category's colour breathing behind the content. */}
       {!reduce && (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-x-[-20%] inset-y-[-10%] -z-10"
+          className="-z-10 pointer-events-none absolute inset-x-[-20%] inset-y-[-10%]"
           style={{
-            opacity: bloom,
             background: `radial-gradient(60% 50% at 20% 50%, ${rgba(category.accent, 0.16)} 0%, transparent 70%)`,
+            opacity: bloom,
           }}
         />
       )}
 
-      {/* Oversized ghost numeral, parallaxing behind the header. */}
+      {/* Oversized ghost numeral, parallaxing as a watermark behind the
+          category name. It sits left rather than right because the entry price
+          holds the right edge, and two things drifting into each other at the
+          same corner reads as a collision rather than as depth. Hidden on narrow
+          screens, where there is nowhere for it to sit that is not behind copy. */}
       {!reduce && (
         <motion.span
           aria-hidden
-          className="-z-10 pointer-events-none absolute top-0 right-0 select-none font-bold leading-none"
+          className="-z-10 -left-4 -top-10 pointer-events-none absolute hidden select-none font-bold leading-none sm:block"
           style={{
+            color: rgba(category.accent, 0.09),
+            fontSize: "clamp(6rem, 12vw, 10rem)",
             y: ghostY,
-            fontSize: "clamp(7rem, 18vw, 15rem)",
-            color: rgba(category.accent, 0.07),
           }}
         >
           {String(index + 1).padStart(2, "0")}
@@ -251,24 +261,29 @@ function CategoryStage({
       )}
 
       <motion.div {...revealOnScroll(reduce, stagger())}>
-        <motion.div
-          className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pb-5"
-          variants={REVEAL}
-        >
-          <div className="min-w-0">
+        <motion.div className="pb-5" variants={REVEAL}>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h2
               className="font-bold text-3xl tracking-tight sm:text-4xl"
               style={{ textShadow: `0 0 44px ${rgba(category.accent, 0.3)}` }}
             >
               {category.label}
             </h2>
-            <p className="mt-1.5 text-muted-foreground text-sm">
-              {category.desc}
+            {/* The entry price as a tag beside the name rather than flung to
+                the far edge: at this column width a right-aligned price sat a
+                thousand pixels from the thing it was pricing. */}
+            <p
+              className="inline-flex flex-none items-center rounded-full border px-3 py-1.5 font-mono text-xs"
+              style={{
+                background: rgba(category.accentText, 0.07),
+                borderColor: rgba(category.accentText, 0.3),
+                color: category.accentText,
+              }}
+            >
+              {category.fromLabel}
             </p>
           </div>
-          <p className="font-mono text-xs" style={{ color: category.accentText }}>
-            {category.fromLabel}
-          </p>
+          <p className="mt-2 text-muted-foreground text-sm">{category.desc}</p>
         </motion.div>
 
         {/* Rule that wipes in under the header, in the category accent. Its own
@@ -286,15 +301,17 @@ function CategoryStage({
       </motion.div>
 
       <motion.ul
-        className="divide-y divide-border/10"
+        className="mt-7 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
         {...revealOnScroll(reduce, stagger())}
       >
         {category.services.map((service) => (
-          <ServiceRow
+          <ServiceCard
             accentText={category.accentText}
+            ctaLabel={ctaLabel}
+            includesLabel={includesLabel}
+            inquireLabel={inquireLabel}
             key={service.key}
             service={service}
-            skew={skew}
           />
         ))}
       </motion.ul>
@@ -304,24 +321,20 @@ function CategoryStage({
 
 export function ServiceOffers({
   categories,
+  ctaLabel,
+  includesLabel,
+  inquireLabel,
 }: {
   categories: OfferCategory[];
+  /** The in-card action label, e.g. "Get in touch". */
+  ctaLabel: string;
+  /** Screen-reader label introducing a card's feature chips. */
+  includesLabel: string;
+  /** Accessible name for a card link; `{service}` is replaced with its title. */
+  inquireLabel: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  // Velocity skew shears badly during touch-momentum scrolling, desktop only,
-  // matching HeroSection's `reduceFx` gate.
-  const [fine] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: fine)").matches,
-  );
-
-  const { scrollY } = useScroll();
-  const velocity = useVelocity(scrollY);
-  const smooth = useSpring(velocity, { damping: 45, stiffness: 300 });
-  const skewRaw = useTransform(smooth, [-2200, 0, 2200], [1.6, 0, -1.6]);
-  const skew = !reduce && fine ? skewRaw : null;
 
   // The branch: draws downward as the whole stack scrolls through.
   const { scrollYProgress } = useScroll({
@@ -336,7 +349,7 @@ export function ServiceOffers({
 
   return (
     <div className="relative lg:pl-20" ref={ref}>
-      {/* The branch continuing out of the 3D tree above. Decorative, desktop —
+      {/* The branch continuing out of the 3D tree above. Decorative, desktop:
           the content stack reads identically without it. */}
       {!reduce && (
         <svg
@@ -363,18 +376,20 @@ export function ServiceOffers({
             stroke="url(#branch-gradient)"
             strokeLinecap="round"
             strokeWidth="2"
-            style={{ pathLength: draw, opacity: 0.55 }}
+            style={{ opacity: 0.55, pathLength: draw }}
           />
         </svg>
       )}
 
-      <div className="space-y-24 sm:space-y-32">
+      <div className="space-y-20 sm:space-y-28">
         {categories.map((category, i) => (
           <CategoryStage
             category={category}
+            ctaLabel={ctaLabel}
+            includesLabel={includesLabel}
             index={i}
+            inquireLabel={inquireLabel}
             key={category.key}
-            skew={skew}
           />
         ))}
       </div>

@@ -8,7 +8,7 @@ import {
   Github,
   Sparkles,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,7 @@ import {
 import { translations } from "@/lib/translations";
 import LogoLoop from "@/components/effects/LogoLoop";
 import {
+  Lightbox,
   Magnetic,
   SpotlightCard,
   StatStrip,
@@ -168,6 +169,7 @@ const ProjectDetails = () => {
     damping: 28,
     restDelta: 0.001,
   });
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (!project) {
     return <Navigate replace to="/projects" />;
@@ -189,7 +191,7 @@ const ProjectDetails = () => {
 
   /* Spec-rail rows (year / role / languages / OS), only render what exists. */
   const specRows: Array<{ label: string; value: ReactNode }> = [
-    { label: t.present, value: projectTimeline },
+    { label: t.timeline, value: projectTimeline },
     { label: t.role, value: project.roleSummary },
   ];
   if (project.programmingLanguages?.length) {
@@ -201,6 +203,22 @@ const ProjectDetails = () => {
   if (project.operatingSystem) {
     specRows.push({ label: "Platform", value: project.operatingSystem });
   }
+
+  /* Every full-size image on the page, in reading order: the hero screenshot
+     (icon-mode projects have a logo there, not a screenshot) followed by the
+     in-context shots woven through the body. The lightbox walks this list, so
+     each figure only has to know its own offset into it. */
+  const heroShot = project.image && !project.imageIcon ? project.image : null;
+  const galleryImages = [
+    ...(heroShot ? [heroShot] : []),
+    ...(project.gallery ?? []),
+  ];
+  const shotIndex = (galleryPosition: number) =>
+    galleryPosition + (heroShot ? 1 : 0);
+  const shotLabel = (position: number) =>
+    t.viewImage
+      .replace("{index}", String(position + 1))
+      .replace("{total}", String(galleryImages.length));
 
   return (
     <>
@@ -251,7 +269,7 @@ const ProjectDetails = () => {
         <section className="relative overflow-hidden">
           <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 pb-12 sm:px-6 sm:pb-16 md:px-8 lg:px-16">
             {/* Breadcrumb + back */}
-            <div className="mb-14 flex flex-wrap items-center justify-between gap-4">
+            <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
               <nav
                 aria-label="Breadcrumb"
                 className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground"
@@ -388,6 +406,8 @@ const ProjectDetails = () => {
                       alt={`${project.title} screenshot`}
                       className="w-full max-w-xl"
                       label={liveHost}
+                      onOpen={() => setLightboxIndex(0)}
+                      openLabel={shotLabel(0)}
                       priority
                       src={project.image}
                     />
@@ -396,8 +416,28 @@ const ProjectDetails = () => {
               ) : null}
             </div>
 
+            {/* Spec rail. It used to exist only in the desktop sticky aside, so
+                a phone got the title and the buttons and none of the facts. */}
+            <motion.dl
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-border/30 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
+            >
+              {specRows.map((row) => (
+                <div className="max-w-xs" key={row.label}>
+                  <dt className="font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.18em]">
+                    {row.label}
+                  </dt>
+                  <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </motion.dl>
+
             {project.stats?.length ? (
-              <div className="mt-14">
+              <div className="mt-12">
                 <StatStrip stats={project.stats} />
               </div>
             ) : null}
@@ -408,7 +448,7 @@ const ProjectDetails = () => {
         {/* BODY — veil dissolves into a solid reading surface           */}
         {/* ============================================================ */}
         <div
-          className="relative pb-28 pt-40 sm:pt-48"
+          className="relative pb-24 pt-28 sm:pb-28 sm:pt-36"
           style={{
             background:
               "linear-gradient(to bottom, hsl(var(--background) / 0) 0px, hsl(var(--background) / 0.1) 80px, hsl(var(--background) / 0.92) 220px, hsl(var(--background)) 320px)",
@@ -473,6 +513,8 @@ const ProjectDetails = () => {
                 <TiltFigure
                   alt={`${project.title} interface`}
                   label={liveHost}
+                  onOpen={() => setLightboxIndex(shotIndex(0))}
+                  openLabel={shotLabel(shotIndex(0))}
                   src={project.gallery?.[0]}
                 />
 
@@ -519,6 +561,8 @@ const ProjectDetails = () => {
                 <TiltFigure
                   alt={`${project.title} interface`}
                   label={liveHost}
+                  onOpen={() => setLightboxIndex(shotIndex(1))}
+                  openLabel={shotLabel(shotIndex(1))}
                   src={project.gallery?.[1]}
                 />
 
@@ -557,6 +601,8 @@ const ProjectDetails = () => {
                 <TiltFigure
                   alt={`${project.title} interface`}
                   label={liveHost}
+                  onOpen={() => setLightboxIndex(shotIndex(2))}
+                  openLabel={shotLabel(shotIndex(2))}
                   src={project.gallery?.[2]}
                 />
 
@@ -720,26 +766,45 @@ const ProjectDetails = () => {
               className="mt-24 border-border/30 border-t pt-14"
               {...reveal}
             >
-              <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
-                {t.moreProjects}
-              </h2>
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
+                  {t.moreProjects}
+                </h2>
+                <Link
+                  className="inline-flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
+                  to="/projects"
+                >
+                  {t.allProjects}
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              {/* One rail, two behaviours: a snapping swipe deck on a phone
+                  (a nine-card grid there is a wall of scrolling) and the grid
+                  from `sm` up. The negative margin lets the first and last
+                  cards sit flush with the page gutter while still scrolling
+                  edge to edge. */}
+              {/* The gutter under `sm` is 32px, not 16: index.css adds a 1rem
+                  padding to every `section` below 768px on top of this
+                  container's `px-4`. The bleed has to clear both or the first
+                  card sits 16px left of the heading above it. */}
+              <div className="-mx-8 mt-8 flex snap-x snap-mandatory scroll-pl-8 gap-4 overflow-x-auto px-8 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
                 {otherProjects.map((item) => (
                   <Link
-                    className="group glass-deep flex flex-col rounded-2xl p-5 transition hover:border-primary/30"
+                    className="group glass-deep flex w-[78vw] max-w-sm shrink-0 snap-start flex-col rounded-2xl p-5 transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none"
                     key={item.slug}
                     to={`/projects/${item.slug}`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="font-heading text-lg tracking-tight transition-colors group-hover:text-primary">
+                        <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
                           {item.title}
                         </p>
                         <p className="mt-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.18em]">
                           {item.dateLabel}
                         </p>
                       </div>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-primary" />
                     </div>
                     <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
                       {item.description}
@@ -756,6 +821,24 @@ const ProjectDetails = () => {
           </div>
         </div>
       </div>
+
+      {lightboxIndex !== null && galleryImages.length > 0 ? (
+        <Lightbox
+          alt={`${project.title} screenshot`}
+          images={galleryImages}
+          index={lightboxIndex}
+          labels={{
+            close: t.closeViewer,
+            counter: t.imageCounter,
+            next: t.nextImage,
+            previous: t.previousImage,
+            thumb: t.showImage,
+            title: `${project.title} ${t.gallery}`,
+          }}
+          onClose={() => setLightboxIndex(null)}
+          onSelect={setLightboxIndex}
+        />
+      ) : null}
     </>
   );
 };

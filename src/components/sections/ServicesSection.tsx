@@ -14,7 +14,15 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import type { ServiceTreeNode } from "@/components/effects/service-tree/types";
 import {
@@ -28,7 +36,7 @@ import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { Button } from "@/components/ui/button";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger, VIEWPORT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
@@ -125,6 +133,11 @@ const withAlpha = (hex: string, alpha: number) =>
  * theme tokens so the card reads on either page brightness; `accent` stays the
  * saturated hue for the glowing bar, while `accentText` carries anything with
  * words in it.
+ *
+ * It arrives on the shared soft spring rather than a tween, which is what makes
+ * it read as pushed up out of the leaf instead of faded in over it, and it takes
+ * focus on open so the keyboard lands on the close button rather than back at
+ * the top of the document.
  */
 function DetailCard({
   service,
@@ -134,6 +147,7 @@ function DetailCard({
   categoryLabel,
   inquiry,
   closeLabel,
+  includesLabel,
   getInTouchLabel,
   onClose,
 }: {
@@ -144,35 +158,63 @@ function DetailCard({
   categoryLabel: string;
   inquiry: Inquiry;
   closeLabel: string;
+  includesLabel: string;
   getInTouchLabel: string;
   onClose: () => void;
 }) {
   const Icon = service.icon;
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    // `preventScroll` because the card is already on screen: without it the
+    // browser would scroll the panel to satisfy a focus it did not need to.
+    closeRef.current?.focus({ preventScroll: true });
+  }, []);
+
   return (
     <motion.div
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="glass-deep absolute bottom-7 left-7 z-[4] w-[340px] max-w-[calc(100%-56px)] transform-gpu rounded-[20px] p-[22px] text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
-      exit={{ opacity: 0, y: 14, scale: 0.98 }}
-      initial={{ opacity: 0, y: 14, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      aria-label={item.title}
+      className="glass-deep absolute bottom-7 left-7 z-[4] w-[356px] max-w-[calc(100%-56px)] transform-gpu rounded-2xl p-6 text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
+      exit={{
+        opacity: 0,
+        scale: 0.98,
+        transition: { duration: DUR.fast, ease: EASE_OUT },
+        y: 12,
+      }}
+      initial={{ opacity: 0, scale: 0.96, y: 18 }}
       onPointerDown={(e) => e.stopPropagation()}
-      transition={{ duration: DUR.base, ease: EASE_OUT }}
+      role="dialog"
+      transition={{
+        ...SPRING_SOFT,
+        opacity: { duration: DUR.fast, ease: EASE_OUT },
+      }}
     >
+      {/* The close control reads as a control: a bordered chip rather than a
+          bare glyph, with an invisible ring of extra hit area around it so the
+          pointer target clears 44px without a 44px hole in the layout. */}
       <button
         aria-label={closeLabel}
-        className="absolute top-[15px] right-[15px] flex h-[30px] w-[30px] items-center justify-center rounded-full border-none bg-muted/60 text-muted-foreground transition-colors duration-200 ease-out hover:bg-muted hover:text-foreground"
+        className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/70 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:-inset-1.5 after:content-[''] hover:border-primary/40 hover:bg-primary/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         onClick={onClose}
+        ref={closeRef}
         type="button"
       >
         <X className="h-4 w-4" />
       </button>
 
       <div
+        aria-hidden
         className="mb-4 h-1 w-11 rounded-full"
-        style={{ background: accent, boxShadow: `0 0 16px ${withAlpha(accent, 0.85)}` }}
+        style={{
+          background: accent,
+          boxShadow: `0 0 16px ${withAlpha(accent, 0.85)}`,
+        }}
       />
 
-      <div className="mb-[13px] flex items-center gap-2">
+      <div className="mb-3.5 flex items-center gap-2">
         <span
+          aria-hidden
           className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-xl"
           style={{ background: withAlpha(accentText, 0.12), color: accentText }}
         >
@@ -182,43 +224,49 @@ function DetailCard({
           className="inline-flex items-center rounded-full px-[11px] py-1 font-bold text-[11.5px] uppercase tracking-[0.06em]"
           style={{
             background: withAlpha(accentText, 0.12),
-            color: accentText,
             border: `1px solid ${withAlpha(accentText, 0.32)}`,
+            color: accentText,
           }}
         >
           {categoryLabel}
         </span>
       </div>
 
-      <h3 className="mb-[9px] font-bold text-[22px] text-foreground leading-tight tracking-[-0.01em]">
+      <h3 className="mb-2 font-bold text-[22px] text-foreground leading-tight tracking-[-0.01em]">
         {item.title}
       </h3>
-      <p className="mb-3 text-[15px] text-muted-foreground leading-[1.55]">
+      <p className="text-[15px] text-muted-foreground leading-[1.55]">
         {item.description}
       </p>
 
-      <div className="mb-4 flex flex-wrap items-center gap-1.5">
-        <span className="rounded-md border border-border/40 bg-muted/40 px-2 py-1 font-medium font-mono text-[11px] text-foreground/80">
-          {service.price}
-        </span>
-        {item.features.map((f) => (
+      <span className="sr-only">{includesLabel}</span>
+      <div className="mt-3.5 flex flex-wrap gap-1.5">
+        {item.features.map((feature) => (
           <span
-            className="rounded-full border border-border/40 bg-muted/30 px-2.5 py-0.5 text-[11px] text-muted-foreground"
-            key={f}
+            className="rounded-full border border-border/40 bg-muted/30 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
+            key={feature}
           >
-            {f}
+            {feature}
           </span>
         ))}
       </div>
 
-      <Link
-        className="group/btn flex items-center justify-between rounded-lg border border-border/40 px-4 py-2.5 text-[13px] text-foreground/80 transition-colors duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.06] hover:text-foreground"
-        state={inquiry}
-        to="/contact"
-      >
-        {getInTouchLabel}
-        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover/btn:translate-x-0.5" />
-      </Link>
+      {/* Price and action share the footer rule, the same pairing the offer
+          cards below use, so the tree and the grid quote a price identically. */}
+      <div className="mt-5 flex items-center justify-between gap-3 border-border/30 border-t pt-4">
+        <span
+          className="font-mono font-semibold text-[15px] tabular-nums"
+          style={{ color: accentText }}
+        >
+          {service.price}
+        </span>
+        <Button asChild className="rounded-lg" size="sm" variant="soft">
+          <Link state={inquiry} to="/contact">
+            {getInTouchLabel}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </Button>
+      </div>
     </motion.div>
   );
 }
@@ -327,13 +375,17 @@ export function ServicesSection() {
   const showPanel = showExplorer && !treeFailed;
 
   return (
-    <section className="section-padding" id="services">
+    // `w-full` matters: `section-padding` centres with auto margins, and a
+    // column flex item with auto side margins is sized to its content rather
+    // than stretched. Without it this section collapsed to roughly 800px on a
+    // 1440px screen and the offer grid had nowhere to go.
+    <section className="section-padding w-full" id="services">
       {showPanel ? (
         // ── Immersive desktop panel ──────────────────────────────────────
         // No panel, no border, no vignette: the plant renders straight onto
         // the page. The canvas was always transparent (alpha renderer, zero
         // clear alpha); the dark slab was this wrapper.
-        <div className="relative mb-14 w-full">
+        <div className="relative mb-10 w-full">
           <div
             className="relative w-full"
             style={{ height: "clamp(560px, 70vh, 760px)" }}
@@ -351,7 +403,7 @@ export function ServicesSection() {
               />
             </Suspense>
 
-            {/* Eyebrow + title + tabs, overlaid top-centre. */}
+            {/* Eyebrow + title + segmented filter, overlaid top-centre. */}
             <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 pt-11 text-center">
               <p className="font-semibold text-[13px] text-muted-foreground uppercase tracking-[0.24em]">
                 {t.eyebrow}
@@ -365,19 +417,27 @@ export function ServicesSection() {
               >
                 {t.heading}
               </h1>
-              <div className="pointer-events-auto mt-6 inline-flex flex-wrap justify-center gap-1.5">
+              {/* One segmented control on its own glass track rather than four
+                  loose pills: over a moving 3D scene, unfilled labels had
+                  nothing behind them and read as text lying on the leaves. */}
+              <div
+                aria-label={t.filterLabel}
+                className="pointer-events-auto mt-6 inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-border/40 bg-background/85 p-1 shadow-sm backdrop-blur-md"
+                role="group"
+              >
                 {FILTER_IDS.map((id) => {
                   const on = active === id;
                   return (
                     <button
-                      key={id}
-                      onClick={() => selectCategory(id)}
+                      aria-pressed={on}
                       className={cn(
-                        "rounded-full px-[18px] py-[9px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out",
+                        "inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                         on
                           ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.35)]"
-                          : "bg-transparent text-muted-foreground hover:text-foreground",
+                          : "bg-transparent text-muted-foreground hover:bg-primary/[0.06] hover:text-foreground",
                       )}
+                      key={id}
+                      onClick={() => selectCategory(id)}
                       type="button"
                     >
                       {t.filters[id]}
@@ -385,6 +445,17 @@ export function ServicesSection() {
                   );
                 })}
               </div>
+              {/* The same background-coloured halo the title uses, so a line of
+                  small type stays readable where a leaf passes behind it. */}
+              <p
+                className="mt-3 text-[12.5px] text-muted-foreground"
+                style={{
+                  textShadow:
+                    "0 0 8px hsl(var(--background)), 0 0 16px hsl(var(--background))",
+                }}
+              >
+                {t.treeHint}
+              </p>
             </div>
 
             {/* Detail card. */}
@@ -396,6 +467,7 @@ export function ServicesSection() {
                   categoryLabel={t.categoryMeta[selected.category].label}
                   closeLabel={t.close}
                   getInTouchLabel={t.getInTouch}
+                  includesLabel={t.includesLabel}
                   inquiry={buildInquiry(t.items[selected.itemKey])}
                   item={t.items[selected.itemKey]}
                   key={selected.itemKey}
@@ -422,10 +494,17 @@ export function ServicesSection() {
         </div>
       ) : (
         // ── Mobile / reduced-motion / fallback header ────────────────────
-        <>
-          <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
-        </>
+        <SectionHeading className="mb-8" eyebrow={t.eyebrow} title={t.heading} />
       )}
+
+      {/* The lead. Nine prices with no framing is a rate card; one paragraph
+          ahead of them is an offer. */}
+      <motion.p
+        className="mx-auto mb-14 max-w-2xl text-balance text-center text-base text-muted-foreground leading-relaxed sm:mb-16 sm:text-lg"
+        {...revealOnScroll(reduceMotion)}
+      >
+        {t.intro}
+      </motion.p>
 
       {/* Three offers, not nine line items. The categories that used to be
           filter-only are now the page's structure. `ServiceOffers` carries the
@@ -446,36 +525,41 @@ export function ServicesSection() {
               key: service.itemKey,
               title: t.items[service.itemKey].title,
               description: t.items[service.itemKey].description,
+              features: t.items[service.itemKey].features,
               price: service.price,
               icon: service.icon,
               inquiry: buildInquiry(t.items[service.itemKey]),
             })),
           };
         })}
+        ctaLabel={t.getInTouch}
+        includesLabel={t.includesLabel}
+        inquireLabel={t.inquireAbout}
       />
 
       {/* Process + FAQ. This copy already existed in `seo-data/services.ts`,
-          fully translated, but was only ever emitted as JSON-LD — Google
+          fully translated, but was only ever emitted as JSON-LD, and Google
           requires FAQ/HowTo content to be visible to users, so the markup was
           being ignored and the visitor was told less than the crawler.
           Heading and steps cascade off one parent instead of each step running
           its own timer, so the list reads as a single sequence. */}
       <motion.div
-        className="mt-20 sm:mt-24"
+        className="mt-24 sm:mt-28"
         {...revealOnScroll(reduceMotion, stagger())}
       >
         <motion.h2
-          className="font-bold text-xl tracking-tight sm:text-2xl"
+          className="font-bold text-2xl tracking-tight sm:text-3xl"
           variants={REVEAL}
         >
           {t.processTitle}
         </motion.h2>
-        <ol className="relative mt-8 max-w-2xl space-y-7 pl-6 sm:pl-8">
+        <ol className="relative mt-9 max-w-2xl space-y-8 pl-11">
           {/* The rule draws itself as the steps arrive. Its own scaleY wipe,
-              not a REVEAL, so it keeps its independent trigger. */}
+              not a REVEAL, so it keeps its independent trigger. Offset to run
+              through the middle of the numbered tokens. */}
           <motion.span
             aria-hidden
-            className="absolute top-0 left-0 w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
+            className="absolute top-0 left-[13px] w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
             initial={{ scaleY: 0 }}
             style={{ bottom: 0 }}
             transition={{ duration: DUR.slow, ease: EASE_OUT }}
@@ -483,13 +567,15 @@ export function ServicesSection() {
             whileInView={{ scaleY: 1 }}
           />
           {howTo.step.map((step, i) => (
-            <motion.li key={step.name} variants={REVEAL}>
-              <p className="flex items-baseline gap-3">
-                <span className="font-mono text-muted-foreground/40 text-xs">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="font-medium text-base">{step.name}</span>
-              </p>
+            <motion.li className="relative" key={step.name} variants={REVEAL}>
+              {/* An opaque token so the rule passes behind, not through. */}
+              <span
+                aria-hidden
+                className="-left-11 absolute top-0 flex h-7 w-7 items-center justify-center rounded-full border border-border/50 bg-background font-mono text-[11px] text-muted-foreground"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="font-medium text-base leading-7">{step.name}</p>
               <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
                 {step.text}
               </p>
@@ -499,33 +585,37 @@ export function ServicesSection() {
       </motion.div>
 
       <motion.div
-        className="mt-20 max-w-2xl sm:mt-24"
+        className="mt-24 max-w-2xl sm:mt-28"
         {...revealOnScroll(reduceMotion, stagger())}
       >
         <motion.h2
-          className="font-bold text-xl tracking-tight sm:text-2xl"
+          className="font-bold text-2xl tracking-tight sm:text-3xl"
           variants={REVEAL}
         >
           {t.faqTitle}
         </motion.h2>
         {/* Native <details>: no JS, keyboard and screen-reader correct, and it
             keeps the answers in the DOM for crawlers even while collapsed. The
-            cascade is on the wrapper, the element itself stays native. */}
-        <div className="mt-6 divide-y divide-border/15 border-border/15 border-t">
+            cascade is on the wrapper, the element itself stays native, and the
+            open state is styled rather than animated (a height animation would
+            need JS and would take the content out of the DOM's flow). */}
+        <div className="mt-6 divide-y divide-border/30 border-border/30 border-t">
           {faqs.map((faq) => (
             <motion.details
-              className="group py-4"
+              className="group py-1.5"
               key={faq.question}
               variants={REVEAL}
             >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+              <summary className="-mx-3 flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-3 py-3 font-medium text-sm transition-colors duration-200 ease-out hover:bg-muted/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background group-open:text-primary [&::-webkit-details-marker]:hidden">
                 {faq.question}
                 <ChevronDown
                   aria-hidden
-                  className="mt-0.5 h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 ease-out group-open:rotate-180"
+                  className="h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 ease-out group-open:rotate-180"
                 />
               </summary>
-              <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+              {/* No left padding: the summary's own is cancelled by its
+                  negative margin, so the answer lines up under the question. */}
+              <p className="pt-1 pr-10 pb-4 text-muted-foreground text-sm leading-relaxed">
                 {faq.answer}
               </p>
             </motion.details>
@@ -535,7 +625,7 @@ export function ServicesSection() {
 
       {/* Bottom CTA */}
       <motion.div
-        className="mt-16 flex flex-col items-center gap-4 border-border/20 border-t pt-14 text-center"
+        className="mt-20 flex flex-col items-center gap-4 border-border/20 border-t pt-14 text-center"
         {...revealOnScroll(reduceMotion, stagger(0.2))}
       >
         <motion.p className="eyebrow" variants={REVEAL}>
@@ -546,8 +636,8 @@ export function ServicesSection() {
         </motion.h3>
         <motion.div variants={REVEAL}>
           <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
-            {/* No specific service picked — land on /contact set to "a freelance
-                project" rather than its default of "a role". */}
+            {/* No specific service picked, so land on /contact set to "a
+                freelance project" rather than its default of "a role". */}
             <Link state={{ intent: "freelance" }} to="/contact">
               {t.ctaButton}
               <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
