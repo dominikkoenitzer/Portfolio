@@ -72,10 +72,7 @@ function NameMorphTitle() {
       {/* Stable, SEO-friendly heading for assistive tech and crawlers. The
           visible name below cycles purely as decoration (aria-hidden), so it
           never re-announces every few seconds. */}
-      {/* font-sans: the heading rule would otherwise fetch the Zen Maru face
-          for text nobody sees, the only reason that font loaded on the home
-          page at all. */}
-      <h1 className="sr-only font-sans">
+      <h1 className="sr-only">
         Dominik Könitzer, {SITE_CONFIG.title}
       </h1>
       <div
