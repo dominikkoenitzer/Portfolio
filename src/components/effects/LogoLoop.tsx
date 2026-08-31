@@ -324,7 +324,7 @@ export const LogoLoop = memo(
     }, [effectiveHoverSpeed]);
 
     const renderLogoItem = useCallback(
-      (item: LogoItem, key: Key) => {
+      (item: LogoItem, key: Key, focusable: boolean) => {
         if (renderItem) {
           return (
             <li className="logoloop__item" key={key} role="listitem">
@@ -363,6 +363,12 @@ export const LogoLoop = memo(
             className="logoloop__link"
             href={item.href}
             rel="noreferrer noopener"
+            // Links in the wrap copies leave the tab order (the first copy is
+            // the one keyboard users walk) but stay clickable: at any moment
+            // most of the icons on screen belong to a copy, and a marquee
+            // where only a drifting handful respond to the pointer reads as
+            // broken.
+            tabIndex={focusable ? undefined : -1}
             target="_blank"
           >
             {content}
@@ -386,18 +392,21 @@ export const LogoLoop = memo(
             aria-hidden={copyIndex > 0}
             className="logoloop__list"
             /*
-             * The extra copies exist only so the marquee can wrap seamlessly.
-             * aria-hidden alone leaves their links in the tab order, which
-             * strands a keyboard user on something a screen reader never
-             * announces; inert takes them out of both.
+             * The extra copies exist only so the marquee can wrap seamlessly:
+             * hidden from assistive tech, and their links are taken out of the
+             * tab order below. Not `inert`: that also swallowed pointer events,
+             * so only the icons of the first copy ever opened anything.
              */
-            inert={copyIndex > 0}
             key={`copy-${copyIndex}`}
             ref={copyIndex === 0 ? seqRef : undefined}
             role="list"
           >
             {logos.map((item, itemIndex) =>
-              renderLogoItem(item, `${copyIndex}-${itemIndex}`),
+              renderLogoItem(
+                item,
+                `${copyIndex}-${itemIndex}`,
+                copyIndex === 0,
+              ),
             )}
           </ul>
         )),
