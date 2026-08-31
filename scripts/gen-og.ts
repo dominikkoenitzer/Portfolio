@@ -1,78 +1,193 @@
 /**
- * One-off generator for per-page Open Graph / social share images.
+ * One-off generator for the Open Graph / social share images.
  *
  * Every route shared the single static /og-image.png, so links to /about,
  * /projects, etc. looked identical when shared (Slack/Discord/X) or shown
- * in AI answer cards. This renders a distinct 1200x630 card per section + per
- * project in the same dark-brand style as og-image.png, served statically and
- * wired through the <SEO image=...> prop.
+ * in AI answer cards. This renders a distinct 1200x630 card for the home
+ * page, each section and each project in the site's own look (the bloom
+ * palette and the three site fonts), served statically and wired through
+ * the <SEO image=...> prop.
  *
- * Run: `bun scripts/gen-og.ts` (needs `@resvg/resvg-js`, installed transiently
- * and not kept in package.json since these change rarely).
+ * Run: `bun scripts/gen-og.ts`. Needs `@resvg/resvg-js`, which is not kept in
+ * package.json because these change rarely: install it once into the temp
+ * folder below (`cd %TEMP%/resvg && bun add @resvg/resvg-js`) or into the
+ * repo transiently. The fonts are fetched from the Google Fonts repo into the
+ * temp folder on first run; resvg cannot see web fonts.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
-import { Resvg } from "@resvg/resvg-js";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+
+const require = createRequire(import.meta.url);
+const RESVG_FALLBACK = join(tmpdir(), "resvg", "node_modules", "@resvg", "resvg-js");
+const { Resvg } = (() => {
+  try {
+    return require("@resvg/resvg-js");
+  } catch {
+    return require(RESVG_FALLBACK);
+  }
+})();
+
+const FONT_DIR = join(tmpdir(), "og-fonts");
+const FONT_FILES = [
+  "bowlbyonesc/BowlbyOneSC-Regular.ttf",
+  "zenmarugothic/ZenMaruGothic-Medium.ttf",
+  "zenmarugothic/ZenMaruGothic-Bold.ttf",
+  "zenkakugothicnew/ZenKakuGothicNew-Regular.ttf",
+  "zenkakugothicnew/ZenKakuGothicNew-Medium.ttf",
+];
+
+async function ensureFonts(): Promise<string[]> {
+  mkdirSync(FONT_DIR, { recursive: true });
+  const paths: string[] = [];
+  for (const rel of FONT_FILES) {
+    const out = join(FONT_DIR, rel.split("/")[1]);
+    if (!existsSync(out)) {
+      const res = await fetch(`https://github.com/google/fonts/raw/main/ofl/${rel}`);
+      if (!res.ok) throw new Error(`font download failed: ${rel} (${res.status})`);
+      writeFileSync(out, new Uint8Array(await res.arrayBuffer()));
+    }
+    paths.push(out);
+  }
+  return paths;
+}
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const FONT = "Segoe UI, Arial, sans-serif";
+// The bloom tokens from index.css, resolved to hex: page background, primary
+// violet, foreground, muted foreground, and the two grainient end stops.
+const BG = "#fdf0f2";
+const PRIMARY = "#513569";
+const FOREGROUND = "#221730";
+const MUTED = "#645a72";
+const VIOLET = "#453161";
+const SAGE = "#b6d088";
 
-const card = (title: string, subtitle: string) =>
-  `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+const TITLE_FONT = "Bowlby One SC";
+const SUB_FONT = "Zen Maru Gothic";
+const BODY_FONT = "Zen Kaku Gothic New";
+
+/** Greedy word wrap for the subtitle: two lines at most, so it never runs
+ *  under the footer. */
+function wrap(text: string, max: number): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let line = "";
+  for (const w of words) {
+    const next = line ? `${line} ${w}` : w;
+    if (next.length > max && line) {
+      lines.push(line);
+      line = w;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 2);
+}
+
+const backdrop = `
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a0f1e"/>
-      <stop offset="1" stop-color="#0d1428"/>
+    <linearGradient id="wash" x1="0" y1="0" x2="1" y2="0.35">
+      <stop offset="0" stop-color="${VIOLET}" stop-opacity="0.30"/>
+      <stop offset="0.48" stop-color="${SAGE}" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="${BG}" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="glow" cx="22%" cy="40%" r="60%">
-      <stop offset="0" stop-color="#2563eb" stop-opacity="0.22"/>
-      <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+    <radialGradient id="glow" cx="18%" cy="30%" r="55%">
+      <stop offset="0" stop-color="${PRIMARY}" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="${PRIMARY}" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="name" x1="0" y1="0" x2="1" y2="0.2">
+      <stop offset="0" stop-color="${PRIMARY}"/>
+      <stop offset="0.55" stop-color="${PRIMARY}" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="${PRIMARY}"/>
+    </linearGradient>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.27  0 0 0 0 0.19  0 0 0 0 0.38  0 0 0 0.09 0"/>
+    </filter>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="${BG}"/>
+  <rect width="1200" height="630" fill="url(#wash)"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <rect x="96" y="222" width="8" height="132" rx="4" fill="#2563eb"/>
-  <text x="140" y="208" font-family="${FONT}" font-size="26" font-weight="600" letter-spacing="5" fill="#5b8def">DOMINIK KÖNITZER</text>
-  <text x="137" y="312" font-family="${FONT}" font-size="78" font-weight="700" fill="#ffffff">${esc(title)}</text>
-  <text x="140" y="374" font-family="${FONT}" font-size="36" fill="#c2cbe0">${esc(subtitle)}</text>
-  <text x="140" y="520" font-family="${FONT}" font-size="26" fill="#6b7693">dk.punds.ch</text>
+  <rect width="1200" height="630" filter="url(#grain)"/>`;
+
+const eyebrow = (text: string, y: number) =>
+  `<text x="120" y="${y}" font-family="${BODY_FONT}" font-weight="500" font-size="24" letter-spacing="6" fill="${PRIMARY}" fill-opacity="0.8">${esc(text)}</text>`;
+
+const footer = (text: string) =>
+  `<text x="120" y="552" font-family="${BODY_FONT}" font-weight="400" font-size="24" fill="${MUTED}">${esc(text)}</text>`;
+
+const subtitle = (text: string, y: number) =>
+  wrap(text, 58)
+    .map(
+      (line, i) =>
+        `<text x="120" y="${y + i * 46}" font-family="${SUB_FONT}" font-weight="500" font-size="34" fill="${FOREGROUND}" fill-opacity="0.82">${esc(line)}</text>`,
+    )
+    .join("\n  ");
+
+const card = (title: string, sub: string, path: string) =>
+  `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  ${backdrop}
+  ${eyebrow("DOMINIK KÖNITZER", 196)}
+  <text x="114" y="330" font-family="${TITLE_FONT}" font-size="104" fill="url(#name)">${esc(title)}</text>
+  ${subtitle(sub, 404)}
+  ${footer(`dk.punds.ch${path}`)}
 </svg>`;
 
-const CARDS: { out: string; title: string; subtitle: string }[] = [
-  { out: "public/og/about.png", title: "About", subtitle: "Software engineer in Zürich, Switzerland" },
-  { out: "public/og/timeline.png", title: "Timeline", subtitle: "Career & education — experience and studies" },
-  { out: "public/og/skills.png", title: "Skills & Technologies", subtitle: "React · TypeScript · Node.js · full-stack" },
-  { out: "public/og/projects.png", title: "Projects", subtitle: "Impact-focused software & web builds" },
-  { out: "public/og/services.png", title: "Services", subtitle: "Web development & software engineering" },
-  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's build something — Zürich or remote" },
-  { out: "public/og/donate.png", title: "Support My Work", subtitle: "Fund new builds, hosting & development" },
+// The home card mirrors the hero: the greeting, then the name at hero size.
+const homeCard = () =>
+  `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  ${backdrop}
+  ${eyebrow("HI, I'M", 168)}
+  <text x="114" y="292" font-family="${TITLE_FONT}" font-size="112" fill="url(#name)">Dominik</text>
+  <text x="114" y="404" font-family="${TITLE_FONT}" font-size="112" fill="url(#name)">Könitzer</text>
+  ${subtitle("Software engineer and web developer in Zürich", 470)}
+  ${footer("dk.punds.ch")}
+</svg>`;
+
+const CARDS: { out: string; title: string; subtitle: string; path: string }[] = [
+  { out: "public/og/about.png", title: "About", subtitle: "Software engineer in Zürich, Switzerland", path: "/about" },
+  { out: "public/og/timeline.png", title: "Timeline", subtitle: "School in three countries, then an internship in Lucerne", path: "/timeline" },
+  { out: "public/og/skills.png", title: "Skills", subtitle: "What I work with day to day, and what I'm still getting better at", path: "/skills" },
+  { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built and put online, source included", path: "/projects" },
+  { out: "public/og/services.png", title: "Services", subtitle: "Web development and software engineering, Zürich or remote", path: "/services" },
+  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together. One email is all it takes.", path: "/contact" },
+  { out: "public/og/donate.png", title: "Tip Jar", subtitle: "If something here clicked for you", path: "/donate" },
 ];
 
 // Per-project share cards (wired through ProjectDetails' <SEO image=...>, which
-// points at /og/projects/<slug>.png). Subtitles are short, plain summaries.
-const PROJECT_CARDS: { out: string; title: string; subtitle: string }[] = [
-  { out: "public/og/projects/time.png", title: "Time", subtitle: "NTP-synced clock, accurate to 1/100 of a second" },
-  { out: "public/og/projects/spectrum.png", title: "Spectrum", subtitle: "Color picker, palettes & WCAG contrast tools" },
-  { out: "public/og/projects/entropy.png", title: "Entropy", subtitle: "Local-only password generator & strength analyzer" },
-  { out: "public/og/projects/zephyr.png", title: "Zephyr", subtitle: "Local-first focus & productivity app" },
-  { out: "public/og/projects/senbon.png", title: "Senbon", subtitle: "A digital garden — one thousand entries" },
-  { out: "public/og/projects/punds.png", title: "Punds", subtitle: "Everything I build, in one place" },
-  { out: "public/og/projects/flow.png", title: "Flow", subtitle: "Ultra-low-latency Windows automation (C++)" },
-  { out: "public/og/projects/jester.png", title: "Jester", subtitle: "A lightweight Windows notepad (C# · WPF)" },
-  { out: "public/og/projects/remnants.png", title: "Remnants", subtitle: "A clean, AI-free fork of VS Code" },
-  { out: "public/og/projects/portfolio.png", title: "Portfolio", subtitle: "This site — React, TypeScript, multilingual" },
-  { out: "public/og/projects/oxidize.png", title: "Oxidize", subtitle: "A thorough Windows uninstaller (Rust)" },
+// points at /og/projects/<slug>.png). Subtitles follow each project's tagline.
+const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
+  { slug: "time", title: "Time", subtitle: "An NTP-synced clock, accurate to a hundredth of a second" },
+  { slug: "spectrum", title: "Spectrum", subtitle: "Five color tools under one roof, and none of them phone home" },
+  { slug: "entropy", title: "Entropy", subtitle: "Real randomness and an honest strength score, nothing leaves your browser" },
+  { slug: "zephyr", title: "Zephyr", subtitle: "A to-do list and a focus timer, all yours and all offline" },
+  { slug: "senbon", title: "Senbon", subtitle: "A digital garden that refuses to be found on Google. On purpose." },
+  { slug: "punds", title: "Punds", subtitle: "A CRT terminal that boots up to tell you where everything else lives" },
+  { slug: "flow", title: "Flow", subtitle: "Clicks faster than you can, and never needs a coffee break" },
+  { slug: "jester", title: "Jester", subtitle: "Notepad, but it grew up. Tabs, line numbers, find in files, PDF export." },
+  { slug: "remnants", title: "Remnants", subtitle: "VS Code, minus the parts that talk back" },
+  { slug: "portfolio", title: "Portfolio", subtitle: "The site you are looking at. Yes, it is in the portfolio." },
+  { slug: "oxidize", title: "Oxidize", subtitle: "Uninstall a program, then hunt down what it left behind" },
 ];
 
-for (const c of [...CARDS, ...PROJECT_CARDS]) {
-  mkdirSync(dirname(c.out), { recursive: true });
-  const resvg = new Resvg(card(c.title, c.subtitle), {
+const fontFiles = await ensureFonts();
+const render = (svg: string, out: string) => {
+  mkdirSync(dirname(out), { recursive: true });
+  const resvg = new Resvg(svg, {
     fitTo: { mode: "width", value: 1200 },
-    font: { loadSystemFonts: true, defaultFontFamily: "Segoe UI" },
+    font: { fontFiles, loadSystemFonts: false, defaultFontFamily: BODY_FONT },
   });
-  writeFileSync(c.out, resvg.render().asPng());
-  console.log("✓", c.out);
+  writeFileSync(out, resvg.render().asPng());
+  console.log("ok", out);
+};
+
+render(homeCard(), "public/og-image.png");
+for (const c of CARDS) render(card(c.title, c.subtitle, c.path), c.out);
+for (const p of PROJECT_CARDS) {
+  render(card(p.title, p.subtitle, `/projects/${p.slug}`), `public/og/projects/${p.slug}.png`);
 }
-console.log(`Generated ${CARDS.length + PROJECT_CARDS.length} OG cards.`);
+console.log(`Generated ${1 + CARDS.length + PROJECT_CARDS.length} OG cards.`);

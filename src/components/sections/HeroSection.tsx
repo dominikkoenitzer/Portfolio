@@ -249,7 +249,7 @@ export function HeroSection() {
             <Magnetic>
               <Button
                 asChild
-                className="h-10 rounded-lg border-border/30 bg-transparent px-6 text-sm font-medium hover:border-primary/25 hover:bg-primary/[0.04]"
+                className="h-10 rounded-lg border-primary/25 bg-transparent px-6 text-sm font-medium hover:border-primary/45 hover:bg-primary/[0.04]"
                 variant="outline"
               >
                 <Link to="/projects">{t.hero.viewWork}</Link>

@@ -54,7 +54,10 @@ import * as THREE from "three";
 
 const RADIUS = 2.4;
 const SPRITE = 0.62;
-const CAM_Z = 6.9; // pulled back so the full sphere fits with margin (no edge clipping while it tumbles)
+// Far enough back that the tumbling sphere (radius + half a sprite) clears the
+// frame at fov 50 with about 9% to spare; any further and it drew at a third of
+// its stage on desktop.
+const CAM_Z = 6.4;
 const AUTO_Y = 0.0016;
 const AUTO_X = 0.0008; // constant tilt so the Y-poles also drift (nothing stays still)
 const NEUTRAL = "#94A3B8"; // for monochrome marks (Next.js, Vercel, Rust, Bun)

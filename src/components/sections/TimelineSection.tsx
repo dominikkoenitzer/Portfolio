@@ -217,7 +217,7 @@ function TimelineCard({
               >
                 <span
                   aria-hidden
-                  className="absolute top-2 left-0 h-1 w-1 rounded-full bg-muted-foreground/50"
+                  className="absolute top-[0.6em] left-0 h-1.5 w-1.5 rounded-full bg-muted-foreground/70"
                 />
                 {point}
               </li>
@@ -327,7 +327,7 @@ export function TimelineSection() {
         />
 
         <motion.div
-          className="mx-auto mb-14 grid max-w-xl grid-cols-1 gap-3 sm:mb-16 sm:grid-cols-2"
+          className="mx-auto mb-12 grid max-w-xl grid-cols-1 gap-3 sm:mb-14 sm:grid-cols-2"
           {...revealOnScroll(reduceMotion, stagger())}
         >
           <CvDownload
