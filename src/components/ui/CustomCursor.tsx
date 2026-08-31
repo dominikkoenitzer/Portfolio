@@ -110,6 +110,20 @@ const MAGNET_FILL = 0.16; // accent alpha of the translucent fill while snapped
 const MAGNET_RING_W = 1.5; // px — inset accent ring while snapped
 const MAGNET_RELEASE_MARGIN = 28; // px — pointer beyond rect ⇒ release the magnet
 const PRESS_DIP = 0.2; // scale reduction on press (1 → 0.8)
+/**
+ * Frames between hit-tests that confirm the snapped target is still the topmost
+ * thing under the pointer. A rect alone cannot tell that something has been
+ * drawn over it, so the glue loop would happily keep painting the box on top of
+ * a modal the click just opened. Every fourth frame is imperceptible (~66ms)
+ * and costs one `elementFromPoint` in a loop that already reads layout.
+ */
+const OCCLUSION_EVERY = 4;
+/**
+ * Frames of per-frame hit-testing after a press. A click is what usually drops
+ * an overlay over the target, and React needs a frame or two to mount it, so
+ * the release has to be watched for rather than checked once.
+ */
+const OCCLUSION_BURST = 20;
 
 /** Border-radius of a magnetic target: `pct` pills round to half the short side. */
 type MagnetRadius = { pct: boolean; px: number };
@@ -226,6 +240,9 @@ export function CustomCursor() {
     // hide deliberately do NOT change it, so a keyboard app-or-tab switch (the
     // pointer stays put over the page) can correctly re-show on refocus.
     let inside = false;
+    // Occlusion-check bookkeeping for the glue loop, see the constants above.
+    let occlusionFrame = 0;
+    let occlusionBurst = 0;
 
     // Visibility rides a motion value, so show/hide are cheap edge-guarded
     // writes, never React state, never per-frame.
@@ -309,6 +326,22 @@ export function CustomCursor() {
       return true;
     }
 
+    /**
+     * True when the snapped target is no longer what the pointer would hit.
+     * Opening a modal over the target leaves its rect exactly where it was, so
+     * the geometry checks in `glueMagnet` all still pass and the box goes on
+     * drawing over the overlay until the pointer moves. One hit-test settles it:
+     * the target counts as reachable when it is the topmost element, contains
+     * it, or is contained by it (the pointer sitting in a parent's padding,
+     * inside the release margin, is still a hover).
+     */
+    function isOccluded(el: Element): boolean {
+      const { x, y } = pointerRef.current;
+      const top = document.elementFromPoint(x, y);
+      if (!top) return true; // nothing hit ⇒ pointer is off-viewport
+      return !(top === el || el.contains(top) || top.contains(el));
+    }
+
     // The scroll-glue loop. Alive ONLY while a magnetic target is set; it reads
     // `rafRef` back to null before rescheduling so `ensureRaf` can restart it,
     // and self-cancels (no reschedule) the moment there's no target.
@@ -316,6 +349,23 @@ export function CustomCursor() {
       rafRef.current = null;
       const el = activeTargetRef.current;
       if (!el) return;
+
+      occlusionFrame += 1;
+      const due = occlusionBurst > 0 || occlusionFrame >= OCCLUSION_EVERY;
+      if (occlusionBurst > 0) occlusionBurst -= 1;
+      if (due) {
+        occlusionFrame = 0;
+        if (isOccluded(el)) {
+          releaseMagnet();
+          // Re-read context from whatever is now on top: the pointer has not
+          // moved, so nothing else would, and a modal's own button under the
+          // pointer deserves the morph the covered element just lost.
+          const { x, y } = pointerRef.current;
+          applyContext(document.elementFromPoint(x, y));
+          return;
+        }
+      }
+
       if (!glueMagnet(el)) {
         releaseMagnet();
         return;
@@ -384,6 +434,8 @@ export function CustomCursor() {
       destFill.set(MAGNET_FILL);
       destRing.set(MAGNET_RING_W);
       fieldMV.set(0);
+      occlusionFrame = 0;
+      occlusionBurst = 0;
       glueMagnet(el); // place it this frame — no one-frame lag
       ensureRaf();
     }
@@ -456,8 +508,16 @@ export function CustomCursor() {
       applyContext(e.target as Element | null);
     };
 
-    const onDown = () => press.set(1);
-    const onUp = () => press.set(0);
+    // A press is the usual way an overlay lands on top of the snapped target, so
+    // both edges arm a short burst of per-frame occlusion checks (see `tick`).
+    const onDown = () => {
+      press.set(1);
+      occlusionBurst = OCCLUSION_BURST;
+    };
+    const onUp = () => {
+      press.set(0);
+      occlusionBurst = OCCLUSION_BURST;
+    };
 
     // Pointer physically left the viewport: mark it outside, release any magnet
     // (so re-entry starts fresh: never a stale box) and fade out.

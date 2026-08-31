@@ -1,11 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRight, Code, X } from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { useSwipe } from "@/hooks/use-swipe";
 import { isActivePath } from "@/lib/active-path";
-import { DUR, EASE_OUT, SPRING_SOFT } from "@/lib/motion";
+import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
@@ -29,23 +28,21 @@ export function NavbarMobileMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
-  // Swipe-right inside the drawer closes it: feels native on iOS/Android.
-  const swipeHandlers = useSwipe({ onSwipeRight: onClose, threshold: 70 });
   // Motion-sensitive users get the drawer in place: it fades where it stands
   // instead of sliding, and its rows arrive together instead of cascading.
   const reduceMotion = prefersReducedMotion();
-  const linkVariants = {
-    open: {
+  // Rows ride the shared cascade so the drawer opens on the same clock as every
+  // other staged reveal on the site. The old timing ran the last row 0.8s after
+  // the panel, long enough that the drawer looked like it was still loading.
+  const rowsVariants = reduceMotion ? stagger(0, 0) : stagger(0.12, 0.05);
+  const rowVariants = {
+    hidden: { opacity: 0, x: reduceMotion ? 0 : 24 },
+    show: {
       opacity: 1,
       x: 0,
       transition: reduceMotion
         ? { duration: DUR.fast, ease: EASE_OUT }
         : SPRING_SOFT,
-    },
-    closed: {
-      opacity: 0,
-      x: reduceMotion ? 0 : 50,
-      transition: { duration: DUR.fast, ease: EASE_OUT },
     },
   };
 
@@ -58,6 +55,18 @@ export function NavbarMobileMenu({
     return () => {
       window.clearTimeout(id);
       previousFocus.current?.focus?.();
+    };
+  }, [open]);
+
+  // Flag the open drawer on <html> so fixed chrome outside this subtree (the
+  // scroll-to-top button) can step out of the way. An attribute rather than a
+  // context keeps it to one write per open and costs the drawer no re-render.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    root.dataset.navOpen = "true";
+    return () => {
+      delete root.dataset.navOpen;
     };
   }, [open]);
 
@@ -90,7 +99,7 @@ export function NavbarMobileMenu({
           {/* Backdrop — tap to dismiss */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[60] transform-gpu bg-background/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-[60] transform-gpu bg-background/95 md:hidden"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={onClose}
@@ -103,16 +112,21 @@ export function NavbarMobileMenu({
             animate={reduceMotion ? { opacity: 1, x: 0 } : { x: 0 }}
             aria-label={nav.menu}
             aria-modal="true"
-            className="overflow-y-auto overscroll-contain border-border/50 border-l bg-gradient-to-br from-background via-background to-background/95 shadow-2xl shadow-primary/10 backdrop-blur-2xl md:hidden"
+            className="overflow-y-auto overscroll-contain border-border/50 border-l bg-gradient-to-br from-background via-background to-background/95 shadow-2xl shadow-primary/10 md:hidden"
             data-mobile-scroll
+            /* One gesture system, not two. The panel tracks the finger 1:1 to
+               the right (elastic 1) and springs back from the constraint when
+               the throw is too short, which is what a native drawer does; the
+               old 0.5 elasticity moved it half as far as the finger and read as
+               drag. */
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0, right: 0.5 }}
+            dragElastic={{ left: 0, right: 1 }}
             dragMomentum={false}
             exit={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
             initial={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
             onDragEnd={(_, info) => {
-              if (info.offset.x > 100 || info.velocity.x > 500) {
+              if (info.offset.x > 90 || info.velocity.x > 400) {
                 onClose();
               }
             }}
@@ -136,7 +150,6 @@ export function NavbarMobileMenu({
                 ? { duration: DUR.fast, ease: EASE_OUT }
                 : SPRING_SOFT
             }
-            {...swipeHandlers}
           >
             {/* Drag affordance — small grip on the left edge */}
             <div className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 z-20 hidden h-12 w-1 rounded-full bg-border/40 sm:block" />
@@ -155,32 +168,28 @@ export function NavbarMobileMenu({
                 ease: EASE_OUT,
               }}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <motion.div
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5"
-                    transition={SPRING_SOFT}
-                    whileHover={{ scale: 1.05, rotate: 5 }}
-                  >
-                    <Code className="h-6 w-6 text-primary" />
-                  </motion.div>
-                  <div>
-                    <h2 className="font-bold text-foreground text-lg">
-                      {nav.menu}
-                    </h2>
-                    <p className="text-muted-foreground text-xs">
-                      {nav.navigation}
-                    </p>
-                  </div>
-                </div>
+              {/* The header used to read "Menu / Navigation" beside a decorative
+                  code glyph: a label for a panel that is self-evidently a menu,
+                  and an icon that says nothing. The row now carries the one
+                  thing the list is missing, a way back to the home page, under
+                  the same wordmark the bar behind it shows. The panel keeps its
+                  accessible name from the dialog and the <nav> below. */}
+              <div className="flex items-center justify-between gap-4">
+                <Link
+                  aria-label={nav.goHome}
+                  className="min-w-0 truncate rounded-lg font-bold text-foreground text-lg tracking-tight transition-colors duration-200 ease-out hover:text-primary"
+                  onClick={onClose}
+                  to="/"
+                >
+                  Dominik Könitzer
+                </Link>
                 <motion.button
                   aria-label={nav.closeMenu}
-                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors duration-200 ease-out hover:bg-muted"
+                  className="-mr-1 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border border-border/50 bg-muted/50 transition-colors duration-200 ease-out hover:bg-muted"
                   onClick={onClose}
                   ref={closeBtnRef}
                   transition={SPRING_SOFT}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.92 }}
                 >
                   <X className="h-5 w-5 text-foreground/70" />
                 </motion.button>
@@ -189,30 +198,22 @@ export function NavbarMobileMenu({
 
             <nav aria-label={nav.menu} className="relative z-10 px-6 py-6">
               <motion.div
-                animate="open"
+                animate="show"
                 className="space-y-3"
-                initial="closed"
-                variants={{
-                  open: {
-                    transition: {
-                      staggerChildren: reduceMotion ? 0 : 0.1,
-                      delayChildren: reduceMotion ? 0 : 0.2,
-                    },
-                  },
-                  closed: {
-                    transition: {
-                      staggerChildren: reduceMotion ? 0 : 0.05,
-                      staggerDirection: -1,
-                    },
-                  },
-                }}
+                initial="hidden"
+                variants={rowsVariants}
               >
                 {navLinks.map((link, index) => {
                   const isActive = isActivePath(activePath, link.targetId);
                   return (
-                    <motion.div key={link.name} variants={linkVariants}>
+                    <motion.div key={link.name} variants={rowVariants}>
                       <Link
                         className="group relative block"
+                        /* A drag that starts on a row is a swipe-to-close, not
+                           an attempt to drag the link somewhere: without this
+                           the browser's native link drag swallows the gesture
+                           and the panel never moves. */
+                        draggable={false}
                         onClick={onClose}
                         to={link.targetId}
                       >
@@ -223,7 +224,6 @@ export function NavbarMobileMenu({
                               : "border-border/50 bg-muted/30 hover:border-primary/20 hover:bg-muted/50"
                           }`}
                           transition={SPRING_SOFT}
-                          whileHover={{ scale: 1.02, x: 4 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <motion.div
@@ -233,17 +233,19 @@ export function NavbarMobileMenu({
 
                           <div className="relative flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                              <motion.div
-                                className={`flex h-10 w-10 items-center justify-center rounded-xl border font-bold text-sm ${
+                              {/* The row is a tap target, not a hover surface:
+                                  the number and the chevron used to spin and
+                                  swell on hover, which nothing on a phone can
+                                  ever trigger. */}
+                              <div
+                                className={`flex h-10 w-10 items-center justify-center rounded-xl border font-bold text-sm tabular-nums ${
                                   isActive
                                     ? "border-primary/30 bg-primary/20 text-primary"
                                     : "border-border/50 bg-background/50 text-muted-foreground group-hover:border-primary/20"
                                 }`}
-                                transition={SPRING_SOFT}
-                                whileHover={{ scale: 1.1, rotate: 5 }}
                               >
                                 {String(index + 1).padStart(2, "0")}
-                              </motion.div>
+                              </div>
 
                               <div>
                                 <h3
@@ -271,17 +273,15 @@ export function NavbarMobileMenu({
                               </div>
                             </div>
 
-                            <motion.div
+                            <div
                               className={`transition-colors duration-200 ease-out ${
                                 isActive
                                   ? "text-primary"
                                   : "text-muted-foreground group-hover:text-primary"
                               }`}
-                              transition={SPRING_SOFT}
-                              whileHover={{ x: 4, rotate: -45 }}
                             >
                               <ChevronRight className="h-6 w-6" />
-                            </motion.div>
+                            </div>
                           </div>
 
                           {isActive && (
@@ -308,13 +308,13 @@ export function NavbarMobileMenu({
                 className="mt-8 border-border/20 border-t pt-6"
                 initial={{ opacity: 0, y: reduceMotion ? 0 : 10 }}
                 transition={{
-                  delay: reduceMotion ? 0 : 0.7,
+                  delay: reduceMotion ? 0 : 0.45,
                   duration: DUR.base,
                   ease: EASE_OUT,
                 }}
               >
                 <Link
-                  className="group flex items-center justify-center gap-2 text-muted-foreground text-xs transition-colors duration-200 ease-out hover:text-foreground"
+                  className="group flex min-h-11 items-center justify-center gap-2 text-muted-foreground text-xs transition-colors duration-200 ease-out hover:text-foreground"
                   onClick={onClose}
                   to="/privacy"
                 >

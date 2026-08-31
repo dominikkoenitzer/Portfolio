@@ -1,47 +1,62 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
+import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+
+/**
+ * Both icon links are the same 44px square on every pointer, so the two targets
+ * match and clear the WCAG minimum without the global coarse-pointer fallback
+ * having to stretch them. The lift rides the independent `translate` property
+ * rather than a transform utility: these sit inside a framer subtree, and framer
+ * writes a finished entrance back as an inline `transform: none` that would
+ * out-rank a class rule for good (same reason as `.btn-raise` in index.css).
+ */
+const ICON_LINK =
+  "inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-[color,translate] duration-200 ease-out hover:text-primary hover:[translate:0_-2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export function Footer() {
   const { language } = useLanguage();
   const t = translations[language];
+  const reduceMotion = useReducedMotion();
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="border-border/30 border-t bg-background pb-safe">
-      <div className="mx-auto max-w-7xl px-6 py-12 sm:px-8 md:px-12 lg:px-16">
-        <div className="flex flex-col items-center md:flex-row md:justify-between">
-          <motion.div
-            className="mb-6 md:mb-0"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <Link className="font-bold text-xl tracking-tight" to="/">
+      <motion.div
+        className="mx-auto max-w-7xl px-6 py-12 sm:px-8 md:px-12 lg:px-16"
+        {...revealOnScroll(reduceMotion, stagger())}
+      >
+        {/* Row one: who this is, and where else he is. */}
+        <div className="flex flex-col items-center gap-7 text-center sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:text-left">
+          <motion.div className="min-w-0" variants={REVEAL}>
+            <Link
+              className="rounded-sm font-bold text-xl tracking-tight transition-colors duration-200 ease-out hover:text-primary"
+              to="/"
+            >
               Dominik Könitzer
             </Link>
-            <p className="mt-1 text-muted-foreground text-sm">
+            <p className="mt-1.5 text-muted-foreground text-sm">
               {t.footer.tagline}
             </p>
           </motion.div>
 
+          {/* The negative margin pulls the 44px squares back out to the column
+              edge, so the icons stay optically aligned with the text above. */}
           <motion.div
-            className="mb-6 flex space-x-6 md:mb-0"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
+            className="-mx-2.5 flex shrink-0 items-center gap-1 sm:mx-0 sm:-mr-2.5"
+            variants={REVEAL}
           >
             <a
               aria-label="GitHub"
-              className="text-muted-foreground transition-colors hover:text-primary"
+              className={ICON_LINK}
               href="https://github.com/dominikkoenitzer"
               rel="noopener noreferrer"
               target="_blank"
             >
               <svg
+                aria-hidden="true"
                 className="lucide lucide-github"
                 fill="none"
                 height="20"
@@ -58,14 +73,15 @@ export function Footer() {
               </svg>
             </a>
             <a
-              aria-label="Journal"
-              className="text-muted-foreground transition-colors hover:text-primary"
+              aria-label={t.footer.journal}
+              className={ICON_LINK}
               href="https://senbon.ch/"
               rel="noopener noreferrer"
               target="_blank"
-              title="My Journal - A zen garden for thoughts and notes"
+              title={t.footer.journal}
             >
               <svg
+                aria-hidden="true"
                 className="lucide lucide-book-open"
                 fill="none"
                 height="20"
@@ -84,27 +100,24 @@ export function Footer() {
           </motion.div>
         </div>
 
+        {/* Row two: the hairline runs the full content width, and the legal line
+            keeps a 44px target for the one link it carries. */}
         <motion.div
-          className="mt-8 flex flex-col items-center justify-between border-border/40 border-t pt-8 sm:flex-row"
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="mt-9 flex flex-col items-center gap-1 border-border/40 border-t pt-5 text-center sm:mt-10 sm:flex-row sm:justify-between sm:gap-6 sm:pt-6 sm:text-left"
+          variants={REVEAL}
         >
-          <p className="mb-4 text-muted-foreground text-sm sm:mb-0">
+          <p className="text-muted-foreground text-sm">
             © {currentYear} Dominik Könitzer. {t.footer.rights}
           </p>
 
-          <div className="flex space-x-6">
-            <Link
-              className="text-muted-foreground text-sm transition-colors hover:text-primary"
-              to="/privacy"
-            >
-              {t.footer.privacyPolicy}
-            </Link>
-          </div>
+          <Link
+            className="inline-flex min-h-[44px] items-center rounded-sm text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary"
+            to="/privacy"
+          >
+            {t.footer.privacyPolicy}
+          </Link>
         </motion.div>
-      </div>
+      </motion.div>
     </footer>
   );
 }

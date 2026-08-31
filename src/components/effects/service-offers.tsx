@@ -74,7 +74,9 @@ const rgba = (hex: string, alpha: number) => {
 function PriceCounter({ price, accent }: { price: string; accent: string }) {
   // `accent` here is already the text-contrast variant (see OfferCategory).
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
+  // No inset margin: a price that is on screen at all should count, or a card
+  // sitting on the fold shows "0 CHF" until the visitor scrolls.
+  const inView = useInView(ref, { once: true });
   const reduce = useReducedMotion();
 
   const match = price.match(/^(\d+)([\s\S]*)$/);
