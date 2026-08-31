@@ -209,9 +209,7 @@ export function ProjectsSection() {
             <Wrench className="h-6 w-6" />
           </span>
           <p className="eyebrow mb-3">{t.wipEyebrow}</p>
-          <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
-            {t.wipTitle}
-          </h2>
+          <h2 className="font-bold text-xl sm:text-2xl">{t.wipTitle}</h2>
           <p className="mt-4 max-w-md text-balance text-muted-foreground leading-relaxed">
             {t.wipBody}
           </p>

@@ -404,16 +404,15 @@ export function ServicesSection() {
             </Suspense>
 
             {/* Eyebrow + title + segmented filter, overlaid top-centre. */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 pt-11 text-center">
-              <p className="font-semibold text-[13px] text-muted-foreground uppercase tracking-[0.24em]">
-                {t.eyebrow}
-              </p>
+            {/* Same eyebrow and title classes as SectionHeading, so this page's
+                title matches every other page's to the pixel. The only extra
+                is the background-coloured halo that keeps it legible where a
+                leaf of the tree passes behind it. */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 text-center">
+              <p className="eyebrow mb-3">{t.eyebrow}</p>
               <h1
-                className="mt-2.5 font-bold text-foreground tracking-[-0.025em]"
-                style={{
-                  fontSize: "clamp(38px, 4.4vw, 58px)",
-                  textShadow: "0 2px 30px hsl(var(--background))",
-                }}
+                className="font-bold text-3xl md:text-4xl"
+                style={{ textShadow: "0 2px 30px hsl(var(--background))" }}
               >
                 {t.heading}
               </h1>
@@ -494,7 +493,7 @@ export function ServicesSection() {
         </div>
       ) : (
         // ── Mobile / reduced-motion / fallback header ────────────────────
-        <SectionHeading className="mb-8" eyebrow={t.eyebrow} title={t.heading} />
+        <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
       )}
 
       {/* The lead. Nine prices with no framing is a rate card; one paragraph
@@ -548,7 +547,7 @@ export function ServicesSection() {
         {...revealOnScroll(reduceMotion, stagger())}
       >
         <motion.h2
-          className="font-bold text-2xl tracking-tight sm:text-3xl"
+          className="font-bold text-xl sm:text-2xl"
           variants={REVEAL}
         >
           {t.processTitle}
@@ -589,7 +588,7 @@ export function ServicesSection() {
         {...revealOnScroll(reduceMotion, stagger())}
       >
         <motion.h2
-          className="font-bold text-2xl tracking-tight sm:text-3xl"
+          className="font-bold text-xl sm:text-2xl"
           variants={REVEAL}
         >
           {t.faqTitle}
@@ -631,7 +630,7 @@ export function ServicesSection() {
         <motion.p className="eyebrow" variants={REVEAL}>
           {t.ctaEyebrow}
         </motion.p>
-        <motion.h3 className="font-bold text-2xl md:text-3xl" variants={REVEAL}>
+        <motion.h3 className="font-bold text-xl sm:text-2xl" variants={REVEAL}>
           {t.ctaTitle}
         </motion.h3>
         <motion.div variants={REVEAL}>
