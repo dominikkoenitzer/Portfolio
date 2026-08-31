@@ -10,6 +10,7 @@ import {
   type LanguageContextValue,
 } from "@/lib/language-context";
 import { type Language, SUPPORTED_LANGUAGE_CODES } from "@/config/languages";
+import { isTranslationLoaded, loadTranslation } from "@/lib/translations";
 
 const STORAGE_KEY = "preferred-language";
 
@@ -72,36 +73,62 @@ export function LanguageProvider({
     () => readStored() ?? detected.resolved ?? defaultLanguage,
   );
 
-  const setLanguage = useCallback((next: Language) => {
-    setLanguageState(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* private mode etc., the in-memory choice still applies */
-    }
+  // Only English ships in the entry chunk; the other languages are fetched on
+  // demand (see lib/translations). Nothing renders under the provider until
+  // the initial language's copy is in memory, so `translations[language]` is
+  // never read before it exists. English visitors pay nothing; the others
+  // wait one small request instead of seeing an English page flip over.
+  const [ready, setReady] = useState(() => isTranslationLoaded(language));
+  useEffect(() => {
+    if (ready) return;
+    let cancelled = false;
+    loadTranslation(language).then(() => {
+      if (!cancelled) setReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language, ready]);
+
+  // Every path that changes the language goes through here, so the copy is
+  // always loaded before the switch is visible.
+  const applyLanguage = useCallback((next: Language) => {
+    loadTranslation(next).then(() => setLanguageState(next));
   }, []);
+
+  const setLanguage = useCallback(
+    (next: Language) => {
+      applyLanguage(next);
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        /* private mode etc., the in-memory choice still applies */
+      }
+    },
+    [applyLanguage],
+  );
 
   // Mirror the choice across open tabs.
   useEffect(() => {
     const sync = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY && e.newValue && isSupported(e.newValue)) {
-        setLanguageState(e.newValue);
+        applyLanguage(e.newValue);
       }
     };
     window.addEventListener("storage", sync);
     return () => window.removeEventListener("storage", sync);
-  }, []);
+  }, [applyLanguage]);
 
   // Track the OS/browser language until the user makes an explicit choice.
   useEffect(() => {
     const onBrowserChange = () => {
       if (readStored() === null) {
-        setLanguageState(detectFromBrowser().resolved);
+        applyLanguage(detectFromBrowser().resolved);
       }
     };
     window.addEventListener("languagechange", onBrowserChange);
     return () => window.removeEventListener("languagechange", onBrowserChange);
-  }, []);
+  }, [applyLanguage]);
 
   // Keep <html lang> accurate for SEO and assistive tech.
   useEffect(() => {
@@ -120,7 +147,7 @@ export function LanguageProvider({
 
   return (
     <LanguageContext.Provider value={value}>
-      {children}
+      {ready ? children : null}
     </LanguageContext.Provider>
   );
 }

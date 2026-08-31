@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import { SUPPORTED_LANGUAGE_CODES } from "@/config/languages";
-import { translations } from "./index";
+import { de } from "./de";
+import { en } from "./en";
+import { fr } from "./fr";
+import { zh } from "./zh";
+
+// The runtime `translations` object only holds English until a language is
+// requested, so the shape checks read the modules directly.
+const translations = { en, de, fr, zh };
 
 /**
  * `satisfies Record<Language, Translation>` already makes a missing key fail
