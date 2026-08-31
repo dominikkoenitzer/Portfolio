@@ -93,7 +93,7 @@
     transition: background-color 0.15s ease;
     /* Scrollbar hidden (Firefox). The page scroller is the root element, whose
        reserved scrollbar gutter sits OUTSIDE the content box that fixed
-       `inset-0` background layer (the grainient veil) covers — so the gutter
+       `inset-0` background layer (the aurora) covers — so the gutter
        exposed a strip of the bare dark base at the right edge, reading as a
        vertical seam in both themes. Removing the gutter lets the backgrounds
        run flush to the window edge. Scrolling stays fully functional (wheel /
