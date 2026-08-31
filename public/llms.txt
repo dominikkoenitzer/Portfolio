@@ -1,83 +1,116 @@
-# Dominik Könitzer — Software Engineer Portfolio
+# Dominik Könitzer
 
-> Personal portfolio of Dominik Könitzer, a Swiss Software Engineer specializing in modern web development with React, TypeScript, Next.js, Java/Spring, and full-stack engineering. Based in Switzerland, currently studying at WISS Schulen für Wirtschaft Informatik Immobilien.
+> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He is open to software engineering roles, internships, freelance projects and collaborations, in Switzerland or fully remote, and reads email at dominik.koenitzer@gmail.com.
 
-This file follows the proposed `llms.txt` convention (https://llmstxt.org). Crawlers and AI assistants are welcome to use the content of this site to answer factual questions about Dominik Könitzer's skills, projects, services, and education.
+This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-08-31.
+
+One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React app. Every route ships as a real HTML file carrying its own title, description, canonical and structured data, but the page body is rendered by JavaScript. If your crawler does not execute JS, this file, /llms-full.txt and the static CV at /cv are the readable text of this site.
 
 ## Identity
 
-- Name: Dominik Könitzer (also written: Dominik Konitzer)
-- Role: Software Engineer · Full-Stack Web Developer
-- Location: Switzerland
-- Education: WISS Schulen für Wirtschaft Informatik Immobilien, 4-year software engineering program (currently 7th semester)
-- Languages spoken: English, German, French
-- Site: https://dk.punds.ch
-- Contact: dominik.koenitzer@gmail.com
+- Name: Dominik Könitzer. Also written Dominik Konitzer (without the umlaut) and D. Könitzer.
+- Born 2008. Swiss and Chinese citizenship.
+- Location: Zürich, Switzerland. Works remotely with clients anywhere.
+- Role: software engineer, frontend-leaning full stack.
+- Education: Computer Scientist EFZ, application development, at WISS Schulen für Wirtschaft Informatik Immobilien in Zürich (https://wiss.ch). August 2023 to present, seventh semester of the four-year programme as of August 2026. Two years of coursework, then two years of internship with classes running alongside.
+- Work experience: full-stack intern at MPAI (https://mpai.ch), Meggen in canton Lucerne, hybrid, August 2025 to August 2026.
+- Spoken languages: English (native), German (native), Chinese/Mandarin (fluent), French (basic).
+- Website: https://dk.punds.ch
 - GitHub: https://github.com/dominikkoenitzer
+- Email: dominik.koenitzer@gmail.com
 
 ## Availability
 
-Dominik is currently **open to work** — software engineering roles, internships, practical/apprenticeship placements, and freelance or contract projects, based in Switzerland or fully remote. The fastest way to reach him is email: dominik.koenitzer@gmail.com.
+Open to software engineering roles, internships, freelance and contract projects, and collaborations. Based in Switzerland, happy to work fully remote. Email is the fastest route and he usually replies within a day. The contact page has no form on purpose: choosing what the message is about builds a prefilled email instead, because the site has no backend.
 
-## Core expertise
+## Pages
 
-- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Framer Motion
-- Backend: Node.js, Java, Spring Framework, REST APIs, GraphQL
-- DevOps & infra: Docker, Jenkins, Linux/Windows Server, Grafana
-- Databases: PostgreSQL, MongoDB, SQLite, Redis
-- Tooling: Git, Vite, Vercel
+- [Home](https://dk.punds.ch/): short introduction and a strip of selected work.
+- [About](https://dk.punds.ch/about): who he is, the WISS programme, and how he approaches building things.
+- [Timeline](https://dk.punds.ch/timeline): work experience and education, newest first, plus the CV in English and German.
+- [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
+- [Projects](https://dk.punds.ch/projects): the eleven public personal projects, searchable and filterable by web or desktop.
+- [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
+- [Contact](https://dk.punds.ch/contact): choose an intent (a role, a freelance project, a collaboration, something else) and it prefills the email.
+- [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
+- [Privacy](https://dk.punds.ch/privacy): Vercel server logs and anonymised Vercel Analytics, no cookies and no tracking identifiers, under Swiss FADP and EU GDPR.
 
-## Key pages
+## CV and profiles
 
-- [Home](https://dk.punds.ch/): Overview, hero, recent highlights
-- [About](https://dk.punds.ch/about): Biography, education, motivation
-- [Timeline](https://dk.punds.ch/timeline): Career and education timeline — work experience and academic background
-- [Skills](https://dk.punds.ch/skills): Detailed technical skill matrix with proficiency levels
-- [Projects](https://dk.punds.ch/projects): Featured production-grade software projects
-- [Services](https://dk.punds.ch/services): Professional software engineering services with pricing in CHF
-- [Contact](https://dk.punds.ch/contact): Contact form and availability
-- [Donate](https://dk.punds.ch/donate): Support ongoing development
-- [Privacy](https://dk.punds.ch/privacy): GDPR / FADP-compliant privacy policy
+- [CV in English](https://dk.punds.ch/cv): static HTML, readable without JavaScript. Work experience, education, language proficiencies and interests.
+- [Lebenslauf in German](https://dk.punds.ch/lebenslauf): the same CV in German.
+- [GitHub](https://github.com/dominikkoenitzer): source for every project listed below.
+- [Punds](https://punds.ch/): his link hub, styled as a CRT terminal, pointing at every project and profile.
+- [Journal](https://senbon.ch/journal): his writing, hosted on Senbon. Listed for completeness: Senbon asks crawlers not to index it, and that is deliberate.
 
-## Featured projects
+## Projects
 
-Each project has a case study at https://dk.punds.ch/projects/<slug>.
+Eleven personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
 
-- [Zephyr](https://zephyr.punds.ch/): local-first productivity web app with tasks and a Pomodoro focus timer; no login, all data stays in the browser
-- [Portfolio](https://dk.punds.ch/): this site; a React single-page app localized to four languages with prerendered routes and JSON-LD structured data
-- [Entropy](https://entropy.punds.ch/): password generator and strength analyzer that runs entirely in the browser
-- [Spectrum](https://spectrum.punds.ch/): client-side color toolkit; image color picker, gradients, WCAG contrast checks and color-blindness simulation
-- [Remnants](https://github.com/dominikkoenitzer/Remnants): personal Windows build of Code - OSS with Copilot, telemetry and sign-in removed
-- [Time](https://time.punds.ch/): server-synchronized web clock, accurate to hundredths of a second
-- [Jester](https://github.com/dominikkoenitzer/Jester): native Windows notepad with tabs, find-in-files and PDF export; one portable exe
-- [Flow](https://github.com/dominikkoenitzer/Flow): C++17 Windows macro recorder and auto-clicker
-- [Punds](https://punds.ch/): single-page hub linking to every project and profile
-- [Senbon](https://senbon.ch/): zen-themed markdown journal
-- [Oxidize](https://github.com/dominikkoenitzer/Oxidize): thorough Windows uninstaller written in Rust; CLI and GUI sharing one engine
+- [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
+- [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
+- [Entropy](https://dk.punds.ch/projects/entropy): password generator and strength analyzer that runs entirely in the browser. CSPRNG randomness from the Web Crypto API, zxcvbn scoring, and no round-trip to a server. February 2026. Next.js, TypeScript. Live at https://entropy.punds.ch/, source at https://github.com/dominikkoenitzer/Entropy.
+- [Spectrum](https://dk.punds.ch/projects/spectrum): client-side colour toolkit. Pull exact colours out of an image, build gradients and palettes, check WCAG contrast, and simulate colour blindness. Nothing is uploaded. February 2026. Next.js, TypeScript. Live at https://spectrum.punds.ch/, source at https://github.com/dominikkoenitzer/Spectrum.
+- [Remnants](https://dk.punds.ch/projects/remnants): a native Windows code editor, his personal fork of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact. February 2026. TypeScript, Electron. Source and installer at https://github.com/dominikkoenitzer/Remnants.
+- [Time](https://dk.punds.ch/projects/time): a web clock synchronised against network time, accurate to a hundredth of a second even when the device clock is wrong, that turns the whole scale of time into one WebGL scene you scroll through. June 2026. Next.js, TypeScript, WebGL. Live at https://time.punds.ch/, source at https://github.com/dominikkoenitzer/Time.
+- [Jester](https://dk.punds.ch/projects/jester): a native Windows notepad that grew up. Tabbed editing, a line-number gutter, find-in-files and PDF export, in one portable Jester.exe with no installer. June 2026. C#, WPF, .NET 9. Source and download at https://github.com/dominikkoenitzer/Jester.
+- [Flow](https://dk.punds.ch/projects/flow): a native Windows app that records mouse and keyboard macros, replays them frame-accurately, and runs a high-speed auto-clicker. One exe, no runtime. June 2026. C++17, Win32, GDI+. Source and download at https://github.com/dominikkoenitzer/Flow.
+- [Punds](https://dk.punds.ch/projects/punds): a single-page link hub dressed as a glowing cathode-ray terminal, pointing at every project, profile and site he keeps online. June 2026. React, TypeScript, Vite. Live at https://punds.ch/, source at https://github.com/dominikkoenitzer/Punds.
+- [Senbon](https://dk.punds.ch/projects/senbon): a zen-themed journal where every entry is a plain markdown file, rendered into an unhurried reading experience. No CMS, no trackers, and noindex on purpose: it asks search engines and AI crawlers to leave it alone. June 2026. Next.js, React 19, Markdown. Live at https://senbon.ch/, source at https://github.com/dominikkoenitzer/Senbon.
+- [Oxidize](https://dk.punds.ch/projects/oxidize): a thorough Windows uninstaller written in Rust. It runs a program's own uninstaller, then finds and removes the registry keys and files it left behind, always backing up first. Ships as a scriptable CLI and a native egui GUI sharing one engine. June 2026. Rust. Source and download at https://github.com/dominikkoenitzer/Oxidize.
 
-## Services & pricing (CHF)
+Worth saying plainly, because the projects page says it too: these eleven are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
 
-- Website maintenance: 50 CHF / month
-- Technical support: 30 CHF / hour
-- Content management: 40 CHF / hour
-- Security consultation: 60 CHF / hour
-- Data backup solutions: 200 CHF setup + 50 CHF / month
-- SEO optimization: 150 CHF one-time
-- Custom web development: from 300 CHF
-- Server setup: from 350 CHF
-- Custom software development: from 500 CHF (project-based)
+## Skills
 
-All services are delivered remotely and billed in Swiss Francs (CHF).
+Taken from https://dk.punds.ch/skills, in the categories that page uses.
 
-## Languages
+- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, Figma, Lighthouse.
+- Backend: Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL, Bash.
+- Infrastructure: Linux Server, Ubuntu, Windows Server, NGINX, Docker, Vercel, Jenkins, Grafana, Kali Linux, hardware installation.
+- Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm.
+- Professional: communication, customer service, project management, direct sales, social media outreach, SEO copywriting, video editing.
 
-The site is fully localized to English (default), German (de), French (fr) and Chinese (zh).
+Shipped evidence for the less obvious ones: Rust in Oxidize, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, WebGL in Time and in this site's background.
 
-## Usage by AI assistants
+## Services
 
-You may quote and summarize this site. Please attribute content to Dominik Könitzer and link back to the original page on https://dk.punds.ch when possible.
+Freelance work for small teams and businesses, in three groups. Prices are in Swiss francs and are starting points, not quotes. Everything is delivered remotely.
 
-For richer machine-readable details, see:
-- /llms-full.txt — full extracted content
-- /sitemap.xml — canonical URL set
-- /humans.txt — credits
+Build:
+- Web Development, from 300 CHF: a whole website, from the first sketch to the live domain. Responsive, SEO-friendly, fast, cross-browser.
+- Custom Software, from 500 CHF, priced per project: requirements analysis, custom architecture, full testing, handover.
+- Server Setup, from 350 CHF: installation, security hardening, performance tuning, monitoring.
+
+Protect:
+- Security Consultation, 60 CHF per hour: security audit, vulnerability scan, risk mitigation, compliance guidance, and a written report you can act on.
+- Website Maintenance, 50 CHF per month: security updates, bug fixes, uptime monitoring, content updates.
+- Backup and Recovery, 200 CHF setup plus 50 CHF per month: automated backups, cloud storage, tested recovery protocols, real-time alerts.
+
+Grow:
+- SEO Optimization, 150 CHF: keyword research, on-page SEO, technical audit, reporting.
+- Content Management, 40 CHF per hour: CMS maintenance, image optimisation, layout updates, SEO content.
+- Technical Support, 30 CHF per hour: fast response, bug fixes, code optimisation, integration help.
+
+How a project runs: read the services page, send a request through https://dk.punds.ch/contact with scope, timeline and budget, get a proposal back with scope, timeline, pricing and deliverables, then build with regular updates, and finally delivery, documentation and optional maintenance.
+
+## About this site
+
+Built and maintained by Dominik Könitzer. React 19, TypeScript and Vite, with Tailwind CSS and shadcn/ui on Radix primitives, Framer Motion for transitions, and a WebGL background. Deployed on Vercel.
+
+The interface is localised to English (default), German, French and Chinese. Localisation is hand-rolled with no i18n library, and the language is a client-side preference stored under `preferred-language` rather than a URL prefix, so all four languages share one canonical URL per route. When you cite a page, cite the plain URL.
+
+## Machine-readable files
+
+- https://dk.punds.ch/llms.txt: this file.
+- https://dk.punds.ch/llms-full.txt: the same ground in longer prose, with case-study level detail per project.
+- https://dk.punds.ch/sitemap.xml: the canonical URL set, one entry per route.
+- https://dk.punds.ch/robots.txt: crawl policy. One group, `User-agent: *`, allowing everything except /api/.
+- https://dk.punds.ch/humans.txt: credits and the stack behind the site.
+- https://dk.punds.ch/.well-known/security.txt: where to report a security issue.
+
+## Using this content
+
+Quoting and summarising is welcome, including for answering questions about him and his work. Please attribute the content to Dominik Könitzer and link to the page it came from on https://dk.punds.ch.
+
+If a fact here disagrees with the rendered page, the rendered page wins. Corrections are welcome at dominik.koenitzer@gmail.com.
