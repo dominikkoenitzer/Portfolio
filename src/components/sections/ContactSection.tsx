@@ -14,6 +14,7 @@ import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import { SectionHeading } from "../layout/SectionHeading";
 
 const EMAIL = SITE_CONFIG.email;
 
@@ -126,24 +127,15 @@ export function ContactSection() {
         className="mx-auto w-full max-w-3xl"
         {...revealOnScroll(reduceMotion, stagger())}
       >
-        <motion.p className="eyebrow mb-5" variants={REVEAL}>
-          {t.eyebrow}
-        </motion.p>
-
-        <motion.h1
-          className="break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
-          style={{ fontSize: "clamp(2.25rem, 8vw, 4.5rem)" }}
-          variants={REVEAL}
-        >
-          {/* hyphens: manual so German only breaks at the soft hyphen (U+00AD)
-              the translation places — "zusammen-arbeiten", not the dictionary's
-              "zusammenar-beiten". pb keeps descenders off the clipping edge. */}
-          {t.headlineLine1}
-          <br />
-          <span className="hero-name-gradient inline-block pb-[0.15em]">
-            {t.headlineLine2}
-          </span>
-        </motion.h1>
+        {/* The shared page title, left-aligned for this editorial layout, so
+            the type is identical to every other page's. The German line
+            carries a soft hyphen (U+00AD) and only breaks there if it must. */}
+        <SectionHeading
+          align="left"
+          className="mb-0"
+          eyebrow={t.eyebrow}
+          title={`${t.headlineLine1} ${t.headlineLine2}`}
+        />
 
         {/* The visitor's half of the exchange: a line they finish. The rule on
             the left marks it as their draft rather than more of the headline. */}

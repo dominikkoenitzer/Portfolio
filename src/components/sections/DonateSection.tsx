@@ -10,6 +10,7 @@ import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import { SectionHeading } from "../layout/SectionHeading";
 
 type TierKey = keyof typeof translations.en.donate.tiers;
 const tiers: { amount: string; tierKey: TierKey }[] = [
@@ -57,20 +58,14 @@ export function DonateSection() {
           className="flex min-w-0 flex-col md:col-span-5"
           variants={stagger(0, 0.08)}
         >
-          <motion.p className="eyebrow mb-3" variants={REVEAL}>
-            {t.eyebrow}
-          </motion.p>
-          <motion.h1
-            className="mb-6 break-words font-bold leading-[1.02] [hyphens:manual] [-webkit-hyphens:manual] [overflow-wrap:break-word]"
-            style={{ fontSize: "clamp(2rem, 7vw, 3.75rem)" }}
-            variants={REVEAL}
-          >
-            {t.headlineLine1}
-            <br />
-            <span className="hero-name-gradient inline-block pb-[0.15em]">
-              {t.headlineLine2}
-            </span>
-          </motion.h1>
+          {/* The shared page title, left-aligned for the two-column layout,
+              so the type matches every other page's. */}
+          <SectionHeading
+            align="left"
+            className="mb-6"
+            eyebrow={t.eyebrow}
+            title={`${t.headlineLine1} ${t.headlineLine2}`}
+          />
 
           <motion.p
             className="max-w-sm text-muted-foreground text-base leading-relaxed"
