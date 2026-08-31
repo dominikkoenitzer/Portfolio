@@ -157,7 +157,7 @@ function CategoryCard({
         {/* Same icon-tile + title pattern as the Timeline group headers, one
             step down the scale: bold title, 36px tile, 18px glyph, gap-3. */}
         <h2 className="font-bold text-base sm:text-lg">{title}</h2>
-        <span className="ml-auto font-mono text-muted-foreground/50 text-xs tabular-nums">
+        <span className="ml-auto font-mono text-muted-foreground text-xs tabular-nums">
           {count}
         </span>
       </div>

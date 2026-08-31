@@ -307,7 +307,7 @@ const ProjectDetails = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: EASE }}
               >
-                <p className="eyebrow text-primary/70">{projectTimeline}</p>
+                <p className="eyebrow text-primary/80">{projectTimeline}</p>
 
                 <h1 className="mt-5 font-bold text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
                   <span className="gradient-text">{project.title}</span>
@@ -426,7 +426,7 @@ const ProjectDetails = () => {
             >
               {specRows.map((row) => (
                 <div className="max-w-xs" key={row.label}>
-                  <dt className="font-mono text-[10px] text-muted-foreground/80 uppercase tracking-[0.18em]">
+                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
                     {row.label}
                   </dt>
                   <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
@@ -689,7 +689,7 @@ const ProjectDetails = () => {
                     <dl className="mt-5 space-y-5">
                       {specRows.map((row) => (
                         <div key={row.label}>
-                          <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
+                          <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                             {row.label}
                           </dt>
                           <dd className="mt-1.5 text-foreground/90 text-sm leading-relaxed">
@@ -800,7 +800,7 @@ const ProjectDetails = () => {
                         <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
                           {item.title}
                         </p>
-                        <p className="mt-1 font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.18em]">
+                        <p className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
                           {item.dateLabel}
                         </p>
                       </div>
