@@ -103,7 +103,7 @@ export function DonateSection() {
                   target="_blank"
                   variants={REVEAL}
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/45">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                     {t.currency}
                   </span>
                   <span
@@ -114,12 +114,12 @@ export function DonateSection() {
                   >
                     {tier.amount}
                   </span>
-                  <span className="mt-auto text-muted-foreground/75 text-xs leading-snug">
+                  <span className="mt-auto text-muted-foreground text-xs leading-snug">
                     {data.label}
                   </span>
                   <ArrowUpRight
                     aria-hidden
-                    className={cn(TILE_ARROW, "text-muted-foreground/35")}
+                    className={cn(TILE_ARROW, "text-muted-foreground/60")}
                   />
                 </motion.a>
               );
@@ -136,7 +136,7 @@ export function DonateSection() {
               target="_blank"
               variants={REVEAL}
             >
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/65">
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/85">
                 {t.anyAmount.title}
               </span>
               <span className={TILE_GLYPH}>
@@ -183,7 +183,7 @@ export function DonateSection() {
 
           {/* Tiny security note */}
           <motion.div
-            className="flex items-center gap-2 text-muted-foreground/55 text-xs"
+            className="flex items-center gap-2 text-muted-foreground text-xs"
             variants={REVEAL}
           >
             <ShieldCheck className="h-3.5 w-3.5 shrink-0" />

@@ -131,7 +131,7 @@ export function LanguageToggle() {
                 </span>
                 <span className="flex flex-col leading-tight">
                   <span className="text-sm">{t.toggles.useSystem}</span>
-                  <span className="text-[11px] text-muted-foreground/70">
+                  <span className="text-[11px] text-muted-foreground">
                     {systemLanguage.label}
                   </span>
                 </span>

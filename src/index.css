@@ -343,8 +343,10 @@
   }
 
   /* Mono uppercase micro-label (the "eyebrow" above section titles). */
+  /* Full muted-foreground, not /70: at 10px this is body text to WCAG, and
+     the faded version measured 3.09:1 on the page; this one is 5.9:1. */
   .eyebrow {
-    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70;
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground;
   }
 
   /* Text styles */

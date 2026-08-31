@@ -228,7 +228,7 @@ export function ProjectsSection() {
               variants={REVEAL}
             >
               <p className="eyebrow mb-2.5">{t.disclosureEyebrow}</p>
-              <p className="text-muted-foreground/85 text-sm leading-relaxed sm:text-base">
+              <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
                 {t.disclosureBody}
               </p>
             </motion.div>
@@ -258,7 +258,7 @@ export function ProjectsSection() {
                   {query ? (
                     <button
                       aria-label={t.clearSearch}
-                      className="absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground/70 transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
+                      className="absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
                       onClick={() => updateParams({ q: "" })}
                       type="button"
                     >
@@ -290,7 +290,7 @@ export function ProjectsSection() {
 
               <motion.p
                 aria-live="polite"
-                className="mt-3 pl-1 text-muted-foreground/70 text-xs tabular-nums"
+                className="mt-3 pl-1 text-muted-foreground text-xs tabular-nums"
                 variants={REVEAL}
               >
                 {t.showingCount
@@ -449,7 +449,7 @@ export function ProjectsSection() {
                             <h2 className="font-semibold text-xl leading-tight tracking-tight sm:text-2xl">
                               {project.title}
                             </h2>
-                            <p className="mt-1.5 font-medium text-[11px] text-muted-foreground/70 uppercase tracking-[0.18em]">
+                            <p className="mt-1.5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
                               {project.dateLabel}
                             </p>
                           </div>

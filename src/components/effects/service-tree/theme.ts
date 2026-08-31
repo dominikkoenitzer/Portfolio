@@ -87,8 +87,10 @@ export const CATEGORY_ACCENT_TEXT: Record<
   "light" | "dark",
   Record<Group3, string>
 > = {
-  // On a light page: darkened, still recognisably the same hue.
-  light: { build: "#0e7490", protect: "#be185d", grow: "#047857" },
+  // On a light page: darkened, still recognisably the same hue. Build sits
+  // one step darker than the tree's 0x0e7490 because as 12px chip text on
+  // the tinted chip fill that value measured 4.45:1; this one is 4.9:1.
+  light: { build: "#0c6d88", protect: "#be185d", grow: "#047857" },
   // On a dark page: the decorative accents already pass comfortably.
   dark: { build: "#5adcff", protect: "#ff86bb", grow: "#6ceaa7" },
 };

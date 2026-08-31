@@ -100,7 +100,7 @@ export function TiltFigure({
         <span className="h-2.5 w-2.5 rounded-full bg-primary/40" />
         <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
         {label ? (
-          <span className="ml-2 truncate font-mono text-[10px] text-muted-foreground/60">
+          <span className="ml-2 truncate font-mono text-[10px] text-muted-foreground">
             {label}
           </span>
         ) : null}
@@ -256,7 +256,7 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
             />
             <span
               aria-hidden
-              className="mt-2 block font-mono text-[10px] text-muted-foreground/70 uppercase tracking-[0.18em]"
+              className="mt-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
             >
               {s.label}
             </span>
