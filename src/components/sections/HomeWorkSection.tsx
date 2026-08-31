@@ -91,7 +91,12 @@ export default function HomeWorkSection() {
                     nothing below it moves when the screenshots load. */}
                 <span className="block aspect-[16/10] overflow-hidden border-border/40 border-b bg-secondary/40">
                   <img
-                    alt=""
+                    // Named rather than empty: the link text already carries
+                    // the title for a screen reader, but an empty alt also
+                    // opts the screenshot out of image search, and these are
+                    // the only pictures of the work on the highest-authority
+                    // page. Same wording as the cards on /projects.
+                    alt={`${project.title} screenshot`}
                     className={cn(
                       "h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.03]",
                       // A few projects carry a square app icon rather than a

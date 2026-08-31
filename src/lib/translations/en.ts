@@ -406,7 +406,7 @@ export const en = {
         heading: "Impressum",
         responsibleFor: "Responsible for this website:",
         name: "Dominik Könitzer",
-        city: "Zurich, Switzerland",
+        city: "Zürich, Switzerland",
         emailLabel: "Email: ",
       },
       lastUpdated: "Last updated: ",
@@ -414,14 +414,14 @@ export const en = {
   },
   seo: {
     home: {
-      title: "Software Engineer & Web Developer",
+      title: "Software Engineer & Web Developer in Zürich",
       description:
-        "Dominik Könitzer, a Swiss software engineer building modern web apps with React, TypeScript, and full-stack tooling. Portfolio, projects, and source code.",
+        "Dominik Könitzer, a software engineer in Zürich building web apps with React, TypeScript and Node. Live projects, source code and services.",
       keywords:
         "Dominik Könitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, software engineer Switzerland, web development services, frontend developer, backend developer, portfolio",
     },
     about: {
-      title: "Software Engineer in Zürich",
+      title: "About Me, a Software Engineer in Zürich",
       description:
         "Dominik Könitzer is a software engineer in Zürich, Switzerland, studying at WISS and specializing in modern React and TypeScript web development.",
       keywords:
@@ -430,9 +430,9 @@ export const en = {
     timeline: {
       title: "Career & Education Timeline",
       description:
-        "Dominik Könitzer's career and education timeline: a software engineering internship at MPAI, freelance web development, and studies at WISS in Switzerland.",
+        "Dominik Könitzer's career and education timeline: a software engineering internship at MPAI in Lucerne, and a four-year program at WISS in Zürich.",
       keywords:
-        "Dominik Könitzer timeline, career timeline, work experience, education, MPAI internship, WISS, freelance web developer, software engineer Switzerland",
+        "Dominik Könitzer timeline, career timeline, work experience, education, MPAI internship, WISS Zürich, Computer Scientist EFZ, software engineer Switzerland",
     },
     skills: {
       title: "Skills & Technologies",

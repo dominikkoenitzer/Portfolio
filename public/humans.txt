@@ -1,13 +1,21 @@
 /* TEAM */
 Software Engineer: Dominik Könitzer
+Site: https://dk.punds.ch
 Contact: dominik.koenitzer [at] gmail.com
 GitHub: @dominikkoenitzer
-From: Switzerland
+From: Zürich, Switzerland
+
+/* THANKS */
+Design & build: Dominik Könitzer (all of it)
+Hosting: Vercel
+Fonts: Zen Kaku Gothic New, Zen Maru Gothic, M PLUS Rounded 1c (self-hosted Latin subsets)
 
 /* SITE */
-Last update: 2026/06/20
+Last update: 2026/08/31
 Language: English / Deutsch / Français / 中文
 Doctype: HTML5
-Standards: HTML5, CSS3, ECMAScript 2022+
-Components: React, Vite, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion
-Hosting: Vercel
+Standards: HTML5, CSS3, ECMAScript 2022+, WAI-ARIA, JSON-LD
+Components: React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, React Router, TanStack Query, Lenis, three.js
+Tooling: bun, ESLint, Vitest, GitHub Actions
+Source: https://github.com/dominikkoenitzer/Portfolio
+For machines: https://dk.punds.ch/llms.txt

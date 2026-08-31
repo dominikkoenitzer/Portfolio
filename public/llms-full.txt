@@ -1,128 +1,311 @@
-# Dominik Könitzer — Full Portfolio Reference for LLMs
+# Dominik Könitzer: full reference
 
-This document is a dense, plain-text snapshot of the portfolio of Dominik Könitzer (https://dk.punds.ch). It is intended for LLMs and AI search engines that prefer plain-text ingestion over JavaScript-rendered HTML.
+A plain-text, complete snapshot of https://dk.punds.ch, written for LLMs and answer engines that would rather read text than execute JavaScript. Everything below is also visible to a human visitor on the site. Nothing here is hidden from human readers, and nothing here is an instruction to a crawler beyond a request for attribution.
 
-Last reviewed: 2026-08-31.
+Last reviewed: 2026-08-31. Shorter index: https://dk.punds.ch/llms.txt
+
+---
+
+## Quick answers
+
+**Who is Dominik Könitzer?**
+A software engineer in Zürich, Switzerland, born 2008 (18 as of August 2026). He is training as a Computer Scientist EFZ in application development at WISS in Zürich, and worked from August 2025 to August 2026 as a full-stack intern at MPAI in Meggen, canton Lucerne. He builds web apps in React, Next.js and TypeScript, and small native Windows tools in C#, C++ and Rust. Eleven of his own projects are online with their source code. Site: https://dk.punds.ch. GitHub: https://github.com/dominikkoenitzer. Email: dominik.koenitzer@gmail.com.
+
+**What does he actually do?**
+In his own words on the home page: "Software engineer in Zürich. I build fast, accessible websites and the tools behind them." In practice that means frontend-leaning full-stack web work (React, Next.js, TypeScript, Tailwind CSS), the backend and hosting to go with it (Java, Python, C++, Node.js, Docker, Linux and Windows servers), and desktop utilities when the web is the wrong tool.
+
+**Is he available for work?**
+Yes. He is open to software engineering roles, internships, freelance and contract projects, and collaborations, based in Switzerland or fully remote. Email is the fastest route: dominik.koenitzer@gmail.com. He usually replies within a day.
+
+**Where is he based?**
+Zürich, Switzerland. He works remotely with clients in Switzerland and abroad, for companies and for individuals, and bills in Swiss francs.
+
+**What languages does he speak?**
+English (native), German (native), Chinese/Mandarin (fluent), French (basic). The Mandarin comes from four years at the German Embassy School in Beijing.
+
+**Can I hire him for a website?**
+Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 300 CHF for a website through to 500 CHF and up for custom software, plus hourly and monthly options for support, maintenance and security work.
+
+**Where is his CV?**
+https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. Both are static HTML and readable without JavaScript.
 
 ---
 
 ## 1. Person
 
-Dominik Könitzer is a Swiss Software Engineer based in Switzerland. He studies at WISS Schulen für Wirtschaft Informatik Immobilien (https://www.wiss.ch), currently in the seventh semester of a 4-year software engineering program. The first two years are coursework, followed by two years of practical internship with ongoing studies. He speaks English, German, and French.
+Dominik Könitzer is a software engineer based in Zürich, Switzerland. Born 2008, Swiss and Chinese citizenship. He is in the seventh semester of the four-year Computer Scientist EFZ programme in application development at WISS Schulen für Wirtschaft Informatik Immobilien (https://wiss.ch), which he started in August 2023. The programme is split: two years of coursework, then two years of internship with classes running alongside. As he puts it on the about page, "the point of the split is that nothing stays theoretical for long."
 
-He builds production-grade web products with a frontend emphasis (React, Next.js, TypeScript) and a comfortable full-stack reach into Node.js, Java/Spring, databases, and DevOps. His work style favors clean code, predictable architecture, accessible UX, and measurable impact.
+The second half of that split was a full-stack internship at MPAI (https://mpai.ch) in Meggen, canton Lucerne, hybrid, from August 2025 to August 2026.
+
+His own summary of what he builds, from the about page: "I like building clean, fast, and good-looking websites and applications that people actually want to use. Writing the code is only half of it. The other half is understanding the problem well enough to explain what I did about it."
+
+He grew up between countries: primary school at the Swiss School Singapore, then the German Embassy School in Beijing, then secondary school in canton Schwyz, then WISS in Zürich. Interests listed on his CV: playing keyboard, chess, programming.
 
 Contact: dominik.koenitzer@gmail.com
+Website: https://dk.punds.ch
 GitHub: https://github.com/dominikkoenitzer
+Link hub: https://punds.ch
+Journal: https://senbon.ch/journal
 
 ---
 
-## 2. Skills matrix
+## 2. Work experience
 
-Frontend
-- React — building dynamic UIs and component systems
-- Next.js — production-grade React framework
-- shadcn/ui — accessible, customizable component library
-- TypeScript — static typing for safer code
-- JavaScript (ES6+) — modern language features
-- Tailwind CSS — utility-first styling
-- Framer Motion — interactive UI animation
-- Lighthouse — performance / accessibility / SEO auditing
+**MPAI Intern, MPAI (https://mpai.ch)**
+Meggen, canton Lucerne. Hybrid. Internship. August 2025 to August 2026.
 
-Backend
-- Java
-- Spring Framework
-- Node.js
-- GraphQL & REST APIs
+- Full-stack web apps for real clients, built with React, Next.js, TypeScript and Tailwind CSS.
+- Backend services and APIs in Java, Python and C++, plus the hosting and server work that keeps them running.
+- Git-based CI/CD pipelines, so releases go out with fewer surprises.
+- Day-to-day work in an agile team: planning, reviews, shipping.
 
-DevOps & infrastructure
-- Docker
-- Jenkins
-- Linux Server · Ubuntu
-- Windows Server
-- Grafana
+Stack on that role: React, Next.js, TypeScript, Tailwind CSS, Java, Python, C++, Git, CI/CD.
 
-Databases
-- SQLite
-- PostgreSQL
-- MongoDB
-- Redis
-
-Languages
-- JavaScript, TypeScript, Java, Python, C#, C++, Bash
-
-Soft / professional skills
-- Customer service, communication, project management, direct sales, social media, SEO copywriting, video editing
+Client work from this role is not published on the portfolio. The projects page says so directly: some work sits behind NDAs, in private repos, or on client infrastructure, so only personal projects are shown.
 
 ---
 
-## 3. Projects (case studies)
+## 3. Education
 
-Eleven projects, each with a case study at https://dk.punds.ch/projects/<slug>. Ordered by repository creation date.
+**Computer Scientist EFZ, Application Development. WISS (https://wiss.ch). Zürich, Switzerland. August 2023 to present.**
+- Application development track: programming, application design, databases and system architecture.
+- Two years of coursework, then two years of internship with classes alongside.
+- The MPAI internship above is part of that second half.
+- Focus areas: software development, application design, databases, system architecture, programming.
 
-- Zephyr (https://zephyr.punds.ch/) - local-first productivity web app: tasks and a Pomodoro focus timer. No login, no backend; every piece of data lives in the browser. React, Vite, Tailwind, installable as a PWA.
-- Portfolio (https://dk.punds.ch/) - this site: a React single-page app with hand-rolled i18n in four languages (en, de, fr, zh), a prerendered HTML file per route, and JSON-LD structured data.
-- Entropy (https://entropy.punds.ch/) - password generator and strength analyzer that runs entirely in the browser: CSPRNG randomness, zxcvbn-grade scoring, and no round-trips to a server.
-- Spectrum (https://spectrum.punds.ch/) - client-side color toolkit: pull exact colors from an image, build gradients and palettes, check WCAG contrast, and simulate color blindness. Nothing is uploaded.
-- Remnants (https://github.com/dominikkoenitzer/Remnants) - native Windows editor: a personal build of Code - OSS with Copilot, chat, agents, telemetry, and sign-in removed, and the editor, terminal, Git, and debugger left intact.
-- Time (https://time.punds.ch/) - a web clock that silently corrects itself against the server, accurate to hundredths of a second even when the device clock is wrong.
-- Jester (https://github.com/dominikkoenitzer/Jester) - native Windows notepad with tabbed editing, a line-number gutter, find-in-files, and PDF export. One portable Jester.exe, no installer.
-- Flow (https://github.com/dominikkoenitzer/Flow) - native Windows desktop app in C++17 that records mouse and keyboard macros, replays them frame-accurately, and runs a high-speed auto-clicker.
-- Punds (https://punds.ch/) - single-page hub styled as a CRT terminal, linking to every project, profile, and site.
-- Senbon (https://senbon.ch/) - zen-themed journal where every entry is a plain markdown file rendered into an unhurried reading experience.
-- Oxidize (https://github.com/dominikkoenitzer/Oxidize) - thorough Windows uninstaller written in Rust: runs a program's own uninstaller, then removes leftover registry keys and files, always backing up first. Scriptable CLI and native GUI sharing one engine.
+Note on the credential: Computer Scientist EFZ (Informatiker EFZ, Applikationsentwicklung) is a Swiss federal vocational diploma, not a university degree.
 
----
+**Secondary School, Level A. MPS Oberarth. Oberarth, canton Schwyz. 2021 to 2023.**
+- Finished at Level A, the highest track.
+- Maths and the sciences were the subjects he leaned into.
+- Where he got used to working on his own.
 
-## 4. Services (priced in CHF, delivered remotely from Switzerland)
+**Primary School, Grades 3 to 7. German Embassy School Beijing. Beijing, China. 2016 to 2020.**
+- German curriculum, taught in Beijing.
+- Classmates from everywhere, and the first years of living between cultures.
+- Where the Mandarin comes from.
 
-- Website maintenance — 50 CHF / month — security updates, bug fixes, performance monitoring, content updates
-- Technical support — 30 CHF / hour
-- Content management — 40 CHF / hour
-- Security consultation — 60 CHF / hour — audits, vulnerability assessment, best-practice rollout, compliance guidance
-- Data backup solutions — 200 CHF setup + 50 CHF / month — automated backups, cloud storage, recovery protocols, real-time alerts
-- SEO optimization — 150 CHF one-time — technical SEO, keyword work, performance
-- Custom web development — from 300 CHF
-- Server setup — from 350 CHF
-- Custom software development — from 500 CHF (project-based) — requirements analysis, solution design, build & test, deployment, maintenance
-
-Hiring workflow:
-1. Review services on /services
-2. Submit request via /contact with scope, timeline, budget
-3. Receive proposal with scope, timeline, pricing, deliverables
-4. Project execution with regular updates
-5. Delivery, documentation, and optional maintenance
+**Primary School, Grades 1 to 2. Swiss School Singapore. Singapore. 2014 to 2016.**
+- The first two school years, in Singapore.
+- Swiss curriculum taught in German, in an English-speaking city.
+- The start of growing up in more than one language.
 
 ---
 
-## 5. Localization
+## 4. Spoken languages
 
-The site is fully localized into:
-- en — English (default)
-- de — German
-- fr — French
-- zh — Chinese (Simplified)
-
-Language preference is stored in `localStorage` under `app-language` and auto-detected from `navigator.language` on first visit. Each URL is the same across languages; the active language is a client-side preference, not a URL prefix.
+- English: native proficiency
+- German: native proficiency
+- Chinese/Mandarin: fluent proficiency
+- French: basic proficiency
 
 ---
 
-## 6. Tech stack of this site
+## 5. Skills
 
-- Vite + React 18 + TypeScript
-- Tailwind CSS + shadcn/ui (Radix primitives)
-- Framer Motion (page transitions and micro-interactions)
-- React Router DOM
-- React Helmet Async for per-page SEO
-- Vercel Analytics + Speed Insights
-- Deployed on Vercel
+These are the categories exactly as the skills page groups them (https://dk.punds.ch/skills).
+
+**Frontend**
+React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, Figma, Lighthouse.
+
+**Backend**
+Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL, Bash.
+
+**Infrastructure**
+Linux Server, Ubuntu, Windows Server, NGINX, Docker, Vercel, Jenkins, Grafana, Kali Linux, hardware installation.
+
+**Data and tooling**
+PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm.
+
+**Professional**
+Communication, customer service, project management, direct sales, social media outreach, SEO copywriting, video editing.
+
+Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 9 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in Time and in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
 
 ---
 
-## 7. Crawler & AI policy
+## 6. Projects
 
-All major search and AI crawlers are explicitly allowed in /robots.txt (Googlebot, Bingbot, GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot, anthropic-ai, Claude-Web, PerplexityBot, Google-Extended, Applebot-Extended, CCBot, FacebookBot, Meta-ExternalAgent, Amazonbot, cohere-ai, Diffbot, MistralAI-User, YouBot, DeepSeekBot).
+Eleven personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
-If quoting this site, please attribute "Dominik Könitzer" and link to the source page on https://dk.punds.ch.
+A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, with the source public.
 
-For security issues, see /.well-known/security.txt.
+The page also says more are coming: "A few new projects are almost finished and will show up here soon." If your copy of this file is old, check https://dk.punds.ch/projects for the current list.
+
+### Zephyr, December 2024
+Case study: https://dk.punds.ch/projects/zephyr
+Live: https://zephyr.punds.ch/
+Source: https://github.com/dominikkoenitzer/Zephyr
+Stack: React, Vite, Tailwind CSS, Radix UI, PWA
+
+A local-first productivity web app: a to-do list and a Pomodoro focus timer in one place. No login, no backend, no data leaving the browser. The problem it solves, in his words: "I wanted one place for tasks and focus sessions, without handing my day to a backend or paying rent on my own data. Every option I found did the opposite." Every task and focus session lives in localStorage, so it works offline and there is no server to breach or bill. It is installable as a PWA. It once had notes, a journal and a calendar too; he cut them so the two tools that earn daily use stay fast and obvious. Numbers he puts on it: 2 tools on purpose, 0 backend, 100% on-device, 0 accounts.
+
+### Portfolio, May 2025
+Case study: https://dk.punds.ch/projects/portfolio
+Live: https://dk.punds.ch/
+Source: https://github.com/dominikkoenitzer/Portfolio
+Stack: React 19, TypeScript, Vite
+
+This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, prerendered routes for every page, 0 tokens leaked.
+
+### Entropy, February 2026
+Case study: https://dk.punds.ch/projects/entropy
+Live: https://entropy.punds.ch/
+Source: https://github.com/dominikkoenitzer/Entropy
+Stack: Next.js, TypeScript, Web Crypto
+
+A password generator and strength analyzer that runs entirely in the browser. Randomness comes from the Web Crypto API, never Math.random(), and strength is scored with zxcvbn for an honest read rather than a green bar. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random().
+
+### Spectrum, February 2026
+Case study: https://dk.punds.ch/projects/spectrum
+Live: https://spectrum.punds.ch/
+Source: https://github.com/dominikkoenitzer/Spectrum
+Stack: Next.js, TypeScript, Canvas API
+
+A client-side colour toolkit that puts five jobs in one app: pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, and simulate colour blindness. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: contrast and colour-vision-deficiency checks are "usually the tab you forget to open," so Spectrum treats accessibility as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 5 tools in one app, 100% client-side, 0 uploads, 0 backend.
+
+### Remnants, February 2026
+Case study: https://dk.punds.ch/projects/remnants
+Source and installer: https://github.com/dominikkoenitzer/Remnants
+Stack: TypeScript, Electron, Code - OSS
+
+A native Windows code editor: a personal fork of Code - OSS, the open-source core of VS Code, with every AI surface, telemetry hook and sign-in prompt removed, and everything that matters left intact: fast editing, IntelliSense, the integrated terminal, source control, and the JavaScript and Node debugger. Extensions resolve through Open VSX instead of Microsoft's Marketplace. It ships as a per-user Windows installer, RemnantsUserSetup.exe. His summary: "VS Code is a great editor wrapped in a growing layer of cloud services, chat panels, agent windows, and account prompts you never asked for. Remnants removes that layer entirely, and what's left is the editor." Numbers: 0 telemetry, 0 sign-in, 100% open-source core, 1 maintainer.
+
+### Time, June 2026
+Case study: https://dk.punds.ch/projects/time
+Live: https://time.punds.ch/
+Source: https://github.com/dominikkoenitzer/Time
+Stack: Next.js, TypeScript, WebGL
+
+A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within a hundredth of a second even when the local machine is set wrong. The home page is one raw WebGL scene, and scrolling falls out of the current second into the day, the year, and the Unix epoch. Numbers: 1/100s sync accuracy, 4 time scales, 0 external time APIs, 0 animation libraries.
+
+### Jester, June 2026
+Case study: https://dk.punds.ch/projects/jester
+Source and download: https://github.com/dominikkoenitzer/Jester
+Stack: C#, WPF, .NET 9, Windows
+
+A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch." Numbers: 1 portable exe, 0 installers, .NET 9 bundled, A4 PDF export.
+
+### Flow, June 2026
+Case study: https://dk.punds.ch/projects/flow
+Source and download: https://github.com/dominikkoenitzer/Flow
+Stack: C++17, Win32, GDI+
+
+A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 9 KB binary, 0 dependencies, under 10 ms input latency, 0 telemetry.
+
+### Punds, June 2026
+Case study: https://dk.punds.ch/projects/punds
+Live: https://punds.ch/
+Source: https://github.com/dominikkoenitzer/Punds
+Stack: React, TypeScript, Vite
+
+A single-page link hub dressed as a glowing cathode-ray terminal: scanlines, screen curvature, glitch and a boot sequence, all hand-written CSS with no UI framework. It points at every project, profile and site he keeps online. Numbers: 1 page, 0 UI frameworks, 0 server, 3 console widgets.
+
+### Senbon, June 2026
+Case study: https://dk.punds.ch/projects/senbon
+Live: https://senbon.ch/ (journal at https://senbon.ch/journal)
+Source: https://github.com/dominikkoenitzer/Senbon
+Stack: Next.js, React 19, Markdown
+
+A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter. No database, no CMS, no trackers. Next.js App Router and React 19 turn the files into an editorial reading experience with an auto-generated table of contents, reading-time estimates and a command palette. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 trackers, 100% markdown, noindex on purpose.
+
+### Oxidize, June 2026
+Case study: https://dk.punds.ch/projects/oxidize
+Source and download: https://github.com/dominikkoenitzer/Oxidize
+Stack: Rust, Windows, CLI, egui
+
+A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. Nothing is deleted without a validated .reg backup and file quarantine first. Two binaries share one engine: oxidize-cli for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 0 deletes without a backup.
+
+---
+
+## 7. Services
+
+Freelance work for small teams and businesses, described on the services page as coming "in three parts: building the thing, keeping it running, and getting it found." Prices are in Swiss francs, are starting points rather than quotes, and everything is delivered remotely. He works with clients in Switzerland and abroad, for companies and for individuals.
+
+**Build**
+
+- Web Development, from 300 CHF. A whole website, from the first sketch to the live domain. Includes responsive design, SEO-friendly markup, fast loading, cross-browser support.
+- Custom Software, from 500 CHF, priced per project. Software built to fit how a business already works. Includes requirements analysis, custom architecture, full testing, handover.
+- Server Setup, from 350 CHF. A server set up properly the first time, with security and monitoring in place. Includes installation, security hardening, performance tuning, monitoring.
+
+**Protect**
+
+- Security Consultation, 60 CHF per hour. Finding the holes before someone else does, with a report you can act on. Includes security audit, vulnerability scan, risk mitigation, compliance guidance.
+- Website Maintenance, 50 CHF per month. Monthly patching and updates, plus an eye on anything starting to drift. Includes security updates, bug fixes, uptime monitoring, content updates.
+- Backup and Recovery, 200 CHF setup plus 50 CHF per month. Automated backups, plus restores that get tested so you know they work. Includes automated backups, cloud storage, recovery protocols, real-time alerts.
+
+**Grow**
+
+- SEO Optimization, 150 CHF. Technical SEO and page-speed work aimed at the searches you actually want. Includes keyword research, on-page SEO, technical audit, reporting.
+- Content Management, 40 CHF per hour. Keeping the content current so the site does not quietly go stale. Includes CMS maintenance, image optimisation, layout updates, SEO content.
+- Technical Support, 30 CHF per hour. Help when something breaks, or when something just needs to be quicker. Includes fast response, bug fixes, code optimisation, integration help.
+
+**How a project runs**
+
+1. Read the services on https://dk.punds.ch/services.
+2. Send a request through https://dk.punds.ch/contact with scope, timeline and budget.
+3. Get a proposal back with scope, timeline, pricing and deliverables.
+4. Build, with regular updates.
+5. Delivery, documentation, and optional ongoing maintenance.
+
+---
+
+## 8. Contact, availability and support
+
+Email: dominik.koenitzer@gmail.com. He usually replies within a day.
+
+The contact page (https://dk.punds.ch/contact) has no form, on purpose: the site has no backend. You pick what the message is about (a role, a freelance project, building something together, or something else) and it opens your mail app with a subject and a template already filled in. There is also a copy-the-address fallback for anyone on webmail.
+
+He is open to: software engineering roles, internships, freelance and contract projects, and collaborations. In Switzerland or fully remote.
+
+There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or any amount. It is a thank-you box, not a paywall. Nothing on the site or in any of the projects is gated behind it.
+
+---
+
+## 9. About this site
+
+- Built and maintained by Dominik Könitzer. Source: https://github.com/dominikkoenitzer/Portfolio
+- React 19, TypeScript, Vite (SWC), Tailwind CSS, shadcn/ui on Radix primitives, Framer Motion, React Router, TanStack Query, Lenis for smooth scrolling, a WebGL background on three.js, and React Helmet Async for per-page metadata.
+- Deployed on Vercel, with Vercel Analytics and Speed Insights.
+- Every route also ships as a real prerendered HTML file carrying its own title, description, canonical URL and Open Graph image, plus a 404 document that reports noindex honestly. The page body is still rendered by JavaScript.
+- Localised to English (default), German, French and Chinese, with a hand-rolled i18n layer and no i18n library. The language is a client-side preference stored under `preferred-language`, detected from the browser on a first visit. It is not a URL prefix, so all four languages share one canonical URL per route. Cite the plain URL.
+- Privacy: Vercel server logs for security and reliability, anonymised Vercel Analytics, no cookies and no tracking identifiers. Full policy at https://dk.punds.ch/privacy, written against Swiss FADP and EU GDPR. Data controller: Dominik Könitzer, Zürich, Switzerland.
+
+---
+
+## 10. Route list
+
+- https://dk.punds.ch/
+- https://dk.punds.ch/about
+- https://dk.punds.ch/timeline
+- https://dk.punds.ch/skills
+- https://dk.punds.ch/projects
+- https://dk.punds.ch/projects/zephyr
+- https://dk.punds.ch/projects/portfolio
+- https://dk.punds.ch/projects/entropy
+- https://dk.punds.ch/projects/spectrum
+- https://dk.punds.ch/projects/remnants
+- https://dk.punds.ch/projects/time
+- https://dk.punds.ch/projects/jester
+- https://dk.punds.ch/projects/flow
+- https://dk.punds.ch/projects/punds
+- https://dk.punds.ch/projects/senbon
+- https://dk.punds.ch/projects/oxidize
+- https://dk.punds.ch/services
+- https://dk.punds.ch/contact
+- https://dk.punds.ch/donate
+- https://dk.punds.ch/privacy
+- https://dk.punds.ch/cv (CV, English, static HTML)
+- https://dk.punds.ch/lebenslauf (CV, German, static HTML)
+
+---
+
+## 11. Crawler and AI policy
+
+Crawl policy lives in https://dk.punds.ch/robots.txt. It is deliberately one group, `User-agent: *`, allowing everything except `/api/`. Search crawlers and AI crawlers are treated the same: all are welcome. A single group is used on purpose, because adding a named group for a specific bot would replace the shared group for that bot and quietly drop the `/api/` rule.
+
+Quoting, summarising and citing this site is welcome. Please attribute the content to Dominik Könitzer and link back to the page it came from on https://dk.punds.ch.
+
+If something here disagrees with the rendered page, the rendered page is correct and this file is stale. Corrections and questions: dominik.koenitzer@gmail.com.
+
+Security issues: https://dk.punds.ch/.well-known/security.txt

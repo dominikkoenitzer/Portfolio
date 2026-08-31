@@ -143,15 +143,19 @@ export const createPersonSchema = (
   name: SITE_CONFIG.name,
   alternateName: ["Dominik Konitzer", "D. Könitzer"],
   url: SITE_CONFIG.url,
+  // The portrait, not the OG card. `image` on a Person is the picture *of the
+  // person*, which is what a knowledge panel would show; the 1200x630 card is
+  // a title slate with no face in it. Self-hosted copy of the GitHub avatar
+  // (public/avatar.jpg), so it stays reachable and inside the CSP.
   image: {
     "@type": "ImageObject",
-    url: `${SITE_CONFIG.url}${SITE_CONFIG.ogImage}`,
-    width: 1200,
-    height: 630,
+    url: `${SITE_CONFIG.url}/avatar.jpg`,
+    width: 460,
+    height: 460,
   },
   sameAs: [SITE_CONFIG.github],
   jobTitle: "Software Engineer",
-  knowsLanguage: ["en", "de", "fr"],
+  knowsLanguage: ["en", "de", "zh", "fr"],
   knowsAbout: [
     "Software Engineering",
     "Web Development",
@@ -267,7 +271,10 @@ export const createSoftwareApplicationSchema = (project: {
   "@type": "SoftwareApplication",
   name: project.title,
   description: project.description,
-  url: project.downloadUrl ?? project.liveUrl,
+  // `url` is where the application lives, `downloadUrl` is the binary. These
+  // used to be the same .exe for the desktop projects, which pointed the
+  // entity's canonical URL at a file download.
+  url: project.liveUrl,
   ...(project.downloadUrl && { downloadUrl: project.downloadUrl }),
   applicationCategory: project.applicationCategory ?? "WebApplication",
   operatingSystem: project.operatingSystem ?? "Any",

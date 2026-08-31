@@ -416,14 +416,14 @@ export const fr = {
   },
   seo: {
     home: {
-      title: "Ingénieur logiciel & développeur web",
+      title: "Ingénieur logiciel & développeur web à Zürich",
       description:
         "Dominik Könitzer, ingénieur logiciel et développeur web full-stack en Suisse. Expert React et TypeScript. Portfolio, projets et code source.",
       keywords:
         "Dominik Könitzer, ingénieur logiciel, développeur web, développeur React, développeur TypeScript, développeur full-stack, Suisse, développeur suisse, ingénieur logiciel Suisse, services de développement web, développeur frontend, développeur backend, portfolio",
     },
     about: {
-      title: "Ingénieur logiciel à Zürich",
+      title: "À propos, ingénieur logiciel à Zürich",
       description:
         "Dominik Könitzer, ingénieur logiciel à Zürich, Suisse, étudiant à la WISS et spécialisé en développement web moderne avec React et TypeScript.",
       keywords:
@@ -432,9 +432,9 @@ export const fr = {
     timeline: {
       title: "Parcours & formation",
       description:
-        "Le parcours de Dominik Könitzer : stage en ingénierie logicielle chez MPAI, développement web en freelance et formation à la WISS en Suisse.",
+        "Le parcours de Dominik Könitzer : stage en ingénierie logicielle chez MPAI à Lucerne et formation de quatre ans à la WISS à Zürich.",
       keywords:
-        "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage MPAI, WISS, développeur web freelance, ingénieur logiciel Suisse",
+        "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage MPAI, WISS Zürich, informaticien CFC, ingénieur logiciel Suisse",
     },
     skills: {
       title: "Compétences & technologies",
