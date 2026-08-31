@@ -189,7 +189,7 @@ export function SEO({
       <meta content={siteDescription} name="twitter:description" />
       <meta content={siteImage} name="twitter:image" />
       <meta content={siteTitle} name="twitter:image:alt" />
-      {/* No X/Twitter account — card still renders without a handle */}
+      {/* No X/Twitter account, so the card renders without a handle */}
 
       {/* Structured Data */}
       {allStructuredData.map((data, index) => (
@@ -202,7 +202,7 @@ export function SEO({
         />
       ))}
 
-      {/* Citations for GEO — AI engines use these for authority signals */}
+      {/* Citations for GEO: AI engines use these for authority signals */}
       {citationLinks?.map((citation) => (
         <link href={citation.url} key={citation.url} rel="citation" />
       ))}

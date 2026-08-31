@@ -87,7 +87,7 @@ function localGithubApi(env: Record<string, string>): Plugin {
  *
  * This is the function form of `manualChunks` on purpose. The object form
  * (`{ "react-vendor": ["react", …] }`) matches bare specifiers, and several of
- * ours never bound to a real module — `react` itself was landing in
+ * ours never bound to a real module: `react` itself was landing in
  * `query-vendor`, and `scheduler`, which react-dom needs, was being swallowed
  * by `three-vendor`. That last one was the expensive part: it gave the entry
  * chunk a static `import … from "./three-vendor.js"`, so **every** route
@@ -123,7 +123,7 @@ const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
 ];
 
 /**
- * react-dom's server renderer — 494 kB of source across the modern and legacy
+ * react-dom's server renderer, 494 kB of source across the modern and legacy
  * browser builds. Nothing on the critical path touches it; it is reached only
  * from the lazy SkillSphere and ServiceExplorer, which rasterise react-icons
  * SVGs to textures with `renderToStaticMarkup`. The `react-dom` rule above

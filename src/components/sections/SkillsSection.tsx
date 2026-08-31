@@ -217,7 +217,7 @@ export function SkillsSection() {
           </CategoryCard>
         ))}
 
-        {/* Spoken languages — names are translated, flags from the icon map */}
+        {/* Spoken languages: names are translated, flags from the icon map */}
         <CategoryCard
           count={languageKeys.length}
           icon={<LanguagesIcon />}

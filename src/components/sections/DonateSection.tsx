@@ -53,7 +53,7 @@ export function DonateSection() {
         className="grid gap-12 sm:gap-16 md:grid-cols-12 md:gap-12 lg:gap-20"
         {...revealOnScroll(reduceMotion, stagger())}
       >
-        {/* Left — editorial intro */}
+        {/* Left: editorial intro */}
         <motion.div
           className="flex min-w-0 flex-col md:col-span-5"
           variants={stagger(0, 0.08)}
@@ -75,7 +75,7 @@ export function DonateSection() {
           </motion.p>
         </motion.div>
 
-        {/* Right — amount picker */}
+        {/* Right: amount picker */}
         <motion.div
           className="flex min-w-0 flex-col md:col-span-7"
           variants={stagger(0.15, 0.06)}

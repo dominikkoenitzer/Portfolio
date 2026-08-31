@@ -44,7 +44,7 @@ export function AboutSection() {
         <motion.div className="md:col-span-5 lg:col-span-5" {...avatarReveal}>
           <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
-              {/* LCP element on /about — fetchPriority high + async decode so it
+              {/* LCP element on /about: fetchPriority high + async decode so it
                   paints fast; explicit square dimensions reserve space (no CLS).
                   Self-hosted copy of the GitHub avatar (public/avatar.jpg, 460px):
                   no third-party connection on the critical path, and it keeps
