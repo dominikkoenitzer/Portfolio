@@ -96,7 +96,7 @@ export function NavbarMobileMenu({
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop — tap to dismiss */}
+          {/* Backdrop: tap to dismiss */}
           <motion.div
             animate={{ opacity: 1 }}
             className="fixed inset-0 z-[60] transform-gpu bg-background/95 md:hidden"
@@ -107,7 +107,7 @@ export function NavbarMobileMenu({
             transition={{ duration: DUR.base, ease: EASE_OUT }}
           />
 
-          {/* Drawer — swipe right to close */}
+          {/* Drawer: swipe right to close */}
           <motion.div
             animate={reduceMotion ? { opacity: 1, x: 0 } : { x: 0 }}
             aria-label={nav.menu}
@@ -151,7 +151,7 @@ export function NavbarMobileMenu({
                 : SPRING_SOFT
             }
           >
-            {/* Drag affordance — small grip on the left edge */}
+            {/* Drag affordance: small grip on the left edge */}
             <div className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 z-20 hidden h-12 w-1 rounded-full bg-border/40 sm:block" />
 
             <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
@@ -177,11 +177,28 @@ export function NavbarMobileMenu({
               <div className="flex items-center justify-between gap-4">
                 <Link
                   aria-label={nav.goHome}
-                  className="min-w-0 truncate rounded-lg font-bold text-foreground text-lg tracking-tight transition-colors duration-200 ease-out hover:text-primary"
+                  className="flex min-w-0 items-center gap-2.5 rounded-full"
                   onClick={onClose}
                   to="/"
                 >
-                  Dominik Könitzer
+                  {/* The same mark the bar behind this panel carries, so the
+                      drawer opens on the brand rather than on a line of bold
+                      body text. Decorative: the link is named by aria-label. */}
+                  <span
+                    aria-hidden
+                    className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[0.8rem] bg-primary shadow-[0_8px_20px_-10px_hsl(var(--primary)/0.75)]"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-black/[0.07]" />
+                    <span className="relative font-bold font-heading text-[0.95rem] text-primary-foreground leading-none tracking-tight">
+                      DK
+                    </span>
+                  </span>
+                  <span
+                    aria-hidden
+                    className="min-w-0 truncate font-bold font-heading text-foreground text-lg tracking-tight"
+                  >
+                    Dominik <span className="text-primary">Könitzer</span>
+                  </span>
                 </Link>
                 <motion.button
                   aria-label={nav.closeMenu}
