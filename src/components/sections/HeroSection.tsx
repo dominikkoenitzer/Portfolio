@@ -10,6 +10,7 @@ import { ArrowRight, Github, Mail } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { SplitText } from "@/components/effects/SplitText";
 import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
@@ -18,7 +19,7 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
 const MORPH_EASE = `cubic-bezier(${EASE_OUT.join(", ")})`;
-/** The name swaps the instant the outgoing one has finished fading. */
+/** The name swaps the instant the outgoing one has finished clearing. */
 const MORPH_OUT_MS = DUR.fast * 1000;
 
 // ─── Name morph title ─────────────────────────────────────────────────────────
@@ -52,19 +53,27 @@ function NameMorphTitle() {
     };
   }, [PHRASES.length, reduceMotion]);
 
-  // Transform and opacity only. The line spans the viewport at the 7.5rem max
-  // size, so a blur() on the way out repainted the whole hero every frame.
+  /*
+   * A clip-path wipe, not a transform: the name carries `hero-name-gradient`,
+   * i.e. a `background-clip: text` fill, and `clip-path` clips the painted
+   * gradient with the glyphs it fills. It also keeps the promise the old
+   * transform version made for a different reason: the line spans the
+   * viewport at 7.5rem, and a transformed layer makes Chrome rasterize text
+   * that size through the compositor, which is visibly soft on dense screens.
+   * `inset()` never scales the layer, so the settled name stays sharp.
+   *
+   * The same reasoning rules out splitting this line into per-character spans
+   * (see `SplitText`): a gradient clipped to one element cannot be inherited by
+   * transformed children, they would all render transparent.
+   */
   const morphStyle: React.CSSProperties = reduceMotion
     ? {}
     : {
         opacity: morphOut ? 0 : 1,
-        // Rest at `none`, not an identity matrix: a transformed layer makes
-        // Chrome rasterize this 7.5rem text through the compositor, which is
-        // visibly soft on high-density screens.
-        transform: morphOut ? "scale(0.97) translateY(-0.04em)" : "none",
+        clipPath: morphOut ? "inset(0 0 100% 0)" : "inset(0 0 0 0)",
         transition: morphOut
-          ? `opacity ${DUR.fast}s ease-in, transform ${DUR.fast}s ease-in`
-          : `opacity ${DUR.slow}s ${MORPH_EASE}, transform ${DUR.slow}s ${MORPH_EASE}`,
+          ? `opacity ${DUR.fast}s ease-in, clip-path ${DUR.fast}s ease-in`
+          : `opacity ${DUR.slow}s ${MORPH_EASE}, clip-path ${DUR.slow}s ${MORPH_EASE}`,
       };
 
   return (
@@ -72,12 +81,10 @@ function NameMorphTitle() {
       {/* Stable, SEO-friendly heading for assistive tech and crawlers. The
           visible name below cycles purely as decoration (aria-hidden), so it
           never re-announces every few seconds. */}
-      <h1 className="sr-only">
-        Dominik Könitzer, {SITE_CONFIG.title}
-      </h1>
+      <h1 className="sr-only">Dominik Könitzer, {SITE_CONFIG.title}</h1>
       <div
         aria-hidden="true"
-        className="mb-7 overflow-visible leading-[0.95] tracking-[-0.01em] sm:mb-9 md:mb-11"
+        className="mb-5 overflow-visible leading-[0.95] tracking-[-0.01em] sm:mb-6 md:mb-7"
         style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
       >
         <span
@@ -104,18 +111,18 @@ function Magnetic({ children }: { children: React.ReactNode }) {
 
   return (
     <motion.div
-      ref={ref}
-      style={{ x: sx, y: sy }}
+      onMouseLeave={() => {
+        x.set(0);
+        y.set(0);
+      }}
       onMouseMove={(e) => {
         if (!ref.current) return;
         const r = ref.current.getBoundingClientRect();
         x.set((e.clientX - (r.left + r.width / 2)) * 0.28);
         y.set((e.clientY - (r.top + r.height / 2)) * 0.28);
       }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
+      ref={ref}
+      style={{ x: sx, y: sy }}
     >
       {children}
     </motion.div>
@@ -134,8 +141,11 @@ export function HeroSection() {
   });
   const skewY = useTransform(smoothVelocity, [-2500, 0, 2500], [2.5, 0, -2.5]);
   const contentY = useTransform(scrollY, [0, 600], [0, -60]);
+  // The cue has done its job the moment the page moves; fading it on scroll
+  // keeps it from sitting over the section below.
+  const cueOpacity = useTransform(scrollY, [0, 120], [1, 0]);
 
-  // Seeded on the first client render, like RoleMorphTitle: reduced motion gets
+  // Seeded on the first client render, like NameMorphTitle: reduced motion gets
   // the settled hero immediately rather than a cascade it did not ask for.
   const [reduceMotion] = useState(prefersReducedMotion);
 
@@ -153,11 +163,11 @@ export function HeroSection() {
       className="relative flex min-h-[calc(100vh-6rem)] flex-col justify-center overflow-hidden sm:min-h-[calc(100vh-7rem)] md:min-h-[calc(100vh-8rem)]"
       id="hero"
     >
-      {/* Ambient — radial-gradient glows instead of solid circles under a heavy
+      {/* Ambient: radial-gradient glows instead of solid circles under a heavy
           `blur()`; same soft look, no costly blur pass on mobile. */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
-          className="absolute left-[5%] top-[15%] h-[700px] w-[700px]"
+          className="absolute top-[15%] left-[5%] h-[700px] w-[700px]"
           style={{
             background:
               "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, hsl(var(--primary) / 0) 72%)",
@@ -178,26 +188,57 @@ export function HeroSection() {
         style={{ skewY: reduceFx ? 0 : skewY }}
       >
         {/* One choreographed sequence rather than hand-tuned delays: the
-            greeting, the social row and the CTAs cascade off a single stagger
-            parent, so the order stays fixed no matter what is added between
-            them. The morph title sits in the middle without a variant of its
-            own, it is already animating on its own clock. */}
+            status line, greeting, tagline, social row and CTAs cascade off a
+            single stagger parent, so the order stays fixed no matter what is
+            added between them. The morph title sits in the middle without a
+            variant of its own, it is already animating on its own clock. */}
         <motion.div
           animate="show"
           initial={reduceMotion ? "show" : "hidden"}
           style={{ y: reduceFx ? 0 : contentY }}
           variants={stagger(0.18, 0.2)}
         >
-          {/* Greeting, completed by the rotating name below it */}
+          {/* Availability. Sage is the site's signal colour and stays rare;
+              this is the one thing on the home page asking to be looked at, so
+              it earns the dot. The ping ring is a CSS animation, which the
+              global reduced-motion rule in index.css already cancels. */}
+          <motion.div className="mb-5 sm:mb-6" variants={REVEAL}>
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-sage/45 bg-sage/[0.10] py-1.5 pr-3.5 pl-3">
+              <span className="relative flex h-2 w-2 shrink-0">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sage opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-sage-deep" />
+              </span>
+              <span className="eyebrow">{t.hero.available}</span>
+            </span>
+          </motion.div>
+
+          {/* Greeting, completed by the rotating name below it. Split per
+              character so the line writes itself in rather than fading up as a
+              block; it is flat-coloured, so the split is safe here. */}
+          {/* The paragraph orchestrates rather than animates: it takes its slot
+              in the hero cascade and then deals its own characters out, 30ms
+              apart. Giving it REVEAL as well would fade the whole line up
+              underneath the letters and read as two animations fighting. */}
           <motion.p
             className="mb-3 font-semibold text-foreground/90 sm:mb-4"
             style={{ fontSize: "clamp(1.15rem, 2.5vw, 1.75rem)" }}
-            variants={REVEAL}
+            variants={stagger(0, 0.03)}
           >
-            {t.hero.greeting}
+            <SplitText static={reduceMotion} text={t.hero.greeting} />
           </motion.p>
 
           <NameMorphTitle />
+
+          {/* What the name is attached to. The hero was greeting + name + two
+              buttons and said nothing about the work; this is the one line that
+              does, and it is what the page is actually about. */}
+          <motion.p
+            className="mb-7 max-w-xl text-balance text-muted-foreground leading-relaxed sm:mb-8"
+            style={{ fontSize: "clamp(1rem, 1.6vw, 1.2rem)" }}
+            variants={REVEAL}
+          >
+            {t.hero.tagline}
+          </motion.p>
 
           {/* Social links */}
           <motion.div
@@ -237,7 +278,7 @@ export function HeroSection() {
             <Magnetic>
               <Button
                 asChild
-                className="group h-10 rounded-lg px-6 text-sm font-medium"
+                className="group h-10 rounded-lg px-6 font-medium text-sm"
                 variant="cta"
               >
                 <Link className="flex items-center gap-1.5" to="/contact">
@@ -249,7 +290,7 @@ export function HeroSection() {
             <Magnetic>
               <Button
                 asChild
-                className="h-10 rounded-lg border-primary/25 bg-transparent px-6 text-sm font-medium hover:border-primary/45 hover:bg-primary/[0.04]"
+                className="h-10 rounded-lg border-primary/25 bg-transparent px-6 font-medium text-sm hover:border-primary/45 hover:bg-primary/[0.04]"
                 variant="outline"
               >
                 <Link to="/projects">{t.hero.viewWork}</Link>
@@ -258,6 +299,29 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
       </motion.div>
+
+      {/* Scroll cue. Decorative and desktop-only: on a phone the hero already
+          ends mid-thumb, and the section beneath is obvious. Fades out as soon
+          as the page moves. */}
+      {reduceMotion ? null : (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-6 hidden justify-center md:flex"
+          style={{ opacity: cueOpacity }}
+        >
+          <span className="flex flex-col items-center gap-2">
+            {/* Full-strength muted foreground, not an opacity of it: 10px
+                type at /70 lands under the 4.5:1 AA floor, which is exactly
+                the regression the small-type contrast pass cleared. */}
+            <span className="eyebrow text-muted-foreground">
+              {t.hero.scrollCue}
+            </span>
+            <span className="relative block h-9 w-px overflow-hidden bg-border">
+              <span className="animate-scroll-cue absolute inset-x-0 top-0 block h-3 bg-primary/70" />
+            </span>
+          </span>
+        </motion.div>
+      )}
     </section>
   );
 }
