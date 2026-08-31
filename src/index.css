@@ -201,6 +201,13 @@
     font-family: inherit !important;
   }
 
+  /* Visually hidden text paints no glyphs, so it must not fetch a heading
+     face of its own: the hero's sr-only h1 was the only reason Zen Maru
+     loaded on the home page at all. */
+  .sr-only {
+    font-family: inherit !important;
+  }
+
   /* Title face for the hero name only (Tailwind `font-title`). Bowlby One SC
      ships a single weight, so a synthesized bold is pinned off here. */
   .font-title,
