@@ -13,6 +13,13 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+// Module path, not the seo-data barrel: that barrel also re-exports
+// services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
+// no business riding along in the project-detail chunk.
+import {
+  getProjectSeoDescription,
+  getProjectSeoTitle,
+} from "@/config/seo-data/projects";
 import { SITE_CONFIG } from "@/constants";
 import { getProject, getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-context";
@@ -227,7 +234,7 @@ const ProjectDetails = () => {
         // Exactly what scripts/prerender.ts writes into this route's static
         // document. Helmet appends rather than replaces, so a different string
         // here would leave two disagreeing description tags in one head.
-        description={project.tagline}
+        description={getProjectSeoDescription(project)}
         type="article"
         image={`${SITE_CONFIG.url}/og/projects/${project.slug}.png`}
         geoLocation={getDefaultGeoLocation()}
@@ -251,11 +258,11 @@ const ProjectDetails = () => {
           createSoftwareSourceCodeSchema(project),
           createSoftwareApplicationSchema(project),
         ]}
-        title={project.title}
+        title={getProjectSeoTitle(project.slug, project.title)}
         url={projectUrl}
       />
 
-      {/* Reading-progress hairline — transform-only, fixed, decorative. */}
+      {/* Reading-progress hairline: transform-only, fixed, decorative. */}
       <motion.div
         aria-hidden
         className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-primary/80"
@@ -264,7 +271,7 @@ const ProjectDetails = () => {
 
       <div className="min-h-screen">
         {/* ============================================================ */}
-        {/* HERO — floats on the WebGL veil                              */}
+        {/* HERO: floats on the WebGL veil                              */}
         {/* ============================================================ */}
         <section className="relative overflow-hidden">
           <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 pb-12 sm:px-6 sm:pb-16 md:px-8 lg:px-16">
@@ -376,7 +383,7 @@ const ProjectDetails = () => {
                 </div>
               </motion.div>
 
-              {/* Image — handles all 3 modes, guarded onError */}
+              {/* Image: handles all 3 modes, guarded onError */}
               {project.image ? (
                 <motion.div
                   className="flex justify-center lg:justify-end"
@@ -445,7 +452,7 @@ const ProjectDetails = () => {
         </section>
 
         {/* ============================================================ */}
-        {/* BODY — veil dissolves into a solid reading surface           */}
+        {/* BODY: veil dissolves into a solid reading surface           */}
         {/* ============================================================ */}
         <div
           className="relative pb-24 pt-28 sm:pb-28 sm:pt-36"
@@ -606,7 +613,7 @@ const ProjectDetails = () => {
                   src={project.gallery?.[2]}
                 />
 
-                {/* What this demonstrates — hiring signals */}
+                {/* What this demonstrates: hiring signals */}
                 <FeatureSection index={8} title={t.signals}>
                   <SpotlightCard
                     className="glass-deep overflow-hidden rounded-2xl p-6 sm:p-7"
@@ -625,7 +632,7 @@ const ProjectDetails = () => {
                   </SpotlightCard>
                 </FeatureSection>
 
-                {/* What's next — roadmap */}
+                {/* What's next: roadmap */}
                 <FeatureSection index={9} title={t.whatsNext}>
                   <ol className="relative space-y-6 border-border/40 border-l pl-6">
                     {project.nextIterations.map((step, i) => (
@@ -653,7 +660,7 @@ const ProjectDetails = () => {
                   </ol>
                 </FeatureSection>
 
-                {/* Impact — the focal climax tile: brand-gradient wash + a soft
+                {/* Impact, the focal climax tile: brand-gradient wash + a soft
                     primary glow over glass-deep. Overlays kept low-opacity so the
                     checklist stays legible in the light theme (bloom). */}
                 <FeatureSection index={10} title={project.impactHeading}>

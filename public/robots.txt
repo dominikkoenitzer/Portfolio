@@ -1,7 +1,11 @@
 # robots.txt for https://dk.punds.ch
 # One group covers every crawler, search engines and AI crawlers alike.
-# Per-bot groups would replace this one for those bots and lose the /api/
-# disallow, so all crawlers are welcomed here instead.
+#
+# Do NOT add a per-bot group. A crawler obeys only the single most specific
+# group that matches its token, so a "User-agent: GPTBot" block would replace
+# this one for GPTBot entirely and silently drop the /api/ disallow rather than
+# adding to it. Anything that should apply to a named bot has to be repeated
+# inside its group. Every crawler is welcome here, so no named group is needed.
 
 User-agent: *
 Allow: /

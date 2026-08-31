@@ -48,12 +48,16 @@ const About = () => {
           createPersonSchema({
             description:
               "18-year-old software engineer in the seventh semester of the 4-year programme at WISS Schulen für Wirtschaft Informatik Immobilien",
-            educationalCredentialAwarded:
-              "Software Engineering Degree (In Progress)",
+            // The real credential, as the timeline and the CV name it: a Swiss
+            // federal VET diploma, not a degree. `educationalCredentialAwarded`
+            // used to sit here too, but that property belongs on a programme or
+            // an institution, never on a Person; `hasCredential.name` is where
+            // the title goes.
             hasCredential: {
               "@type": "EducationalOccupationalCredential",
-              credentialCategory: "degree",
-              educationalLevel: "Vocational Education",
+              name: "Computer Scientist EFZ, Application Development (in progress)",
+              credentialCategory: "diploma",
+              educationalLevel: "Swiss federal VET diploma (EFZ)",
               recognizedBy: {
                 "@type": "Organization",
                 name: "WISS Schulen für Wirtschaft Informatik Immobilien",

@@ -357,14 +357,14 @@ export const zh = {
   },
   seo: {
     home: {
-      title: "软件工程师 & 网页开发者",
+      title: "苏黎世的软件工程师 & 网页开发者",
       description:
         "Dominik Könitzer，常驻瑞士苏黎世的软件工程师，专注 React、TypeScript 与全栈网页开发。浏览作品集、项目与技能。",
       keywords:
         "Dominik Könitzer, 软件工程师, 网页开发者, React 开发者, TypeScript 开发者, 全栈开发者, 瑞士, 瑞士开发者, 瑞士软件工程师, 网页开发服务, 前端开发者, 后端开发者, 作品集",
     },
     about: {
-      title: "苏黎世软件工程师",
+      title: "关于我，苏黎世的软件工程师",
       description:
         "认识 Dominik Könitzer，一位常驻瑞士苏黎世的软件工程师，就读于 WISS，专注现代网页开发与全栈工程。",
       keywords:
@@ -373,9 +373,9 @@ export const zh = {
     timeline: {
       title: "履历与教育",
       description:
-        "Dominik Könitzer 的履历：在 MPAI 的软件工程实习、自由网页开发，以及在瑞士 WISS 的学业。",
+        "Dominik Könitzer 的履历：在卢塞恩 MPAI 的软件工程实习，以及在苏黎世 WISS 的四年制学业。",
       keywords:
-        "Dominik Könitzer 履历, 简历, 工作经历, 教育, MPAI 实习, WISS, 自由网页开发者, 瑞士软件工程师",
+        "Dominik Könitzer 履历, 简历, 工作经历, 教育, MPAI 实习, 苏黎世 WISS, 信息技术专家 EFZ, 瑞士软件工程师",
     },
     skills: {
       title: "技能与技术",
