@@ -24,9 +24,20 @@ export const zh = {
     language: "切换语言",
     useSystem: "使用系统语言",
   },
+  home: {
+    workEyebrow: "精选作品",
+    workHeading: "我做过的一些东西",
+    workBody:
+      "一些我希望它们存在、于是自己动手做的小工具，附带源代码。",
+    workCta: "查看全部项目",
+  },
   hero: {
     greeting: "你好，我是",
     roles: ["Dominik", "Punds", "DK"] as string[],
+    available: "可接受新项目",
+    tagline:
+      "苏黎世的软件工程师。我做快速、无障碍的网站，以及背后的工具。",
+    scrollCue: "向下滚动",
     hireMe: "雇用我",
     viewWork: "查看作品",
   },

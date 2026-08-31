@@ -24,9 +24,20 @@ export const en = {
     language: "Toggle language",
     useSystem: "Use system language",
   },
+  home: {
+    workEyebrow: "Selected work",
+    workHeading: "A few things I built",
+    workBody:
+      "Small tools I made because I wanted them to exist. Source code included.",
+    workCta: "See all projects",
+  },
   hero: {
     greeting: "Hi, I'm",
     roles: ["Dominik", "Punds", "DK"] as string[],
+    available: "Available for work",
+    tagline:
+      "Software engineer in Zürich. I build fast, accessible websites and the tools behind them.",
+    scrollCue: "Scroll",
     hireMe: "Hire Me",
     viewWork: "View Work",
   },
