@@ -42,12 +42,11 @@
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     >
 
-    <!-- Performance / Preconnect. Fonts are self-hosted (see src/main.tsx),
-         so no font origins need warming. -->
-    <link rel="dns-prefetch" href="https://github.com">
-    <!-- Avatar on /about is the LCP image, so warm the connection early -->
-    <link rel="preconnect" href="https://avatars.githubusercontent.com">
-    <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
+    <!-- No preconnect / dns-prefetch hints on purpose: fonts (src/main.tsx),
+         the /about avatar (public/avatar.jpg) and the contributions API (/api)
+         are all same-origin, so there is no third-party origin worth warming.
+         The production CSP in vercel.json only allows same-origin resources;
+         adding a third-party script, image or fetch means extending it. -->
 
     <!-- Icons and PWA. SVG for modern browsers, favicon.ico as the raster
          fallback that Google's favicon crawler + legacy clients request by convention -->
