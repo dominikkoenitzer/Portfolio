@@ -164,17 +164,24 @@ export function HeroSection() {
       id="hero"
     >
       {/* Ambient: radial-gradient glows instead of solid circles under a heavy
-          `blur()`; same soft look, no costly blur pass on mobile. */}
+          `blur()`; same soft look, no costly blur pass on mobile.
+
+          `max-w-none` on both: index.css carries a blanket
+          `@media (max-width: 640px) { * { max-width: 100% } }` safety net, which
+          clamped these 700px and 500px squares to the viewport width and
+          rendered them as squashed ellipses on every phone. Opting the two
+          decorative layers out is safer than deleting a global rule the rest of
+          the site may lean on. */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
-          className="absolute top-[15%] left-[5%] h-[700px] w-[700px]"
+          className="absolute top-[15%] left-[5%] h-[700px] w-[700px] max-w-none"
           style={{
             background:
               "radial-gradient(circle, hsl(var(--primary) / 0.09) 0%, hsl(var(--primary) / 0) 72%)",
           }}
         />
         <div
-          className="absolute right-[5%] bottom-[10%] h-[500px] w-[500px]"
+          className="absolute right-[5%] bottom-[10%] h-[500px] w-[500px] max-w-none"
           style={{
             background:
               "radial-gradient(circle, hsl(var(--primary) / 0.06) 0%, hsl(var(--primary) / 0) 72%)",
