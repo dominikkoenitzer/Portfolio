@@ -63,4 +63,14 @@ export default tseslint.config(
       globals: globals.node,
     },
   },
+  {
+    // shadcn's primitives re-export Radix parts as consts (`const Popover =
+    // PopoverPrimitive.Root`), which eslint-plugin-react-refresh >= 0.5.5 cannot
+    // tell apart from a non-component export. They are generated wrappers that
+    // nobody hot-edits, so the Fast Refresh warning is noise for that folder.
+    files: ["src/components/ui/**/*.tsx"],
+    rules: {
+      "react-refresh/only-export-components": "off",
+    },
+  },
 );
