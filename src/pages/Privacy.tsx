@@ -24,7 +24,9 @@ const PANEL =
 /** Caps the measure at a comfortable reading line for long-form copy. */
 const PROSE = "max-w-[68ch] text-muted-foreground leading-relaxed";
 
-const MAIL_LINK = "break-all text-primary underline-offset-4 hover:underline";
+// Always underlined: inside a paragraph the colour alone does not mark it as
+// a link (axe link-in-text-block, 1.61:1 against the surrounding text).
+const MAIL_LINK = "break-all text-primary underline underline-offset-4";
 
 const Privacy = () => {
   const { language } = useLanguage();
