@@ -10,7 +10,7 @@
 
 [**Live → dk.punds.ch**](https://dk.punds.ch)
 
-<img src="docs/screenshot.jpg" alt="The portfolio landing page: the hero headline over the WebGL grainient background." width="900">
+<img src="docs/screenshot.jpg" alt="The portfolio landing page: the hero headline under the WebGL aurora background." width="900">
 
 </div>
 
@@ -25,7 +25,7 @@ widget.
 
 - **Fast SPA.** React 19 and Vite, manually code-split, with the WebGL background lazy-loaded off the critical path.
 - **Four languages.** English, German, French, Chinese, on hand-rolled i18n with no library.
-- **One palette, lifted from an illustration.** Dusty violet, sage and blush on a warm cream page, taken from the reference art rather than picked from a scale and kept deliberately muted, under a grainy WebGL gradient in the same three colours.
+- **One palette, lifted from an illustration.** Dusty violet, sage and blush on a warm cream page, taken from the reference art rather than picked from a scale and kept deliberately muted, with a slow WebGL aurora (React Bits' Aurora) in the same three colours drifting across the top.
 - **SEO and AI-SEO treated as real work.** JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards.
 - **Prerendered routes.** The build emits a real HTML document per route, twenty of them, each with its own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview.
 - **Live GitHub contributions** widget, via a Vercel serverless function.
