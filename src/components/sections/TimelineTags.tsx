@@ -13,12 +13,18 @@ import { fitTags } from "@/lib/fit-tags";
  * many as the card is wide enough to hold: measured, not capped at a number.
  * and hands the rest to a "+N" chip that reveals them on hover, focus or tap.
  * Nothing is dropped: what does not fit is one interaction away.
+ *
+ * The chip lift below is now the only thing in the row that moves. The entry
+ * card around it used to lift too (TimelineSection), so pointing at one chip
+ * travelled that chip 6px and every sibling 4px, with no card surface on the
+ * page to explain the 4px. The card has a surface now and answers a hover with
+ * its border and shadow instead of a translate, so this lift stands alone.
  */
 
 const CHIP = "rounded-full border border-border/40 px-3 py-1 text-xs";
 /** The off-layout copies must report their natural width: never shrunk, never wrapped. */
 const MEASURED = "shrink-0 whitespace-nowrap";
-const TAG_CHIP = `${CHIP} bg-secondary/40 text-foreground/80`;
+const TAG_CHIP = `${CHIP} bg-secondary/50 text-foreground/80`;
 /** Transform and colour only, so the lift stays on its own compositor layer. */
 const TAG_HOVER =
   "transform-gpu transition-[transform,color,background-color,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]";
