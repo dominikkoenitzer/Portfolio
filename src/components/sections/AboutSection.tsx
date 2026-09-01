@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Award, GraduationCap } from "lucide-react";
+import { ArrowUpRight, Award, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -10,7 +10,7 @@ import {
   revealStagger,
 } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { Button } from "../ui/button";
@@ -40,8 +40,16 @@ export function AboutSection() {
         title={t.heading}
       />
 
-      <div className="grid gap-8 md:grid-cols-12 md:items-start md:gap-10">
-        <motion.div className="md:col-span-5 lg:col-span-5" {...avatarReveal}>
+      {/* Both columns stretch to the taller of the two (the grid's default),
+          and each one owns where its slack goes: the left column pushes the
+          fact tiles down to its floor, the right column pins the card's action
+          row to the same line. The columns therefore finish level in every
+          language instead of 100-200px out of step. */}
+      <div className="grid gap-8 md:grid-cols-12 md:gap-10">
+        <motion.div
+          className="md:col-span-5 lg:col-span-5 md:flex md:flex-col"
+          {...avatarReveal}
+        >
           <div className="relative mx-auto max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl shadow-lg ring-1 ring-border/20">
               {/* LCP element on /about: fetchPriority high + async decode so it
@@ -59,43 +67,58 @@ export function AboutSection() {
                 width={460}
               />
             </div>
-            {/* One full-size frame that slides out from behind the portrait to
-                its offset. Two loose corner squares used to sit here; at 96px
-                against a 348px portrait they read as tiles that failed to
-                render rather than as a frame. */}
+            {/* A mat, not a second card. This is the only decoration behind
+                the portrait: one hairline that sits an even 10px outside it on
+                all four sides. It used to be an inset-0 frame nudged 14px down
+                and right, which an opaque photo hides on two sides, so all you
+                ever saw was a stray L-shaped rect off the bottom-right corner.
+                Centred, it can only read as a frame. */}
             <motion.div
-              animate={{ opacity: 1, x: 14, y: 14 }}
+              animate={{ opacity: 1, scale: 1 }}
               aria-hidden="true"
-              className="-z-10 absolute inset-0 rounded-2xl border border-primary/10"
-              initial={{ opacity: 0, x: 0, y: 0 }}
+              className="-z-10 -inset-2.5 absolute rounded-[1.625rem] border border-primary/15"
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
               transition={{ duration: DUR.slow, delay: 0.25, ease: EASE_OUT }}
             />
           </div>
 
+          {/* Same width and centre line as the portrait above them, so the
+              column reads as one stack: past ~1100px the track is wider than
+              the 348px photo, and full-bleed tiles left it hanging off-axis
+              with a third of each tile empty.
+              `md:mt-auto` is the left column's slack: when the bio card is the
+              taller of the two, the gap opens under the portrait rather than
+              leaving the tiles hanging above the card's floor. `md:pt-10` keeps
+              the minimum gap when there is no slack to spend. */}
           <motion.div
-            className="mt-8 space-y-4 md:mt-10 md:space-y-6"
+            className="mt-8 space-y-3 sm:space-y-4 md:mx-auto md:mt-auto md:w-full md:max-w-[348px] md:pt-10"
             {...revealOnScroll(reduceMotion, stagger())}
           >
             <InfoCard
               icon={<GraduationCap />}
-              subtitle={t.cards.educationSubtitle}
-              title={t.cards.educationTitle}
+              label={t.cards.educationTitle}
+              to="/timeline"
+              value={t.cards.educationSubtitle}
             />
 
             <InfoCard
               icon={<Award />}
-              subtitle={t.cards.specializedSubtitle}
-              title={t.cards.specializedTitle}
+              label={t.cards.specializedTitle}
+              to="/services"
+              value={t.cards.specializedSubtitle}
             />
           </motion.div>
         </motion.div>
 
-        <motion.div className="md:col-span-7 lg:col-span-7" {...bioReveal}>
+        <motion.div
+          className="md:col-span-7 lg:col-span-7 md:flex md:flex-col"
+          {...bioReveal}
+        >
           {/* One trigger for the whole card: the panel rises, then the heading,
               the three paragraphs and the buttons follow it in sequence instead
               of each running its own hand-set delay. */}
           <motion.div
-            className="glass-card rounded-2xl p-6 sm:p-8"
+            className="glass-card rounded-2xl p-6 sm:p-8 md:flex md:flex-1 md:flex-col"
             {...revealOnScroll(reduceMotion, revealStagger())}
           >
             <motion.h2
@@ -147,8 +170,12 @@ export function AboutSection() {
               </motion.p>
             </div>
 
+            {/* The card's footer: a hairline, then the two actions. `md:mt-auto`
+                parks it on the card's floor, so when the card stretches to the
+                portrait column the air lands above the rule (where a card wants
+                air) instead of below the buttons. */}
             <motion.div
-              className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:gap-4"
+              className="mt-6 flex flex-col gap-3 border-border/40 border-t pt-6 sm:mt-8 sm:flex-row sm:gap-4 sm:pt-8 md:mt-auto"
               variants={REVEAL}
             >
               <Button asChild className="group" variant="default">
@@ -221,38 +248,53 @@ export function AboutSection() {
   );
 }
 
-// Info Card Component for better organization
 interface InfoCardProps {
   icon: React.ReactNode;
-  title: string;
-  subtitle: string;
+  /** Mono micro-label: the category ("Education"). */
+  label: string;
+  /** The fact itself, and the line the eye should land on. */
+  value: string;
+  /** Where the fact is expanded on: the tile is the whole hit target. */
+  to: string;
 }
 
-function InfoCard({ icon, title, subtitle }: InfoCardProps) {
-  // Entrance and hover sit on separate elements so the cascade delay never
-  // applies to the hover lift. The column above owns the timing.
-  //
-  // Geometry and the icon tile match the Skills category cards and the CV rows
-  // on Timeline: 36px tile, 18px glyph, gap-3, rounded-xl shell.
+/**
+ * A fact tile, built to the /donate amount tile: micro-label over a value,
+ * hairline border, a lift and a warmed fill on hover, an arrow that leans out
+ * to the corner it points at. The entrance variant stays on an outer wrapper so
+ * the column's cascade delay can never apply to the hover, and the hover rides
+ * the independent `translate`/`scale` properties for the same reason /donate's
+ * tiles do: they compose with a finished framer transform instead of losing to
+ * it. These two are also the only body links on /about that reach Timeline and
+ * Services, which nothing else on the page pointed at.
+ */
+function InfoCard({ icon, label, value, to }: InfoCardProps) {
   return (
     <motion.div variants={REVEAL}>
-      <motion.div
-        className="flex transform-gpu items-center gap-3 rounded-xl border border-border/30 bg-background/50 p-3 shadow-primary/5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-300 ease-out hover:border-primary/20 hover:bg-background/80 hover:shadow-sm sm:p-4"
-        transition={SPRING_SOFT}
-        whileHover={{ y: -4 }}
+      <Link
+        className="group/tile flex items-center gap-4 rounded-xl border border-border/30 bg-background/40 p-4 shadow-sm backdrop-blur-sm transition-[translate,scale,border-color,background-color,box-shadow] duration-200 ease-out hover:border-primary/40 hover:bg-primary/[0.04] hover:shadow-md hover:[translate:0_-2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background active:[scale:0.985] sm:p-5"
+        to={to}
       >
-        {/* Decorative: the card's title says the same thing in words. */}
+        {/* Decorative: the label says the same thing in words. */}
         <span
           aria-hidden="true"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary [&_svg]:h-[18px] [&_svg]:w-[18px]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-primary/15 bg-primary/[0.07] text-primary transition-colors duration-200 ease-out group-hover/tile:border-primary/30 group-hover/tile:bg-primary/10 [&_svg]:h-[18px] [&_svg]:w-[18px]"
         >
           {icon}
         </span>
-        <div>
-          <h2 className="font-medium text-sm sm:text-base">{title}</h2>
-          <p className="text-muted-foreground text-xs sm:text-sm">{subtitle}</p>
+        <div className="min-w-0">
+          <h2 className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+            {label}
+          </h2>
+          <p className="mt-1 font-medium text-sm transition-colors duration-200 ease-out group-hover/tile:text-primary sm:text-base">
+            {value}
+          </p>
         </div>
-      </motion.div>
+        <ArrowUpRight
+          aria-hidden
+          className="ml-auto h-4 w-4 shrink-0 text-muted-foreground/60 transition-[transform,color] duration-200 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:translate-x-0.5 group-hover/tile:text-primary"
+        />
+      </Link>
     </motion.div>
   );
 }
