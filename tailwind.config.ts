@@ -137,6 +137,11 @@ export default {
       transitionTimingFunction: {
         "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
         "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
+        // The CSS half of EASE_OUT in lib/motion.ts, as a named token. An
+        // arbitrary `ease-[var(--ease-out)]` is reported ambiguous by Tailwind
+        // and emits no utility at all, so a CSS transition written that way
+        // silently falls back to the browser default curve.
+        bloom: "cubic-bezier(0.22, 1, 0.36, 1)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
