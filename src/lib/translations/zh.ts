@@ -315,14 +315,27 @@ export const zh = {
     rights: "保留所有权利。",
     privacyPolicy: "隐私政策",
     journal: "日志",
+    pages: "页面",
+    elsewhere: "其他去处",
+    emailMe: "给我发邮件",
   },
   notFound: {
     title: "页面未找到",
     body: "你要找的页面不存在，或者已经移动了。",
     cta: "返回首页",
+    requested: "你访问的是",
+    suggestionsHeading: "试试这几页",
+    destinations: {
+      projects: "我做过的项目，附源码。",
+      about: "我是谁，在学什么。",
+      services: "我承接什么，怎么做。",
+      contact: "给我留言。",
+    },
   },
   privacy: {
     title: "隐私政策",
+    eyebrow: "法律信息",
+    onThisPage: "本页内容",
     sections: {
       intro: {
         heading: "简介",
