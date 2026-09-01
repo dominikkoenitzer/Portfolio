@@ -27,6 +27,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 /* TiltFigure: a framed screenshot that tilts toward the cursor       */
 /* ------------------------------------------------------------------ */
 
+/**
+ * The ratio every project screenshot in `public/projects/` is exported at
+ * (1600x1000). It is only the opening bid: the frame re-reserves itself from
+ * the file's own dimensions as soon as the browser knows them, so a portrait
+ * shot or a square icon is never squeezed into a landscape slot.
+ */
+const SHOT_RATIO = 16 / 10;
+
 export function TiltFigure({
   src,
   alt,
@@ -35,6 +43,7 @@ export function TiltFigure({
   onOpen,
   openLabel,
   priority = false,
+  ratio = SHOT_RATIO,
 }: {
   src?: string;
   alt: string;
@@ -45,12 +54,30 @@ export function TiltFigure({
   /** Accessible name for that button (required for it to render). */
   openLabel?: string;
   priority?: boolean;
+  /**
+   * Width over height of the picture, used to reserve its box before the file
+   * arrives. Pass the real one for anything that is not a landscape screenshot
+   * (a portrait shot, a square icon) to make the reservation exact from the
+   * first frame.
+   */
+  ratio?: number;
 }) {
   const reduced = useMemo(() => prefersReducedMotion(), []);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const rx = useSpring(mx, { stiffness: 150, damping: 18 });
   const ry = useSpring(my, { stiffness: 150, damping: 18 });
+  const [box, setBox] = useState(ratio);
+  const [failed, setFailed] = useState(false);
+
+  // Correct the reservation from the file itself. Runs both on load and when
+  // the element attaches, because a cached image is already complete by the
+  // time React wires the handler up and would never fire `onLoad`.
+  const measure = useCallback((node: HTMLImageElement | null) => {
+    if (!node?.naturalWidth || !node.naturalHeight) return;
+    const real = node.naturalWidth / node.naturalHeight;
+    setBox((current) => (Math.abs(current - real) < 0.005 ? current : real));
+  }, []);
 
   if (!src) return null;
 
@@ -64,18 +91,26 @@ export function TiltFigure({
     my.set(0);
   };
 
+  // The box is reserved by ratio rather than left to the file: an <img> with no
+  // dimensions is a zero-height box until it decodes, and there are four of
+  // these per project page, so a cold load pushed the article down once per
+  // picture. `object-contain` means the reservation never crops, and a file
+  // that 404s leaves the frame standing instead of collapsing it (the old
+  // handler set display:none and reflowed everything under it).
   const picture = (
-    <img
-      alt={alt}
-      className="block w-full"
-      decoding="async"
-      fetchPriority={priority ? "high" : "auto"}
-      loading={priority ? "eager" : "lazy"}
-      onError={(e) => {
-        e.currentTarget.style.display = "none";
-      }}
-      src={src}
-    />
+    <div className="relative w-full" style={{ aspectRatio: box }}>
+      <img
+        alt={alt}
+        className={`absolute inset-0 h-full w-full object-contain ${failed ? "opacity-0" : ""}`}
+        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+        loading={priority ? "eager" : "lazy"}
+        onError={() => setFailed(true)}
+        onLoad={(event) => measure(event.currentTarget)}
+        ref={measure}
+        src={src}
+      />
+    </div>
   );
 
   return (
@@ -225,9 +260,24 @@ export function CountUp({
   if (!parsed) return <span className={className}>{value}</span>;
   return (
     <span className={className}>
-      {parsed[1]}
-      {disp}
-      {parsed[3]}
+      {/* Both copies of the number share one grid cell: the settled value,
+          hidden, sets the cell's width, and the counting one is painted over
+          it. `tabular-nums` fixes the width of a digit but not how many digits
+          there are, and "0" growing into "100%" widened this cell by 21.8px
+          mid-count and slid the three stats beside it by half that each.
+          Overlapping in flow rather than taking the counting copy out of it:
+          out of flow it inherits the cell's width as a hard limit and flips its
+          unit onto a second line as the digits change, which is a 48px jump. */}
+      <span className="grid">
+        <span aria-hidden className="invisible col-start-1 row-start-1">
+          {value}
+        </span>
+        <span className="col-start-1 row-start-1">
+          {parsed[1]}
+          {disp}
+          {parsed[3]}
+        </span>
+      </span>
     </span>
   );
 }
