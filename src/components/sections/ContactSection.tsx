@@ -103,7 +103,7 @@ const LABEL_SWAP_STILL: MotionProps = {
 function IntentLabel({ label }: { label: string }) {
   return (
     <>
-      <span className="underline decoration-primary/50 decoration-dashed underline-offset-[7px] transition-colors duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:decoration-primary">
+      <span className="rounded-[0.3rem] bg-primary/[0.06] px-1.5 py-0.5 underline decoration-2 decoration-primary/45 underline-offset-[6px] transition-[background-color,text-decoration-color] duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:bg-primary/[0.11] group-hover/intent:decoration-primary group-focus-visible/intent:bg-primary/[0.11]">
         {label}
       </span>
       {/* The chevron leans down under the pointer and flips once the list is
@@ -292,7 +292,7 @@ export function ContactSection() {
           <p className="mt-5 text-muted-foreground text-sm leading-relaxed">
             {t.emailHint}{" "}
             <button
-              className="inline-grid min-h-[44px] items-center rounded-sm text-left underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-grid min-h-[44px] items-center rounded-sm text-left underline decoration-muted-foreground/40 underline-offset-2 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={copyEmail}
               type="button"
             >
