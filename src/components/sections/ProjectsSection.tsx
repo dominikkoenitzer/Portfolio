@@ -49,6 +49,31 @@ const isDesktopApp = (project: PortfolioProject) =>
 const ACTION_BASE =
   "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-3 font-medium text-xs backdrop-blur-sm transition-[background-color,border-color,box-shadow,color] duration-200 ease-out";
 
+/**
+ * The toolbar surface, written out rather than taken from `.glass-card`.
+ *
+ * `.glass-card` carries `translate: 0 -2px` on hover. Because that is the
+ * independent `translate` property and not `transform`, it never shows up in
+ * a `getComputedStyle(el).transform` check, and it lifted the whole bar two
+ * pixels the instant the pointer crossed into it to reach a control: measured
+ * document-relative y 594 with the pointer away, 592 with the pointer
+ * anywhere on the bar, before any click. That is the 2px hop. A cluster of
+ * controls is not a card and gets no card lift.
+ *
+ * It is also why the bar read as disabled: `.glass-card` is `bg-background/70`,
+ * literally the page colour, behind a `border/40` hairline that is at the
+ * threshold of visible on warm cream. The replacement is a lighter surface
+ * than the page with a violet hairline and a soft violet shadow, so the bar
+ * reads as a live object, and `focus-within` deepens the edge when a control
+ * inside it has the keyboard.
+ */
+const TOOLBAR =
+  "flex flex-col gap-2 rounded-2xl border border-primary/30 bg-card/90 p-2 shadow-[0_1px_2px_hsl(var(--foreground)/0.06),0_14px_34px_-18px_hsl(var(--primary)/0.55)] backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-bloom focus-within:border-primary/50 lg:flex-row lg:items-center";
+
+/** The house keyboard-focus ring (same one the buttons and Contact use). */
+const FOCUS_RING =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
 /* ------------------------------------------------------------------ */
 /* Segmented control: one radiogroup, roving tabindex, arrow keys      */
 /* ------------------------------------------------------------------ */
@@ -91,8 +116,10 @@ function SegmentedControl<Key extends string>({
     <div
       aria-label={label}
       // Full width on a phone (two tidy rows beat two ragged ones), intrinsic
-      // width from `sm` up where it sits beside the search field.
-      className="flex w-full rounded-xl border border-border/40 bg-secondary/50 p-1 backdrop-blur-sm sm:w-auto"
+      // width from `sm` up where it sits beside the search field. The track is
+      // a shade darker than the toolbar panel so the selected thumb reads as
+      // sitting on top of it rather than floating on the page.
+      className="flex w-full rounded-xl border border-primary/20 bg-secondary/70 p-1 sm:w-auto"
       onKeyDown={onKeyDown}
       role="radiogroup"
     >
@@ -101,10 +128,10 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`relative h-9 flex-1 rounded-lg px-3.5 font-medium text-xs transition-[color,background-color,box-shadow] duration-200 ease-out sm:flex-none ${
+            className={`relative h-9 flex-1 rounded-lg px-3.5 font-medium text-xs transition-[color,background-color,box-shadow] duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
               active
-                ? "bg-primary/15 text-primary shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary/15 text-primary shadow-sm ring-1 ring-primary/25"
+                : "text-muted-foreground hover:bg-background/70 hover:text-foreground"
             }`}
             key={option.key}
             onClick={() => onChange(option.key)}
@@ -192,7 +219,12 @@ export function ProjectsSection() {
 
   return (
     <section className="section-padding" id="projects">
+      {/* Left-aligned like /donate and /contact: the page head used to stack a
+          centred title on a left-ruled paragraph on a full-width toolbar, three
+          axes inside 300px. One left edge for the eyebrow, title, subtitle,
+          disclosure and toolbar makes the whole head read as a single column. */}
       <SectionHeading
+        align="left"
         eyebrow={t.eyebrow}
         subtitle={t.subheading}
         title={t.heading}
@@ -239,17 +271,18 @@ export function ProjectsSection() {
             <motion.div className="mb-10 sm:mb-12" variants={stagger(0, 0.06)}>
               <motion.div
                 aria-label={t.toolbarLabel}
-                className="glass-card flex flex-col gap-2 rounded-2xl p-2 lg:flex-row lg:items-center"
+                className={TOOLBAR}
                 role="search"
                 variants={REVEAL}
               >
                 <div className="relative min-w-0 flex-1">
-                  <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
+                  <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-primary/70" />
                   {/* The placeholder is the only visible label, and it
-                      vanishes as soon as anything is typed, so name the field. */}
+                      vanishes as soon as anything is typed, so name the field
+                      and keep the placeholder at full text contrast. */}
                   <input
                     aria-label={t.searchPlaceholder}
-                    className="h-11 w-full rounded-xl border border-transparent bg-secondary/40 pr-11 pl-10 text-sm transition-[border-color,background-color] duration-200 ease-out placeholder:text-muted-foreground/60 focus:border-primary/40 focus:bg-secondary/60 focus:outline-none focus:ring-2 focus:ring-primary/15"
+                    className={`h-11 w-full rounded-xl border border-primary/20 bg-background/85 pr-11 pl-10 text-sm transition-[border-color,background-color] duration-200 ease-out placeholder:text-muted-foreground focus:border-primary/45 focus:bg-background ${FOCUS_RING}`}
                     onChange={(event) => updateParams({ q: event.target.value })}
                     placeholder={t.searchPlaceholder}
                     type="text"
@@ -258,7 +291,7 @@ export function ProjectsSection() {
                   {query ? (
                     <button
                       aria-label={t.clearSearch}
-                      className="absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground"
+                      className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground ${FOCUS_RING}`}
                       onClick={() => updateParams({ q: "" })}
                       type="button"
                     >
@@ -269,7 +302,7 @@ export function ProjectsSection() {
 
                 <span
                   aria-hidden
-                  className="hidden h-7 w-px shrink-0 bg-border/60 lg:block"
+                  className="hidden h-7 w-px shrink-0 bg-primary/20 lg:block"
                 />
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
@@ -336,10 +369,26 @@ export function ProjectsSection() {
                quick fade-and-rise. The previous version gave every card
                `layout` + popLayout exits, so re-sorting sent full-height
                cards flying across the page to their new positions, and quick
-               switches interrupted them mid-flight. */
+               switches interrupted them mid-flight.
+
+               `md:auto-rows-fr` is what stops re-sorting from resizing
+               anything. The list was a `space-y-6` stack of naturally sized
+               cards, so a card's height was its description's line count: two
+               distinct heights 22.75px apart in English at 1280 (exactly one
+               `text-sm`/`leading-relaxed` line) and a 67.5px spread in French
+               at 1024. Sorting reordered them and every box changed size.
+               Equal rows make the boxes identical, so a sort only swaps their
+               contents. It is `auto-rows-fr` rather than a `line-clamp`
+               because no single clamp survives four languages: 3 lines would
+               cut the German and French Oxidize description at 1280, and at
+               768 German already runs to 6 or 7 lines, so a clamp tight
+               enough to level the desktop would gut the mid widths. Below
+               `md` the card is a single column seen one at a time, and
+               levelling there would only add up to 90px of dead scroll per
+               card, so the rows stay natural. */
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6"
+              className="grid grid-cols-1 gap-6 md:auto-rows-fr"
               initial={{ opacity: 0, y: 12 }}
               key={`${query}|${type}|${sort}`}
               transition={{ duration: DUR.fast, ease: EASE_OUT }}
@@ -352,6 +401,7 @@ export function ProjectsSection() {
                   transition to the colour properties. */}
               {visible.map((project, index) => (
                 <motion.div
+                  className="md:h-full"
                   initial={{ opacity: 0, y: 28 }}
                   key={project.slug}
                   transition={{
@@ -363,7 +413,7 @@ export function ProjectsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                 >
                   <motion.article
-                    className="glass-deep group relative transform-gpu overflow-hidden rounded-2xl transition-[box-shadow,border-color] duration-300 ease-out"
+                    className="glass-deep group relative transform-gpu overflow-hidden rounded-2xl transition-[box-shadow,border-color] duration-300 ease-out md:h-full"
                     transition={SPRING_SOFT}
                     whileHover={reduceMotion ? undefined : { y: -4 }}
                   >
@@ -371,11 +421,11 @@ export function ProjectsSection() {
                         uses, at its lower glow. It lives inside the article so
                         the card's own overflow clips it to the rounded corners
                         and so it rides along with the hover lift. */}
-                    <SpotlightCard className="rounded-[inherit]" glow={0.14}>
+                    <SpotlightCard className="rounded-[inherit] md:h-full" glow={0.14}>
                       {/* Top animated border */}
                       <span className="absolute top-0 left-0 z-10 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-transform duration-500 ease-out group-hover:scale-x-100" />
 
-                      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+                      <div className="grid md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
                         {/* Visual panel. The screenshot used to sit under the
                             title and the full tag list, which needed a heavy
                             scrim to stay legible and left the image as mush.
