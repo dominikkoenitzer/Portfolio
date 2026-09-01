@@ -374,14 +374,27 @@ export const fr = {
     rights: "Tous droits réservés.",
     privacyPolicy: "Politique de confidentialité",
     journal: "Journal",
+    pages: "Pages",
+    elsewhere: "Ailleurs",
+    emailMe: "M'écrire un e-mail",
   },
   notFound: {
     title: "Page introuvable",
     body: "La page que vous cherchez n'existe pas ou a été déplacée.",
     cta: "Retour à l'accueil",
+    requested: "Vous avez demandé",
+    suggestionsHeading: "Essayez plutôt ceci",
+    destinations: {
+      projects: "Ce que j'ai construit, avec le code.",
+      about: "Qui je suis et ce que j'étudie.",
+      services: "Ce que je prends en charge, et comment.",
+      contact: "Envoyez-moi un message.",
+    },
   },
   privacy: {
     title: "Politique de confidentialité",
+    eyebrow: "Mentions légales",
+    onThisPage: "Sur cette page",
     sections: {
       intro: {
         heading: "Introduction",

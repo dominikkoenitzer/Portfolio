@@ -1,20 +1,48 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { BookOpen, Bot, FileText, Github, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import { LanguageToggle } from "@/components/layout/LanguageToggle";
+import { Button } from "@/components/ui/button";
+import { NAV_LINKS, SITE_CONFIG } from "@/constants";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 
 /**
- * Both icon links are the same 44px square on every pointer, so the two targets
- * match and clear the WCAG minimum without the global coarse-pointer fallback
- * having to stretch them. The lift rides the independent `translate` property
- * rather than a transform utility: these sit inside a framer subtree, and framer
- * writes a finished entrance back as an inline `transform: none` that would
- * out-rank a class rule for good (same reason as `.btn-raise` in index.css).
+ * The same path-to-nav-key map the Navbar keeps, repeated rather than shared:
+ * it lives as a private const in `Navbar.tsx` and `constants/index.ts` holds
+ * only the paths. Seven entries is cheaper to duplicate than a new module, but
+ * a new nav route has to be added in both places.
  */
-const ICON_LINK =
-  "inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-[color,translate] duration-200 ease-out hover:text-primary hover:[translate:0_-2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
+  "/about": "about",
+  "/timeline": "timeline",
+  "/skills": "skills",
+  "/projects": "projects",
+  "/services": "services",
+  "/contact": "contact",
+  "/donate": "donate",
+};
+
+/**
+ * Column heading. Mono micro-label in the secondary text colour (5.2:1), not
+ * `.eyebrow`: the eyebrow is sage, and sage is the signal colour. Three of them
+ * stacked in a footer on all 21 routes would stop being a signal.
+ */
+const COL_LABEL =
+  "font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]";
+
+/**
+ * Every footer link is a 44px row, so the whole grid is a column of legal
+ * tap targets on a phone without any coarse-pointer fallback stretching them.
+ * Colour is the only thing that moves on hover: a lift on a list of twelve
+ * links reads as the page twitching.
+ */
+const LINK =
+  "inline-flex min-h-[44px] items-center gap-2.5 rounded-sm text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary";
+
+const ICON = "h-4 w-4 shrink-0 opacity-80";
 
 export function Footer() {
   const { language } = useLanguage();
@@ -22,15 +50,56 @@ export function Footer() {
   const reduceMotion = useReducedMotion();
   const currentYear = new Date().getFullYear();
 
+  const pages = NAV_LINKS.map((link) => ({
+    to: link.targetId,
+    name: t.nav[NAV_KEY_BY_PATH[link.targetId]] ?? link.name,
+  }));
+
+  // The CV documents are static files under public/, not routes, so they are
+  // plain anchors and keep the same paths the Timeline page links to (the
+  // pretty /cv and /lebenslauf URLs are Vercel redirects and do not exist in
+  // dev). Both languages are offered, because which one a reader wants does
+  // not follow from which language the site is in.
+  const elsewhere = [
+    {
+      href: SITE_CONFIG.github,
+      icon: <Github className={ICON} />,
+      label: "GitHub",
+    },
+    {
+      href: "https://senbon.ch/",
+      icon: <BookOpen className={ICON} />,
+      label: t.footer.journal,
+    },
+    {
+      href: "/cv/curriculum-vitae.html",
+      icon: <FileText className={ICON} />,
+      label: "Curriculum Vitae",
+    },
+    {
+      href: "/cv/lebenslauf.html",
+      icon: <FileText className={ICON} />,
+      label: "Lebenslauf",
+    },
+    {
+      href: "/llms.txt",
+      icon: <Bot className={ICON} />,
+      label: "llms.txt",
+    },
+  ];
+
   return (
     <footer className="border-border/30 border-t bg-background pb-safe">
       <motion.div
         className="mx-auto max-w-7xl px-6 py-12 sm:px-8 md:px-12 lg:px-16"
         {...revealOnScroll(reduceMotion, stagger())}
       >
-        {/* Row one: who this is, and where else he is. */}
-        <div className="flex flex-col items-center gap-7 text-center sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:text-left">
-          <motion.div className="min-w-0" variants={REVEAL}>
+        {/* Two columns from the smallest phone up: stacking three blocks made
+            the footer a screen and a half tall, which is its own kind of
+            afterthought. The identity block takes the full width above them. */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-9 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-14">
+          {/* Who this is, whether he is free, and the one-click way to ask. */}
+          <motion.div className="col-span-2 min-w-0 lg:col-span-1" variants={REVEAL}>
             <Link
               className="rounded-sm font-bold text-xl tracking-tight transition-colors duration-200 ease-out hover:text-primary"
               to="/"
@@ -40,82 +109,94 @@ export function Footer() {
             <p className="mt-1.5 text-muted-foreground text-sm">
               {t.footer.tagline}
             </p>
+
+            {/* The same status the home hero carries, minus its ping ring: a
+                pulse is right once at the top of the page and wrong on every
+                route's footer. */}
+            <p className="mt-5">
+              <span className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-sage/45 bg-sage/[0.10] py-1.5 pr-3.5 pl-3">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-sage-deep" />
+                <span className="eyebrow">{t.hero.available}</span>
+              </span>
+            </p>
+
+            <Button
+              asChild
+              className="mt-5 rounded-lg px-5"
+              size="lg"
+              variant="soft"
+            >
+              <a href={`mailto:${SITE_CONFIG.email}`}>
+                <Mail className="h-4 w-4" />
+                {t.footer.emailMe}
+              </a>
+            </Button>
           </motion.div>
 
-          {/* The negative margin pulls the 44px squares back out to the column
-              edge, so the icons stay optically aligned with the text above. */}
-          <motion.div
-            className="-mx-2.5 flex shrink-0 items-center gap-1 sm:mx-0 sm:-mr-2.5"
-            variants={REVEAL}
-          >
-            <a
-              aria-label="GitHub"
-              className={ICON_LINK}
-              href="https://github.com/dominikkoenitzer"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <svg
-                aria-hidden="true"
-                className="lucide lucide-github"
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                <path d="M9 18c-4.51 2-5-2-7-2" />
-              </svg>
-            </a>
-            <a
-              aria-label={t.footer.journal}
-              className={ICON_LINK}
-              href="https://senbon.ch/"
-              rel="noopener noreferrer"
-              target="_blank"
-              title={t.footer.journal}
-            >
-              <svg
-                aria-hidden="true"
-                className="lucide lucide-book-open"
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-              </svg>
-            </a>
-          </motion.div>
+          {/* The nav, repeated. The footer is the second place people scroll
+              to and it used to offer exactly one link out of it. */}
+          <motion.nav aria-labelledby="footer-pages" variants={REVEAL}>
+            <h2 className={COL_LABEL} id="footer-pages">
+              {t.footer.pages}
+            </h2>
+            {/* Seven links in one file is a tall thin column next to two short
+                ones, so from lg they run in two. */}
+            <ul className="mt-2 lg:grid lg:grid-cols-2 lg:gap-x-5">
+              {pages.map((page) => (
+                <li key={page.to}>
+                  <Link className={LINK} to={page.to}>
+                    {page.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.nav>
+
+          <motion.nav aria-labelledby="footer-elsewhere" variants={REVEAL}>
+            <h2 className={COL_LABEL} id="footer-elsewhere">
+              {t.footer.elsewhere}
+            </h2>
+            <ul className="mt-2">
+              {elsewhere.map((item) => (
+                <li key={item.href}>
+                  {/* Every one of these leaves the app, so they are anchors,
+                      and the two off-site ones open in a new tab. The icon is
+                      decoration: the label carries the name, which is what the
+                      two bare glyphs here never did. */}
+                  <a
+                    className={LINK}
+                    href={item.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {item.icon}
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.nav>
         </div>
 
-        {/* Row two: the hairline runs the full content width, and the legal line
-            keeps a 44px target for the one link it carries. */}
+        {/* The legal line, the policy, and the language picker: the three
+            things that belong at the very bottom and nowhere else. */}
         <motion.div
-          className="mt-9 flex flex-col items-center gap-1 border-border/40 border-t pt-5 text-center sm:mt-10 sm:flex-row sm:justify-between sm:gap-6 sm:pt-6 sm:text-left"
+          className="mt-10 flex flex-col items-center gap-3 border-border/40 border-t pt-5 text-center sm:flex-row sm:justify-between sm:gap-6 sm:text-left"
           variants={REVEAL}
         >
           <p className="text-muted-foreground text-sm">
             © {currentYear} Dominik Könitzer. {t.footer.rights}
           </p>
 
-          <Link
-            className="inline-flex min-h-[44px] items-center rounded-sm text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary"
-            to="/privacy"
-          >
-            {t.footer.privacyPolicy}
-          </Link>
+          <div className="flex items-center gap-2 sm:shrink-0">
+            <Link className={LINK} to="/privacy">
+              {t.footer.privacyPolicy}
+            </Link>
+            {/* The navbar's own control, reused rather than rebuilt: it owns
+                the language list, the system-language row and the roving
+                keyboard movement inside the sheet. */}
+            <LanguageToggle />
+          </div>
         </motion.div>
       </motion.div>
     </footer>
