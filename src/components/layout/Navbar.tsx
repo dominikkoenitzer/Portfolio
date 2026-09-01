@@ -81,7 +81,7 @@ function RippleLabel({ accentFrom, text, wave }: RippleLabelProps) {
           className={cn(
             "inline-block whitespace-pre",
             wave &&
-              "transition-transform duration-200 ease-[var(--ease-out)] group-focus-visible:-translate-y-[3px] group-hover:-translate-y-[3px]",
+              "transition-transform duration-200 ease-bloom group-focus-visible:-translate-y-[3px] group-hover:-translate-y-[3px]",
             accentFrom !== undefined && i >= accentFrom && "text-primary",
           )}
           // The string is fixed for the life of the element. A language switch
@@ -112,11 +112,11 @@ function Monogram() {
   return (
     <span
       aria-hidden
-      className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[0.8rem] bg-primary shadow-[0_8px_20px_-10px_hsl(var(--primary)/0.75)] transition-transform duration-200 ease-[var(--ease-out)] group-focus-visible:-rotate-6 group-hover:-rotate-6 md:h-10 md:w-10 md:rounded-[0.9rem]"
+      className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[0.8rem] bg-primary shadow-[0_8px_20px_-10px_hsl(var(--primary)/0.75)] transition-transform duration-200 ease-bloom group-focus-visible:-rotate-6 group-hover:-rotate-6 md:h-10 md:w-10 md:rounded-[0.9rem]"
     >
       <span className="absolute inset-0 bg-gradient-to-br from-white/[0.12] via-transparent to-black/[0.07]" />
       {/* Sheen parked off the left edge, sweeping across on hover. */}
-      <span className="-left-full -skew-x-12 absolute inset-y-0 w-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-[400ms] ease-[var(--ease-out)] group-hover:translate-x-[220%]" />
+      <span className="-left-full -skew-x-12 absolute inset-y-0 w-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 ease-bloom group-hover:translate-x-[220%]" />
       <span className="relative font-bold font-heading text-[0.95rem] text-primary-foreground leading-none tracking-tight md:text-base">
         DK
       </span>
