@@ -14,11 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SITE_CONFIG } from "@/constants";
-import {
-  fadeInUp,
-  revealOnScroll,
-  revealStagger,
-} from "@/lib/framer-animations";
+import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
 import { REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
@@ -160,7 +156,7 @@ function ContributionsCalendar() {
     return (
       <motion.div
         className="glass-card mt-12 rounded-2xl p-6 sm:p-8 md:mt-16"
-        {...fadeInUp}
+        {...revealOnScroll(reduceMotion)}
       >
         {/* Reserve ~the loaded height so the calendar/commits popping in after
             the API resolves doesn't shove the page (layout shift / jank). */}
