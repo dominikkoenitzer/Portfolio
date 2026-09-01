@@ -60,6 +60,10 @@ const GITHUB_COLORS = {
   "4": "hsl(var(--primary))",
 };
 
+// One reserved height for both states that have no calendar to show: waiting
+// and degraded look the same size, so settling into either moves nothing.
+const RESERVED = "min-h-[400px]";
+
 class ContributionsError extends Error {
   constructor(readonly status: number) {
     super(`GitHub contributions request failed with ${status}`);
@@ -160,19 +164,39 @@ function ContributionsCalendar() {
       >
         {/* Reserve ~the loaded height so the calendar/commits popping in after
             the API resolves doesn't shove the page (layout shift / jank). */}
-        <div className="flex min-h-[400px] items-center justify-center">
+        <div className={`flex ${RESERVED} items-center justify-center`}>
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </motion.div>
     );
   }
 
-  // The calendar is a nice-to-have under the bio. When the endpoint cannot
-  // serve it (the server token was revoked once already), a visitor gets
-  // nothing rather than a red card apologising for a widget they never asked
-  // for.
+  // The calendar is a nice-to-have under the bio, and the endpoint does fail
+  // (the server token has been revoked once already). It used to render
+  // nothing at all on a definitive failure, which dropped the whole band out
+  // of the page: the widget is the last thing in the section, so the bio
+  // column simply stopped and left a few hundred pixels of empty page above
+  // the footer, and the switch out of the loading card moved everything under
+  // it. So the frame stays, at exactly the height the loading state reserved,
+  // holding its own space. It is a quiet label, not an apology: no colour, no
+  // warning, nothing claiming the data is zero, and nothing inventing a reason
+  // it cannot know.
   if (error) {
-    return null;
+    return (
+      <motion.div
+        className="glass-card mt-12 rounded-2xl p-6 sm:p-8 md:mt-16"
+        {...revealOnScroll(reduceMotion)}
+      >
+        <div
+          className={`flex ${RESERVED} flex-col items-center justify-center gap-3 text-center`}
+        >
+          <GitCommit aria-hidden className="h-5 w-5 text-muted-foreground" />
+          <p className="max-w-xs text-muted-foreground text-sm">
+            {t.activityNote}
+          </p>
+        </div>
+      </motion.div>
+    );
   }
 
   // The loaded card is a sequence: the panel, its count, then the calendar. The

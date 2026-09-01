@@ -110,14 +110,26 @@ function PriceCounter({ price, accent }: { price: string; accent: string }) {
   }
 
   return (
+    // Both copies of the price share one grid cell: the settled string, hidden,
+    // sets the width, and the counting one is painted over it. `tabular-nums`
+    // fixes the width of a digit but not how many digits there are, so without
+    // the twin "0 CHF" widening into "200 CHF" resizes the row it sits in. Same
+    // trick as the stats strip on a project page, and in flow for the same
+    // reason: an out-of-flow copy inherits this width as a hard limit and flips
+    // its currency onto a second line as the digits change.
     <span
-      className="font-mono text-[13px] tabular-nums"
+      className="grid font-mono text-[13px] tabular-nums"
       ref={ref}
       style={{ color: accent }}
     >
-      {/* A motion value only renders as text inside a motion component. */}
-      <motion.span>{rounded}</motion.span>
-      {tail}
+      <span aria-hidden className="invisible col-start-1 row-start-1">
+        {price}
+      </span>
+      <span className="col-start-1 row-start-1">
+        {/* A motion value only renders as text inside a motion component. */}
+        <motion.span>{rounded}</motion.span>
+        {tail}
+      </span>
     </span>
   );
 }
