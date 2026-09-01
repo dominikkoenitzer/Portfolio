@@ -426,17 +426,37 @@ export function ServicesSection() {
               >
                 {FILTER_IDS.map((id) => {
                   const on = active === id;
+                  // The active chip wears the category's OWN accent, the same
+                  // one its bough and its offer block wear, so pressing "Grow"
+                  // is answered on the chip as well as out in the tree. Only
+                  // fill, ring and text colour change: padding, weight and glyph
+                  // size are constant, so the row cannot re-wrap under the
+                  // pointer. "All services" stays ink rather than violet,
+                  // because the build accent IS the primary violet and the two
+                  // would otherwise be the same chip.
+                  const tint = id === "all" ? null : accentText[id];
                   return (
                     <button
                       aria-pressed={on}
                       className={cn(
                         "inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                         on
-                          ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.35)]"
+                          ? "text-foreground"
                           : "bg-transparent text-muted-foreground hover:bg-primary/[0.06] hover:text-foreground",
+                        on &&
+                          !tint &&
+                          "bg-foreground/[0.08] shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.6)]",
                       )}
                       key={id}
                       onClick={() => selectCategory(id)}
+                      style={
+                        on && tint
+                          ? {
+                              backgroundColor: withAlpha(tint, 0.16),
+                              boxShadow: `inset 0 0 0 1px ${withAlpha(tint, 0.85)}`,
+                            }
+                          : undefined
+                      }
                       type="button"
                     >
                       {t.filters[id]}
@@ -444,17 +464,42 @@ export function ServicesSection() {
                   );
                 })}
               </div>
-              {/* The same background-coloured halo the title uses, so a line of
-                  small type stays readable where a leaf passes behind it. */}
-              <p
-                className="mt-3 text-[12.5px] text-muted-foreground"
-                style={{
-                  textShadow:
-                    "0 0 8px hsl(var(--background)), 0 0 16px hsl(var(--background))",
-                }}
-              >
-                {t.treeHint}
-              </p>
+              {/* The hint used to be bare type with a background-coloured halo
+                  around it, and the top blush leaf grew straight through it: a
+                  text-shadow cannot separate small type from a lit 3D object
+                  sitting in the same pixels. It now rides the same glass track
+                  the control above uses, which is opaque enough that nothing
+                  behind it matters, and it doubles as the chip row's receipt.
+                  Picking a category prefixes it with that category's name and
+                  description in the category's own colour, so the chips have a
+                  written answer as well as a moving one. Announced politely,
+                  because the tree itself is aria-hidden and this line is the
+                  only thing a screen reader can hear change. */}
+              <div className="mt-3 flex justify-center">
+                <p
+                  aria-live="polite"
+                  className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 rounded-full border border-border/40 bg-background/90 px-3.5 py-1.5 text-[12.5px] text-muted-foreground shadow-sm backdrop-blur-md"
+                >
+                  {active === "all" ? null : (
+                    <motion.span
+                      animate={{ opacity: 1, y: 0 }}
+                      className="inline-flex items-center gap-1.5 font-semibold"
+                      initial={{ opacity: 0, y: -4 }}
+                      key={active}
+                      style={{ color: accentText[active] }}
+                      transition={{ duration: DUR.fast, ease: EASE_OUT }}
+                    >
+                      <span
+                        aria-hidden
+                        className="h-1.5 w-1.5 flex-none rounded-full"
+                        style={{ background: accentText[active] }}
+                      />
+                      {`${t.categoryMeta[active].label} · ${t.categoryMeta[active].desc}`}
+                    </motion.span>
+                  )}
+                  <span>{t.treeHint}</span>
+                </p>
+              </div>
             </div>
 
             {/* Detail card. */}
@@ -594,10 +639,12 @@ export function ServicesSection() {
           {t.faqTitle}
         </motion.h2>
         {/* Native <details>: no JS, keyboard and screen-reader correct, and it
-            keeps the answers in the DOM for crawlers even while collapsed. The
-            cascade is on the wrapper, the element itself stays native, and the
-            open state is styled rather than animated (a height animation would
-            need JS and would take the content out of the DOM's flow). */}
+            keeps the answers in the DOM for crawlers even while collapsed,
+            which matters here because this copy is also the page's FAQ schema.
+            The box still snaps to its open height (animating height repaints
+            every frame and is banned site-wide), but the answer no longer just
+            appears inside it: `.faq-panel` in index.css rises and fades it into
+            the space on the shared curve, against the chevron turning over. */}
         <div className="mt-6 divide-y divide-border/30 border-border/30 border-t">
           {faqs.map((faq) => (
             <motion.details
@@ -609,12 +656,12 @@ export function ServicesSection() {
                 {faq.question}
                 <ChevronDown
                   aria-hidden
-                  className="h-4 w-4 flex-none text-muted-foreground/50 transition-transform duration-200 ease-out group-open:rotate-180"
+                  className="h-4 w-4 flex-none text-muted-foreground/60 transition-transform duration-300 ease-out group-open:rotate-180 group-open:text-primary"
                 />
               </summary>
               {/* No left padding: the summary's own is cancelled by its
                   negative margin, so the answer lines up under the question. */}
-              <p className="pt-1 pr-10 pb-4 text-muted-foreground text-sm leading-relaxed">
+              <p className="faq-panel pt-1 pr-10 pb-4 text-muted-foreground text-sm leading-relaxed">
                 {faq.answer}
               </p>
             </motion.details>

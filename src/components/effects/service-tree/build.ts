@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { CATS, FORK, HUBS, LEAVES, ROOT, TIMING } from "./layout";
-import type { ServiceTreePalette } from "./theme";
+import { CATEGORY_ACCENT_TEXT, type ServiceTreePalette } from "./theme";
 import { glowTexture, iconTexture, leafTexture } from "./textures";
 import type {
   Branch,
@@ -51,6 +51,9 @@ export function buildSapling(opts: {
   const { scene, palette, glowBlend, nodes, disposables } = opts;
   const glowTex = glowTexture();
   const leafTex = leafTexture();
+  // Leaf glyphs wear their category's text-strength accent (see the icon
+  // material below), picked for the page brightness this palette targets.
+  const iconTints = CATEGORY_ACCENT_TEXT[palette.onLight ? "light" : "dark"];
 
   const branches: Branch[] = [];
   const nodeObjs: NodeObj[] = [];
@@ -147,6 +150,7 @@ export function buildSapling(opts: {
     growAt: number,
   ) => {
     const col = new THREE.Color(palette.accent[node.category]);
+    const iconTint = iconTints[node.category];
     const p = V(pos);
     const group = new THREE.Group();
     group.position.copy(p);
@@ -181,8 +185,13 @@ export function buildSapling(opts: {
     const leaf = new THREE.Sprite(leafMat);
     leaf.scale.set(1.6, 1.6, 1);
     leaf.renderOrder = 3;
+    // The glyph is rasterised white once and tinted here, so one texture per
+    // icon serves every palette. White was invisible on the cream page: the
+    // leaf it sits on is a pale wash of its own accent, so the icon takes the
+    // text-strength version of that accent and reads as drawn ink.
     const iconMat = new THREE.SpriteMaterial({
       map: iconTexture(node.key, node.icon),
+      color: new THREE.Color(iconTint),
       transparent: true,
       depthWrite: false,
       fog: false,

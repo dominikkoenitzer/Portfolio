@@ -1176,3 +1176,32 @@ section h4 {
   }
 }
 
+
+/* /services FAQ answer panel. The native <details> box snaps to its open
+   height, because a height animation repaints every frame and is banned
+   site-wide, so the answer rises and fades into the space the box just made
+   instead: transform and opacity only, on the shared `--ease-out` curve at the
+   standard 300ms. Scoped to `details[open]` rather than relying on fill-mode
+   alone, so closing removes the animation and re-opening always restarts it
+   whichever way the UA hides a closed <details> (display:none in older Chrome,
+   content-visibility in newer). */
+@keyframes faq-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+details[open] > .faq-panel {
+  animation: faq-panel-in 300ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details[open] > .faq-panel {
+    animation: none;
+  }
+}

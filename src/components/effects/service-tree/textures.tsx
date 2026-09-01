@@ -69,7 +69,9 @@ export function leafTexture(): THREE.Texture {
 
 // Icon textures depend only on the icon component (white, language-agnostic),
 // so cache them at module scope: a language/theme switch reuses them instead
-// of re-serialising the SVG + re-uploading to the GPU.
+// of re-serialising the SVG + re-uploading to the GPU. White is a tint base,
+// not the colour that ships: the sprite material in build.ts multiplies it by
+// the leaf's category accent, because a white glyph on a cream page is a hole.
 const iconTexCache = new Map<string, THREE.Texture>();
 export function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {
   const cached = iconTexCache.get(cacheKey);

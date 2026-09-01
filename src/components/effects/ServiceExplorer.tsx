@@ -257,9 +257,14 @@ export default function ServiceExplorer({
       camera.updateMatrixWorld();
       raycaster.setFromCamera(ndc, camera);
       const hits = raycaster.intersectObjects(hitMeshes, false);
+      // A dimmed bough is out of scope, not merely faint: with a category
+      // picked, its leaves stop answering the pointer, so the chip row reads as
+      // a real scope control instead of a lighting change you can click through.
+      const A = activeRef.current;
       let idx: number | null = null;
       for (const ht of hits) {
         const i = ht.object.userData.idx as number;
+        if (A !== "all" && nodeObjs[i].cat !== A) continue;
         if (nowSec() > nodeObjs[i].growAt) {
           idx = i;
           break;
@@ -381,17 +386,19 @@ export default function ServiceExplorer({
         desRad = 14;
       }
 
-      curTarget.lerp(focusV, 0.045);
-      radius += (desRad - radius) * 0.045;
+      // Faster than a drift: picking a category should read as the camera being
+      // flown somewhere, not as the scene slowly noticing.
+      curTarget.lerp(focusV, 0.075);
+      radius += (desRad - radius) * 0.075;
 
       const userActive = performance.now() - lastUser < 2200;
       if (userActive) {
         /* drag owns azimuth / elevation */
       } else if (selPos || A !== "all") {
         const desAz = Math.atan2(focusV.x, focusV.z + 0.0001);
-        azimuth = lerpAngle(azimuth, desAz, 0.04);
+        azimuth = lerpAngle(azimuth, desAz, 0.065);
         const desEl = clamp(0.12 + focusV.y * 0.05, 0.0, 0.6);
-        elevation += (desEl - elevation) * 0.04;
+        elevation += (desEl - elevation) * 0.065;
       } else {
         if (autoRotateRef.current) azimuth += dt * 0.12;
         elevation += (0.16 - elevation) * 0.03;
@@ -432,25 +439,30 @@ export default function ServiceExplorer({
         }
       }
 
-      // Category dim factors.
+      // Category dim factors. The chosen bough is pushed ABOVE full (opacity
+      // clamps at 1, the colour does not, so it reads as lit rather than merely
+      // undimmed) and the other two drop far enough to leave the page, because
+      // a category chip that only nudges the tree looks like a dead button.
       const A = activeRef.current;
       for (const k of ["trunk", "build", "protect", "grow"] as BranchCat[]) {
         const tgt =
-          A === "all" ? 1 : k === A ? 1 : k === "trunk" ? 0.5 : 0.12;
-        catFactor[k] += (tgt - catFactor[k]) * 0.1;
+          A === "all" ? 1 : k === A ? 1.18 : k === "trunk" ? 0.34 : 0.05;
+        catFactor[k] += (tgt - catFactor[k]) * 0.14;
       }
       for (const b of branches) {
         const f = catFactor[b.cat];
         for (const L of b.layers) {
-          L.mat.opacity = L.baseOp * f;
+          L.mat.opacity = Math.min(1, L.baseOp * f);
           L.mat.color
             .copy(L.core ? b.coreCol : b.base)
-            .lerp(dimColor, (1 - f) * 0.85);
+            .lerp(dimColor, clamp(1 - f, 0, 1) * 0.9);
         }
       }
       for (const hg of hubGlows) {
-        hg.sp.material.opacity =
-          (el > hg.growAt ? 0.5 : 0.0) * catFactor[hg.cat];
+        hg.sp.material.opacity = Math.min(
+          1,
+          (el > hg.growAt ? 0.5 : 0.0) * catFactor[hg.cat],
+        );
       }
 
       // Nodes: pop-in, hover/select focus, dim.
@@ -464,11 +476,15 @@ export default function ServiceExplorer({
         n.scale += (tScale - n.scale) * 0.16;
         n.group.scale.setScalar(n.scale);
         n.glow.scale.setScalar(focused ? 1.45 : 1.15);
-        n.glowMat.opacity = (focused ? 0.8 : 0.5) * Math.max(f, 0.06);
-        n.glowMat.color.copy(n.baseColor).lerp(dimColor, (1 - f) * 0.6);
-        n.leafMat.opacity = (focused ? 1.0 : 0.9) * Math.max(f, 0.12);
-        n.leafMat.color.copy(n.baseColor).lerp(dimColor, (1 - f) * 0.55);
-        n.iconMat.opacity = Math.max(f, focused ? 1 : 0.14);
+        n.glowMat.opacity = Math.min(1, (focused ? 0.8 : 0.5) * Math.max(f, 0.04));
+        n.glowMat.color
+          .copy(n.baseColor)
+          .lerp(dimColor, clamp(1 - f, 0, 1) * 0.6);
+        n.leafMat.opacity = Math.min(1, (focused ? 1.0 : 0.9) * Math.max(f, 0.06));
+        n.leafMat.color
+          .copy(n.baseColor)
+          .lerp(dimColor, clamp(1 - f, 0, 1) * 0.6);
+        n.iconMat.opacity = Math.min(1, Math.max(f, focused ? 1 : 0.06));
       }
 
       // Energy pulses.
@@ -594,10 +610,17 @@ export default function ServiceExplorer({
         ref={canvasRef}
         style={{ cursor: "grab" }}
       />
+      {/* The leaf label. It used to carry a hard-coded near-black navy fill
+          from the dark-panel era, which on the cream page put ink text on a
+          midnight pill: unreadable, and the one dark surface left on the site.
+          It now wears the page's own glass, like every other floating label. */}
       <div
-        className="glass-deep pointer-events-none absolute top-0 left-0 z-[3] whitespace-nowrap rounded-full px-[13px] py-1.5 font-semibold text-[13px] text-foreground opacity-0 shadow-[0_8px_26px_-10px_rgba(0,0,0,0.4)]"
+        className="glass-deep pointer-events-none absolute top-0 left-0 z-[3] whitespace-nowrap rounded-full px-[13px] py-1.5 font-semibold text-[13px] text-foreground opacity-0 shadow-[0_10px_28px_-14px_rgba(0,0,0,0.28)]"
         ref={tooltipRef}
-        style={{ background: "rgba(8,16,42,0.72)", transition: "opacity 160ms" }}
+        style={{
+          background: "hsl(var(--background) / 0.94)",
+          transition: "opacity 160ms",
+        }}
       />
     </div>
   );
