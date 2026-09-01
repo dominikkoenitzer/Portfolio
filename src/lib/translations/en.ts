@@ -372,14 +372,27 @@ export const en = {
     rights: "All rights reserved.",
     privacyPolicy: "Privacy Policy",
     journal: "Journal",
+    pages: "Pages",
+    elsewhere: "Elsewhere",
+    emailMe: "Email me",
   },
   notFound: {
     title: "Page not found",
     body: "The page you’re looking for doesn’t exist or may have moved.",
     cta: "Back home",
+    requested: "You asked for",
+    suggestionsHeading: "Try one of these",
+    destinations: {
+      projects: "What I have built, with the source.",
+      about: "Who I am and what I study.",
+      services: "What I take on, and how I work.",
+      contact: "Send me a message.",
+    },
   },
   privacy: {
     title: "Privacy Policy",
+    eyebrow: "Legal",
+    onThisPage: "On this page",
     sections: {
       intro: {
         heading: "Introduction",

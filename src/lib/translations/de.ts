@@ -376,14 +376,27 @@ export const de = {
     rights: "Alle Rechte vorbehalten.",
     privacyPolicy: "Datenschutz",
     journal: "Journal",
+    pages: "Seiten",
+    elsewhere: "Anderswo",
+    emailMe: "E-Mail schreiben",
   },
   notFound: {
     title: "Seite nicht gefunden",
     body: "Die Seite, die du suchst, gibt es nicht oder sie ist umgezogen.",
     cta: "Zur Startseite",
+    requested: "Angefragt war",
+    suggestionsHeading: "Vielleicht eines davon",
+    destinations: {
+      projects: "Was ich gebaut habe, mit Quellcode.",
+      about: "Wer ich bin und was ich lerne.",
+      services: "Was ich übernehme und wie ich arbeite.",
+      contact: "Schreib mir eine Nachricht.",
+    },
   },
   privacy: {
     title: "Datenschutzerklärung",
+    eyebrow: "Rechtliches",
+    onThisPage: "Auf dieser Seite",
     sections: {
       intro: {
         heading: "Einleitung",
