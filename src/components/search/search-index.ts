@@ -1,7 +1,10 @@
 import type { Language } from "@/config/languages";
 // Module path, not the seo-data barrel: that barrel also re-exports the
 // project schemas, which have nothing to do with the search index.
-import { getServicesFaqs } from "@/config/seo-data/services";
+import {
+  getServicesFaqs,
+  getServicesHowTo,
+} from "@/config/seo-data/services";
 import { NAV_LINKS } from "@/constants";
 import { getProjects } from "@/constants/projects";
 import { SKILL_CATEGORIES } from "@/constants/skills";
@@ -39,6 +42,34 @@ function pageKey(t: Translation, path: string): PageKey | null {
 }
 
 /**
+ * Words a page renders that its nav label and SEO line leave out. Both of
+ * these are visible copy, not invented handles: /contact renders the intent
+ * picker ("a role", "a freelance project"), and /services renders the two
+ * section headings. Without them "job", "role" and "faq" found nothing.
+ */
+function extraKeywords(
+  t: Translation,
+  path: string,
+): { keywords: string[]; body: string[] } {
+  if (path === "/contact") {
+    const intents = Object.values(t.contact.intents);
+    return {
+      keywords: intents.flatMap((intent) => [intent.label, intent.subject]),
+      body: intents.map((intent) => intent.body),
+    };
+  }
+  if (path === "/services") {
+    // "faq" is a handle: the section is headed "Questions" in every language
+    // and nobody types that.
+    return {
+      keywords: [t.services.processTitle, t.services.faqTitle, "faq"],
+      body: [],
+    };
+  }
+  return { keywords: [], body: [] };
+}
+
+/**
  * One index per language, kept for the life of the page. The palette is
  * re-created on every opening (so it always starts on an empty query), and
  * rebuilding 90-odd records with it would put that work on the frame the panel
@@ -68,18 +99,41 @@ function collect(language: Language, t: Translation): SearchRecord[] {
   // page is about ("Experience & Education", "…in Zürich") in words the nav
   // label leaves out; the SEO keyword list stays out, because it is written
   // for crawlers and would make every page match every technology.
+  //
+  // The path joins them too. A visitor who half-remembers a URL types what was
+  // in it, and the localized label will not help them: "donate" found nothing
+  // in any of the four languages, because the page is called Tip Jar, Trinkgeld,
+  // Cagnotte and 打赏 and the word only ever appears in `/donate`.
   for (const link of NAV_LINKS) {
     const key = pageKey(t, link.targetId);
     if (!key) continue;
+    const extra = extraKeywords(t, link.targetId);
     records.push({
       id: `page:${link.targetId}`,
       kind: "page",
       title: t.nav[key],
       context: t.seo[key].description,
       href: link.targetId,
-      keywords: [t.seo[key].title],
+      keywords: [t.seo[key].title, link.targetId.slice(1), ...extra.keywords],
+      body: extra.body,
     });
   }
+
+  // The privacy policy is a real page with real copy, linked from the footer
+  // and the drawer, and it had no record at all: "privacy" answered with a
+  // project, and "datenschutz", "confidentialité" and "隐私" answered with
+  // nothing. It is not in NAV_LINKS, and its nav key ("privacyPolicy") does not
+  // match its SEO key ("privacy"), so the derived-key loop above cannot reach
+  // it. The id deliberately omits the slash, so it stays out of the suggestion
+  // list, which is the nav and only the nav.
+  records.push({
+    id: "page:privacy",
+    kind: "page",
+    title: t.nav.privacyPolicy,
+    context: t.seo.privacy.description,
+    href: "/privacy",
+    keywords: [t.seo.privacy.title, "privacy"],
+  });
 
   // The CV, which is a button on /about rather than a route of its own. A
   // recruiter's first query is "cv" or "resume", and without this record both
@@ -118,6 +172,25 @@ function collect(language: Language, t: Translation): SearchRecord[] {
       keywords: item.features,
     });
   }
+
+  // How it works: the five process steps rendered on /services. They are the
+  // answer to "process", "how long", "budget" and "hire", none of which the
+  // service cards say. The schema name ("How to Hire ...") is searchable as
+  // body text while the visible heading stays the row title.
+  const howTo = getServicesHowTo(language);
+  records.push({
+    id: "service:process",
+    kind: "service",
+    title: t.services.processTitle,
+    context: howTo.description,
+    href: "/services",
+    // "process" is a search handle rather than copy, like the CV record's one
+    // Latin keyword: the section is called "How it works" in all four
+    // languages and never uses the word anybody would type to find it. The
+    // synonym group carries Prozess, Ablauf, processus and 流程 from here.
+    keywords: ["process", ...howTo.step.map((step) => step.name)],
+    body: [howTo.name, ...howTo.step.map((step) => step.text)],
+  });
 
   for (const category of SKILL_CATEGORIES) {
     const label = t.skills.categories[category.key];
