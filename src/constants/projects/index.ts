@@ -84,8 +84,7 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup.exe",
     priority: 5,
-    image: "/projects/remnants.png",
-    imageIcon: true,
+    image: "/projects/remnants.jpg",
     programmingLanguages: ["TypeScript"],
     operatingSystem: "Windows",
     applicationCategory: "DeveloperApplication",
@@ -98,10 +97,8 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://time.punds.ch/",
     priority: 6,
     image: "/projects/time.jpg",
-    gallery: [
-      "/projects/time-2.jpg",
-      "/projects/time-3.jpg",
-    ],
+    // One screen, so one extra view: the same clock in another timezone.
+    gallery: ["/projects/time-2.jpg"],
   },
   {
     slug: "jester",
@@ -112,7 +109,7 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Jester/releases/latest/download/Jester.exe",
     priority: 7,
-    image: "/projects/jester.png",
+    image: "/projects/jester.jpg",
     programmingLanguages: ["C#"],
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
@@ -126,8 +123,7 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe",
     priority: 8,
-    image: "/projects/flow.png",
-    imageIcon: true,
+    image: "/projects/flow.jpg",
     programmingLanguages: ["C++"],
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
