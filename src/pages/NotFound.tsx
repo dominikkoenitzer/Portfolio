@@ -23,18 +23,12 @@ import { translations } from "@/lib/translations";
 const PATH_LIMIT = 80;
 
 /**
- * The status marker. It replaces a 10px `.eyebrow`, which was the smallest
- * type on the site: this is 11px violet (6.7:1) in a bordered pill, so it is
- * legible and reads as a label rather than as a stray line of text. Violet
- * rather than sage, because a dead end is not something to signal-colour.
+ * The status marker: a mono micro-label, violet rather than sage, because a
+ * dead end is not something to spend the signal colour on.
  */
-const STATUS =
-  "inline-flex items-center rounded-full border border-primary/25 bg-primary/[0.09] py-1.5 pr-3.5 pl-4 font-mono text-primary text-xs tracking-[0.2em]";
+const STATUS = "text-primary text-xs tracking-[0.2em]";
 
-/**
- * A suggested destination. `.glass-card` earns its hover lift here: unlike the
- * panels this site used to put legal text in, these really are clickable.
- */
+/** A suggested destination: the plain card the rest of the site uses. */
 function Destination({
   blurb,
   icon,
@@ -49,7 +43,7 @@ function Destination({
   return (
     <li>
       <Link
-        className="glass-card group flex h-full items-start gap-3.5 rounded-2xl p-5 text-left"
+        className="group flex h-full items-start gap-3.5 rounded-2xl border border-border/60 bg-card p-5 text-left transition-colors duration-200 ease-out hover:border-primary/30"
         to={to}
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -135,8 +129,8 @@ export default function NotFound() {
         {...revealOnScroll(reduceMotion, stagger())}
       >
         <div className="flex flex-col items-center text-center">
-          <motion.p variants={REVEAL}>
-            <span className={STATUS}>404</span>
+          <motion.p className={STATUS} variants={REVEAL}>
+            404
           </motion.p>
 
           <motion.h1
@@ -160,15 +154,14 @@ export default function NotFound() {
             variants={REVEAL}
           >
             {t.requested}
-            <code className="min-w-0 max-w-full break-all rounded-md bg-muted px-2 py-1 font-mono text-[13px] text-foreground">
+            <code className="min-w-0 max-w-full break-all rounded-md bg-muted px-2 py-1 text-[13px] text-foreground">
               {requested}
             </code>
           </motion.p>
 
           <motion.div className="mt-9" variants={REVEAL}>
-            {/* `size="lg"` for the 44px target; the cta variant brings the site's
-                lift, sweep and glow, and the leading arrow is nudged here because
-                `.btn-icon-nudge` only leans a trailing one. */}
+            {/* `size="lg"` for the 44px target. The leading arrow is nudged
+                here because `.btn-icon-nudge` only leans a trailing one. */}
             <Button
               asChild
               className="group rounded-lg px-6"

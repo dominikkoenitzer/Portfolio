@@ -9,7 +9,7 @@ import { pageTransitionVariants } from "@/lib/transitions";
 import Home from "@/pages/Home";
 
 const About = lazy(() => import("@/pages/About"));
-const Timeline = lazy(() => import("@/pages/Timeline"));
+const Experience = lazy(() => import("@/pages/Experience"));
 const Skills = lazy(() => import("@/pages/Skills"));
 const Projects = lazy(() => import("@/pages/Projects"));
 const ProjectDetails = lazy(() => import("@/pages/ProjectDetails"));
@@ -74,7 +74,7 @@ export const AnimatedRoutes = () => {
             <Routes location={location}>
               <Route element={<Home />} path="/" />
               <Route element={<About />} path="/about" />
-              <Route element={<Timeline />} path="/timeline" />
+              <Route element={<Experience />} path="/experience" />
               <Route element={<Skills />} path="/skills" />
               <Route element={<Projects />} path="/projects" />
               <Route element={<ProjectDetails />} path="/projects/:projectSlug" />

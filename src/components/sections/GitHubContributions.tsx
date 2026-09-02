@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion, useReducedMotion } from "framer-motion";
-import { GitCommit, Loader2 } from "lucide-react";
+import { GitCommit } from "lucide-react";
 import { useState } from "react";
 import {
   Tooltip,
@@ -17,7 +17,7 @@ import { SITE_CONFIG } from "@/constants";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DATE_FNS_LOCALE, LOCALE_TAG } from "@/lib/locale";
-import { REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
+import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 
 interface ContributionDay {
@@ -45,9 +45,8 @@ interface GitHubData {
   recentCommits: RecentCommit[];
 }
 
-// Theme-aware heatmap scale: a neutral empty cell that blends into the card in
-// both themes, then a ramp of the site's primary colour (blue on glass, violet
-// on bloom) instead of fixed GitHub greens that looked pasted-in on dark.
+// Heatmap scale: a neutral empty cell that blends into the card, then a ramp of
+// the page's violet instead of the fixed GitHub greens, which read as pasted in.
 const GITHUB_COLORS = {
   "0": "hsl(var(--foreground) / 0.08)",
   "1": "hsl(var(--primary) / 0.3)",
@@ -55,10 +54,6 @@ const GITHUB_COLORS = {
   "3": "hsl(var(--primary) / 0.72)",
   "4": "hsl(var(--primary))",
 };
-
-// One reserved height for both states that have no calendar to show: waiting
-// and degraded look the same size, so settling into either moves nothing.
-const RESERVED = "min-h-[400px]";
 
 class ContributionsError extends Error {
   constructor(readonly status: number) {
@@ -152,55 +147,20 @@ function ContributionsCalendar() {
     return GITHUB_COLORS["4"];
   };
 
-  if (isLoading) {
-    return (
-      <motion.div
-        className="glass-card mt-12 rounded-2xl p-6 sm:p-8 md:mt-16"
-        {...revealOnScroll(reduceMotion)}
-      >
-        {/* Reserve ~the loaded height so the calendar/commits popping in after
-            the API resolves doesn't shove the page (layout shift / jank). */}
-        <div className={`flex ${RESERVED} items-center justify-center`}>
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </motion.div>
-    );
-  }
-
   // The calendar is a nice-to-have under the bio, and the endpoint does fail
-  // (the server token has been revoked once already). It used to render
-  // nothing at all on a definitive failure, which dropped the whole band out
-  // of the page: the widget is the last thing in the section, so the bio
-  // column simply stopped and left a few hundred pixels of empty page above
-  // the footer, and the switch out of the loading card moved everything under
-  // it. So the frame stays, at exactly the height the loading state reserved,
-  // holding its own space. It is a quiet label, not an apology: no colour, no
-  // warning, nothing claiming the data is zero, and nothing inventing a reason
-  // it cannot know.
-  if (error) {
-    return (
-      <motion.div
-        className="glass-card mt-12 rounded-2xl p-6 sm:p-8 md:mt-16"
-        {...revealOnScroll(reduceMotion)}
-      >
-        <div
-          className={`flex ${RESERVED} flex-col items-center justify-center gap-3 text-center`}
-        >
-          <GitCommit aria-hidden className="h-5 w-5 text-muted-foreground" />
-          <p className="max-w-xs text-muted-foreground text-sm">
-            {t.activityNote}
-          </p>
-        </div>
-      </motion.div>
-    );
-  }
+  // (the server token has been revoked once already). Waiting and failing both
+  // render nothing: a card sized to a calendar that never arrives is a few
+  // hundred pixels of empty page above the footer, which is worse than no
+  // widget at all. The card carries its own top margin, so the section closes
+  // cleanly at the bio either way.
+  if (isLoading || error || !data) return null;
 
   // The loaded card is a sequence: the panel, its count, then the calendar. The
   // commits block below keeps a trigger of its own, since it sits far enough
   // down the card to still be under the fold when the card arrives.
   return (
     <motion.div
-      className="glass-card mt-12 w-full rounded-2xl p-3 sm:p-4 md:mt-16 md:p-6"
+      className="mt-12 w-full rounded-2xl border border-border/60 bg-card p-3 sm:p-4 md:mt-16 md:p-6"
       {...revealOnScroll(reduceMotion, revealStagger())}
     >
       <motion.div className="mb-3 sm:mb-4" variants={REVEAL}>
@@ -294,15 +254,13 @@ function ContributionsCalendar() {
                       return (
                         <Tooltip key={dayIndex}>
                           <TooltipTrigger asChild>
-                            <motion.div
-                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 ease-out hover:border-border/60"
+                            <div
+                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 ease-out hover:border-primary/50"
                               style={{ backgroundColor: color }}
-                              transition={SPRING_SOFT}
-                              whileHover={{ scale: 1.35, zIndex: 10 }}
                             />
                           </TooltipTrigger>
                           <TooltipContent
-                            className="border border-border/50 bg-popover/95 px-3 py-2 text-xs shadow-xl backdrop-blur-sm"
+                            className="px-3 py-2 text-xs"
                             side="top"
                             sideOffset={8}
                           >
@@ -328,18 +286,12 @@ function ContributionsCalendar() {
           <span className="font-medium text-muted-foreground text-xs">
             {t.less}
           </span>
-          <div className="flex" style={{ gap: "2px" }}>
+          <div className="flex gap-[2px]">
             {Object.values(GITHUB_COLORS).map((color, index) => (
               <div
-                className="rounded-sm border border-border/20"
+                className="h-2.5 w-2.5 flex-none rounded-sm border border-border/20 sm:h-3 sm:w-3"
                 key={index}
-                style={{
-                  backgroundColor: color,
-                  width: "clamp(10px, 1.3vw, 14px)",
-                  height: "clamp(10px, 1.3vw, 14px)",
-                  minWidth: "clamp(10px, 1.3vw, 14px)",
-                  minHeight: "clamp(10px, 1.3vw, 14px)",
-                }}
+                style={{ backgroundColor: color }}
               />
             ))}
           </div>
@@ -383,7 +335,7 @@ function ContributionsCalendar() {
                       {commit.message.split("\n")[0]}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                      <span className="rounded bg-muted/50 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:text-xs">
+                      <span className="rounded bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground sm:text-xs">
                         {commit.repository}
                       </span>
                       <span className="text-[10px] text-muted-foreground sm:text-xs">

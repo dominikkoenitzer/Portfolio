@@ -84,56 +84,6 @@ export default {
         // title-card treatment earns its keep.
         title: ["M PLUS Rounded 1c", ...fontFamily.sans],
       },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        fadeIn: {
-          from: { opacity: "0", transform: "translateY(10px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        fadeInLeft: {
-          from: { opacity: "0", transform: "translateX(-20px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
-        },
-        fadeInRight: {
-          from: { opacity: "0", transform: "translateX(20px)" },
-          to: { opacity: "1", transform: "translateX(0)" },
-        },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-8px)" },
-        },
-        scale: {
-          from: { transform: "scale(0.98)", opacity: "0" },
-          to: { transform: "scale(1)", opacity: "1" },
-        },
-        gradientShift: {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
-        },
-        pulse: {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.85", transform: "scale(1.05)" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fadeIn 0.7s ease-out forwards",
-        "fade-in-left": "fadeInLeft 0.7s ease-out forwards",
-        "fade-in-right": "fadeInRight 0.7s ease-out forwards",
-        float: "float 6s ease-in-out infinite",
-        "scale-in": "scale 0.4s ease-out forwards",
-        "gradient-shift": "gradientShift 8s ease infinite",
-        pulse: "pulse 4s ease-in-out infinite",
-      },
       transitionTimingFunction: {
         "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
         "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",

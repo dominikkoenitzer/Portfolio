@@ -76,7 +76,9 @@ export function ScrollToTopFab() {
         <motion.button
           animate={{ opacity: 1, scale: 1, y: 0 }}
           aria-label={t.nav.backToTop}
-          className="fixed right-4 bottom-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 bg-background/80 text-primary shadow-lg shadow-primary/15 backdrop-blur-xl transition-colors hover:bg-primary/10 active:bg-primary/15 sm:right-6 sm:bottom-6"
+          // Clear of the thumb zone on a phone, where card actions are
+          // full-width controls ending at the same right edge.
+          className="fixed right-4 bottom-20 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-card text-primary shadow-sm transition-colors hover:bg-primary/10 active:bg-primary/15 sm:right-6 sm:bottom-6"
           exit={{ opacity: 0, scale: 0.8, y: 16 }}
           initial={{ opacity: 0, scale: 0.8, y: 16 }}
           onClick={handleClick}

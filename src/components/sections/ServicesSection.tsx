@@ -30,24 +30,26 @@ import {
   CATEGORY_ACCENT_TEXT,
   SITE_SERVICE_TREE_THEME,
 } from "@/components/effects/service-tree/theme";
-import { ServiceOffers } from "@/components/effects/service-offers";
+import {
+  type OfferCategoryKey,
+  ServiceOffers,
+} from "@/components/effects/service-offers";
 import { SectionHeading } from "@/components/layout/SectionHeading";
-import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { Button } from "@/components/ui/button";
+import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger, VIEWPORT } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
-// The Services page IS a 3D skill-tree sapling on desktop, lazy (three.js),
-// desktop + motion only.
+// The Services page opens on a 3D skill-tree sapling on desktop: lazy
+// (three.js), desktop and full-motion only. Everything below it is plain cards.
 const ServiceExplorer = lazy(
   () => import("@/components/effects/ServiceExplorer"),
 );
 
-type CategoryGroup = "build" | "protect" | "grow";
-type Category = "all" | CategoryGroup;
+type Category = "all" | OfferCategoryKey;
 type ItemKey = keyof typeof translations.en.services.items;
 type ServiceCopy = {
   title: string;
@@ -65,7 +67,7 @@ interface Service {
   itemKey: ItemKey;
   price: string;
   icon: LucideIcon;
-  category: CategoryGroup;
+  category: OfferCategoryKey;
 }
 
 // Order within a category maps onto the tree's three leaf slots (see
@@ -100,7 +102,7 @@ const services: Service[] = [
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
 
 // The page's structure, and the tree's branch order.
-const CATEGORY_ORDER: CategoryGroup[] = ["build", "protect", "grow"];
+const CATEGORY_ORDER: OfferCategoryKey[] = ["build", "protect", "grow"];
 
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
@@ -129,15 +131,10 @@ const withAlpha = (hex: string, alpha: number) =>
     .padStart(2, "0");
 
 /**
- * The detail card that flies up bottom-left when a leaf is clicked. Surfaces use
- * theme tokens so the card reads on either page brightness; `accent` stays the
- * saturated hue for the glowing bar, while `accentText` carries anything with
- * words in it.
- *
- * It arrives on the shared soft spring rather than a tween, which is what makes
- * it read as pushed up out of the leaf instead of faded in over it, and it takes
- * focus on open so the keyboard lands on the close button rather than back at
- * the top of the document.
+ * The detail card that rises bottom-left when a leaf is clicked. A plain card
+ * on the shared soft spring; `accent` colours the small bar that ties it to the
+ * leaf, `accentText` carries anything with words in it. Takes focus on open so
+ * the keyboard lands on the close button rather than back at the top.
  */
 function DetailCard({
   service,
@@ -175,7 +172,7 @@ function DetailCard({
     <motion.div
       animate={{ opacity: 1, scale: 1, y: 0 }}
       aria-label={item.title}
-      className="glass-deep absolute bottom-7 left-7 z-[4] w-[356px] max-w-[calc(100%-56px)] transform-gpu rounded-2xl p-6 text-foreground shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]"
+      className="absolute bottom-7 left-7 z-[4] w-[356px] max-w-[calc(100%-56px)] rounded-2xl border border-border/60 bg-card p-6 text-foreground shadow-sm"
       exit={{
         opacity: 0,
         scale: 0.98,
@@ -190,12 +187,11 @@ function DetailCard({
         opacity: { duration: DUR.fast, ease: EASE_OUT },
       }}
     >
-      {/* The close control reads as a control: a bordered chip rather than a
-          bare glyph, with an invisible ring of extra hit area around it so the
-          pointer target clears 44px without a 44px hole in the layout. */}
+      {/* A bordered chip rather than a bare glyph, with an invisible ring of
+          extra hit area so the pointer target clears 44px. */}
       <button
         aria-label={closeLabel}
-        className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/70 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:-inset-1.5 after:content-[''] hover:border-primary/40 hover:bg-primary/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:-inset-1.5 after:content-[''] hover:border-primary/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         onClick={onClose}
         ref={closeRef}
         type="button"
@@ -206,10 +202,7 @@ function DetailCard({
       <div
         aria-hidden
         className="mb-4 h-1 w-11 rounded-full"
-        style={{
-          background: accent,
-          boxShadow: `0 0 16px ${withAlpha(accent, 0.85)}`,
-        }}
+        style={{ background: accent }}
       />
 
       <div className="mb-3.5 flex items-center gap-2">
@@ -243,7 +236,7 @@ function DetailCard({
       <div className="mt-3.5 flex flex-wrap gap-1.5">
         {item.features.map((feature) => (
           <span
-            className="rounded-full border border-border/40 bg-muted/30 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
+            className="rounded-full border border-border/60 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
             key={feature}
           >
             {feature}
@@ -253,9 +246,9 @@ function DetailCard({
 
       {/* Price and action share the footer rule, the same pairing the offer
           cards below use, so the tree and the grid quote a price identically. */}
-      <div className="mt-5 flex items-center justify-between gap-3 border-border/30 border-t pt-4">
+      <div className="mt-5 flex items-center justify-between gap-3 border-border/60 border-t pt-4">
         <span
-          className="font-mono font-semibold text-[15px] tabular-nums"
+          className="font-semibold text-[15px] tabular-nums"
           style={{ color: accentText }}
         >
           {service.price}
@@ -280,8 +273,8 @@ export function ServicesSection() {
   // visible content and the structured data can't drift apart.
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
-  // The decorative accents glow on dark but are unreadable as small text on the
-  // light bloom page (a pastel on #f6f0e6 is under 2:1), so words use the text set.
+  // The tree's decorative accents are unreadable as small text on the light
+  // page (a pastel on cream is under 2:1), so words use the text set.
   const accentText = CATEGORY_ACCENT_TEXT.light;
 
   const [active, setActive] = useState<Category>("all");
@@ -290,10 +283,10 @@ export function ServicesSection() {
   const [treeFailed, setTreeFailed] = useState(false);
 
   // The 3D tree is purely the desktop experience; mobile / narrow viewports /
-  // reduced-motion get the card grid only (three.js never even loads there).
+  // reduced motion get the card grid only (three.js never even loads there).
   // Seeded on first client render (no layout shift, no mobile cost) and kept
-  // reactive so crossing the breakpoint (resize, DevTools, device rotation)
-  // swaps cleanly and tears down the WebGL panel on the way down.
+  // reactive so crossing the breakpoint swaps cleanly and tears down the WebGL
+  // panel on the way down.
   const [showExplorer, setShowExplorer] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -381,10 +374,8 @@ export function ServicesSection() {
     // 1440px screen and the offer grid had nowhere to go.
     <section className="section-padding w-full" id="services">
       {showPanel ? (
-        // ── Immersive desktop panel ──────────────────────────────────────
-        // No panel, no border, no vignette: the plant renders straight onto
-        // the page. The canvas was always transparent (alpha renderer, zero
-        // clear alpha); the dark slab was this wrapper.
+        // The plant renders straight onto the page: the canvas is transparent
+        // and there is no panel or border around it.
         <div className="relative mb-10 w-full">
           <div
             className="relative w-full"
@@ -403,11 +394,10 @@ export function ServicesSection() {
               />
             </Suspense>
 
-            {/* Eyebrow + title + segmented filter, overlaid top-centre. */}
-            {/* Same eyebrow and title classes as SectionHeading, so this page's
-                title matches every other page's to the pixel. The only extra
-                is the background-coloured halo that keeps it legible where a
-                leaf of the tree passes behind it. */}
+            {/* Eyebrow, title and the category filter, overlaid top-centre.
+                Same eyebrow and title classes as SectionHeading, so this
+                page's title matches every other page's. The cream halo keeps
+                the title legible where a leaf passes behind it. */}
             <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 text-center">
               <p className="eyebrow mb-3">{t.eyebrow}</p>
               <h1
@@ -416,24 +406,21 @@ export function ServicesSection() {
               >
                 {t.heading}
               </h1>
-              {/* One segmented control on its own glass track rather than four
-                  loose pills: over a moving 3D scene, unfilled labels had
-                  nothing behind them and read as text lying on the leaves. */}
+              {/* One segmented control on its own opaque track: over a moving
+                  3D scene, unfilled labels read as text lying on the leaves. */}
               <div
                 aria-label={t.filterLabel}
-                className="pointer-events-auto mt-6 inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-border/40 bg-background/85 p-1 shadow-sm backdrop-blur-md"
+                className="pointer-events-auto mt-6 inline-flex flex-wrap items-center justify-center gap-1 rounded-full border border-border/60 bg-background/95 p-1"
                 role="group"
               >
                 {FILTER_IDS.map((id) => {
                   const on = active === id;
-                  // The active chip wears the category's OWN accent, the same
-                  // one its bough and its offer block wear, so pressing "Grow"
-                  // is answered on the chip as well as out in the tree. Only
-                  // fill, ring and text colour change: padding, weight and glyph
-                  // size are constant, so the row cannot re-wrap under the
-                  // pointer. "All services" stays ink rather than violet,
-                  // because the build accent IS the primary violet and the two
-                  // would otherwise be the same chip.
+                  // The active chip wears the category's own accent, the same
+                  // one its bough wears, so pressing "Grow" is answered on the
+                  // chip as well as out in the tree. Only fill, ring and text
+                  // colour change, so the row cannot re-wrap under the pointer.
+                  // "All services" stays ink, because the build accent is the
+                  // primary violet and the two would otherwise be the same chip.
                   const tint = id === "all" ? null : accentText[id];
                   return (
                     <button
@@ -464,21 +451,17 @@ export function ServicesSection() {
                   );
                 })}
               </div>
-              {/* The hint used to be bare type with a background-coloured halo
-                  around it, and the top blush leaf grew straight through it: a
-                  text-shadow cannot separate small type from a lit 3D object
-                  sitting in the same pixels. It now rides the same glass track
-                  the control above uses, which is opaque enough that nothing
-                  behind it matters, and it doubles as the chip row's receipt.
-                  Picking a category prefixes it with that category's name and
-                  description in the category's own colour, so the chips have a
-                  written answer as well as a moving one. Announced politely,
-                  because the tree itself is aria-hidden and this line is the
-                  only thing a screen reader can hear change. */}
+              {/* The hint sits on the same opaque track as the control above,
+                  because small type cannot be separated from a lit 3D object
+                  in the same pixels by a text-shadow alone. Picking a category
+                  prefixes it with that category's name and description, so the
+                  chips have a written answer as well as a moving one. Announced
+                  politely, because the tree itself is aria-hidden and this line
+                  is the only thing a screen reader can hear change. */}
               <div className="mt-3 flex justify-center">
                 <p
                   aria-live="polite"
-                  className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 rounded-full border border-border/40 bg-background/90 px-3.5 py-1.5 text-[12.5px] text-muted-foreground shadow-sm backdrop-blur-md"
+                  className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 rounded-full border border-border/60 bg-background/95 px-3.5 py-1.5 text-[12.5px] text-muted-foreground"
                 >
                   {active === "all" ? null : (
                     <motion.span
@@ -502,7 +485,6 @@ export function ServicesSection() {
               </div>
             </div>
 
-            {/* Detail card. */}
             <AnimatePresence>
               {selected ? (
                 <DetailCard
@@ -521,15 +503,15 @@ export function ServicesSection() {
               ) : null}
             </AnimatePresence>
 
-            {/* Loading shimmer (fades once the first frame renders). */}
+            {/* Loading note, fades once the first frame renders. */}
             <div
               aria-hidden
               className={cn(
-                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3.5 transition-opacity duration-500 ease-out",
+                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3 transition-opacity duration-500 ease-out",
                 treeReady && "opacity-0",
               )}
             >
-              <span className="h-3.5 w-3.5 animate-pulse rounded-full bg-sage shadow-[0_0_22px_6px_hsl(var(--sage)/0.75)]" />
+              <span className="h-2 w-2 rounded-full bg-sage-deep" />
               <span className="text-[13px] text-muted-foreground tracking-[0.06em]">
                 {t.loading}
               </span>
@@ -537,159 +519,181 @@ export function ServicesSection() {
           </div>
         </div>
       ) : (
-        // ── Mobile / reduced-motion / fallback header ────────────────────
-        <SectionHeading eyebrow={t.eyebrow} title={t.heading} />
+        // Mobile / reduced-motion / fallback header, left-aligned like
+        // /projects and /contact. The tree carries a centred title because it
+        // is a title laid over its own canvas; with no canvas the title has no
+        // reason to leave the column the rest of the page sits in.
+        <SectionHeading
+          align="left"
+          className="mb-6"
+          eyebrow={t.eyebrow}
+          title={t.heading}
+        />
       )}
 
       {/* The lead. Nine prices with no framing is a rate card; one paragraph
-          ahead of them is an offer. */}
+          ahead of them is an offer. It starts on the page column edge, the one
+          the footer and the hero use: centred here, it was the first step of a
+          staircase that ran centred, left, left, centred down the page. The
+          measure is 35rem rather than `max-w-2xl`, which fitted 87 characters
+          a line in English and 89 in French; this holds every language between
+          70 and 75. */}
       <motion.p
-        className="mx-auto mb-14 max-w-2xl text-balance text-center text-base text-muted-foreground leading-relaxed sm:mb-16 sm:text-lg"
+        className="mb-16 max-w-[35rem] text-base text-muted-foreground leading-relaxed sm:text-lg"
         {...revealOnScroll(reduceMotion)}
       >
         {t.intro}
       </motion.p>
 
-      {/* Three offers, not nine line items. The categories that used to be
-          filter-only are now the page's structure. `ServiceOffers` carries the
-          scroll act: a branch drawing down the page out of the tree above, each
-          category blooming in its own accent as it passes. */}
-      <ServiceOffers
-        categories={CATEGORY_ORDER.map((category) => {
-          const items = services.filter((s) => s.category === category);
-          const meta = t.categoryMeta[category];
-          return {
-            key: category,
-            label: meta.label,
-            desc: meta.desc,
-            accent: CATEGORY_ACCENT_HEX[category],
-            accentText: accentText[category],
-            fromLabel: t.fromPrice.replace("{price}", entryPrice(items)),
-            services: items.map((service) => ({
-              key: service.itemKey,
-              title: t.items[service.itemKey].title,
-              description: t.items[service.itemKey].description,
-              features: t.items[service.itemKey].features,
-              price: service.price,
-              icon: service.icon,
-              inquiry: buildInquiry(t.items[service.itemKey]),
-            })),
-          };
-        })}
-        ctaLabel={t.getInTouch}
-        includesLabel={t.includesLabel}
-        inquireLabel={t.inquireAbout}
-      />
+      {/* The nine offers as cards, only where the tree is not: the tree already
+          carries every service, its price and its feature list behind a leaf,
+          so on desktop the grid was the same rate card twice. This is the
+          fallback for phones, narrow windows and reduced motion, where the
+          tree never renders. */}
+      {showPanel ? null : (
+        <ServiceOffers
+          categories={CATEGORY_ORDER.map((category) => {
+            const items = services.filter((s) => s.category === category);
+            const meta = t.categoryMeta[category];
+            return {
+              key: category,
+              label: meta.label,
+              desc: meta.desc,
+              fromLabel: t.fromPrice.replace("{price}", entryPrice(items)),
+              services: items.map((service) => ({
+                key: service.itemKey,
+                title: t.items[service.itemKey].title,
+                description: t.items[service.itemKey].description,
+                features: t.items[service.itemKey].features,
+                price: service.price,
+                icon: service.icon,
+                inquiry: buildInquiry(t.items[service.itemKey]),
+              })),
+            };
+          })}
+          ctaLabel={t.getInTouch}
+          includesLabel={t.includesLabel}
+          inquireLabel={t.inquireAbout}
+        />
+      )}
 
       {/* Process + FAQ. This copy already existed in `seo-data/services.ts`,
           fully translated, but was only ever emitted as JSON-LD, and Google
           requires FAQ/HowTo content to be visible to users, so the markup was
           being ignored and the visitor was told less than the crawler.
-          Heading and steps cascade off one parent instead of each step running
-          its own timer, so the list reads as a single sequence. */}
-      <motion.div
-        className="mt-24 sm:mt-28"
-        {...revealOnScroll(reduceMotion, stagger())}
-      >
-        <motion.h2
-          className="font-bold text-xl sm:text-2xl"
-          variants={REVEAL}
-        >
-          {t.processTitle}
-        </motion.h2>
-        <ol className="relative mt-9 max-w-2xl space-y-8 pl-11">
-          {/* The rule draws itself as the steps arrive. Its own scaleY wipe,
-              not a REVEAL, so it keeps its independent trigger. Offset to run
-              through the middle of the numbered tokens. */}
-          <motion.span
-            aria-hidden
-            className="absolute top-0 left-[13px] w-0.5 origin-top bg-gradient-to-b from-primary via-primary/50 to-transparent"
-            initial={{ scaleY: 0 }}
-            style={{ bottom: 0 }}
-            transition={{ duration: DUR.slow, ease: EASE_OUT }}
-            viewport={VIEWPORT}
-            whileInView={{ scaleY: 1 }}
-          />
-          {howTo.step.map((step, i) => (
-            <motion.li className="relative" key={step.name} variants={REVEAL}>
-              {/* An opaque token so the rule passes behind, not through. */}
-              <span
-                aria-hidden
-                className="-left-11 absolute top-0 flex h-7 w-7 items-center justify-center rounded-full border border-border/50 bg-background font-mono text-[11px] text-muted-foreground"
+
+          The two sit side by side from `lg`, because on desktop the tree above
+          already answers "what do you sell", and the two things left to say
+          ("how does this go" and "what will I want to ask") are short lists
+          that were each running down a 672px column in a 1152px page, leaving
+          the right half of the page blank twice over. Paired, they share one
+          band, both headings start on the page column edge, and the gap opens
+          up at `xl` so neither measure runs past ~75 characters: the cap below
+          `lg`, where the two stack, is on the lists themselves. */}
+      <div className="mt-20 grid gap-y-20 sm:mt-24 lg:grid-cols-2 lg:gap-x-16 xl:gap-x-36">
+        {/* Heading and steps cascade off one parent instead of each step
+            running its own timer, so the list reads as a single sequence. */}
+        <motion.div {...revealOnScroll(reduceMotion, stagger())}>
+          <motion.h2
+            className="font-bold text-xl sm:text-2xl"
+            variants={REVEAL}
+          >
+            {t.processTitle}
+          </motion.h2>
+          <ol className="mt-8 max-w-lg space-y-7 lg:max-w-none">
+            {howTo.step.map((step, i) => (
+              <motion.li
+                className="flex gap-4"
+                key={step.name}
+                variants={REVEAL}
               >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="font-medium text-base leading-7">{step.name}</p>
-              <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
-                {step.text}
-              </p>
-            </motion.li>
-          ))}
-        </ol>
-      </motion.div>
-
-      <motion.div
-        className="mt-24 max-w-2xl sm:mt-28"
-        {...revealOnScroll(reduceMotion, stagger())}
-      >
-        <motion.h2
-          className="font-bold text-xl sm:text-2xl"
-          variants={REVEAL}
-        >
-          {t.faqTitle}
-        </motion.h2>
-        {/* Native <details>: no JS, keyboard and screen-reader correct, and it
-            keeps the answers in the DOM for crawlers even while collapsed,
-            which matters here because this copy is also the page's FAQ schema.
-            The box still snaps to its open height (animating height repaints
-            every frame and is banned site-wide), but the answer no longer just
-            appears inside it: `.faq-panel` in index.css rises and fades it into
-            the space on the shared curve, against the chevron turning over. */}
-        <div className="mt-6 divide-y divide-border/30 border-border/30 border-t">
-          {faqs.map((faq) => (
-            <motion.details
-              className="group py-1.5"
-              key={faq.question}
-              variants={REVEAL}
-            >
-              <summary className="-mx-3 flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-3 py-3 font-medium text-sm transition-colors duration-200 ease-out hover:bg-muted/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background group-open:text-primary [&::-webkit-details-marker]:hidden">
-                {faq.question}
-                <ChevronDown
+                <span
                   aria-hidden
-                  className="h-4 w-4 flex-none text-muted-foreground/60 transition-transform duration-300 ease-out group-open:rotate-180 group-open:text-primary"
-                />
-              </summary>
-              {/* No left padding: the summary's own is cancelled by its
-                  negative margin, so the answer lines up under the question. */}
-              <p className="faq-panel pt-1 pr-10 pb-4 text-muted-foreground text-sm leading-relaxed">
-                {faq.answer}
-              </p>
-            </motion.details>
-          ))}
-        </div>
-      </motion.div>
+                  className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-border/60 text-[11px] text-muted-foreground"
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <p className="font-medium text-base leading-7">{step.name}</p>
+                  <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">
+                    {step.text}
+                  </p>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
+        </motion.div>
 
-      {/* Bottom CTA */}
+        <motion.div {...revealOnScroll(reduceMotion, stagger())}>
+          <motion.h2
+            className="font-bold text-xl sm:text-2xl"
+            variants={REVEAL}
+          >
+            {t.faqTitle}
+          </motion.h2>
+          {/* Native <details>: no JS, keyboard and screen-reader correct, and
+              it keeps the answers in the DOM for crawlers even while collapsed,
+              which matters here because this copy is also the page's FAQ
+              schema. The box snaps to its open height (animating height
+              repaints every frame and is banned site-wide); `.faq-panel` in
+              index.css rises the answer into the space it opened. */}
+          <div className="mt-6 max-w-lg divide-y divide-border/50 border-border/50 border-t lg:max-w-none">
+            {faqs.map((faq) => (
+              <motion.details
+                className="group py-1.5"
+                key={faq.question}
+                variants={REVEAL}
+              >
+                <summary className="-mx-3 flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-3 py-3 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background group-open:text-primary [&::-webkit-details-marker]:hidden">
+                  {faq.question}
+                  <ChevronDown
+                    aria-hidden
+                    className="h-4 w-4 flex-none text-muted-foreground/60 transition-transform duration-300 ease-out group-open:rotate-180 group-open:text-primary"
+                  />
+                </summary>
+                {/* No left padding: the summary's own is cancelled by its
+                    negative margin, so the answer lines up under the
+                    question. */}
+                <p className="faq-panel pt-1 pr-10 pb-4 text-muted-foreground text-sm leading-relaxed">
+                  {faq.answer}
+                </p>
+              </motion.details>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bottom CTA. Left on the same column edge as everything above it, with
+          the one sage fill on the page pushed to the far end of the rule from
+          `sm` up: the ask and the button are the two ends of one line rather
+          than a centred stack that restarted the staircase. */}
       <motion.div
-        className="mt-20 flex flex-col items-center gap-4 border-border/20 border-t pt-14 text-center"
+        className="mt-20 border-border/50 border-t pt-14 sm:mt-24"
         {...revealOnScroll(reduceMotion, stagger(0.2))}
       >
-        <motion.p className="eyebrow" variants={REVEAL}>
-          {t.ctaEyebrow}
-        </motion.p>
-        <motion.h3 className="font-bold text-xl sm:text-2xl" variants={REVEAL}>
-          {t.ctaTitle}
-        </motion.h3>
-        <motion.div variants={REVEAL}>
-          <Button asChild className="group mt-2 rounded-lg px-6" variant="cta">
-            {/* No specific service picked, so land on /contact set to "a
-                freelance project" rather than its default of "a role". */}
-            <Link state={{ intent: "freelance" }} to="/contact">
-              {t.ctaButton}
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
-            </Link>
-          </Button>
-        </motion.div>
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <motion.p className="eyebrow" variants={REVEAL}>
+              {t.ctaEyebrow}
+            </motion.p>
+            <motion.h3
+              className="mt-3 font-bold text-xl sm:text-2xl"
+              variants={REVEAL}
+            >
+              {t.ctaTitle}
+            </motion.h3>
+          </div>
+          <motion.div className="flex-none" variants={REVEAL}>
+            <Button asChild className="group rounded-lg px-6" variant="cta">
+              {/* No specific service picked, so land on /contact set to "a
+                  freelance project" rather than its default of "a role". */}
+              <Link state={{ intent: "freelance" }} to="/contact">
+                {t.ctaButton}
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
       </motion.div>
     </section>
   );

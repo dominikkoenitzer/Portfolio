@@ -1,14 +1,7 @@
-import {
-  animate,
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import {
   type KeyboardEvent,
-  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -19,12 +12,11 @@ import { createPortal } from "react-dom";
 
 import type { ProjectStat } from "@/constants/projects/types";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { DUR, EASE_OUT, VIEWPORT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
 /* ------------------------------------------------------------------ */
-/* TiltFigure: a framed screenshot that tilts toward the cursor       */
+/* ProjectFigure: a framed screenshot, optionally opening a lightbox   */
 /* ------------------------------------------------------------------ */
 
 /**
@@ -35,7 +27,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  */
 const SHOT_RATIO = 16 / 10;
 
-export function TiltFigure({
+export function ProjectFigure({
   src,
   alt,
   label,
@@ -47,6 +39,7 @@ export function TiltFigure({
 }: {
   src?: string;
   alt: string;
+  /** Optional caption under the frame (the live host, usually). */
   label?: string;
   className?: string;
   /** When set, the frame becomes a button that opens the image in a lightbox. */
@@ -62,11 +55,6 @@ export function TiltFigure({
    */
   ratio?: number;
 }) {
-  const reduced = useMemo(() => prefersReducedMotion(), []);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rx = useSpring(mx, { stiffness: 150, damping: 18 });
-  const ry = useSpring(my, { stiffness: 150, damping: 18 });
   const [box, setBox] = useState(ratio);
   const [failed, setFailed] = useState(false);
 
@@ -81,22 +69,11 @@ export function TiltFigure({
 
   if (!src) return null;
 
-  const onMove = (e: React.MouseEvent<HTMLElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    my.set(((e.clientX - r.left) / r.width - 0.5) * 10);
-    mx.set(-((e.clientY - r.top) / r.height - 0.5) * 8);
-  };
-  const onLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
   // The box is reserved by ratio rather than left to the file: an <img> with no
   // dimensions is a zero-height box until it decodes, and there are four of
   // these per project page, so a cold load pushed the article down once per
   // picture. `object-contain` means the reservation never crops, and a file
-  // that 404s leaves the frame standing instead of collapsing it (the old
-  // handler set display:none and reflowed everything under it).
+  // that 404s leaves the frame standing instead of collapsing it.
   const picture = (
     <div className="relative w-full" style={{ aspectRatio: box }}>
       <img
@@ -115,32 +92,13 @@ export function TiltFigure({
 
   return (
     <motion.figure
-      className={`group/tilt relative overflow-hidden rounded-2xl border border-border/40 bg-card/40 shadow-2xl shadow-primary/10 ${className ?? ""}`}
-      initial={{ opacity: 0, y: 28 }}
-      onMouseLeave={reduced ? undefined : onLeave}
-      onMouseMove={reduced ? undefined : onMove}
-      style={{
-        rotateX: reduced ? 0 : rx,
-        rotateY: reduced ? 0 : ry,
-        transformPerspective: 1100,
-        transformStyle: "preserve-3d",
-      }}
-      transition={{ duration: 0.6, ease: EASE }}
-      viewport={{ once: true, margin: "-80px" }}
+      className={`group/shot m-0 ${className ?? ""}`}
+      initial={{ opacity: 0, y: 24 }}
+      transition={{ duration: DUR.slow, ease: EASE_OUT }}
+      viewport={VIEWPORT}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {/* window chrome: makes a screenshot read as an app window, not a crop */}
-      <div className="flex items-center gap-1.5 border-border/30 border-b bg-background/50 px-3 py-2 backdrop-blur-sm">
-        <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
-        <span className="h-2.5 w-2.5 rounded-full bg-primary/40" />
-        <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
-        {label ? (
-          <span className="ml-2 truncate font-mono text-[10px] text-muted-foreground">
-            {label}
-          </span>
-        ) : null}
-      </div>
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out hover:border-primary/30">
         {onOpen && openLabel ? (
           <button
             aria-label={openLabel}
@@ -154,7 +112,7 @@ export function TiltFigure({
                 is no hover to reveal it. */}
             <span
               aria-hidden
-              className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/40 bg-background/80 text-foreground/80 opacity-100 backdrop-blur-sm transition-opacity duration-300 ease-out md:opacity-0 md:group-hover/tilt:opacity-100"
+              className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100"
             >
               <Maximize2 className="h-4 w-4" />
             </span>
@@ -162,197 +120,43 @@ export function TiltFigure({
         ) : (
           picture
         )}
-        {/* static glassy sheen */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,hsl(var(--foreground)/0.06),transparent_35%)] opacity-0 transition-opacity duration-500 group-hover/tilt:opacity-100"
-        />
       </div>
+      {label ? (
+        <figcaption className="mt-2.5 text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+          {label}
+        </figcaption>
+      ) : null}
     </motion.figure>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* SpotlightCard: a primary-tinted glow that tracks the cursor        */
+/* StatStrip: the project's headline numbers, as a flat meta row       */
 /* ------------------------------------------------------------------ */
-
-export function SpotlightCard({
-  className,
-  children,
-  glow = 0.12,
-}: {
-  className?: string;
-  children: ReactNode;
-  glow?: number;
-}) {
-  const reduced = useMemo(() => prefersReducedMotion(), []);
-  const mx = useMotionValue(-300);
-  const my = useMotionValue(-300);
-  const bg = useMotionTemplate`radial-gradient(22rem 22rem at ${mx}px ${my}px, hsl(var(--primary) / ${glow}), transparent 65%)`;
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set(e.clientX - r.left);
-    my.set(e.clientY - r.top);
-  };
-  const onLeave = () => {
-    mx.set(-300);
-    my.set(-300);
-  };
-
-  return (
-    <div
-      className={`relative isolate ${className ?? ""}`}
-      onMouseLeave={reduced ? undefined : onLeave}
-      onMouseMove={reduced ? undefined : onMove}
-    >
-      {reduced ? null : (
-        <motion.div
-          aria-hidden
-          className="-z-10 pointer-events-none absolute inset-0 rounded-[inherit]"
-          style={{ background: bg }}
-        />
-      )}
-      {children}
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* CountUp + StatStrip: animated metric chips                          */
-/* ------------------------------------------------------------------ */
-
-export function CountUp({
-  value,
-  className,
-}: {
-  value: string;
-  className?: string;
-}) {
-  const reduced = useMemo(() => prefersReducedMotion(), []);
-  const parsed = value.match(/^(\D*)([\d.,]+)(.*)$/);
-  const [disp, setDisp] = useState(reduced ? (parsed?.[2] ?? "0") : "0");
-
-  // Stats live in the hero (above the fold), so count up on mount. Depend ONLY
-  // on the stable `value` string: the regex match is a fresh object each render,
-  // so keeping it in deps would restart the tween on every setDisp (stuck at 0).
-  useEffect(() => {
-    if (reduced) return;
-    const m = value.match(/^(\D*)([\d.,]+)(.*)$/);
-    if (!m) return;
-    const num = m[2];
-    const tgt = Number.parseFloat(num.replace(/,/g, "")) || 0;
-    const dec = num.includes(".") ? num.split(".")[1].length : 0;
-    const comma = num.includes(",");
-    const controls = animate(0, tgt, {
-      duration: 1.2,
-      delay: 0.25,
-      ease: EASE,
-      onUpdate: (v) => {
-        let s = v.toFixed(dec);
-        if (comma) s = Number(s).toLocaleString("en-US");
-        setDisp(s);
-      },
-    });
-    return () => controls.stop();
-  }, [value, reduced]);
-
-  if (!parsed) return <span className={className}>{value}</span>;
-  return (
-    <span className={className}>
-      {/* Both copies of the number share one grid cell: the settled value,
-          hidden, sets the cell's width, and the counting one is painted over
-          it. `tabular-nums` fixes the width of a digit but not how many digits
-          there are, and "0" growing into "100%" widened this cell by 21.8px
-          mid-count and slid the three stats beside it by half that each.
-          Overlapping in flow rather than taking the counting copy out of it:
-          out of flow it inherits the cell's width as a hard limit and flips its
-          unit onto a second line as the digits change, which is a 48px jump. */}
-      <span className="grid">
-        <span aria-hidden className="invisible col-start-1 row-start-1">
-          {value}
-        </span>
-        <span className="col-start-1 row-start-1">
-          {parsed[1]}
-          {disp}
-          {parsed[3]}
-        </span>
-      </span>
-    </span>
-  );
-}
 
 export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
   if (!stats?.length) return null;
   return (
-    // One surface rather than four floating numbers: the strip is a single
-    // component in the layout, so it gets a single frame and the dividers sit
-    // inside it instead of hanging in the page.
-    <dl className="glass-deep grid grid-cols-2 gap-y-8 rounded-2xl px-4 py-8 sm:flex sm:flex-wrap sm:items-stretch sm:justify-center sm:px-8 sm:py-9">
-      {stats.map((s, i) => (
-        <motion.div
-          className={`px-4 text-center sm:px-10 ${i > 0 ? "sm:border-border/40 sm:border-l" : ""}`}
-          initial={{ opacity: 0, y: 18 }}
-          key={s.label}
-          transition={{ duration: 0.5, ease: EASE, delay: Math.min(i, 6) * 0.07 }}
-          viewport={{ once: true, margin: "-60px" }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <dt className="sr-only">{s.label}</dt>
+    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14">
+      {stats.map((stat) => (
+        <div key={stat.label}>
+          {/* The label reads under the number, so the term is voiced from a
+              screen-reader-only copy and the visible one is decorative. */}
+          <dt className="sr-only">{stat.label}</dt>
           <dd className="m-0">
-            <CountUp
-              className="block font-bold font-heading text-4xl text-primary tabular-nums sm:text-5xl"
-              value={s.value}
-            />
+            <span className="block font-heading text-3xl text-primary tabular-nums sm:text-4xl">
+              {stat.value}
+            </span>
             <span
               aria-hidden
-              className="mt-2 block font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
+              className="mt-1.5 block text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
             >
-              {s.label}
+              {stat.label}
             </span>
           </dd>
-        </motion.div>
+        </div>
       ))}
     </dl>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Magnetic: children drift toward the cursor on hover                */
-/* ------------------------------------------------------------------ */
-
-export function Magnetic({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  const reduced = useMemo(() => prefersReducedMotion(), []);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 200, damping: 15 });
-  const sy = useSpring(y, { stiffness: 200, damping: 15 });
-
-  const onMove = (e: React.MouseEvent<HTMLSpanElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    x.set((e.clientX - (r.left + r.width / 2)) * 0.3);
-    y.set((e.clientY - (r.top + r.height / 2)) * 0.3);
-  };
-  const onLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.span
-      className={`inline-flex ${className ?? ""}`}
-      onMouseLeave={reduced ? undefined : onLeave}
-      onMouseMove={reduced ? undefined : onMove}
-      style={{ x: reduced ? 0 : sx, y: reduced ? 0 : sy }}
-    >
-      {children}
-    </motion.span>
   );
 }
 
@@ -449,19 +253,19 @@ export function Lightbox({
   };
 
   const control =
-    "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/40 bg-background/80 text-foreground/80 backdrop-blur-sm transition-[background-color,color,transform] duration-200 ease-out hover:bg-background hover:text-foreground";
+    "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-colors duration-200 ease-out hover:text-foreground";
 
   return createPortal(
     <motion.div
       animate={{ opacity: 1 }}
       aria-label={labels.title}
       aria-modal="true"
-      className="fixed inset-0 z-[100] flex flex-col bg-background/90 backdrop-blur-xl"
+      className="fixed inset-0 z-[100] flex flex-col bg-background/95"
       initial={{ opacity: reduced ? 1 : 0 }}
       onKeyDown={onKeyDown}
       ref={panelRef}
       role="dialog"
-      transition={{ duration: 0.2, ease: EASE }}
+      transition={{ duration: DUR.fast, ease: EASE_OUT }}
     >
       {/* The backdrop closes on click; the header and the image sit above it
           and do not. It is not tabbable, so Escape and the close button stay
@@ -475,7 +279,7 @@ export function Lightbox({
       />
 
       <div className="relative flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <p className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em] tabular-nums">
+        <p className="text-[11px] text-muted-foreground uppercase tracking-[0.18em] tabular-nums">
           {labels.counter
             .replace("{index}", String(index + 1))
             .replace("{total}", String(total))}
@@ -507,19 +311,19 @@ export function Lightbox({
 
         <motion.img
           alt={alt}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-h-full min-h-0 w-auto max-w-full rounded-2xl border border-border/40 object-contain shadow-2xl shadow-primary/10"
+          animate={{ opacity: 1 }}
+          className="max-h-full min-h-0 w-auto max-w-full rounded-2xl border border-border/60 object-contain"
           drag={reduced || total < 2 ? false : "x"}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.16}
-          initial={{ opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.98 }}
+          initial={{ opacity: reduced ? 1 : 0 }}
           key={images[index]}
           onDragEnd={(_, info) => {
             if (info.offset.x < -70) go(1);
             else if (info.offset.x > 70) go(-1);
           }}
           src={images[index]}
-          transition={{ duration: 0.25, ease: EASE }}
+          transition={{ duration: DUR.fast, ease: EASE_OUT }}
         />
 
         {total > 1 ? (
@@ -543,7 +347,7 @@ export function Lightbox({
               className={`h-14 w-20 shrink-0 overflow-hidden rounded-lg border transition-[border-color,opacity] duration-200 ease-out ${
                 i === index
                   ? "border-primary/60 opacity-100"
-                  : "border-border/40 opacity-60 hover:opacity-100"
+                  : "border-border/60 opacity-60 hover:opacity-100"
               }`}
               key={src}
               onClick={() => onSelect(i)}

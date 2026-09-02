@@ -83,17 +83,38 @@ function localGithubApi(env: Record<string, string>): Plugin {
 }
 
 /**
+ * Declares UTF-8 on the plain-text files in dev and preview.
+ *
+ * `vercel.json` sends `text/plain; charset=utf-8` for these in production, but
+ * Vite's static middleware sends a bare `text/plain`, so a browser falls back
+ * to its own default encoding and renders llms.txt as "Dominik KÃ¶nitzer". The
+ * bytes were always correct UTF-8; only the local header was missing, which
+ * made the file look broken in the one place it gets proofread.
+ */
+function textCharset(): Plugin {
+  const attach = (server: ViteDevServer | PreviewServer) => {
+    server.middlewares.use((req, res, next) => {
+      if (req.url && /\.txt(\?|$)/.test(req.url)) {
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      }
+      next();
+    });
+  };
+  return {
+    name: "text-charset",
+    configureServer: attach,
+    configurePreviewServer: attach,
+  };
+}
+
+/**
  * Vendor chunks, keyed by the npm package a module comes from.
  *
  * This is the function form of `manualChunks` on purpose. The object form
  * (`{ "react-vendor": ["react", …] }`) matches bare specifiers, and several of
- * ours never bound to a real module: `react` itself was landing in
- * `query-vendor`, and `scheduler`, which react-dom needs, was being swallowed
- * by `three-vendor`. That last one was the expensive part: it gave the entry
- * chunk a static `import … from "./three-vendor.js"`, so **every** route
- * modulepreloaded and evaluated 896 kB of three.js before first paint, even
- * though SkillSphere and ServiceExplorer are the only things that use it and
- * both are `React.lazy`. Matching resolved ids instead makes the assignment
+ * ours never bound to a real module: `react` itself landed in `query-vendor`
+ * and `scheduler`, which react-dom needs, ended up in a lazy vendor chunk that
+ * the entry then had to preload. Matching resolved ids makes the assignment
  * exact. Order is the assignment order: first match wins, so React's own
  * runtime is listed before anything that depends on it.
  */
@@ -124,11 +145,11 @@ const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
 
 /**
  * react-dom's server renderer, 494 kB of source across the modern and legacy
- * browser builds. Nothing on the critical path touches it; it is reached only
- * from the lazy SkillSphere and ServiceExplorer, which rasterise react-icons
- * SVGs to textures with `renderToStaticMarkup`. The `react-dom` rule above
- * would otherwise sweep it into `react-vendor`, which every route preloads, so
- * it is excluded here and gets its own chunk behind those two dynamic imports.
+ * browser builds. Nothing on the critical path touches it (the service tree
+ * rasterises its icon textures through `lib/svg-string` instead). Should a
+ * lazy chunk ever import it, the `react-dom` rule above would sweep it into
+ * `react-vendor`, which every route preloads, so it is kept out of the vendor
+ * split and can only travel with whatever imports it.
  */
 const REACT_DOM_SERVER =
   /[\\/]node_modules[\\/]react-dom[\\/](server|static|cjs[\\/]react-dom-(server|static))/;
@@ -143,8 +164,8 @@ function vendorChunk(id: string): string | undefined {
 }
 
 /**
- * Preloads the woff2 files that paint the first screen (the hero name's Bowlby
- * face and the body font's three weights) straight from the HTML. Without this
+ * Preloads the woff2 files that paint the first screen (the hero name's
+ * M PLUS Rounded face and the body font's three weights) straight from the HTML. Without this
  * the browser only learns about them after the stylesheet has arrived and been
  * parsed, one full round trip later, and on a phone that hop sat right on the
  * LCP text. Vite hashes the file names, so the tags are injected at build time
@@ -155,7 +176,7 @@ function vendorChunk(id: string): string | undefined {
  * console warning instead of a win.
  */
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
-  /^assets[\\/]bowlby-one-sc-latin-400-normal-[\w-]+\.woff2$/,
+  /^assets[\\/]m-plus-rounded-1c-latin-800-normal-[\w-]+\.woff2$/,
   /^assets[\\/]zen-kaku-gothic-new-latin-(400|500|700)-normal-[\w-]+\.woff2$/,
 ];
 
@@ -199,7 +220,12 @@ export default defineConfig(({ mode }) => {
       host: "::",
       port: 1000,
     },
-    plugins: [react(), localGithubApi(env), preloadFirstScreenFonts()],
+    plugins: [
+      react(),
+      localGithubApi(env),
+      textCharset(),
+      preloadFirstScreenFonts(),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

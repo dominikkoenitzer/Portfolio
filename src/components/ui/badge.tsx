@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
  * the project/service cards (different border opacities, backgrounds, sizes).
  */
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] transition-colors",
+  "inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] transition-colors",
   {
     variants: {
       variant: {
-        default: "border-border/40 bg-secondary/40 text-muted-foreground",
+        default: "border-border/60 bg-secondary/50 text-muted-foreground",
         primary: "border-primary/30 bg-primary/[0.08] text-primary",
       },
     },

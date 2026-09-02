@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { BookOpen, Bot, FileText, Github, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
-import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS, SITE_CONFIG } from "@/constants";
 import { revealOnScroll } from "@/lib/framer-animations";
@@ -12,12 +11,13 @@ import { translations } from "@/lib/translations";
 /**
  * The same path-to-nav-key map the Navbar keeps, repeated rather than shared:
  * it lives as a private const in `Navbar.tsx` and `constants/index.ts` holds
- * only the paths. Seven entries is cheaper to duplicate than a new module, but
+ * only the paths. Eight entries are cheaper to duplicate than a new module, but
  * a new nav route has to be added in both places.
  */
 const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
+  "/": "home",
   "/about": "about",
-  "/timeline": "timeline",
+  "/experience": "experience",
   "/skills": "skills",
   "/projects": "projects",
   "/services": "services",
@@ -26,12 +26,12 @@ const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
 };
 
 /**
- * Column heading. Mono micro-label in the secondary text colour (5.2:1), not
+ * Column heading, in the secondary text colour (5.2:1) rather than
  * `.eyebrow`: the eyebrow is sage, and sage is the signal colour. Three of them
  * stacked in a footer on all 21 routes would stop being a signal.
  */
 const COL_LABEL =
-  "font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]";
+  "text-[11px] text-muted-foreground uppercase tracking-[0.18em]";
 
 /**
  * Every footer link is a 44px row, so the whole grid is a column of legal
@@ -56,10 +56,8 @@ export function Footer() {
   }));
 
   // The CV documents are static files under public/, not routes, so they are
-  // plain anchors and keep the same paths the Timeline page links to (the
-  // pretty /cv and /lebenslauf URLs are Vercel redirects and do not exist in
-  // dev). Both languages are offered, because which one a reader wants does
-  // not follow from which language the site is in.
+  // plain anchors (the pretty /cv and /lebenslauf URLs are Vercel redirects
+  // and do not exist in dev).
   const elsewhere = [
     {
       href: SITE_CONFIG.github,
@@ -71,16 +69,20 @@ export function Footer() {
       icon: <BookOpen className={ICON} />,
       label: t.footer.journal,
     },
-    {
-      href: "/cv/curriculum-vitae.html",
-      icon: <FileText className={ICON} />,
-      label: "Curriculum Vitae",
-    },
-    {
-      href: "/cv/lebenslauf.html",
-      icon: <FileText className={ICON} />,
-      label: "Lebenslauf",
-    },
+    // One CV entry, the one that matches the language the site is in: German
+    // gets the Lebenslauf, everyone else the Curriculum Vitae. Same rule as
+    // the "View CV" button on /about.
+    language === "de"
+      ? {
+          href: "/cv/lebenslauf.html",
+          icon: <FileText className={ICON} />,
+          label: "Lebenslauf",
+        }
+      : {
+          href: "/cv/curriculum-vitae.html",
+          icon: <FileText className={ICON} />,
+          label: "Curriculum Vitae",
+        },
     {
       href: "/llms.txt",
       icon: <Bot className={ICON} />,
@@ -98,7 +100,7 @@ export function Footer() {
             the footer a screen and a half tall, which is its own kind of
             afterthought. The identity block takes the full width above them. */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-9 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-x-14">
-          {/* Who this is, whether he is free, and the one-click way to ask. */}
+          {/* Who this is, and the one-click way to reach him. */}
           <motion.div className="col-span-2 min-w-0 lg:col-span-1" variants={REVEAL}>
             <Link
               className="rounded-sm font-bold text-xl tracking-tight transition-colors duration-200 ease-out hover:text-primary"
@@ -108,16 +110,6 @@ export function Footer() {
             </Link>
             <p className="mt-1.5 text-muted-foreground text-sm">
               {t.footer.tagline}
-            </p>
-
-            {/* The same status the home hero carries, minus its ping ring: a
-                pulse is right once at the top of the page and wrong on every
-                route's footer. */}
-            <p className="mt-5">
-              <span className="inline-flex max-w-full items-center gap-2.5 rounded-full border border-sage/45 bg-sage/[0.10] py-1.5 pr-3.5 pl-3">
-                <span className="h-2 w-2 shrink-0 rounded-full bg-sage-deep" />
-                <span className="eyebrow">{t.hero.available}</span>
-              </span>
             </p>
 
             <Button
@@ -139,7 +131,7 @@ export function Footer() {
             <h2 className={COL_LABEL} id="footer-pages">
               {t.footer.pages}
             </h2>
-            {/* Seven links in one file is a tall thin column next to two short
+            {/* Eight links in one file is a tall thin column next to two short
                 ones, so from lg they run in two. */}
             <ul className="mt-2 lg:grid lg:grid-cols-2 lg:gap-x-5">
               {pages.map((page) => (
@@ -178,8 +170,8 @@ export function Footer() {
           </motion.nav>
         </div>
 
-        {/* The legal line, the policy, and the language picker: the three
-            things that belong at the very bottom and nowhere else. */}
+        {/* The legal line and the policy. The language control lives in the
+            header only. */}
         <motion.div
           className="mt-10 flex flex-col items-center gap-3 border-border/40 border-t pt-5 text-center sm:flex-row sm:justify-between sm:gap-6 sm:text-left"
           variants={REVEAL}
@@ -188,15 +180,9 @@ export function Footer() {
             © {currentYear} Dominik Könitzer. {t.footer.rights}
           </p>
 
-          <div className="flex items-center gap-2 sm:shrink-0">
-            <Link className={LINK} to="/privacy">
-              {t.footer.privacyPolicy}
-            </Link>
-            {/* The navbar's own control, reused rather than rebuilt: it owns
-                the language list, the system-language row and the roving
-                keyboard movement inside the sheet. */}
-            <LanguageToggle />
-          </div>
+          <Link className={`${LINK} sm:shrink-0`} to="/privacy">
+            {t.footer.privacyPolicy}
+          </Link>
         </motion.div>
       </motion.div>
     </footer>

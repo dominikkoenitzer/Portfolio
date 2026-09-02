@@ -1,8 +1,9 @@
 import type { NavLink } from "@/types";
 
 export const NAV_LINKS: NavLink[] = [
+  { name: "Home", targetId: "/" },
   { name: "About", targetId: "/about" },
-  { name: "Timeline", targetId: "/timeline" },
+  { name: "Experience", targetId: "/experience" },
   { name: "Skills", targetId: "/skills" },
   { name: "Projects", targetId: "/projects" },
   { name: "Services", targetId: "/services" },
@@ -30,16 +31,4 @@ export const SITE_CONFIG = {
   },
 } as const;
 
-export const ANIMATION_DURATION = {
-  fast: 0.2,
-  normal: 0.3,
-  slow: 0.5,
-} as const;
 
-export const BREAKPOINTS = {
-  sm: "640px",
-  md: "768px",
-  lg: "1024px",
-  xl: "1280px",
-  "2xl": "1536px",
-} as const;

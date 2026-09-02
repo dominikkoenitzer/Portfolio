@@ -1,7 +1,8 @@
 export const fr = {
   nav: {
+    home: "Accueil",
     about: "À propos",
-    timeline: "Parcours",
+    experience: "Parcours",
     skills: "Compétences",
     projects: "Projets",
     services: "Services",
@@ -9,35 +10,23 @@ export const fr = {
     donate: "Pourboire",
     menu: "Menu",
     navigation: "Navigation",
-    currentPage: "Page actuelle",
     privacyPolicy: "Politique de confidentialité",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
     skipToContent: "Aller au contenu",
-    goHome: "Aller à la page d'accueil",
     backToTop: "Retour en haut",
     loading: "Chargement",
   },
   toggles: {
-    themes: "Thèmes",
-    background: "Arrière-plan",
     language: "Changer de langue",
     useSystem: "Utiliser la langue du système",
   },
-  home: {
-    workEyebrow: "Travaux sélectionnés",
-    workHeading: "Quelques projets que j'ai construits",
-    workBody:
-      "De petits outils que j'ai faits parce que je voulais qu'ils existent. Code source inclus.",
-    workCta: "Voir tous les projets",
-  },
   hero: {
     greeting: "Bonjour, je suis",
-    roles: ["Dominik", "Punds", "DK"] as string[],
-    available: "Disponible pour un projet",
+    title: "Ingénieur logiciel & développeur web",
+    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "Ingénieur logiciel à Zurich. Je construis des sites rapides et accessibles, et les outils qui vont avec.",
-    scrollCue: "Défiler",
     hireMe: "Engagez-moi",
     viewWork: "Voir le travail",
   },
@@ -63,6 +52,9 @@ export const fr = {
       " que les gens ont vraiment envie d'utiliser. Écrire le code n'est que la moitié du travail. L'autre moitié, c'est comprendre le problème assez bien pour expliquer ce que j'en ai fait.",
     exploreSkills: "Découvrir mes compétences",
     readJournal: "Lire mon journal",
+    viewCv: "Voir le CV",
+    cvOpenNewTab: "Ouvrir dans un nouvel onglet",
+    cvClose: "Fermer l'aperçu du CV",
     cards: {
       educationTitle: "Formation",
       educationSubtitle: "Programme de 4 ans à la WISS",
@@ -134,7 +126,6 @@ export const fr = {
     projects: "Projets",
     back: "Retour",
     overview: "Aperçu",
-    notes: "Notes",
     links: "Liens",
     visitSite: "Visiter le site",
     download: "Télécharger",
@@ -167,18 +158,20 @@ export const fr = {
   services: {
     eyebrow: "Ce que je propose",
     heading: "Services",
-    intro:
-      "Du travail en freelance pour les petites équipes et les entreprises, en trois volets : construire la chose, la garder en état de marche et la rendre visible. Les prix ci-dessous sont des points de départ, alors dites-moi ce qu'il vous faut et vous recevrez un vrai chiffre.",
     treeHint: "Cliquez sur une feuille pour ouvrir un service.",
     filterLabel: "Filtrer les services par catégorie",
-    inquireAbout: "Prendre contact au sujet de {service}",
-    includesLabel: "Inclus",
     filters: {
       all: "Tous les services",
       build: "Construire",
       protect: "Protéger",
       grow: "Développer",
     },
+    close: "Fermer",
+    loading: "L'arbre pousse…",
+    intro:
+      "Du travail en freelance pour les petites équipes et les entreprises, en trois volets : construire la chose, la garder en état de marche et la rendre visible. Les prix ci-dessous sont des points de départ, alors dites-moi ce qu'il vous faut et vous recevrez un vrai chiffre.",
+    inquireAbout: "Prendre contact au sujet de {service}",
+    includesLabel: "Inclus",
     categoryMeta: {
       build: { label: "Construire", desc: "Design & développement" },
       protect: { label: "Protéger", desc: "Sécurité & fiabilité" },
@@ -188,8 +181,6 @@ export const fr = {
     ctaEyebrow: "Un projet en tête ?",
     ctaButton: "Prendre contact",
     getInTouch: "Prendre contact",
-    close: "Fermer",
-    loading: "L'arbre pousse…",
     fromPrice: "à partir de {price}",
     processTitle: "Comment ça se passe",
     faqTitle: "Questions fréquentes",
@@ -442,7 +433,7 @@ export const fr = {
       keywords:
         "à propos de Dominik Könitzer, biographie ingénieur logiciel, étudiant WISS, étudiant ingénierie logicielle Suisse, parcours développeur web, formation ingénieur logiciel",
     },
-    timeline: {
+    experience: {
       title: "Parcours & formation",
       description:
         "Le parcours de Dominik Könitzer : stage en ingénierie logicielle chez MPAI à Lucerne et formation de quatre ans à la WISS à Zürich.",

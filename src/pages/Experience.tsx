@@ -1,4 +1,4 @@
-import { TimelineSection } from "@/components/sections/TimelineSection";
+import { ExperienceSection } from "@/components/sections/ExperienceSection";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
@@ -9,10 +9,10 @@ import {
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
-const Timeline = () => {
+const Experience = () => {
   const { language } = useLanguage();
-  const seo = translations[language].seo.timeline;
-  const timelineUrl = `${SITE_CONFIG.url}/timeline`;
+  const seo = translations[language].seo.experience;
+  const experienceUrl = `${SITE_CONFIG.url}/experience`;
 
   return (
     <>
@@ -20,16 +20,16 @@ const Timeline = () => {
         citationLinks={getDefaultCitations()}
         description={seo.description}
         geoLocation={getDefaultGeoLocation()}
-        image={`${SITE_CONFIG.url}/og/timeline.png`}
+        image={`${SITE_CONFIG.url}/og/experience.png`}
         keywords={seo.keywords}
         structuredData={[
           {
             "@context": "https://schema.org",
             "@type": "ProfilePage",
-            name: "Dominik Könitzer, Career & Education Timeline",
+            name: "Dominik Könitzer, Career & Education",
             description:
               "The work experience and academic background of Dominik Könitzer, a software engineer in Switzerland.",
-            url: timelineUrl,
+            url: experienceUrl,
             mainEntity: {
               "@type": "Person",
               name: SITE_CONFIG.name,
@@ -55,11 +55,11 @@ const Timeline = () => {
           }),
         ]}
         title={seo.title}
-        url={timelineUrl}
+        url={experienceUrl}
       />
-      <TimelineSection />
+      <ExperienceSection />
     </>
   );
 };
 
-export default Timeline;
+export default Experience;

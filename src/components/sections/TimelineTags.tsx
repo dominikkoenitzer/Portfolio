@@ -10,25 +10,25 @@ import { fitTags } from "@/lib/fit-tags";
  * The tag row on a timeline card.
  *
  * The chips are the stack a role was actually built on, so the row shows as
- * many as the card is wide enough to hold: measured, not capped at a number.
+ * many as the card is wide enough to hold: measured, not capped at a number,
  * and hands the rest to a "+N" chip that reveals them on hover, focus or tap.
  * Nothing is dropped: what does not fit is one interaction away.
  *
- * The chip lift below is now the only thing in the row that moves. The entry
- * card around it used to lift too (TimelineSection), so pointing at one chip
- * travelled that chip 6px and every sibling 4px, with no card surface on the
- * page to explain the 4px. The card has a surface now and answers a hover with
- * its border and shadow instead of a translate, so this lift stands alone.
+ * Only the "+N" chip is interactive, so it is the only one with a hover state.
  */
 
-const CHIP = "rounded-full border border-border/40 px-3 py-1 text-xs";
+const CHIP = "rounded-full border border-border/60 px-3 py-1 text-xs";
 /** The off-layout copies must report their natural width: never shrunk, never wrapped. */
 const MEASURED = "shrink-0 whitespace-nowrap";
 const TAG_CHIP = `${CHIP} bg-secondary/50 text-foreground/80`;
-/** Transform and colour only, so the lift stays on its own compositor layer. */
-const TAG_HOVER =
-  "transform-gpu transition-[transform,color,background-color,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary/[0.07] hover:text-primary hover:shadow-[0_6px_18px_-6px_hsl(var(--primary)/0.35)]";
-const MORE_CHIP = `${CHIP} bg-secondary/30 text-muted-foreground ${TAG_HOVER} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/40 data-[state=open]:bg-primary/[0.07] data-[state=open]:text-primary`;
+/**
+ * The "+N" chip. The label is visually hidden text rather than an `aria-label`,
+ * because index.css gives every `button[aria-label]` a 44px minimum on coarse
+ * pointers, which stretched this chip and every sibling in its row to 44px
+ * while the row above stayed 26px. The `after` pseudo-element carries that
+ * touch target instead, so the hit area grows and the chip does not.
+ */
+const MORE_CHIP = `${CHIP} relative bg-secondary/30 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-[''] hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/30 data-[state=open]:text-primary`;
 
 /** Matches the `gap-2` on the row below; the packer needs it as a number. */
 const GAP = 8;
@@ -60,7 +60,9 @@ export function TimelineTags({
       if (!badge) return;
       setVisible(
         fitTags({
-          widths: chips.map((chip) => Math.ceil(chip.getBoundingClientRect().width)),
+          widths: chips.map((chip) =>
+            Math.ceil(chip.getBoundingClientRect().width),
+          ),
           badgeWidth: Math.ceil(badge.getBoundingClientRect().width),
           containerWidth: row.clientWidth,
           gap: GAP,
@@ -110,9 +112,9 @@ export function TimelineTags({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2" ref={rowRef}>
+      <div className="flex flex-wrap items-center gap-2" ref={rowRef}>
         {shown.map((tag) => (
-          <span className={`${TAG_CHIP} ${TAG_HOVER}`} key={tag}>
+          <span className={TAG_CHIP} key={tag}>
             {tag}
           </span>
         ))}
@@ -121,7 +123,6 @@ export function TimelineTags({
           <Popover onOpenChange={setOpen} open={open}>
             <PopoverTrigger asChild>
               <button
-                aria-label={moreLabel(hidden.length)}
                 className={MORE_CHIP}
                 onClick={() => {
                   hoverOpened.current = false;
@@ -136,7 +137,8 @@ export function TimelineTags({
                 }}
                 type="button"
               >
-                +{hidden.length}
+                <span aria-hidden>+{hidden.length}</span>
+                <span className="sr-only">{moreLabel(hidden.length)}</span>
               </button>
             </PopoverTrigger>
             <PopoverContent

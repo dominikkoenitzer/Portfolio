@@ -11,7 +11,9 @@ import tseslint from "typescript-eslint";
  */
 export default tseslint.config(
   {
-    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules"],
+    // `tmp` is the gitignored scratch tree (audit scripts, screenshots): not
+    // product code, so it must not be able to fail the lint gate.
+    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules", "tmp"],
   },
   {
     files: ["**/*.{ts,tsx}"],
@@ -41,15 +43,11 @@ export default tseslint.config(
       ],
       /*
        * The React Compiler rules in eslint-plugin-react-hooks v7 flag real
-       * things, refs written during render, setState called straight out of an
-       * effect, a child mutating what its parent owns. Fix a file, then promote
-       * its rule; never a disable comment. `refs` was ServiceExplorer and
-       * LightVeil moving their live-prop writes into post-commit effects,
-       * `set-state-in-effect` was the hero, skills and services sections
-       * seeding their media queries in the initial state instead of assigning
-       * it from an effect on mount, and `immutability` was the WebGL sphere
-       * taking its drag wiring off the wrapper so the velocity the frame loop
-       * integrates belongs to the component that writes it.
+       * things: refs written during render, setState called straight out of an
+       * effect, a child mutating what its parent owns. Fix the file, never add
+       * a disable comment. Media-query state is seeded in the initial state
+       * rather than assigned from an effect on mount, which is what keeps
+       * `set-state-in-effect` quiet.
        */
       "react-hooks/refs": "error",
       "react-hooks/set-state-in-effect": "error",

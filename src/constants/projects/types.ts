@@ -1,4 +1,4 @@
-/** A punchy metric chip for the animated stats strip on the detail page. */
+/** A headline number shown in the detail page meta row. */
 export type ProjectStat = { value: string; label: string };
 
 export interface PortfolioProject {
@@ -30,7 +30,6 @@ export interface PortfolioProject {
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   priority: number;
-  toneClass: string;
   image?: string;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
@@ -47,7 +46,7 @@ export interface PortfolioProject {
   tags: string[];
   impactHeading: string;
   impactPoints: string[];
-  /** Punchy metric chips for the animated stats strip (e.g. "9 KB" / "binary size"). */
+  /** Headline numbers for the detail page meta row (e.g. "9 KB" / "binary size"). */
   stats?: ProjectStat[];
 }
 
@@ -80,7 +79,6 @@ export type ProjectBase = {
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   priority: number;
-  toneClass: string;
   /** Optional screenshot path under /public (e.g. /projects/<slug>.png). */
   image?: string;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */

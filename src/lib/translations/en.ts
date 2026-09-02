@@ -1,7 +1,8 @@
 export const en = {
   nav: {
+    home: "Home",
     about: "About",
-    timeline: "Timeline",
+    experience: "Experience",
     skills: "Skills",
     projects: "Projects",
     services: "Services",
@@ -9,35 +10,23 @@ export const en = {
     donate: "Tip Jar",
     menu: "Menu",
     navigation: "Navigation",
-    currentPage: "Current page",
     privacyPolicy: "Privacy Policy",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     skipToContent: "Skip to content",
-    goHome: "Go to home page",
     backToTop: "Back to top",
     loading: "Loading",
   },
   toggles: {
-    themes: "Themes",
-    background: "Background",
     language: "Toggle language",
     useSystem: "Use system language",
   },
-  home: {
-    workEyebrow: "Selected work",
-    workHeading: "A few things I built",
-    workBody:
-      "Small tools I made because I wanted them to exist. Source code included.",
-    workCta: "See all projects",
-  },
   hero: {
     greeting: "Hi, I'm",
-    roles: ["Dominik", "Punds", "DK"] as string[],
-    available: "Available for work",
+    title: "Software Engineer & Web Developer",
+    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "Software engineer in Zürich. I build fast, accessible websites and the tools behind them.",
-    scrollCue: "Scroll",
     hireMe: "Hire Me",
     viewWork: "View Work",
   },
@@ -63,6 +52,9 @@ export const en = {
       " websites and applications that people actually want to use. Writing the code is only half of it. The other half is understanding the problem well enough to explain what I did about it.",
     exploreSkills: "Explore my skills",
     readJournal: "Read my journal",
+    viewCv: "View CV",
+    cvOpenNewTab: "Open in a new tab",
+    cvClose: "Close the CV preview",
     cards: {
       educationTitle: "Education",
       educationSubtitle: "4-year program at WISS",
@@ -133,7 +125,6 @@ export const en = {
     projects: "Projects",
     back: "Back",
     overview: "Overview",
-    notes: "Notes",
     links: "Links",
     visitSite: "Visit Site",
     download: "Download",
@@ -166,18 +157,20 @@ export const en = {
   services: {
     eyebrow: "What I offer",
     heading: "Services",
-    intro:
-      "Freelance work for small teams and businesses, in three parts: building the thing, keeping it running, and getting it found. The prices below are starting points, so tell me what you need and you get a real number back.",
     treeHint: "Click a leaf to open a service.",
     filterLabel: "Filter services by category",
-    inquireAbout: "Get in touch about {service}",
-    includesLabel: "Includes",
     filters: {
       all: "All services",
       build: "Build",
       protect: "Protect",
       grow: "Grow",
     },
+    close: "Close",
+    loading: "Growing the tree…",
+    intro:
+      "Freelance work for small teams and businesses, in three parts: building the thing, keeping it running, and getting it found. The prices below are starting points, so tell me what you need and you get a real number back.",
+    inquireAbout: "Get in touch about {service}",
+    includesLabel: "Includes",
     categoryMeta: {
       build: { label: "Build", desc: "Design & development" },
       protect: { label: "Protect", desc: "Security & reliability" },
@@ -187,8 +180,6 @@ export const en = {
     ctaEyebrow: "Have a project in mind?",
     ctaButton: "Get in Touch",
     getInTouch: "Get in touch",
-    close: "Close",
-    loading: "Growing the tree…",
     fromPrice: "from {price}",
     processTitle: "How it works",
     faqTitle: "Questions",
@@ -440,12 +431,12 @@ export const en = {
       keywords:
         "about Dominik Könitzer, software engineer biography, WISS student, software engineering student Switzerland, web developer background, software engineer education",
     },
-    timeline: {
-      title: "Career & Education Timeline",
+    experience: {
+      title: "Experience & Education",
       description:
-        "Dominik Könitzer's career and education timeline: a software engineering internship at MPAI in Lucerne, and a four-year program at WISS in Zürich.",
+        "Dominik Könitzer's experience and education: a software engineering internship at MPAI in Lucerne, and a four-year program at WISS in Zürich.",
       keywords:
-        "Dominik Könitzer timeline, career timeline, work experience, education, MPAI internship, WISS Zürich, Computer Scientist EFZ, software engineer Switzerland",
+        "Dominik Könitzer experience, work experience, career, education, MPAI internship, WISS Zürich, Computer Scientist EFZ, software engineer Switzerland",
     },
     skills: {
       title: "Skills & Technologies",

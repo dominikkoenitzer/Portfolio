@@ -11,20 +11,12 @@ import {
 } from "lucide-react";
 import { type KeyboardEvent, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { SpotlightCard } from "@/components/effects/project-effects";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProjects, type PortfolioProject } from "@/constants/projects";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import {
-  DUR,
-  EASE_OUT,
-  REVEAL,
-  SPRING_SOFT,
-  stagger,
-  VIEWPORT,
-} from "@/lib/motion";
+import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 
@@ -41,34 +33,20 @@ const PARAM_DEFAULTS: Record<string, string> = {
 const isDesktopApp = (project: PortfolioProject) =>
   project.operatingSystem === "Windows";
 
+/** One card surface for the whole page: opaque cream, hairline, no shadow. */
+const CARD =
+  "rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out";
+
 /**
  * Every action in a card's footer row is a link, not a button, so they cannot
  * come from the Button cva. One base class keeps them the same height (44px),
  * radius and focus behaviour; the variant only supplies the surface.
  */
 const ACTION_BASE =
-  "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-3 font-medium text-xs backdrop-blur-sm transition-[background-color,border-color,box-shadow,color] duration-200 ease-out";
+  "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-xs transition-colors duration-200 ease-out";
 
-/**
- * The toolbar surface, written out rather than taken from `.glass-card`.
- *
- * `.glass-card` carries `translate: 0 -2px` on hover. Because that is the
- * independent `translate` property and not `transform`, it never shows up in
- * a `getComputedStyle(el).transform` check, and it lifted the whole bar two
- * pixels the instant the pointer crossed into it to reach a control: measured
- * document-relative y 594 with the pointer away, 592 with the pointer
- * anywhere on the bar, before any click. That is the 2px hop. A cluster of
- * controls is not a card and gets no card lift.
- *
- * It is also why the bar read as disabled: `.glass-card` is `bg-background/70`,
- * literally the page colour, behind a `border/40` hairline that is at the
- * threshold of visible on warm cream. The replacement is a lighter surface
- * than the page with a violet hairline and a soft violet shadow, so the bar
- * reads as a live object, and `focus-within` deepens the edge when a control
- * inside it has the keyboard.
- */
 const TOOLBAR =
-  "flex flex-col gap-2 rounded-2xl border border-primary/30 bg-card/90 p-2 shadow-[0_1px_2px_hsl(var(--foreground)/0.06),0_14px_34px_-18px_hsl(var(--primary)/0.55)] backdrop-blur-md transition-[border-color,box-shadow] duration-300 ease-bloom focus-within:border-primary/50 lg:flex-row lg:items-center";
+  "flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-2 lg:flex-row lg:items-center";
 
 /** The house keyboard-focus ring (same one the buttons and Contact use). */
 const FOCUS_RING =
@@ -117,9 +95,9 @@ function SegmentedControl<Key extends string>({
       aria-label={label}
       // Full width on a phone (two tidy rows beat two ragged ones), intrinsic
       // width from `sm` up where it sits beside the search field. The track is
-      // a shade darker than the toolbar panel so the selected thumb reads as
+      // a shade darker than the toolbar panel so the selected option reads as
       // sitting on top of it rather than floating on the page.
-      className="flex w-full rounded-xl border border-primary/20 bg-secondary/70 p-1 sm:w-auto"
+      className="flex w-full rounded-xl border border-border/60 bg-secondary/60 p-1 sm:w-auto"
       onKeyDown={onKeyDown}
       role="radiogroup"
     >
@@ -128,10 +106,10 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`relative h-9 flex-1 rounded-lg px-3.5 font-medium text-xs transition-[color,background-color,box-shadow] duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
+            className={`h-9 flex-1 rounded-lg px-3.5 font-medium text-xs transition-colors duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
               active
-                ? "bg-primary/15 text-primary shadow-sm ring-1 ring-primary/25"
-                : "text-muted-foreground hover:bg-background/70 hover:text-foreground"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:text-foreground"
             }`}
             key={option.key}
             onClick={() => onChange(option.key)}
@@ -219,10 +197,9 @@ export function ProjectsSection() {
 
   return (
     <section className="section-padding" id="projects">
-      {/* Left-aligned like /donate and /contact: the page head used to stack a
-          centred title on a left-ruled paragraph on a full-width toolbar, three
-          axes inside 300px. One left edge for the eyebrow, title, subtitle,
-          disclosure and toolbar makes the whole head read as a single column. */}
+      {/* Left-aligned like /donate and /contact: one left edge for the eyebrow,
+          title, subtitle, disclosure and toolbar, so the whole page head reads
+          as a single column. */}
       <SectionHeading
         align="left"
         eyebrow={t.eyebrow}
@@ -234,10 +211,10 @@ export function ProjectsSection() {
         // The catalog is being reworked: show a clean placeholder instead of an
         // empty grid, so the page reads as intentionally in-progress.
         <motion.div
-          className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-8 py-16 text-center sm:py-20"
+          className={`${CARD} mx-auto flex max-w-xl flex-col items-center px-8 py-16 text-center sm:py-20`}
           {...revealOnScroll(reduceMotion)}
         >
-          <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary">
+          <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full border border-border/60 text-primary">
             <Wrench className="h-6 w-6" />
           </span>
           <p className="eyebrow mb-3">{t.wipEyebrow}</p>
@@ -276,13 +253,13 @@ export function ProjectsSection() {
                 variants={REVEAL}
               >
                 <div className="relative min-w-0 flex-1">
-                  <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-primary/70" />
+                  <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   {/* The placeholder is the only visible label, and it
                       vanishes as soon as anything is typed, so name the field
                       and keep the placeholder at full text contrast. */}
                   <input
                     aria-label={t.searchPlaceholder}
-                    className={`h-11 w-full rounded-xl border border-primary/20 bg-background/85 pr-11 pl-10 text-sm transition-[border-color,background-color] duration-200 ease-out placeholder:text-muted-foreground focus:border-primary/45 focus:bg-background ${FOCUS_RING}`}
+                    className={`h-11 w-full rounded-xl border border-border/60 bg-background pr-11 pl-10 text-sm transition-colors duration-200 ease-out placeholder:text-muted-foreground focus:border-primary/40 ${FOCUS_RING}`}
                     onChange={(event) => updateParams({ q: event.target.value })}
                     placeholder={t.searchPlaceholder}
                     type="text"
@@ -291,7 +268,7 @@ export function ProjectsSection() {
                   {query ? (
                     <button
                       aria-label={t.clearSearch}
-                      className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:bg-secondary hover:text-foreground ${FOCUS_RING}`}
+                      className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground ${FOCUS_RING}`}
                       onClick={() => updateParams({ q: "" })}
                       type="button"
                     >
@@ -302,7 +279,7 @@ export function ProjectsSection() {
 
                 <span
                   aria-hidden
-                  className="hidden h-7 w-px shrink-0 bg-primary/20 lg:block"
+                  className="hidden h-7 w-px shrink-0 bg-border lg:block"
                 />
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
@@ -335,12 +312,10 @@ export function ProjectsSection() {
 
           {visible.length === 0 ? (
             <motion.div
-              animate={{ opacity: 1, y: 0 }}
-              className="glass-deep mx-auto flex max-w-xl flex-col items-center rounded-2xl px-6 py-14 text-center sm:px-10"
-              initial={{ opacity: 0, y: 12 }}
-              transition={{ duration: DUR.base, ease: EASE_OUT }}
+              className={`${CARD} mx-auto flex max-w-xl flex-col items-center px-6 py-14 text-center sm:px-10`}
+              {...revealOnScroll(reduceMotion)}
             >
-              <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary">
+              <span className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border border-border/60 text-primary">
                 <SearchX className="h-5 w-5" />
               </span>
               <h2 className="font-semibold text-xl tracking-tight">
@@ -365,219 +340,147 @@ export function ProjectsSection() {
               </Button>
             </motion.div>
           ) : (
-            /* Re-keyed per filter/sort state: the whole list swaps with a
-               quick fade-and-rise. The previous version gave every card
-               `layout` + popLayout exits, so re-sorting sent full-height
-               cards flying across the page to their new positions, and quick
-               switches interrupted them mid-flight.
+            /* Re-keyed per filter/sort state so the list reveals once per
+               result set instead of animating cards across the page to their
+               new positions.
 
                `md:auto-rows-fr` is what stops re-sorting from resizing
-               anything. The list was a `space-y-6` stack of naturally sized
-               cards, so a card's height was its description's line count: two
-               distinct heights 22.75px apart in English at 1280 (exactly one
-               `text-sm`/`leading-relaxed` line) and a 67.5px spread in French
-               at 1024. Sorting reordered them and every box changed size.
-               Equal rows make the boxes identical, so a sort only swaps their
-               contents. It is `auto-rows-fr` rather than a `line-clamp`
-               because no single clamp survives four languages: 3 lines would
-               cut the German and French Oxidize description at 1280, and at
-               768 German already runs to 6 or 7 lines, so a clamp tight
-               enough to level the desktop would gut the mid widths. Below
-               `md` the card is a single column seen one at a time, and
-               levelling there would only add up to 90px of dead scroll per
-               card, so the rows stay natural. */
+               anything. The list was a stack of naturally sized cards, so a
+               card's height was its description's line count: two distinct
+               heights 22.75px apart in English at 1280 and a 67.5px spread in
+               French at 1024. Equal rows make the boxes identical, so a sort
+               only swaps their contents. It is `auto-rows-fr` rather than a
+               `line-clamp` because no single clamp survives four languages.
+               Below `md` the card is a single column seen one at a time, so
+               the rows stay natural. */
             <motion.div
-              animate={{ opacity: 1, y: 0 }}
               className="grid grid-cols-1 gap-6 md:auto-rows-fr"
-              initial={{ opacity: 0, y: 12 }}
               key={`${query}|${type}|${sort}`}
-              transition={{ duration: DUR.fast, ease: EASE_OUT }}
+              {...revealOnScroll(reduceMotion, stagger(0, 0.06))}
             >
-              {/* Entrance and hover live on separate elements: sharing one
-                  would make the card's staggered entrance delay apply to the
-                  hover lift in both directions. `.glass-deep` also transitions
-                  transform in CSS, which would fight the spring writing
-                  transform every frame, so the utility narrows the card's own
-                  transition to the colour properties. */}
-              {visible.map((project, index) => (
-                <motion.div
-                  className="md:h-full"
-                  initial={{ opacity: 0, y: 28 }}
+              {visible.map((project) => (
+                <motion.article
+                  className={`${CARD} group overflow-hidden hover:border-primary/30`}
                   key={project.slug}
-                  transition={{
-                    duration: DUR.slow,
-                    delay: 0.06 + Math.min(index, 6) * 0.08,
-                    ease: EASE_OUT,
-                  }}
-                  viewport={VIEWPORT}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  variants={REVEAL}
                 >
-                  <motion.article
-                    className="glass-deep group relative transform-gpu overflow-hidden rounded-2xl transition-[box-shadow,border-color] duration-300 ease-out md:h-full"
-                    transition={SPRING_SOFT}
-                    whileHover={reduceMotion ? undefined : { y: -4 }}
-                  >
-                    {/* The same cursor-following highlight the detail page
-                        uses, at its lower glow. It lives inside the article so
-                        the card's own overflow clips it to the rounded corners
-                        and so it rides along with the hover lift. */}
-                    <SpotlightCard className="rounded-[inherit] md:h-full" glow={0.14}>
-                      {/* Top animated border */}
-                      <span className="absolute top-0 left-0 z-10 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/70 to-primary/30 transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                  <div className="grid md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+                    {/* Visual panel: the picture and nothing else, at one
+                        aspect ratio across every card. Naming happens once, in
+                        the content column. */}
+                    <figure className="relative m-0 aspect-[16/10] overflow-hidden border-border/60 border-b bg-secondary/40 md:aspect-auto md:border-r md:border-b-0">
+                      {project.image && !project.imageIcon ? (
+                        <img
+                          alt={`${project.title} screenshot`}
+                          className="absolute inset-0 h-full w-full object-cover object-top"
+                          decoding="async"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                          }}
+                          src={project.image}
+                        />
+                      ) : null}
 
-                      <div className="grid md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-                        {/* Visual panel. The screenshot used to sit under the
-                            title and the full tag list, which needed a heavy
-                            scrim to stay legible and left the image as mush.
-                            Naming happens once, in the content column; the
-                            panel is now just the picture, at one aspect ratio
-                            across every card. */}
-                        <figure className="shimmer-on-hover relative m-0 aspect-[16/10] overflow-hidden border-border/20 border-b md:aspect-auto md:border-r md:border-b-0">
-                          <div className={`absolute inset-0 ${project.toneClass}`} />
-                          <div className="absolute inset-0 bg-[linear-gradient(135deg,_transparent_20%,_hsl(var(--foreground)/0.025)_50%,_transparent_80%)]" />
-                          <div className="absolute inset-0 opacity-40 [background:repeating-linear-gradient(135deg,transparent,transparent_22px,hsl(var(--foreground)/0.025)_22px,hsl(var(--foreground)/0.025)_23px)]" />
-
-                          {project.image && !project.imageIcon ? (
-                            <>
-                              <img
-                                alt={`${project.title} screenshot`}
-                                className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                                decoding="async"
-                                loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                                src={project.image}
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/10 to-transparent" />
-                            </>
-                          ) : null}
-
-                          {project.imageIcon && project.image ? (
-                            <div className="relative flex h-full items-center justify-center p-8">
-                              <img
-                                alt={`${project.title} logo`}
-                                className="h-20 w-20 object-contain drop-shadow-xl transition-transform duration-300 ease-out group-hover:scale-105 sm:h-24 sm:w-24"
-                                decoding="async"
-                                loading="lazy"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                }}
-                                src={project.image}
-                              />
-                            </div>
-                          ) : null}
-
-                          {/* Platform chip, so the type filter has a visible
-                              counterpart on the card itself. */}
-                          <Badge
-                            className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm"
-                            variant="default"
-                          >
-                            {isDesktopApp(project) ? t.filterDesktop : t.filterWeb}
-                          </Badge>
-
-                          {/* Hairline inset ring: frames the image against the
-                              card without adding a second visible border. */}
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.06)]"
+                      {project.imageIcon && project.image ? (
+                        <div className="flex h-full items-center justify-center p-8">
+                          <img
+                            alt={`${project.title} logo`}
+                            className="h-20 w-20 object-contain sm:h-24 sm:w-24"
+                            decoding="async"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                            src={project.image}
                           />
-                        </figure>
-
-                        {/* Content panel: title, date, tagline, description,
-                            tags, actions, in that order and nowhere else. */}
-                        <div className="relative flex flex-col p-5 sm:p-6">
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute top-2 right-4 select-none font-bold font-mono text-6xl text-foreground/[0.05] leading-none sm:text-7xl"
-                          >
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-
-                          <div className="relative">
-                            <h2 className="font-semibold text-xl leading-tight tracking-tight sm:text-2xl">
-                              {project.title}
-                            </h2>
-                            <p className="mt-1.5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
-                              {project.dateLabel}
-                            </p>
-                          </div>
-
-                          <p className="relative mt-4 font-medium text-base text-foreground/90 leading-snug">
-                            {project.tagline}
-                          </p>
-                          <p className="mt-2.5 text-muted-foreground text-sm leading-relaxed">
-                            {project.description}
-                          </p>
-
-                          <div className="mt-5 mb-6 flex flex-wrap gap-1.5">
-                            {project.tags.map((tag) => (
-                              <Badge key={tag}>{tag}</Badge>
-                            ))}
-                          </div>
-
-                          <div className="mt-auto grid grid-cols-2 gap-2 border-border/25 border-t pt-4 sm:grid-cols-3">
-                            {project.downloadUrl ? (
-                              <a
-                                aria-label={t.openDownload.replace(
-                                  "{name}",
-                                  project.title,
-                                )}
-                                className={`${ACTION_BASE} col-span-2 bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)] sm:col-span-1`}
-                                download
-                                href={project.downloadUrl}
-                                rel="noopener noreferrer"
-                                target="_blank"
-                              >
-                                {t.download}
-                                <Download className="h-3.5 w-3.5" />
-                              </a>
-                            ) : (
-                              <a
-                                aria-label={t.openLive.replace(
-                                  "{name}",
-                                  project.title,
-                                )}
-                                className={`${ACTION_BASE} col-span-2 bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-[0_2px_12px_hsl(var(--primary)/0.2)] sm:col-span-1`}
-                                href={project.liveUrl}
-                                rel="noopener noreferrer"
-                                target="_blank"
-                              >
-                                {t.live}
-                                <ExternalLink className="h-3.5 w-3.5" />
-                              </a>
-                            )}
-                            <a
-                              aria-label={t.openRepo.replace(
-                                "{name}",
-                                project.title,
-                              )}
-                              className={`${ACTION_BASE} border border-border/40 bg-secondary/50 hover:border-border/70 hover:bg-secondary`}
-                              href={project.repoUrl}
-                              rel="noopener noreferrer"
-                              target="_blank"
-                            >
-                              <Github className="h-3.5 w-3.5" />
-                              {t.source}
-                            </a>
-                            <Link
-                              aria-label={t.viewDetails.replace(
-                                "{name}",
-                                project.title,
-                              )}
-                              className={`${ACTION_BASE} border border-border/40 bg-background/60 text-primary hover:border-primary/30 hover:bg-primary/[0.06]`}
-                              to={`/projects/${project.slug}`}
-                            >
-                              {t.details}
-                              <ArrowRight className="h-3.5 w-3.5" />
-                            </Link>
-                          </div>
                         </div>
+                      ) : null}
+                    </figure>
+
+                    {/* Content panel: title, date, tagline, description, tags,
+                        actions, in that order and nowhere else. */}
+                    <div className="flex flex-col p-5 sm:p-6">
+                      <h2 className="font-semibold text-xl leading-tight tracking-tight sm:text-2xl">
+                        {project.title}
+                      </h2>
+                      {/* Date and platform on one line: the type filter needs a
+                          visible counterpart on the card, and a meta line is
+                          quieter than a chip on top of the screenshot. */}
+                      <p className="mt-1.5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
+                        {project.dateLabel} ·{" "}
+                        {isDesktopApp(project) ? t.filterDesktop : t.filterWeb}
+                      </p>
+
+                      <p className="mt-4 font-medium text-base text-foreground/90 leading-snug">
+                        {project.tagline}
+                      </p>
+                      <p className="mt-2.5 text-muted-foreground text-sm leading-relaxed">
+                        {project.description}
+                      </p>
+
+                      <div className="mt-5 mb-6 flex flex-wrap gap-1.5">
+                        {project.tags.map((tag) => (
+                          <Badge key={tag}>{tag}</Badge>
+                        ))}
                       </div>
-                    </SpotlightCard>
-                  </motion.article>
-                </motion.div>
+
+                      <div className="mt-auto grid grid-cols-2 gap-2 border-border/60 border-t pt-4 sm:grid-cols-3">
+                        {project.downloadUrl ? (
+                          <a
+                            aria-label={t.openDownload.replace(
+                              "{name}",
+                              project.title,
+                            )}
+                            className={`${ACTION_BASE} col-span-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 sm:col-span-1`}
+                            download
+                            href={project.downloadUrl}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {t.download}
+                            <Download className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <a
+                            aria-label={t.openLive.replace(
+                              "{name}",
+                              project.title,
+                            )}
+                            className={`${ACTION_BASE} col-span-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 sm:col-span-1`}
+                            href={project.liveUrl}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {t.live}
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        <a
+                          aria-label={t.openRepo.replace("{name}", project.title)}
+                          className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
+                          href={project.repoUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <Github className="h-3.5 w-3.5" />
+                          {t.source}
+                        </a>
+                        <Link
+                          aria-label={t.viewDetails.replace(
+                            "{name}",
+                            project.title,
+                          )}
+                          className={`${ACTION_BASE} border-border/60 text-primary hover:border-primary/30`}
+                          to={`/projects/${project.slug}`}
+                        >
+                          {t.details}
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </motion.article>
               ))}
             </motion.div>
           )}
