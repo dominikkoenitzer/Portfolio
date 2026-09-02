@@ -6,6 +6,7 @@ import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { NAV_LINKS } from "@/constants";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useHaptic } from "@/hooks/use-haptic";
+import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { isActivePath } from "@/lib/active-path";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
@@ -140,6 +141,10 @@ export function Navbar() {
     null,
   );
   const [reduceMotion] = useState(prefersReducedMotion);
+  // Reaching for a nav link is enough intent to fetch the page behind it, so
+  // the click has nothing left to download. `onFocus` and `onMouseEnter` are
+  // already taken by the hover pill, hence the separate pointer handler.
+  const { warm } = useRoutePrefetch();
   // Which link the pointer/keyboard is on, and whether it is still there. The
   // `on` flag exists so the travelling pill can fade out where it stands: a
   // shared-layout element only glides while a single instance stays mounted, so
@@ -352,8 +357,12 @@ export function Navbar() {
                       onBlur={() =>
                         setHover((h) => (h ? { ...h, on: false } : null))
                       }
-                      onFocus={() => setHover({ index, on: true })}
+                      onFocus={() => {
+                        warm(link.targetId);
+                        setHover({ index, on: true });
+                      }}
                       onMouseEnter={() => setHover({ index, on: true })}
+                      onPointerEnter={() => warm(link.targetId)}
                       to={link.targetId}
                     >
                       {/* One pill for the whole row: framer projects it from
