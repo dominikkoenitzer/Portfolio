@@ -175,9 +175,9 @@ A native Windows code editor: a personal fork of Code - OSS, the open-source cor
 Case study: https://dk.punds.ch/projects/time
 Live: https://time.punds.ch/
 Source: https://github.com/dominikkoenitzer/Time
-Stack: Next.js, TypeScript, WebGL
+Stack: Next.js, TypeScript, Intl
 
-A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within hundredths of a second even when the local machine is set wrong. The home page is one raw WebGL scene, and scrolling falls out of the current second into the day, the year, and the Unix epoch. Numbers: 1/100s sync accuracy, 4 time scales, 0 external time APIs, 0 animation libraries.
+A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within hundredths of a second even when the local machine is set wrong. The page itself is one screen and nothing else: the weekday and date, the ISO week number, the corrected time with the seconds held back a shade, and the visitor's own timezone spelled out beside its UTC offset. No controls, no scrolling, nothing to configure. Numbers: 1/100s sync accuracy, 1 screen, 0 external time APIs, 0 controls.
 
 ### Jester, June 2026
 Case study: https://dk.punds.ch/projects/jester
