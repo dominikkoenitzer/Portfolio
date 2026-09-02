@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { SearchTrigger } from "@/components/search/SearchTrigger";
+import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { isActivePath } from "@/lib/active-path";
 import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
@@ -33,6 +34,9 @@ export function NavbarMobileMenu({
   onPreloadSearch,
   open,
 }: NavbarMobileMenuProps) {
+  // The drawer's rows carry no handlers of their own, so the whole pair goes
+  // on in one spread: touching a row warms the page it opens.
+  const { warmOnIntent } = useRoutePrefetch();
   const menuRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
@@ -195,6 +199,7 @@ export function NavbarMobileMenu({
                         draggable={false}
                         onClick={onClose}
                         to={link.targetId}
+                        {...warmOnIntent(link.targetId)}
                       >
                         {link.name}
                         <ChevronRight
