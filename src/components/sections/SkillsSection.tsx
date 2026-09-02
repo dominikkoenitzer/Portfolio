@@ -8,6 +8,7 @@ import {
   Server,
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
+import { SKILL_CATEGORIES, type SkillCategoryKey } from "@/constants/skills";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
@@ -19,100 +20,18 @@ import { getSkillIcon } from "./skill-icons";
 // The owner's draggable 3D logo sphere: lazy (three.js) and desktop-only.
 const SkillSphere = lazy(() => import("@/components/effects/SkillSphere"));
 
-type CategoryKey = keyof typeof translations.en.skills.categories;
 type LangKey = keyof typeof translations.en.skills.langNames;
 
-interface SkillCategory {
-  key: CategoryKey;
-  icon: JSX.Element;
-  /**
-   * How many of the leading skills wear the card's accent surface. The lists
-   * are written most-used first, so the emphasis is the ordering signal: the
-   * three chips a visitor should read are visibly the first three, and the
-   * rest of the list reads as depth behind them. The Languages card sets 0,
-   * because emphasising three of four spoken languages would be claiming a
-   * proficiency ranking the page never states.
-   */
-  lead: number;
-  skills: string[];
-}
-
-/* Categories paired so adjacent cards sit at similar heights on the 2-col grid.
-   Skill names must match the keys in skill-icons.tsx. */
-const skillCategories: SkillCategory[] = [
-  {
-    key: "frontend",
-    icon: <Layers />,
-    lead: 3,
-    skills: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "JavaScript (ES6+)",
-      "Tailwind CSS",
-      "shadcn/ui",
-      "Radix UI",
-      "Framer Motion",
-      "Figma",
-      "Lighthouse",
-    ],
-  },
-  {
-    key: "backend",
-    icon: <Server />,
-    lead: 3,
-    skills: [
-      "Java",
-      "Kotlin",
-      "Rust",
-      "Node.js",
-      "Bun",
-      "Spring Framework",
-      "Python",
-      "C#",
-      "C++",
-      "GraphQL",
-      "Bash",
-    ],
-  },
-  {
-    key: "devops",
-    icon: <Network />,
-    lead: 3,
-    skills: [
-      "Linux Server",
-      "Ubuntu",
-      "Windows Server",
-      "NGINX",
-      "Docker",
-      "Vercel",
-      "Jenkins",
-      "Grafana",
-      "Kali Linux",
-      "Hardware Installation",
-    ],
-  },
-  {
-    key: "professional",
-    icon: <Briefcase />,
-    lead: 3,
-    skills: [
-      "Communication",
-      "Customer Service",
-      "Project Management",
-      "Direct Sales",
-      "Social Media Outreach",
-      "SEO Copywriting",
-      "Video Editing",
-    ],
-  },
-  {
-    key: "databases",
-    icon: <Database />,
-    lead: 3,
-    skills: ["PostgreSQL", "MongoDB", "Redis", "SQLite", "Git", "pnpm"],
-  },
-];
+/* One lucide glyph per card, keyed by the same category key as the headings in
+   the translations and the chip lists in `constants/skills.ts`. */
+const CATEGORY_ICONS: Record<SkillCategoryKey, JSX.Element> = {
+  frontend: <Layers />,
+  backend: <Server />,
+  devops: <Network />,
+  professional: <Briefcase />,
+  databases: <Database />,
+  languages: <LanguagesIcon />,
+};
 
 const languageKeys: LangKey[] = ["english", "german", "chinese", "french"];
 
@@ -248,10 +167,10 @@ export function SkillsSection() {
           one height and the ragged bottom edge (and the dead space it left
           between columns) is gone. */}
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-        {skillCategories.map((category) => (
+        {SKILL_CATEGORIES.map((category) => (
           <CategoryCard
             count={category.skills.length}
-            icon={category.icon}
+            icon={CATEGORY_ICONS[category.key]}
             key={category.key}
             title={t.categories[category.key]}
           >
@@ -269,7 +188,7 @@ export function SkillsSection() {
         {/* Spoken languages: names are translated, flags from the icon map */}
         <CategoryCard
           count={languageKeys.length}
-          icon={<LanguagesIcon />}
+          icon={CATEGORY_ICONS.languages}
           title={t.categories.languages}
         >
           {languageKeys.map((langKey) => (

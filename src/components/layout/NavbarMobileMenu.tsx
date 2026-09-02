@@ -4,6 +4,7 @@ import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef } from "rea
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { LanguageToggle } from "@/components/layout/LanguageToggle";
+import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { isActivePath } from "@/lib/active-path";
 import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
@@ -14,6 +15,9 @@ import { cn } from "@/lib/utils";
 interface NavbarMobileMenuProps {
   open: boolean;
   onClose: () => void;
+  /** Closes the drawer and opens the search palette over it. */
+  onOpenSearch: () => void;
+  onPreloadSearch?: () => void;
   navLinks: NavLink[];
   activePath: string;
   nav: Translation["nav"];
@@ -25,6 +29,8 @@ export function NavbarMobileMenu({
   nav,
   navLinks,
   onClose,
+  onOpenSearch,
+  onPreloadSearch,
   open,
 }: NavbarMobileMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
@@ -145,10 +151,14 @@ export function NavbarMobileMenu({
             }
           >
             {/* Home is the first row of the list below, so the head of the
-                drawer holds only the two controls. The language picker has to
-                be here: the drawer covers the header, so without it there is
-                no way to change language on a phone. */}
+                drawer holds only the controls. The language picker and the
+                search button have to be here: the drawer covers the header, so
+                without them there is no way to reach either on a phone. */}
             <div className="flex items-center justify-end gap-2 border-border/40 border-b px-6 pt-8 pb-6">
+              <SearchTrigger
+                onOpen={onOpenSearch}
+                onPreload={onPreloadSearch}
+              />
               <LanguageToggle />
               <button
                 aria-label={nav.closeMenu}

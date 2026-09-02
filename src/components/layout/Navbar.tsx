@@ -1,6 +1,8 @@
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { NAV_LINKS } from "@/constants";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useHaptic } from "@/hooks/use-haptic";
@@ -12,6 +14,60 @@ import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { LanguageToggle } from "./LanguageToggle";
 import { NavbarMobileMenu } from "./NavbarMobileMenu";
+
+/**
+ * The palette reaches the whole project catalogue, the timeline and the FAQ
+ * copy, so it is loaded on demand. The specifiers are written once and reused
+ * as the preload, so hovering the button and clicking it ask for one chunk.
+ */
+const loadSearchDialog = () => import("@/components/search/SearchDialog");
+const loadSearchIndex = () => import("@/components/search/search-index");
+
+/**
+ * The palette is held in state rather than behind `React.lazy`, which is the
+ * one place this file departs from the pattern the rest of the app uses.
+ * `lazy` needs a Suspense boundary, and React throttles the reveal of content
+ * that replaces a fallback by ~300ms: with the chunk already in memory the
+ * panel still took 330ms to appear, all of it that throttle. Loaded into state
+ * by the preload below, the component is simply there when the visitor asks
+ * for it and the panel mounts on the next frame. The props type is read back
+ * off the import, so it cannot drift from the component's own.
+ */
+type SearchDialogComponent = Awaited<
+  ReturnType<typeof loadSearchDialog>
+>["default"];
+
+/**
+ * What stands in for the palette while its chunk is still in flight: the same
+ * wash and the same card, with the field's own geometry, so a slow network
+ * shows an empty search rather than nothing at all. Everything below the input
+ * row belongs to the real panel, which replaces this the moment it resolves.
+ * With the preloads on hover, focus and the modifier key, this is rarely seen.
+ */
+function SearchShell({ hint, label }: { hint: string; label: string }) {
+  return (
+    // Announced rather than hidden: it covers the page with an opaque wash, so
+    // an assistive technology that was told nothing would leave its user on a
+    // trigger they can no longer see. Escape still closes it.
+    <div
+      aria-busy="true"
+      aria-label={label}
+      aria-modal="true"
+      className="fixed inset-0 z-[80]"
+      role="dialog"
+    >
+      <div className="absolute inset-0 bg-background/95" />
+      <div className="absolute inset-0 flex justify-center sm:px-4 sm:pt-28">
+        <div className="flex h-14 w-full max-w-xl items-center gap-3 overflow-hidden rounded-b-2xl border-border/60 border-b bg-card px-4 shadow-sm sm:rounded-2xl sm:border">
+          <Search className="size-[18px] shrink-0 text-muted-foreground" />
+          <span className="truncate text-base text-muted-foreground">
+            {hint}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /** Offset at which the bar takes its condensed island state. */
 const CONDENSE_AT = 50;
@@ -52,13 +108,17 @@ const NAV_ITEM = {
  * /services, /about and /donate at 1440); unscrolled, straight over the
  * aurora, they measure 6.1:1.
  */
-function Island({ show }: { show: boolean }) {
+function Island({ show, tight }: { show: boolean; tight?: boolean }) {
   return (
     <motion.div
       animate={{ opacity: show ? 1 : 0 }}
       aria-hidden
+      /* `left` is written on its own rather than through `inset-0` plus an
+         override: two utilities that set the same property leave the winner to
+         Tailwind's own ordering, which is not something to bet a layout on. */
       className={cn(
-        "pointer-events-none absolute inset-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
+        "pointer-events-none absolute top-0 right-0 bottom-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
+        tight ? "left-2" : "left-0",
         show && "backdrop-blur-xl",
       )}
       initial={false}
@@ -71,6 +131,14 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollingDown, setScrollingDown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  // Counts openings, and stays 0 until the first one: it mounts the dialog and
+  // then re-keys it, so every opening starts on an empty query and a fresh
+  // highlight without the panel writing its own state from an effect.
+  const [searchSession, setSearchSession] = useState(0);
+  const [SearchDialog, setSearchDialog] = useState<SearchDialogComponent | null>(
+    null,
+  );
   const [reduceMotion] = useState(prefersReducedMotion);
   // Which link the pointer/keyboard is on, and whether it is still there. The
   // `on` flag exists so the travelling pill can fade out where it stands: a
@@ -79,6 +147,7 @@ export function Navbar() {
   const [hover, setHover] = useState<{ index: number; on: boolean } | null>(
     null,
   );
+  const searchReturnFocus = useRef<HTMLElement | null>(null);
   const location = useLocation();
   const { language } = useLanguage();
   const t = translations[language];
@@ -139,12 +208,73 @@ export function Navbar() {
     setMobileMenuOpen(true);
   }, [haptic]);
 
-  useBodyScrollLock(mobileMenuOpen);
+  /**
+   * Everything the first open would otherwise pay for: the chunk, and the
+   * index itself. Building it is not free the first time, because it is the
+   * call that pulls in the project catalogue and warms the platform's date and
+   * unicode tables, which measured ~320ms of the first open on its own. After
+   * this the index module has it cached and opening is one frame.
+   */
+  const preloadSearch = useCallback(() => {
+    loadSearchDialog()
+      // The updater form, because the value is itself a function.
+      .then((module) => setSearchDialog(() => module.default))
+      .catch(() => {});
+    loadSearchIndex()
+      .then((module) => module.buildSearchIndex(language, t))
+      .catch(() => {});
+  }, [language, t]);
+
+  const openSearch = useCallback(() => {
+    haptic("medium");
+    // A cold open (before hover, focus, the modifier key or the idle window
+    // have armed it) starts the load here and shows the shell until it lands.
+    preloadSearch();
+    // Captured here, not in the dialog: the drawer hands focus back to the
+    // hamburger as it closes, and that runs first, so the dialog would see the
+    // wrong element as the control to return focus to.
+    searchReturnFocus.current = document.activeElement as HTMLElement | null;
+    // The drawer covers the header and locks the page; two overlays at once
+    // would fight over both. The lock below stays on throughout, because it
+    // reads one flag for both.
+    setMobileMenuOpen(false);
+    setSearchSession((session) => session + 1);
+    setSearchOpen(true);
+  }, [haptic, preloadSearch]);
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+  }, []);
+
+  useBodyScrollLock(mobileMenuOpen || searchOpen);
+
+  // Arm the palette once the browser has nothing better to do, so the first
+  // open is never the slow one. Hover, focus and the modifier key all preload
+  // as well, but a visitor who goes straight for the shortcut touches none of
+  // them, and that first open measured a third of a second.
+  useEffect(() => {
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      // The aurora animates on its own rAF, so this page is never truly idle
+      // and the callback lands on its timeout. Two seconds is late enough to
+      // be clear of first paint and early enough that a visitor reaching for
+      // the shortcut finds the chunk already there.
+      const id = idle(preloadSearch, { timeout: 2000 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(preloadSearch, 2000);
+    return () => window.clearTimeout(timer);
+  }, [preloadSearch]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && mobileMenuOpen) {
         closeMobileMenu();
+      }
+      // Escape is handled inside the panel as well, for the case where focus
+      // has been moved out of it; both paths just close.
+      if (e.key === "Escape" && searchOpen) {
+        closeSearch();
       }
     };
 
@@ -153,7 +283,7 @@ export function Navbar() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [mobileMenuOpen, closeMobileMenu]);
+  }, [mobileMenuOpen, closeMobileMenu, searchOpen, closeSearch]);
 
   return (
     <motion.header
@@ -280,8 +410,16 @@ export function Navbar() {
               right-aligned bar put it too. */}
           <div className="-right-4 pointer-events-auto absolute inset-y-0 flex items-center">
             <div className="relative flex h-16 items-center md:h-[4.5rem]">
-              <Island show={isScrolled} />
-              <div className="relative flex items-center gap-1.5 px-4 sm:gap-2">
+              <Island show={isScrolled} tight />
+              <div className="relative flex items-center gap-1.5 px-4">
+                {/* Two forms of one control: the input-shaped bar where the row
+                    has room for it, the 44px circle where it does not. At 1024
+                    the French link row leaves 11px between its last label and
+                    this cluster, so a 160px bar cannot live there. */}
+                <SearchTrigger
+                  onOpen={openSearch}
+                  onPreload={preloadSearch}
+                />
                 <LanguageToggle />
                 <button
                   aria-expanded={mobileMenuOpen}
@@ -327,8 +465,26 @@ export function Navbar() {
         nav={t.nav}
         navLinks={navLinks}
         onClose={closeMobileMenu}
+        onOpenSearch={openSearch}
+        onPreloadSearch={preloadSearch}
         open={mobileMenuOpen}
       />
+
+      {/* Mounted from the first opening onwards, so the panel can animate out;
+          the key makes each opening a fresh panel with an empty query. */}
+      {SearchDialog && searchSession > 0 ? (
+        <SearchDialog
+          key={searchSession}
+          onClose={closeSearch}
+          open={searchOpen}
+          returnFocusTo={searchReturnFocus}
+        />
+      ) : null}
+      {/* The one frame (or the one slow network) where the palette has been
+          asked for and its chunk has not landed. Escape still closes it. */}
+      {searchOpen && !SearchDialog ? (
+        <SearchShell hint={t.search.placeholder} label={t.search.label} />
+      ) : null}
     </motion.header>
   );
 }
