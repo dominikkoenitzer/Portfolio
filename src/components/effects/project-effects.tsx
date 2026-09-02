@@ -219,22 +219,53 @@ export function Lightbox({
     return () => opener?.focus?.();
   }, []);
 
+  // Escape and the arrows are bound on the document rather than the panel:
+  // clicking the picture itself moves focus to <body>, and a viewer whose keys
+  // go dead the moment you touch what you came to look at is a trap. Home and
+  // End jump to the ends of the gallery, which is what they do in every other
+  // list on the site.
+  useEffect(() => {
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (total < 2) return;
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        go(1);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        go(-1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        onSelect(0);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        onSelect(total - 1);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [go, onClose, onSelect, total]);
+
+  // Warm the two shots either side of this one. The arrows and a swipe are a
+  // single gesture away, and a 90 kB screenshot that only starts downloading on
+  // the press shows an empty frame first.
+  useEffect(() => {
+    if (total < 2) return;
+    for (const src of [
+      images[(index + 1) % total],
+      images[(index - 1 + total) % total],
+    ]) {
+      const warm = new Image();
+      warm.src = src;
+    }
+  }, [images, index, total]);
+
+  // Tab only: the panel is the focus trap, the keys above are the controls.
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      onClose();
-      return;
-    }
-    if (event.key === "ArrowRight" && total > 1) {
-      event.preventDefault();
-      go(1);
-      return;
-    }
-    if (event.key === "ArrowLeft" && total > 1) {
-      event.preventDefault();
-      go(-1);
-      return;
-    }
     if (event.key !== "Tab") return;
 
     const items = Array.from(
@@ -319,8 +350,13 @@ export function Lightbox({
           initial={{ opacity: reduced ? 1 : 0 }}
           key={images[index]}
           onDragEnd={(_, info) => {
-            if (info.offset.x < -70) go(1);
-            else if (info.offset.x > 70) go(-1);
+            // Either a deliberate drag or a flick: a fast swipe on a phone
+            // covers barely 40px before the finger leaves the glass, and
+            // distance alone swallowed it.
+            const right = info.offset.x > 70 || info.velocity.x > 500;
+            const left = info.offset.x < -70 || info.velocity.x < -500;
+            if (left) go(1);
+            else if (right) go(-1);
           }}
           src={images[index]}
           transition={{ duration: DUR.fast, ease: EASE_OUT }}

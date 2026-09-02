@@ -14,6 +14,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProjects, type PortfolioProject } from "@/constants/projects";
+import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
@@ -133,6 +134,7 @@ export function ProjectsSection() {
   const t = translations[language].projects;
   const projects = getProjects(language);
   const reduceMotion = useReducedMotion();
+  const { warmOnIntent } = useRoutePrefetch();
 
   // Filter/sort state lives in the URL (?q=&type=&sort=) so it survives
   // back-navigation from a detail page and can be shared as a link. Defaults
@@ -183,6 +185,15 @@ export function ProjectsSection() {
       return [...list].sort((a, b) => a.title.localeCompare(b.title));
     return list;
   }, [projects, query, type, sort]);
+
+  // The grid is re-keyed per result *set* rather than per keystroke. Re-mounting
+  // it is what replays the reveal after a filter or a sort, but typing
+  // "spectrum" narrows to the same single card eight times in a row and used to
+  // replay the whole cascade on every one of those characters.
+  const resultKey = useMemo(
+    () => visible.map((project) => project.slug).join("|"),
+    [visible],
+  );
 
   const typeOptions: Array<{ key: TypeKey; label: string }> = [
     { key: "all", label: t.filterAll },
@@ -340,9 +351,8 @@ export function ProjectsSection() {
               </Button>
             </motion.div>
           ) : (
-            /* Re-keyed per filter/sort state so the list reveals once per
-               result set instead of animating cards across the page to their
-               new positions.
+            /* Re-keyed per result set so the list reveals once per set instead
+               of animating cards across the page to their new positions.
 
                `md:auto-rows-fr` is what stops re-sorting from resizing
                anything. The list was a stack of naturally sized cards, so a
@@ -355,7 +365,7 @@ export function ProjectsSection() {
                the rows stay natural. */
             <motion.div
               className="grid grid-cols-1 gap-6 md:auto-rows-fr"
-              key={`${query}|${type}|${sort}`}
+              key={resultKey}
               {...revealOnScroll(reduceMotion, stagger(0, 0.06))}
             >
               {visible.map((project) => (
@@ -473,6 +483,7 @@ export function ProjectsSection() {
                           )}
                           className={`${ACTION_BASE} border-border/60 text-primary hover:border-primary/30`}
                           to={`/projects/${project.slug}`}
+                          {...warmOnIntent(`/projects/${project.slug}`)}
                         >
                           {t.details}
                           <ArrowRight className="h-3.5 w-3.5" />
