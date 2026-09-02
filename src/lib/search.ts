@@ -7,13 +7,22 @@
  * record, so it can be unit-tested without React, routing or translations.
  *
  * Two passes, in this order:
- *  1. every token has to match somewhere (with synonyms), ranked by where the
- *     matches landed;
+ *  1. every token that carries signal has to match somewhere (with synonyms),
+ *     ranked by which field the matches landed in and where;
  *  2. only if that finds nothing, the same tokens are scored by how many of
  *     them matched and how rare they are, with one typo allowed per word. That
- *     is what turns "what do you charge" and "prjects" into a destination
- *     instead of a dead end, while never letting a fuzzy hit outrank an exact
- *     one (the passes are never mixed).
+ *     is what turns "prjects" into a destination instead of a dead end, while
+ *     never letting a fuzzy hit outrank an exact one (the passes are never
+ *     mixed).
+ *
+ * A 305-query study across the four languages drove the shape of both passes.
+ * Three findings are worth keeping in mind when changing anything here:
+ * a query of common words used to be decided by the commonest of them, so
+ * "what do you charge" answered with the record that happened to contain
+ * "what", "do" and "you"; the fallback would rank noise confidently, so
+ * "zzzz-nothing-here" returned nine hits and Enter opened one of them; and a
+ * Chinese compound never matched at all, because it is one token that has to
+ * appear contiguously.
  */
 
 /** Group order used as the tie-break when two groups score the same. */
@@ -37,7 +46,7 @@ export interface SearchRecord {
   id: string;
   kind: SearchKind;
   title: string;
-  /** The one line shown under the title. Searched at the weakest weight. */
+  /** The one line shown under the title. Searched below the keywords. */
   context: string;
   href: string;
   /** Short, high-signal extras: tags, a year, an organization, a slug. */
@@ -79,37 +88,126 @@ export function normalizeText(value: string): string {
  * scrubbed away by an a-z0-9 filter or split into meaningless single glyphs.
  */
 const TOKEN_SEPARATOR = /[^\p{L}\p{N}+#]+/u;
+/** The same class, for stripping rather than splitting. */
+const SEPARATORS = /[^\p{L}\p{N}+#]+/gu;
 
-/** The query as normalized tokens, all of which a record must match. */
+/** The query as normalized tokens. */
 export function tokenizeQuery(query: string): string[] {
   return normalizeText(query).split(TOKEN_SEPARATOR).filter(Boolean);
 }
+
+/** True for a token written in a script that does not put spaces between words. */
+const isUnspaced = (token: string): boolean => !/[a-z0-9]/.test(token);
 
 /**
  * Words a visitor and the copy can disagree about. Kept here rather than in
  * the translations, because these are search handles, not text anybody reads:
  * the copy says "price" and the visitor types "what do you charge", the copy
- * says "Zürich" and an American types "color". Groups are symmetric, so any
- * member finds any other.
+ * says "Werdegang" and the visitor types "experience". Groups are symmetric,
+ * so any member finds any other, and members are written in normalized form
+ * (no diacritics), because that is what they are matched against.
+ *
+ * One group serves all four languages: a member with nothing to match in the
+ * active index is simply inert, so there is no need to key these by language.
  */
 const ALIAS_GROUPS: readonly (readonly string[])[] = [
   ["color", "colour"],
-  ["cv", "resume", "lebenslauf", "curriculum", "vitae"],
-  ["email", "mail", "write", "message", "contact"],
+  // "curriculum" and "vitae" are deliberately absent: "curriculum" also
+  // appears in the tag "International Curriculum" on two school entries, so
+  // including it put primary school under every search for a CV.
+  ["cv", "resume", "lebenslauf", "简历"],
+  [
+    "email",
+    "mail",
+    "write",
+    "message",
+    "contact",
+    "phone",
+    "call",
+    "kontakt",
+    "kontaktieren",
+    "courriel",
+    "contacter",
+    "联系",
+    "邮箱",
+  ],
   [
     "price",
     "pricing",
     "cost",
     "costs",
+    "cheap",
     "rate",
     "rates",
     "charge",
     "charges",
     "quote",
     "chf",
+    "preis",
+    "preise",
+    "kosten",
+    "kostet",
+    "stundensatz",
+    "prix",
+    "tarif",
+    "tarifs",
+    "cout",
+    "coute",
+    "combien",
+    "费用",
+    "价格",
+    "报价",
+    "多少钱",
   ],
   ["3d", "three", "threejs", "webgl"],
   ["dark", "light", "theme"],
+  ["swiss", "switzerland", "schweiz", "suisse", "瑞士"],
+  [
+    "experience",
+    "erfahrung",
+    "werdegang",
+    "laufbahn",
+    "parcours",
+    "经验",
+    "履历",
+  ],
+  ["skills", "fahigkeiten", "kenntnisse", "competences", "技能"],
+  [
+    "privacy",
+    "datenschutz",
+    "confidentialite",
+    "impressum",
+    "imprint",
+    "legal",
+    "cookies",
+    "隐私",
+  ],
+  [
+    "donate",
+    "donation",
+    "tip",
+    "coffee",
+    "trinkgeld",
+    "spenden",
+    "pourboire",
+    "打赏",
+    "捐赠",
+  ],
+  [
+    "hire",
+    "hiring",
+    "job",
+    "jobs",
+    "vacancy",
+    "freelance",
+    "engagieren",
+    "einstellen",
+    "embaucher",
+    "招聘",
+    "雇佣",
+  ],
+  ["process", "steps", "prozess", "ablauf", "processus", "流程"],
+  ["todo", "aufgabenliste", "待办"],
 ];
 
 const ALIASES = new Map<string, readonly string[]>();
@@ -123,24 +221,82 @@ for (const group of ALIAS_GROUPS) {
 }
 
 /**
- * What a match costs, by where it landed. The gaps are wider than the largest
- * position penalty below, so a title match always beats a keyword match and a
- * keyword match always beats one in the prose, whatever the offsets.
+ * Function words, which say nothing about which record a visitor wants. They
+ * are still scored where they appear, so "how it works" still ranks better on
+ * a record containing all three, but they can never decide the result set on
+ * their own and they can never justify a fallback hit.
+ *
+ * A frequency threshold was tried first and does not work at this size: on a
+ * 90 record index "do" appears in 30% and "to" in 36%, but "what" in only 7%,
+ * which is the same neighbourhood as "cost" at 2%. There is no cut that keeps
+ * "cost" and drops "what". The indefinite pronouns are in here for the same
+ * reason as the articles: "zzzz-nothing-here" was answering with a project,
+ * on the strength of "nothing" and "here".
  */
-const FIELD_COST = { title: 0, keywords: 100, body: 220 } as const;
-const FIELDS = ["title", "keywords", "body"] as const;
+const STOPWORDS = new Set([
+  // English
+  "a", "an", "and", "any", "anything", "are", "as", "at", "be", "been", "but",
+  "by", "can", "could", "did", "do", "does", "each", "everything", "for",
+  "from", "get", "had", "has", "have", "here", "how", "i", "if", "in", "into",
+  "is", "it", "its", "just", "me", "much", "my", "no", "not", "nothing", "of",
+  "on", "or", "our", "out", "over", "should", "so", "some", "something",
+  "than", "that", "the", "their", "them", "then", "there", "these", "they",
+  "this", "to", "up", "us", "was", "we", "were", "what", "when", "where",
+  "which", "who", "why", "will", "with", "would", "you", "your",
+  // German
+  "als", "auf", "aus", "bei", "das", "dass", "dem", "den", "der", "des", "die",
+  "ein", "eine", "einen", "einer", "es", "fur", "hat", "ich", "ist", "kann",
+  "mit", "nicht", "sie", "sind", "und", "von", "war", "was", "wie", "wird",
+  "zu", "zum", "zur",
+  // French
+  "au", "aux", "avec", "ce", "ces", "dans", "de", "des", "du", "est", "et",
+  "il", "je", "la", "le", "les", "ne", "ou", "par", "pas", "pour", "que",
+  "qui", "sur", "un", "une", "vous",
+]);
+
+const isStopword = (token: string): boolean => STOPWORDS.has(token);
+
+/**
+ * What a match costs, by where it landed. The gaps are wider than the largest
+ * position penalty, so a match that starts a word in a stronger field always
+ * beats one that starts a word in a weaker field, whatever the offsets. The
+ * mid-word penalty is deliberately larger than the whole position range, so
+ * "note" inside "Node" cannot outrank "note" starting "Notepad".
+ *
+ * `context` is the line shown under the title, so it is stronger evidence than
+ * a sentence buried in the prose. Folding the two together was measurable:
+ * "to do list" answered with a security FAQ rather than with the project whose
+ * tagline is literally "A to-do list and a focus timer".
+ */
+const FIELD_COST = { title: 0, keywords: 100, context: 150, body: 220 } as const;
+const FIELDS = ["title", "keywords", "context", "body"] as const;
 
 /** Beyond this many characters in, one match is as late as another. */
 const MAX_POSITION_COST = 40;
 
 /** A match in the middle of a word is weaker than one that starts a word. */
-const MID_WORD_COST = 8;
+const MID_WORD_COST = 50;
 
 /** A synonym is a weaker signal than the word the visitor actually typed. */
 const ALIAS_COST = 12;
 
+/** A word with the spaces taken out ("todo" against "to-do list"). */
+const SQUASH_COST = 80;
+
 /** And a word one edit away is weaker still. */
 const FUZZY_COST = 60;
+
+/** Per character dropped when retreating to the head of an unspaced token. */
+const CJK_TRIM_COST = 15;
+
+/**
+ * The whole query, spaces and all, appears in the part of a record a visitor
+ * can see. "to do list" is three ordinary words that half the catalogue
+ * contains separately, and the record that means it is the one whose tagline
+ * reads "A to-do list and a focus timer". Only ever applied to a query of more
+ * than one word, so single-word ranking is untouched.
+ */
+const PHRASE_BONUS = 60;
 
 /** The whole query is the start of the title, or the title exactly. */
 const PREFIX_BONUS = 30;
@@ -157,16 +313,44 @@ const RARITY_WEIGHT = 100;
 /** Below this length a typo allowance would match half the dictionary. */
 const MIN_FUZZY_LENGTH = 4;
 
+/**
+ * What a token that is present in more than half the records is worth as a
+ * requirement: nothing. It still scores where it appears, it just cannot
+ * decide the result set on its own.
+ */
+const COMMON_TOKEN_SHARE = 0.5;
+
+/** A token this rare is specific enough to justify a fallback hit by itself. */
+const RARE_TOKEN_SHARE = 0.25;
+
+/** Missing an optional token has to cost more than matching it anywhere. */
+const OPTIONAL_MISS_COST = 320;
+
+/** A multi-word query has to be half accounted for before a hit is honest. */
+const MIN_FALLBACK_COVERAGE = 0.5;
+
 interface Prepared {
   title: string;
   keywords: string;
+  context: string;
   body: string;
   /**
-   * Title and keyword words, for the typo pass. The prose is left out: a
-   * one-edit match inside a paragraph is as likely to be a coincidence as an
-   * intention, and this keeps the fallback cheap.
+   * Title words and keyword words, kept apart for the typo pass, so a mistyped
+   * title ranks above a mistyped keyword: "prjoects" has to answer with
+   * Projects, not with whichever record happens to carry the word somewhere
+   * cheaper. The prose is left out of both: a one-edit match inside a
+   * paragraph is as likely to be a coincidence as an intention, and this keeps
+   * the fallback cheap.
    */
-  words: string[];
+  titleWords: string[];
+  keywordWords: string[];
+  /**
+   * Title, keywords and context with every separator removed, so a query that
+   * dropped a space ("todo", "vscode") can still find "to-do list" and
+   * "VS Code". The prose is left out for the same reason as above: squashing a
+   * paragraph invents words that were never written.
+   */
+  squashed: string;
 }
 
 /**
@@ -181,13 +365,17 @@ function prepare(record: SearchRecord): Prepared {
   if (cached) return cached;
   const title = normalizeText(record.title);
   const keywords = normalizeText((record.keywords ?? []).join(" "));
+  const context = normalizeText(record.context);
   const prepared: Prepared = {
     title,
     keywords,
-    body: normalizeText([record.context, ...(record.body ?? [])].join(" ")),
-    words: [
-      ...new Set(`${title} ${keywords}`.split(TOKEN_SEPARATOR).filter(Boolean)),
+    context,
+    body: normalizeText((record.body ?? []).join(" ")),
+    titleWords: [...new Set(title.split(TOKEN_SEPARATOR).filter(Boolean))],
+    keywordWords: [
+      ...new Set(keywords.split(TOKEN_SEPARATOR).filter(Boolean)),
     ],
+    squashed: `${title} ${keywords} ${context}`.replace(SEPARATORS, ""),
   };
   PREPARED.set(record, prepared);
   return prepared;
@@ -236,63 +424,178 @@ export function withinOneEdit(a: string, b: string): boolean {
   return la > lb ? a.slice(i + 1) === b.slice(i) : a.slice(i) === b.slice(i + 1);
 }
 
-/** Where this exact string sits in a record's fields, or null for nowhere. */
-function directCost(prepared: Prepared, token: string): number | null {
-  for (const field of FIELDS) {
-    const haystack = prepared[field];
-    const at = haystack.indexOf(token);
-    if (at < 0) continue;
-    return (
-      FIELD_COST[field] +
+/**
+ * The cheapest occurrence of `token` in one field, or null. Every occurrence is
+ * considered rather than the first: "e" appears mid-word in most titles long
+ * before it starts one, and taking `indexOf`'s answer would score the accident
+ * instead of the intention.
+ */
+function fieldCost(haystack: string, token: string): number | null {
+  let at = haystack.indexOf(token);
+  if (at < 0) return null;
+  let best = Number.POSITIVE_INFINITY;
+  while (at >= 0) {
+    const cost =
       Math.min(at, MAX_POSITION_COST) +
-      (isWordStart(haystack, at) ? 0 : MID_WORD_COST)
-    );
+      (isWordStart(haystack, at) ? 0 : MID_WORD_COST);
+    if (cost < best) best = cost;
+    if (best === 0) return 0;
+    at = haystack.indexOf(token, at + 1);
   }
-  return null;
+  return best;
 }
 
-/** The cheapest place this token appears in a record, or null for nowhere. */
-function tokenCost(
+/** Where this exact string sits in a record's fields, or null for nowhere. */
+function directCost(prepared: Prepared, token: string): number | null {
+  let best: number | null = null;
+  for (const field of FIELDS) {
+    const cost = fieldCost(prepared[field], token);
+    if (cost === null) continue;
+    const total = FIELD_COST[field] + cost;
+    if (best === null || total < best) best = total;
+  }
+  return best;
+}
+
+interface TokenMatch {
+  cost: number;
+  /** True when the token did not appear as written, so it is weaker evidence. */
+  fuzzy: boolean;
+}
+
+/** The cheapest way this token accounts for a record, or null for no way. */
+function tokenMatch(
   prepared: Prepared,
   token: string,
-  fuzzy: boolean,
-): number | null {
-  const direct = directCost(prepared, token);
-  if (direct !== null) return direct;
+  allowFuzzy: boolean,
+): TokenMatch | null {
+  // The literal word and its synonyms are both costed, and the cheaper wins.
+  // Returning the literal match on sight is wrong when it landed somewhere
+  // weak: "swiss" appears in the answer text of the Switzerland question, and
+  // "Switzerland" is in its title, so taking the first hit ranked a school
+  // entry above the question that is actually about working in Switzerland.
+  let best = directCost(prepared, token);
 
   // Synonyms are looked up flat, never recursively: the groups are symmetric,
   // so following an alias's own aliases would only walk back into the group it
   // came from.
   const aliases = ALIASES.get(token);
   if (aliases) {
-    let best: number | null = null;
     for (const alias of aliases) {
       const cost = directCost(prepared, alias);
-      if (cost !== null && (best === null || cost < best)) best = cost;
+      if (cost === null) continue;
+      const total = cost + ALIAS_COST;
+      if (best === null || total < best) best = total;
     }
-    if (best !== null) return best + ALIAS_COST;
+  }
+  if (best !== null) return { cost: best, fuzzy: false };
+
+  if (!allowFuzzy) return null;
+
+  // A dropped space is not a typo, so it is not the edit pass's job.
+  if (token.length >= MIN_FUZZY_LENGTH && prepared.squashed.includes(token)) {
+    return { cost: FIELD_COST.keywords + SQUASH_COST, fuzzy: false };
   }
 
-  if (fuzzy && token.length >= MIN_FUZZY_LENGTH) {
-    for (const word of prepared.words) {
-      if (withinOneEdit(token, word)) return FIELD_COST.keywords + FUZZY_COST;
+  if (isUnspaced(token)) {
+    // Chinese compounds are head-initial, so retreating to the head is the
+    // cheapest correct thing: 联系方式 finds 联系, 密码生成器 finds 密码. The
+    // edit distance below is meaningless here, where two characters are a
+    // whole word.
+    for (let n = token.length - 1; n >= 2; n -= 1) {
+      const cost = directCost(prepared, token.slice(0, n));
+      if (cost !== null) {
+        return {
+          cost: cost + CJK_TRIM_COST * (token.length - n),
+          fuzzy: true,
+        };
+      }
+    }
+    return null;
+  }
+
+  if (token.length >= MIN_FUZZY_LENGTH) {
+    for (const word of prepared.titleWords) {
+      if (withinOneEdit(token, word)) {
+        return { cost: FIELD_COST.title + FUZZY_COST, fuzzy: true };
+      }
+    }
+    for (const word of prepared.keywordWords) {
+      if (withinOneEdit(token, word)) {
+        return { cost: FIELD_COST.keywords + FUZZY_COST, fuzzy: true };
+      }
     }
   }
   return null;
 }
 
-/** Every token must land somewhere; the record's score is what they cost. */
+/** How many records each token accounts for, without any fuzzy help. */
+function documentFrequency(
+  records: readonly SearchRecord[],
+  tokens: readonly string[],
+): number[] {
+  return tokens.map((token) => {
+    let n = 0;
+    for (const record of records) {
+      if (tokenMatch(prepare(record), token, false) !== null) n += 1;
+    }
+    return n;
+  });
+}
+
+/**
+ * Which tokens a record must account for. A word carried by more than half the
+ * index says nothing about which record the visitor wants, and neither does a
+ * single letter sitting next to a real word, so both are scored where they
+ * appear but never required. Without this, "what do you charge" is decided by
+ * "what" and answers with the wrong question, and the German "e-mail" is
+ * decided by "e".
+ */
+function requiredFlags(
+  tokens: readonly string[],
+  frequency: readonly number[],
+  total: number,
+): boolean[] {
+  if (tokens.length < 2) return tokens.map(() => true);
+  const hasLongToken = tokens.some((token) => token.length > 1);
+  const required = tokens.map((token, i) => {
+    if (isStopword(token)) return false;
+    if (frequency[i] > total * COMMON_TOKEN_SHARE) return false;
+    if (hasLongToken && token.length === 1) return false;
+    return true;
+  });
+  if (required.some(Boolean)) return required;
+  // Every token was a function word. Keep the rarest, so the query still
+  // narrows to something instead of returning the whole index.
+  let rarest = 0;
+  for (let i = 1; i < tokens.length; i += 1) {
+    if (frequency[i] < frequency[rarest]) rarest = i;
+  }
+  required[rarest] = true;
+  return required;
+}
+
+/** Required tokens must land; optional ones only pay for being absent. */
 function scoreRecord(
   record: SearchRecord,
   tokens: readonly string[],
+  required: readonly boolean[],
   normalizedQuery: string,
+  phrase: string | null,
 ): number | null {
   const prepared = prepare(record);
   let score = 0;
-  for (const token of tokens) {
-    const cost = tokenCost(prepared, token, false);
-    if (cost === null) return null;
-    score += cost;
+  for (let i = 0; i < tokens.length; i += 1) {
+    const match = tokenMatch(prepared, tokens[i], false);
+    if (match === null) {
+      if (required[i]) return null;
+      score += OPTIONAL_MISS_COST;
+      continue;
+    }
+    score += match.cost;
+  }
+  if (phrase !== null && prepared.squashed.includes(phrase)) {
+    score -= PHRASE_BONUS;
   }
   if (prepared.title === normalizedQuery) return score - EXACT_BONUS;
   if (prepared.title.startsWith(normalizedQuery)) return score - PREFIX_BONUS;
@@ -301,65 +604,133 @@ function scoreRecord(
 
 const KIND_ORDER = new Map(SEARCH_KINDS.map((kind, i) => [kind, i]));
 
-// Ties are broken by kind and then by title, so the same query always produces
-// the same list rather than leaning on the sort's stability.
+// Ties are broken by kind, then by how much title there is around the match
+// (a four letter title matching "time" is likelier to be the intent than a
+// forty character question), and only then by the title itself, so the same
+// query always produces the same list rather than leaning on sort stability.
 function byScore(a: SearchHit, b: SearchHit): number {
   if (a.score !== b.score) return a.score - b.score;
   const kind =
     (KIND_ORDER.get(a.record.kind) ?? 0) - (KIND_ORDER.get(b.record.kind) ?? 0);
   if (kind !== 0) return kind;
+  const length = a.record.title.length - b.record.title.length;
+  if (length !== 0) return length;
   return a.record.title.localeCompare(b.record.title);
 }
 
 /**
  * Second pass: nothing matched everything, so rank by how much of the query a
- * record does account for. Tokens are weighted by rarity, which is what keeps
- * a sentence like "what do you charge" from being decided by "what": the words
- * that appear in half the index count for little, and "charge" (a synonym of
- * "cost", which appears twice) carries the result.
+ * record does account for, weighted by rarity.
+ *
+ * The floor is the important part. Without one this pass answers anything:
+ * "zzzz-nothing-here" found nine records through a fuzzy edit and a common
+ * word, ranked them confidently, and Enter opened the first. So a hit has to
+ * account for at least half of a multi-word query, and at least one of the
+ * tokens it did account for has to be both rare and written as the visitor
+ * typed it. A single-word query is exempt from the coverage rule, because
+ * covering half of one word is not a meaningful test, and that is the query
+ * shape the typo pass exists for.
  */
 function fallbackSearch(
   records: readonly SearchRecord[],
   tokens: readonly string[],
+  frequency: readonly number[],
 ): SearchHit[] {
-  const costs = records.map((record) =>
-    tokens.map((token) => tokenCost(prepare(record), token, true)),
-  );
   const total = Math.max(records.length, 1);
-  const rarity = tokens.map((_, i) => {
-    const frequency = costs.reduce(
-      (n, row) => n + (row[i] === null ? 0 : 1),
-      0,
-    );
-    return frequency === 0 ? 0 : Math.log(1 + total / frequency);
-  });
+  const rare = frequency.map((n) => n > 0 && n <= total * RARE_TOKEN_SHARE);
+  const rarity = frequency.map((n) => (n === 0 ? 0 : Math.log(1 + total / n)));
+  // Function words are already gone by the time this runs, so every token here
+  // is one the visitor meant. A single word is exempt from coverage: covering
+  // half of one word is not a test, and a lone mistyped word is exactly what
+  // this pass exists for.
+  const needCoverage = tokens.length > 1;
 
   const hits: SearchHit[] = [];
-  records.forEach((record, r) => {
+  for (const record of records) {
+    const prepared = prepare(record);
     let weight = 0;
     let cost = 0;
     let matched = 0;
+    let anchored = false;
     for (let i = 0; i < tokens.length; i += 1) {
-      const c = costs[r][i];
-      if (c === null) continue;
+      const match = tokenMatch(prepared, tokens[i], true);
+      if (match === null) continue;
       matched += 1;
       weight += rarity[i];
-      cost += c;
+      cost += match.cost;
+      // A token can anchor a hit when it is specific and it is really there.
+      // Rarity is measured without fuzzy help, so a token nothing contains
+      // scores zero frequency and cannot anchor anything.
+      if (!match.fuzzy && rare[i]) anchored = true;
     }
-    if (matched === 0) return;
+    if (matched === 0) continue;
+    if (needCoverage && matched < tokens.length * MIN_FALLBACK_COVERAGE) continue;
+    if (needCoverage && !anchored) continue;
     hits.push({
       record,
       score: FALLBACK_BASE - weight * RARITY_WEIGHT + cost / tokens.length,
     });
-  });
+  }
   return hits.sort(byScore);
 }
 
+/** Both passes over one already-tokenized query. */
+function runPasses(
+  records: readonly SearchRecord[],
+  tokens: readonly string[],
+  normalizedQuery: string,
+): SearchHit[] {
+  // Function words are dropped rather than scored. Scoring them was actively
+  // harmful: "what do you charge" made every record that lacked "what" and
+  // "you" pay for it, so the question that literally answers the query lost to
+  // the one that happened to be phrased as a question.
+  const meaningful = tokens.filter((token) => !isStopword(token));
+  const query = meaningful.length > 0 ? meaningful : tokens;
+
+  // "to-do" is two function words, and the only thing that makes it a query is
+  // that they are next to each other. So when nothing but function words was
+  // typed, the phrase has to be there: without this the security question won
+  // on the strength of the "Do" it starts with.
+  const phraseOnly = meaningful.length === 0;
+
+  const frequency = documentFrequency(records, query);
+  const required = requiredFlags(query, frequency, Math.max(records.length, 1));
+  // The phrase is taken from the query as typed, function words included: it
+  // is the whole thing the visitor wrote, not what is left after filtering.
+  const squashedQuery = normalizedQuery.replace(SEPARATORS, "");
+  const phrase =
+    tokens.length > 1 && squashedQuery.length >= 4 ? squashedQuery : null;
+
+  const hits: SearchHit[] = [];
+  for (const record of records) {
+    // Literal, not squashed: squashing turns any "... to do ..." in a sentence
+    // into the same string as the hyphenated "to-do" the visitor typed, which
+    // is how a security question came first for a to-do list.
+    if (phraseOnly && directCost(prepare(record), normalizedQuery) === null) {
+      continue;
+    }
+    const score = scoreRecord(record, query, required, normalizedQuery, phrase);
+    if (score !== null) hits.push({ record, score });
+  }
+  if (hits.length > 0) return hits.sort(byScore);
+  return fallbackSearch(records, query, frequency);
+}
+
 /**
- * Every record that matches all of the query's tokens, best first, falling
- * back to partial matches when nothing matches everything. An empty or
- * whitespace-only query matches nothing: the dialog shows its suggestions in
- * that state rather than the whole index.
+ * A keyboard without umlauts writes them out, so "koenitzer" and
+ * "faehigkeiten" have to reach "Könitzer" and "Fähigkeiten". Collapsing the
+ * digraphs in `normalizeText` would be wrong (it would mangle "queue", "value"
+ * and "blue"), so it happens here instead, once, and only for a query that
+ * already found nothing at all.
+ */
+const DIGRAPHS = /ae|oe|ue/;
+const collapseDigraphs = (value: string): string =>
+  value.replace(/ae/g, "a").replace(/oe/g, "o").replace(/ue/g, "u");
+
+/**
+ * Every record that matches the query, best first. An empty or whitespace-only
+ * query matches nothing: the dialog shows its suggestions in that state rather
+ * than the whole index.
  */
 export function searchRecords(
   records: readonly SearchRecord[],
@@ -369,13 +740,16 @@ export function searchRecords(
   if (tokens.length === 0) return [];
   const normalizedQuery = normalizeText(query.trim());
 
-  const hits: SearchHit[] = [];
-  for (const record of records) {
-    const score = scoreRecord(record, tokens, normalizedQuery);
-    if (score !== null) hits.push({ record, score });
+  const hits = runPasses(records, tokens, normalizedQuery);
+  if (hits.length > 0) return hits;
+
+  if (DIGRAPHS.test(normalizedQuery)) {
+    const collapsed = collapseDigraphs(normalizedQuery);
+    if (collapsed !== normalizedQuery) {
+      return runPasses(records, tokenizeQuery(collapsed), collapsed);
+    }
   }
-  if (hits.length > 0) return hits.sort(byScore);
-  return fallbackSearch(records, tokens);
+  return hits;
 }
 
 export interface GroupOptions {
