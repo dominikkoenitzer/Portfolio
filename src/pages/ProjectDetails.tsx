@@ -21,6 +21,7 @@ import {
 } from "@/config/seo-data/projects";
 import { SITE_CONFIG } from "@/constants";
 import { getProject, getProjects } from "@/constants/projects";
+import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import {
@@ -129,6 +130,7 @@ const ProjectDetails = () => {
   const { projectSlug } = useParams();
   const { language } = useLanguage();
   const reduceMotion = useReducedMotion();
+  const { warmOnIntent } = useRoutePrefetch();
   const t = translations[language].projectDetails;
   const seoSuffix = translations[language].seo.projectDetailsKeywordsSuffix;
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
@@ -244,6 +246,7 @@ const ProjectDetails = () => {
               <Link
                 className="transition-colors hover:text-foreground"
                 to="/projects"
+                {...warmOnIntent("/projects")}
               >
                 {t.projects}
               </Link>
@@ -256,6 +259,7 @@ const ProjectDetails = () => {
             <Link
               className="inline-flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
               to="/projects"
+              {...warmOnIntent("/projects")}
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {t.back}
@@ -561,6 +565,7 @@ const ProjectDetails = () => {
               <Link
                 className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
                 to="/projects"
+                {...warmOnIntent("/projects")}
               >
                 {t.allProjects}
                 <ArrowUpRight className="h-3.5 w-3.5" />
@@ -581,6 +586,7 @@ const ProjectDetails = () => {
                   className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col p-5 transition-colors duration-200 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
                   key={item.slug}
                   to={`/projects/${item.slug}`}
+                  {...warmOnIntent(`/projects/${item.slug}`)}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
