@@ -9,8 +9,8 @@ interface SmoothScrollProps {
 /**
  * App-wide smooth scrolling via Lenis. Mounted high in the tree with `root`, so
  * Lenis drives the real window scroll: `window.scrollY`, native `scroll`
- * events, and framer-motion's `useScroll` (progress bar + hero parallax) all
- * keep working downstream. Lenis runs its own rAF (`autoRaf`, on by default).
+ * events, and framer-motion's `useScroll` (the header's hide-on-scroll, the
+ * scroll-to-top button) all keep working downstream. Lenis runs its own rAF (`autoRaf`, on by default).
  *
  * Honors `prefers-reduced-motion`: when set, Lenis is not mounted at all, so
  * scrolling stays fully native and instant. Consumers read the instance with
@@ -29,8 +29,7 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
         lerp: 0.1,
         smoothWheel: true,
         wheelMultiplier: 1,
-        // Leave touch scrolling native: smoothing it fights iOS momentum, and
-        // the hero's velocity parallax is already disabled on coarse pointers.
+        // Leave touch scrolling native: smoothing it fights iOS momentum.
         syncTouch: false,
       }}
     >

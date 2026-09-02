@@ -1,26 +1,5 @@
 import type { MotionProps, Variants } from "framer-motion";
-import { DUR, EASE_OUT, REVEAL, VIEWPORT } from "./motion";
-
-export const fadeInUp: MotionProps = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-100px" },
-  transition: { duration: DUR.slow, ease: EASE_OUT },
-};
-
-export const fadeInLeft: MotionProps = {
-  initial: { opacity: 0, x: -40 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: "-100px" },
-  transition: { duration: DUR.slow, ease: EASE_OUT },
-};
-
-export const fadeInRight: MotionProps = {
-  initial: { opacity: 0, x: 40 },
-  whileInView: { opacity: 1, x: 0 },
-  viewport: { once: true, margin: "-100px" },
-  transition: { duration: DUR.slow, ease: EASE_OUT },
-};
+import { REVEAL, VIEWPORT } from "./motion";
 
 /**
  * Variants for a container that reveals itself and then cascades its `REVEAL`

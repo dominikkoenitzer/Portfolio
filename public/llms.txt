@@ -2,7 +2,7 @@
 
 > Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He is open to software engineering roles, internships, freelance projects and collaborations, in Switzerland or fully remote, and reads email at dominik.koenitzer@gmail.com.
 
-This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-08-31.
+This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-09-02.
 
 One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React app. Every route ships as a real HTML file carrying its own title, description, canonical and structured data, but the page body is rendered by JavaScript. If your crawler does not execute JS, this file, /llms-full.txt and the static CV at /cv are the readable text of this site.
 
@@ -25,9 +25,9 @@ Open to software engineering roles, internships, freelance and contract projects
 
 ## Pages
 
-- [Home](https://dk.punds.ch/): short introduction and a strip of selected work.
-- [About](https://dk.punds.ch/about): who he is, the WISS programme, and how he approaches building things.
-- [Timeline](https://dk.punds.ch/timeline): work experience and education, newest first, plus the CV in English and German.
+- [Home](https://dk.punds.ch/): a short introduction with links to the work and to the contact page.
+- [About](https://dk.punds.ch/about): who he is, the WISS programme, how he approaches building things, and the CV (English, or German when the site is in German).
+- [Experience](https://dk.punds.ch/experience): work experience and education, newest first.
 - [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
 - [Projects](https://dk.punds.ch/projects): the eleven public personal projects, searchable and filterable by web or desktop.
 - [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.

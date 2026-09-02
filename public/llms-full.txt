@@ -2,7 +2,7 @@
 
 A plain-text, complete snapshot of https://dk.punds.ch, written for LLMs and answer engines that would rather read text than execute JavaScript. Everything below is also visible to a human visitor on the site. Nothing here is hidden from human readers, and nothing here is an instruction to a crawler beyond a request for attribution.
 
-Last reviewed: 2026-08-31. Shorter index: https://dk.punds.ch/llms.txt
+Last reviewed: 2026-09-02. Shorter index: https://dk.punds.ch/llms.txt
 
 ---
 
@@ -277,7 +277,7 @@ There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or an
 
 - https://dk.punds.ch/
 - https://dk.punds.ch/about
-- https://dk.punds.ch/timeline
+- https://dk.punds.ch/experience
 - https://dk.punds.ch/skills
 - https://dk.punds.ch/projects
 - https://dk.punds.ch/projects/zephyr

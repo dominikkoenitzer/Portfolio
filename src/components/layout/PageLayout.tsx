@@ -1,4 +1,3 @@
-import { motion, useScroll, useSpring } from "framer-motion";
 import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -18,13 +17,6 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({ children }: PageLayoutProps) {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
   // Keeps --vh in sync with the real visual viewport so 100vh layouts
   // don't overshoot iOS Safari's collapsing toolbar.
   useViewportHeight();
@@ -65,12 +57,6 @@ export function PageLayout({ children }: PageLayoutProps) {
         </Suspense>
       )}
       <CustomCursor />
-
-      {/* Scroll progress bar */}
-      <motion.div
-        className="progress-bar fixed top-0 right-0 left-0 z-[100] h-[2px] bg-gradient-to-r from-primary/70 via-primary to-primary/70"
-        style={{ scaleX, transformOrigin: "0%" }}
-      />
 
       <Navbar />
 

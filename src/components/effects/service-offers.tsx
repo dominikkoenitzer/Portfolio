@@ -1,36 +1,21 @@
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, type LucideIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { revealOnScroll } from "@/lib/framer-animations";
-import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
+import { REVEAL, stagger } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 /**
- * The offer stack that follows the 3D tree.
+ * The offer stack: three categories, three cards each.
  *
- * The tree stops at the panel edge; this continues it. A branch draws down the
- * page as you scroll, each category is a stop on that branch glowing in its own
- * accent, and its three offers bud off as cards.
- *
- * The cards are a grid rather than a list so a row's cards share a height and
- * their prices land on one line: a price you can compare across three offers
- * without moving your eye is most of what makes a rate card read as considered.
- * Each card is one link, so there is one focus stop and one 44px-plus target per
- * offer, and it carries the same `/contact` router state the tree's detail card
- * does.
- *
- * Everything decorative is gated behind `useReducedMotion`, which collapses the
- * section to a static grid.
+ * The cards sit on a grid rather than in a list so a row's cards share a height
+ * and their prices land on one line: a price you can compare across three
+ * offers without moving your eye is most of what makes a rate card readable.
+ * Each card is one link, so there is one focus stop and one 44px-plus target
+ * per offer.
  */
+
+export type OfferCategoryKey = "build" | "protect" | "grow";
 
 export type OfferService = {
   key: string;
@@ -44,104 +29,32 @@ export type OfferService = {
 };
 
 export type OfferCategory = {
-  key: string;
+  key: OfferCategoryKey;
   label: string;
   desc: string;
-  /** Decorative accent: glows, washes, icon tiles. Tuned for saturation. */
-  accent: string;
-  /** The same hue at text contrast. Anything carrying words uses this. */
-  accentText: string;
   fromLabel: string;
   services: OfferService[];
 };
 
 /**
- * The price count-up. Longer than any transition on purpose: it is a number
- * being read, not a surface being moved, and under ~1s the digits blur past.
+ * The one place a category shows its colour: the 44px icon tile. Bloom tokens
+ * only, and sage stays rare because a tile this size is the largest fill it
+ * takes anywhere on the page.
  */
-const COUNT_UP = 1.1;
-
-/** `#36d0ff` + alpha → `rgba(...)`, so accents can tint backgrounds. */
-const rgba = (hex: string, alpha: number) => {
-  const n = Number.parseInt(hex.slice(1), 16);
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+const ACCENT: Record<OfferCategoryKey, string> = {
+  build: "bg-primary/10 text-primary",
+  protect: "bg-sage/15 text-sage-deep",
+  grow: "bg-blush/20 text-blush-deep",
 };
 
-/**
- * Counts the leading figure up when the card arrives, keeping the rest of the
- * price verbatim: "200 CHF + 50/mo" animates the 200 and leaves the tail alone.
- */
-function PriceCounter({ price, accent }: { price: string; accent: string }) {
-  // `accent` here is already the text-contrast variant (see OfferCategory).
-  const ref = useRef<HTMLSpanElement>(null);
-  // No inset margin: a price that is on screen at all should count, or a card
-  // sitting on the fold shows "0 CHF" until the visitor scrolls.
-  const inView = useInView(ref, { once: true });
-  const reduce = useReducedMotion();
-
-  const match = price.match(/^(\d+)([\s\S]*)$/);
-  const target = match ? Number(match[1]) : 0;
-  const tail = match ? match[2] : price;
-
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (v) => Math.round(v).toString());
-
-  useEffect(() => {
-    if (!(inView && match) || reduce) return;
-    const controls = animate(count, target, {
-      duration: COUNT_UP,
-      ease: EASE_OUT,
-    });
-    return () => controls.stop();
-  }, [inView, match, reduce, count, target]);
-
-  // Same colour either way, so the settled price looks identical whether it
-  // counted up or was painted straight in.
-  if (!match || reduce) {
-    return (
-      <span
-        className="font-mono text-[13px] tabular-nums"
-        ref={ref}
-        style={{ color: accent }}
-      >
-        {price}
-      </span>
-    );
-  }
-
-  return (
-    // Both copies of the price share one grid cell: the settled string, hidden,
-    // sets the width, and the counting one is painted over it. `tabular-nums`
-    // fixes the width of a digit but not how many digits there are, so without
-    // the twin "0 CHF" widening into "200 CHF" resizes the row it sits in. Same
-    // trick as the stats strip on a project page, and in flow for the same
-    // reason: an out-of-flow copy inherits this width as a hard limit and flips
-    // its currency onto a second line as the digits change.
-    <span
-      className="grid font-mono text-[13px] tabular-nums"
-      ref={ref}
-      style={{ color: accent }}
-    >
-      <span aria-hidden className="invisible col-start-1 row-start-1">
-        {price}
-      </span>
-      <span className="col-start-1 row-start-1">
-        {/* A motion value only renders as text inside a motion component. */}
-        <motion.span>{rounded}</motion.span>
-        {tail}
-      </span>
-    </span>
-  );
-}
-
 function ServiceCard({
-  accentText,
+  accent,
   ctaLabel,
   includesLabel,
   inquireLabel,
   service,
 }: {
-  accentText: string;
+  accent: string;
   ctaLabel: string;
   includesLabel: string;
   inquireLabel: string;
@@ -154,21 +67,18 @@ function ServiceCard({
   // chips and the price into the link's accessible name, so a screen reader
   // would hear one long run-on string and lose the structure; this way the card
   // keeps a real heading and readable prose, while the click target is still the
-  // entire card. No timer of its own: the grid is the stagger parent, so the
-  // cards bud off the branch in order however many offers a category carries.
+  // entire card. No timer of its own: the grid is the stagger parent.
   return (
     <motion.li
-      className="glass-card group relative flex h-full transform-gpu flex-col rounded-2xl p-5"
+      className="group relative flex h-full flex-col rounded-2xl border border-border/60 bg-card p-5 transition-colors duration-200 ease-out hover:border-primary/30"
       variants={REVEAL}
     >
       <span
         aria-hidden
-        className="mb-4 inline-flex h-11 w-11 flex-none transform-gpu items-center justify-center rounded-xl transition-transform duration-200 ease-out group-hover:scale-105"
-        style={{
-          background: rgba(accentText, 0.1),
-          boxShadow: `0 0 0 1px ${rgba(accentText, 0.22)}`,
-          color: accentText,
-        }}
+        className={cn(
+          "mb-4 inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl",
+          accent,
+        )}
       >
         <Icon className="h-5 w-5" />
       </span>
@@ -188,10 +98,10 @@ function ServiceCard({
       </p>
 
       <p className="sr-only">{includesLabel}</p>
-      <ul className="mt-4 flex flex-wrap gap-1.5">
+      <ul className="mt-4 mb-5 flex flex-wrap gap-1.5">
         {service.features.map((feature) => (
           <li
-            className="rounded-full border border-border/40 bg-muted/40 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
+            className="rounded-full border border-border/60 px-2.5 py-1 text-[11px] text-muted-foreground leading-none"
             key={feature}
           >
             {feature}
@@ -202,138 +112,19 @@ function ServiceCard({
       {/* `mt-auto` pins the footer to the card's bottom, and grid stretch makes
           the cards in a row the same height, so the three prices in a row sit on
           one line without a hard-coded height anywhere. */}
-      <div className="mt-auto flex items-center justify-between gap-3 border-border/30 border-t pt-4">
-        <PriceCounter accent={accentText} price={service.price} />
+      <div className="mt-auto flex items-center justify-between gap-3 border-border/50 border-t pt-4">
+        <span className="font-medium text-[13px] tabular-nums">
+          {service.price}
+        </span>
         <span
           aria-hidden
-          className="inline-flex items-center gap-1.5 font-medium text-[13px] text-foreground/70 transition-colors duration-200 ease-out group-hover:text-primary"
+          className="inline-flex items-center gap-1.5 font-medium text-[13px] text-muted-foreground transition-colors duration-200 ease-out group-hover:text-primary"
         >
           {ctaLabel}
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
         </span>
       </div>
     </motion.li>
-  );
-}
-
-function CategoryStage({
-  category,
-  ctaLabel,
-  includesLabel,
-  index,
-  inquireLabel,
-}: {
-  category: OfferCategory;
-  ctaLabel: string;
-  includesLabel: string;
-  index: number;
-  inquireLabel: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  // Ghost numeral drifts against the scroll; the accent bloom peaks mid-section.
-  const ghostY = useTransform(scrollYProgress, [0, 1], ["18%", "-18%"]);
-  const bloom = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
-
-  return (
-    <div className="relative" ref={ref}>
-      {/* Accent bloom, the category's colour breathing behind the content. */}
-      {!reduce && (
-        <motion.div
-          aria-hidden
-          className="-z-10 pointer-events-none absolute inset-x-[-20%] inset-y-[-10%]"
-          style={{
-            background: `radial-gradient(60% 50% at 20% 50%, ${rgba(category.accent, 0.16)} 0%, transparent 70%)`,
-            opacity: bloom,
-          }}
-        />
-      )}
-
-      {/* Oversized ghost numeral, parallaxing as a watermark behind the
-          category name. It sits left rather than right because the entry price
-          holds the right edge, and two things drifting into each other at the
-          same corner reads as a collision rather than as depth. Hidden on narrow
-          screens, where there is nowhere for it to sit that is not behind copy. */}
-      {!reduce && (
-        <motion.span
-          aria-hidden
-          className="-z-10 -left-4 -top-7 pointer-events-none absolute hidden select-none font-bold leading-none sm:block"
-          style={{
-            color: rgba(category.accent, 0.09),
-            // Scaled with the heading it sits behind (24px now, not 36px).
-            fontSize: "clamp(4.5rem, 8vw, 7rem)",
-            y: ghostY,
-          }}
-        >
-          {String(index + 1).padStart(2, "0")}
-        </motion.span>
-      )}
-
-      <motion.div {...revealOnScroll(reduce, stagger())}>
-        <motion.div className="pb-5" variants={REVEAL}>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            {/* Section-heading scale (the Timeline groups use the same), not
-                page-title scale: three 36px headings under a 36px title read
-                as four pages. */}
-            <h2
-              className="font-bold text-xl sm:text-2xl"
-              style={{ textShadow: `0 0 44px ${rgba(category.accent, 0.3)}` }}
-            >
-              {category.label}
-            </h2>
-            {/* The entry price as a tag beside the name rather than flung to
-                the far edge: at this column width a right-aligned price sat a
-                thousand pixels from the thing it was pricing. */}
-            <p
-              className="inline-flex flex-none items-center rounded-full border px-3 py-1.5 font-mono text-xs"
-              style={{
-                background: rgba(category.accentText, 0.07),
-                borderColor: rgba(category.accentText, 0.3),
-                color: category.accentText,
-              }}
-            >
-              {category.fromLabel}
-            </p>
-          </div>
-          <p className="mt-2 text-muted-foreground text-sm">{category.desc}</p>
-        </motion.div>
-
-        {/* Rule that wipes in under the header, in the category accent. Its own
-            scaleX draw rather than a REVEAL, so it keeps its own trigger. */}
-        <motion.div
-          className="h-px origin-left"
-          initial={{ scaleX: 0 }}
-          style={{
-            background: `linear-gradient(90deg, ${category.accentText} 0%, ${rgba(category.accentText, 0)} 100%)`,
-          }}
-          transition={{ duration: DUR.slow, ease: EASE_OUT }}
-          viewport={VIEWPORT}
-          whileInView={{ scaleX: 1 }}
-        />
-      </motion.div>
-
-      <motion.ul
-        className="mt-7 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        {...revealOnScroll(reduce, stagger())}
-      >
-        {category.services.map((service) => (
-          <ServiceCard
-            accentText={category.accentText}
-            ctaLabel={ctaLabel}
-            includesLabel={includesLabel}
-            inquireLabel={inquireLabel}
-            key={service.key}
-            service={service}
-          />
-        ))}
-      </motion.ul>
-    </div>
   );
 }
 
@@ -351,66 +142,49 @@ export function ServiceOffers({
   /** Accessible name for a card link; `{service}` is replaced with its title. */
   inquireLabel: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
 
-  // The branch: draws downward as the whole stack scrolls through.
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 85%", "end 60%"],
-  });
-  const draw = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 28,
-    restDelta: 0.001,
-  });
-
   return (
-    <div className="relative lg:pl-20" ref={ref}>
-      {/* The branch continuing out of the 3D tree above. Decorative, desktop:
-          the content stack reads identically without it. */}
-      {!reduce && (
-        <svg
-          aria-hidden
-          className="pointer-events-none absolute top-0 bottom-0 left-4 hidden w-10 lg:block"
-          fill="none"
-          preserveAspectRatio="none"
-          viewBox="0 0 40 1000"
-        >
-          <title>Decorative branch</title>
-          <defs>
-            <linearGradient id="branch-gradient" x1="0" x2="0" y1="0" y2="1">
-              {categories.map((c, i) => (
-                <stop
-                  key={c.key}
-                  offset={`${(i / Math.max(categories.length - 1, 1)) * 100}%`}
-                  stopColor={c.accentText}
-                />
-              ))}
-            </linearGradient>
-          </defs>
-          <motion.path
-            d="M20 0 C 8 180, 32 320, 20 500 S 8 820, 20 1000"
-            stroke="url(#branch-gradient)"
-            strokeLinecap="round"
-            strokeWidth="2"
-            style={{ opacity: 0.55, pathLength: draw }}
-          />
-        </svg>
-      )}
+    <div className="space-y-16 sm:space-y-20">
+      {categories.map((category) => (
+        <div key={category.key}>
+          <motion.div
+            className="border-border/60 border-b pb-4"
+            {...revealOnScroll(reduce)}
+          >
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              {/* Section-heading scale, not page-title scale: three 36px
+                  headings under a 36px title read as four pages. */}
+              <h2 className="font-bold text-xl sm:text-2xl">{category.label}</h2>
+              {/* The entry price sits beside the name rather than at the far
+                  edge: at this column width a right-aligned price lands a
+                  thousand pixels from the thing it is pricing. */}
+              <p className="inline-flex flex-none items-center rounded-full border border-border/60 px-3 py-1 text-[11.5px] text-muted-foreground">
+                {category.fromLabel}
+              </p>
+            </div>
+            <p className="mt-2 text-muted-foreground text-sm">
+              {category.desc}
+            </p>
+          </motion.div>
 
-      <div className="space-y-20 sm:space-y-28">
-        {categories.map((category, i) => (
-          <CategoryStage
-            category={category}
-            ctaLabel={ctaLabel}
-            includesLabel={includesLabel}
-            index={i}
-            inquireLabel={inquireLabel}
-            key={category.key}
-          />
-        ))}
-      </div>
+          <motion.ul
+            className="mt-6 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            {...revealOnScroll(reduce, stagger())}
+          >
+            {category.services.map((service) => (
+              <ServiceCard
+                accent={ACCENT[category.key]}
+                ctaLabel={ctaLabel}
+                includesLabel={includesLabel}
+                inquireLabel={inquireLabel}
+                key={service.key}
+                service={service}
+              />
+            ))}
+          </motion.ul>
+        </div>
+      ))}
     </div>
   );
 }

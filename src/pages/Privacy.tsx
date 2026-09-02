@@ -47,10 +47,13 @@ const PROSE = "text-muted-foreground leading-[1.75]";
 
 // Always underlined: inside a paragraph the colour alone does not mark it as
 // a link (axe link-in-text-block, 1.61:1 against the surrounding text).
-const MAIL_LINK = "break-all text-primary underline underline-offset-4";
+// `anywhere` rather than `break-all`: the address may only wrap when the line
+// cannot hold it, not mid-word on a 390px screen ("dom / inik@...").
+const MAIL_LINK =
+  "[overflow-wrap:anywhere] text-primary underline underline-offset-4";
 
 /** Mono micro-label. Violet is the structural colour; sage stays for signals. */
-const INDEX_LABEL = "font-mono text-primary text-xs tracking-[0.14em]";
+const INDEX_LABEL = "text-primary text-xs tracking-[0.14em]";
 
 /**
  * One clause of the policy: a hairline, a number, a heading, then the text. No
@@ -259,7 +262,7 @@ const Privacy = () => {
           <aside className="hidden xl:col-start-3 xl:block">
             <nav aria-labelledby="privacy-toc" className="sticky top-28">
               <p
-                className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
+                className="text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
                 id="privacy-toc"
               >
                 {t.onThisPage}
@@ -314,7 +317,7 @@ const Privacy = () => {
                       >
                         <span
                           aria-hidden="true"
-                          className="font-mono text-[11px] tabular-nums"
+                          className="text-[11px] tabular-nums"
                         >
                           {String(index + 1).padStart(2, "0")}
                         </span>

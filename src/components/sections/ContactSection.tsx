@@ -73,7 +73,7 @@ const mailtoFor = (subject: string, body: string) =>
 
 /**
  * Swapping the label crossfades it with a small lift, so the sentence reads as
- * being rewritten rather than flickering. Opacity and transform only: the box
+ * being rewritten rather than flickering. Opacity and transform only: the cell
  * the labels share is fixed by the widest of them and never animates.
  */
 const LABEL_SWAP: MotionProps = {
@@ -92,25 +92,25 @@ const LABEL_SWAP_STILL: MotionProps = {
 };
 
 /**
- * One option as the trigger paints it: the dashed-underlined phrase with the
- * chevron glued to its last word. The visible copy and the invisible sizing
- * copies both render through here, so the cell is measured against exactly the
- * box it will later paint. The underline stays on the text (not on the button),
- * so it wraps with the phrase and stops before the chevron, and
- * `overflow-wrap: anywhere` keeps an unbounded service label from pushing its
- * own min-content width past a 375px viewport.
+ * One option as the trigger paints it: the underlined phrase with the chevron
+ * glued to its last word. The visible copy and the invisible sizing copies both
+ * render through here, so the cell is measured against exactly the box it will
+ * later paint. The underline stays on the text (not on the button), so it wraps
+ * with the phrase and stops before the chevron, and `overflow-wrap: anywhere`
+ * keeps an unbounded service label from pushing its own min-content width past
+ * a 375px viewport.
  */
 function IntentLabel({ label }: { label: string }) {
   return (
     <>
-      <span className="rounded-[0.3rem] bg-primary/[0.06] px-1.5 py-0.5 underline decoration-2 decoration-primary/45 underline-offset-[6px] transition-[background-color,text-decoration-color] duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:bg-primary/[0.11] group-hover/intent:decoration-primary group-focus-visible/intent:bg-primary/[0.11]">
+      <span className="underline decoration-2 decoration-primary/45 underline-offset-[6px] transition-[text-decoration-color] duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:decoration-primary">
         {label}
       </span>
-      {/* The chevron leans down under the pointer and flips once the list is
-          open, so the control answers before it is used. */}
+      {/* The chevron flips once the list is open, so the control says which
+          state it is in. */}
       <ChevronDown
         aria-hidden
-        className="ml-1.5 inline-block h-[0.6em] w-[0.6em] align-middle text-primary/70 transition-transform duration-200 ease-out group-hover/intent:translate-y-[0.08em] group-data-[state=open]/intent:rotate-180"
+        className="ml-1.5 inline-block h-[0.6em] w-[0.6em] align-middle text-primary/70 transition-transform duration-200 ease-out group-data-[state=open]/intent:rotate-180"
       />
     </>
   );
@@ -166,7 +166,10 @@ export function ContactSection() {
 
   return (
     <section
-      className="section-padding flex min-h-[60vh] flex-col justify-center"
+      // The block is the whole page, so it centres in the viewport and owns
+      // its own height. `section-padding` on top of the centring left 300 to
+      // 400px of dead page above the footer.
+      className="mx-auto flex min-h-[calc(100vh-10rem)] w-full max-w-7xl flex-col justify-center px-6 sm:px-8 md:px-12 lg:px-16"
       id="contact"
     >
       {/* Headline, the sentence the visitor finishes, then the address: one
@@ -174,7 +177,7 @@ export function ContactSection() {
           centred in the viewport because it is the whole page: top-aligned, it
           left a screen of dead space under the address. */}
       <motion.div
-        className="mx-auto w-full max-w-3xl"
+        className="w-full max-w-3xl"
         {...revealOnScroll(reduceMotion, stagger())}
       >
         {/* The shared page title, left-aligned for this editorial layout, so
@@ -196,43 +199,47 @@ export function ContactSection() {
         >
           {t.sentenceLead}{" "}
           <Popover onOpenChange={setOpen} open={open}>
-            <PopoverTrigger asChild>
-              <button
-                aria-label={t.changeSubject}
-                className="group/intent inline-grid items-start rounded-sm text-left align-baseline font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
-                type="button"
-              >
-                {/* Every option is laid into the same single grid cell, so the
-                    trigger is as wide and as tall as the longest label of the
-                    current language (the service label from the Services page
-                    included) and keeps that box whatever is selected. The
-                    sentence's line count therefore never changes and nothing
-                    below it moves. Picking a subject was reflowing the page
-                    down to the response-time line before this.
-                    The copies that are not selected stay `visibility: hidden`:
-                    they still size the cell, but they are out of the
-                    accessibility tree, unselectable and unclickable, so only
-                    the chosen phrase is ever read out or copied. */}
-                {options.map(({ key, label }) => (
-                  <span
-                    aria-hidden
-                    className="invisible col-start-1 row-start-1"
-                    key={key}
-                  >
-                    <IntentLabel label={label} />
-                  </span>
-                ))}
-                <AnimatePresence initial={false}>
-                  <motion.span
-                    className="col-start-1 row-start-1"
-                    key={intent}
-                    {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
-                  >
-                    <IntentLabel label={selected.label} />
-                  </motion.span>
-                </AnimatePresence>
-              </button>
-            </PopoverTrigger>
+            {/* Every option is laid into one grid cell of this wrapper, so the
+                cell is as wide and as tall as the longest label of the current
+                language (the service label from the Services page included)
+                whatever is selected. The sentence's line count therefore never
+                changes and nothing below it moves; picking a subject was
+                reflowing the page down to the response-time line before this.
+                The copies stay `visibility: hidden`: they still size the cell,
+                but they are out of the accessibility tree, unselectable and
+                unclickable, so only the chosen phrase is ever read out.
+                The button is a grid child of that cell rather than the cell
+                itself, and hugs its own label: its box is what the focus ring
+                and the custom cursor's magnet wrap, and at 1440px the cell is
+                381px wide against a 81px phrase. */}
+            <span className="inline-grid items-start align-baseline">
+              {options.map(({ key, label }) => (
+                <span
+                  aria-hidden
+                  className="invisible col-start-1 row-start-1"
+                  key={key}
+                >
+                  <IntentLabel label={label} />
+                </span>
+              ))}
+              <PopoverTrigger asChild>
+                <button
+                  aria-label={t.changeSubject}
+                  className="group/intent col-start-1 row-start-1 inline-grid justify-self-start rounded-sm text-left font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  type="button"
+                >
+                  <AnimatePresence initial={false}>
+                    <motion.span
+                      className="col-start-1 row-start-1"
+                      key={intent}
+                      {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
+                    >
+                      <IntentLabel label={selected.label} />
+                    </motion.span>
+                  </AnimatePresence>
+                </button>
+              </PopoverTrigger>
+            </span>
             <PopoverContent align="start" className="w-72 p-1.5">
               <div className="grid gap-0.5">
                 {options.map(({ key, label }) => {
@@ -274,10 +281,9 @@ export function ContactSection() {
             href={mailtoFor(selected.subject, selected.body)}
             style={{ fontSize: "clamp(1.25rem, 4.5vw, 2.25rem)" }}
           >
-            {/* The site's `.link-hover` wipe, hand-rolled on the text span so
-                the whole link (arrow included) drives it: the biggest target on
-                the page now answers the pointer with a rule, not just a tint. */}
-            <span className="relative min-w-0 break-all after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-200 after:ease-out after:content-[''] group-hover:after:origin-bottom-left group-hover:after:scale-x-100">
+            {/* Underlined at rest, because it is the one link the page is for.
+                The rule deepens with the pointer: a colour change, not a wipe. */}
+            <span className="min-w-0 break-all underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color] duration-200 ease-out group-hover:decoration-primary">
               {EMAIL}
             </span>
             <ArrowUpRight
@@ -291,32 +297,37 @@ export function ContactSection() {
               beside it, and what happens next sits under both. */}
           <p className="mt-5 text-muted-foreground text-sm leading-relaxed">
             {t.emailHint}{" "}
-            <button
-              className="inline-grid min-h-[44px] items-center rounded-sm text-left underline decoration-muted-foreground/40 underline-offset-2 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              onClick={copyEmail}
-              type="button"
-            >
-              {/* The same single-cell stack as the subject trigger, for the
-                  same reason: the confirmation is far shorter than the
-                  invitation, and on a 375px screen that changed this
-                  paragraph's line count and pulled the response-time line up
-                  under it. Sized to the longer of the two, it holds still. */}
+            {/* The same single-cell stack as the subject trigger, for the same
+                reason: the confirmation is far shorter than the invitation, and
+                on a 375px screen that changed this paragraph's line count and
+                pulled the response-time line up under it. The cell holds the
+                longer of the two; the button hugs whichever is showing, so its
+                box is the size of the words it is under. The 44px touch target
+                is spent on coarse pointers only, where it is what the finger
+                needs; on a mouse it would only inflate the cursor's magnet. */}
+            <span className="inline-grid align-baseline">
               <span aria-hidden className="invisible col-start-1 row-start-1">
                 {t.copyEmail}
               </span>
               <span aria-hidden className="invisible col-start-1 row-start-1">
                 {t.copied}
               </span>
-              <AnimatePresence initial={false}>
-                <motion.span
-                  className="col-start-1 row-start-1"
-                  key={copied ? "copied" : "copy"}
-                  {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
-                >
-                  {copied ? t.copied : t.copyEmail}
-                </motion.span>
-              </AnimatePresence>
-            </button>
+              <button
+                className="col-start-1 row-start-1 inline-grid items-center justify-self-start rounded-sm text-left underline decoration-muted-foreground/40 underline-offset-2 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [@media(pointer:coarse)]:min-h-[44px]"
+                onClick={copyEmail}
+                type="button"
+              >
+                <AnimatePresence initial={false}>
+                  <motion.span
+                    className="col-start-1 row-start-1"
+                    key={copied ? "copied" : "copy"}
+                    {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
+                  >
+                    {copied ? t.copied : t.copyEmail}
+                  </motion.span>
+                </AnimatePresence>
+              </button>
+            </span>
           </p>
           <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
             {t.responseTime}

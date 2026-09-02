@@ -54,10 +54,12 @@ export function LanguageToggle() {
             chrome and the smaller one missed the tap-target floor. The corner
             is now the header's: everything in that row (island, nav pills,
             hamburger) is a pill, and a rounded square among them read as a
-            leftover. */}
+            leftover. On desktop this button stands alone at the page gutter
+            rather than inside `<nav>`, because the nav row is centred on the
+            page axis and a control in the row would push the links off it. */}
         <Button
           aria-label={t.toggles.language}
-          className="h-11 w-11 rounded-full border border-primary/15 bg-primary/[0.06] transition-colors hover:bg-primary/[0.12] focus-visible:!rounded-full"
+          className="h-11 w-11 rounded-full border border-primary/15 bg-primary/[0.06] transition-colors hover:bg-primary/[0.12] hover:text-primary"
           size="icon"
           variant="ghost"
         >
