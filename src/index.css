@@ -1,5 +1,4 @@
-/* Fonts are loaded non-render-blocking from index.html (<link> in <head>)
-   so first paint isn't gated on the Google Fonts request. */
+/* Fonts are self-hosted subsets imported from main.tsx. */
 
 @tailwind base;
 @tailwind components;
@@ -9,8 +8,8 @@
   /* Bloom: the site's only palette, taken from the owner's Reze reference
      illustrations and kept deliberately muted: the dusty, hazy version of the
      colours rather than the saturated one, because the page is meant to be
-     easy to sit in front of. (The glass theme and the theme toggle were
-     removed on purpose, so these are the root tokens, not a switchable class.)
+     easy to sit in front of. These are the root tokens; there is no theme
+     switch.
 
        page        shirt / paper    #f6f0e6   warm cream, no glare
        ink         hair             #332a38   soft plum-black, never pure black
@@ -25,15 +24,17 @@
      looked at, blush keeps the page warm. The `-deep` variants are the same
      hues pulled down to AA text contrast on the page (sage #4e7040 5.0:1,
      blush #8e5a64 4.9:1); the raw sage is a fill colour and only ever carries
-     the ink foreground (6.2:1). Every pair was checked at 4.5:1 for text and
-     3:1 for the hero's lilac (display size only). */
+     the ink foreground (6.2:1). */
   :root {
-    /* The CSS half of the motion vocabulary in `lib/motion.ts`: same curve as
-       the `EASE_OUT` token, so a CSS hover and a framer entrance decelerate
-       identically. Durations stay literal (200ms feedback, 300ms standard). */
+    /* The `EASE_OUT` curve from `lib/motion.ts`, for the few CSS animations
+       that name it (the FAQ panel, the icon nudge). Tailwind's own `ease-out`
+       utility is a different, shallower curve, and that is what every hover on
+       the site uses; the two are close enough that mixing them is deliberate
+       rather than a bug. Durations stay literal (200ms feedback, 300ms
+       standard). */
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    /* A touch rounder than shadcn's default: the whole type set is rounded
-       now, and square-ish corners next to it read as a different site. */
+    /* A touch rounder than shadcn's default: the whole type set is rounded,
+       and square-ish corners next to it read as a different site. */
     --radius: 0.875rem;
     --background: 37 47% 93%;
     --foreground: 279 14% 19%;
@@ -66,8 +67,8 @@
     /* Errors stay red, but a dusty rose-red rather than a stock one. */
     --destructive: 353 42% 52%;
     --destructive-foreground: 0 0% 100%;
-    /* Violet → lilac → sage → blush: the illustration as a sweep, used for the
-       decorative washes and hairlines on the project pages. */
+    /* Violet, lilac, sage, blush: the illustration as a sweep. Referenced by
+       the OG and icon scripts; nothing on the page paints with it. */
     --theme-gradient: linear-gradient(
       135deg,
       hsl(267 28% 39%) 0%,
@@ -76,38 +77,45 @@
       hsl(312 21% 91%) 100%
     );
     --theme-shadow-color: 267 28% 39%;
+
+    /* JS-managed visual-viewport unit (see useViewportHeight) and safe areas. */
+    --vh: 1vh;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
   }
 
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
-  /* Base HTML - background is set in index.html critical CSS */
   html {
     scroll-behavior: smooth;
-    @apply text-base;
+    font-size: 1rem;
+    line-height: 1.5;
     background-color: hsl(var(--background));
     width: 100%;
     min-height: 100%;
     position: relative;
-    transition: background-color 0.15s ease;
+    /* iOS Safari: never let the browser silently bump font size on rotate. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     /* Scrollbar hidden (Firefox). The page scroller is the root element, whose
-       reserved scrollbar gutter sits OUTSIDE the content box that fixed
-       `inset-0` background layer (the aurora) covers, so the gutter
-       exposed a strip of the bare dark base at the right edge, reading as a
-       vertical seam in both themes. Removing the gutter lets the backgrounds
-       run flush to the window edge. Scrolling stays fully functional (wheel /
-       touch / keyboard / Lenis); this site drives scroll through Lenis anyway. */
+       reserved scrollbar gutter sits outside the content box the fixed aurora
+       layer covers, so the gutter showed as a bare strip at the right edge.
+       Scrolling stays fully functional (wheel / touch / keyboard / Lenis). */
     scrollbar-width: none;
   }
 
   /* Lenis smooth scroll (see components/layout/SmoothScroll.tsx). Lenis toggles
      these classes on <html>; opt an inner scroll container out of Lenis with
      `data-lenis-prevent`. The `scroll-behavior: auto` override is keyed on the
-     persistent base `.lenis` class (NOT `.lenis-smooth`, which Lenis only adds
-     mid-scroll) so the native `scroll-behavior: smooth` above can't turn an
-     idle/stopped programmatic scroll (e.g. the mobile-drawer position restore
-     in use-body-scroll-lock) into an unwanted animation that desyncs Lenis. */
+     persistent base `.lenis` class (not `.lenis-smooth`, which Lenis only adds
+     mid-scroll) so the native smooth behaviour above cannot turn an idle
+     programmatic scroll (the mobile-drawer position restore) into an animation
+     that desyncs Lenis. */
   html.lenis,
   html.lenis body {
     height: auto;
@@ -125,52 +133,48 @@
     pointer-events: none;
   }
 
-  /* WebKit / Blink scrollbar hidden: no reserved gutter, so the fixed
-     background layers reach the window's right edge with no seam (see the
-     note on `html` above). */
+  /* WebKit / Blink scrollbar hidden, same reason as the Firefox rule above. */
   ::-webkit-scrollbar {
     width: 0;
     height: 0;
     display: none;
   }
 
-  /* Body - inherits background from html::before pseudo-element */
   body {
     @apply bg-background text-foreground antialiased;
     font-family:
       "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI",
       "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     text-rendering: optimizeLegibility;
-    background-color: hsl(var(--background));
     min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height for mobile */
+    min-height: 100dvh;
     width: 100%;
     margin: 0;
     padding: 0;
     position: relative;
     overflow-x: hidden;
-    transition: background-color 0.15s ease;
+    /* Mobile: smoother momentum scrolling, no rubber-band pull-to-refresh, no
+       double-tap zoom on tappable UI, no grey tap flash. */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* Root element */
   #root {
     min-height: 100vh;
     min-height: 100dvh;
     width: 100%;
     position: relative;
-    isolation: isolate; /* Creates stacking context */
+    /* A stacking context of its own, so nothing inside can blend with the
+       page background. Backgrounds composite by alpha, not blend mode. */
+    isolation: isolate;
   }
 
-  /* Main content area */
   main {
     width: 100%;
     min-height: 100vh;
     position: relative;
-  }
-
-  /* All elements use border-box */
-  * {
-    box-sizing: border-box;
   }
 
   h1,
@@ -183,19 +187,15 @@
     font-family:
       "Zen Maru Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI",
       "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
-    /* Single source of truth for the default heading weight (the duplicate
-       @layer components rule that used to set font-bold has been removed). */
     font-weight: 700;
-    /* Defensive wrapping for long German compounds (Zusammenarbeit,
-       Datenschutzerklärung, Webentwicklung). hyphens: auto relies on the
-       html[lang] attribute that LanguageProvider keeps in sync. */
+    /* Long German compounds (Datenschutzerklärung, Webentwicklung) wrap
+       instead of overflowing; hyphens: auto relies on the html[lang] attribute
+       that LanguageProvider keeps in sync. */
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
     -webkit-hyphens: auto;
-    /* Never clip descenders: affects "g", "j", "p", "q", "y" and accented
-       descenders ("ç" in français). Without this, Chrome with
-       -webkit-background-clip: text + tight line-height shaves their bottoms. */
+    /* Never clip descenders ("g", "j", "p", "q", "y", "ç"). */
     overflow: visible;
   }
 
@@ -211,6 +211,9 @@
   li,
   td,
   th,
+  dt,
+  dd,
+  figcaption,
   small,
   strong,
   em,
@@ -244,9 +247,8 @@
   }
 
   /* Title face for the hero name only (Tailwind `font-title`). M PLUS Rounded
-     1c at its ExtraBold cut: the third rounded Japanese face next to the two
-     Zen ones, so the name is heavy without turning into a poster font. Only
-     the 800 subset is loaded, so the weight is pinned to it here. */
+     1c at its ExtraBold cut. Only the 800 subset is loaded, so the weight is
+     pinned to it here. */
   .font-title,
   .font-title * {
     font-family:
@@ -254,342 +256,65 @@
       "Segoe UI", sans-serif !important;
     font-weight: 800 !important;
   }
-
-  /* Common utility classes */
-  .highlight-text {
-    display: inline-block;
-    position: relative;
-    color: var(--foreground);
-    font-weight: 500;
-  }
-
-  .highlight-text::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(
-      to right,
-      hsl(var(--primary) / 0.2),
-      hsl(var(--primary) / 0.05)
-    );
-    border-radius: 4px;
-    z-index: -1;
-  }
-
-  .gradient-border {
-    position: relative;
-  }
-
-  .gradient-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(
-      45deg,
-      hsl(var(--primary) / 0.3),
-      transparent,
-      hsl(var(--primary) / 0.3)
-    );
-    border-radius: inherit;
-    z-index: -1;
-    animation: border-rotate 8s linear infinite;
-  }
-
-  @keyframes border-rotate {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .link-hover {
-    position: relative;
-  }
-
-  .link-hover::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -2px;
-    left: 0;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.2s var(--ease-out);
-  }
-
-  .link-hover:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
 }
 
 @layer components {
-  /* Enhanced responsiveness */
-  * {
-    @apply box-border;
-  }
-
-  /* Base responsive styles */
-  html {
-    @apply text-base;
-    background-color: hsl(var(--background));
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    background-color: hsl(var(--background));
-  }
-
-  /* Enhanced card styles */
-  .glass-card {
-    @apply bg-background/70 backdrop-blur-md border border-border/40 shadow-sm hover:shadow-md transition-[background-color,border-color,box-shadow,translate] duration-300 ease-out;
-  }
-
-  /* A small lift to go with the shadow the card already grows on hover. It has
-     to be `translate` rather than `transform`: every `.glass-card` on the site
-     is a framer element with a `y` entrance, and framer writes the finished
-     entrance back as an inline `transform: none` that would out-rank a class
-     rule for good. The independent property composes with that instead of
-     losing to it. `.glass-deep` deliberately gets no lift: the project cards
-     animate their own `whileHover={{ y: -4 }}` spring on the same element
-     (ProjectsSection), and the Services/ServiceExplorer cards are positioned
-     by motion values, so a second source of movement would fight all three. */
-  .glass-card:hover {
-    translate: 0 -2px;
-  }
-
-  /* Section styles with improved responsive padding */
-  /* `w-full` is load-bearing, not decoration. These sections render as flex
+  /* Section rhythm. `w-full` is load-bearing: these sections render as flex
      items of the page wrapper in AnimatedRoutes, and in a flex column
-     `align-self: stretch` does NOT apply when a cross-axis margin is `auto`.
+     `align-self: stretch` does not apply when a cross-axis margin is `auto`.
      Without it, `mx-auto` makes the section a fit-content box that tracks its
      widest child, so any state change that changes a child width resizes and
-     re-centres the whole section: picking a subject on /contact moved it from
-     598.5px to 707.2px, and an empty search on /projects moved it from 1280px
-     to 896px, sliding the heading and toolbar 192px sideways. */
+     re-centres the whole section. */
+  /* The gutter ladder is the footer's and the hero's: 24 / 32 / 48 / 64. It
+     used to be 16 / 24 / 32 / 64 here, so under 1024px every page's body
+     column sat 8 to 16px inside the footer directly beneath it. */
   .section-padding {
-    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-7xl mx-auto w-full;
+    @apply py-16 px-6 sm:py-20 sm:px-8 md:py-24 md:px-12 lg:py-28 lg:px-16 max-w-7xl mx-auto w-full;
   }
 
-  /* Narrower reading column for long-form/legal pages (Privacy, etc.), shares
-     the section-padding rhythm/gutters but caps the measure for readability. */
-  .reading-padding {
-    @apply py-16 px-4 sm:py-20 sm:px-6 md:py-24 md:px-8 lg:py-28 lg:px-16 max-w-3xl mx-auto w-full;
-  }
 
-  /* Mono uppercase micro-label (the "eyebrow" above section titles). The one
-     place the eye colour carries words: deep sage, which is the same hue at
-     5.0:1 on the page (at 10px this is body text to WCAG, so no /70 fade). */
+  /* The micro-label above a section title. The one place the eye colour
+     carries words: deep sage, 5.0:1 on the page.
+
+     No `font-mono`: it never applied. The element rule in @layer base sets the
+     body face with `!important` on `p` and `span`, which an @layer components
+     class cannot beat, so every eyebrow on the site has always rendered in the
+     body sans. The class now says what it does, and the two places that really
+     did render mono (`dt`, `figcaption`) are in the element list above, so all
+     micro-labels finally share one face. */
   .eyebrow {
-    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-sage-deep;
+    @apply text-[10px] uppercase tracking-[0.22em] text-sage-deep;
   }
 
-  /* Text styles */
-  .gradient-text {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-image: linear-gradient(
-      to right,
-      hsl(var(--primary)),
-      hsl(var(--lilac))
-    );
-    /* Reserve descender room: see .hero-name-gradient comment for the why. */
-    padding-bottom: 0.08em;
-    line-height: 1.05;
+  /* A trailing icon in a text-size Button leans 2px into the direction it
+     points on hover. Scoped to the last child so a leading icon stays put. */
+  .btn-icon-nudge > svg:last-child {
+    transition: transform 0.2s var(--ease-out);
+  }
+  .btn-icon-nudge:hover > svg:last-child {
+    transform: translateX(2px);
   }
 
-  /* Enhanced responsive typography */
-  .text-responsive-xs {
-    @apply text-xs sm:text-sm;
+  /* Answer panel of the /services FAQ. The native <details> box snaps to its
+     open height (height animations repaint every frame and are banned
+     site-wide), so the answer rises and fades into the space instead. Scoped
+     to `details[open]` so closing removes the animation and re-opening
+     restarts it. */
+  @keyframes faq-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  .text-responsive-sm {
-    @apply text-sm sm:text-base;
-  }
-  .text-responsive-base {
-    @apply text-base sm:text-lg;
-  }
-  .text-responsive-lg {
-    @apply text-lg sm:text-xl md:text-2xl;
-  }
-  .text-responsive-xl {
-    @apply text-xl sm:text-2xl md:text-3xl;
-  }
-  .text-responsive-2xl {
-    @apply text-2xl sm:text-3xl md:text-4xl;
-  }
-  .text-responsive-3xl {
-    @apply text-3xl sm:text-4xl md:text-5xl;
-  }
-  .text-responsive-4xl {
-    @apply text-4xl sm:text-5xl md:text-6xl;
+  details[open] > .faq-panel {
+    animation: faq-panel-in 300ms var(--ease-out) both;
   }
 
-  /* Fluid containers */
-  .fluid-container {
-    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
-  }
-
-  /* Advanced spacing utilities */
-  .space-responsive-xs {
-    @apply space-y-2 sm:space-y-3;
-  }
-  .space-responsive-sm {
-    @apply space-y-4 sm:space-y-6;
-  }
-  .space-responsive-md {
-    @apply space-y-6 sm:space-y-8 md:space-y-10;
-  }
-  .space-responsive-lg {
-    @apply space-y-8 sm:space-y-12 md:space-y-16;
-  }
-
-  /* Enhanced animations */
-  @keyframes gradient-shift {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  @keyframes float-elegant {
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes blob {
-    0% {
-      transform: translate(0px, 0px) scale(1);
-    }
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-    100% {
-      transform: translate(0px, 0px) scale(1);
-    }
-  }
-
-  @keyframes parallax-float {
-    0%,
-    100% {
-      transform: translateY(0px) rotate(0deg);
-    }
-    25% {
-      transform: translateY(-5px) rotate(1deg);
-    }
-    50% {
-      transform: translateY(-10px) rotate(0deg);
-    }
-    75% {
-      transform: translateY(-5px) rotate(-1deg);
-    }
-  }
-
-  @keyframes glow-pulse {
-    0%,
-    100% {
-      box-shadow:
-        0 0 20px hsl(var(--theme-shadow-color) / 0.2),
-        0 0 40px hsl(var(--theme-shadow-color) / 0.1);
-    }
-    50% {
-      box-shadow:
-        0 0 30px hsl(var(--theme-shadow-color) / 0.4),
-        0 0 60px hsl(var(--theme-shadow-color) / 0.2);
-    }
-  }
-
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  .animate-float-elegant {
-    animation: float-elegant 6s ease-in-out infinite;
-  }
-  .animate-parallax-float {
-    animation: parallax-float 8s ease-in-out infinite;
-  }
-  .animate-glow-pulse {
-    animation: glow-pulse 3s ease-in-out infinite;
-  }
-  .animate-shimmer {
-    animation: shimmer 2s ease-in-out infinite;
-  }
-
-  .animate-blob {
-    animation: blob 7s infinite;
-  }
-
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-
-  .animation-delay-4000 {
-    animation-delay: 4s;
-  }
-
-  .animation-delay-1000 {
-    animation-delay: 1s;
-  }
-
-  .bg-grid-pattern {
-    background-size: 50px 50px;
-    background-image:
-      linear-gradient(
-        to right,
-        hsl(var(--foreground) / 0.05) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        hsl(var(--foreground) / 0.05) 1px,
-        transparent 1px
-      );
-  }
-
-  /* Media query adjustments for better responsiveness */
   @media (max-width: 640px) {
-    html {
-      /* Prevent text size adjustment on iOS */
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
-    }
-
-    body {
-      /* Better touch scrolling on mobile */
-      -webkit-overflow-scrolling: touch;
-      /* Prevent pull-to-refresh */
-      overscroll-behavior-y: contain;
-    }
-
     h1 {
       @apply text-3xl;
     }
@@ -599,45 +324,17 @@
     h3 {
       @apply text-xl;
     }
-    .glass-card {
-      @apply p-4;
-    }
     .section-padding {
-      @apply py-12 px-4;
+      @apply py-12 px-6;
     }
-
-    /* Prevent horizontal scroll on mobile */
+    /* Prevent horizontal scroll on phones. */
     * {
       max-width: 100%;
     }
-
-    /* Better mobile viewport handling */
     main {
       overflow-x: hidden;
       width: 100%;
     }
-  }
-
-  /* Additional mobile optimizations */
-  @media (max-width: 768px) {
-    /* Ensure all containers respect viewport */
-    .container,
-    .fluid-container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    /* Better spacing on mobile */
-    section {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-
-  /* Focus & Selection Styles */
-  :focus-visible {
-    outline: 2px solid hsl(var(--primary) / 0.5);
-    outline-offset: 2px;
   }
 
   /* Selected text sits in the sage with the ink on top (6.2:1 at full
@@ -646,240 +343,30 @@
     background-color: hsl(var(--sage) / 0.55);
     color: hsl(var(--foreground));
   }
-
-  /* Hero gradient text: the backdrop violet to its lighter patches and back,
-     so the name has some air in it rather than being one flat block. */
-  .hero-name-gradient {
-    background-image: linear-gradient(
-      120deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--lilac)) 50%,
-      hsl(var(--primary)) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-size: 200% 200%;
-    animation: gradient-shift 7s ease infinite;
-    /* -webkit-background-clip:text trims the rendered gradient to the element's
-       text box; without a baseline-aware bottom buffer, descenders ("g", "j",
-       "y", "p", "q") render with their bottoms shaved off. line-height alone
-       isn't enough because the line-box height excludes descender area. */
-    padding-bottom: 0.08em;
-    line-height: 1.05;
-  }
-
-  /* Glass badge */
-  .glass-badge {
-    @apply inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-primary/[0.07] px-5 py-2.5 font-semibold text-primary text-sm backdrop-blur-md;
-    box-shadow:
-      0 0 20px hsl(var(--primary) / 0.12),
-      0 2px 8px hsl(var(--primary) / 0.08);
-  }
-
-  /* Strong glass card */
-  .glass-deep {
-    @apply backdrop-blur-xl border border-border/30 bg-background/60;
-    box-shadow:
-      0 4px 24px -4px rgba(0, 0, 0, 0.08),
-      0 1px 0 0 hsl(var(--primary) / 0);
-    transition:
-      box-shadow 0.3s var(--ease-out),
-      border-color 0.3s var(--ease-out),
-      transform 0.2s var(--ease-out);
-  }
-
-  .glass-deep:hover {
-    box-shadow:
-      0 8px 40px -4px hsl(var(--primary) / 0.12),
-      0 20px 60px -10px hsl(var(--primary) / 0.06),
-      0 0 0 1px hsl(var(--primary) / 0.12);
-  }
-
-  /* Shimmer sweep for cards */
-  @keyframes shimmer-sweep {
-    0% {
-      transform: translateX(-100%) skewX(-15deg);
-    }
-    100% {
-      transform: translateX(250%) skewX(-15deg);
-    }
-  }
-
-  .shimmer-on-hover {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .shimmer-on-hover::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 100%;
-    background: linear-gradient(
-      110deg,
-      transparent,
-      hsl(var(--primary) / 0.06),
-      transparent
-    );
-    transform: translateX(-100%) skewX(-15deg);
-    transition: none;
-  }
-
-  .shimmer-on-hover:hover::after {
-    animation: shimmer-sweep 0.6s ease forwards;
-  }
-
-  /* Button polish. Three utilities the cva in components/ui/button.tsx opts
-     into per variant, so the palette stays in the variant strings and only the
-     motion lives here. Every one of them animates transform, translate or a
-     colour, never layout, and every duration rides `--ease-out`. */
-
-  /* The sweep is the card shimmer above, scaled to a control: narrower, faster
-     and neutral white rather than primary-tinted, so it reads as light passing
-     over the fill instead of a second glow colour. */
-  @keyframes button-shine-sweep {
-    0% {
-      transform: translateX(-150%) skewX(-20deg);
-    }
-    100% {
-      transform: translateX(150%) skewX(-20deg);
-    }
-  }
-
-  .btn-shine {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-shine::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 55%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.35) 50%,
-      transparent 100%
-    );
-    /* Parked a full width past the left edge, so nothing shows at rest and the
-       animation can restart from the same place on every hover. */
-    transform: translateX(-150%) skewX(-20deg);
-    pointer-events: none;
-  }
-
-  .btn-shine:hover::after {
-    animation: button-shine-sweep 0.6s var(--ease-out) forwards;
-  }
-
-  /* The lift uses the independent `translate` property, not `transform`: the
-     base variant already spends `transform` on `active:scale-[0.98]`, and
-     `translate` composes with it instead of replacing it, so a pressed button
-     scales without dropping back down first. Timed by the button's own
-     transition (200ms), which lists `translate`. */
-  .btn-raise:hover {
-    translate: 0 -1px;
-  }
-
-  /* A trailing icon leans into the direction it points on hover. Scoped to the
-     last child, so a leading icon (the back arrow on the 404, say) stays put,
-     and carried by the text sizes rather than the base, which is what keeps a
-     size="icon" button's lone centred glyph out of it. Call sites that already
-     hand-roll this on the icon itself (Hero, Services, About) win on
-     specificity and keep their own distance. */
-  .btn-icon-nudge > svg:last-child {
-    transition: transform 0.2s var(--ease-out);
-  }
-
-  .btn-icon-nudge:hover > svg:last-child {
-    transform: translateX(2px);
-  }
-
-  /* Scroll mouse indicator */
-  @keyframes scroll-cue {
-    0%,
-    100% {
-      transform: translateY(0);
-      opacity: 0.6;
-    }
-    50% {
-      transform: translateY(4px);
-      opacity: 1;
-    }
-  }
-
-  .animate-scroll-cue {
-    animation: scroll-cue 1.6s ease-in-out infinite;
-  }
 }
 
 @layer utilities {
-  .glass-morph {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
-  }
-
-  .section-heading {
-    @apply text-3xl md:text-4xl font-bold mb-8 text-center leading-tight;
-  }
-
   .text-balance {
     text-wrap: balance;
   }
 
-  .highlight-text {
-    @apply text-primary font-semibold;
+  /* Safe-area helper, used by the footer. */
+  .pb-safe {
+    padding-bottom: max(var(--safe-bottom), 1rem);
   }
 
-  .gradient-bg {
-    @apply bg-gradient-to-r from-primary/10 to-primary/5;
-  }
-
-  .gradient-border {
-    background:
-      linear-gradient(var(--background), var(--background)) padding-box,
-      linear-gradient(to right, hsl(var(--primary)), hsl(var(--primary) / 30%))
-      border-box;
-    border: 2px solid transparent;
-  }
-
-  .link-hover {
-    @apply relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100 hover:after:origin-bottom-left;
-  }
-
-  .gradient-text {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-image: linear-gradient(
-      to right,
-      hsl(var(--primary)),
-      hsl(var(--lilac))
-    );
-    padding-bottom: 0.08em;
-    line-height: 1.05;
-  }
-
-  .gradient-text-primary {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    background-image: linear-gradient(
-      to right,
-      hsl(var(--primary)),
-      hsl(var(--lilac))
-    );
-    padding-bottom: 0.08em;
-    line-height: 1.05;
+  /* True viewport height for <main>. svh, not dvh: dvh tracks the collapsing
+     mobile URL bar, which resized <main> mid-scroll on the routes whose
+     content is shorter than the viewport and walked the footer up the page. */
+  .min-h-screen-mobile {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    min-height: 100svh;
   }
 }
 
-/* Custom cursor: hide the native cursor on mouse devices */
-
+/* Custom cursor: hide the native cursor on mouse devices. CustomCursor
+   portals its own element into <body>. */
 @media (pointer: fine) {
   *,
   *::before,
@@ -887,7 +374,7 @@
     cursor: none !important;
   }
 
-  /* Preserve the native I-beam on text-entry fields (the custom dot hides over
+  /* Keep the native I-beam on text-entry fields (the custom dot hides over
      them, see CustomCursor) so the typing affordance is never lost. */
   input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
       [type="checkbox"]
@@ -898,222 +385,9 @@
   }
 }
 
-/* Opt out of the custom cursor for reduced-motion users: restore the native
-   cursor everywhere (CustomCursor renders nothing for them). */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    cursor: auto !important;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.05);
-  }
-}
-
-/* Theme transition: a circular reveal animated from JS.
-   theme-provider.tsx animates a clip-path keyframe on the
-   new view-transition snapshot via the Web Animations API,
-   so the default cross-fade is suppressed here. */
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
-::view-transition-new(root) {
-  z-index: 1;
-}
-
-/* Mobile quality-of-life layer.
-   Loaded last so it overrides earlier rules. Keeps touch
-   UX feeling like a native app: safe areas, tap targets,
-   no input zoom, snappier feedback, reduced-motion respect. */
-
-:root {
-  /* JS-managed visual-viewport unit (see useViewportHeight) */
-  --vh: 1vh;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-}
-
-html {
-  /* iOS Safari: never let the browser silently bump font size on rotate */
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-
-body {
-  /* Smoother momentum scrolling on iOS */
-  -webkit-overflow-scrolling: touch;
-  /* Block the rubber-band pull-to-refresh that randomly nukes app state */
-  overscroll-behavior-y: contain;
-  /* Stop iOS double-tap-to-zoom on tappable UI */
-  touch-action: manipulation;
-  /* Kill the grey flash that mobile browsers paint on every tap */
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Tap targets: kill flash + snap haptic-feeling scale on press */
-@media (hover: none) and (pointer: coarse) {
-  a,
-  button,
-  [role="button"],
-  [data-tap] {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-
-  a:active,
-  button:active:not(:disabled),
-  [role="button"]:active,
-  [data-tap]:active {
-    transform: scale(0.97);
-    transition: transform 0.08s ease-out;
-  }
-
-  /* Minimum WCAG-aligned touch target (44x44 CSS px) for icon-only buttons */
-  button[aria-label]:not([aria-label=""]),
-  a[aria-label]:not([aria-label=""]) {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-/* Prevent iOS Safari from zooming when focusing form fields.
-   16px is the magic threshold below which auto-zoom fires. */
-@supports (-webkit-touch-callout: none) {
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-}
-
-/* Reduced-motion: cut all decoration animations, keep functional ones (page transitions) usable */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .animate-blob,
-  .animate-float-elegant,
-  .animate-parallax-float,
-  .animate-glow-pulse,
-  .animate-shimmer,
-  .animate-scroll-cue,
-  .hero-name-gradient {
-    animation: none !important;
-  }
-
-  /* The button sweep is pure decoration: cancelled outright rather than run at
-     the 0.01ms above, which would flash it across the button in a single
-     frame. With no animation it stays parked off the left edge, clipped by the
-     button's own `overflow: hidden`, so nothing of it is ever visible. */
-  .btn-shine::after {
-    animation: none !important;
-  }
-}
-
-/* Safe-area helpers: opt-in via `pt-safe`, `pb-safe`, `px-safe` */
-.pt-safe {
-  padding-top: max(var(--safe-top), 1rem);
-}
-.pb-safe {
-  padding-bottom: max(var(--safe-bottom), 1rem);
-}
-.pl-safe {
-  padding-left: max(var(--safe-left), 0rem);
-}
-.pr-safe {
-  padding-right: max(var(--safe-right), 0rem);
-}
-.px-safe {
-  padding-left: max(var(--safe-left), 0rem);
-  padding-right: max(var(--safe-right), 0rem);
-}
-.mt-safe {
-  margin-top: var(--safe-top);
-}
-.mb-safe {
-  margin-bottom: var(--safe-bottom);
-}
-.inset-safe {
-  inset: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
-}
-.top-safe {
-  top: var(--safe-top);
-}
-.bottom-safe {
-  bottom: var(--safe-bottom);
-}
-
-/* True viewport height (handles iOS toolbar collapse) */
-.min-h-screen-mobile {
-  min-height: 100vh;
-  min-height: calc(var(--vh, 1vh) * 100);
-  /* svh, not dvh: dvh tracks the collapsing mobile URL bar, which resized
-     <main> mid-scroll on the four routes whose content is shorter than the
-     viewport (/, /contact, /donate, 404) and walked the footer up the page. */
-  min-height: 100svh;
-}
-.h-screen-mobile {
-  height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
-  height: 100dvh;
-}
-
-/* Custom cursor is hidden on touch: auto-restore native cursor for accessibility */
-@media (hover: none), (pointer: coarse) {
+/* Touch devices and reduced motion: the custom cursor does not render, so the
+   native cursor comes back everywhere. */
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
@@ -1132,20 +406,73 @@ body {
   }
 }
 
-/* Restore visible focus for keyboard users on touch (touchscreen + keyboard hybrids) */
+/* Tap targets on touch: no flash, a small press, and a 44px minimum for
+   icon-only controls. */
+@media (hover: none) and (pointer: coarse) {
+  a,
+  button,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  a:active,
+  button:active:not(:disabled),
+  [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 0.08s ease-out;
+  }
+
+  button[aria-label]:not([aria-label=""]),
+  a[aria-label]:not([aria-label=""]) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Prevent iOS Safari from zooming when focusing form fields: 16px is the
+   threshold below which auto-zoom fires. */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Reduced motion: cut decoration to a single frame, keep functional
+   transitions usable. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  details[open] > .faq-panel {
+    animation: none;
+  }
+}
+
+/* Visible focus for keyboard users, on every pointer type. No `border-radius`
+   here: this rule is unlayered, so it used to tie with `.rounded-full` on
+   specificity and win on source order, squaring off every pill on the site the
+   moment it took focus. Browsers already follow the element's own radius. */
 :focus-visible {
   outline: 2px solid hsl(var(--primary) / 0.65);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
-/* Mobile drawer / sheet: block overscroll chaining into the body */
+/* Mobile drawer: block overscroll chaining into the body. */
 [data-mobile-scroll] {
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Better long-press handling: disable iOS callout for navigation elements */
+/* No long-press callout or accidental selection on navigation chrome. */
 header,
 nav,
 [data-no-callout] {
@@ -1154,7 +481,7 @@ nav,
   user-select: none;
 }
 
-/* But keep content selectable */
+/* But content stays selectable. */
 main,
 article,
 section p,
@@ -1165,43 +492,4 @@ section h4 {
   -webkit-user-select: text;
   user-select: text;
   -webkit-touch-callout: default;
-}
-
-/* Active-press fade for cards on touch */
-@media (hover: none) and (pointer: coarse) {
-  .glass-card:active,
-  .glass-deep:active {
-    transform: scale(0.985);
-    transition: transform 0.1s ease-out;
-  }
-}
-
-
-/* /services FAQ answer panel. The native <details> box snaps to its open
-   height, because a height animation repaints every frame and is banned
-   site-wide, so the answer rises and fades into the space the box just made
-   instead: transform and opacity only, on the shared `--ease-out` curve at the
-   standard 300ms. Scoped to `details[open]` rather than relying on fill-mode
-   alone, so closing removes the animation and re-opening always restarts it
-   whichever way the UA hides a closed <details> (display:none in older Chrome,
-   content-visibility in newer). */
-@keyframes faq-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-details[open] > .faq-panel {
-  animation: faq-panel-in 300ms var(--ease-out) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  details[open] > .faq-panel {
-    animation: none;
-  }
 }

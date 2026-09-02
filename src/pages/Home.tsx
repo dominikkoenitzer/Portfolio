@@ -1,43 +1,33 @@
-import { lazy, Suspense } from "react";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SEO } from "@/components/seo";
 import { useLanguage } from "@/lib/language-context";
 import {
-  createPersonSchema,  getDefaultCitations,
+  createPersonSchema,
+  getDefaultCitations,
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
-/*
- * Home is the one page that is not lazy-loaded, so anything it imports lands in
- * the entry chunk. The selected-work section reads `constants/projects`, which
- * would drag every project's content in all four languages onto the critical
- * path (+281 kB, the regression CLAUDE.md documents), so it is split out and
- * fetched after first paint instead. It sits below the fold; there is nothing
- * to see during the swap, hence the null fallback.
+/**
+ * The home page is the hero and nothing else. It is also the one page that is
+ * not lazy-loaded, so keep anything heavy (project data, effects) out of here.
  */
-const HomeWorkSection = lazy(
-  () => import("@/components/sections/HomeWorkSection"),
-);
-
 const Home = () => {
   const { language } = useLanguage();
   const seo = translations[language].seo.home;
 
   return (
     <>
-      <SEO        citationLinks={getDefaultCitations()}
+      <SEO
+        citationLinks={getDefaultCitations()}
         description={seo.description}
         geoLocation={getDefaultGeoLocation()}
         keywords={seo.keywords}
-        speakableSelectors={["h1", "h2", "[data-speakable]"]}
+        speakableSelectors={["h1"]}
         structuredData={[createPersonSchema()]}
         title={seo.title}
       />
       <HeroSection />
-      <Suspense fallback={null}>
-        <HomeWorkSection />
-      </Suspense>
     </>
   );
 };

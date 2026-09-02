@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router-dom";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, stagger, VIEWPORT } from "@/lib/motion";
+import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
@@ -21,24 +21,19 @@ const tiers: { amount: string; tierKey: TierKey }[] = [
 
 const PAYPAL = "https://www.paypal.com/paypalme/dominikkoenitzer";
 
-/**
- * Every amount is the same control, so the four share one behaviour string and
- * differ only in what they say. The lift and the press ride the independent
- * `translate` and `scale` properties rather than transform utilities: these are
- * framer elements, and framer writes a finished entrance back as an inline
- * `transform: none` that would out-rank a class rule for good (the reason
- * `.btn-raise` in index.css works the same way). Both compose with that inline
- * value instead of losing to it, and with each other on press.
- */
+/** Every amount is the same control, so the four share one class string. */
 const TILE =
-  "group/tile relative flex flex-col gap-2 overflow-hidden rounded-xl border p-4 shadow-sm transition-[translate,scale,border-color,background-color,box-shadow] duration-200 ease-out hover:[translate:0_-2px] hover:shadow-md active:[scale:0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5";
+  "group/tile flex flex-col gap-2 rounded-2xl border bg-card p-4 transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5";
 
 /** Fixed glyph row: the amounts and the infinity mark share one height, so all
     four captions sit on the same line however tall the mark is. */
 const TILE_GLYPH = "flex h-10 items-center sm:h-11";
 
+/** The arrow is a flex sibling of the micro-label, not an absolute overlay: it
+    used to sit on top of it, 6px into the word at 1440px and 10px at 390px. */
+const TILE_TOP = "flex items-center justify-between gap-2";
 const TILE_ARROW =
-  "absolute right-3 top-3 h-3.5 w-3.5 transition-[transform,color] duration-200 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:translate-x-0.5 group-hover/tile:text-primary";
+  "h-3.5 w-3.5 flex-none transition-[transform,color] duration-200 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:translate-x-0.5 group-hover/tile:text-primary";
 
 export function DonateSection() {
   const { language } = useLanguage();
@@ -88,7 +83,7 @@ export function DonateSection() {
           variants={stagger(0.15, 0.06)}
         >
           <motion.p
-            className="mb-5 font-mono font-medium text-[11px] text-muted-foreground uppercase tracking-[0.2em]"
+            className="mb-5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.2em]"
             variants={REVEAL}
           >
             {t.pickAmount}
@@ -100,18 +95,21 @@ export function DonateSection() {
               return (
                 <motion.a
                   aria-label={`${t.currency} ${tier.amount}: ${data.label}`}
-                  className={cn(
-                    TILE,
-                    "border-border/30 bg-background/40 hover:border-primary/40 hover:bg-primary/[0.04]",
-                  )}
+                  className={cn(TILE, "border-border/60 hover:border-primary/30")}
                   href={`${PAYPAL}/${tier.amount}`}
                   key={tier.amount}
                   rel="noopener noreferrer"
                   target="_blank"
                   variants={REVEAL}
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    {t.currency}
+                  <span className={TILE_TOP}>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                      {t.currency}
+                    </span>
+                    <ArrowUpRight
+                      aria-hidden
+                      className={cn(TILE_ARROW, "text-muted-foreground/60")}
+                    />
                   </span>
                   <span
                     className={cn(
@@ -124,27 +122,28 @@ export function DonateSection() {
                   <span className="mt-auto text-muted-foreground text-xs leading-snug">
                     {data.label}
                   </span>
-                  <ArrowUpRight
-                    aria-hidden
-                    className={cn(TILE_ARROW, "text-muted-foreground/60")}
-                  />
                 </motion.a>
               );
             })}
 
+            {/* The open amount is the odd one out, and says so with its border
+                and its violet label rather than with a fill. */}
             <motion.a
               aria-label={`${t.anyAmount.title}: ${t.anyAmount.label}`}
-              className={cn(
-                TILE,
-                "border-primary/30 bg-primary/[0.04] hover:border-primary/55 hover:bg-primary/[0.08]",
-              )}
+              className={cn(TILE, "border-border/60 hover:border-primary/30")}
               href={PAYPAL}
               rel="noopener noreferrer"
               target="_blank"
               variants={REVEAL}
             >
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary/85">
-                {t.anyAmount.title}
+              <span className={TILE_TOP}>
+                <span className="text-[10px] text-primary/85 uppercase tracking-[0.18em]">
+                  {t.anyAmount.title}
+                </span>
+                <ArrowUpRight
+                  aria-hidden
+                  className={cn(TILE_ARROW, "text-primary/60")}
+                />
               </span>
               <span className={TILE_GLYPH}>
                 <InfinityIcon
@@ -156,19 +155,13 @@ export function DonateSection() {
               <span className="mt-auto text-foreground/80 text-xs leading-snug">
                 {t.anyAmount.label}
               </span>
-              <ArrowUpRight aria-hidden className={cn(TILE_ARROW, "text-primary/60")} />
             </motion.a>
           </div>
 
-          {/* Divider. No `animate` prop alongside `whileInView`: it ran the wipe
-              on mount, so the rule was already drawn once it scrolled into view. */}
+          {/* Divider: a rule, drawn where it sits. */}
           <motion.div
-            className="my-10 h-px w-full bg-border/20"
-            initial={{ scaleX: 0 }}
-            style={{ transformOrigin: "left" }}
-            transition={{ duration: DUR.slow, delay: 0.4, ease: EASE_OUT }}
-            viewport={VIEWPORT}
-            whileInView={{ scaleX: 1 }}
+            className="my-10 h-px w-full bg-border/60"
+            variants={REVEAL}
           />
 
           {/* Tiny security note. It stays with the amounts, directly under the

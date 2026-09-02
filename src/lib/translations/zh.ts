@@ -1,7 +1,8 @@
 export const zh = {
   nav: {
+    home: "首页",
     about: "关于",
-    timeline: "履历",
+    experience: "履历",
     skills: "技能",
     projects: "项目",
     services: "服务",
@@ -9,35 +10,23 @@ export const zh = {
     donate: "打赏",
     menu: "菜单",
     navigation: "导航",
-    currentPage: "当前页面",
     privacyPolicy: "隐私政策",
     openMenu: "打开菜单",
     closeMenu: "关闭菜单",
     skipToContent: "跳到主要内容",
-    goHome: "前往首页",
     backToTop: "回到顶部",
     loading: "加载中",
   },
   toggles: {
-    themes: "主题",
-    background: "背景",
     language: "切换语言",
     useSystem: "使用系统语言",
   },
-  home: {
-    workEyebrow: "精选作品",
-    workHeading: "我做过的一些东西",
-    workBody:
-      "一些我希望它们存在、于是自己动手做的小工具，附带源代码。",
-    workCta: "查看全部项目",
-  },
   hero: {
     greeting: "你好，我是",
-    roles: ["Dominik", "Punds", "DK"] as string[],
-    available: "可接受新项目",
+    title: "软件工程师与网页开发者",
+    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "苏黎世的软件工程师。我做快速、无障碍的网站，以及背后的工具。",
-    scrollCue: "向下滚动",
     hireMe: "雇用我",
     viewWork: "查看作品",
   },
@@ -63,6 +52,9 @@ export const zh = {
       "的网站与应用，让人真的愿意用。写代码只是其中一半，另一半是把问题想透，然后能把自己的做法讲清楚。",
     exploreSkills: "查看我的技能",
     readJournal: "阅读我的日志",
+    viewCv: "查看简历",
+    cvOpenNewTab: "在新标签页打开",
+    cvClose: "关闭简历预览",
     cards: {
       educationTitle: "教育",
       educationSubtitle: "WISS 的四年项目",
@@ -131,7 +123,6 @@ export const zh = {
     projects: "项目",
     back: "返回",
     overview: "概览",
-    notes: "备注",
     links: "链接",
     visitSite: "访问站点",
     download: "下载",
@@ -164,18 +155,20 @@ export const zh = {
   services: {
     eyebrow: "我提供",
     heading: "服务",
-    intro:
-      "面向小团队和小企业的自由职业服务，分成三块：把东西做出来、让它稳定运行、让别人找得到它。下面的价格都是起步价，告诉我你的需求，我给你一个真实的报价。",
     treeHint: "点击一片叶子，查看对应的服务。",
     filterLabel: "按类别筛选服务",
-    inquireAbout: "就「{service}」与我联系",
-    includesLabel: "包含",
     filters: {
       all: "全部服务",
       build: "构建",
       protect: "保护",
       grow: "增长",
     },
+    close: "关闭",
+    loading: "正在生长…",
+    intro:
+      "面向小团队和小企业的自由职业服务，分成三块：把东西做出来、让它稳定运行、让别人找得到它。下面的价格都是起步价，告诉我你的需求，我给你一个真实的报价。",
+    inquireAbout: "就「{service}」与我联系",
+    includesLabel: "包含",
     categoryMeta: {
       build: { label: "构建", desc: "设计与开发" },
       protect: { label: "保护", desc: "安全与可靠性" },
@@ -185,8 +178,6 @@ export const zh = {
     ctaEyebrow: "脑海里有项目想法？",
     ctaButton: "立即联系",
     getInTouch: "立即联系",
-    close: "关闭",
-    loading: "正在生长…",
     fromPrice: "{price} 起",
     processTitle: "合作流程",
     faqTitle: "常见问题",
@@ -383,7 +374,7 @@ export const zh = {
       keywords:
         "关于 Dominik Könitzer, 软件工程师简介, WISS 学生, 瑞士软件工程学生, 网页开发者背景, 软件工程教育",
     },
-    timeline: {
+    experience: {
       title: "履历与教育",
       description:
         "Dominik Könitzer 的履历：在卢塞恩 MPAI 的软件工程实习，以及在苏黎世 WISS 的四年制学业。",

@@ -15,9 +15,6 @@ import { zephyr } from "./zephyr";
 
 export type { PortfolioProject } from "./types";
 
-const TONE_RADIAL =
-  "bg-[radial-gradient(circle_at_50%_50%,_hsl(var(--primary)/0.18),_transparent_70%)]";
-
 // Array order is display order (getProjects maps over this list as-is) and is
 // kept sorted by repository creation date, oldest first. To add a project:
 // insert it at the position matching its GitHub creation date, set `date` to
@@ -32,7 +29,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Zephyr",
     liveUrl: "https://zephyr.punds.ch/",
     priority: 1,
-    toneClass: TONE_RADIAL,
     image: "/projects/zephyr.jpg",
     gallery: [
       "/projects/zephyr-2.jpg",
@@ -47,7 +43,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Portfolio",
     liveUrl: `${SITE_CONFIG.url}/`,
     priority: 2,
-    toneClass: TONE_RADIAL,
     image: "/projects/portfolio.jpg",
     gallery: [
       "/projects/portfolio-2.jpg",
@@ -61,7 +56,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Entropy",
     liveUrl: "https://entropy.punds.ch/",
     priority: 3,
-    toneClass: TONE_RADIAL,
     image: "/projects/entropy.jpg",
     gallery: [
       "/projects/entropy-2.jpg",
@@ -74,7 +68,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Spectrum",
     liveUrl: "https://spectrum.punds.ch/",
     priority: 4,
-    toneClass: TONE_RADIAL,
     image: "/projects/spectrum.jpg",
     gallery: [
       "/projects/spectrum-2.jpg",
@@ -91,7 +84,6 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup.exe",
     priority: 5,
-    toneClass: TONE_RADIAL,
     image: "/projects/remnants.png",
     imageIcon: true,
     programmingLanguages: ["TypeScript"],
@@ -105,7 +97,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Time",
     liveUrl: "https://time.punds.ch/",
     priority: 6,
-    toneClass: TONE_RADIAL,
     image: "/projects/time.jpg",
     gallery: [
       "/projects/time-2.jpg",
@@ -121,7 +112,6 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Jester/releases/latest/download/Jester.exe",
     priority: 7,
-    toneClass: TONE_RADIAL,
     image: "/projects/jester.png",
     programmingLanguages: ["C#"],
     operatingSystem: "Windows",
@@ -136,7 +126,6 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe",
     priority: 8,
-    toneClass: TONE_RADIAL,
     image: "/projects/flow.png",
     imageIcon: true,
     programmingLanguages: ["C++"],
@@ -150,7 +139,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Punds",
     liveUrl: "https://punds.ch/",
     priority: 9,
-    toneClass: TONE_RADIAL,
     image: "/projects/punds.jpg",
   },
   {
@@ -160,7 +148,6 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Senbon",
     liveUrl: "https://senbon.ch/",
     priority: 10,
-    toneClass: TONE_RADIAL,
     image: "/projects/senbon.jpg",
     gallery: [
       "/projects/senbon-2.jpg",
@@ -175,7 +162,6 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl:
       "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
     priority: 11,
-    toneClass: TONE_RADIAL,
     image: "/projects/oxidize.png",
     programmingLanguages: ["Rust"],
     operatingSystem: "Windows",

@@ -76,7 +76,7 @@ const MPAI_TAGS = [
 const TIMELINE: Record<Language, TimelineContent> = {
   en: {
     eyebrow: "Career & education",
-    heading: "Timeline",
+    heading: "Experience",
     subheading:
       "School in three countries, then an internship in Lucerne. Newest first.",
     experienceTitle: "Work Experience",

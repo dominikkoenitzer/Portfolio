@@ -1,7 +1,8 @@
 export const de = {
   nav: {
+    home: "Start",
     about: "Über mich",
-    timeline: "Werdegang",
+    experience: "Werdegang",
     skills: "Skills",
     projects: "Projekte",
     services: "Leistungen",
@@ -9,35 +10,23 @@ export const de = {
     donate: "Trinkgeld",
     menu: "Menü",
     navigation: "Navigation",
-    currentPage: "Aktuelle Seite",
     privacyPolicy: "Datenschutz",
     openMenu: "Menü öffnen",
     closeMenu: "Menü schliessen",
     skipToContent: "Zum Inhalt springen",
-    goHome: "Zur Startseite",
     backToTop: "Nach oben",
     loading: "Wird geladen",
   },
   toggles: {
-    themes: "Themes",
-    background: "Hintergrund",
     language: "Sprache wechseln",
     useSystem: "Systemsprache verwenden",
   },
-  home: {
-    workEyebrow: "Ausgewählte Arbeiten",
-    workHeading: "Ein paar Dinge, die ich gebaut habe",
-    workBody:
-      "Kleine Tools, die ich gebaut habe, weil ich sie haben wollte. Quellcode inklusive.",
-    workCta: "Alle Projekte ansehen",
-  },
   hero: {
     greeting: "Hi, ich bin",
-    roles: ["Dominik", "Punds", "DK"] as string[],
-    available: "Offen für Projekte",
+    title: "Software Engineer & Webentwickler",
+    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "Softwareentwickler in Zürich. Ich baue schnelle, barrierefreie Websites und die Tools dahinter.",
-    scrollCue: "Scrollen",
     hireMe: "Anstellen",
     viewWork: "Arbeiten ansehen",
   },
@@ -63,6 +52,9 @@ export const de = {
       " Code für Websites und Anwendungen, die Leute wirklich benutzen wollen. Der Code ist dabei nur die Hälfte. Die andere Hälfte ist, das Problem so gut zu verstehen, dass ich meine Lösung erklären kann.",
     exploreSkills: "Meine Skills ansehen",
     readJournal: "Mein Journal lesen",
+    viewCv: "Lebenslauf ansehen",
+    cvOpenNewTab: "In neuem Tab öffnen",
+    cvClose: "Lebenslauf-Vorschau schliessen",
     cards: {
       educationTitle: "Ausbildung",
       educationSubtitle: "4-jähriges Programm an der WISS",
@@ -134,7 +126,6 @@ export const de = {
     projects: "Projekte",
     back: "Zurück",
     overview: "Übersicht",
-    notes: "Notizen",
     links: "Links",
     visitSite: "Website besuchen",
     download: "Download",
@@ -167,18 +158,20 @@ export const de = {
   services: {
     eyebrow: "Was ich anbiete",
     heading: "Leistungen",
-    intro:
-      "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise unten sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
     treeHint: "Klick auf ein Blatt, um eine Leistung zu öffnen.",
     filterLabel: "Leistungen nach Kategorie filtern",
-    inquireAbout: "Kontakt aufnehmen wegen {service}",
-    includesLabel: "Enthalten",
     filters: {
       all: "Alle Leistungen",
       build: "Bauen",
       protect: "Schützen",
       grow: "Wachsen",
     },
+    close: "Schließen",
+    loading: "Der Baum wächst…",
+    intro:
+      "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise unten sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
+    inquireAbout: "Kontakt aufnehmen wegen {service}",
+    includesLabel: "Enthalten",
     categoryMeta: {
       build: { label: "Bauen", desc: "Design & Entwicklung" },
       protect: { label: "Schützen", desc: "Sicherheit & Zuverlässigkeit" },
@@ -188,8 +181,6 @@ export const de = {
     ctaEyebrow: "Ein Projekt im Kopf?",
     ctaButton: "Jetzt Kontakt aufnehmen",
     getInTouch: "Kontakt aufnehmen",
-    close: "Schließen",
-    loading: "Der Baum wächst…",
     fromPrice: "ab {price}",
     processTitle: "So läuft's ab",
     faqTitle: "Fragen",
@@ -445,7 +436,7 @@ export const de = {
       keywords:
         "Über Dominik Könitzer, Software-Engineer-Biografie, WISS-Schüler, Software-Engineering-Student Schweiz, Webentwickler-Hintergrund, Software-Engineer-Ausbildung",
     },
-    timeline: {
+    experience: {
       title: "Werdegang & Ausbildung",
       description:
         "Der Werdegang von Dominik Könitzer: Software-Engineering-Praktikum bei MPAI in Luzern und die vierjährige Ausbildung an der WISS in Zürich.",

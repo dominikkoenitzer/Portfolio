@@ -18,6 +18,14 @@ describe("isActivePath", () => {
     expect(isActivePath("/", "/projects")).toBe(false);
   });
 
+  it("lights Home on the root path only", () => {
+    // Home is a nav link, and every path starts with "/", so this is the
+    // case that would light it everywhere if the prefix check were naive.
+    expect(isActivePath("/", "/")).toBe(true);
+    expect(isActivePath("/about", "/")).toBe(false);
+    expect(isActivePath("/projects/zephyr", "/")).toBe(false);
+  });
+
   it("does not match a sibling that merely shares a prefix", () => {
     // The separator check is what keeps /projects-archive from lighting
     // /projects.

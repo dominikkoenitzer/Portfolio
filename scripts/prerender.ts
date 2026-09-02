@@ -57,7 +57,7 @@ interface Page {
 const STATIC: Array<[route: string, key: keyof typeof seo, image: string]> = [
   ["/", "home", "/og-image.png"],
   ["/about", "about", "/og/about.png"],
-  ["/timeline", "timeline", "/og/timeline.png"],
+  ["/experience", "experience", "/og/experience.png"],
   ["/skills", "skills", "/og/skills.png"],
   ["/projects", "projects", "/og/projects.png"],
   ["/services", "services", "/og/services.png"],

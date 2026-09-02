@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -6,7 +6,6 @@ import {
   Download,
   ExternalLink,
   Github,
-  Sparkles,
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
@@ -22,6 +21,7 @@ import {
 } from "@/config/seo-data/projects";
 import { SITE_CONFIG } from "@/constants";
 import { getProject, getProjects } from "@/constants/projects";
+import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import {
   createSoftwareApplicationSchema,
@@ -30,31 +30,17 @@ import {
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
-import LogoLoop from "@/components/effects/LogoLoop";
 import {
   Lightbox,
-  Magnetic,
-  SpotlightCard,
+  ProjectFigure,
   StatStrip,
-  TiltFigure,
 } from "@/components/effects/project-effects";
-import { getProjectLogos } from "@/components/effects/tech-stack";
+
+/** One card surface for the whole page: opaque cream, hairline, no shadow. */
+const CARD = "rounded-2xl border border-border/60 bg-card";
 
 /* ------------------------------------------------------------------ */
-/* Canonical motion                                                    */
-/* ------------------------------------------------------------------ */
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-const reveal = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: EASE },
-  viewport: { once: true, margin: "-80px" },
-} as const;
-
-/* ------------------------------------------------------------------ */
-/* Editorial section: big numbered marker + hairline + reading body   */
+/* Numbered section: a flat marker, a hairline and a reading body      */
 /* ------------------------------------------------------------------ */
 
 function FeatureSection({
@@ -66,15 +52,16 @@ function FeatureSection({
   title: ReactNode;
   children: ReactNode;
 }) {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.section
-      className="scroll-mt-28 border-border/30 border-t pt-12 first:border-t-0 first:pt-0"
-      {...reveal}
+      className="scroll-mt-28 border-border/60 border-t pt-12 first:border-t-0 first:pt-0"
+      {...revealOnScroll(reduceMotion)}
     >
       <div className="flex items-baseline gap-4">
         <span
           aria-hidden
-          className="select-none font-mono text-2xl text-primary/30 tabular-nums leading-none"
+          className="select-none text-muted-foreground text-sm tabular-nums"
         >
           {String(index).padStart(2, "0")}
         </span>
@@ -102,9 +89,7 @@ function MicroLabel({
         ? "text-destructive"
         : "text-muted-foreground";
   return (
-    <p
-      className={`font-mono text-[10px] uppercase tracking-[0.22em] ${color}`}
-    >
+    <p className={`text-[10px] uppercase tracking-[0.22em] ${color}`}>
       {children}
     </p>
   );
@@ -112,22 +97,9 @@ function MicroLabel({
 
 function BulletList({ items }: { items: string[] }) {
   return (
-    <ul className="space-y-4">
-      {items.map((item, i) => (
-        <motion.li
-          className="flex gap-4 text-foreground/90 leading-relaxed"
-          key={item}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: EASE, delay: i * 0.05 }}
-          viewport={{ once: true, margin: "-60px" }}
-        >
-          <span
-            aria-hidden
-            className="mt-[0.55rem] h-1.5 w-6 shrink-0 rounded-full bg-primary/60"
-          />
-          <span>{item}</span>
-        </motion.li>
+    <ul className="list-disc space-y-3 pl-5 text-foreground/90 leading-relaxed marker:text-primary/50">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
       ))}
     </ul>
   );
@@ -135,24 +107,15 @@ function BulletList({ items }: { items: string[] }) {
 
 function CheckList({ items }: { items: string[] }) {
   return (
-    <ul className="space-y-4">
-      {items.map((item, i) => (
-        <motion.li
-          className="flex gap-4 text-foreground/90 leading-relaxed"
+    <ul className="space-y-3">
+      {items.map((item) => (
+        <li
+          className="flex gap-3 text-foreground/90 leading-relaxed"
           key={item}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, ease: EASE, delay: i * 0.05 }}
-          viewport={{ once: true, margin: "-60px" }}
         >
-          <span
-            aria-hidden
-            className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/12 ring-1 ring-primary/25"
-          >
-            <Check className="h-3 w-3 text-primary" />
-          </span>
+          <Check aria-hidden className="mt-1 h-4 w-4 shrink-0 text-primary" />
           <span>{item}</span>
-        </motion.li>
+        </li>
       ))}
     </ul>
   );
@@ -165,17 +128,11 @@ function CheckList({ items }: { items: string[] }) {
 const ProjectDetails = () => {
   const { projectSlug } = useParams();
   const { language } = useLanguage();
+  const reduceMotion = useReducedMotion();
   const t = translations[language].projectDetails;
   const seoSuffix = translations[language].seo.projectDetailsKeywordsSuffix;
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
 
-  // useScroll/useSpring must run unconditionally (hooks order); cheap when unused.
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 28,
-    restDelta: 0.001,
-  });
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (!project) {
@@ -188,13 +145,18 @@ const ProjectDetails = () => {
   const otherProjects = getProjects(language).filter(
     (item) => item.slug !== project.slug,
   );
-  const liveHost = (() => {
-    try {
-      return new URL(project.liveUrl).host;
-    } catch {
-      return project.title;
-    }
-  })();
+  // Caption under a screenshot: the host it was taken on. A desktop app points
+  // `liveUrl` at its repo, so it would read "github.com" under a picture of a
+  // Windows window; those get no caption.
+  const shotCaption = project.downloadUrl
+    ? undefined
+    : (() => {
+        try {
+          return new URL(project.liveUrl).host;
+        } catch {
+          return project.title;
+        }
+      })();
 
   /* Spec-rail rows (year / role / languages / OS), only render what exists. */
   const specRows: Array<{ label: string; value: ReactNode }> = [
@@ -262,570 +224,387 @@ const ProjectDetails = () => {
         url={projectUrl}
       />
 
-      {/* Reading-progress hairline: transform-only, fixed, decorative. */}
-      <motion.div
-        aria-hidden
-        className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-primary/80"
-        style={{ scaleX: progress }}
-      />
-
       <div className="min-h-screen">
         {/* ============================================================ */}
-        {/* HERO: floats on the WebGL veil                              */}
+        {/* HERO: title, tagline, actions, meta                          */}
         {/* ============================================================ */}
-        <section className="relative overflow-hidden">
-          <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 pb-12 sm:px-6 sm:pb-16 md:px-8 lg:px-16">
-            {/* Breadcrumb + back */}
-            <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
-              <nav
-                aria-label="Breadcrumb"
-                className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground"
-              >
-                <Link
-                  className="transition-colors hover:text-foreground"
-                  to="/"
-                >
-                  {t.home}
-                </Link>
-                <span aria-hidden className="text-border">/</span>
-                <Link
-                  className="transition-colors hover:text-foreground"
-                  to="/projects"
-                >
-                  {t.projects}
-                </Link>
-                <span aria-hidden className="text-border">/</span>
-                <span className="text-foreground/80">{project.title}</span>
-              </nav>
-
+        <section className="mx-auto max-w-7xl px-6 pt-4 pb-12 sm:px-8 sm:pb-16 md:px-12 lg:px-16">
+          {/* Breadcrumb + back */}
+          <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
+            >
+              <Link className="transition-colors hover:text-foreground" to="/">
+                {t.home}
+              </Link>
+              <span aria-hidden className="text-border">
+                /
+              </span>
               <Link
-                className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+                className="transition-colors hover:text-foreground"
                 to="/projects"
               >
-                <ArrowLeft className="h-3.5 w-3.5" />
-                {t.back}
+                {t.projects}
               </Link>
-            </div>
+              <span aria-hidden className="text-border">
+                /
+              </span>
+              <span className="text-foreground/80">{project.title}</span>
+            </nav>
 
-            {/* Asymmetric editorial hero: oversized title left, image right. */}
-            <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
-              <motion.div
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: EASE }}
-              >
-                <p className="eyebrow text-primary">{projectTimeline}</p>
+            <Link
+              className="inline-flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
+              to="/projects"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              {t.back}
+            </Link>
+          </div>
 
-                <h1 className="mt-5 font-bold text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-                  <span className="gradient-text">{project.title}</span>
-                </h1>
+          {/* Title and tagline left, the picture right. */}
+          <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+            <motion.div {...revealOnScroll(reduceMotion)}>
+              <p className="eyebrow">{projectTimeline}</p>
 
-                <p className="mt-7 max-w-2xl text-balance text-lg text-foreground/90 leading-relaxed sm:text-xl">
-                  {project.tagline}
-                </p>
+              <h1 className="mt-5 font-bold text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+                {project.title}
+              </h1>
 
-                {/* CTAs */}
-                <div className="mt-9 flex flex-wrap items-center gap-3">
-                  {project.downloadUrl ? (
-                    <Magnetic>
-                      <Button asChild className="rounded-lg px-6" variant="cta">
-                        <a
-                          download
-                          href={project.downloadUrl}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          <Download className="h-4 w-4" />
-                          {t.download}
-                        </a>
-                      </Button>
-                    </Magnetic>
-                  ) : (
-                    <Magnetic>
-                      <Button asChild className="rounded-lg px-6" variant="cta">
-                        <a
-                          href={project.liveUrl}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                          {t.visitSite}
-                        </a>
-                      </Button>
-                    </Magnetic>
-                  )}
-                  <Magnetic>
-                    <Button asChild className="rounded-lg px-5" variant="soft">
-                      <a
-                        href={project.repoUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <Github className="h-4 w-4" />
-                        {t.sourceCode}
-                      </a>
-                    </Button>
-                  </Magnetic>
-                </div>
+              <p className="mt-7 max-w-2xl text-balance text-foreground/90 text-lg leading-relaxed sm:text-xl">
+                {project.tagline}
+              </p>
 
+              <div className="mt-9 flex flex-wrap items-center gap-3">
                 {project.downloadUrl ? (
-                  <p className="mt-4 max-w-prose text-muted-foreground text-xs leading-relaxed">
-                    {t.downloadNote}
-                  </p>
-                ) : null}
+                  <Button asChild className="rounded-lg px-6" variant="cta">
+                    <a
+                      download
+                      href={project.downloadUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Download className="h-4 w-4" />
+                      {t.download}
+                    </a>
+                  </Button>
+                ) : (
+                  <Button asChild className="rounded-lg px-6" variant="cta">
+                    <a
+                      href={project.liveUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {t.visitSite}
+                    </a>
+                  </Button>
+                )}
+                <Button asChild className="rounded-lg px-5" variant="soft">
+                  <a
+                    href={project.repoUrl}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Github className="h-4 w-4" />
+                    {t.sourceCode}
+                  </a>
+                </Button>
+              </div>
 
-                <div className="mt-7 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <Badge key={tag} variant="primary">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </motion.div>
+              {project.downloadUrl ? (
+                <p className="mt-4 max-w-prose text-muted-foreground text-xs leading-relaxed">
+                  {t.downloadNote}
+                </p>
+              ) : null}
 
-              {/* Image: handles all 3 modes, guarded onError */}
-              {project.image ? (
-                <motion.div
-                  className="flex justify-center lg:justify-end"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
-                >
-                  {project.imageIcon ? (
-                    <div className="relative">
-                      <div
-                        aria-hidden
-                        className="-inset-6 absolute rounded-full opacity-40 blur-2xl"
-                        style={{ backgroundImage: "var(--theme-gradient)" }}
-                      />
-                      <img
-                        alt={`${project.title} logo`}
-                        className="relative h-36 w-36 object-contain drop-shadow-2xl sm:h-44 sm:w-44"
-                        loading="eager"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                        src={project.image}
-                      />
-                    </div>
-                  ) : (
-                    <TiltFigure
-                      alt={`${project.title} screenshot`}
-                      className="w-full max-w-xl"
-                      label={liveHost}
-                      onOpen={() => setLightboxIndex(0)}
-                      openLabel={shotLabel(0)}
-                      priority
+              <div className="mt-7 flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <Badge key={tag} variant="primary">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* A square app icon gets the same frame as a screenshot, so both
+                modes read as one component. */}
+            {project.image ? (
+              <div className="flex justify-center lg:justify-end">
+                {project.imageIcon ? (
+                  <motion.div
+                    className={`${CARD} flex items-center justify-center p-10`}
+                    {...revealOnScroll(reduceMotion)}
+                  >
+                    <img
+                      alt={`${project.title} logo`}
+                      className="h-36 w-36 object-contain sm:h-44 sm:w-44"
+                      loading="eager"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
                       src={project.image}
                     />
-                  )}
-                </motion.div>
-              ) : null}
-            </div>
-
-            {/* Spec rail. It used to exist only in the desktop sticky aside, so
-                a phone got the title and the buttons and none of the facts. */}
-            <motion.dl
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-border/30 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
-            >
-              {specRows.map((row) => (
-                <div className="max-w-xs" key={row.label}>
-                  <dt className="font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
-                    {row.label}
-                  </dt>
-                  <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
-                    {row.value}
-                  </dd>
-                </div>
-              ))}
-            </motion.dl>
-
-            {project.stats?.length ? (
-              <div className="mt-12">
-                <StatStrip stats={project.stats} />
+                  </motion.div>
+                ) : (
+                  <ProjectFigure
+                    alt={`${project.title} screenshot`}
+                    className="w-full max-w-xl"
+                    label={shotCaption}
+                    onOpen={() => setLightboxIndex(0)}
+                    openLabel={shotLabel(0)}
+                    priority
+                    src={project.image}
+                  />
+                )}
               </div>
             ) : null}
           </div>
+
+          {/* Spec rail. It has to live here rather than only in the desktop
+              aside, or a phone gets the title and the buttons and none of the
+              facts. */}
+          <motion.dl
+            className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14"
+            {...revealOnScroll(reduceMotion)}
+          >
+            {specRows.map((row) => (
+              <div className="max-w-xs" key={row.label}>
+                <dt className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                  {row.label}
+                </dt>
+                <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </motion.dl>
+
+          {project.stats?.length ? (
+            <div className="mt-10">
+              <StatStrip stats={project.stats} />
+            </div>
+          ) : null}
         </section>
 
         {/* ============================================================ */}
-        {/* BODY: veil dissolves into a solid reading surface           */}
+        {/* BODY                                                         */}
         {/* ============================================================ */}
-        <div
-          className="relative pb-24 pt-28 sm:pb-28 sm:pt-36"
-          style={{
-            background:
-              "linear-gradient(to bottom, hsl(var(--background) / 0) 0px, hsl(var(--background) / 0.1) 80px, hsl(var(--background) / 0.92) 220px, hsl(var(--background)) 320px)",
-          }}
-        >
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 md:px-8 lg:px-16">
-            {/* Edges fade to transparent via a mask (not a colored overlay), so
-                the strip blends into whatever theme/veil sits behind it. */}
-            <div className="relative mb-12 overflow-hidden [-webkit-mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)] [mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)]">
-              <LogoLoop
-                ariaLabel={`${project.title} tech stack`}
-                className="text-foreground/50"
-                gap={56}
-                logoHeight={30}
-                logos={getProjectLogos(project.slug)}
-                pauseOnHover
-                scaleOnHover
-                speed={34}
-              />
-            </div>
-
-            {/* Pull-quote: roleSummary, framed like a magazine standfirst. */}
-            <motion.blockquote className="relative max-w-4xl" {...reveal}>
-              <span
-                aria-hidden
-                className="-left-2 sm:-left-4 absolute top-0 select-none font-bold font-heading text-6xl text-primary/15 leading-none"
-              >
-                “
-              </span>
-              <p className="pl-6 font-heading text-balance text-2xl leading-snug tracking-tight text-foreground/90 sm:pl-10 sm:text-3xl">
-                {project.tagline}
-              </p>
-              <footer className="mt-5 pl-6 sm:pl-10">
-                <MicroLabel tone="primary">{t.role}</MicroLabel>
-                <p className="mt-2 text-foreground/70 leading-relaxed">
-                  {project.roleSummary}
+        <div className="mx-auto max-w-7xl px-6 pb-24 sm:px-8 sm:pb-28 md:px-12 lg:px-16">
+          <div className="grid gap-12 pt-8 lg:grid-cols-[1fr_auto] lg:gap-16">
+            {/* -------- Reading column -------- */}
+            <article className="min-w-0 max-w-3xl space-y-12">
+              <FeatureSection index={1} title={t.overview}>
+                <p className="text-foreground/90 leading-relaxed">
+                  {project.overview}
                 </p>
-              </footer>
-            </motion.blockquote>
+              </FeatureSection>
 
-            <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_auto] lg:gap-16">
-              {/* -------- Reading column -------- */}
-              <article className="min-w-0 max-w-3xl space-y-12">
-                {/* Overview with drop-cap emphasis */}
-                <motion.section className="scroll-mt-28" {...reveal}>
-                  <div className="flex items-baseline gap-4">
-                    <span
-                      aria-hidden
-                      className="select-none font-mono text-2xl text-primary/30 tabular-nums leading-none"
-                    >
-                      01
-                    </span>
-                    <h2 className="font-bold text-2xl leading-tight tracking-tight sm:text-3xl">
-                      {t.overview}
-                    </h2>
-                  </div>
-                  <p className="mt-6 text-foreground/90 leading-relaxed sm:pl-10 [&>span:first-letter]:float-left [&>span:first-letter]:mr-2 [&>span:first-letter]:font-bold [&>span:first-letter]:font-heading [&>span:first-letter]:text-5xl [&>span:first-letter]:text-primary [&>span:first-letter]:leading-[0.85]">
-                    <span>{project.overview}</span>
-                  </p>
-                </motion.section>
+              <ProjectFigure
+                alt={`${project.title} interface`}
+                label={shotCaption}
+                onOpen={() => setLightboxIndex(shotIndex(0))}
+                openLabel={shotLabel(shotIndex(0))}
+                src={project.gallery?.[0]}
+              />
 
-                <TiltFigure
-                  alt={`${project.title} interface`}
-                  label={liveHost}
-                  onOpen={() => setLightboxIndex(shotIndex(0))}
-                  openLabel={shotLabel(shotIndex(0))}
-                  src={project.gallery?.[0]}
-                />
+              <FeatureSection index={2} title={t.problem}>
+                <p className="text-foreground/90 leading-relaxed">
+                  {project.problemStatement}
+                </p>
+              </FeatureSection>
 
-                <FeatureSection index={2} title={t.problem}>
-                  <p className="text-foreground/90 leading-relaxed">
-                    {project.problemStatement}
-                  </p>
-                </FeatureSection>
+              <FeatureSection index={3} title={t.objectives}>
+                <ol className="list-decimal space-y-3 pl-5 text-foreground/90 leading-relaxed marker:marker:text-muted-foreground">
+                  {project.objectives.map((objective) => (
+                    <li key={objective}>{objective}</li>
+                  ))}
+                </ol>
+              </FeatureSection>
 
-                <FeatureSection index={3} title={t.objectives}>
-                  <ol className="space-y-5">
-                    {project.objectives.map((objective, i) => (
-                      <motion.li
-                        className="flex gap-4"
-                        key={objective}
-                        initial={{ opacity: 0, y: 14 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.45,
-                          ease: EASE,
-                          delay: i * 0.05,
-                        }}
-                        viewport={{ once: true, margin: "-60px" }}
-                      >
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10 font-mono text-primary text-xs tabular-nums">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span className="pt-1 text-foreground/90 leading-relaxed">
-                          {objective}
-                        </span>
-                      </motion.li>
-                    ))}
-                  </ol>
-                </FeatureSection>
+              <FeatureSection index={4} title={t.architecture}>
+                <BulletList items={project.architectureDecisions} />
+              </FeatureSection>
 
-                <FeatureSection index={4} title={t.architecture}>
-                  <BulletList items={project.architectureDecisions} />
-                </FeatureSection>
+              <FeatureSection index={5} title={t.implementation}>
+                <BulletList items={project.implementationHighlights} />
+              </FeatureSection>
 
-                <FeatureSection index={5} title={t.implementation}>
-                  <BulletList items={project.implementationHighlights} />
-                </FeatureSection>
+              <ProjectFigure
+                alt={`${project.title} interface`}
+                label={shotCaption}
+                onOpen={() => setLightboxIndex(shotIndex(1))}
+                openLabel={shotLabel(shotIndex(1))}
+                src={project.gallery?.[1]}
+              />
 
-                <TiltFigure
-                  alt={`${project.title} interface`}
-                  label={liveHost}
-                  onOpen={() => setLightboxIndex(shotIndex(1))}
-                  openLabel={shotLabel(shotIndex(1))}
-                  src={project.gallery?.[1]}
-                />
+              <FeatureSection index={6} title={t.quality}>
+                <BulletList items={project.qualityAndSecurity} />
+              </FeatureSection>
 
-                <FeatureSection index={6} title={t.quality}>
-                  <BulletList items={project.qualityAndSecurity} />
-                </FeatureSection>
-
-                <FeatureSection index={7} title={t.challenges}>
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    {project.challengesAndSolutions.map((item) => (
-                      <div
-                        className="glass-deep rounded-2xl p-5"
-                        key={item.challenge}
-                      >
-                        <MicroLabel tone="destructive">
-                          {t.challengeLabel}
-                        </MicroLabel>
-                        <p className="mt-2 text-foreground/90 text-sm leading-relaxed">
-                          {item.challenge}
-                        </p>
-                        <div
-                          aria-hidden
-                          className="my-4 h-px bg-border/40"
-                        />
-                        <MicroLabel tone="primary">
-                          {t.solutionLabel}
-                        </MicroLabel>
-                        <p className="mt-2 text-foreground/80 text-sm leading-relaxed">
-                          {item.solution}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </FeatureSection>
-
-                <TiltFigure
-                  alt={`${project.title} interface`}
-                  label={liveHost}
-                  onOpen={() => setLightboxIndex(shotIndex(2))}
-                  openLabel={shotLabel(shotIndex(2))}
-                  src={project.gallery?.[2]}
-                />
-
-                {/* What this demonstrates: hiring signals */}
-                <FeatureSection index={8} title={t.signals}>
-                  <SpotlightCard
-                    className="glass-deep overflow-hidden rounded-2xl p-6 sm:p-7"
-                    glow={0.14}
-                  >
-                    <div
-                      aria-hidden
-                      className="absolute inset-x-0 top-0 h-px opacity-60"
-                      style={{ backgroundImage: "var(--theme-gradient)" }}
-                    />
-                    <div className="mb-5 flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-primary" />
-                      <MicroLabel tone="primary">{t.signals}</MicroLabel>
+              <FeatureSection index={7} title={t.challenges}>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {project.challengesAndSolutions.map((item) => (
+                    <div className={`${CARD} p-5`} key={item.challenge}>
+                      <MicroLabel tone="destructive">
+                        {t.challengeLabel}
+                      </MicroLabel>
+                      <p className="mt-2 text-foreground/90 text-sm leading-relaxed">
+                        {item.challenge}
+                      </p>
+                      <div aria-hidden className="my-4 h-px bg-border/60" />
+                      <MicroLabel tone="primary">{t.solutionLabel}</MicroLabel>
+                      <p className="mt-2 text-foreground/80 text-sm leading-relaxed">
+                        {item.solution}
+                      </p>
                     </div>
-                    <CheckList items={project.hiringSignals} />
-                  </SpotlightCard>
-                </FeatureSection>
-
-                {/* What's next: roadmap */}
-                <FeatureSection index={9} title={t.whatsNext}>
-                  <ol className="relative space-y-6 border-border/40 border-l pl-6">
-                    {project.nextIterations.map((step, i) => (
-                      <motion.li
-                        className="relative"
-                        key={step}
-                        initial={{ opacity: 0, y: 14 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.45,
-                          ease: EASE,
-                          delay: i * 0.05,
-                        }}
-                        viewport={{ once: true, margin: "-60px" }}
-                      >
-                        <span
-                          aria-hidden
-                          className="-left-[1.6rem] absolute top-1.5 h-2.5 w-2.5 rounded-full border border-primary/40 bg-background ring-2 ring-primary/15"
-                        />
-                        <p className="text-foreground/90 leading-relaxed">
-                          {step}
-                        </p>
-                      </motion.li>
-                    ))}
-                  </ol>
-                </FeatureSection>
-
-                {/* Impact, the focal climax tile: brand-gradient wash + a soft
-                    primary glow over glass-deep. Overlays kept low-opacity so the
-                    checklist stays legible in the light theme (bloom). */}
-                <FeatureSection index={10} title={project.impactHeading}>
-                  <SpotlightCard
-                    className="glass-deep overflow-hidden rounded-3xl p-7 sm:p-9"
-                    glow={0.16}
-                  >
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 opacity-[0.12]"
-                      style={{ backgroundImage: "var(--theme-gradient)" }}
-                    />
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute -top-20 -right-16 h-64 w-64 rounded-full opacity-40 blur-3xl"
-                      style={{
-                        background:
-                          "radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%)",
-                      }}
-                    />
-                    <div className="relative">
-                      <CheckList items={project.impactPoints} />
-                    </div>
-                  </SpotlightCard>
-                </FeatureSection>
-              </article>
-
-              {/* -------- Sticky spec rail -------- */}
-              <aside className="hidden lg:block">
-                <div className="sticky top-28 w-64">
-                  <div className="glass-deep rounded-2xl p-6">
-                    <MicroLabel tone="primary">{t.notes}</MicroLabel>
-                    <dl className="mt-5 space-y-5">
-                      {specRows.map((row) => (
-                        <div key={row.label}>
-                          <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                            {row.label}
-                          </dt>
-                          <dd className="mt-1.5 text-foreground/90 text-sm leading-relaxed">
-                            {row.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-
-                    <div
-                      aria-hidden
-                      className="my-6 h-px bg-border/40"
-                    />
-
-                    <MicroLabel>{t.links}</MicroLabel>
-                    <div className="mt-4 flex flex-col gap-2">
-                      {project.downloadUrl ? (
-                        <Button
-                          asChild
-                          className="w-full justify-start rounded-lg"
-                          size="sm"
-                          variant="cta"
-                        >
-                          <a
-                            download
-                            href={project.downloadUrl}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            <Download className="h-4 w-4" />
-                            {t.download}
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button
-                          asChild
-                          className="w-full justify-start rounded-lg"
-                          size="sm"
-                          variant="cta"
-                        >
-                          <a
-                            href={project.liveUrl}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                            {t.visitSite}
-                          </a>
-                        </Button>
-                      )}
-                      <Button
-                        asChild
-                        className="w-full justify-start rounded-lg"
-                        size="sm"
-                        variant="soft"
-                      >
-                        <a
-                          href={project.repoUrl}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          <Github className="h-4 w-4" />
-                          {t.sourceCode}
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              </aside>
+              </FeatureSection>
+
+              <ProjectFigure
+                alt={`${project.title} interface`}
+                label={shotCaption}
+                onOpen={() => setLightboxIndex(shotIndex(2))}
+                openLabel={shotLabel(shotIndex(2))}
+                src={project.gallery?.[2]}
+              />
+
+              {/* What this demonstrates: hiring signals */}
+              <FeatureSection index={8} title={t.signals}>
+                <div className={`${CARD} p-6 sm:p-7`}>
+                  <CheckList items={project.hiringSignals} />
+                </div>
+              </FeatureSection>
+
+              {/* What's next: roadmap */}
+              <FeatureSection index={9} title={t.whatsNext}>
+                <BulletList items={project.nextIterations} />
+              </FeatureSection>
+
+              <FeatureSection index={10} title={project.impactHeading}>
+                <div className={`${CARD} p-6 sm:p-7`}>
+                  <CheckList items={project.impactPoints} />
+                </div>
+              </FeatureSection>
+            </article>
+
+            {/* -------- Sticky links rail. The facts are in the hero spec
+                    rail; repeating them here only doubled the page. -------- */}
+            <aside className="hidden lg:block">
+              <div className={`sticky top-28 w-64 ${CARD} p-6`}>
+                <MicroLabel>{t.links}</MicroLabel>
+                <div className="mt-4 flex flex-col gap-2">
+                  {project.downloadUrl ? (
+                    <Button
+                      asChild
+                      className="w-full justify-start rounded-lg"
+                      size="sm"
+                      variant="cta"
+                    >
+                      <a
+                        download
+                        href={project.downloadUrl}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <Download className="h-4 w-4" />
+                        {t.download}
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      className="w-full justify-start rounded-lg"
+                      size="sm"
+                      variant="cta"
+                    >
+                      <a
+                        href={project.liveUrl}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        {t.visitSite}
+                      </a>
+                    </Button>
+                  )}
+                  <Button
+                    asChild
+                    className="w-full justify-start rounded-lg"
+                    size="sm"
+                    variant="soft"
+                  >
+                    <a
+                      href={project.repoUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Github className="h-4 w-4" />
+                      {t.sourceCode}
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          {/* -------- More projects -------- */}
+          <motion.section
+            className="mt-24 border-border/60 border-t pt-14"
+            {...revealOnScroll(reduceMotion)}
+          >
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
+                {t.moreProjects}
+              </h2>
+              <Link
+                className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
+                to="/projects"
+              >
+                {t.allProjects}
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
-            {/* -------- More projects -------- */}
-            <motion.section
-              className="mt-24 border-border/30 border-t pt-14"
-              {...reveal}
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
-                  {t.moreProjects}
-                </h2>
+            {/* One rail, two behaviours: a snapping swipe deck on a phone
+                (a ten-card grid there is a wall of scrolling) and the grid
+                from `sm` up. The negative margin lets the first and last
+                cards sit flush with the page gutter while still scrolling
+                edge to edge. The gutter under `sm` is 32px, not 16: index.css
+                adds a 1rem padding to every `section` below 768px on top of
+                this container's `px-4`. The bleed has to clear both or the
+                first card sits 16px left of the heading above it. */}
+            <div className="-mx-8 mt-8 flex snap-x snap-mandatory scroll-pl-8 gap-4 overflow-x-auto px-8 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+              {otherProjects.map((item) => (
                 <Link
-                  className="inline-flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
-                  to="/projects"
+                  className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col p-5 transition-colors duration-200 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
+                  key={item.slug}
+                  to={`/projects/${item.slug}`}
                 >
-                  {t.allProjects}
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
+                        {item.title}
+                      </p>
+                      <p className="mt-1 text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                        {item.dateLabel}
+                      </p>
+                    </div>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-primary" />
+                  </div>
+                  <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
+                    {item.description}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {item.tags.map((tag) => (
+                      <Badge key={tag}>{tag}</Badge>
+                    ))}
+                  </div>
                 </Link>
-              </div>
-
-              {/* One rail, two behaviours: a snapping swipe deck on a phone
-                  (a nine-card grid there is a wall of scrolling) and the grid
-                  from `sm` up. The negative margin lets the first and last
-                  cards sit flush with the page gutter while still scrolling
-                  edge to edge. */}
-              {/* The gutter under `sm` is 32px, not 16: index.css adds a 1rem
-                  padding to every `section` below 768px on top of this
-                  container's `px-4`. The bleed has to clear both or the first
-                  card sits 16px left of the heading above it. */}
-              <div className="-mx-8 mt-8 flex snap-x snap-mandatory scroll-pl-8 gap-4 overflow-x-auto px-8 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
-                {otherProjects.map((item) => (
-                  <Link
-                    className="group glass-deep flex w-[78vw] max-w-sm shrink-0 snap-start flex-col rounded-2xl p-5 transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none"
-                    key={item.slug}
-                    to={`/projects/${item.slug}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
-                          {item.title}
-                        </p>
-                        <p className="mt-1 font-mono text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
-                          {item.dateLabel}
-                        </p>
-                      </div>
-                      <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-primary" />
-                    </div>
-                    <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
-                      {item.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {item.tags.map((tag) => (
-                        <Badge key={tag}>{tag}</Badge>
-                      ))}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </motion.section>
-          </div>
+              ))}
+            </div>
+          </motion.section>
         </div>
       </div>
 
