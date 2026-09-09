@@ -106,19 +106,19 @@ Note on the credential: Computer Scientist EFZ (Informatiker EFZ, Applikationsen
 These are the categories exactly as the skills page groups them (https://dk.punds.ch/skills).
 
 **Frontend**
-React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, Figma, Lighthouse.
+React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion.
 
 **Backend**
-Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL, Bash.
+Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL.
 
 **Infrastructure**
-Linux Server, Ubuntu, Windows Server, NGINX, Docker, Vercel, Jenkins, Grafana, Kali Linux, hardware installation.
+NGINX, Docker, Vercel, Jenkins, Grafana, Bash.
 
 **Data and tooling**
-PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm.
+PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 
 **Professional**
-Communication, customer service, project management, direct sales, social media outreach, SEO copywriting, video editing.
+Communication, project management, direct sales, social media outreach.
 
 Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 9 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in Time and in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
 
@@ -126,7 +126,7 @@ Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET
 
 ## 6. Projects
 
-Eleven personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Eleven personal projects, ordered newest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
 A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, with the source public.
 

@@ -45,7 +45,7 @@ Open to software engineering roles, internships, freelance and contract projects
 
 ## Projects
 
-Eleven personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
+Eleven personal projects, listed newest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
 
 - [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
 - [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
@@ -65,11 +65,11 @@ Worth saying plainly, because the projects page says it too: these eleven are pe
 
 Taken from https://dk.punds.ch/skills, in the categories that page uses.
 
-- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, Figma, Lighthouse.
-- Backend: Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL, Bash.
-- Infrastructure: Linux Server, Ubuntu, Windows Server, NGINX, Docker, Vercel, Jenkins, Grafana, Kali Linux, hardware installation.
-- Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm.
-- Professional: communication, customer service, project management, direct sales, social media outreach, SEO copywriting, video editing.
+- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion.
+- Backend: Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL.
+- Infrastructure: NGINX, Docker, Vercel, Jenkins, Grafana, Bash.
+- Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
+- Professional: communication, project management, direct sales, social media outreach.
 
 Shipped evidence for the less obvious ones: Rust in Oxidize, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
 

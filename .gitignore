@@ -92,3 +92,6 @@ AGENTS.md
 .claude/
 .agents/
 skills-lock.json
+
+# OldDb CLI link state
+olddb/.temp/

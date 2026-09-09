@@ -122,7 +122,11 @@ export function AboutSection() {
                 className="text-muted-foreground text-sm leading-relaxed sm:text-base"
                 variants={REVEAL}
               >
-                {t.intro2}
+                {t.intro2Before}
+                <span className="font-medium text-foreground">
+                  {t.intro2Highlight}
+                </span>
+                {t.intro2After}
               </motion.p>
 
               <motion.p
@@ -131,15 +135,7 @@ export function AboutSection() {
               >
                 {t.intro3Before}
                 <span className="font-medium text-foreground">
-                  {t.intro3Word1}
-                </span>
-                {t.intro3Comma1}
-                <span className="font-medium text-foreground">
-                  {t.intro3Word2}
-                </span>
-                {t.intro3Comma2}
-                <span className="font-medium text-foreground">
-                  {t.intro3Word3}
+                  {t.intro3Highlight}
                 </span>
                 {t.intro3After}
               </motion.p>
@@ -150,9 +146,12 @@ export function AboutSection() {
                 portrait column the air lands above the rule (where a card wants
                 air) instead of below the buttons. */}
             <motion.div
-              className="mt-6 flex flex-col gap-3 border-border/40 border-t pt-6 sm:mt-8 sm:flex-row sm:gap-4 sm:pt-8 md:mt-auto"
+              className="mt-6 flex flex-col gap-3 border-border/40 border-t pt-6 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4 sm:pt-8 md:mt-auto"
               variants={REVEAL}
             >
+              {/* `sm:flex-wrap`: three buttons in German ("Mein Journal lesen")
+                  are wider than the card at tablet widths, and without wrapping
+                  the last one ran past the card's edge. */}
               {/* Lucide, like every other icon on the site. The trailing one
                   leans on hover through `.btn-icon-nudge` on the size variant,
                   so neither button needs a nudge of its own. */}
