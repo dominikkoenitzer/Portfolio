@@ -27,7 +27,7 @@ type SortKey = "oldest" | "newest" | "az";
 const PARAM_DEFAULTS: Record<string, string> = {
   q: "",
   type: "all",
-  sort: "oldest",
+  sort: "newest",
 };
 
 /** Desktop apps ship a Windows binary; everything else is a hosted web app. */
@@ -146,7 +146,7 @@ export function ProjectsSection() {
     rawType === "web" || rawType === "desktop" ? rawType : "all";
   const rawSort = searchParams.get("sort");
   const sort: SortKey =
-    rawSort === "newest" || rawSort === "az" ? rawSort : "oldest";
+    rawSort === "oldest" || rawSort === "az" ? rawSort : "newest";
 
   const updateParams = (patch: Partial<Record<"q" | "type" | "sort", string>>) => {
     const next = new URLSearchParams(searchParams);
@@ -201,8 +201,8 @@ export function ProjectsSection() {
     { key: "desktop", label: t.filterDesktop },
   ];
   const sortOptions: Array<{ key: SortKey; label: string }> = [
-    { key: "oldest", label: t.sortOldest },
     { key: "newest", label: t.sortNewest },
+    { key: "oldest", label: t.sortOldest },
     { key: "az", label: t.sortAZ },
   ];
 
@@ -344,7 +344,7 @@ export function ProjectsSection() {
               </p>
               <Button
                 className="mt-6 rounded-lg px-5"
-                onClick={() => updateParams({ q: "", type: "all", sort: "oldest" })}
+                onClick={() => updateParams({ q: "", type: "all", sort: "newest" })}
                 variant="cta"
               >
                 {t.resetFilters}

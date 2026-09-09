@@ -5,15 +5,6 @@ export type SkillCategoryKey = keyof Translation["skills"]["categories"];
 
 export interface SkillCategory {
   key: SkillCategoryKey;
-  /**
-   * How many of the leading skills wear the card's accent surface. The lists
-   * are written most-used first, so the emphasis is the ordering signal: the
-   * three chips a visitor should read are visibly the first three, and the
-   * rest of the list reads as depth behind them. The spoken-languages card is
-   * not in this list at all, because emphasising three of four languages would
-   * be claiming a proficiency ranking the page never states.
-   */
-  lead: number;
   skills: string[];
 }
 
@@ -30,7 +21,6 @@ export interface SkillCategory {
 export const SKILL_CATEGORIES: SkillCategory[] = [
   {
     key: "frontend",
-    lead: 3,
     skills: [
       "React",
       "Next.js",
@@ -40,13 +30,10 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       "shadcn/ui",
       "Radix UI",
       "Framer Motion",
-      "Figma",
-      "Lighthouse",
     ],
   },
   {
     key: "backend",
-    lead: 3,
     skills: [
       "Java",
       "Kotlin",
@@ -58,41 +45,30 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       "C#",
       "C++",
       "GraphQL",
-      "Bash",
     ],
   },
   {
     key: "devops",
-    lead: 3,
     skills: [
-      "Linux Server",
-      "Ubuntu",
-      "Windows Server",
       "NGINX",
       "Docker",
       "Vercel",
       "Jenkins",
       "Grafana",
-      "Kali Linux",
-      "Hardware Installation",
+      "Bash",
     ],
   },
   {
     key: "professional",
-    lead: 3,
     skills: [
       "Communication",
-      "Customer Service",
       "Project Management",
       "Direct Sales",
       "Social Media Outreach",
-      "SEO Copywriting",
-      "Video Editing",
     ],
   },
   {
     key: "databases",
-    lead: 3,
-    skills: ["PostgreSQL", "MongoDB", "Redis", "SQLite", "Git", "pnpm"],
+    skills: ["PostgreSQL", "MongoDB", "Redis", "SQLite", "Git", "pnpm", "Figma", "Lighthouse"],
   },
 ];

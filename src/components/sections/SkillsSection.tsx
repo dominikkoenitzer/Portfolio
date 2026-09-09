@@ -13,7 +13,6 @@ import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
-import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";
 
@@ -41,27 +40,15 @@ const CARD =
 
 /**
  * A chip. The row above owns the timing: the chip only says how it arrives,
- * never when. `lead` swaps the surface only, and padding, font-weight and glyph
- * size are constant across both states and across hover, so a row of ten chips
- * cannot re-wrap under the pointer.
+ * never when. Every chip wears the same surface: the tinted "lead" state was
+ * removed on 2026-09-09 because two chip colours read as a skill ranking the
+ * page never meant to make. Padding, font-weight and glyph size are constant
+ * across hover, so a row of ten chips cannot re-wrap under the pointer.
  */
-function Chip({
-  icon,
-  label,
-  lead,
-}: {
-  icon: ReactNode;
-  label: string;
-  lead?: boolean;
-}) {
+function Chip({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <motion.span
-      className={cn(
-        "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out",
-        lead
-          ? "border-primary/25 bg-primary/[0.07] hover:border-primary/45"
-          : "border-border/60 bg-background/50 hover:border-primary/30",
-      )}
+      className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background/50 px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out hover:border-primary/30"
       variants={REVEAL}
     >
       {/* Decorative: the skill's name is the text right beside it, and the
@@ -72,12 +59,7 @@ function Chip({
       >
         {icon}
       </span>
-      <span
-        className={cn(
-          "font-medium",
-          lead ? "text-foreground" : "text-foreground/85",
-        )}
-      >
+      <span className="font-medium text-foreground/85">
         {label}
       </span>
     </motion.span>
@@ -174,12 +156,11 @@ export function SkillsSection() {
             key={category.key}
             title={t.categories[category.key]}
           >
-            {category.skills.map((name, i) => (
+            {category.skills.map((name) => (
               <Chip
                 icon={getSkillIcon(name)}
                 key={name}
                 label={name}
-                lead={i < category.lead}
               />
             ))}
           </CategoryCard>
