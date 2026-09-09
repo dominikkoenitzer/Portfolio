@@ -9,32 +9,64 @@ import {
   type ViteDevServer,
 } from "vite";
 
+/** The serverless routes in `api/` that the local servers should answer. */
+const LOCAL_API_ROUTES = ["github-contributions", "contact"] as const;
+
+/** Server-side secrets copied from `.env.local` into the handlers' environment. */
+const SERVER_ENV_KEYS = [
+  "GITHUB_TOKEN",
+  "VITE_GITHUB_TOKEN",
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "GMAIL_USER",
+  "GMAIL_APP_PASSWORD",
+  "CONTACT_TO",
+] as const;
+
+/** Reads a JSON request body the way Vercel hands it to a function. */
+const readJsonBody = (req: import("node:http").IncomingMessage) =>
+  new Promise<unknown>((resolve) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (c: Buffer) => chunks.push(c));
+    req.on("end", () => {
+      const raw = Buffer.concat(chunks).toString("utf8");
+      if (!raw) return resolve(undefined);
+      try {
+        resolve(JSON.parse(raw));
+      } catch {
+        resolve(raw);
+      }
+    });
+    req.on("error", () => resolve(undefined));
+  });
+
 /**
- * Runs the real `/api/github-contributions` serverless handler in-process for
- * local `vite dev` AND `vite preview`, so the contributions widget works without
- * `vercel dev`. The GitHub token is read server-side from the environment
- * (`.env.local`) and used only here: it is never exposed to the client bundle.
- * On Vercel the platform serves the function itself; this plugin is dev/preview
- * only (the hooks don't run during `vite build`).
+ * Runs the real `api/*.js` serverless handlers in-process for local `vite dev`
+ * AND `vite preview`, so the contributions widget and the contact form work
+ * without `vercel dev`. The secrets are read server-side from the environment
+ * (`.env.local`) and used only here: they are never exposed to the client
+ * bundle. On Vercel the platform serves the functions itself; this plugin is
+ * dev/preview only (the hooks don't run during `vite build`).
  */
-function localGithubApi(env: Record<string, string>): Plugin {
+function localApi(env: Record<string, string>): Plugin {
   const attach = (server: ViteDevServer | PreviewServer) => {
-    if (env.GITHUB_TOKEN) {
-      process.env.GITHUB_TOKEN = env.GITHUB_TOKEN;
-    } else if (env.VITE_GITHUB_TOKEN) {
-      process.env.VITE_GITHUB_TOKEN = env.VITE_GITHUB_TOKEN;
+    for (const key of SERVER_ENV_KEYS) {
+      if (env[key]) process.env[key] = env[key];
     }
 
     server.middlewares.use(async (req, res, next) => {
       const reqUrl = req.url || "";
-      if (!reqUrl.startsWith("/api/github-contributions")) {
+      const route = LOCAL_API_ROUTES.find((r) =>
+        reqUrl.startsWith(`/api/${r}`),
+      );
+      if (!route) {
         next();
         return;
       }
 
       try {
         const handlerUrl = pathToFileURL(
-          path.resolve(__dirname, "api/github-contributions.js"),
+          path.resolve(__dirname, `api/${route}.js`),
         ).href;
         const mod = await import(handlerUrl);
         const parsed = new URL(reqUrl, "http://localhost");
@@ -42,7 +74,10 @@ function localGithubApi(env: Record<string, string>): Plugin {
         // Shim the Vercel-style req/res the handler expects onto Node's raw ones.
         const vreq = {
           method: req.method,
+          headers: req.headers,
+          socket: req.socket,
           query: Object.fromEntries(parsed.searchParams),
+          body: req.method === "POST" ? await readJsonBody(req) : undefined,
         };
         const vres = {
           setHeader: (key: string, value: string) => res.setHeader(key, value),
@@ -76,7 +111,7 @@ function localGithubApi(env: Record<string, string>): Plugin {
   };
 
   return {
-    name: "local-github-contributions-api",
+    name: "local-api",
     configureServer: attach,
     configurePreviewServer: attach,
   };
@@ -222,7 +257,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
-      localGithubApi(env),
+      localApi(env),
       textCharset(),
       preloadFirstScreenFonts(),
     ],

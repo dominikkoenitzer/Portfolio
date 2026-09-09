@@ -54,23 +54,18 @@ export const de = {
   about: {
     eyebrow: "Profil",
     heading: "Über mich",
-    subheading: "Was ich lerne, und was ich damit baue.",
+    subheading: "Die Kurzfassung, ohne Krawatte.",
     passionate: "Schweizer",
     passionateRole: "Software Engineer",
-    intro1Before:
-      "Ich bin Dominik Könitzer, ein 18-jähriger Software Engineer an der WISS Schule für Wirtschaft Informatik Immobilien und befinde mich derzeit im ",
-    intro1Highlight: "siebten",
-    intro1After: " Semester eines vierjährigen Software-Engineering-Programms.",
-    intro2:
-      "Die ersten zwei Jahre sind Unterricht, die zwei danach ein Praktikum mit begleitendem Unterricht. Der Sinn dieser Aufteilung: Nichts bleibt lange nur Theorie.",
-    intro3Before: "Ich baue gerne ",
-    intro3Word1: "sauberen",
-    intro3Comma1: ", ",
-    intro3Word2: "schnellen",
-    intro3Comma2: " und ",
-    intro3Word3: "ansehnlichen",
-    intro3After:
-      " Code für Websites und Anwendungen, die Leute wirklich benutzen wollen. Der Code ist dabei nur die Hälfte. Die andere Hälfte ist, das Problem so gut zu verstehen, dass ich meine Lösung erklären kann.",
+    intro1Before: "Ich bin Dominik, 18, aus Küsnacht am Zürichsee. Ich baue Websites, ",
+    intro1Highlight: "beruflich und zum Spass",
+    intro1After: ", was praktisch ist, weil das für mich dasselbe ist.",
+    intro2Before: "Meistens findet man mich mit zu vielen offenen Tabs, einem kalt gewordenen Kaffee und einer festen Meinung zu einem Button, der zwei Pixel daneben sitzt. Ich mag Sachen, die schnell sind, gut aussehen und ",
+    intro2Highlight: "einfach funktionieren",
+    intro2After: ". Die Art von Sachen, über die man nie nachdenken muss.",
+    intro3Before: "Wenn der Laptop zu ist, bin ich vermutlich gerade zum hundertsten Mal meinen PC am Ricen, am Anime schauen oder am Streiten über Schriftarten. Wenn deine Website ein bisschen Liebe braucht oder du einfach Hallo sagen willst, ",
+    intro3Highlight: "ich bin leicht zu erreichen",
+    intro3After: ".",
     exploreSkills: "Meine Skills ansehen",
     readJournal: "Mein Journal lesen",
     viewCv: "Lebenslauf ansehen",
@@ -187,7 +182,7 @@ export const de = {
       protect: "Schützen",
       grow: "Wachsen",
     },
-    close: "Schließen",
+    close: "Schliessen",
     loading: "Der Baum wächst…",
     intro:
       "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise unten sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
@@ -251,25 +246,25 @@ export const de = {
         ],
       },
       maintenance: {
-        title: "Website-Wartung",
+        title: "Hosting & Wartung",
         description:
-          "Monatliche Patches und Updates, plus ein Auge auf alles, was langsam wegdriftet.",
+          "Deine Website läuft auf meinem Server, mit Updates, Backups und einem Auge auf alles, was langsam wegdriftet.",
         features: [
+          "Hosting inklusive",
           "Sicherheitsupdates",
-          "Bugfixes",
+          "Tägliche Backups",
           "Uptime-Monitoring",
-          "Content-Updates",
         ],
       },
-      backup: {
-        title: "Backup & Recovery",
+      emergency: {
+        title: "Website-Notfall",
         description:
-          "Automatische Backups, dazu getestete Wiederherstellungen, damit du weisst, dass sie funktionieren.",
+          "Seite down, gehackt oder nach einem Update kaputt? Innert 48 Stunden läuft sie wieder, zum Fixpreis.",
         features: [
-          "Automatische Backups",
-          "Cloud-Speicher",
-          "Recovery-Protokolle",
-          "Echtzeit-Alerts",
+          "Reaktion am selben Tag",
+          "Seite wiederhergestellt",
+          "Ursache behoben",
+          "Kurzer Bericht",
         ],
       },
       seo: {
@@ -283,26 +278,26 @@ export const de = {
           "Reporting",
         ],
       },
-      cms: {
-        title: "Content-Management",
+      relaunch: {
+        title: "Website-Relaunch",
         description:
-          "Ich halte die Inhalte aktuell, damit die Seite nicht still vor sich hin altert.",
+          "Deine bestehende Seite neu gebaut: mobil, schnell, sicher und bei Google auffindbar, mit deinen Inhalten.",
         features: [
-          "CMS-Wartung",
-          "Bildoptimierung",
-          "Layout-Updates",
-          "SEO-Inhalte",
+          "Bestehende Inhalte übernommen",
+          "Mobil und schnell",
+          "HTTPS und SEO-Basis",
+          "Umzug der Domain",
         ],
       },
       support: {
-        title: "Technischer Support",
+        title: "Support & Inhalte",
         description:
-          "Hilfe, wenn etwas kaputtgeht oder einfach schneller werden muss.",
+          "Neue Texte und Bilder einpflegen, kleine Fehler beheben, etwas schneller machen. Stundenweise, ohne Mindestmenge.",
         features: [
-          "Schnelle Reaktion",
+          "Content-Updates",
           "Bugfixes",
-          "Code-Optimierung",
-          "Integrationshilfe",
+          "Bildoptimierung",
+          "Kleine Anpassungen",
         ],
       },
     },
@@ -351,6 +346,20 @@ export const de = {
     copyFailed:
       "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
     eyebrow: "Kontakt",
+    form: {
+      nameLabel: "Name",
+      emailLabel: "E-Mail",
+      messageLabel: "Nachricht",
+      messagePlaceholder: "Was brauchst du, bis wann ungefähr, und was sollte ich wissen?",
+      send: "Nachricht senden",
+      sending: "Wird gesendet…",
+      sentTitle: "Gesendet.",
+      sentBody: "Danke, ist angekommen. Ich antworte normalerweise innerhalb eines Tages.",
+      sendAnother: "Noch eine Nachricht senden",
+      failed: "Das hat nicht geklappt. Versuch es nochmals oder schreib mir direkt.",
+      tooMany: "Das sind viele Nachrichten von deinem Anschluss. Versuch es in einer Stunde nochmals oder schreib mir direkt.",
+      orDirect: "Oder schreib mir direkt:",
+    },
     responseTime: "Ich antworte normalerweise innerhalb eines Tages.",
   },
   donate: {
@@ -424,7 +433,7 @@ export const de = {
           "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics ausschliesslich anonymisiert erhoben. Cookies oder Tracking-Identifier werden nicht verwendet.",
         contactLabel: "E-Mail:",
         contactBody:
-          "Wenn du mir eine E-Mail schreibst, behalte ich nur, was du schickst (deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären.",
+          "Wenn du mir eine E-Mail schreibst oder das Kontaktformular benutzt, behalte ich nur, was du schickst (deinen Namen, deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären. Nachrichten aus dem Formular liegen in einer Supabase-Datenbank in Frankfurt, Deutschland, zusammen mit einer gehashten IP-Adresse, die nur zur Spam-Begrenzung dient.",
       },
       rights: {
         heading: "Deine Rechte",

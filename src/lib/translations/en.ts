@@ -54,23 +54,18 @@ export const en = {
   about: {
     eyebrow: "Profile",
     heading: "About Me",
-    subheading: "What I'm studying, and what I build with it.",
+    subheading: "The short version, tie optional.",
     passionate: "Swiss",
     passionateRole: "Software Engineer",
-    intro1Before:
-      "I'm Dominik Könitzer, an 18-year-old software engineer at WISS Schulen für Wirtschaft Informatik Immobilien, currently in my ",
-    intro1Highlight: "seventh",
-    intro1After: " semester of a 4-year software engineering program.",
-    intro2:
-      "The first two years are coursework; the two after that are a working internship with classes running alongside. The point of the split is that nothing stays theoretical for long.",
-    intro3Before: "I like building ",
-    intro3Word1: "clean",
-    intro3Comma1: ", ",
-    intro3Word2: "fast",
-    intro3Comma2: ", and ",
-    intro3Word3: "good-looking",
-    intro3After:
-      " websites and applications that people actually want to use. Writing the code is only half of it. The other half is understanding the problem well enough to explain what I did about it.",
+    intro1Before: "I'm Dominik, 18, from Küsnacht on Lake Zürich. I build websites, ",
+    intro1Highlight: "for a living and for fun",
+    intro1After: ", which is convenient, because to me those are the same thing.",
+    intro2Before: "Most days you'll find me with too many tabs open, a coffee going cold, and a strong opinion about a button that sits two pixels off. I like things that are quick, look nice and ",
+    intro2Highlight: "just work",
+    intro2After: ". The kind of thing you never have to think about.",
+    intro3Before: "When the laptop is shut, I'm probably ricing my PC for the hundredth time, watching anime or arguing about fonts. If your website needs a bit of love, or you just want to say hi, ",
+    intro3Highlight: "I'm easy to reach",
+    intro3After: ".",
     exploreSkills: "Explore my skills",
     readJournal: "Read my journal",
     viewCv: "View CV",
@@ -250,25 +245,25 @@ export const en = {
         ],
       },
       maintenance: {
-        title: "Website Maintenance",
+        title: "Hosting & Maintenance",
         description:
-          "Monthly patching and updates, plus an eye on anything starting to drift.",
+          "Your site lives on my server, with updates, backups and an eye on anything starting to drift.",
         features: [
+          "Hosting included",
           "Security updates",
-          "Bug fixes",
+          "Daily backups",
           "Uptime monitoring",
-          "Content updates",
         ],
       },
-      backup: {
-        title: "Backup & Recovery",
+      emergency: {
+        title: "Website Emergency",
         description:
-          "Automated backups, plus restores that get tested so you know they work.",
+          "Site down, hacked, or broken after an update? Back online within 48 hours, at a fixed price.",
         features: [
-          "Automated backups",
-          "Cloud storage",
-          "Recovery protocols",
-          "Real-time alerts",
+          "Same-day response",
+          "Site restored",
+          "Root cause fixed",
+          "Short report",
         ],
       },
       seo: {
@@ -282,26 +277,26 @@ export const en = {
           "Reporting",
         ],
       },
-      cms: {
-        title: "Content Management",
+      relaunch: {
+        title: "Website Relaunch",
         description:
-          "I keep the content current so the site doesn't quietly go stale.",
+          "Your existing site rebuilt: mobile, fast, secure and findable on Google, with your content carried over.",
         features: [
-          "CMS maintenance",
-          "Image optimization",
-          "Layout updates",
-          "SEO content",
+          "Existing content kept",
+          "Mobile and fast",
+          "HTTPS and SEO basics",
+          "Domain move",
         ],
       },
       support: {
-        title: "Technical Support",
+        title: "Support & Content",
         description:
-          "Help when something breaks, or when something just needs to be quicker.",
+          "New text and images put in, small bugs fixed, things made quicker. By the hour, no minimum.",
         features: [
-          "Fast response",
+          "Content updates",
           "Bug fixes",
-          "Code optimisation",
-          "Integration help",
+          "Image optimisation",
+          "Small changes",
         ],
       },
     },
@@ -347,6 +342,20 @@ export const en = {
     copied: "Copied.",
     copyFailed: "Couldn't copy. The address is dominik.koenitzer@gmail.com",
     eyebrow: "Contact",
+    form: {
+      nameLabel: "Name",
+      emailLabel: "Email",
+      messageLabel: "Message",
+      messagePlaceholder: "What do you need, roughly when, and what should I know?",
+      send: "Send message",
+      sending: "Sending…",
+      sentTitle: "Sent.",
+      sentBody: "Thanks, I've got it. I usually reply within a day.",
+      sendAnother: "Send another message",
+      failed: "That didn't go through. Try again, or write to me directly.",
+      tooMany: "That's a lot of messages from your connection. Try again in an hour, or write to me directly.",
+      orDirect: "Or write to me directly:",
+    },
     responseTime: "I usually reply within a day.",
   },
   donate: {
@@ -420,7 +429,7 @@ export const en = {
           "This site is hosted by Vercel. Server logs (IP address, browser type, access time) are stored for security and reliability. Visitor statistics are collected via Vercel Analytics with anonymized data only. No cookies or tracking identifiers are used.",
         contactLabel: "Email:",
         contactBody:
-          "If you email me, I keep what you send (your address and your message) only to answer you and any follow-up questions.",
+          "If you email me or use the contact form, I keep what you send (your name, your address and your message) only to answer you and any follow-up questions. Form messages are stored in a Supabase database in Frankfurt, Germany, together with a hashed IP address that is used only to limit spam.",
       },
       rights: {
         heading: "Your Rights",
