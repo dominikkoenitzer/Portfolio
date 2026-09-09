@@ -54,23 +54,18 @@ export const fr = {
   about: {
     eyebrow: "Profil",
     heading: "À propos de moi",
-    subheading: "Ce que j'étudie, et ce que je construis avec.",
+    subheading: "La version courte, cravate facultative.",
     passionate: "Ingénieur logiciel",
     passionateRole: "suisse",
-    intro1Before:
-      "Je suis Dominik Könitzer, ingénieur logiciel de 18 ans à la WISS Schulen für Wirtschaft Informatik Immobilien, actuellement dans mon ",
-    intro1Highlight: "septième",
-    intro1After: " semestre d'un programme d'ingénierie logicielle de 4 ans.",
-    intro2:
-      "Les deux premières années sont des cours, les deux suivantes un stage en entreprise avec des cours en parallèle. L'intérêt de ce découpage : rien ne reste longtemps théorique.",
-    intro3Before: "J'aime construire des sites et des applications ",
-    intro3Word1: "propres",
-    intro3Comma1: ", ",
-    intro3Word2: "rapides",
-    intro3Comma2: " et ",
-    intro3Word3: "agréables à regarder",
-    intro3After:
-      " que les gens ont vraiment envie d'utiliser. Écrire le code n'est que la moitié du travail. L'autre moitié, c'est comprendre le problème assez bien pour expliquer ce que j'en ai fait.",
+    intro1Before: "Je suis Dominik, 18 ans, de Küsnacht au bord du lac de Zurich. Je fais des sites web, ",
+    intro1Highlight: "pour gagner ma vie et pour le plaisir",
+    intro1After: ", ce qui tombe bien, parce que pour moi c'est la même chose.",
+    intro2Before: "La plupart du temps, vous me trouverez avec trop d'onglets ouverts, un café qui refroidit et un avis très tranché sur un bouton décalé de deux pixels. J'aime les choses rapides, jolies et ",
+    intro2Highlight: "qui marchent, tout simplement",
+    intro2After: ". Le genre de choses auxquelles on n'a jamais besoin de penser.",
+    intro3Before: "Quand l'ordinateur est fermé, je suis probablement en train de ricer mon PC pour la centième fois, devant un anime ou en pleine dispute sur des polices. Si votre site a besoin d'un peu d'amour, ou si vous voulez juste dire bonjour, ",
+    intro3Highlight: "je suis facile à joindre",
+    intro3After: ".",
     exploreSkills: "Découvrir mes compétences",
     readJournal: "Lire mon journal",
     viewCv: "Voir le CV",
@@ -251,25 +246,25 @@ export const fr = {
         ],
       },
       maintenance: {
-        title: "Maintenance de site web",
+        title: "Hébergement & maintenance",
         description:
-          "Correctifs et mises à jour chaque mois, et un œil sur ce qui commence à dériver.",
+          "Votre site vit sur mon serveur, avec mises à jour, sauvegardes et un œil sur ce qui commence à dériver.",
         features: [
+          "Hébergement inclus",
           "Mises à jour de sécurité",
-          "Corrections de bugs",
+          "Sauvegardes quotidiennes",
           "Monitoring de disponibilité",
-          "Mises à jour de contenu",
         ],
       },
-      backup: {
-        title: "Sauvegarde & restauration",
+      emergency: {
+        title: "Urgence site web",
         description:
-          "Des sauvegardes automatiques, et des restaurations testées pour savoir qu'elles marchent.",
+          "Site hors ligne, piraté ou cassé après une mise à jour ? De retour en 48 heures, à prix fixe.",
         features: [
-          "Sauvegardes automatisées",
-          "Stockage cloud",
-          "Protocoles de restauration",
-          "Alertes en temps réel",
+          "Réponse le jour même",
+          "Site restauré",
+          "Cause corrigée",
+          "Bref rapport",
         ],
       },
       seo: {
@@ -283,26 +278,26 @@ export const fr = {
           "Reporting",
         ],
       },
-      cms: {
-        title: "Gestion de contenu",
+      relaunch: {
+        title: "Refonte de site web",
         description:
-          "Je garde le contenu à jour pour que le site ne vieillisse pas en silence.",
+          "Votre site actuel reconstruit : mobile, rapide, sécurisé et visible sur Google, avec vos contenus repris.",
         features: [
-          "Maintenance CMS",
-          "Optimisation d'images",
-          "Mises à jour de mise en page",
-          "Contenu SEO",
+          "Contenus existants conservés",
+          "Mobile et rapide",
+          "HTTPS et bases SEO",
+          "Transfert du domaine",
         ],
       },
       support: {
-        title: "Support technique",
+        title: "Support & contenu",
         description:
-          "De l'aide quand quelque chose casse, ou quand il faut simplement que ça aille plus vite.",
+          "Nouveaux textes et images intégrés, petits bugs corrigés, site accéléré. À l'heure, sans minimum.",
         features: [
-          "Réponse rapide",
+          "Mises à jour de contenu",
           "Corrections de bugs",
-          "Optimisation de code",
-          "Aide à l'intégration",
+          "Optimisation d'images",
+          "Petites modifications",
         ],
       },
     },
@@ -349,6 +344,20 @@ export const fr = {
     copyFailed:
       "Copie impossible. L'adresse est dominik.koenitzer@gmail.com",
     eyebrow: "Contact",
+    form: {
+      nameLabel: "Nom",
+      emailLabel: "E-mail",
+      messageLabel: "Message",
+      messagePlaceholder: "De quoi avez-vous besoin, pour quand environ, et que dois-je savoir ?",
+      send: "Envoyer le message",
+      sending: "Envoi…",
+      sentTitle: "Envoyé.",
+      sentBody: "Merci, bien reçu. Je réponds généralement dans la journée.",
+      sendAnother: "Envoyer un autre message",
+      failed: "Ça n'est pas passé. Réessayez, ou écrivez-moi directement.",
+      tooMany: "Beaucoup de messages depuis votre connexion. Réessayez dans une heure, ou écrivez-moi directement.",
+      orDirect: "Ou écrivez-moi directement :",
+    },
     responseTime: "Je réponds généralement dans la journée.",
   },
   donate: {
@@ -422,7 +431,7 @@ export const fr = {
           "Ce site est hébergé par Vercel. Les journaux serveur (adresse IP, type de navigateur, heure d'accès) sont stockés à des fins de sécurité et de fiabilité. Les statistiques de visiteurs sont collectées via Vercel Analytics avec uniquement des données anonymisées. Aucun cookie ni identifiant de suivi n'est utilisé.",
         contactLabel: "E-mail :",
         contactBody:
-          "Si vous m'écrivez par e-mail, je ne conserve que ce que vous envoyez (votre adresse et votre message), uniquement pour vous répondre et traiter vos questions de suivi.",
+          "Si vous m'écrivez par e-mail ou via le formulaire de contact, je ne conserve que ce que vous envoyez (votre nom, votre adresse et votre message), uniquement pour vous répondre et traiter vos questions de suivi. Les messages du formulaire sont stockés dans une base de données Supabase à Francfort, en Allemagne, avec une adresse IP hachée qui sert uniquement à limiter le spam.",
       },
       rights: {
         heading: "Vos droits",

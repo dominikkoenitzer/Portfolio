@@ -4,14 +4,15 @@ import {
   type MotionProps,
   useReducedMotion,
 } from "framer-motion";
-import { ArrowUpRight, Check, ChevronDown } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ArrowRight, ArrowUpRight, Check, ChevronDown } from "lucide-react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { revealOnScroll } from "@/lib/framer-animations";
@@ -22,6 +23,14 @@ import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
 
 const EMAIL = SITE_CONFIG.email;
+
+/**
+ * One recipe for every field, the card recipe turned inwards: the same hairline
+ * border and surface as a card, the primary ring on focus. `text-base` on
+ * touch screens, because iOS zooms into anything smaller than 16px.
+ */
+const FIELD =
+  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:border-primary/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:text-sm";
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -117,11 +126,12 @@ function IntentLabel({ label }: { label: string }) {
 }
 
 /**
- * The contact page is one sentence the visitor finishes, and one link.
+ * The contact page is one sentence the visitor finishes, then a short form.
  *
- * There is no backend by design: the picked subject prefills a mailto template,
- * so the message is sent by the visitor's own mail client. Nothing to deploy, no
- * API key, no third-party service.
+ * The form posts to `/api/contact` (same origin, so the CSP is untouched), which
+ * stores the message in Supabase and mails it on. The picked subject travels
+ * with it. The mailto link stays underneath as the fallback for anyone who
+ * would rather use their own mail client, with the same prefilled subject.
  */
 export function ContactSection() {
   const { language } = useLanguage();
@@ -162,6 +172,57 @@ export function ContactSection() {
     } catch {
       toast({ title: t.copyFailed, variant: "destructive" });
     }
+  };
+
+  // The form. `startedAt` is when the page mounted: the API drops anything
+  // "filled in" faster than a person can type, and `website` is the honeypot
+  // no person sees. Both are read by `api/contact.js`.
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const startedAt = useRef(0);
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (status === "sending") return;
+    const data = new FormData(event.currentTarget);
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          message: data.get("message"),
+          website: data.get("website"),
+          subject: selected.subject,
+          intent,
+          language,
+          startedAt: startedAt.current,
+        }),
+      });
+      if (!res.ok) {
+        toast({
+          title: res.status === 429 ? t.form.tooMany : t.form.failed,
+          variant: "destructive",
+        });
+        setStatus("idle");
+        return;
+      }
+      setStatus("sent");
+    } catch {
+      toast({ title: t.form.failed, variant: "destructive" });
+      setStatus("idle");
+    }
+  };
+
+  const reset = () => {
+    formRef.current?.reset();
+    startedAt.current = Date.now();
+    setStatus("idle");
   };
 
   return (
@@ -274,37 +335,116 @@ export function ContactSection() {
           </Popover>
         </motion.p>
 
-        {/* The address is the button, with no card, wrapper or icon tile. */}
-        <motion.div className="mt-12 sm:mt-16" variants={REVEAL}>
-          <a
-            className="group inline-flex max-w-full items-start gap-2 font-semibold tracking-tight transition-colors duration-200 ease-out hover:text-primary active:text-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:items-center"
-            href={mailtoFor(selected.subject, selected.body)}
-            style={{ fontSize: "clamp(1.25rem, 4.5vw, 2.25rem)" }}
-          >
-            {/* Underlined at rest, because it is the one link the page is for.
-                The rule deepens with the pointer: a colour change, not a wipe. */}
-            <span className="min-w-0 break-all underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color] duration-200 ease-out group-hover:decoration-primary">
-              {EMAIL}
-            </span>
-            <ArrowUpRight
-              aria-hidden
-              className="mt-[0.35em] h-[0.55em] w-[0.55em] shrink-0 text-primary transition-transform duration-200 ease-out group-hover:-translate-y-1 group-hover:translate-x-1 sm:mt-0"
-            />
-          </a>
+        {/* The form. Plain fields on the page column, no card around them:
+            the sentence above is the subject line, so the form only needs the
+            three things the sentence cannot say. Labels sit above the fields
+            and stay visible, placeholders only hint. */}
+        <motion.div className="mt-10 sm:mt-12" variants={REVEAL}>
+          {status === "sent" ? (
+            <div
+              aria-live="polite"
+              className="max-w-xl rounded-2xl border border-border/60 bg-card p-6 sm:p-8"
+            >
+              <p className="font-semibold text-lg">{t.form.sentTitle}</p>
+              <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+                {t.form.sentBody}
+              </p>
+              <Button
+                className="mt-6 rounded-lg"
+                onClick={reset}
+                type="button"
+                variant="outline"
+              >
+                {t.form.sendAnother}
+              </Button>
+            </div>
+          ) : (
+            <form
+              className="grid max-w-xl gap-5"
+              noValidate={false}
+              onSubmit={submit}
+              ref={formRef}
+            >
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="grid gap-1.5 text-sm">
+                  <span className="font-medium">{t.form.nameLabel}</span>
+                  <input
+                    autoComplete="name"
+                    className={FIELD}
+                    maxLength={120}
+                    name="name"
+                    required
+                    type="text"
+                  />
+                </label>
+                <label className="grid gap-1.5 text-sm">
+                  <span className="font-medium">{t.form.emailLabel}</span>
+                  <input
+                    autoComplete="email"
+                    className={FIELD}
+                    maxLength={254}
+                    name="email"
+                    required
+                    type="email"
+                  />
+                </label>
+              </div>
+              <label className="grid gap-1.5 text-sm">
+                <span className="font-medium">{t.form.messageLabel}</span>
+                <textarea
+                  className={cn(FIELD, "min-h-[9rem] resize-y leading-relaxed")}
+                  maxLength={5000}
+                  name="message"
+                  placeholder={t.form.messagePlaceholder}
+                  required
+                />
+              </label>
+              {/* Honeypot: off-screen rather than display:none, so the bots
+                  that skip hidden fields still fill this one. Out of the tab
+                  order and the accessibility tree for everyone else. */}
+              <div aria-hidden className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
+                <label>
+                  Website
+                  <input autoComplete="off" name="website" tabIndex={-1} type="text" />
+                </label>
+              </div>
+              <div>
+                <Button
+                  className="group rounded-lg px-6"
+                  disabled={status === "sending"}
+                  type="submit"
+                  variant="cta"
+                >
+                  {status === "sending" ? t.form.sending : t.form.send}
+                  <ArrowRight
+                    aria-hidden
+                    className="transition-transform duration-200 ease-out group-hover:translate-x-0.5"
+                  />
+                </Button>
+              </div>
+            </form>
+          )}
+        </motion.div>
 
-          {/* Two quiet lines. mailto: is a dead end for anyone on webmail
-              without a registered handler, so the copy fallback sits right
-              beside it, and what happens next sits under both. */}
-          <p className="mt-5 text-muted-foreground text-sm leading-relaxed">
-            {t.emailHint}{" "}
+        {/* The address stays, as the fallback: same subject, the visitor's own
+            mail client. Smaller than it was, because the form is now the
+            thing the page is for. */}
+        <motion.div className="mt-10 sm:mt-12" variants={REVEAL}>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            {t.form.orDirect}{" "}
+            <a
+              className="group inline-flex max-w-full items-center gap-1 font-medium text-foreground underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color,color] duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              href={mailtoFor(selected.subject, selected.body)}
+            >
+              <span className="min-w-0 break-all">{EMAIL}</span>
+              <ArrowUpRight
+                aria-hidden
+                className="h-[0.8em] w-[0.8em] shrink-0 text-primary transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>{" "}
             {/* The same single-cell stack as the subject trigger, for the same
-                reason: the confirmation is far shorter than the invitation, and
-                on a 375px screen that changed this paragraph's line count and
-                pulled the response-time line up under it. The cell holds the
-                longer of the two; the button hugs whichever is showing, so its
-                box is the size of the words it is under. The 44px touch target
-                is spent on coarse pointers only, where it is what the finger
-                needs; on a mouse it would only inflate the cursor's magnet. */}
+                reason: the confirmation is far shorter than the invitation, so
+                the cell holds the longer of the two and nothing reflows. */}
             <span className="inline-grid align-baseline">
               <span aria-hidden className="invisible col-start-1 row-start-1">
                 {t.copyEmail}
