@@ -3,10 +3,10 @@ import {
   ArrowRight,
   ChevronDown,
   Code,
-  FileText,
-  HardDrive,
   Laptop,
+  LifeBuoy,
   type LucideIcon,
+  RefreshCw,
   Search,
   Server,
   Settings,
@@ -73,15 +73,15 @@ interface Service {
 // Order within a category maps onto the tree's three leaf slots (see
 // ServiceExplorer's LEAVES layout), so keep build/protect/grow grouped.
 const services: Service[] = [
-  { itemKey: "webDev", price: "300 CHF", icon: Code, category: "build" },
+  { itemKey: "webDev", price: "2'000 CHF", icon: Code, category: "build" },
   {
     itemKey: "customSoftware",
-    price: "500 CHF",
+    price: "3'000 CHF",
     icon: Settings,
     category: "build",
   },
-  { itemKey: "serverSetup", price: "350 CHF", icon: Server, category: "build" },
-  { itemKey: "security", price: "60 CHF/hr", icon: Shield, category: "protect" },
+  { itemKey: "serverSetup", price: "600 CHF", icon: Server, category: "build" },
+  { itemKey: "security", price: "100 CHF/hr", icon: Shield, category: "protect" },
   {
     itemKey: "maintenance",
     price: "50 CHF/mo",
@@ -89,14 +89,19 @@ const services: Service[] = [
     category: "protect",
   },
   {
-    itemKey: "backup",
-    price: "200 CHF + 50/mo",
-    icon: HardDrive,
+    itemKey: "emergency",
+    price: "300 CHF",
+    icon: LifeBuoy,
     category: "protect",
   },
-  { itemKey: "seo", price: "150 CHF", icon: Search, category: "grow" },
-  { itemKey: "cms", price: "40 CHF/hr", icon: FileText, category: "grow" },
-  { itemKey: "support", price: "30 CHF/hr", icon: Laptop, category: "grow" },
+  { itemKey: "seo", price: "500 CHF", icon: Search, category: "grow" },
+  {
+    itemKey: "relaunch",
+    price: "1'500 CHF",
+    icon: RefreshCw,
+    category: "grow",
+  },
+  { itemKey: "support", price: "80 CHF/hr", icon: Laptop, category: "grow" },
 ];
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
@@ -107,16 +112,17 @@ const CATEGORY_ORDER: OfferCategoryKey[] = ["build", "protect", "grow"];
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
  * unit. Taking a numeric minimum across the raw strings would be wrong, they
- * mix models ("300 CHF", "60 CHF/hr", "50 CHF/mo", "200 CHF + 50/mo"), so we
+ * mix models ("2'000 CHF", "100 CHF/hr", "50 CHF/mo"), so we
  * pick the cheapest entry figure and show that service's price verbatim. Derived
- * rather than hard-coded so it can't drift when a price changes.
+ * rather than hard-coded so it can't drift when a price changes. The Swiss
+ * thousands apostrophe is stripped first, or "2'000" would count as 2.
  */
+const entryFigure = (price: string) =>
+  Number(price.replace(/'/g, "").match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY);
+
 const entryPrice = (items: Service[]) =>
   items.reduce((cheapest, s) =>
-    Number(s.price.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY) <
-    Number(cheapest.price.match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY)
-      ? s
-      : cheapest,
+    entryFigure(s.price) < entryFigure(cheapest.price) ? s : cheapest,
   ).price;
 
 // The immersive 3D tree is desktop + motion only; everything else is cards.

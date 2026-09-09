@@ -92,3 +92,6 @@ AGENTS.md
 .claude/
 .agents/
 skills-lock.json
+
+# Supabase CLI link state
+supabase/.temp/
