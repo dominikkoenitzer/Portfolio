@@ -36,7 +36,6 @@ import {
   SiSpring,
   SiTailwindcss,
   SiTypescript,
-  SiUbuntu,
   SiVercel,
 } from "react-icons/si";
 import * as THREE from "three";
@@ -85,7 +84,6 @@ const ICONS: { Icon: IconType; color: string }[] = [
   { Icon: SiNginx, color: "#009639" },
   { Icon: SiJenkins, color: "#E0584B" },
   { Icon: SiGrafana, color: "#F46800" },
-  { Icon: SiUbuntu, color: "#E95420" },
   { Icon: SiGit, color: "#F05032" },
   { Icon: SiPostgresql, color: "#4F8CC9" },
   { Icon: SiMongodb, color: "#4DB33D" },
