@@ -14,11 +14,17 @@
  *
  * Run: bun scripts/prerender.ts   (wired into `bun run build`)
  */
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import { SITE_CONFIG } from "../src/constants";
-import { getProjects } from "../src/constants/projects";
+import {
+  cardImageSrc,
+  getProjects,
+  PROJECT_CARD_SIZES,
+  projectCardSrcSet,
+} from "../src/constants/projects";
 import {
   getProjectSeoDescription,
   getProjectSeoTitle,
@@ -141,6 +147,30 @@ for (const p of getProjects("en")) {
     ],
   });
 }
+
+/*
+ * The catalogue card serves a downscaled copy of each screenshot as its first
+ * `srcset` candidate (`scripts/gen-card-images.ts`). Nothing at build time
+ * imports those files, so a project added without running the generator would
+ * ship a candidate that 404s for every 1x visitor, and the card would show the
+ * browser's broken-image box. Check the files are there while there is still a
+ * build to fail.
+ */
+const missingCards = getProjects("en")
+  .filter((p) => p.image && !p.imageIcon)
+  .map((p) => cardImageSrc(p.image as string))
+  .filter((card) => !existsSync(join(process.cwd(), "public", card)));
+
+if (missingCards.length > 0) {
+  console.error(
+    `prerender: no catalogue copy for ${missingCards.join(", ")}\n` +
+      "  Run `bun scripts/gen-card-images.ts`.",
+  );
+  process.exit(1);
+}
+
+/** The project the catalogue opens on: newest is the default sort. */
+const firstCard = getProjects("en").at(-1);
 
 // A route that reaches the router but not this list ships with no file behind
 // it, and Vercel answers 404 for a path with no file. That is invisible in dev
@@ -294,6 +324,23 @@ for (const page of pages) {
     html = html.replace(
       /<\/head>/i,
       `  <link rel="preload" as="image" href="/avatar.jpg" fetchpriority="high">\n  </head>`,
+    );
+  }
+
+  // Same trick on the catalogue, where the first card's screenshot is the LCP
+  // element. It has to carry the card's own srcset and sizes: a bare href
+  // would preload the full-size file and the card would then pick the small
+  // one, paying for both. The list opens on the newest project because that is
+  // the default sort, and the base array runs oldest first.
+  if (page.route === "/projects" && firstCard?.image) {
+    const srcset = esc(
+      projectCardSrcSet(firstCard.image, firstCard.imageWidth),
+    );
+    html = html.replace(
+      /<\/head>/i,
+      `  <link rel="preload" as="image" href="${esc(firstCard.image)}" ` +
+        `imagesrcset="${srcset}" imagesizes="${esc(PROJECT_CARD_SIZES)}" ` +
+        `fetchpriority="high">\n  </head>`,
     );
   }
 

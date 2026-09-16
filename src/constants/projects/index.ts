@@ -160,6 +160,10 @@ const PROJECT_BASE: ProjectBase[] = [
     downloadUrl: "https://github.com/dominikkoenitzer/Oxidize/releases/latest",
     priority: 11,
     image: "/projects/oxidize.png",
+    // The one shot that is not 1600px wide. Left alone on purpose: it is flat
+    // terminal text, and a lanczos downscale to 1600 turns crisp glyph edges
+    // into gradients that PNG cannot pack, taking the file from 144 kB to 388.
+    imageWidth: 1920,
     programmingLanguages: ["Rust"],
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
@@ -203,11 +207,43 @@ const formatProjectDate = (date: string, lang: Language): string => {
   return formatter.format(new Date(`${date}-01T00:00:00Z`));
 };
 
+/** Intrinsic width of a project screenshot unless the entry says otherwise. */
+const DEFAULT_IMAGE_WIDTH = 1600;
+
+/** Width of the downscaled catalogue copies `gen-card-images.ts` writes. */
+export const PROJECT_CARD_WIDTH = 800;
+
+/**
+ * The /projects catalogue's copy of a project's picture: the same shot at
+ * `PROJECT_CARD_WIDTH`, written by `scripts/gen-card-images.ts` and offered
+ * beside the original in the card's `srcset`. Always .jpg, including for the
+ * one PNG source: a downscaled screenshot has no flat regions left for PNG to
+ * pack, so the format would cost more than it returns.
+ */
+export const cardImageSrc = (image: string): string =>
+  image.replace(/\.(jpe?g|png)$/i, "-card.jpg");
+
+/** The two candidates a catalogue card offers for a project's picture. */
+export const projectCardSrcSet = (image: string, imageWidth: number): string =>
+  `${cardImageSrc(image)} ${PROJECT_CARD_WIDTH}w, ${image} ${imageWidth}w`;
+
+/**
+ * How wide a catalogue card renders its picture, measured in a browser rather
+ * than estimated: 534px from 1280 up, where the grid column stops growing,
+ * 42vw for the two-column card between 768 and 1280, and all but the gutters
+ * on a phone. Shared with the prerendered preload on /projects, which has to
+ * advertise the same widths or the browser preloads one candidate and then
+ * downloads the other.
+ */
+export const PROJECT_CARD_SIZES =
+  "(min-width: 1280px) 534px, (min-width: 768px) 42vw, 93vw";
+
 const buildProject = (base: ProjectBase, lang: Language): PortfolioProject => {
   const content = resolveContent(base.slug, lang);
   return {
     ...base,
     ...content,
+    imageWidth: base.imageWidth ?? DEFAULT_IMAGE_WIDTH,
     year: base.date.slice(0, 4),
     dateLabel: formatProjectDate(base.date, lang),
   };

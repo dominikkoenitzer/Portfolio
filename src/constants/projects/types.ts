@@ -31,6 +31,13 @@ export interface PortfolioProject {
   downloadUrl?: string;
   priority: number;
   image?: string;
+  /**
+   * Intrinsic pixel width of `image`, resolved from the data (1600 unless the
+   * entry overrides it). It is the `w` descriptor the catalogue card's
+   * `srcset` advertises, so it has to match the file on disk;
+   * `scripts/gen-card-images.ts` fails the run when it does not.
+   */
+  imageWidth: number;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
   /** Set when `image` is a square app icon/logo (not a screenshot): renders it contained and centered instead of full-bleed. */
@@ -81,6 +88,8 @@ export type ProjectBase = {
   priority: number;
   /** Optional screenshot path under /public (e.g. /projects/<slug>.png). */
   image?: string;
+  /** Intrinsic pixel width of `image`, when it is not the usual 1600. */
+  imageWidth?: number;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
   /** Set when `image` is a square app icon/logo (not a screenshot): renders it contained and centered instead of full-bleed. */
