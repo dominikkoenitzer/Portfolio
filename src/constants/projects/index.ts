@@ -155,8 +155,9 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
     liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
+    // Oxidize ships a versioned archive, so a fixed asset name under
+    // latest/download breaks on every release. The release page always resolves.
+    downloadUrl: "https://github.com/dominikkoenitzer/Oxidize/releases/latest",
     priority: 11,
     image: "/projects/oxidize.png",
     programmingLanguages: ["Rust"],
