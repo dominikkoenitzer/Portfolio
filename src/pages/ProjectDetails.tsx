@@ -343,6 +343,8 @@ const ProjectDetails = () => {
                     <img
                       alt={`${project.title} logo`}
                       className="h-36 w-36 object-contain sm:h-44 sm:w-44"
+                      decoding="async"
+                      fetchPriority="high"
                       loading="eager"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";

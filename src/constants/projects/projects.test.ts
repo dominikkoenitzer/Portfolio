@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { SUPPORTED_LANGUAGE_CODES } from "@/config/languages";
-import { PORTFOLIO_PROJECTS, getProject, getProjects } from "./index";
+import {
+  cardImageSrc,
+  getProject,
+  getProjects,
+  PORTFOLIO_PROJECTS,
+} from "./index";
 
 /**
  * The project list is hand-maintained data that feeds the cards, the detail
@@ -79,6 +84,27 @@ describe("the project list", () => {
       for (const shot of project.gallery ?? []) {
         expect(shot, project.slug).toMatch(/^\/.+\.\w+$/);
       }
+    }
+  });
+
+  /**
+   * The catalogue card advertises the small copy as a `srcset` candidate, so
+   * the derived name has to stay a real .jpg path next to the original. That
+   * the file behind it exists is checked by the prerender step, which is the
+   * only place that can see `public/`.
+   */
+  it("derives a catalogue copy for every screenshot", () => {
+    for (const project of projects) {
+      if (!project.image || project.imageIcon) continue;
+      const card = cardImageSrc(project.image);
+      expect(card, project.slug).toMatch(/^\/projects\/[\w-]+-card\.jpg$/);
+      expect(card, project.slug).not.toBe(project.image);
+    }
+  });
+
+  it("declares an intrinsic width for every screenshot", () => {
+    for (const project of projects) {
+      expect(project.imageWidth, project.slug).toBeGreaterThanOrEqual(1600);
     }
   });
 

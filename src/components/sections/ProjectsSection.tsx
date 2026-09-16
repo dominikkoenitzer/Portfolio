@@ -13,7 +13,12 @@ import { type KeyboardEvent, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getProjects, type PortfolioProject } from "@/constants/projects";
+import {
+  getProjects,
+  type PortfolioProject,
+  PROJECT_CARD_SIZES,
+  projectCardSrcSet,
+} from "@/constants/projects";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -368,7 +373,7 @@ export function ProjectsSection() {
               key={resultKey}
               {...revealOnScroll(reduceMotion, stagger(0, 0.06))}
             >
-              {visible.map((project) => (
+              {visible.map((project, cardIndex) => (
                 <motion.article
                   className={`${CARD} group overflow-hidden hover:border-primary/30`}
                   key={project.slug}
@@ -380,15 +385,34 @@ export function ProjectsSection() {
                         the content column. */}
                     <figure className="relative m-0 aspect-[16/10] overflow-hidden border-border/60 border-b bg-secondary/40 md:aspect-auto md:border-r md:border-b-0">
                       {project.image && !project.imageIcon ? (
+                        /* Two candidates, not one. The box is 534px wide past
+                           1280 and never grows, so a 1x display was decoding a
+                           1600px screenshot to fill a third of its width: eleven
+                           of those is 844kB on one route, 448kB of it pulled in
+                           before the visitor has scrolled. `gen-card-images.ts`
+                           writes the 800px copy; the original stays in the list
+                           so a retina panel still gets a sharp picture. `sizes`
+                           is measured, not guessed: see the script's header.
+
+                           The first card is the LCP element on this route, and
+                           `loading="lazy"` costs it a round trip, because the
+                           browser will not start a lazy image until layout has
+                           told it the box is on screen. The rest stay lazy. */
                         <img
                           alt={`${project.title} screenshot`}
                           className="absolute inset-0 h-full w-full object-cover object-top"
                           decoding="async"
-                          loading="lazy"
+                          fetchPriority={cardIndex === 0 ? "high" : "auto"}
+                          loading={cardIndex === 0 ? "eager" : "lazy"}
                           onError={(e) => {
                             e.currentTarget.style.display = "none";
                           }}
+                          sizes={PROJECT_CARD_SIZES}
                           src={project.image}
+                          srcSet={projectCardSrcSet(
+                            project.image,
+                            project.imageWidth,
+                          )}
                         />
                       ) : null}
 
