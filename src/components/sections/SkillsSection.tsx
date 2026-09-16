@@ -137,12 +137,19 @@ export function SkillsSection() {
         title={t.heading}
       />
 
+      {/* The box sits outside the Suspense boundary, the way the services tree
+          does it. Inside, `fallback={null}` meant the sphere's 560px of height
+          did not exist in the layout until the three.js chunk had arrived, and
+          the card grid below rendered against the heading, then dropped when it
+          landed: 0.172 of layout shift on a throttled first visit, all of it
+          after the page looked finished. Reserving the height first costs
+          nothing and the shift goes to zero. */}
       {showSphere ? (
-        <Suspense fallback={null}>
-          <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
+        <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
+          <Suspense fallback={null}>
             <SkillSphere />
-          </div>
-        </Suspense>
+          </Suspense>
+        </div>
       ) : null}
 
       {/* No `items-start`: the row stretches, so two cards side by side share
