@@ -32,8 +32,7 @@ as described in `.editorconfig`.
 
 ## Conventions
 
-A few things are deliberate and load-bearing (see `CLAUDE.md` for the full
-picture):
+A few things are deliberate and load-bearing:
 
 - **Exports.** Components use **named** exports through barrels
   (`components/<group>/index.ts`); pages and any `React.lazy`-loaded component
