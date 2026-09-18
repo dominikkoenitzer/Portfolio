@@ -27,10 +27,15 @@ const buttonVariants = cva(
         // Primary-tinted secondary action (in-card links, the footer mail button).
         soft: "bg-primary/10 text-primary hover:bg-primary/15",
       },
+      // Sizes change the size and nothing else. The `sm` and `lg` rows carried
+      // a `rounded-md` from the upstream shadcn default, which quietly re-set
+      // the base `rounded-lg`, so the same button shipped at a 12px radius in
+      // one size and 14px in another — "Email me" and "Hire Me" sat next to
+      // each other with different corners.
       size: {
         default: "btn-icon-nudge h-10 px-4 py-2",
-        sm: "btn-icon-nudge h-9 rounded-md px-3",
-        lg: "btn-icon-nudge h-11 rounded-md px-8",
+        sm: "btn-icon-nudge h-9 px-3",
+        lg: "btn-icon-nudge h-11 px-8",
         icon: "h-10 w-10",
       },
     },

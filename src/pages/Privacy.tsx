@@ -77,12 +77,18 @@ function Clause({
       id={id}
       variants={REVEAL}
     >
-      <h2 className="font-semibold text-foreground text-xl sm:text-2xl">
-        {/* The number is decoration for the eye and for the rail beside it, so
-            it is hidden from the accessible name of the heading. */}
-        <span aria-hidden="true" className={`${INDEX_LABEL} mb-2 block`}>
-          {String(index + 1).padStart(2, "0")}
-        </span>
+      {/* The number is decoration for the eye and for the rail beside it, so it
+          is hidden from the accessible name of the heading. It sits outside the
+          heading rather than inside it: index.css makes a span inside h1..h6
+          inherit the heading face with !important, which rendered this
+          micro-label in Zen Maru while every other one on the site is body
+          face. It was already `block mb-2`, so nothing moves. */}
+      <p aria-hidden="true" className={`${INDEX_LABEL} mb-2`}>
+        {String(index + 1).padStart(2, "0")}
+      </p>
+      {/* 700 like every other section heading on the site; card titles are the
+          600 ones. */}
+      <h2 className="font-bold text-foreground text-xl sm:text-2xl">
         {heading}
       </h2>
       <div className="mt-4 space-y-4">{children}</div>
@@ -99,7 +105,10 @@ const Privacy = () => {
   const lenis = useLenis();
   const [active, setActive] = useState<SectionId>(SECTION_IDS[0]);
   const privacyUrl = `${SITE_CONFIG.url}/privacy`;
-  const lastRevised = new Date(PRIVACY_REVISED).toLocaleDateString(
+  // `new Date("2026-06-26")` is UTC midnight, so a reader west of Greenwich was
+  // shown the day before the one the <time datetime> attribute carries. The
+  // explicit time makes it local midnight, i.e. the calendar date meant here.
+  const lastRevised = new Date(`${PRIVACY_REVISED}T00:00:00`).toLocaleDateString(
     LOCALE_TAG[language],
     { year: "numeric", month: "long", day: "numeric" },
   );

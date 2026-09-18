@@ -35,9 +35,10 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  *                the target during Lenis smooth-scroll and on resize.
  *   • CARET: over non-input selectable text, morphs to a thin tall I-beam
  *                whose height is derived from the text's font/line metrics.
- *   • FIELD: over a real form field it fades out (opacity 0) so the native
- *                I-beam (kept by index.css) owns the typing / selection / IME /
- *                blink affordance a synthetic caret can't represent.
+ *   • FIELD: over a real form field (or an iframe) it fades out (opacity 0)
+ *                so the native cursor owns the typing / selection / IME / blink
+ *                affordance a synthetic caret can't represent, and so a nested
+ *                document that swallows the page's mouse events can't strand it.
  *   • PRESS: scale dips on mousedown, restores on mouseup.
  *
  * ── Theme ──────────────────────────────────────────────────────────────────
@@ -83,6 +84,13 @@ const INTERACTIVE_SELECTOR =
 // the typing affordance is never lost.
 const TEXT_FIELD_SELECTOR =
   'input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]';
+
+// A nested document owns its own pointer: once the cursor is over an iframe the
+// page stops getting mouse events entirely (measured: one `mouseover` on the
+// frame, then nothing), so the custom element would freeze mid-page and sit
+// there, visible, while the real pointer moves inside the frame. Fade out for
+// the same reason as a form field and let the frame's native cursor take over.
+const NESTED_DOCUMENT_SELECTOR = "iframe, embed, object";
 
 // Non-input, text-bearing elements that earn the adaptive I-beam caret. Kept as
 // a single string for the same cheap `closest()` walk; an empty-text guard in
@@ -273,6 +281,11 @@ export function CustomCursor() {
     // / pointer strayed far outside) so the caller can fall back to a dot.
     function glueMagnet(el: Element): boolean {
       if (!el.isConnected) return false;
+      // A target can stop being interactive while the pointer rests on it: the
+      // contact form disables its submit button for the length of the request,
+      // and the box went on advertising a control that no longer takes a click
+      // (the rect, the connection and the hit-test all still pass).
+      if (!el.matches(INTERACTIVE_SELECTOR)) return false;
 
       // Prefer an override sub-rect (e.g. the hovered services leaf) over the
       // element's bounding box. `undefined` ⇒ no override; explicit `null` ⇒ the
@@ -375,6 +388,13 @@ export function CustomCursor() {
 
       if (!glueMagnet(el)) {
         releaseMagnet();
+        // Re-read what is under the pointer, exactly as the occlusion branch
+        // above does. Without it a release could never be undone while the
+        // pointer sat still: the contact form's submit button drops the magnet
+        // when it disables itself for the request, and re-enabling it left a
+        // plain dot sitting on a live primary action until the mouse moved.
+        const { x, y } = pointerRef.current;
+        applyContext(document.elementFromPoint(x, y));
         return;
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -474,8 +494,11 @@ export function CustomCursor() {
       }
       if (activeTargetRef.current) releaseMagnet();
 
-      // 2) Real form field ⇒ fade out (native I-beam shows).
-      const field = el ? el.closest(TEXT_FIELD_SELECTOR) : null;
+      // 2) Real form field, or a nested document ⇒ fade out (the native
+      //    cursor shows).
+      const field = el
+        ? el.closest(`${TEXT_FIELD_SELECTOR}, ${NESTED_DOCUMENT_SELECTOR}`)
+        : null;
       if (field) {
         setFieldShape();
       } else {
@@ -509,14 +532,17 @@ export function CustomCursor() {
       applyContext(e.target as Element | null);
     };
 
-    // A canvas scene can't emit a real pointer move when its interactivity
-    // changes under a STILL cursor (the object drifts under the pixel, not the
-    // pixel onto the object). It toggles `.cursor-pointer` / a magnet rect and
-    // fires a synthetic `mouseover`; re-evaluate here so the morph acquires or
-    // releases without waiting for the user to jog the mouse. Real hovers are
-    // already covered by `mousemove`, so only handle untrusted (synthetic) ones.
+    // `mousemove` is not the only way the thing under the pointer changes: a
+    // scroll, a resize, an overlay opening and a canvas scene re-hit-testing
+    // all move content under a STILL cursor, and none of them emit a move. The
+    // browser does fire a trusted `mouseover` for every one of them (measured:
+    // 8 of them across one wheel scroll), so this is what keeps the morph in
+    // sync when the page moves instead of the mouse. Synthetic (untrusted)
+    // `mouseover`s from the canvas scenes carry no coordinates and are handled
+    // here too; both read the position from `pointerRef`, which is still
+    // correct precisely because the pointer has not moved.
     const onOver = (e: MouseEvent) => {
-      if (e.isTrusted || !hasMoved) return;
+      if (!hasMoved) return;
       applyContext(e.target as Element | null);
     };
 
@@ -530,6 +556,32 @@ export function CustomCursor() {
       press.set(0);
       occlusionBurst = OCCLUSION_BURST;
     };
+
+    // Chrome turns a mousedown on a link or an image into a native drag, and
+    // from that moment the page sees no mousemove and no mouseup at all. The
+    // morph stayed parked on the link while the pointer travelled away, and the
+    // press dip outlived the drop, leaving the whole cursor a fifth too small
+    // until the next click anywhere. `dragstart` is the last event before the
+    // blackout, `dragend` the first one after it, and `dragend` carries the
+    // release coordinates.
+    const onDragStart = () => {
+      press.set(0);
+      if (activeTargetRef.current) releaseMagnet();
+      hideCursor();
+    };
+    const onDragEnd = (e: DragEvent) => {
+      press.set(0);
+      pointerRef.current.x = e.clientX;
+      pointerRef.current.y = e.clientY;
+      destX.set(e.clientX);
+      destY.set(e.clientY);
+      cx.jump(e.clientX);
+      cy.jump(e.clientY);
+      showCursor();
+      applyContext(document.elementFromPoint(e.clientX, e.clientY));
+    };
+    // A native context menu can swallow the mouseup that would clear the dip.
+    const onContextMenu = () => press.set(0);
 
     // Pointer physically left the viewport: mark it outside, release any magnet
     // (so re-entry starts fresh: never a stale box) and fade out.
@@ -579,6 +631,9 @@ export function CustomCursor() {
     window.addEventListener("mouseover", onOver, { passive: true });
     window.addEventListener("mousedown", onDown, { passive: true });
     window.addEventListener("mouseup", onUp, { passive: true });
+    window.addEventListener("dragstart", onDragStart, { passive: true });
+    window.addEventListener("dragend", onDragEnd, { passive: true });
+    window.addEventListener("contextmenu", onContextMenu, { passive: true });
     document.addEventListener("mouseout", onWindowOut, { passive: true });
     window.addEventListener("blur", onBlur);
     window.addEventListener("focus", onFocus);
@@ -591,6 +646,9 @@ export function CustomCursor() {
       window.removeEventListener("mouseover", onOver);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("dragstart", onDragStart);
+      window.removeEventListener("dragend", onDragEnd);
+      window.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("mouseout", onWindowOut);
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);

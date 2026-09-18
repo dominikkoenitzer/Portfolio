@@ -798,7 +798,10 @@
             }
         }
 
-        @media (max-width: 768px) {
+        /* Up to 819px, not 768: the A4 sheet below is gated at 820px, and the gap
+           between the two left 769-819 with A4 geometry and unstyled base fonts —
+           16px body text inside a fixed 794px sheet. The two numbers have to meet. */
+        @media (max-width: 819px) {
             .container {
                 grid-template-columns: 1fr;
                 margin: 10px;
@@ -889,6 +892,25 @@
                 width: 60px;
                 height: 60px;
             }
+        
+            /* Phone readability and grid overflow, both introduced by the A4
+               block above having been unconditional: these rules had never run.
+               `li` at 9px is unreadable on a phone, and a grid item defaults to
+               `min-width: auto`, so one long address in the sidebar pushed the
+               whole sheet past a 320px screen. */
+            li,
+            .work-points li,
+            .education-details li,
+            .language-proficiency,
+            section.sprachen ul li .proficiency {
+                font-size: 12px;
+            }
+
+            .sidebar,
+            .main-content {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
         }
 
         /* ============================================
@@ -946,7 +968,19 @@
             box-shadow: none !important;
         }
 
-        /* ============================================
+                /* ============================================
+           The block below is the A4 sheet: it is what makes the
+           screen render identical to Ctrl+P. It is gated to print
+           and to viewports wide enough to hold 210mm, because it
+           was unconditional and `!important`, which locked the
+           document to 794px on a phone too: 414px of sideways
+           scrolling in a 390px viewport, and it silently killed
+           the responsive rules further up this stylesheet, which
+           had never once run. Print is listed first and without a
+           width, so paper output is untouched.
+           ============================================ */
+        @media print, screen and (min-width: 820px) {
+/* ============================================
            UNIFIED SIZING: applies to screen AND print
            A4 page dimensions, compact fit, identical
            output on Ctrl+P as on screen.
@@ -1082,6 +1116,7 @@
             height: 10px;
             margin: 0;
             color: #3498db;
+        }
         }
     </style>
 </head>

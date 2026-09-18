@@ -55,6 +55,13 @@ const GITHUB_COLORS = {
   "4": "hsl(var(--primary))",
 };
 
+// GitHub dates the calendar in plain `YYYY-MM-DD`, which `new Date()` parses as
+// UTC midnight. Formatted in a timezone behind UTC that renders as the previous
+// day, so every tooltip west of Greenwich named the wrong date and a Sunday
+// column read "Saturday" (measured in America/New_York and America/Los_Angeles).
+// Appending a time makes it local midnight, which is the day GitHub means.
+const localDay = (isoDate: string) => new Date(`${isoDate}T00:00:00`);
+
 class ContributionsError extends Error {
   constructor(readonly status: number) {
     super(`GitHub contributions request failed with ${status}`);
@@ -62,8 +69,10 @@ class ContributionsError extends Error {
 }
 
 // Answers the endpoint gives when nothing will change on a retry: a bad
-// username, a missing or revoked server token, an unknown user.
-const PERMANENT_FAILURES = new Set([400, 401, 403, 404, 500]);
+// username, a missing or revoked server token, an unknown user, and a GitHub
+// rate limit (429), which lasts an hour and only gets worse for being retried
+// a second later.
+const PERMANENT_FAILURES = new Set([400, 401, 403, 404, 429, 500]);
 
 const fetchGitHubData = async (username: string): Promise<GitHubData> => {
   const response = await fetch(
@@ -125,7 +134,7 @@ function ContributionsCalendar() {
 
   weeks.forEach((week, weekIndex) => {
     if (week.contributionDays.length > 0) {
-      const firstDay = new Date(week.contributionDays[0].date);
+      const firstDay = localDay(week.contributionDays[0].date);
       const month = firstDay.getMonth();
 
       // Show label at the start of each month
@@ -165,7 +174,10 @@ function ContributionsCalendar() {
     >
       <motion.div className="mb-3 sm:mb-4" variants={REVEAL}>
         <h2 className="mb-0.5 font-semibold text-foreground text-sm sm:text-base md:text-lg">
-          {data?.total?.toLocaleString() || 0} {t.contributionsSuffix}
+          {/* With no locale this number follows the browser, not the site, so
+              the German page read "2,527" next to German words while every
+              date beside it was localised properly. */}
+          {data?.total?.toLocaleString(localeTag) || 0} {t.contributionsSuffix}
         </h2>
         <p className="text-muted-foreground text-xs sm:text-sm">
           {t.activityNote}
@@ -242,7 +254,7 @@ function ContributionsCalendar() {
                         );
                       }
 
-                      const formattedDate = new Date(
+                      const formattedDate = localDay(
                         day.date,
                       ).toLocaleDateString(localeTag, {
                         weekday: "long",
