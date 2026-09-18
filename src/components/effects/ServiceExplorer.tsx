@@ -585,6 +585,25 @@ export default function ServiceExplorer({
       canvas.classList.remove("cursor-pointer");
       setCursorMagnetRect(canvas, null);
       sceneApi.current = null;
+      /*
+       * three.js keeps ONE `BufferGeometry` for every `Sprite` on the page
+       * (`three/src/objects/Sprite.js`, module-level `_geometry`), and every
+       * renderer that draws a sprite registers a `dispose` listener on it that
+       * closes over that renderer's WebGL context. The listener only removes
+       * itself when the geometry is disposed, and `renderer.dispose()` does not
+       * touch it — so every visit to this page left a closure holding a
+       * context, its canvas, and the whole detached route subtree above it.
+       * Found by heap snapshot: +535 DOM nodes and ~726 kB per visit here and
+       * to /skills, linear and never collected.
+       *
+       * Reached through a throwaway, because `new THREE.Sprite()` hands back
+       * that very singleton: the leaves live under `treeGroup`, not under this
+       * `scene`, so traversing from here would miss them. Disposing fires the
+       * event, every registered listener deregisters itself, and the geometry
+       * is re-uploaded the next time a sprite is drawn. Only one of these
+       * scenes is mounted at a time, so nothing live loses its buffer.
+       */
+      new THREE.Sprite().geometry.dispose();
       for (const d of disposables) d.dispose();
       renderer.dispose();
       // Drop the WebGL context so rapid route navigation can't exhaust the
