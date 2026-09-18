@@ -147,27 +147,36 @@ export function ContactSection() {
     [state],
   );
 
-  const [intent, setIntent] = useState<IntentKey | "service">(
-    service ? "service" : (incomingIntent ?? "job"),
-  );
+  /*
+   * Only an explicit choice is stored. Everything else is derived from the
+   * router, because this component outlives the navigations that change it:
+   * /contact → /contact is a `replace` and the route is keyed on the pathname,
+   * so it never remounts. Storing the *derived* value instead was the bug in
+   * both directions — with no service it left `intent` pointing at one that no
+   * longer existed (`t.intents.service` is undefined, and reading `.label` off
+   * it took the page to the error boundary), and once corrected, pressing Back
+   * restored the service to the router but not to the picker, so the form sent
+   * the wrong subject.
+   */
+  const [chosen, setChosen] = useState<IntentKey | "service" | null>(null);
+  // A new navigation — including Back and Forward — drops the explicit choice,
+  // so arriving from a service card always opens on that service.
+  const [seenState, setSeenState] = useState(state);
+  if (seenState !== state) {
+    setSeenState(state);
+    setChosen(null);
+  }
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  /*
-   * The router can drop its state while this component stays mounted: a second
-   * link to /contact is a `replace`, and `AnimatedRoutes` keys the route on the
-   * pathname, which has not changed. `intent` was then still "service" with no
-   * service behind it, `t.intents.service` is undefined, and reading `.label`
-   * off it replaced the whole contact page with the error boundary. Reproduced
-   * on production: arrive from a Services offer card, then click the footer's
-   * Contact link. Fall back in the same render that notices it, and correct the
-   * state so the picker agrees.
-   */
+  // An explicit "service" only counts while there is one; otherwise follow the
+  // router: the service it carried, the intent it named, or a role.
   const effectiveIntent: IntentKey | "service" =
-    intent === "service" && !service ? (incomingIntent ?? "job") : intent;
-  if (effectiveIntent !== intent) {
-    setIntent(effectiveIntent);
-  }
+    chosen && (chosen !== "service" || service)
+      ? chosen
+      : service
+        ? "service"
+        : (incomingIntent ?? "job");
 
   const selected: Draft =
     effectiveIntent === "service" && service
@@ -369,7 +378,7 @@ export function ContactSection() {
                       )}
                       key={key}
                       onClick={() => {
-                        setIntent(key);
+                        setChosen(key);
                         setOpen(false);
                       }}
                       type="button"

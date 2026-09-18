@@ -84,6 +84,20 @@ function CvDialog({
   // Only the overlay in front answers Escape: the palette can be opened over
   // this dialog, and one keypress used to close both.
   const isTopLayer = useOverlayLayer(true);
+
+  /*
+   * Move focus into the dialog on open. The Tab trap below only fires on keys
+   * pressed inside the panel, so with focus left on <body> it never ran: 14
+   * tabs from the open dialog walked the whole page behind it and never
+   * reached Close. Taking the iframe out of the tab order removed the one
+   * element that used to catch focus by accident, which is what exposed this.
+   */
+  useEffect(() => {
+    const first = panelRef.current?.querySelector<HTMLElement>(
+      'button, [href], [tabindex]:not([tabindex="-1"])',
+    );
+    first?.focus({ preventScroll: true });
+  }, []);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isTopLayer(event)) onClose();
