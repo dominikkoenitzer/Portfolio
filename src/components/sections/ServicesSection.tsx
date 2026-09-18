@@ -336,7 +336,15 @@ export function ServicesSection() {
     setSelectedKey(null);
   };
 
-  const closeCard = useCallback(() => setSelectedKey(null), []);
+  const closeCard = useCallback(() => {
+    const key = selectedKey;
+    setSelectedKey(null);
+    // Only when the keyboard was inside the card: a pointer user clicking the
+    // empty canvas must not have focus yanked into the hidden list.
+    if (key && document.activeElement?.closest('[role="dialog"]')) {
+      document.getElementById(`service-leaf-${key}`)?.focus();
+    }
+  }, [selectedKey]);
 
   // Stable so the imperative scene's pointer handlers never see a stale setter.
   const handleSelect = useCallback((key: string | null) => {
@@ -490,6 +498,31 @@ export function ServicesSection() {
                 </p>
               </div>
             </div>
+
+            {/* The tree is a <canvas>: aria-hidden, with nothing focusable in
+                it, so a keyboard or a screen reader could reach this page's
+                framing and never one of the nine services — the page's whole
+                point. These are the same nine leaves as real buttons, visually
+                hidden, driving the same `selectedKey` the pointer drives, so
+                both inputs open the same panel rather than getting two
+                different UIs. Filtered by `active` for the same reason a dimmed
+                bough stops answering the pointer. */}
+            <ul aria-label={t.heading} className="sr-only">
+              {services
+                .filter((item) => active === "all" || item.category === active)
+                .map((item) => (
+                  <li key={item.itemKey}>
+                    <button
+                      aria-expanded={selectedKey === item.itemKey}
+                      id={`service-leaf-${item.itemKey}`}
+                      onClick={() => handleSelect(item.itemKey)}
+                      type="button"
+                    >
+                      {`${t.items[item.itemKey].title}, ${t.categoryMeta[item.category].label}, ${item.price}`}
+                    </button>
+                  </li>
+                ))}
+            </ul>
 
             <AnimatePresence>
               {selected ? (
