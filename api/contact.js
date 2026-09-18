@@ -25,8 +25,20 @@ const INTENTS = new Set(["job", "freelance", "collab", "other", "service"]);
 const LANGS = new Set(["en", "de", "fr", "zh"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Postgres rejects a JSON body holding a NUL or a lone surrogate, and PostgREST
+// answers 400, which this handler reports to the visitor as "could not store the
+// message". Slicing by UTF-16 unit can cut an emoji in half at exactly the
+// limit, so drop a dangling high surrogate, and strip the control characters
+// that are not newlines or tabs.
 const clean = (v, max) =>
-  typeof v === "string" ? v.replace(/\r\n?/g, "\n").trim().slice(0, max) : "";
+  typeof v === "string"
+    ? v
+        .replace(/\r\n?/g, "\n")
+        .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, "")
+        .trim()
+        .slice(0, max)
+        .replace(/[\uD800-\uDBFF]$/, "")
+    : "";
 
 const clientIp = (req) => {
   const fwd = req.headers?.["x-forwarded-for"];
@@ -83,7 +95,9 @@ async function notify(row) {
   await transport.sendMail({
     from: `"dk.punds.ch Kontakt" <${user}>`,
     to,
-    replyTo: `"${row.name.replace(/"/g, "")}" <${row.email}>`,
+    // Backslashes have to go as well as quotes: a name ending in one escaped the
+    // closing quote and swallowed the address, so the reply went nowhere.
+    replyTo: `"${row.name.replace(/["\\]/g, "")}" <${row.email}>`,
     subject: `[Kontakt] ${row.subject}`,
     text,
   });
@@ -94,6 +108,41 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  // The form is same-origin and always sends JSON. Without these two checks any
+  // other site could post a plain <form> here from a visitor's browser: a form
+  // body is a "simple request", so it is never preflighted, and every accepted
+  // one costs a stored row and a mail out of his own Gmail account. A
+  // same-origin POST always carries an Origin, so comparing it with the Host
+  // covers the live domain, every preview deployment and localhost at once.
+  const origin = req.headers?.origin;
+  if (origin) {
+    let originHost = null;
+    try {
+      originHost = new URL(origin).host;
+    } catch {
+      originHost = null;
+    }
+    // Both headers, because the platform in front of the function is what
+    // decides which one carries the domain the visitor actually typed. Getting
+    // this wrong would reject every real message, so accept either.
+    // Split on commas too: a chained proxy joins forwarded values into one
+    // header, and a false 403 here would silently swallow a real message.
+    const selfHosts = [req.headers?.host, req.headers?.["x-forwarded-host"]]
+      .flatMap((h) => (Array.isArray(h) ? h : [h]))
+      .filter(Boolean)
+      .flatMap((h) => String(h).split(","))
+      .map((h) => h.trim().toLowerCase())
+      .filter(Boolean);
+    if (!originHost || !selfHosts.includes(originHost.toLowerCase())) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+  }
+  const contentType = String(req.headers?.["content-type"] || "");
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    res.setHeader("Accept-Post", "application/json");
+    return res.status(415).json({ error: "Unsupported media type" });
   }
 
   let body = req.body;
@@ -109,10 +158,17 @@ export default async function handler(req, res) {
   }
 
   // Honeypot and timing: answer as if it worked, store nothing.
+  // Both gates used to be skippable by leaving the field out, which is the first
+  // thing a bot does, so a missing or unreadable `startedAt` now counts as one.
+  // The elapsed time is judged only when it is positive: a visitor whose clock
+  // runs ahead of the server produces a negative one, and that silently threw
+  // their message away.
   const startedAt = Number(body.startedAt);
+  const elapsed = Date.now() - startedAt;
   if (
     (typeof body.website === "string" && body.website.trim() !== "") ||
-    (Number.isFinite(startedAt) && Date.now() - startedAt < MIN_FILL_MS)
+    !Number.isFinite(startedAt) ||
+    (elapsed >= 0 && elapsed < MIN_FILL_MS)
   ) {
     return res.status(200).json({ ok: true });
   }
@@ -153,7 +209,15 @@ export default async function handler(req, res) {
       console.error("contact: insert failed", insert.status, details);
       return res.status(502).json({ error: "Could not store the message" });
     }
-    const [{ id }] = await insert.json();
+    // The row is stored by now. An unexpected response shape must not turn into
+    // a 500 the visitor sees, or they retry a message that did arrive.
+    let id = null;
+    try {
+      [{ id }] = await insert.json();
+    } catch (err) {
+      console.error("contact: stored but could not read the id", err);
+      return res.status(200).json({ ok: true });
+    }
 
     // The row is the record; the mail is a courtesy. A mail failure must not
     // turn a stored message into an error the visitor sees.

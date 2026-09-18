@@ -213,6 +213,10 @@ function vendorChunk(id: string): string | undefined {
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
   /^assets[\\/]m-plus-rounded-1c-latin-800-normal-[\w-]+\.woff2$/,
   /^assets[\\/]zen-kaku-gothic-new-latin-(400|500|700)-normal-[\w-]+\.woff2$/,
+  // The heading face. It paints on every route but was the only first-screen
+  // font left for the CSS to discover, so headings were the last thing on the
+  // page to stop swapping.
+  /^assets[\\/]zen-maru-gothic-latin-700-normal-[\w-]+\.woff2$/,
 ];
 
 function preloadFirstScreenFonts(): Plugin {

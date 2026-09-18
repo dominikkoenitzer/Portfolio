@@ -48,7 +48,10 @@ const CARD =
 function Chip({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <motion.span
-      className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-background/50 px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out hover:border-primary/30"
+      /* `bg-secondary/50` is the chip fill used by the identical chips on
+         /experience and /projects; this one was the only `bg-background/50`,
+         which composites blush over cream and reads as a different object. */
+      className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-secondary/50 px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out hover:border-primary/30"
       variants={REVEAL}
     >
       {/* Decorative: the skill's name is the text right beside it, and the

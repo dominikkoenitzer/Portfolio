@@ -21,12 +21,24 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Supabase is not configured" });
   }
 
-  const upstream = await fetch(`${base}/rest/v1/contact_messages?select=id`, {
-    method: "HEAD",
-    headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact" },
-  });
+  // The other two routes both wrap their upstream call; this one did not, so a
+  // DNS or network failure left the platform to turn an unhandled rejection
+  // into a 500 instead of the 502 this route means. The upstream status stays
+  // in the log rather than the response: to an anonymous caller it is the
+  // difference between "the service key is dead" and "the table is gone".
+  let upstream;
+  try {
+    upstream = await fetch(`${base}/rest/v1/contact_messages?select=id`, {
+      method: "HEAD",
+      headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact" },
+    });
+  } catch (err) {
+    console.error("keepalive: upstream request failed", err);
+    return res.status(502).json({ error: "Supabase unreachable" });
+  }
   if (!upstream.ok) {
-    return res.status(502).json({ error: "Supabase unreachable", status: upstream.status });
+    console.error("keepalive: upstream answered", upstream.status);
+    return res.status(502).json({ error: "Supabase unreachable" });
   }
 
   const total = Number((upstream.headers.get("content-range") || "").split("/")[1]);
