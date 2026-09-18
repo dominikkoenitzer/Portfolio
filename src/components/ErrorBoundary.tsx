@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   children: ReactNode;
+  /**
+   * What to render instead of the recovery card. Pass `null` for decoration:
+   * a background that fails to load should disappear, not replace the page
+   * with an apology.
+   */
+  fallback?: ReactNode;
 }
 
 interface State {
@@ -33,6 +39,10 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (!this.state.hasError) {
       return this.props.children;
+    }
+
+    if (this.props.fallback !== undefined) {
+      return this.props.fallback;
     }
 
     return (

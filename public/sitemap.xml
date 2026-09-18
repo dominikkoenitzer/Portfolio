@@ -113,7 +113,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/remnants.png</image:loc>
+      <image:loc>https://dk.punds.ch/projects/remnants.jpg</image:loc>
       <image:title>Remnants, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
@@ -137,7 +137,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/jester.png</image:loc>
+      <image:loc>https://dk.punds.ch/projects/jester.jpg</image:loc>
       <image:title>Jester, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
@@ -149,7 +149,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/flow.png</image:loc>
+      <image:loc>https://dk.punds.ch/projects/flow.jpg</image:loc>
       <image:title>Flow, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
