@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import * as THREE from "three";
 import { svgDataUrl } from "@/lib/svg-string";
 
-// ── Procedural textures (module-cached: shared, never disposed) ─────────────
+// ── Procedural textures (module-cached: shared, re-uploaded per scene) ─────
 let glowTexCache: THREE.Texture | null = null;
 export function glowTexture(): THREE.Texture {
   if (glowTexCache) return glowTexCache;
@@ -85,4 +85,27 @@ export function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {
   tex.anisotropy = 4;
   iconTexCache.set(cacheKey, tex);
   return tex;
+}
+
+/**
+ * Hand every renderer's copy of these textures back when a scene unmounts.
+ *
+ * Caching the textures across mounts is deliberate and stays: what does not
+ * stay is the GPU handle. `Texture.dispose()` fires an event that makes each
+ * renderer's `onTextureDispose` deregister itself from the texture's listener
+ * list and drop its `WebGLTexture`. Without it the list grew by one closure per
+ * renderer ever created, and each closure held that renderer's WebGL context,
+ * its canvas, and the whole detached route subtree above it — a heap snapshot
+ * traced the /services wrapper to exactly this, 213 retained DOM nodes per
+ * visit, linear and never collected. `Material.dispose()` does not touch
+ * `material.map`, and `renderer.dispose()` does not dispose textures, so
+ * nothing else was ever going to release them.
+ *
+ * The `Texture`, its `Source` and the canvas behind it all stay in the cache;
+ * the next scene simply uploads them again.
+ */
+export function releaseSharedTextures(): void {
+  glowTexCache?.dispose();
+  leafTexCache?.dispose();
+  for (const tex of iconTexCache.values()) tex.dispose();
 }
