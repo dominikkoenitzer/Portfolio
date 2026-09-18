@@ -131,6 +131,34 @@ function Cloud() {
   const vel = useRef<Vel>({ x: 0.0012, y: AUTO_Y });
   const drag = useRef<Drag>({ active: false, x: 0, y: 0 });
 
+  /*
+   * three.js keeps ONE `BufferGeometry` for every `Sprite` on the page
+   * (`three/src/objects/Sprite.js`, module-level `_geometry`), and every
+   * renderer that draws a sprite registers a `dispose` listener on it that
+   * closes over that renderer's WebGL context. The listener only removes
+   * itself when the geometry is disposed, and neither `renderer.dispose()` nor
+   * R3F's unmount touches it — so every visit to this page left a closure
+   * holding a context, its canvas, and the whole detached route subtree above
+   * it. Found by heap snapshot: +535 DOM nodes and ~726 kB per visit here and
+   * to /services, linear and never collected.
+   *
+   * Disposing it fires that event, every registered listener deregisters
+   * itself, and the geometry is re-uploaded the next time a sprite is drawn.
+   * Only one of these scenes is mounted at a time, so nothing live loses its
+   * buffer.
+   *
+   * Reached through a throwaway rather than through this scene's own sprites:
+   * `new THREE.Sprite()` hands back that very singleton, and going via the refs
+   * would make them an effect dependency the frame loop is not allowed to
+   * mutate. The throwaway is garbage the moment the line ends.
+   */
+  useEffect(
+    () => () => {
+      new THREE.Sprite().geometry.dispose();
+    },
+    [],
+  );
+
   // Drag is wired to the canvas element rather than the wrapper so the velocity
   // the frame loop integrates is owned by the component that writes it.
   const canvas = useThree((state) => state.gl.domElement);
