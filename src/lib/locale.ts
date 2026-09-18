@@ -11,8 +11,8 @@ import type { Language } from "@/config/languages";
 /** BCP-47 tag for Intl APIs (toLocaleDateString, Intl.NumberFormat, …). */
 export const LOCALE_TAG: Record<Language, string> = {
   en: "en-US",
-  de: "de-DE",
-  fr: "fr-FR",
+  de: "de-CH",
+  fr: "fr-CH",
   zh: "zh-CN",
 };
 

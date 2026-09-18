@@ -41,7 +41,10 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "Supabase unreachable" });
   }
 
+  // The count is what makes the query count as activity; it is not something an
+  // anonymous caller needs to know, so it goes to the log and not the response.
   const total = Number((upstream.headers.get("content-range") || "").split("/")[1]);
+  console.log("keepalive: ok", Number.isFinite(total) ? total : "unknown");
   res.setHeader("Cache-Control", "no-store");
-  return res.status(200).json({ ok: true, messages: Number.isFinite(total) ? total : null });
+  return res.status(200).json({ ok: true });
 }

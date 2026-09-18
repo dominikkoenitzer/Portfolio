@@ -21,7 +21,7 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 
 ## Availability
 
-Open to software engineering roles, internships, freelance and contract projects, and collaborations. Based in Switzerland, happy to work fully remote. Email is the fastest route and he usually replies within a day. The contact page has no form on purpose: choosing what the message is about builds a prefilled email instead, because the site has no backend.
+Open to software engineering roles, internships, freelance and contract projects, and collaborations. Based in Switzerland, happy to work fully remote. Email is the fastest route and he usually replies within a day. The contact page has a short form: you pick what the message is about, write it, and it reaches him directly. A prefilled mailto link sits underneath for anyone who would rather use their own mail client.
 
 ## Pages
 
@@ -45,7 +45,7 @@ Open to software engineering roles, internships, freelance and contract projects
 
 ## Projects
 
-Eleven personal projects, listed newest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
+Eleven personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
 
 - [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
 - [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
@@ -78,19 +78,19 @@ Shipped evidence for the less obvious ones: Rust in Oxidize, C# and .NET in Jest
 Freelance work for small teams and businesses, in three groups. Prices are in Swiss francs and are starting points, not quotes. Everything is delivered remotely.
 
 Build:
-- Web Development, from 300 CHF: a whole website, from the first sketch to the live domain. Responsive, SEO-friendly, fast, cross-browser.
-- Custom Software, from 500 CHF, priced per project: requirements analysis, custom architecture, full testing, handover.
-- Server Setup, from 350 CHF: installation, security hardening, performance tuning, monitoring.
+- Web Development, from 2'000 CHF: a whole website, from the first sketch to the live domain.
+- Custom Software, from 3'000 CHF: software built to fit how your business already works.
+- Server Setup, from 600 CHF: a server set up properly the first time, with security and monitoring.
 
 Protect:
-- Security Consultation, 60 CHF per hour: security audit, vulnerability scan, risk mitigation, compliance guidance, and a written report you can act on.
-- Website Maintenance, 50 CHF per month: security updates, bug fixes, uptime monitoring, content updates.
-- Backup and Recovery, 200 CHF setup plus 50 CHF per month: automated backups, cloud storage, tested recovery protocols, real-time alerts.
+- Security Consultation, 100 CHF per hour: find the holes before someone else does, with a report you can act on.
+- Hosting and Maintenance, 50 CHF per month: your site lives on my server, with updates, backups and an eye on it.
+- Website Emergency, from 300 CHF: site down, hacked, or broken after an update, back online fast.
 
 Grow:
-- SEO Optimization, 150 CHF: keyword research, on-page SEO, technical audit, reporting.
-- Content Management, 40 CHF per hour: CMS maintenance, image optimisation, layout updates, SEO content.
-- Technical Support, 30 CHF per hour: fast response, bug fixes, code optimisation, integration help.
+- SEO Optimization, from 500 CHF: technical SEO and page-speed work aimed at the searches you actually want.
+- Website Relaunch, from 1'500 CHF: your existing site rebuilt, mobile, fast, secure and findable.
+- Support and Content, 80 CHF per hour: new text and images put in, small bugs fixed, things made quicker.
 
 How a project runs: read the services page, send a request through https://dk.punds.ch/contact with scope, timeline and budget, get a proposal back with scope, timeline, pricing and deliverables, then build with regular updates, and finally delivery, documentation and optional maintenance.
 

@@ -1,6 +1,7 @@
 import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTopFab } from "@/components/layout/ScrollToTopFab";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { CustomCursor } from "@/components/ui/CustomCursor";
@@ -51,10 +52,18 @@ export function PageLayout({ children }: PageLayoutProps) {
   return (
     <LanguageProvider defaultLanguage="en">
       <SkipLink />
+      {/* Wrapped, because this is the only lazy import above the route-level
+          boundary: when its chunk or its stylesheet failed to arrive — a stale
+          chunk URL after a redeploy is the ordinary case — the rejection
+          reached the root and React unmounted the entire app. Every route went
+          blank white, no nav, no text, no recovery card. It is a background;
+          the correct failure is that it is simply not there. */}
       {showVeil && (
-        <Suspense fallback={null}>
-          <AuroraBackground />
-        </Suspense>
+        <ErrorBoundary fallback={null}>
+          <Suspense fallback={null}>
+            <AuroraBackground />
+          </Suspense>
+        </ErrorBoundary>
       )}
       <CustomCursor />
 

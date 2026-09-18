@@ -443,12 +443,18 @@
 }
 
 /* Prevent iOS Safari from zooming when focusing form fields: 16px is the
-   threshold below which auto-zoom fires. */
+   threshold below which auto-zoom fires. `-webkit-touch-callout` is supported by
+   desktop Safari too, so on its own this query also fired on a Mac and forced
+   every input, textarea and select on the site to 16px with `!important` —
+   nothing downstream could correct it. The pointer test is what makes it the
+   touch-only rule it was always meant to be. */
 @supports (-webkit-touch-callout: none) {
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
+  @media (pointer: coarse) {
+    input,
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
   }
 }
 
