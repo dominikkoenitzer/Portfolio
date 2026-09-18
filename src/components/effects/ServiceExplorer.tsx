@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { buildSapling } from "@/components/effects/service-tree/build";
 import { clamp, easeOutCubic, lerpAngle } from "@/components/effects/service-tree/easing";
 import { HUBS } from "@/components/effects/service-tree/layout";
+import { releaseSharedTextures } from "@/components/effects/service-tree/textures";
 import {
   SERVICE_TREE_THEMES,
   type ServiceTreeTheme,
@@ -604,6 +605,10 @@ export default function ServiceExplorer({
        * scenes is mounted at a time, so nothing live loses its buffer.
        */
       new THREE.Sprite().geometry.dispose();
+      // Same shape of leak, different subsystem: the module-cached tree
+      // textures were holding one `onTextureDispose` closure per renderer,
+      // each pinning a context, a canvas and this route's whole subtree.
+      releaseSharedTextures();
       for (const d of disposables) d.dispose();
       renderer.dispose();
       // Drop the WebGL context so rapid route navigation can't exhaust the
