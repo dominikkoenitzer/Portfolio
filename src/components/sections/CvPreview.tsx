@@ -3,6 +3,7 @@ import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState }
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 
@@ -80,13 +81,16 @@ function CvDialog({
     return () => previousFocus.current?.focus?.();
   }, []);
 
+  // Only the overlay in front answers Escape: the palette can be opened over
+  // this dialog, and one keypress used to close both.
+  const isTopLayer = useOverlayLayer(true);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape" && isTopLayer(event)) onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, isTopLayer]);
 
   // The iframe is a focus stop of its own and swallows Tab once inside it, so
   // the trap only has to hold the two controls in the header.

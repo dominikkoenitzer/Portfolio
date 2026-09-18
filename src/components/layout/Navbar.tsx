@@ -1,12 +1,15 @@
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useLenis } from "lenis/react";
 import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { NAV_LINKS } from "@/constants";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useHaptic } from "@/hooks/use-haptic";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
+import { allowsPrefetch, readConnection } from "@/lib/route-prefetch";
 import { isActivePath } from "@/lib/active-path";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
@@ -109,17 +112,21 @@ const NAV_ITEM = {
  * /services, /about and /donate at 1440); unscrolled, straight over the
  * aurora, they measure 6.1:1.
  */
-function Island({ show, tight }: { show: boolean; tight?: boolean }) {
+function Island({ show }: { show: boolean }) {
   return (
     <motion.div
       animate={{ opacity: show ? 1 : 0 }}
       aria-hidden
       /* `left` is written on its own rather than through `inset-0` plus an
          override: two utilities that set the same property leave the winner to
-         Tailwind's own ordering, which is not something to bet a layout on. */
+         Tailwind's own ordering, which is not something to bet a layout on.
+         It is `left-0` for both surfaces: the pill's air is the row's own
+         padding, 16px on each side, so the two islands are the same shape.
+         The controls pill used to take `left-2`, which ate 8px of that air on
+         the left only and left the circles sitting off-centre in their own
+         surface — 8px before them, 16px after. */
       className={cn(
-        "pointer-events-none absolute top-0 right-0 bottom-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
-        tight ? "left-2" : "left-0",
+        "pointer-events-none absolute top-0 right-0 bottom-0 left-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
         show && "backdrop-blur-xl",
       )}
       initial={false}
@@ -154,6 +161,9 @@ export function Navbar() {
   );
   const searchReturnFocus = useRef<HTMLElement | null>(null);
   const location = useLocation();
+  // Smooth-scroll driver, shared with the back-to-top control: a nav entry for
+  // the page you are already on scrolls to the top rather than doing nothing.
+  const lenis = useLenis();
   const { language } = useLanguage();
   const t = translations[language];
   const haptic = useHaptic();
@@ -202,6 +212,20 @@ export function Navbar() {
   // reduced motion asks us not to do; without a layoutId each indicator simply
   // appears on the link it belongs to.
   const glide = reduceMotion ? undefined : SPRING_SOFT;
+
+  /*
+   * Closing on the route itself rather than on each link's onClick: the links
+   * did close the drawer themselves, but the browser's own back button does not
+   * go through them, so going back left the drawer open and scroll-locked over
+   * a page that had already changed underneath it. Adjusted during render
+   * rather than in an effect, which is what React asks for when state has to
+   * follow a prop: an effect here costs a second render pass every navigation.
+   */
+  const [lastPath, setLastPath] = useState(location.pathname);
+  if (lastPath !== location.pathname) {
+    setLastPath(location.pathname);
+    if (mobileMenuOpen) setMobileMenuOpen(false);
+  }
 
   const closeMobileMenu = useCallback(() => {
     haptic("light");
@@ -252,12 +276,24 @@ export function Navbar() {
   }, []);
 
   useBodyScrollLock(mobileMenuOpen || searchOpen);
+  // The drawer and the palette are never open together (opening the palette
+  // closes the drawer), so they share one layer.
+  const isTopLayer = useOverlayLayer(mobileMenuOpen || searchOpen);
 
   // Arm the palette once the browser has nothing better to do, so the first
   // open is never the slow one. Hover, focus and the modifier key all preload
   // as well, but a visitor who goes straight for the shortcut touches none of
   // them, and that first open measured a third of a second.
   useEffect(() => {
+    // Not on a connection the visitor pays for by the byte. Arming the palette
+    // pulls the search index, and the index pulls the whole project catalogue
+    // in four languages: 85 kB gzipped, spent on spec, on a page that may never
+    // render a project. The route prefetcher already refuses to spend on
+    // Save-Data and 2G, and this is the same kind of spend, so it answers to
+    // the same policy. Hover, focus and opening the palette still preload
+    // unconditionally: those are the visitor asking.
+    if (!allowsPrefetch(readConnection())) return;
+
     const idle = window.requestIdleCallback;
     if (idle) {
       // The aurora animates on its own rAF, so this page is never truly idle
@@ -273,6 +309,9 @@ export function Navbar() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Only when this is the overlay in front: the lightbox and the CV dialog
+      // bind their own handler, and every one of them used to fire at once.
+      if (e.key === "Escape" && !isTopLayer(e)) return;
       if (e.key === "Escape" && mobileMenuOpen) {
         closeMobileMenu();
       }
@@ -288,7 +327,24 @@ export function Navbar() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [mobileMenuOpen, closeMobileMenu, searchOpen, closeSearch]);
+  }, [mobileMenuOpen, closeMobileMenu, searchOpen, closeSearch, isTopLayer]);
+
+  /*
+   * The drawer is hidden by a media query (`lg:hidden`), but the scroll lock
+   * follows React state, so crossing that breakpoint while it is open took the
+   * panel, its backdrop AND the hamburger off the screen and left the page
+   * locked with nothing visible to unlock it. A tablet rotating from portrait
+   * to landscape is the real case: the only way out was a physical Escape key,
+   * which a tablet does not have. The breakpoint is the one `lg:` compiles to.
+   */
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setMobileMenuOpen(false);
+    };
+    desktop.addEventListener("change", onChange);
+    return () => desktop.removeEventListener("change", onChange);
+  }, []);
 
   return (
     <motion.header
@@ -363,6 +419,24 @@ export function Navbar() {
                       }}
                       onMouseEnter={() => setHover({ index, on: true })}
                       onPointerEnter={() => warm(link.targetId)}
+                      /* Clicking the entry for the page you are already on used
+                         to do nothing at all: the router has nowhere to go, so
+                         a visitor halfway down /projects pressed "Projects" and
+                         the page sat still. Take them to the top, the way the
+                         back-to-top control does, Lenis included so the smooth
+                         scroll and Lenis's own target stay in sync. */
+                      onClick={() => {
+                        if (!isActive) return;
+                        if (lenis) {
+                          lenis.scrollTo(0);
+                        } else {
+                          window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: reduceMotion ? "auto" : "smooth",
+                          });
+                        }
+                      }}
                       to={link.targetId}
                     >
                       {/* One pill for the whole row: framer projects it from
@@ -419,7 +493,7 @@ export function Navbar() {
               right-aligned bar put it too. */}
           <div className="-right-4 pointer-events-auto absolute inset-y-0 flex items-center">
             <div className="relative flex h-16 items-center md:h-[4.5rem]">
-              <Island show={isScrolled} tight />
+              <Island show={isScrolled} />
               <div className="relative flex items-center gap-1.5 px-4">
                 {/* Two forms of one control: the input-shaped bar where the row
                     has room for it, the 44px circle where it does not. At 1024

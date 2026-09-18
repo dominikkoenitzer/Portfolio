@@ -128,9 +128,16 @@ export function Footer() {
           {/* The nav, repeated. The footer is the second place people scroll
               to and it used to offer exactly one link out of it. */}
           <motion.nav aria-labelledby="footer-pages" variants={REVEAL}>
-            <h2 className={COL_LABEL} id="footer-pages">
+            {/* A <p>, not an <h2>: index.css forces the body face onto
+                p/span/dt/dd/figcaption with !important but not onto headings,
+                so this column label was the one micro-label on the site
+                rendering in the heading face at weight 700 while every other
+                one is body face at 400. A class cannot win against that
+                !important; the element is the fix. `aria-labelledby` names the
+                nav from any element with an id, heading or not. */}
+            <p className={COL_LABEL} id="footer-pages">
               {t.footer.pages}
-            </h2>
+            </p>
             {/* Eight links in one file is a tall thin column next to two short
                 ones, so from lg they run in two. */}
             <ul className="mt-2 lg:grid lg:grid-cols-2 lg:gap-x-5">
@@ -145,9 +152,9 @@ export function Footer() {
           </motion.nav>
 
           <motion.nav aria-labelledby="footer-elsewhere" variants={REVEAL}>
-            <h2 className={COL_LABEL} id="footer-elsewhere">
+            <p className={COL_LABEL} id="footer-elsewhere">
               {t.footer.elsewhere}
-            </h2>
+            </p>
             <ul className="mt-2">
               {elsewhere.map((item) => (
                 <li key={item.href}>

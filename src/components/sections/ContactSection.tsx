@@ -180,6 +180,17 @@ export function ContactSection() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const startedAt = useRef(0);
   const formRef = useRef<HTMLFormElement>(null);
+  // Sending disables the button, and disabling the focused element drops focus
+  // to <body>. On a failure the toast is the only sign anything happened, and a
+  // keyboard visitor was left at the top of the document with no way back to
+  // the form but to tab through the whole page again.
+  const submitRef = useRef<HTMLButtonElement>(null);
+  // Not a bare `.focus()`: at the moment the failure branch runs, React has not
+  // re-rendered yet, so the button is still `disabled` and focusing it does
+  // nothing at all. The frame after the commit is the first moment it can take
+  // focus again.
+  const restoreFocus = () =>
+    requestAnimationFrame(() => submitRef.current?.focus());
   useEffect(() => {
     startedAt.current = Date.now();
   }, []);
@@ -210,12 +221,14 @@ export function ContactSection() {
           variant: "destructive",
         });
         setStatus("idle");
+        restoreFocus();
         return;
       }
       setStatus("sent");
     } catch {
       toast({ title: t.form.failed, variant: "destructive" });
       setStatus("idle");
+      restoreFocus();
     }
   };
 
@@ -412,6 +425,7 @@ export function ContactSection() {
                 <Button
                   className="group rounded-lg px-6"
                   disabled={status === "sending"}
+                  ref={submitRef}
                   type="submit"
                   variant="cta"
                 >

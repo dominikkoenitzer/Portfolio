@@ -28,7 +28,7 @@ export function allowsPrefetch(hint?: ConnectionHint | null): boolean {
   return !SLOW_TYPES.has(hint.effectiveType ?? "");
 }
 
-function readConnection(): ConnectionHint | null {
+export function readConnection(): ConnectionHint | null {
   if (typeof navigator === "undefined") return null;
   const connection = (navigator as Navigator & { connection?: ConnectionHint })
     .connection;

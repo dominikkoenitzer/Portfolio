@@ -20,7 +20,11 @@ import {
   getProjectSeoTitle,
 } from "@/config/seo-data/projects";
 import { SITE_CONFIG } from "@/constants";
-import { getProject, getProjects } from "@/constants/projects";
+import {
+  getProject,
+  getProjects,
+  projectCardSrcSet,
+} from "@/constants/projects";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -39,6 +43,10 @@ import {
 
 /** One card surface for the whole page: opaque cream, hairline, no shadow. */
 const CARD = "rounded-2xl border border-border/60 bg-card";
+
+/** How wide the hero screenshot renders, measured at each breakpoint. */
+const HERO_SIZES =
+  "(min-width: 1280px) 455px, (min-width: 1024px) 36vw, (min-width: 640px) 574px, 90vw";
 
 /* ------------------------------------------------------------------ */
 /* Numbered section: a flat marker, a hairline and a reading body      */
@@ -60,9 +68,16 @@ function FeatureSection({
       {...revealOnScroll(reduceMotion)}
     >
       <div className="flex items-baseline gap-4">
+        {/* A fixed 24px column, not an auto-width numeral: `gap-4` puts the
+            heading text 24+16=40px in, which is exactly the `sm:pl-10` the body
+            copy below gets, so a section's heading and its own paragraphs share
+            one left edge. Left to itself the span was ~13px wide and the
+            heading sat 11px left of its own text, with a ragged edge on top of
+            that — `tabular-nums` does nothing in Zen Kaku Gothic New, so "01"
+            and "05" measured differently. */}
         <span
           aria-hidden
-          className="select-none text-muted-foreground text-sm tabular-nums"
+          className="w-6 shrink-0 select-none text-muted-foreground text-sm"
         >
           {String(index).padStart(2, "0")}
         </span>
@@ -190,6 +205,19 @@ const ProjectDetails = () => {
     t.viewImage
       .replace("{index}", String(position + 1))
       .replace("{total}", String(galleryImages.length));
+  /*
+   * Three screenshots of the same app carried the same alt text ("Zephyr
+   * interface") three times, which tells a screen reader nothing about which
+   * one it has reached. Position is the honest distinguisher when the pictures
+   * have no separate description, and the counter string is already localised
+   * for the viewer, so this adds no new copy in any language.
+   */
+  const shotAlt = (position: number) =>
+    galleryImages.length > 1
+      ? `${project.title} — ${t.imageCounter
+          .replace("{index}", String(position + 1))
+          .replace("{total}", String(galleryImages.length))}`
+      : `${project.title} interface`;
 
   return (
     <>
@@ -237,14 +265,20 @@ const ProjectDetails = () => {
               aria-label="Breadcrumb"
               className="flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
             >
-              <Link className="transition-colors hover:text-foreground" to="/">
+              {/* `inline-flex` is not cosmetic here: it is what the touch
+                  tap-target rule in index.css matches, so a breadcrumb is a
+                  44px target under a thumb and unchanged under a mouse. */}
+              <Link
+                className="inline-flex items-center transition-colors hover:text-foreground"
+                to="/"
+              >
                 {t.home}
               </Link>
               <span aria-hidden className="text-border">
                 /
               </span>
               <Link
-                className="transition-colors hover:text-foreground"
+                className="inline-flex items-center transition-colors hover:text-foreground"
                 to="/projects"
                 {...warmOnIntent("/projects")}
               >
@@ -360,7 +394,15 @@ const ProjectDetails = () => {
                     onOpen={() => setLightboxIndex(0)}
                     openLabel={shotLabel(0)}
                     priority
+                    /* Measured in a browser at every breakpoint, not estimated:
+                       270px at 320 through 574px where the column caps, 348px
+                       once the two-column layout arrives at 1024, and 455px
+                       from 1280 up. A 1x display now takes the 800px card file
+                       the catalogue already ships and a retina one still takes
+                       the full shot, so nobody gets a soft screenshot. */
+                    sizes={HERO_SIZES}
                     src={project.image}
+                    srcSet={projectCardSrcSet(project.image, project.imageWidth)}
                   />
                 )}
               </div>
@@ -407,7 +449,7 @@ const ProjectDetails = () => {
               </FeatureSection>
 
               <ProjectFigure
-                alt={`${project.title} interface`}
+                alt={shotAlt(shotIndex(0))}
                 label={shotCaption}
                 onOpen={() => setLightboxIndex(shotIndex(0))}
                 openLabel={shotLabel(shotIndex(0))}
@@ -437,7 +479,7 @@ const ProjectDetails = () => {
               </FeatureSection>
 
               <ProjectFigure
-                alt={`${project.title} interface`}
+                alt={shotAlt(shotIndex(1))}
                 label={shotCaption}
                 onOpen={() => setLightboxIndex(shotIndex(1))}
                 openLabel={shotLabel(shotIndex(1))}
@@ -469,7 +511,7 @@ const ProjectDetails = () => {
               </FeatureSection>
 
               <ProjectFigure
-                alt={`${project.title} interface`}
+                alt={shotAlt(shotIndex(2))}
                 label={shotCaption}
                 onOpen={() => setLightboxIndex(shotIndex(2))}
                 openLabel={shotLabel(shotIndex(2))}
@@ -578,11 +620,15 @@ const ProjectDetails = () => {
                 (a ten-card grid there is a wall of scrolling) and the grid
                 from `sm` up. The negative margin lets the first and last
                 cards sit flush with the page gutter while still scrolling
-                edge to edge. The gutter under `sm` is 32px, not 16: index.css
-                adds a 1rem padding to every `section` below 768px on top of
-                this container's `px-4`. The bleed has to clear both or the
-                first card sits 16px left of the heading above it. */}
-            <div className="-mx-8 mt-8 flex snap-x snap-mandatory scroll-pl-8 gap-4 overflow-x-auto px-8 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+                edge to edge, so it has to be exactly the gutter: 24px under
+                `sm` (`.section-padding` is `px-6` there), measured, not
+                assumed. It used to pull 32, and `max-w-none` is what makes the
+                bleed possible at all: index.css caps `*` at `max-width: 100%`
+                below 640px, so the strip could never grow past the parent's
+                content box and the whole overhang went left. The visible
+                result was a strip 8px off the left edge of the screen that
+                stopped 56px short of the right. */}
+            <div className="-mx-6 mt-8 flex max-w-none snap-x snap-mandatory scroll-pl-6 gap-4 overflow-x-auto px-6 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {otherProjects.map((item) => (
                 <Link
                   className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col p-5 transition-colors duration-200 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none ${CARD}`}

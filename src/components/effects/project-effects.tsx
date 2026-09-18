@@ -1,17 +1,11 @@
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import {
-  type KeyboardEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { ProjectStat } from "@/constants/projects/types";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { DUR, EASE_OUT, VIEWPORT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
@@ -36,9 +30,21 @@ export function ProjectFigure({
   openLabel,
   priority = false,
   ratio = SHOT_RATIO,
+  srcSet,
+  sizes,
 }: {
   src?: string;
   alt: string;
+  /**
+   * Candidates for the picture, when a smaller variant of it exists. Only the
+   * project's main shot has one (`<slug>-card.jpg`, written by
+   * `scripts/gen-card-images.ts`); the in-body gallery shots have no small
+   * variant, so they pass neither and ship their single file.
+   */
+  srcSet?: string;
+  /** Rendered width per breakpoint. Measured, never estimated: get it wrong and
+   * the browser picks a candidate too small and the screenshot is soft. */
+  sizes?: string;
   /** Optional caption under the frame (the live host, usually). */
   label?: string;
   className?: string;
@@ -85,7 +91,9 @@ export function ProjectFigure({
         onError={() => setFailed(true)}
         onLoad={(event) => measure(event.currentTarget)}
         ref={measure}
+        sizes={sizes}
         src={src}
+        srcSet={srcSet}
       />
     </div>
   );
@@ -205,6 +213,7 @@ export function Lightbox({
   const total = images.length;
 
   useBodyScrollLock(true);
+  const isTopLayer = useOverlayLayer(true);
 
   const go = useCallback(
     (delta: number) => onSelect((index + delta + total) % total),
@@ -216,7 +225,18 @@ export function Lightbox({
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null;
     panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
-    return () => opener?.focus?.();
+    return () => {
+      // The root has to come out of `inert` before the opener is focused:
+      // `.focus()` inside an inert subtree is a silent no-op, and React runs
+      // cleanups in the order the effects were declared, so leaving it to the
+      // effect below meant every exit from the viewer dropped focus on <body>.
+      const root = document.getElementById("root");
+      if (root) {
+        root.inert = false;
+        root.removeAttribute("aria-hidden");
+      }
+      opener?.focus?.();
+    };
   }, []);
 
   // Escape and the arrows are bound on the document rather than the panel:
@@ -226,9 +246,37 @@ export function Lightbox({
   // list on the site.
   useEffect(() => {
     const onKey = (event: globalThis.KeyboardEvent) => {
+      // Only the overlay in front answers Escape.
       if (event.key === "Escape") {
+        if (!isTopLayer(event)) return;
         event.preventDefault();
         onClose();
+        return;
+      }
+      // Tab is trapped here rather than on the panel, because clicking the
+      // picture (the obvious thing to do — on a one-image gallery it is the
+      // only content) moves focus to <body>, and a React handler bound to the
+      // panel never sees a key pressed there. On a single-image viewer the
+      // browser then walked the whole navbar behind the overlay: nine stops,
+      // all invisible, dialog still open.
+      if (event.key === "Tab") {
+        const items = Array.from(
+          panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [],
+        );
+        if (items.length === 0) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        const active = document.activeElement;
+        if (!panelRef.current?.contains(active)) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        } else if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
         return;
       }
       if (total < 2) return;
@@ -248,7 +296,7 @@ export function Lightbox({
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [go, onClose, onSelect, total]);
+  }, [go, onClose, onSelect, total, isTopLayer]);
 
   // Warm the two shots either side of this one. The arrows and a swipe are a
   // single gesture away, and a 90 kB screenshot that only starts downloading on
@@ -264,24 +312,19 @@ export function Lightbox({
     }
   }, [images, index, total]);
 
-  // Tab only: the panel is the focus trap, the keys above are the controls.
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== "Tab") return;
-
-    const items = Array.from(
-      panelRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? [],
-    );
-    if (items.length === 0) return;
-    const first = items[0];
-    const last = items[items.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
+  // The dialog portals into <body>, so the app root is its sibling: hiding it
+  // while the viewer is open is what stops a screen reader in browse mode from
+  // reading the whole project page straight through the overlay.
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (!root) return;
+    root.setAttribute("aria-hidden", "true");
+    root.inert = true;
+    return () => {
+      root.removeAttribute("aria-hidden");
+      root.inert = false;
+    };
+  }, []);
 
   const control =
     "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-colors duration-200 ease-out hover:text-foreground";
@@ -293,7 +336,6 @@ export function Lightbox({
       aria-modal="true"
       className="fixed inset-0 z-[100] flex flex-col bg-background/95"
       initial={{ opacity: reduced ? 1 : 0 }}
-      onKeyDown={onKeyDown}
       ref={panelRef}
       role="dialog"
       transition={{ duration: DUR.fast, ease: EASE_OUT }}
