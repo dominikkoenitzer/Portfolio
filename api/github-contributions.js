@@ -52,10 +52,19 @@ const recentCommitsQuery = `
   }
 `;
 
+/**
+ * The only account this endpoint will answer for. Without it the route is an
+ * open proxy onto a personal token: any origin could ask for any GitHub user
+ * and spend two authenticated GraphQL calls of the 5000/hour budget, and a
+ * username nobody has asked for before is always an edge-cache miss, so the
+ * CDN is no shield at all.
+ */
+const ALLOWED_LOGIN = "dominikkoenitzer";
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // No CORS header: the widget is same-origin. It used to send `*`, which is
+  // what let the open proxy above be driven from anyone's browser.
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
   // Without this, a POST reaches the handler like any GET, and Vercel never
   // edge-caches a POST: every one of them was a guaranteed cache miss spending
@@ -65,16 +74,21 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const username = req.query?.username || "";
-  if (!username) return res.status(400).json({ error: "Missing username" });
+  const requested = Array.isArray(req.query?.username)
+    ? req.query.username[0]
+    : req.query?.username || "";
+  if (!requested) return res.status(400).json({ error: "Missing username" });
+  if (requested.toLowerCase() !== ALLOWED_LOGIN) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+  const username = ALLOWED_LOGIN;
 
   const token = process.env.GITHUB_TOKEN || process.env.VITE_GITHUB_TOKEN;
   if (!token) {
-    return res.status(500).json({
-      error: "Missing GitHub token on server",
-      details:
-        "Set env GITHUB_TOKEN (recommended) or VITE_GITHUB_TOKEN on your deployment platform.",
-    });
+    // The name of the missing variable belongs in the log, not in a response an
+    // anonymous caller can read.
+    console.error("github-contributions: no GITHUB_TOKEN configured");
+    return res.status(500).json({ error: "Not configured" });
   }
 
   try {
@@ -105,9 +119,8 @@ export default async function handler(req, res) {
 
     if (!contributionsRes.ok) {
       const txt = await contributionsRes.text();
-      return res
-        .status(contributionsRes.status)
-        .json({ error: "GitHub API error", details: txt });
+      console.error("github-contributions: upstream", contributionsRes.status, txt);
+      return res.status(contributionsRes.status).json({ error: "GitHub API error" });
     }
 
     const contributionsData = await contributionsRes.json();
@@ -121,9 +134,10 @@ export default async function handler(req, res) {
       const rateLimited = contributionsData.errors.some(
         (e) => e.type === "RATE_LIMIT",
       );
-      return res
-        .status(rateLimited ? 429 : 502)
-        .json({ error: "GitHub API error", details });
+      // Logged, not returned: the upstream text tells a prober whether the
+      // token is live, out of scope or rate limited.
+      console.error("github-contributions: graphql", details);
+      return res.status(rateLimited ? 429 : 502).json({ error: "GitHub API error" });
     }
 
     const calendar =
@@ -187,8 +201,7 @@ export default async function handler(req, res) {
       recentCommits,
     });
   } catch (e) {
-    return res
-      .status(500)
-      .json({ error: "Unexpected error", details: e?.message || String(e) });
+    console.error("github-contributions: failed", e);
+    return res.status(500).json({ error: "Unexpected error" });
   }
 }

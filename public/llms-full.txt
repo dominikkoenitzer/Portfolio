@@ -24,7 +24,7 @@ Zürich, Switzerland. He works remotely with clients in Switzerland and abroad, 
 English (native), German (native), Chinese/Mandarin (fluent), French (basic). The Mandarin comes from four years at the German Embassy School in Beijing.
 
 **Can I hire him for a website?**
-Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 300 CHF for a website through to 500 CHF and up for custom software, plus hourly and monthly options for support, maintenance and security work.
+Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 2'000 CHF for a website through to 3'000 CHF and up for custom software, plus hourly and monthly options for support, hosting and security work.
 
 **Where is his CV?**
 https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. Both are static HTML and readable without JavaScript.
@@ -126,7 +126,7 @@ Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET
 
 ## 6. Projects
 
-Eleven personal projects, ordered newest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Eleven personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
 A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, with the source public.
 
@@ -224,21 +224,21 @@ Freelance work for small teams and businesses, described on the services page as
 
 **Build**
 
-- Web Development, from 300 CHF. A whole website, from the first sketch to the live domain. Includes responsive design, SEO-friendly markup, fast loading, cross-browser support.
-- Custom Software, from 500 CHF, priced per project. Software built to fit how a business already works. Includes requirements analysis, custom architecture, full testing, handover.
-- Server Setup, from 350 CHF. A server set up properly the first time, with security and monitoring in place. Includes installation, security hardening, performance tuning, monitoring.
+- Web Development, from 2'000 CHF. A whole website, from the first sketch to the live domain. Includes responsive design, SEO-friendly markup, fast loading, cross-browser support.
+- Custom Software, from 3'000 CHF, priced per project. Software built to fit how a business already works. Includes requirements analysis, custom architecture, full testing, handover.
+- Server Setup, from 600 CHF. A server set up properly the first time, with security and monitoring in place. Includes installation, security hardening, performance tuning, monitoring.
 
 **Protect**
 
-- Security Consultation, 60 CHF per hour. Finding the holes before someone else does, with a report you can act on. Includes security audit, vulnerability scan, risk mitigation, compliance guidance.
-- Website Maintenance, 50 CHF per month. Monthly patching and updates, plus an eye on anything starting to drift. Includes security updates, bug fixes, uptime monitoring, content updates.
-- Backup and Recovery, 200 CHF setup plus 50 CHF per month. Automated backups, plus restores that get tested so you know they work. Includes automated backups, cloud storage, recovery protocols, real-time alerts.
+- Security Consultation, 100 CHF per hour. Finding the holes before someone else does, with a report you can act on. Includes security audit, vulnerability scan, risk mitigation, compliance guidance.
+- Hosting and Maintenance, 50 CHF per month. Monthly patching and updates, plus an eye on anything starting to drift. Includes security updates, bug fixes, uptime monitoring, content updates.
+- Website Emergency, from 300 CHF. Site down, hacked, or broken after an update, back online fast. Includes triage, the fix, and a note on what caused it.
 
 **Grow**
 
-- SEO Optimization, 150 CHF. Technical SEO and page-speed work aimed at the searches you actually want. Includes keyword research, on-page SEO, technical audit, reporting.
-- Content Management, 40 CHF per hour. Keeping the content current so the site does not quietly go stale. Includes CMS maintenance, image optimisation, layout updates, SEO content.
-- Technical Support, 30 CHF per hour. Help when something breaks, or when something just needs to be quicker. Includes fast response, bug fixes, code optimisation, integration help.
+- SEO Optimization, from 500 CHF. Technical SEO and page-speed work aimed at the searches you actually want. Includes keyword research, on-page SEO, technical audit, reporting.
+- Website Relaunch, from 1'500 CHF. An existing site rebuilt: mobile, fast, secure and findable. Includes the rebuild, the content move, and the switchover.
+- Support and Content, 80 CHF per hour. New text and images put in, small bugs fixed, things made quicker. Includes fast response, bug fixes, content updates.
 
 **How a project runs**
 
@@ -254,7 +254,7 @@ Freelance work for small teams and businesses, described on the services page as
 
 Email: dominik.koenitzer@gmail.com. He usually replies within a day.
 
-The contact page (https://dk.punds.ch/contact) has no form, on purpose: the site has no backend. You pick what the message is about (a role, a freelance project, building something together, or something else) and it opens your mail app with a subject and a template already filled in. There is also a copy-the-address fallback for anyone on webmail.
+The contact page (https://dk.punds.ch/contact) has a short form. You pick what the message is about (a role, a freelance project, building something together, or something else), write it, and it reaches him directly: the message is stored in a Supabase database in Frankfurt with a hashed IP address and mailed on. Underneath it sits a prefilled mailto link for anyone who would rather use their own mail client, and a copy-the-address fallback for anyone on webmail.
 
 He is open to: software engineering roles, internships, freelance and contract projects, and collaborations. In Switzerland or fully remote.
 

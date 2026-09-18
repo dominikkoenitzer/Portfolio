@@ -153,8 +153,26 @@ export function ContactSection() {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  /*
+   * The router can drop its state while this component stays mounted: a second
+   * link to /contact is a `replace`, and `AnimatedRoutes` keys the route on the
+   * pathname, which has not changed. `intent` was then still "service" with no
+   * service behind it, `t.intents.service` is undefined, and reading `.label`
+   * off it replaced the whole contact page with the error boundary. Reproduced
+   * on production: arrive from a Services offer card, then click the footer's
+   * Contact link. Fall back in the same render that notices it, and correct the
+   * state so the picker agrees.
+   */
+  const effectiveIntent: IntentKey | "service" =
+    intent === "service" && !service ? (incomingIntent ?? "job") : intent;
+  if (effectiveIntent !== intent) {
+    setIntent(effectiveIntent);
+  }
+
   const selected: Draft =
-    intent === "service" && service ? service : t.intents[intent as IntentKey];
+    effectiveIntent === "service" && service
+      ? service
+      : t.intents[effectiveIntent as IntentKey];
 
   // The service, when there is one, leads the list; it's why they're here.
   const options: Array<{ key: IntentKey | "service"; label: string }> = [
@@ -164,15 +182,32 @@ export function ContactSection() {
 
   // Clipboard needs a secure context; if it's unavailable or denied, spell the
   // address out in the toast rather than failing silently.
+  const copiedTimer = useRef<number | null>(null);
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      // Tracked, so a second copy inside two seconds does not let the first
+      // timer clear the confirmation the second one just put up.
+      if (copiedTimer.current !== null) {
+        window.clearTimeout(copiedTimer.current);
+      }
+      copiedTimer.current = window.setTimeout(() => {
+        copiedTimer.current = null;
+        setCopied(false);
+      }, 2000);
     } catch {
       toast({ title: t.copyFailed, variant: "destructive" });
     }
   };
+  useEffect(
+    () => () => {
+      if (copiedTimer.current !== null) {
+        window.clearTimeout(copiedTimer.current);
+      }
+    },
+    [],
+  );
 
   // The form. `startedAt` is when the page mounted: the API drops anything
   // "filled in" faster than a person can type, and `website` is the honeypot
@@ -203,6 +238,11 @@ export function ContactSection() {
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
+        // Without a deadline a hung request parked the button on "Sending…"
+        // forever: disabled, focus dropped, and no way to try again short of
+        // reloading and retyping. An abort lands in the catch below, which
+        // already restores the button, the focus and the typed message.
+        signal: AbortSignal.timeout(20000),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
@@ -210,7 +250,7 @@ export function ContactSection() {
           message: data.get("message"),
           website: data.get("website"),
           subject: selected.subject,
-          intent,
+          intent: effectiveIntent,
           language,
           startedAt: startedAt.current,
         }),
@@ -305,7 +345,7 @@ export function ContactSection() {
                   <AnimatePresence initial={false}>
                     <motion.span
                       className="col-start-1 row-start-1"
-                      key={intent}
+                      key={effectiveIntent}
                       {...(reduceMotion ? LABEL_SWAP_STILL : LABEL_SWAP)}
                     >
                       <IntentLabel label={selected.label} />
@@ -317,7 +357,7 @@ export function ContactSection() {
             <PopoverContent align="start" className="w-72 p-1.5">
               <div className="grid gap-0.5">
                 {options.map(({ key, label }) => {
-                  const isActive = key === intent;
+                  const isActive = key === effectiveIntent;
                   return (
                     <button
                       aria-pressed={isActive}

@@ -200,9 +200,15 @@ function CvFrame({ href, name }: { href: string; name: string }) {
       {/* `max-w-none`: index.css carries a blanket `* { max-width: 100% }`
           under 640px, which would clamp the 860px frame back to the panel
           width and then scale it again, painting the document at 42%. */}
+      {/* Not a tab stop: the embedded document swallows Escape and Shift+Tab,
+          so once focus entered the frame there was no keyboard route back out
+          of the dialog — a keyboard trap, and the one WCAG A failure on the
+          site. The CV is reachable as a normal page from the button beside
+          Close, so nothing is lost by taking the frame out of the tab order. */}
       <iframe
         className="absolute top-0 left-0 max-w-none border-0"
         src={href}
+        tabIndex={-1}
         style={
           scale < 1 && box
             ? {
