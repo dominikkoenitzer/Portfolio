@@ -57,10 +57,15 @@ bun run dev     # → http://localhost:1000
 | Production build | `bun run build` |
 | Preview the build | `bun run preview` |
 | Typecheck | `bun run typecheck` |
+| Lint | `bun run lint` |
+| Unit tests | `bun run test` |
+| Sitemap parity | `bun run check:sitemap` |
+| JSON-LD validation | `bun run check:jsonld` |
 
 > The GitHub-contributions widget reads a `GITHUB_TOKEN` from `.env.local`
 > (server-side only, never bundled into the client). Without one it degrades
-> gracefully. CI runs `typecheck` + `build` on every push and PR.
+> gracefully. CI runs `typecheck`, `lint`, `test`, both SEO guards and `build`
+> on every push and PR.
 
 ## Project structure
 
