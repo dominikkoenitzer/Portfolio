@@ -254,7 +254,7 @@ export function Lightbox({
         return;
       }
       // Tab is trapped here rather than on the panel, because clicking the
-      // picture (the obvious thing to do — on a one-image gallery it is the
+      // picture (the obvious thing to do) because on a one-image gallery it is the
       // only content) moves focus to <body>, and a React handler bound to the
       // panel never sees a key pressed there. On a single-image viewer the
       // browser then walked the whole navbar behind the overlay: nine stops,

@@ -30,7 +30,7 @@ const buttonVariants = cva(
       // Sizes change the size and nothing else. The `sm` and `lg` rows carried
       // a `rounded-md` from the upstream shadcn default, which quietly re-set
       // the base `rounded-lg`, so the same button shipped at a 12px radius in
-      // one size and 14px in another — "Email me" and "Hire Me" sat next to
+      // one size and 14px in another, so "Email me" and "Hire Me" sat next to
       // each other with different corners.
       size: {
         default: "btn-icon-nudge h-10 px-4 py-2",

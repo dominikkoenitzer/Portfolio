@@ -137,7 +137,7 @@ function Cloud() {
    * renderer that draws a sprite registers a `dispose` listener on it that
    * closes over that renderer's WebGL context. The listener only removes
    * itself when the geometry is disposed, and neither `renderer.dispose()` nor
-   * R3F's unmount touches it — so every visit to this page left a closure
+   * R3F's unmount touches it, so every visit to this page left a closure
    * holding a context, its canvas, and the whole detached route subtree above
    * it. Found by heap snapshot: +535 DOM nodes and ~726 kB per visit here and
    * to /services, linear and never collected.

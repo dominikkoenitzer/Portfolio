@@ -1,8 +1,8 @@
 /**
  * Which overlay owns the next Escape.
  *
- * The site has four things that cover the page — the nav drawer, the search
- * palette, the project lightbox and the CV preview — and each binds its own
+ * The site has four things that cover the page: the nav drawer, the search
+ * palette, the project lightbox and the CV preview, and each binds its own
  * global key handler. They all fired on the same keypress, so one Escape
  * cleared the whole stack at once: opening the palette over the CV and pressing
  * Escape closed both, which is not what Escape means anywhere else.
@@ -39,7 +39,7 @@ export function isTop(id: symbol | null): boolean {
  * Every overlay's handler runs on the same keypress, and React flushes a
  * discrete event synchronously: the first handler closes its overlay, that
  * unmount releases its layer, and the next handler then reads a stack whose top
- * has already moved to it — so both closed anyway. The answer has to be fixed
+ * has already moved to it, so both closed anyway. The answer has to be fixed
  * for the whole event, so the first question asked during a keypress freezes
  * the top for every later question about the same one.
  */
