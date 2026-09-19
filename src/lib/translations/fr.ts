@@ -320,21 +320,25 @@ export const fr = {
       job: {
         label: "un poste",
         subject: "Poste chez [entreprise]",
+        formSubject: "Poste",
         body: "Bonjour Dominik,\n\nnous recrutons [poste] chez [entreprise] et votre profil correspond bien.\n\n· Poste : \n· Équipe et stack : \n· Lieu / télétravail : \n· Date de début : \n\nCordialement,\n[nom]",
       },
       freelance: {
         label: "une mission freelance",
         subject: "Mission freelance : [brève description]",
+        formSubject: "Mission freelance",
         body: "Bonjour Dominik,\n\nj'aimerais travailler avec vous sur [projet].\n\n· Ce dont nous avons besoin : \n· Calendrier approximatif : \n· Budget envisagé : \n· Liens : \n\nCordialement,\n[nom]",
       },
       collab: {
         label: "une collaboration",
         subject: "Collaboration : [idée]",
+        formSubject: "Collaboration",
         body: "Bonjour Dominik,\n\nje travaille sur [projet] et je me disais que nous pourrions construire quelque chose ensemble.\n\n· L'idée : \n· Ce que j'apporte : \n· Liens : \n\nCordialement,\n[nom]",
       },
       other: {
         label: "autre chose",
         subject: "Bonjour Dominik",
+        formSubject: "Bonjour Dominik",
         body: "Bonjour Dominik,\n\n",
       },
     },
