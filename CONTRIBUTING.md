@@ -24,11 +24,17 @@ bun run dev     # dev server on http://localhost:1000
 | Production build | `bun run build` |
 | Preview the build | `bun run preview` |
 | Typecheck | `bun run typecheck` |
+| Lint | `bun run lint` |
+| Unit tests | `bun run test` |
+| Sitemap parity | `bun run check:sitemap` |
+| JSON-LD validation | `bun run check:jsonld` |
 
-There is **no test suite**, so verify changes with `bun run typecheck` and
-`bun run build` (CI runs both on every push/PR). There is intentionally **no
-linter or formatter**; match the surrounding code style: 2-space indentation,
-as described in `.editorconfig`.
+Before pushing, run `bun run typecheck`, `bun run lint`, `bun run test` and
+`bun run build`. CI runs those four plus the two SEO guards on every push/PR.
+The tests are vitest in a node environment with no DOM, so they cover pure
+modules only; anything that changes what a component renders has to be checked
+in a browser. There is no formatter, so match the surrounding code style:
+2-space indentation, as described in `.editorconfig`.
 
 ## Conventions
 
@@ -45,7 +51,7 @@ A few things are deliberate and load-bearing:
 ## Pull requests
 
 - Keep PRs focused and fill in the template.
-- Make sure `bun run typecheck` and `bun run build` pass.
+- Make sure `bun run typecheck`, `bun run lint`, `bun run test` and `bun run build` pass.
 - Never commit secrets, tokens, or personal absolute paths.
 
 ## Reporting bugs & ideas
