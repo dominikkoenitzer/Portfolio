@@ -262,21 +262,25 @@ export const zh = {
       job: {
         label: "职位机会",
         subject: "职位机会：[公司]",
+        formSubject: "职位机会",
         body: "你好 Dominik，\n\n我们 [公司] 正在招聘 [职位]，觉得你的作品很合适。\n\n· 职位：\n· 团队与技术栈：\n· 地点 / 远程：\n· 入职时间：\n\n此致，\n[姓名]",
       },
       freelance: {
         label: "自由职业项目",
         subject: "自由职业项目：[简要说明]",
+        formSubject: "自由职业项目",
         body: "你好 Dominik，\n\n我想请你参与 [项目]。\n\n· 我们的需求：\n· 大致时间安排：\n· 预算范围：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       collab: {
         label: "合作",
         subject: "合作：[想法]",
+        formSubject: "合作",
         body: "你好 Dominik，\n\n我正在做 [项目]，觉得我们也许可以一起做点什么。\n\n· 这个想法：\n· 我能带来什么：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       other: {
         label: "其他事情",
         subject: "你好 Dominik",
+        formSubject: "你好 Dominik",
         body: "你好 Dominik，\n\n",
       },
     },

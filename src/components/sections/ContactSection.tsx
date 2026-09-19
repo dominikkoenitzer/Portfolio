@@ -38,7 +38,19 @@ const INTENT_KEYS = ["job", "freelance", "collab", "other"] as const;
 type IntentKey = (typeof INTENT_KEYS)[number];
 
 /** What the sentence and the mail link are built from, whatever the source. */
-type Draft = { label: string; subject: string; body: string };
+type Draft = {
+  label: string;
+  subject: string;
+  body: string;
+  /**
+   * What the form sends. The `subject` above is the mailto template, and its
+   * bracket is a prompt for the visitor to fill in ("Role at [company]") — sent
+   * through the form nobody fills it, so the mail arrived titled with the
+   * placeholder. A service enquiry composes a real subject already and needs no
+   * second one.
+   */
+  formSubject?: string;
+};
 
 /**
  * The Services page hands us an enquiry through router state (see
@@ -258,7 +270,7 @@ export function ContactSection() {
           email: data.get("email"),
           message: data.get("message"),
           website: data.get("website"),
-          subject: selected.subject,
+          subject: selected.formSubject ?? selected.subject,
           intent: effectiveIntent,
           language,
           startedAt: startedAt.current,

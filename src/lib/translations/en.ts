@@ -319,21 +319,25 @@ export const en = {
       job: {
         label: "a role",
         subject: "Role at [company]",
+        formSubject: "Role",
         body: "Hi Dominik,\n\nWe're hiring a [role] at [company] and your work looks like a good fit.\n\n· Role: \n· Team and stack: \n· Location / remote: \n· Start date: \n\nBest,\n[name]",
       },
       freelance: {
         label: "a freelance project",
         subject: "Freelance project: [short description]",
+        formSubject: "Freelance project",
         body: "Hi Dominik,\n\nI'd like to work with you on [project].\n\n· What we need: \n· Rough timeline: \n· Budget range: \n· Links: \n\nBest,\n[name]",
       },
       collab: {
         label: "building something together",
         subject: "Collaboration: [idea]",
+        formSubject: "Collaboration",
         body: "Hi Dominik,\n\nI'm working on [project] and thought we might build something together.\n\n· The idea: \n· What I'd bring: \n· Links: \n\nBest,\n[name]",
       },
       other: {
         label: "something else",
         subject: "Hi Dominik",
+        formSubject: "Hi Dominik",
         body: "Hi Dominik,\n\n",
       },
     },
