@@ -13,7 +13,7 @@ import "@fontsource/zen-kaku-gothic-new/latin-400.css";
 import "@fontsource/zen-kaku-gothic-new/latin-500.css";
 import "@fontsource/zen-kaku-gothic-new/latin-700.css";
 // 700 only: measured across all 11 routes in all four languages, the browser
-// never requests the 500 or the 900 cut — nothing on the site paints at those
+// never requests the 500 or the 900 cut, because nothing on the site paints at those
 // weights, and a heading at 600 resolves upward to 700 either way. The two
 // unused faces were ~23 kB of woff2 (plus their woff fallbacks) shipped in
 // every build for nobody.

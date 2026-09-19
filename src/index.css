@@ -432,7 +432,7 @@
   /* The same 44px for every control a finger actually lands on, not only the
      icon-only ones: the shared button ships at 40px, which reads fine under a
      mouse and is small under a thumb. Links are matched by the button base
-     class rather than by tag, so a link inside a paragraph is untouched — and
+     class rather than by tag, so a link inside a paragraph is untouched, and
      an inline box ignores `min-height` anyway, which is why prose links cannot
      be caught by this rule by accident. Touch only: nothing moves on desktop. */
   button,
@@ -445,7 +445,7 @@
 /* Prevent iOS Safari from zooming when focusing form fields: 16px is the
    threshold below which auto-zoom fires. `-webkit-touch-callout` is supported by
    desktop Safari too, so on its own this query also fired on a Mac and forced
-   every input, textarea and select on the site to 16px with `!important` —
+   every input, textarea and select on the site to 16px with `!important`,
    nothing downstream could correct it. The pointer test is what makes it the
    touch-only rule it was always meant to be. */
 @supports (-webkit-touch-callout: none) {

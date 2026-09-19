@@ -53,8 +53,8 @@ export function PageLayout({ children }: PageLayoutProps) {
     <LanguageProvider defaultLanguage="en">
       <SkipLink />
       {/* Wrapped, because this is the only lazy import above the route-level
-          boundary: when its chunk or its stylesheet failed to arrive — a stale
-          chunk URL after a redeploy is the ordinary case — the rejection
+          boundary: when its chunk or its stylesheet failed to arrive. A stale
+          chunk URL after a redeploy is the ordinary case, and the rejection
           reached the root and React unmounted the entire app. Every route went
           blank white, no nav, no text, no recovery card. It is a background;
           the correct failure is that it is simply not there. */}

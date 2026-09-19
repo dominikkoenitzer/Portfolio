@@ -216,7 +216,7 @@ function CvFrame({ href, name }: { href: string; name: string }) {
           width and then scale it again, painting the document at 42%. */}
       {/* Not a tab stop: the embedded document swallows Escape and Shift+Tab,
           so once focus entered the frame there was no keyboard route back out
-          of the dialog — a keyboard trap, and the one WCAG A failure on the
+          of the dialog: a keyboard trap, and the one WCAG A failure on the
           site. The CV is reachable as a normal page from the button beside
           Close, so nothing is lost by taking the frame out of the tab order. */}
       <iframe

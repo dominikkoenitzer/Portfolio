@@ -44,7 +44,7 @@ type Draft = {
   body: string;
   /**
    * What the form sends. The `subject` above is the mailto template, and its
-   * bracket is a prompt for the visitor to fill in ("Role at [company]") — sent
+   * bracket is a prompt for the visitor to fill in ("Role at [company]"). Sent
    * through the form nobody fills it, so the mail arrived titled with the
    * placeholder. A service enquiry composes a real subject already and needs no
    * second one.
@@ -164,14 +164,14 @@ export function ContactSection() {
    * router, because this component outlives the navigations that change it:
    * /contact → /contact is a `replace` and the route is keyed on the pathname,
    * so it never remounts. Storing the *derived* value instead was the bug in
-   * both directions — with no service it left `intent` pointing at one that no
+   * both directions: with no service it left `intent` pointing at one that no
    * longer existed (`t.intents.service` is undefined, and reading `.label` off
    * it took the page to the error boundary), and once corrected, pressing Back
    * restored the service to the router but not to the picker, so the form sent
    * the wrong subject.
    */
   const [chosen, setChosen] = useState<IntentKey | "service" | null>(null);
-  // A new navigation — including Back and Forward — drops the explicit choice,
+  // A new navigation, including Back and Forward, drops the explicit choice,
   // so arriving from a service card always opens on that service.
   const [seenState, setSeenState] = useState(state);
   if (seenState !== state) {

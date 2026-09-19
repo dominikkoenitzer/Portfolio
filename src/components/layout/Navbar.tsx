@@ -124,7 +124,7 @@ function Island({ show }: { show: boolean }) {
          padding, 16px on each side, so the two islands are the same shape.
          The controls pill used to take `left-2`, which ate 8px of that air on
          the left only and left the circles sitting off-centre in their own
-         surface — 8px before them, 16px after. */
+         surface: 8px before them, 16px after. */
       className={cn(
         "pointer-events-none absolute top-0 right-0 bottom-0 left-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
         show && "backdrop-blur-xl",

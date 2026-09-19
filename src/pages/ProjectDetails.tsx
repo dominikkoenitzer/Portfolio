@@ -73,7 +73,7 @@ function FeatureSection({
             copy below gets, so a section's heading and its own paragraphs share
             one left edge. Left to itself the span was ~13px wide and the
             heading sat 11px left of its own text, with a ragged edge on top of
-            that — `tabular-nums` does nothing in Zen Kaku Gothic New, so "01"
+            that: `tabular-nums` does nothing in Zen Kaku Gothic New, so "01"
             and "05" measured differently. */}
         <span
           aria-hidden
@@ -214,7 +214,7 @@ const ProjectDetails = () => {
    */
   const shotAlt = (position: number) =>
     galleryImages.length > 1
-      ? `${project.title} — ${t.imageCounter
+      ? `${project.title}, ${t.imageCounter
           .replace("{index}", String(position + 1))
           .replace("{total}", String(galleryImages.length))}`
       : `${project.title} interface`;
