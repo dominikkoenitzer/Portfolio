@@ -75,6 +75,23 @@ function CvDialog({
 
   useBodyScrollLock(true);
 
+  // The dialog portals into <body>, so the app root is its sibling: hiding it
+  // while the panel is open is what keeps a screen reader in browse mode from
+  // reading the page straight through `aria-modal`. It sits above the focus
+  // effect because React runs cleanups in the order the effects were declared
+  // and `.focus()` inside an inert subtree is a silent no-op, so the root has
+  // to be back before the opener is focused.
+  useEffect(() => {
+    const root = document.getElementById("root");
+    if (!root) return;
+    root.setAttribute("aria-hidden", "true");
+    root.inert = true;
+    return () => {
+      root.removeAttribute("aria-hidden");
+      root.inert = false;
+    };
+  }, []);
+
   useEffect(() => {
     previousFocus.current = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
@@ -106,12 +123,15 @@ function CvDialog({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, isTopLayer]);
 
-  // The iframe is a focus stop of its own and swallows Tab once inside it, so
-  // the trap only has to hold the two controls in the header.
+  // The frame is left out of the selector: `tabIndex={-1}` keeps Tab from
+  // reaching it but still allows `.focus()`, so as the last match it was where
+  // Shift+Tab from the first control landed, and neither this handler nor the
+  // Escape listener sees a key pressed inside the embedded document. The trap
+  // holds the two controls in the header.
   const trapTab = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "Tab") return;
     const items = panelRef.current?.querySelectorAll<HTMLElement>(
-      "a[href], button:not([disabled]), iframe",
+      "a[href], button:not([disabled])",
     );
     if (!items || items.length === 0) return;
     const first = items[0];
@@ -215,10 +235,11 @@ function CvFrame({ href, name }: { href: string; name: string }) {
           under 640px, which would clamp the 860px frame back to the panel
           width and then scale it again, painting the document at 42%. */}
       {/* Not a tab stop: the embedded document swallows Escape and Shift+Tab,
-          so once focus entered the frame there was no keyboard route back out
-          of the dialog: a keyboard trap, and the one WCAG A failure on the
-          site. The CV is reachable as a normal page from the button beside
-          Close, so nothing is lost by taking the frame out of the tab order. */}
+          so focus inside the frame has no keyboard route back out of the
+          dialog, a keyboard trap and a WCAG A failure. `tabIndex={-1}` keeps
+          Tab out of it; it is also left out of the dialog's focus trap, which
+          would otherwise focus it programmatically. The CV is reachable as a
+          normal page from the button beside Close, so nothing is lost. */}
       <iframe
         className="absolute top-0 left-0 max-w-none border-0"
         src={href}
