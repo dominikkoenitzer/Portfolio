@@ -322,21 +322,25 @@ export const de = {
       job: {
         label: "eine Stelle",
         subject: "Stelle bei [Firma]",
+        formSubject: "Stelle",
         body: "Hallo Dominik,\n\nwir suchen [Position] bei [Firma] und deine Arbeit passt gut dazu.\n\n· Position: \n· Team und Stack: \n· Standort / Remote: \n· Startdatum: \n\nBeste Grüsse,\n[Name]",
       },
       freelance: {
         label: "ein Freelance-Projekt",
         subject: "Freelance-Projekt: [kurze Beschreibung]",
+        formSubject: "Freelance-Projekt",
         body: "Hallo Dominik,\n\nich würde gerne mit dir an [Projekt] arbeiten.\n\n· Was wir brauchen: \n· Grober Zeitrahmen: \n· Budgetrahmen: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       collab: {
         label: "eine Zusammenarbeit",
         subject: "Zusammenarbeit: [Idee]",
+        formSubject: "Zusammenarbeit",
         body: "Hallo Dominik,\n\nich arbeite an [Projekt] und dachte, wir könnten zusammen etwas aufbauen.\n\n· Die Idee: \n· Was ich einbringe: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       other: {
         label: "etwas anderes",
         subject: "Hallo Dominik",
+        formSubject: "Hallo Dominik",
         body: "Hallo Dominik,\n\n",
       },
     },
