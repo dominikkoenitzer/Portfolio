@@ -47,10 +47,10 @@ const MPAI_URL = "https://mpai.ch/";
 
 const WISS_URL = "https://wiss.ch";
 const MPS_URL = "https://bezirksschulenschwyz.ch/oberarth/profil-oberarth";
-// http, deliberately: the school's TLS certificate expired on 2024-10-13 and
-// has not been renewed, so https serves a full-page browser interstitial. Plain
-// http reaches the site. Re-check before "fixing" this back.
-const DSP_URL = "http://dspeking.de/";
+// This was plain http for two years because the school's certificate had
+// expired and https served a browser interstitial. They renewed on 2026-09-17
+// (GoDaddy, valid to 2027-04-03), so https reaches the site again.
+const DSP_URL = "https://dspeking.de/";
 const SSS_URL = "https://swiss-school.edu.sg";
 
 const WISS_LOGO = "/timeline/wiss.ico";
