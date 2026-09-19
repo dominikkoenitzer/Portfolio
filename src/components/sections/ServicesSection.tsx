@@ -501,7 +501,7 @@ export function ServicesSection() {
 
             {/* The tree is a <canvas>: aria-hidden, with nothing focusable in
                 it, so a keyboard or a screen reader could reach this page's
-                framing and never one of the nine services — the page's whole
+                framing and never one of the nine services, because the page's whole
                 point. These are the same nine leaves as real buttons, visually
                 hidden, driving the same `selectedKey` the pointer drives, so
                 both inputs open the same panel rather than getting two

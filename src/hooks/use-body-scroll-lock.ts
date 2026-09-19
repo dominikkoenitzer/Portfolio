@@ -6,7 +6,7 @@ import { useEffect } from "react";
  * can hold it at once: the drawer and the palette share one flag in `Navbar`,
  * but the lightbox and the CV dialog each lock on their own. With per-instance
  * state the second lock read `window.scrollY` while the body was already
- * fixed — so it captured 0 — and whichever overlay closed first wiped the
+ * fixed, so it captured 0, and whichever overlay closed first wiped the
  * styles out from under the one still open, leaving the page scrolling behind
  * it and dropping the visitor back to the top on the way out. Measured: open
  * the CV at y=596, open the palette, close the CV, close the palette, land at

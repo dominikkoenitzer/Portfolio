@@ -592,7 +592,7 @@ export default function ServiceExplorer({
        * renderer that draws a sprite registers a `dispose` listener on it that
        * closes over that renderer's WebGL context. The listener only removes
        * itself when the geometry is disposed, and `renderer.dispose()` does not
-       * touch it — so every visit to this page left a closure holding a
+       * touch it, so every visit to this page left a closure holding a
        * context, its canvas, and the whole detached route subtree above it.
        * Found by heap snapshot: +535 DOM nodes and ~726 kB per visit here and
        * to /skills, linear and never collected.

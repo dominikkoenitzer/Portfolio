@@ -95,7 +95,7 @@ export function iconTexture(cacheKey: string, Icon: LucideIcon): THREE.Texture {
  * renderer's `onTextureDispose` deregister itself from the texture's listener
  * list and drop its `WebGLTexture`. Without it the list grew by one closure per
  * renderer ever created, and each closure held that renderer's WebGL context,
- * its canvas, and the whole detached route subtree above it — a heap snapshot
+ * its canvas, and the whole detached route subtree above it. A heap snapshot
  * traced the /services wrapper to exactly this, 213 retained DOM nodes per
  * visit, linear and never collected. `Material.dispose()` does not touch
  * `material.map`, and `renderer.dispose()` does not dispose textures, so
