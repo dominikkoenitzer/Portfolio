@@ -342,10 +342,13 @@ export function Lightbox({
     >
       {/* The backdrop closes on click; the header and the image sit above it
           and do not. It is not tabbable, so Escape and the close button stay
-          the keyboard route out. */}
+          the keyboard route out. `data-cursor-ignore` for the same reason as
+          the CV preview's: a viewport-sized button would pull the custom
+          cursor's magnet onto the whole page. */}
       <button
         aria-hidden
         className="absolute inset-0 cursor-zoom-out"
+        data-cursor-ignore
         onClick={onClose}
         tabIndex={-1}
         type="button"

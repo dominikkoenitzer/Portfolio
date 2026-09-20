@@ -147,10 +147,14 @@ function CvDialog({
 
   return createPortal(
     <div className="fixed inset-0 z-[90] flex flex-col p-3 sm:p-6">
-      {/* Backdrop: click to dismiss. */}
+      {/* Backdrop: click to dismiss. `data-cursor-ignore` keeps the custom
+          cursor's magnet off it: it is a viewport-sized button, so the box
+          morphed onto the whole page whenever the pointer sat beside the
+          panel. */}
       <button
         aria-hidden
         className="-z-10 fixed inset-0 cursor-default bg-foreground/40"
+        data-cursor-ignore
         onClick={onClose}
         tabIndex={-1}
         type="button"
