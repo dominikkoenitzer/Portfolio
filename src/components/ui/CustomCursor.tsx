@@ -8,7 +8,7 @@ import {
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
-import { magnetRectOf } from "@/lib/cursor-magnet";
+import { coversViewport, magnetRectOf } from "@/lib/cursor-magnet";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /**
@@ -75,9 +75,16 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
  * `closest()` is a single cheap ancestor walk. `:not(:disabled)` skips disabled
  * buttons (no affordance to advertise); `[data-cursor-magnetic]` is an explicit
  * opt-in hook for arbitrary elements.
+ *
+ * `[data-cursor-ignore]` is the opt-out, and it exists because a dialog's
+ * click-to-dismiss backdrop is a real `<button>` the size of the viewport: over
+ * the dimmed area beside an open panel the morph took the whole page (measured
+ * at 1498 x 819 with the CV preview open), which advertises nothing and reads
+ * as the cursor losing track of the pointer. A backdrop is a click target with
+ * no shape to snap to, so it opts out and the pointer stays a dot over it.
  */
 const INTERACTIVE_SELECTOR =
-  'a, button:not(:disabled), [role="button"], [data-cursor], .cursor-pointer, [data-cursor-magnetic]';
+  ':is(a, button:not(:disabled), [role="button"], [data-cursor], .cursor-pointer, [data-cursor-magnetic]):not([data-cursor-ignore])';
 
 // Real text-entry fields keep the native I-beam (restored via index.css). We
 // fade out over them so the custom cursor and the native caret don't fight and
@@ -308,6 +315,14 @@ export function CustomCursor() {
       // Release on ANY degenerate rect (either axis collapsed), a collapsed
       // accordion / max-height:0 target would otherwise render a thin sliver.
       if (width < 1 || height < 1) return false;
+      // And on the opposite degenerate case: a target that has grown to the
+      // size of the page is the page. Releasing here cannot loop, because
+      // `applyContext` refuses to re-acquire it on the way back down.
+      if (
+        coversViewport({ width, height }, window.innerWidth, window.innerHeight)
+      ) {
+        return false;
+      }
       const right = left + width;
       const bottom = top + height;
 
@@ -487,7 +502,22 @@ export function CustomCursor() {
     // synthetic `mouseover` that carries no coordinates (see `onOver`).
     const applyContext = (el: Element | null) => {
       // 1) Magnetic wins over everything (e.g. a link inside a paragraph).
-      const interactive = el ? el.closest(INTERACTIVE_SELECTOR) : null;
+      const candidate = el ? el.closest(INTERACTIVE_SELECTOR) : null;
+      // …unless the candidate spans the viewport, which no control does and
+      // every dialog backdrop does. Measured only when the target changes, so
+      // the per-move path keeps its one `closest()` and no layout read; while
+      // the pointer rests on a snapped target the glue loop owns the geometry
+      // and re-checks it there.
+      const interactive =
+        candidate &&
+        candidate !== activeTargetRef.current &&
+        coversViewport(
+          magnetRectOf(candidate) ?? candidate.getBoundingClientRect(),
+          window.innerWidth,
+          window.innerHeight,
+        )
+          ? null
+          : candidate;
       if (interactive) {
         if (activeTargetRef.current !== interactive) enterMagnet(interactive);
         return; // centre + size are owned by the rAF glue loop
