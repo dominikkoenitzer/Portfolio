@@ -48,3 +48,34 @@ export function setCursorMagnetRect(
 ): void {
   (el as unknown as MagnetRectHost).__cursorMagnetRect = rect;
 }
+
+/**
+ * Share of each viewport axis at which a magnet target stops being a control
+ * and starts being the page. 0.9 rather than 1: a dialog backdrop is inset by
+ * a few pixels on some layouts, and nothing legitimate comes near it (the
+ * widest real target on the site is a content-column link, about 84% of the
+ * width, and it is a hundred pixels tall).
+ */
+export const VIEWPORT_COVER_RATIO = 0.9;
+
+/**
+ * True when a target spans essentially the whole viewport in both axes.
+ *
+ * Such an element is the page, not something to snap onto, and the cursor
+ * refuses to morph on to it. This exists because a dialog's click-to-dismiss
+ * backdrop is a real, full-screen `<button>`: with the CV preview open the box
+ * took the entire viewport (measured at 1498 x 819) the moment the pointer
+ * rested beside the panel. Those backdrops carry `data-cursor-ignore` now, but
+ * the next full-screen control would repeat it, so the geometry is checked too.
+ */
+export function coversViewport(
+  rect: { width: number; height: number },
+  viewportWidth: number,
+  viewportHeight: number,
+): boolean {
+  if (viewportWidth <= 0 || viewportHeight <= 0) return false;
+  return (
+    rect.width >= viewportWidth * VIEWPORT_COVER_RATIO &&
+    rect.height >= viewportHeight * VIEWPORT_COVER_RATIO
+  );
+}
