@@ -281,7 +281,7 @@ export default function SkillSphere() {
     <SceneBoundary>
       <div
         aria-hidden="true"
-        className="h-full w-full cursor-grab [touch-action:none] active:cursor-grabbing"
+        className="h-full w-full cursor-grab touch-none active:cursor-grabbing"
         ref={containerRef}
       >
         <Canvas

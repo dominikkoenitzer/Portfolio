@@ -67,7 +67,7 @@ export function SectionHeading({
         {/* The mask carries the descender room it clips (a "y" or a "g" reaches
             below the line box) and takes the same amount back off the margin,
             so the title sits exactly where it did and nothing below it moves. */}
-        <span className="-mb-[0.15em] block overflow-hidden pb-[0.15em]">
+        <span className="mb-[-0.15em] block overflow-hidden pb-[0.15em]">
           <motion.span className="block" variants={TITLE_LINE}>
             {title}
           </motion.span>
