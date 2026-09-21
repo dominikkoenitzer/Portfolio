@@ -41,7 +41,6 @@ Open to software engineering roles, internships, freelance and contract projects
 - [Lebenslauf in German](https://dk.punds.ch/lebenslauf): the same CV in German.
 - [GitHub](https://github.com/dominikkoenitzer): source for every project listed below.
 - [Punds](https://punds.ch/): his link hub, a navigable Three.js world, pointing at every project and profile.
-- [Journal](https://senbon.ch/journal): his writing, hosted on Senbon. Listed for completeness: Senbon asks crawlers not to index it, and that is deliberate.
 
 ## Projects
 
