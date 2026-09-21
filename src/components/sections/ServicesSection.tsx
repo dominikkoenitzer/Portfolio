@@ -178,7 +178,7 @@ function DetailCard({
     <motion.div
       animate={{ opacity: 1, scale: 1, y: 0 }}
       aria-label={item.title}
-      className="absolute bottom-7 left-7 z-[4] w-[356px] max-w-[calc(100%-56px)] rounded-2xl border border-border/60 bg-card p-6 text-foreground shadow-sm"
+      className="absolute bottom-7 left-7 z-4 w-[356px] max-w-[calc(100%-56px)] rounded-2xl border border-border/60 bg-card p-6 text-foreground shadow-xs"
       exit={{
         opacity: 0,
         scale: 0.98,
@@ -197,7 +197,7 @@ function DetailCard({
           extra hit area so the pointer target clears 44px. */}
       <button
         aria-label={closeLabel}
-        className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:-inset-1.5 after:content-[''] hover:border-primary/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="absolute top-4 right-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:-inset-1.5 after:content-[''] hover:border-primary/40 hover:text-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         onClick={onClose}
         ref={closeRef}
         type="button"
@@ -412,7 +412,7 @@ export function ServicesSection() {
                 Same eyebrow and title classes as SectionHeading, so this
                 page's title matches every other page's. The cream halo keeps
                 the title legible where a leaf passes behind it. */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] px-6 text-center">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-2 px-6 text-center">
               <p className="eyebrow mb-3">{t.eyebrow}</p>
               <h1
                 className="font-bold text-3xl md:text-4xl"
@@ -440,13 +440,13 @@ export function ServicesSection() {
                     <button
                       aria-pressed={on}
                       className={cn(
-                        "inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                        "inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                         on
                           ? "text-foreground"
-                          : "bg-transparent text-muted-foreground hover:bg-primary/[0.06] hover:text-foreground",
+                          : "bg-transparent text-muted-foreground hover:bg-primary/6 hover:text-foreground",
                         on &&
                           !tint &&
-                          "bg-foreground/[0.08] shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.6)]",
+                          "bg-foreground/8 shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.6)]",
                       )}
                       key={id}
                       onClick={() => selectCategory(id)}
@@ -546,7 +546,7 @@ export function ServicesSection() {
             <div
               aria-hidden
               className={cn(
-                "pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-center gap-3 transition-opacity duration-500 ease-out",
+                "pointer-events-none absolute inset-0 z-5 flex flex-col items-center justify-center gap-3 transition-opacity duration-500 ease-out",
                 treeReady && "opacity-0",
               )}
             >
@@ -578,7 +578,7 @@ export function ServicesSection() {
           a line in English and 89 in French; this holds every language between
           70 and 75. */}
       <motion.p
-        className="mb-16 max-w-[35rem] text-base text-muted-foreground leading-relaxed sm:text-lg"
+        className="mb-16 max-w-140 text-base text-muted-foreground leading-relaxed sm:text-lg"
         {...revealOnScroll(reduceMotion)}
       >
         {t.intro}
@@ -683,7 +683,7 @@ export function ServicesSection() {
                 key={faq.question}
                 variants={REVEAL}
               >
-                <summary className="-mx-3 flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-3 py-3 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background group-open:text-primary [&::-webkit-details-marker]:hidden">
+                <summary className="-mx-3 flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-3 py-3 font-medium text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background group-open:text-primary [&::-webkit-details-marker]:hidden">
                   {faq.question}
                   <ChevronDown
                     aria-hidden

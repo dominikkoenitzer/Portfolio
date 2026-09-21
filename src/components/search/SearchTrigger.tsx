@@ -30,7 +30,7 @@ export function SearchTrigger({ className, onOpen, onPreload }: SearchTriggerPro
     <Button
       aria-label={t.search.open}
       className={cn(
-        "h-11 w-11 rounded-full border border-primary/15 bg-primary/[0.06] transition-colors hover:bg-primary/[0.12] hover:text-primary",
+        "h-11 w-11 rounded-full border border-primary/15 bg-primary/6 transition-colors hover:bg-primary/12 hover:text-primary",
         className,
       )}
       data-search-trigger
@@ -40,7 +40,7 @@ export function SearchTrigger({ className, onOpen, onPreload }: SearchTriggerPro
       size="icon"
       variant="ghost"
     >
-      <Search className="!size-5" />
+      <Search className="size-5!" />
     </Button>
   );
 }

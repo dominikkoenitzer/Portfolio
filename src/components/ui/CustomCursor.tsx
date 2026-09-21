@@ -680,7 +680,7 @@ export function CustomCursor() {
       window.removeEventListener("dragend", onDragEnd);
       window.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("mouseout", onWindowOut);
-      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("blur-sm", onBlur);
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisibility);
       document.documentElement.removeEventListener("mouseleave", onWindowLeave);
@@ -712,12 +712,12 @@ export function CustomCursor() {
   if (!fine || reduced || typeof document === "undefined") return null;
 
   // Portal to <body> so we share the stacking context of Radix popovers/menus
-  // (which also portal to body at z-50); z-[9999] keeps the cursor above them.
+  // (which also portal to body at z-50); z-9999 keeps the cursor above them.
   // The element stays permanently mounted; only `opacity` toggles visibility.
   return createPortal(
     <div className="pointer-events-none select-none" aria-hidden="true">
       <motion.div
-        className="fixed left-0 top-0 z-[9999]"
+        className="fixed left-0 top-0 z-9999"
         style={{
           x: cornerX,
           y: cornerY,

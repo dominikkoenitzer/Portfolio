@@ -28,7 +28,7 @@ const TAG_CHIP = `${CHIP} bg-secondary/50 text-foreground/80`;
  * while the row above stayed 26px. The `after` pseudo-element carries that
  * touch target instead, so the hit area grows and the chip does not.
  */
-const MORE_CHIP = `${CHIP} relative bg-secondary/30 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-[''] hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/30 data-[state=open]:text-primary`;
+const MORE_CHIP = `${CHIP} relative bg-secondary/30 text-muted-foreground transition-colors duration-200 ease-out after:absolute after:inset-x-0 after:top-1/2 after:h-11 after:-translate-y-1/2 after:content-[''] hover:border-primary/30 hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=open]:border-primary/30 data-[state=open]:text-primary`;
 
 /** Matches the `gap-2` on the row below; the packer needs it as a number. */
 const GAP = 8;
