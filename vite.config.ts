@@ -270,11 +270,8 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(import.meta.dirname, "./src"),
       },
     },
-    esbuild: {
-      target: "es2020",
-      legalComments: "none",
-    },
     build: {
+      target: "es2020",
       rollupOptions: {
         output: {
           manualChunks: vendorChunk,
