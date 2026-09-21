@@ -60,11 +60,12 @@ export const en = {
     intro1Before: "I'm Dominik, from Küsnacht on Lake Zürich. I build websites, ",
     intro1Highlight: "for a living and for fun",
     intro1After: ", which is convenient, because to me those are the same thing.",
-    intro2Before: "Most days you'll find me with too many tabs open, a coffee going cold, and a strong opinion about a button that sits two pixels off. I like things that are quick, look nice and ",
+    intro2Before:
+      "Most days you'll find me with too many tabs open, a coffee going cold, and a strong opinion about a button that sits two pixels off. I'm 18, and I've been doing this since well before anyone paid me for it. I like things that are quick, look nice and ",
     intro2Highlight: "just work",
-    intro2After:
-      ". The kind of thing you never have to think about. I'm 18, so I've been doing this since it was still just a hobby.",
-    intro3Before: "When the laptop is shut, I'm probably ricing my PC for the hundredth time, watching anime or arguing about fonts. If your website needs a bit of love, or you just want to say hi, ",
+    intro2After: ". The kind of thing you never have to think about.",
+    intro3Before:
+      "Outside of work I'm usually building something nobody asked for, watching anime, or arguing about fonts. If your website needs a bit of love, or you just want to say hi, ",
     intro3Highlight: "I'm easy to reach",
     intro3After: ".",
     exploreSkills: "Explore my skills",
