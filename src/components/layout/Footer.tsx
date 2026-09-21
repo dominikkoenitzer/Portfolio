@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { BookOpen, Bot, FileText, Github, Mail } from "lucide-react";
+import { Bot, FileText, Github, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS, SITE_CONFIG } from "@/constants";
@@ -63,11 +63,6 @@ export function Footer() {
       href: SITE_CONFIG.github,
       icon: <Github className={ICON} />,
       label: "GitHub",
-    },
-    {
-      href: "https://senbon.ch/",
-      icon: <BookOpen className={ICON} />,
-      label: t.footer.journal,
     },
     // One CV entry, the one that matches the language the site is in: German
     // gets the Lebenslauf, everyone else the Curriculum Vitae. Same rule as

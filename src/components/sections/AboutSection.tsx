@@ -3,8 +3,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Award,
-  BookOpen,
-  ExternalLink,
   GraduationCap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -149,9 +147,9 @@ export function AboutSection() {
               className="mt-6 flex flex-col gap-3 border-border/40 border-t pt-6 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4 sm:pt-8 md:mt-auto"
               variants={REVEAL}
             >
-              {/* `sm:flex-wrap`: three buttons in German ("Mein Journal lesen")
-                  are wider than the card at tablet widths, and without wrapping
-                  the last one ran past the card's edge. */}
+              {/* `sm:flex-wrap` stays: the German labels are the widest of the
+                  four languages, and without wrapping the last action ran past
+                  the card's edge at tablet widths. */}
               {/* Lucide, like every other icon on the site. The trailing one
                   leans on hover through `.btn-icon-nudge` on the size variant,
                   so neither button needs a nudge of its own. */}
@@ -164,17 +162,6 @@ export function AboutSection() {
               {/* One button for both CV documents: it opens the one that
                   matches the language the site is in. */}
               <CvPreview />
-              <Button asChild variant="outline">
-                <a
-                  href="https://senbon.ch/journal"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <BookOpen aria-hidden />
-                  {t.readJournal}
-                  <ExternalLink aria-hidden />
-                </a>
-              </Button>
             </motion.div>
           </motion.div>
         </motion.div>
