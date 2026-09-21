@@ -30,7 +30,7 @@ const EMAIL = SITE_CONFIG.email;
  * touch screens, because iOS zooms into anything smaller than 16px.
  */
 const FIELD =
-  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:border-primary/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 sm:text-sm";
+  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:border-primary/45 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40 sm:text-sm";
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -124,7 +124,7 @@ const LABEL_SWAP_STILL: MotionProps = {
 function IntentLabel({ label }: { label: string }) {
   return (
     <>
-      <span className="underline decoration-2 decoration-primary/45 underline-offset-[6px] transition-[text-decoration-color] duration-200 ease-out [overflow-wrap:anywhere] group-hover/intent:decoration-primary">
+      <span className="underline decoration-2 decoration-primary/45 underline-offset-[6px] transition-[text-decoration-color] duration-200 ease-out wrap-anywhere group-hover/intent:decoration-primary">
         {label}
       </span>
       {/* The chevron flips once the list is open, so the control says which
@@ -360,7 +360,7 @@ export function ContactSection() {
               <PopoverTrigger asChild>
                 <button
                   aria-label={t.changeSubject}
-                  className="group/intent col-start-1 row-start-1 inline-grid justify-self-start rounded-sm text-left font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  className="group/intent col-start-1 row-start-1 inline-grid justify-self-start rounded-sm text-left font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                   type="button"
                 >
                   <AnimatePresence initial={false}>
@@ -395,7 +395,7 @@ export function ContactSection() {
                       }}
                       type="button"
                     >
-                      <span className="min-w-0 [overflow-wrap:anywhere]">
+                      <span className="min-w-0 wrap-anywhere">
                         {label}
                       </span>
                       {isActive ? (
@@ -466,7 +466,7 @@ export function ContactSection() {
               <label className="grid gap-1.5 text-sm">
                 <span className="font-medium">{t.form.messageLabel}</span>
                 <textarea
-                  className={cn(FIELD, "min-h-[9rem] resize-y leading-relaxed")}
+                  className={cn(FIELD, "min-h-36 resize-y leading-relaxed")}
                   maxLength={5000}
                   name="message"
                   placeholder={t.form.messagePlaceholder}
@@ -476,7 +476,7 @@ export function ContactSection() {
               {/* Honeypot: off-screen rather than display:none, so the bots
                   that skip hidden fields still fill this one. Out of the tab
                   order and the accessibility tree for everyone else. */}
-              <div aria-hidden className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
+              <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
                 <label>
                   Website
                   <input autoComplete="off" name="website" tabIndex={-1} type="text" />
@@ -508,7 +508,7 @@ export function ContactSection() {
           <p className="text-muted-foreground text-sm leading-relaxed">
             {t.form.orDirect}{" "}
             <a
-              className="group inline-flex max-w-full items-center gap-1 font-medium text-foreground underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color,color] duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="group inline-flex max-w-full items-center gap-1 font-medium text-foreground underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color,color] duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
               href={mailtoFor(selected.subject, selected.body)}
             >
               <span className="min-w-0 break-all">{EMAIL}</span>
@@ -528,7 +528,7 @@ export function ContactSection() {
                 {t.copied}
               </span>
               <button
-                className="col-start-1 row-start-1 inline-grid items-center justify-self-start rounded-sm text-left underline decoration-muted-foreground/40 underline-offset-2 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background [@media(pointer:coarse)]:min-h-[44px]"
+                className="col-start-1 row-start-1 inline-grid items-center justify-self-start rounded-sm text-left underline decoration-muted-foreground/40 underline-offset-2 transition-colors duration-200 ease-out hover:text-foreground hover:decoration-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background pointer-coarse:min-h-[44px]"
                 onClick={copyEmail}
                 type="button"
               >

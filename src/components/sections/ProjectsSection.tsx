@@ -56,7 +56,7 @@ const TOOLBAR =
 
 /** The house keyboard-focus ring (same one the buttons and Contact use). */
 const FOCUS_RING =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 /* ------------------------------------------------------------------ */
 /* Segmented control: one radiogroup, roving tabindex, arrow keys      */
@@ -383,7 +383,7 @@ export function ProjectsSection() {
                     {/* Visual panel: the picture and nothing else, at one
                         aspect ratio across every card. Naming happens once, in
                         the content column. */}
-                    <figure className="relative m-0 aspect-[16/10] overflow-hidden border-border/60 border-b bg-secondary/40 md:aspect-auto md:border-r md:border-b-0">
+                    <figure className="relative m-0 aspect-16/10 overflow-hidden border-border/60 border-b bg-secondary/40 md:aspect-auto md:border-r md:border-b-0">
                       {project.image && !project.imageIcon ? (
                         /* Two candidates, not one. The box is 534px wide past
                            1280 and never grows, so a 1x display was decoding a

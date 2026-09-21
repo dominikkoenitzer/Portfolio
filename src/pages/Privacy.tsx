@@ -50,7 +50,7 @@ const PROSE = "text-muted-foreground leading-[1.75]";
 // `anywhere` rather than `break-all`: the address may only wrap when the line
 // cannot hold it, not mid-word on a 390px screen ("dom / inik@...").
 const MAIL_LINK =
-  "[overflow-wrap:anywhere] text-primary underline underline-offset-4";
+  "wrap-anywhere text-primary underline underline-offset-4";
 
 /** Mono micro-label. Violet is the structural colour; sage stays for signals. */
 const INDEX_LABEL = "text-primary text-xs tracking-[0.14em]";
@@ -169,7 +169,7 @@ const Privacy = () => {
             page margin from xl up. Below that the rail is dropped rather than
             stacked: four headings above four short sections is furniture, not
             navigation, and the whole policy is a couple of screens on a phone. */}
-        <div className="mx-auto w-full max-w-[34rem] xl:mx-0 xl:grid xl:max-w-none xl:grid-cols-[13rem_34rem_13rem] xl:justify-center xl:gap-x-10">
+        <div className="mx-auto w-full max-w-136 xl:mx-0 xl:grid xl:max-w-none xl:grid-cols-[13rem_34rem_13rem] xl:justify-center xl:gap-x-10">
           <div className="xl:col-start-2">
             <SectionHeading
               align="left"

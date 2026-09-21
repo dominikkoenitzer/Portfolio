@@ -96,7 +96,7 @@ export const AnimatedRoutes = () => {
                 // taken by its rotation.
                 <div
                   aria-busy="true"
-                  className="fade-in-0 flex min-h-[60vh] animate-in items-center justify-center duration-200 [animation-delay:300ms] [animation-fill-mode:both]"
+                  className="fade-in-0 flex min-h-[60vh] animate-in items-center justify-center duration-200 [animation-delay:300ms] fill-mode-both"
                 >
                   <div
                     aria-label={t.nav.loading}

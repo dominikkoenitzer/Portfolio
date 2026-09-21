@@ -1,8 +1,172 @@
 /* Fonts are self-hosted subsets imported from main.tsx. */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-lilac: hsl(var(--lilac));
+
+  --color-sage: hsl(var(--sage));
+  --color-sage-bright: hsl(var(--sage-bright));
+  --color-sage-deep: hsl(var(--sage-deep));
+  --color-sage-foreground: hsl(var(--sage-foreground));
+
+  --color-blush: hsl(var(--blush));
+  --color-blush-deep: hsl(var(--blush-deep));
+  --color-blush-foreground: hsl(var(--blush-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --font-sans:
+    Zen Kaku Gothic New, ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-heading:
+    Zen Maru Gothic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-display:
+    Zen Maru Gothic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-title:
+    M PLUS Rounded 1c, ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-bloom: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility section-padding {
+  /* Section rhythm. `w-full` is load-bearing: these sections render as flex
+     items of the page wrapper in AnimatedRoutes, and in a flex column
+     `align-self: stretch` does not apply when a cross-axis margin is `auto`.
+     Without it, `mx-auto` makes the section a fit-content box that tracks its
+     widest child, so any state change that changes a child width resizes and
+     re-centres the whole section. */
+  /* The gutter ladder is the footer's and the hero's: 24 / 32 / 48 / 64. It
+     used to be 16 / 24 / 32 / 64 here, so under 1024px every page's body
+     column sat 8 to 16px inside the footer directly beneath it. */
+  @apply py-16 px-6 sm:py-20 sm:px-8 md:py-24 md:px-12 lg:py-28 lg:px-16 max-w-7xl mx-auto w-full;
+
+  @media (max-width: 640px) {
+    @apply py-12 px-6;
+  }
+}
+
+@utility eyebrow {
+  /* The micro-label above a section title. The one place the eye colour
+     carries words: deep sage, 5.0:1 on the page.
+
+     No `font-mono`: it never applied. The element rule in @layer base sets the
+     body face with `!important` on `p` and `span`, which an @layer components
+     class cannot beat, so every eyebrow on the site has always rendered in the
+     body sans. The class now says what it does, and the two places that really
+     did render mono (`dt`, `figcaption`) are in the element list above, so all
+     micro-labels finally share one face. */
+  @apply text-[10px] uppercase tracking-[0.22em] text-sage-deep;
+}
+
+@utility btn-icon-nudge {
+  /* A trailing icon in a text-size Button leans 2px into the direction it
+     points on hover. Scoped to the last child so a leading icon stays put. */
+  & > svg:last-child {
+    transition: transform 0.2s var(--ease-out);
+  }
+  &:hover > svg:last-child {
+    transform: translateX(2px);
+  }
+}
+
+@utility faq-panel {
+  /* Answer panel of the /services FAQ. The native <details> box snaps to its
+     open height (height animations repaint every frame and are banned
+     site-wide), so the answer rises and fades into the space instead. Scoped
+     to `details[open]` so closing removes the animation and re-opening
+     restarts it. */
+  details[open] > & {
+    animation: faq-panel-in 300ms var(--ease-out) both;
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility pb-safe {
+  /* Safe-area helper, used by the footer. */
+  padding-bottom: max(var(--safe-bottom), 1rem);
+}
+
+@utility min-h-screen-mobile {
+  /* True viewport height for <main>. svh, not dvh: dvh tracks the collapsing
+     mobile URL bar, which resized <main> mid-scroll on the routes whose
+     content is shorter than the viewport and walked the footer up the page. */
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 100svh;
+}
 
 @layer base {
   /* Bloom: the site's only palette, taken from the owner's Reze reference
@@ -259,47 +423,6 @@
 }
 
 @layer components {
-  /* Section rhythm. `w-full` is load-bearing: these sections render as flex
-     items of the page wrapper in AnimatedRoutes, and in a flex column
-     `align-self: stretch` does not apply when a cross-axis margin is `auto`.
-     Without it, `mx-auto` makes the section a fit-content box that tracks its
-     widest child, so any state change that changes a child width resizes and
-     re-centres the whole section. */
-  /* The gutter ladder is the footer's and the hero's: 24 / 32 / 48 / 64. It
-     used to be 16 / 24 / 32 / 64 here, so under 1024px every page's body
-     column sat 8 to 16px inside the footer directly beneath it. */
-  .section-padding {
-    @apply py-16 px-6 sm:py-20 sm:px-8 md:py-24 md:px-12 lg:py-28 lg:px-16 max-w-7xl mx-auto w-full;
-  }
-
-
-  /* The micro-label above a section title. The one place the eye colour
-     carries words: deep sage, 5.0:1 on the page.
-
-     No `font-mono`: it never applied. The element rule in @layer base sets the
-     body face with `!important` on `p` and `span`, which an @layer components
-     class cannot beat, so every eyebrow on the site has always rendered in the
-     body sans. The class now says what it does, and the two places that really
-     did render mono (`dt`, `figcaption`) are in the element list above, so all
-     micro-labels finally share one face. */
-  .eyebrow {
-    @apply text-[10px] uppercase tracking-[0.22em] text-sage-deep;
-  }
-
-  /* A trailing icon in a text-size Button leans 2px into the direction it
-     points on hover. Scoped to the last child so a leading icon stays put. */
-  .btn-icon-nudge > svg:last-child {
-    transition: transform 0.2s var(--ease-out);
-  }
-  .btn-icon-nudge:hover > svg:last-child {
-    transform: translateX(2px);
-  }
-
-  /* Answer panel of the /services FAQ. The native <details> box snaps to its
-     open height (height animations repaint every frame and are banned
-     site-wide), so the answer rises and fades into the space instead. Scoped
-     to `details[open]` so closing removes the animation and re-opening
-     restarts it. */
   @keyframes faq-panel-in {
     from {
       opacity: 0;
@@ -309,9 +432,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-  details[open] > .faq-panel {
-    animation: faq-panel-in 300ms var(--ease-out) both;
   }
 
   @media (max-width: 640px) {
@@ -323,9 +443,6 @@
     }
     h3 {
       @apply text-xl;
-    }
-    .section-padding {
-      @apply py-12 px-6;
     }
     /* Prevent horizontal scroll on phones. */
     * {
@@ -342,26 +459,6 @@
   ::selection {
     background-color: hsl(var(--sage) / 0.55);
     color: hsl(var(--foreground));
-  }
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Safe-area helper, used by the footer. */
-  .pb-safe {
-    padding-bottom: max(var(--safe-bottom), 1rem);
-  }
-
-  /* True viewport height for <main>. svh, not dvh: dvh tracks the collapsing
-     mobile URL bar, which resized <main> mid-scroll on the routes whose
-     content is shorter than the viewport and walked the footer up the page. */
-  .min-h-screen-mobile {
-    min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
-    min-height: 100svh;
   }
 }
 

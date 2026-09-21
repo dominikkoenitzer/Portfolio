@@ -334,7 +334,7 @@ export function Lightbox({
       animate={{ opacity: 1 }}
       aria-label={labels.title}
       aria-modal="true"
-      className="fixed inset-0 z-[100] flex flex-col bg-background/95"
+      className="fixed inset-0 z-100 flex flex-col bg-background/95"
       initial={{ opacity: reduced ? 1 : 0 }}
       ref={panelRef}
       role="dialog"
