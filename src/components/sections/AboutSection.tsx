@@ -2,8 +2,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
-  Award,
   GraduationCap,
+  Languages,
+  Mail,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
@@ -76,11 +77,13 @@ export function AboutSection() {
               value={t.cards.educationSubtitle}
             />
 
+            {/* Points at /skills because that is where the spoken languages
+                actually live, next to the technical ones. */}
             <InfoCard
-              icon={<Award />}
-              label={t.cards.specializedTitle}
-              to="/services"
-              value={t.cards.specializedSubtitle}
+              icon={<Languages />}
+              label={t.cards.languagesTitle}
+              to="/skills"
+              value={t.cards.languagesSubtitle}
             />
           </motion.div>
         </motion.div>
@@ -162,6 +165,14 @@ export function AboutSection() {
               {/* One button for both CV documents: it opens the one that
                   matches the language the site is in. */}
               <CvPreview />
+              {/* The last paragraph ends on "I'm easy to reach", so the route
+                  that makes good on it belongs in the same row. */}
+              <Button asChild variant="outline">
+                <Link to="/contact">
+                  <Mail aria-hidden />
+                  {t.getInTouch}
+                </Link>
+              </Button>
             </motion.div>
           </motion.div>
         </motion.div>
