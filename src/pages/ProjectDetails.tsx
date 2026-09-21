@@ -463,7 +463,7 @@ const ProjectDetails = () => {
               </FeatureSection>
 
               <FeatureSection index={3} title={t.objectives}>
-                <ol className="list-decimal space-y-3 pl-5 text-foreground/90 leading-relaxed marker:marker:text-muted-foreground">
+                <ol className="list-decimal space-y-3 pl-5 text-foreground/90 leading-relaxed marker:text-muted-foreground">
                   {project.objectives.map((objective) => (
                     <li key={objective}>{objective}</li>
                   ))}
