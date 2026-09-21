@@ -45,7 +45,6 @@ Contact: dominik.koenitzer@gmail.com
 Website: https://dk.punds.ch
 GitHub: https://github.com/dominikkoenitzer
 Link hub: https://punds.ch
-Journal: https://senbon.ch/journal
 
 ---
 
@@ -203,7 +202,7 @@ A link hub you fly through. It boots like Copland OS from Serial Experiments Lai
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
-Live: https://senbon.ch/ (journal at https://senbon.ch/journal)
+Live: https://senbon.ch/
 Source: https://github.com/dominikkoenitzer/Senbon
 Stack: Next.js, React 19, Markdown
 
