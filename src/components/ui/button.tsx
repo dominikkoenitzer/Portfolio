@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const buttonVariants = cva(
   // `rounded-lg` is the card radius token (14px), so a button matches the rest
   // of the site without every call site remembering to pass it.
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium text-sm ring-offset-background transition-colors duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium text-sm ring-offset-background transition-colors duration-200 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -17,7 +17,7 @@ const buttonVariants = cva(
         // The site's secondary action, as the hero paints it: a violet
         // hairline on the page itself, no fill.
         outline:
-          "border border-primary/25 bg-transparent hover:border-primary/45 hover:bg-primary/[0.04]",
+          "border border-primary/25 bg-transparent hover:border-primary/45 hover:bg-primary/4",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

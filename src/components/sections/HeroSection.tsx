@@ -45,11 +45,11 @@ function Name() {
       <h1 className="sr-only">Dominik Könitzer, {title}</h1>
       {/* Both names share one grid cell, so the outgoing one is still fading
           while the next is already arriving: the biggest element on the page
-          never blinks empty. `-ml-[0.07em]` cancels the face's left sidebearing
+          never blinks empty. `ml-[-0.07em]` cancels the face's left sidebearing
           at 115px, which otherwise hangs the name 8px off the column. */}
       <div
         aria-hidden="true"
-        className="-ml-[0.07em] grid leading-none tracking-[-0.01em]"
+        className="ml-[-0.07em] grid leading-none tracking-[-0.01em]"
         style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
       >
         {reduceMotion ? (

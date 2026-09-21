@@ -107,7 +107,7 @@ export function NavbarMobileMenu({
           {/* Backdrop: tap to dismiss */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[60] bg-background/95 lg:hidden"
+            className="fixed inset-0 z-60 bg-background/95 lg:hidden"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={onClose}
@@ -166,7 +166,7 @@ export function NavbarMobileMenu({
               <LanguageToggle />
               <button
                 aria-label={nav.closeMenu}
-                className="-mr-1 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-border/60 text-foreground/80 transition-colors duration-200 ease-out hover:border-primary/40 hover:text-primary"
+                className="-mr-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/60 text-foreground/80 transition-colors duration-200 ease-out hover:border-primary/40 hover:text-primary"
                 onClick={onClose}
                 ref={closeBtnRef}
                 type="button"
@@ -191,7 +191,7 @@ export function NavbarMobileMenu({
                         className={cn(
                           "flex min-h-14 items-center justify-between gap-4 rounded-xl border px-4 font-semibold text-base transition-colors duration-200 ease-out",
                           isActive
-                            ? "border-primary/30 bg-primary/[0.06] text-primary"
+                            ? "border-primary/30 bg-primary/6 text-primary"
                             : "border-border/60 bg-card text-foreground hover:border-primary/30 hover:text-primary",
                         )}
                         /* A drag that starts on a row is a swipe-to-close, not

@@ -86,7 +86,7 @@ function ServiceCard({
       <h3 className="font-semibold text-[17px] leading-snug">
         <Link
           aria-label={inquireLabel.replace("{service}", service.title)}
-          className="rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-primary/70"
+          className="rounded-2xl after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-hidden focus-visible:after:ring-2 focus-visible:after:ring-primary/70"
           state={service.inquiry}
           to="/contact"
         >

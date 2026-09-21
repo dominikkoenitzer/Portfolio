@@ -370,7 +370,7 @@ export default function SearchDialog({
               an overlay always reads the same way on this site. Opacity only. */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-[80] bg-background/95"
+            className="fixed inset-0 z-80 bg-background/95"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={onClose}
@@ -382,7 +382,7 @@ export default function SearchDialog({
               `items-start`, so the card is as tall as its rows. Flush to the
               top edge on a phone, where the palette is a sheet rather than a
               shrunken dialog. */}
-          <div className="pointer-events-none fixed inset-0 z-[90] flex items-start justify-center sm:px-4 sm:pt-28">
+          <div className="pointer-events-none fixed inset-0 z-90 flex items-start justify-center sm:px-4 sm:pt-28">
             <motion.div
               animate={{ opacity: 1, scale: 1, y: 0 }}
               aria-label={copy.label}

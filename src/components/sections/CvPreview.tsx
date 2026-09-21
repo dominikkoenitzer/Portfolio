@@ -146,7 +146,7 @@ function CvDialog({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[90] flex flex-col p-3 sm:p-6">
+    <div className="fixed inset-0 z-90 flex flex-col p-3 sm:p-6">
       {/* Backdrop: click to dismiss. `data-cursor-ignore` keeps the custom
           cursor's magnet off it: it is a viewport-sized button, so the box
           morphed onto the whole page whenever the pointer sat beside the
@@ -176,7 +176,7 @@ function CvDialog({
             {name}
           </h2>
           <a
-            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60"
             href={href}
             rel="noopener noreferrer"
             target="_blank"
@@ -186,7 +186,7 @@ function CvDialog({
           </a>
           <button
             aria-label={closeLabel}
-            className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors duration-200 ease-out hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-full border border-border/60 text-muted-foreground transition-colors duration-200 ease-out hover:border-primary/40 hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60"
             onClick={onClose}
             ref={closeRef}
             type="button"
