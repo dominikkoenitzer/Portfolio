@@ -66,7 +66,7 @@ function localApi(env: Record<string, string>): Plugin {
 
       try {
         const handlerUrl = pathToFileURL(
-          path.resolve(__dirname, `api/${route}.js`),
+          path.resolve(import.meta.dirname, `api/${route}.js`),
         ).href;
         const mod = await import(handlerUrl);
         const parsed = new URL(reqUrl, "http://localhost");
@@ -267,7 +267,7 @@ export default defineConfig(({ mode }) => {
     ],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        "@": path.resolve(import.meta.dirname, "./src"),
       },
     },
     esbuild: {
