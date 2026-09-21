@@ -60,11 +60,12 @@ export const de = {
     intro1Before: "Ich bin Dominik, aus Küsnacht am Zürichsee. Ich baue Websites, ",
     intro1Highlight: "beruflich und zum Spass",
     intro1After: ", was praktisch ist, weil das für mich dasselbe ist.",
-    intro2Before: "Meistens findet man mich mit zu vielen offenen Tabs, einem kalt gewordenen Kaffee und einer festen Meinung zu einem Button, der zwei Pixel daneben sitzt. Ich mag Sachen, die schnell sind, gut aussehen und ",
+    intro2Before:
+      "Meistens findet man mich mit zu vielen offenen Tabs, einem kalt gewordenen Kaffee und einer festen Meinung zu einem Button, der zwei Pixel daneben sitzt. Ich bin 18 und mache das schon, seit lange bevor mich jemand dafür bezahlt hat. Ich mag Sachen, die schnell sind, gut aussehen und ",
     intro2Highlight: "einfach funktionieren",
-    intro2After:
-      ". Die Art von Sachen, über die man nie nachdenken muss. Ich bin 18, mache das also schon, seit es noch ein Hobby war.",
-    intro3Before: "Wenn der Laptop zu ist, bin ich vermutlich gerade zum hundertsten Mal meinen PC am Ricen, am Anime schauen oder am Streiten über Schriftarten. Wenn deine Website ein bisschen Liebe braucht oder du einfach Hallo sagen willst, ",
+    intro2After: ". Die Art von Sachen, über die man nie nachdenken muss.",
+    intro3Before:
+      "Ausserhalb der Arbeit baue ich meistens irgendetwas, das niemand bestellt hat, schaue Anime oder streite über Schriftarten. Wenn deine Website ein bisschen Liebe braucht oder du einfach Hallo sagen willst, ",
     intro3Highlight: "ich bin leicht zu erreichen",
     intro3After: ".",
     exploreSkills: "Meine Skills ansehen",

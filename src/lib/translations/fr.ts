@@ -60,11 +60,12 @@ export const fr = {
     intro1Before: "Je suis Dominik, de Küsnacht au bord du lac de Zurich. Je fais des sites web, ",
     intro1Highlight: "pour gagner ma vie et pour le plaisir",
     intro1After: ", ce qui tombe bien, parce que pour moi c'est la même chose.",
-    intro2Before: "La plupart du temps, vous me trouverez avec trop d'onglets ouverts, un café qui refroidit et un avis très tranché sur un bouton décalé de deux pixels. J'aime les choses rapides, jolies et ",
+    intro2Before:
+      "La plupart du temps, vous me trouverez avec trop d'onglets ouverts, un café qui refroidit et un avis très tranché sur un bouton décalé de deux pixels. J'ai 18 ans, et je fais ça depuis bien avant que quiconque me paie pour le faire. J'aime les choses rapides, jolies et ",
     intro2Highlight: "qui marchent, tout simplement",
-    intro2After:
-      ". Le genre de choses auxquelles on n'a jamais besoin de penser. J'ai 18 ans, donc je fais ça depuis l'époque où ce n'était encore qu'un loisir.",
-    intro3Before: "Quand l'ordinateur est fermé, je suis probablement en train de ricer mon PC pour la centième fois, devant un anime ou en pleine dispute sur des polices. Si votre site a besoin d'un peu d'amour, ou si vous voulez juste dire bonjour, ",
+    intro2After: ". Le genre de choses auxquelles on n'a jamais besoin de penser.",
+    intro3Before:
+      "En dehors du travail, je construis le plus souvent un truc que personne n'a demandé, je regarde des animes ou je me dispute sur des polices. Si votre site a besoin d'un peu d'amour, ou si vous voulez juste dire bonjour, ",
     intro3Highlight: "je suis facile à joindre",
     intro3After: ".",
     exploreSkills: "Découvrir mes compétences",
