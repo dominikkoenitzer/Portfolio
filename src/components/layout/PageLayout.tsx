@@ -70,7 +70,7 @@ export function PageLayout({ children }: PageLayoutProps) {
       <Navbar />
 
       <main
-        className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-none sm:pt-28 md:pt-32"
+        className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-hidden sm:pt-28 md:pt-32"
         id="main-content"
         tabIndex={-1}
       >

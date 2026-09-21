@@ -207,7 +207,7 @@ function InfoCard({ icon, label, value, to }: InfoCardProps) {
   return (
     <motion.div variants={REVEAL}>
       <Link
-        className="group/tile flex items-center gap-4 rounded-2xl border border-border/60 bg-card p-4 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5"
+        className="group/tile flex items-center gap-4 rounded-2xl border border-border/60 bg-card p-4 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5"
         to={to}
       >
         {/* Decorative: the label says the same thing in words. */}

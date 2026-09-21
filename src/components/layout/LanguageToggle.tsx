@@ -59,11 +59,11 @@ export function LanguageToggle() {
             page axis and a control in the row would push the links off it. */}
         <Button
           aria-label={t.toggles.language}
-          className="h-11 w-11 rounded-full border border-primary/15 bg-primary/[0.06] transition-colors hover:bg-primary/[0.12] hover:text-primary"
+          className="h-11 w-11 rounded-full border border-primary/15 bg-primary/6 transition-colors hover:bg-primary/12 hover:text-primary"
           size="icon"
           variant="ghost"
         >
-          <Languages className="!size-5" />
+          <Languages className="size-5!" />
           <span className="sr-only">{t.toggles.language}</span>
         </Button>
       </PopoverTrigger>
