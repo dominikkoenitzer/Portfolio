@@ -10,7 +10,7 @@ export function SkipLink() {
   const { language } = useLanguage();
   return (
     <a
-      className="sr-only rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200]"
+      className="sr-only rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm shadow-lg focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-200"
       href="#main-content"
     >
       {translations[language].nav.skipToContent}

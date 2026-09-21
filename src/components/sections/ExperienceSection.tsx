@@ -105,7 +105,7 @@ function RailNode({ reduceMotion }: { reduceMotion: boolean | null }) {
       className={`relative ${RAIL_CELL}`}
       {...revealOnScroll(reduceMotion, RAIL_FADE)}
     >
-      <span className="absolute top-[39px] right-[-0.75rem] left-1/2 h-0.5 bg-border sm:top-[47px] sm:right-[-1.25rem]" />
+      <span className="absolute top-[39px] -right-3 left-1/2 h-0.5 bg-border sm:top-[47px] sm:-right-5" />
 
       {/* The bead: one solid dot, sitting on the line. It used to carry a
           3px rim in the page colour, which is only the page colour where the
@@ -179,14 +179,14 @@ function TimelineEntryRow({
 
           <div className="min-w-0 flex-1">
             <motion.h3
-              className="hyphens-auto break-words font-bold text-lg leading-snug sm:text-xl"
+              className="hyphens-auto wrap-break-word font-bold text-lg leading-snug sm:text-xl"
               variants={REVEAL}
             >
               {entry.role}
             </motion.h3>
 
             <motion.a
-              className="group/org mt-1 inline-flex max-w-full items-center gap-1 break-words rounded-sm font-medium text-foreground/90 text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group/org mt-1 inline-flex max-w-full items-center gap-1 wrap-break-word rounded-sm font-medium text-foreground/90 text-sm transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               href={entry.organizationUrl}
               rel="noopener noreferrer"
               target="_blank"
@@ -342,7 +342,7 @@ export function ExperienceSection() {
             // The tail dissolves rather than stopping in mid-air: the last
             // card is taller than its bead, so a hard end left the line
             // running a few hundred pixels past the last date.
-            className={`-z-10 pointer-events-none absolute top-8 bottom-6 bg-border [mask-image:linear-gradient(to_bottom,black_82%,transparent)] sm:top-11 ${SPINE}`}
+            className={`-z-10 pointer-events-none absolute top-8 bottom-6 bg-border mask-[linear-gradient(to_bottom,black_82%,transparent)] sm:top-11 ${SPINE}`}
           />
           <TimelineGroup
             entries={t.experience}

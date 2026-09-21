@@ -57,12 +57,12 @@ function SearchShell({ hint, label }: { hint: string; label: string }) {
       aria-busy="true"
       aria-label={label}
       aria-modal="true"
-      className="fixed inset-0 z-[80]"
+      className="fixed inset-0 z-80"
       role="dialog"
     >
       <div className="absolute inset-0 bg-background/95" />
       <div className="absolute inset-0 flex justify-center sm:px-4 sm:pt-28">
-        <div className="flex h-14 w-full max-w-xl items-center gap-3 overflow-hidden rounded-b-2xl border-border/60 border-b bg-card px-4 shadow-sm sm:rounded-2xl sm:border">
+        <div className="flex h-14 w-full max-w-xl items-center gap-3 overflow-hidden rounded-b-2xl border-border/60 border-b bg-card px-4 shadow-xs sm:rounded-2xl sm:border">
           <Search className="size-[18px] shrink-0 text-muted-foreground" />
           <span className="truncate text-base text-muted-foreground">
             {hint}
@@ -126,7 +126,7 @@ function Island({ show }: { show: boolean }) {
          the left only and left the circles sitting off-centre in their own
          surface: 8px before them, 16px after. */
       className={cn(
-        "pointer-events-none absolute top-0 right-0 bottom-0 left-0 rounded-full border border-border/60 bg-background/90 shadow-sm",
+        "pointer-events-none absolute top-0 right-0 bottom-0 left-0 rounded-full border border-border/60 bg-background/90 shadow-xs",
         show && "backdrop-blur-xl",
       )}
       initial={false}
@@ -365,7 +365,7 @@ export function Navbar() {
           inside it lands on the page axis at every width. */}
       <div className="mx-auto max-w-7xl px-6 pt-2.5 pb-2 sm:px-8 md:px-12 lg:px-16">
         {/* The row itself: one centred group in flow, one cluster out of it. */}
-        <div className="relative flex h-16 items-center justify-center md:h-[4.5rem]">
+        <div className="relative flex h-16 items-center justify-center md:h-18">
           {/* No mark or wordmark: Home is the first entry of the nav list, so
               the whole row is one set of links and nothing else. That is what
               lets it be centred honestly: the group holds only the eight
@@ -382,7 +382,7 @@ export function Navbar() {
                  positioned sibling earlier in the tree. The px-4 is the
                  pill's air: it sits on this element, not on the surface, so
                  the surface can only ever be the row plus 16px each side. */
-              className="relative flex h-16 items-center gap-0.5 px-4 md:h-[4.5rem]"
+              className="relative flex h-16 items-center gap-0.5 px-4 md:h-18"
               initial={reduceMotion ? "show" : "hidden"}
               onMouseLeave={() =>
                 setHover((h) => (h ? { ...h, on: false } : null))
@@ -492,7 +492,7 @@ export function Navbar() {
               surface overhangs into the gutter, which is where the old
               right-aligned bar put it too. */}
           <div className="-right-4 pointer-events-auto absolute inset-y-0 flex items-center">
-            <div className="relative flex h-16 items-center md:h-[4.5rem]">
+            <div className="relative flex h-16 items-center md:h-18">
               <Island show={isScrolled} />
               <div className="relative flex items-center gap-1.5 px-4">
                 {/* Two forms of one control: the input-shaped bar where the row
@@ -507,7 +507,7 @@ export function Navbar() {
                 <button
                   aria-expanded={mobileMenuOpen}
                   aria-label={mobileMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
-                  className="group relative flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-primary/15 bg-primary/[0.06] transition-colors duration-200 ease-out hover:bg-primary/[0.12] lg:hidden"
+                  className="group relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/15 bg-primary/6 transition-colors duration-200 ease-out hover:bg-primary/12 lg:hidden"
                   onClick={mobileMenuOpen ? closeMobileMenu : openMobileMenu}
                 >
                   {/* Three bars that fold into a cross. */}

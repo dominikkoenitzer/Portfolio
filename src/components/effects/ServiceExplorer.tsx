@@ -630,7 +630,7 @@ export default function ServiceExplorer({
     // panel's context and layers above the vignette/header (as in the spec).
     <div aria-hidden="true" className="absolute inset-0" ref={containerRef}>
       <canvas
-        className="block h-full w-full [touch-action:none]"
+        className="block h-full w-full touch-none"
         ref={canvasRef}
         style={{ cursor: "grab" }}
       />
@@ -639,7 +639,7 @@ export default function ServiceExplorer({
           midnight pill: unreadable, and the one dark surface left on the site.
           It now wears the page's own glass, like every other floating label. */}
       <div
-        className="pointer-events-none absolute top-0 left-0 z-[3] whitespace-nowrap rounded-full border border-border/60 bg-background/95 px-[13px] py-1.5 font-semibold text-[13px] text-foreground opacity-0"
+        className="pointer-events-none absolute top-0 left-0 z-3 whitespace-nowrap rounded-full border border-border/60 bg-background/95 px-[13px] py-1.5 font-semibold text-[13px] text-foreground opacity-0"
         ref={tooltipRef}
         style={{
           background: "hsl(var(--background) / 0.94)",
