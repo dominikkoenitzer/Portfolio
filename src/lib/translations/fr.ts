@@ -109,6 +109,7 @@ export const fr = {
     disclosureBody:
       "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer, ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
     source: "Source",
+    sourcePrivate: "Le code source de ce projet est privé.",
     live: "Live",
     download: "Télécharger",
     details: "Détails",

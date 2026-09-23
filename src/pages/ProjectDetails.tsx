@@ -6,6 +6,7 @@ import {
   Download,
   ExternalLink,
   Github,
+  Lock,
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
@@ -19,6 +20,7 @@ import {
   getProjectSeoDescription,
   getProjectSeoTitle,
 } from "@/config/seo-data/projects";
+import { PrivateSource } from "@/components/sections/PrivateSource";
 import { SITE_CONFIG } from "@/constants";
 import {
   getProject,
@@ -338,16 +340,25 @@ const ProjectDetails = () => {
                     </a>
                   </Button>
                 )}
-                <Button asChild className="rounded-lg px-5" variant="soft">
-                  <a
-                    href={project.repoUrl}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <Github className="h-4 w-4" />
-                    {t.sourceCode}
-                  </a>
-                </Button>
+                {project.sourcePrivate ? (
+                  <PrivateSource>
+                    <Button className="rounded-lg px-5" type="button" variant="soft">
+                      <Lock className="h-4 w-4" />
+                      {t.sourceCode}
+                    </Button>
+                  </PrivateSource>
+                ) : (
+                  <Button asChild className="rounded-lg px-5" variant="soft">
+                    <a
+                      href={project.repoUrl}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Github className="h-4 w-4" />
+                      {t.sourceCode}
+                    </a>
+                  </Button>
+                )}
               </div>
 
               {project.downloadUrl ? (
@@ -577,21 +588,35 @@ const ProjectDetails = () => {
                       </a>
                     </Button>
                   )}
-                  <Button
-                    asChild
-                    className="w-full justify-start rounded-lg"
-                    size="sm"
-                    variant="soft"
-                  >
-                    <a
-                      href={project.repoUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
+                  {project.sourcePrivate ? (
+                    <PrivateSource>
+                      <Button
+                        className="w-full justify-start rounded-lg"
+                        size="sm"
+                        type="button"
+                        variant="soft"
+                      >
+                        <Lock className="h-4 w-4" />
+                        {t.sourceCode}
+                      </Button>
+                    </PrivateSource>
+                  ) : (
+                    <Button
+                      asChild
+                      className="w-full justify-start rounded-lg"
+                      size="sm"
+                      variant="soft"
                     >
-                      <Github className="h-4 w-4" />
-                      {t.sourceCode}
-                    </a>
-                  </Button>
+                      <a
+                        href={project.repoUrl}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <Github className="h-4 w-4" />
+                        {t.sourceCode}
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
             </aside>

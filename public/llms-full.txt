@@ -150,7 +150,7 @@ This site, built as the work sample rather than a template with a name swapped i
 ### Entropy, February 2026
 Case study: https://dk.punds.ch/projects/entropy
 Live: https://entropy.punds.ch/
-Source: https://github.com/dominikkoenitzer/Entropy
+Source: private
 Stack: Next.js, TypeScript, Web Crypto
 
 A password generator and strength analyzer that runs entirely in the browser. Randomness comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random().
@@ -158,7 +158,7 @@ A password generator and strength analyzer that runs entirely in the browser. Ra
 ### Spectrum, February 2026
 Case study: https://dk.punds.ch/projects/spectrum
 Live: https://spectrum.punds.ch/
-Source: https://github.com/dominikkoenitzer/Spectrum
+Source: private
 Stack: Next.js, TypeScript, Canvas API
 
 A client-side colour toolkit that puts seven jobs in one app: pick colours, pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, simulate colour blindness, and work through colour theory. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: contrast and colour-vision-deficiency checks are "usually the tab you forget to open," so Spectrum treats accessibility as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 7 tools in one app, 100% client-side, 0 uploads, 0 backend.
@@ -203,7 +203,7 @@ A link hub you fly through. It boots like Copland OS from Serial Experiments Lai
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
 Live: https://senbon.ch/
-Source: https://github.com/dominikkoenitzer/Senbon
+Source: private
 Stack: Next.js, React 19, Markdown
 
 A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter. No database, no CMS, no trackers. Next.js App Router and React 19 turn the files into an unhurried reading page. Most of the work since launch has been subtraction: a command palette, full-text search, tag filters, pagination, a table of contents and reading-time estimates were all built and then deliberately deleted. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 third-party trackers, 4 frontmatter keys, 3 CSS layers, noindex on purpose.

@@ -229,6 +229,7 @@ export const createSoftwareSourceCodeSchema = (project: {
   description: string;
   liveUrl: string;
   repoUrl: string;
+  sourcePrivate?: boolean;
   tags: string[];
   /** ISO year-month (YYYY-MM): a valid ISO 8601 partial date for datePublished. */
   date: string;
@@ -240,7 +241,8 @@ export const createSoftwareSourceCodeSchema = (project: {
   name: project.title,
   description: project.description,
   url: project.liveUrl,
-  codeRepository: project.repoUrl,
+  // A private repo answers visitors with a 404, so it is not advertised.
+  ...(project.sourcePrivate ? {} : { codeRepository: project.repoUrl }),
   codeSampleType: "full",
   programmingLanguage: project.programmingLanguages ?? [
     "TypeScript",

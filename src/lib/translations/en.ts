@@ -108,6 +108,7 @@ export const en = {
     disclosureBody:
       "This page is only the public-facing sliver of what I've built. A few other projects sit behind NDAs, in private repos, or on client infrastructure I'd rather not put on display, so they don't appear here. Everything you see below is personal: small things I tinker on in the evenings and on weekends, made out of curiosity and the quiet hope of making someone's day a fraction lighter. If one of them happens to do that for you, mission accomplished.",
     source: "Source",
+    sourcePrivate: "The source code for this project is private.",
     live: "Live",
     download: "Download",
     details: "Details",
