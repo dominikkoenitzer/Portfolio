@@ -4,6 +4,7 @@ import {
   Download,
   ExternalLink,
   Github,
+  Lock,
   Search,
   SearchX,
   Wrench,
@@ -25,6 +26,7 @@ import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
+import { PrivateSource } from "./PrivateSource";
 
 type TypeKey = "all" | "web" | "desktop";
 type SortKey = "oldest" | "newest" | "az";
@@ -490,16 +492,31 @@ export function ProjectsSection() {
                             <ExternalLink className="h-3.5 w-3.5" />
                           </a>
                         )}
-                        <a
-                          aria-label={t.openRepo.replace("{name}", project.title)}
-                          className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
-                          href={project.repoUrl}
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          <Github className="h-3.5 w-3.5" />
-                          {t.source}
-                        </a>
+                        {project.sourcePrivate ? (
+                          <PrivateSource>
+                            <button
+                              className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
+                              type="button"
+                            >
+                              <Lock className="h-3.5 w-3.5" />
+                              {t.source}
+                            </button>
+                          </PrivateSource>
+                        ) : (
+                          <a
+                            aria-label={t.openRepo.replace(
+                              "{name}",
+                              project.title,
+                            )}
+                            className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
+                            href={project.repoUrl}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            <Github className="h-3.5 w-3.5" />
+                            {t.source}
+                          </a>
+                        )}
                         <Link
                           aria-label={t.viewDetails.replace(
                             "{name}",
