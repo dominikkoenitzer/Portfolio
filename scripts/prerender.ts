@@ -143,7 +143,9 @@ for (const p of getProjects("en")) {
     jsonLd: [
       ...staticSchemas(`/projects/${p.slug}`),
       createSoftwareSourceCodeSchema(p),
-      createSoftwareApplicationSchema(p),
+      // Same rule as ProjectDetails: a project that runs only locally is
+      // described by its source, not offered as an application.
+      ...(p.liveUrl || p.downloadUrl ? [createSoftwareApplicationSchema(p)] : []),
     ],
   });
 }

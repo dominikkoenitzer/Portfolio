@@ -25,6 +25,7 @@ export function ProjectFigure({
   src,
   alt,
   label,
+  caption,
   className,
   onOpen,
   openLabel,
@@ -47,6 +48,8 @@ export function ProjectFigure({
   sizes?: string;
   /** Optional caption under the frame (the live host, usually). */
   label?: string;
+  /** A sentence saying what the picture shows. Set in the body face, not as a micro-label. */
+  caption?: string;
   className?: string;
   /** When set, the frame becomes a button that opens the image in a lightbox. */
   onOpen?: () => void;
@@ -129,7 +132,11 @@ export function ProjectFigure({
           picture
         )}
       </div>
-      {label ? (
+      {caption ? (
+        <figcaption className="mt-3 max-w-prose text-muted-foreground text-sm leading-relaxed">
+          {caption}
+        </figcaption>
+      ) : label ? (
         <figcaption className="mt-2.5 text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
           {label}
         </figcaption>
@@ -142,6 +149,54 @@ export function ProjectFigure({
 /* StatStrip: the project's headline numbers, as a flat meta row       */
 /* ------------------------------------------------------------------ */
 
+/** How many tests the repository has now, or `fallback` until it is known. */
+/**
+ * Counts already fetched this session, per project. The endpoint is cached at
+ * the edge for an hour, so asking again on every visit to the page would only
+ * repeat the same answer.
+ */
+const liveTestCounts = new Map<string, Promise<number | null>>();
+
+const fetchTestCount = (project: string) => {
+  let pending = liveTestCounts.get(project);
+  if (!pending) {
+    pending = fetch(`/api/test-count?project=${encodeURIComponent(project)}`)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body: { count?: unknown } | null) =>
+        typeof body?.count === "number" ? body.count : null,
+      )
+      .catch(() => null);
+    liveTestCounts.set(project, pending);
+  }
+  return pending;
+};
+
+/**
+ * How many tests the repository has now, or `fallback` until it is known.
+ * A plain fetch rather than React Query: the query client lives only in the
+ * About page's widget, and pulling it into this chunk for one number would
+ * be the wrong trade.
+ */
+function LiveTestCount({
+  project,
+  fallback,
+}: {
+  project: string;
+  fallback: string;
+}) {
+  const [count, setCount] = useState<number | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetchTestCount(project).then((value) => {
+      if (live && value !== null) setCount(value);
+    });
+    return () => {
+      live = false;
+    };
+  }, [project]);
+  return <>{count ?? fallback}</>;
+}
+
 export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
   if (!stats?.length) return null;
   return (
@@ -153,7 +208,11 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
           <dt className="sr-only">{stat.label}</dt>
           <dd className="m-0">
             <span className="block font-heading text-3xl text-primary tabular-nums sm:text-4xl">
-              {stat.value}
+              {stat.liveTests ? (
+                <LiveTestCount fallback={stat.value} project={stat.liveTests} />
+              ) : (
+                stat.value
+              )}
             </span>
             <span
               aria-hidden

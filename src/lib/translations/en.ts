@@ -85,6 +85,8 @@ export const en = {
     heading: "Skills",
     subheading:
       "What I work with day to day, and what I'm still getting better at.",
+    projectCountOne: "One project uses {skill}",
+    projectCountMany: "{count} projects use {skill}",
     categories: {
       frontend: "Frontend",
       professional: "Professional",
@@ -103,7 +105,7 @@ export const en = {
   projects: {
     eyebrow: "Personal work",
     heading: "Projects",
-    subheading: "Things I've built and put online, source code included.",
+    subheading: "Things I've built, most of them with the source.",
     disclosureEyebrow: "Before you scroll",
     disclosureBody:
       "This page is only the public-facing sliver of what I've built. A few other projects sit behind NDAs, in private repos, or on client infrastructure I'd rather not put on display, so they don't appear here. Everything you see below is personal: small things I tinker on in the evenings and on weekends, made out of curiosity and the quiet hope of making someone's day a fraction lighter. If one of them happens to do that for you, mission accomplished.",
@@ -120,6 +122,8 @@ export const en = {
     filterLabel: "Filter by type",
     searchPlaceholder: "Search by name, tech, or keyword…",
     clearSearch: "Clear search",
+    techFilter: "Built with {tech}",
+    clearTech: "Show all projects",
     filterAll: "All",
     filterWeb: "Web",
     filterDesktop: "Desktop",
@@ -148,21 +152,13 @@ export const en = {
     visitSite: "Visit Site",
     download: "Download",
     sourceCode: "Source Code",
+    onThisPage: "On this page",
+    builtWith: "Built with",
     downloadNote:
-      "First launch: Windows SmartScreen may appear. Choose “More info” → “Run anyway”, then approve the UAC admin prompt (needed for global input hooks).",
+      "First launch: Windows SmartScreen may appear. Choose “More info” → “Run anyway”.",
     moreProjects: "More Projects",
     present: "Present",
     role: "Role",
-    problem: "The Problem",
-    objectives: "Objectives",
-    architecture: "Architecture",
-    implementation: "Implementation",
-    quality: "Quality & Security",
-    challenges: "Challenges & Solutions",
-    challengeLabel: "Challenge",
-    solutionLabel: "Solution",
-    whatsNext: "What's Next",
-    signals: "What It Shows",
     allProjects: "All projects",
     timeline: "Timeline",
     gallery: "Gallery",
@@ -410,7 +406,7 @@ export const en = {
     requested: "You asked for",
     suggestionsHeading: "Try one of these",
     destinations: {
-      projects: "What I have built, with the source.",
+      projects: "What I have built, and how.",
       about: "Who I am and what I study.",
       services: "What I take on, and how I work.",
       contact: "Send me a message.",
@@ -484,7 +480,7 @@ export const en = {
     projects: {
       title: "Software Engineering Projects",
       description:
-        "Software engineering projects by Dominik Könitzer, a Swiss engineer. Live React and TypeScript builds, each one with its source code.",
+        "Software engineering projects by Dominik Könitzer, a Swiss engineer, from web apps to a tiling window manager in Rust, each with a case study.",
       keywords:
         "software engineer portfolio, web development projects, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer",
     },

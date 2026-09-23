@@ -1,6 +1,28 @@
 import type { Language } from "@/config/languages";
 import type { LocalizedContent } from "./types";
 
+const SAFE_WRITE = `string full = Path.GetFullPath(path);
+string directory = Path.GetDirectoryName(full) ?? Directory.GetCurrentDirectory();
+string temp = Path.Combine(directory,
+    "." + Path.GetFileName(full) + "." + Guid.NewGuid().ToString("N") + ".tmp");
+
+try
+{
+    File.WriteAllText(temp, text, encoding);
+    if (File.Exists(full))
+        File.Replace(temp, full, destinationBackupFileName: null);
+    else
+        File.Move(temp, full);
+}
+finally
+{
+    if (File.Exists(temp))
+    {
+        try { File.Delete(temp); }
+        catch { /* best-effort cleanup of the temp file */ }
+    }
+}`;
+
 export const jester: Record<Language, LocalizedContent> = {
   en: {
     tagline: "Notepad, but it grew up. Tabs, line numbers, find-in-files, PDF export.",
@@ -9,59 +31,49 @@ export const jester: Record<Language, LocalizedContent> = {
     overview:
       "I wanted a notepad that opens before I let go of the mouse, but still does the few things Notepad refuses to. So I built one in C# and WPF on .NET 9: tabs, a line-number gutter, find across a whole folder, and clean A4 PDF export through QuestPDF. It also has the small things you only miss once they are gone, like session restore, Open Recent, and \"Open with Jester\" in the Explorer context menu. It ships as a single portable executable with the runtime baked in, so there is no installer and no \"please install .NET\" dialog.",
     roleSummary: "Just me: the WPF UI and the whole .NET 9 build.",
-    problemStatement:
-      "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch. Jester is the middle I actually wanted: instant start, plus the handful of power features that earn their keep every day.",
-    objectives: [
-      "Launch instantly and stay light, with no splash screen and no warm-up.",
-      "Add the features that matter (tabs, line numbers, find-in-files, PDF export) and skip the rest.",
-      "Ship one portable .exe that runs on Windows 10 and 11 with zero install steps.",
-    ],
-    architectureDecisions: [
-      "C# and WPF on .NET 9, with per-tab document state, the editor surface and the line-number margin as separate, focused components.",
-      "Settings and the last session saved as JSON, so the window, the tabs and the preferences come back where I left them.",
-      "QuestPDF for paginated A4 rendering, walled off in its own exporter so it never touches the startup path.",
-    ],
-    implementationHighlights: [
-      "Tabbed editing where every document keeps its own undo history and encoding, with a line-number gutter and a current-line highlight.",
-      "Find in Files that sweeps an entire folder, filters and subfolders included, and jumps straight to the hit on double-click.",
-      "Export to PDF that turns any note into a clean, paginated A4 document with one keystroke.",
-      "The unglamorous half: find and replace with wrap-around, go to line, insert time and date, a font picker, encoding and line-ending conversion, and a status bar that tells you which of those you are in.",
-    ],
-    qualityAndSecurity: [
-      "It asks before throwing away unsaved work, including on sign-out or shutdown, and writes atomically, so a crash cannot leave you a half-written file.",
-      "Encoding-aware: it reads UTF-8 and UTF-16 BOMs and hands every file back with its original encoding and line endings intact.",
-      "57 test cases over the document, encoding and search logic.",
-      "Self-contained and portable, runtime bundled, so it never leans on a system-wide .NET install.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "Keeping startup instant while still carrying tabs, search and PDF export.",
-        solution:
-          "I split the app into small WPF components and kept the heavy lifting, PDF rendering above all, off the launch path entirely.",
+        heading: "Saving never truncates the file you already have",
+        body: [
+          "The obvious way to save is to open the file for writing and put the text in. Opening for writing empties the file first, so a crash or a full disk halfway through leaves you with less than you had before you pressed Ctrl+S.",
+          "Jester writes the text to a hidden temporary file in the same folder and then swaps it in over the original with File.Replace. If anything fails before the swap, the old file is untouched and the temporary one is cleaned up.",
+          "Leaving gets the same care. Closing a tab, the window or even signing out of Windows with unsaved changes asks first, and Cancel holds the sign-out back. An unexpected error on the UI thread is written to a crash log in AppData and shown in a message, and the other tabs stay open.",
+        ],
+        code: {
+          language: "csharp",
+          text: SAFE_WRITE,
+          caption:
+            "The body of SafeWrite in MainWindow.Files.cs. The text only ever lands in a temporary file beside the real one, and File.Replace swaps it in, so a failed write leaves the old file whole.",
+        },
       },
       {
-        challenge: "Handing every file back byte-faithful, encoding and line endings included.",
-        solution:
-          "I detect the BOM on open, track encoding and line endings per tab, and write them straight back on save, with no silent \"helpful\" conversions.",
+        heading: "A file goes back the way it came",
+        body: [
+          "On open, Jester reads the byte-order mark if there is one and falls back to UTF-8 if there is not. The encoding it found stays with that tab and is used again on save, so a UTF-16 file does not quietly come back as UTF-8. Converting is something you choose in the Format menu.",
+          "Line endings are read from the text and shown in the status bar. The line counter used to count only newlines, so an old Mac file with bare carriage returns showed up as one line while the status bar called it CR in the same breath. A lone carriage return now counts as a line break too.",
+          "Jester's own Delete command removes a CRLF pair or a surrogate pair as one character, because removing half of either leaves a stray line break or half a character behind.",
+        ],
+      },
+      {
+        heading: "One exe, even with a PDF library inside",
+        body: [
+          "Jester ships as one self-contained Jester.exe with the .NET 9 runtime compressed inside it, so it runs on Windows 10 and 11 without an installer or a separate .NET install. The build is unsigned, so the first launch can show a SmartScreen prompt.",
+          "QuestPDF came with a catch: it copies its bundled Lato fonts next to the executable as loose files. Jester never uses them, since a PDF is set in Consolas or the font chosen in the editor, so a step in the project file strips them from the published build and the release stays a single file.",
+          "The export itself is A4 with 2 cm margins, the file name as a header over a gold rule and page numbers in the footer. Long lines wrap to the page.",
+        ],
+      },
+      {
+        heading: "Search that can be tested without a window",
+        body: [
+          "The find and replace arithmetic lives in TextSearch.cs, which knows nothing about the editor. The 57 xUnit tests cover that file, settings persistence and the command table, and CI runs them on every push to main. The WPF views I check by running the app.",
+          "Find in Files has to survive whatever folder it is pointed at. It skips hidden and system files, ignores folders it may not read, and builds the file list before the search starts, so a protected subfolder cannot throw halfway through. Files over 4 MB and files that fail to read are passed over, and the results stop at 5000.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Native Windows desktop work in C# and WPF on a current .NET 9 stack.",
-      "Care in the places nobody demos: atomic saves, crash safety, encoding fidelity.",
-      "A desktop app owned start to finish, from the custom UI down to a single portable build.",
-    ],
-    nextIterations: [
-      "Syntax highlighting and a code-oriented editing mode.",
-      "A plugin or scripting hook for custom commands.",
-      "Multi-caret editing and a richer find-and-replace across files.",
+    captions: [
+      "Jester in its purple and gold theme with an unsaved Untitled note, the status bar showing 180 characters, 9 lines, Windows (CRLF) line endings and UTF-8.",
     ],
     tags: ["C#", "WPF", ".NET 9", "Windows"],
-    impactHeading: "What This Project Is Good For",
-    impactPoints: [
-      "Gives Windows users a notepad that opens instantly and then gets out of the way.",
-      "Adds a few power features (tabs, search, PDF export) without the weight of a full IDE.",
-      "Keeps work safe with crash-proof saves and faithful encoding handling.",
-    ],
     stats: [
       { value: "1", label: "portable exe" },
       { value: "0", label: "installers" },
@@ -76,59 +88,49 @@ export const jester: Record<Language, LocalizedContent> = {
     overview:
       "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die Notepad verweigert. Also habe ich einen in C# und WPF auf .NET 9 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
     roleSummary: "Nur ich: die WPF-Oberfläche und der ganze .NET-9-Build.",
-    problemStatement:
-      "Windows Notepad ist zu nackt, um darin zu wohnen, und ein vollwertiger Editor braucht eine Kaffeepause zum Starten. Jester ist die Mitte, die ich wirklich wollte: sofortiger Start plus die Handvoll Funktionen, die sich täglich rechtfertigen.",
-    objectives: [
-      "Sofort starten und leicht bleiben, ohne Splashscreen und ohne Aufwärmen.",
-      "Die Funktionen einbauen, die zählen (Tabs, Zeilennummern, Suche im Ordner, PDF-Export), und den Rest weglassen.",
-      "Eine portable .exe ausliefern, die auf Windows 10 und 11 ohne einen einzigen Installationsschritt läuft.",
-    ],
-    architectureDecisions: [
-      "C# und WPF auf .NET 9, mit Dokumentzustand pro Tab, der Editor-Fläche und der Zeilennummern-Spalte als getrennte, fokussierte Komponenten.",
-      "Einstellungen und die letzte Sitzung als JSON gespeichert, damit Fenster, Tabs und Vorlieben dort wieder aufgehen, wo ich sie verlassen habe.",
-      "QuestPDF für das paginierte A4-Rendering, abgeschottet in seinem eigenen Exporter, damit es den Startpfad nie berührt.",
-    ],
-    implementationHighlights: [
-      "Tab-Editing, in dem jedes Dokument seine eigene Undo-Historie und Kodierung behält, mit Zeilennummern-Spalte und Markierung der aktuellen Zeile.",
-      "Eine Suche im Ordner, die einen ganzen Baum durchgeht, Filter und Unterordner inklusive, und per Doppelklick direkt zum Treffer springt.",
-      "PDF-Export, der aus jeder Notiz mit einem Tastendruck ein sauberes, paginiertes A4-Dokument macht.",
-      "Die unglamouröse Hälfte: Suchen und Ersetzen mit Umlauf, Gehe-zu-Zeile, Datum und Zeit einfügen, ein Schriftwähler, Umwandlung von Kodierung und Zeilenenden, und eine Statusleiste, die sagt, in welcher davon man steckt.",
-    ],
-    qualityAndSecurity: [
-      "Es fragt, bevor ungespeicherte Arbeit verworfen wird, auch beim Abmelden oder Herunterfahren, und schreibt atomar, damit ein Absturz keine halb geschriebene Datei hinterlässt.",
-      "Kodierungsbewusst: Es liest UTF-8- und UTF-16-BOMs und gibt jede Datei mit ihrer ursprünglichen Kodierung und ihren Zeilenenden zurück.",
-      "57 Testfälle über die Dokument-, Kodierungs- und Suchlogik.",
-      "Eigenständig und portabel, Runtime mitgebracht, damit es sich nie auf eine systemweite .NET-Installation stützt.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "Den Start sofort halten und trotzdem Tabs, Suche und PDF-Export mitschleppen.",
-        solution:
-          "Ich habe die App in kleine WPF-Komponenten geteilt und die schwere Arbeit, vor allem das PDF-Rendering, komplett vom Startpfad genommen.",
+        heading: "Speichern kürzt nie die Datei, die schon da ist",
+        body: [
+          "Der naheliegende Weg zum Speichern: Datei zum Schreiben öffnen, Text hinein. Nur leert das Öffnen zum Schreiben die Datei zuerst, und ein Absturz oder eine volle Festplatte mittendrin hinterlässt weniger, als vor Ctrl+S da war.",
+          "Jester schreibt den Text in eine versteckte temporäre Datei im selben Ordner und tauscht sie dann mit File.Replace gegen das Original aus. Scheitert vor dem Tausch etwas, bleibt die alte Datei unberührt, und die temporäre wird aufgeräumt.",
+          "Beim Verlassen gilt dieselbe Sorgfalt. Wer einen Tab, das Fenster oder sogar die Windows-Sitzung mit ungespeicherten Änderungen schliesst, wird zuerst gefragt, und Abbrechen hält die Abmeldung auf. Ein unerwarteter Fehler im UI-Thread landet in einem Absturzprotokoll unter AppData und in einer Meldung, und die anderen Tabs bleiben offen.",
+        ],
+        code: {
+          language: "csharp",
+          text: SAFE_WRITE,
+          caption:
+            "Der Rumpf von SafeWrite in MainWindow.Files.cs. Der Text landet immer zuerst in einer temporären Datei neben der echten, File.Replace tauscht sie ein, und ein fehlgeschlagener Schreibvorgang lässt die alte Datei ganz.",
+        },
       },
       {
-        challenge: "Jede Datei bytetreu zurückgeben, Kodierung und Zeilenenden inklusive.",
-        solution:
-          "Ich erkenne beim Öffnen die BOM, verfolge Kodierung und Zeilenenden pro Tab und schreibe sie beim Speichern direkt zurück, ohne stille „hilfreiche“ Umwandlungen.",
+        heading: "Eine Datei geht so zurück, wie sie gekommen ist",
+        body: [
+          "Beim Öffnen liest Jester die Byte-Order-Mark, falls es eine gibt, und nimmt sonst UTF-8 an. Die gefundene Kodierung bleibt beim Tab und wird beim Speichern wieder verwendet, damit eine UTF-16-Datei nicht still als UTF-8 zurückkommt. Umwandeln ist etwas, das man im Format-Menü selbst wählt.",
+          "Zeilenenden werden aus dem Text gelesen und in der Statusleiste angezeigt. Der Zeilenzähler hat früher nur Zeilenumbrüche mit Newline gezählt, also stand eine alte Mac-Datei mit reinen Wagenrückläufen als eine einzige Zeile da, während die Statusleiste im selben Atemzug CR meldete. Ein einzelner Wagenrücklauf zählt jetzt auch als Zeilenumbruch.",
+          "Jesters eigener Löschen-Befehl entfernt ein CRLF-Paar oder ein Surrogatpaar als ein Zeichen, weil die Hälfte davon einen verirrten Zeilenumbruch oder ein halbes Zeichen zurücklässt.",
+        ],
+      },
+      {
+        heading: "Eine Exe, auch mit PDF-Bibliothek drin",
+        body: [
+          "Jester kommt als eine eigenständige Jester.exe, die .NET-9-Runtime komprimiert darin, und läuft so auf Windows 10 und 11 ohne Installer und ohne separate .NET-Installation. Der Build ist nicht signiert, beim ersten Start kann also SmartScreen nachfragen.",
+          "QuestPDF brachte einen Haken mit: Es kopiert seine mitgelieferten Lato-Schriften als lose Dateien neben die Exe. Jester braucht sie nie, denn ein PDF wird in Consolas oder in der im Editor gewählten Schrift gesetzt. Ein Schritt in der Projektdatei nimmt sie deshalb aus dem veröffentlichten Build, und das Release bleibt eine einzige Datei.",
+          "Der Export selbst ist A4 mit 2 cm Rand, dem Dateinamen als Kopfzeile über einer goldenen Linie und Seitenzahlen in der Fusszeile. Lange Zeilen brechen auf der Seite um.",
+        ],
+      },
+      {
+        heading: "Suche, die sich ohne Fenster testen lässt",
+        body: [
+          "Die Rechnerei hinter Suchen und Ersetzen steckt in TextSearch.cs, das nichts vom Editor weiss. Die 57 xUnit-Tests decken diese Datei, das Speichern der Einstellungen und die Befehlstabelle ab, und die CI lässt sie bei jedem Push auf main laufen. Die WPF-Ansichten prüfe ich, indem ich die App starte.",
+          "Die Suche im Ordner muss jeden Ordner überstehen, auf den man sie ansetzt. Sie überspringt versteckte und Systemdateien, ignoriert Ordner ohne Leserecht und stellt die Dateiliste vor der Suche zusammen, damit ein geschützter Unterordner nicht mittendrin einen Fehler wirft. Dateien über 4 MB und Dateien, die sich nicht lesen lassen, fallen weg, und bei 5000 Treffern ist Schluss.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Native Windows-Desktop-Arbeit in C# und WPF auf einem aktuellen .NET-9-Stack.",
-      "Sorgfalt an den Stellen, die niemand vorführt: atomare Speicherungen, Absturzsicherheit, Kodierungstreue.",
-      "Eine Desktop-App von Anfang bis Ende verantwortet, von der eigenen Oberfläche bis zum einzelnen portablen Build.",
-    ],
-    nextIterations: [
-      "Syntax-Highlighting und ein Code-orientierter Editiermodus.",
-      "Ein Plugin- oder Scripting-Hook für eigene Befehle.",
-      "Multi-Caret-Editing und ein reichhaltigeres Suchen-und-Ersetzen über Dateien hinweg.",
+    captions: [
+      "Jester im Violett-Gold-Theme mit einer ungespeicherten Notiz „Untitled“, die Statusleiste zeigt 180 Zeichen, 9 Zeilen, Windows-Zeilenenden (CRLF) und UTF-8.",
     ],
     tags: ["C#", "WPF", ".NET 9", "Windows"],
-    impactHeading: "Wofür dieses Projekt gut ist",
-    impactPoints: [
-      "Gibt Windows-Nutzern einen Notizblock, der sofort aufgeht und dann aus dem Weg ist.",
-      "Ergänzt ein paar Power-Funktionen (Tabs, Suche, PDF-Export) ohne das Gewicht einer vollen IDE.",
-      "Hält Arbeit sicher, mit absturzfesten Speicherungen und treuer Kodierungsbehandlung.",
-    ],
     stats: [
       { value: "1", label: "portable Exe" },
       { value: "0", label: "Installer" },
@@ -143,59 +145,49 @@ export const jester: Record<Language, LocalizedContent> = {
     overview:
       "Je voulais un bloc-notes qui s'ouvre avant que je lâche la souris, mais qui fasse les quelques choses que Notepad refuse. J'en ai donc construit un en C# et WPF sur .NET 9 : onglets, gouttière de numéros de ligne, recherche dans un dossier entier, et export A4 propre via QuestPDF. Avec aussi les petites choses qui ne manquent qu'une fois disparues : la restauration de session, « Fichiers récents », et « Ouvrir avec Jester » dans le menu contextuel de l'Explorateur. Il se livre en un exécutable portable unique, runtime inclus, donc pas d'installateur et pas de boîte de dialogue « veuillez installer .NET ».",
     roleSummary: "Moi seul : l'interface WPF et tout le build .NET 9.",
-    problemStatement:
-      "Le Bloc-notes de Windows est trop nu pour y vivre, et un éditeur complet prend une pause café pour démarrer. Jester est le milieu que je voulais vraiment : démarrage instantané, plus la poignée de fonctions qui justifient leur place chaque jour.",
-    objectives: [
-      "Démarrer instantanément et rester léger, sans écran de démarrage ni mise en chauffe.",
-      "Ajouter les fonctions qui comptent (onglets, numéros de ligne, recherche dans les fichiers, export PDF) et laisser le reste.",
-      "Livrer un .exe portable qui tourne sur Windows 10 et 11 sans une seule étape d'installation.",
-    ],
-    architectureDecisions: [
-      "C# et WPF sur .NET 9, avec l'état du document par onglet, la surface d'édition et la marge des numéros de ligne en composants séparés et ciblés.",
-      "Les réglages et la dernière session enregistrés en JSON, pour que la fenêtre, les onglets et les préférences reviennent là où je les ai laissés.",
-      "QuestPDF pour le rendu A4 paginé, isolé dans son propre exporteur pour qu'il ne touche jamais au chemin de démarrage.",
-    ],
-    implementationHighlights: [
-      "Une édition par onglets où chaque document garde son propre historique d'annulation et son encodage, avec gouttière de numéros et surlignage de la ligne courante.",
-      "Une recherche dans les fichiers qui balaie un dossier entier, filtres et sous-dossiers compris, et saute droit au résultat au double-clic.",
-      "Un export PDF qui transforme n'importe quelle note en un document A4 propre et paginé, d'une seule frappe.",
-      "La moitié sans gloire : rechercher-remplacer avec bouclage, aller à la ligne, insérer la date et l'heure, un sélecteur de police, la conversion d'encodage et de fins de ligne, et une barre d'état qui dit dans laquelle vous êtes.",
-    ],
-    qualityAndSecurity: [
-      "Il demande avant de jeter un travail non enregistré, y compris à la déconnexion ou à l'extinction, et écrit de façon atomique, pour qu'un plantage ne laisse pas un fichier à moitié écrit.",
-      "Attentif à l'encodage : il lit les BOM UTF-8 et UTF-16 et rend chaque fichier avec son encodage et ses fins de ligne d'origine.",
-      "57 cas de test sur la logique de document, d'encodage et de recherche.",
-      "Autonome et portable, runtime embarqué, pour qu'il ne s'appuie jamais sur une installation .NET du système.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "Garder un démarrage instantané tout en portant onglets, recherche et export PDF.",
-        solution:
-          "J'ai découpé l'app en petits composants WPF et sorti le gros du travail, le rendu PDF avant tout, du chemin de lancement.",
+        heading: "Enregistrer ne vide jamais le fichier existant",
+        body: [
+          "La façon évidente d'enregistrer, c'est d'ouvrir le fichier en écriture et d'y mettre le texte. Or l'ouverture en écriture vide d'abord le fichier, et un plantage ou un disque plein en cours de route vous laisse avec moins qu'avant le Ctrl+S.",
+          "Jester écrit le texte dans un fichier temporaire caché du même dossier, puis le met à la place de l'original avec File.Replace. Si quelque chose échoue avant l'échange, l'ancien fichier reste intact et le temporaire est nettoyé.",
+          "Partir demande le même soin. Fermer un onglet, la fenêtre ou même la session Windows avec des modifications non enregistrées pose d'abord la question, et Annuler retient la déconnexion. Une erreur inattendue sur le thread d'interface est écrite dans un journal de plantage sous AppData et affichée dans un message, et les autres onglets restent ouverts.",
+        ],
+        code: {
+          language: "csharp",
+          text: SAFE_WRITE,
+          caption:
+            "Le corps de SafeWrite dans MainWindow.Files.cs. Le texte n'arrive jamais que dans un fichier temporaire à côté du vrai, File.Replace fait l'échange, et une écriture ratée laisse l'ancien fichier entier.",
+        },
       },
       {
-        challenge: "Rendre chaque fichier fidèle à l'octet, encodage et fins de ligne compris.",
-        solution:
-          "Je détecte le BOM à l'ouverture, je suis l'encodage et les fins de ligne par onglet, et je les réécris tels quels à l'enregistrement, sans conversion « utile » silencieuse.",
+        heading: "Un fichier repart comme il est arrivé",
+        body: [
+          "À l'ouverture, Jester lit l'indicateur d'ordre des octets (BOM) s'il y en a un, et suppose l'UTF-8 sinon. L'encodage trouvé reste attaché à l'onglet et sert de nouveau à l'enregistrement, pour qu'un fichier UTF-16 ne revienne pas en douce en UTF-8. Convertir se choisit dans le menu Format.",
+          "Les fins de ligne sont lues dans le texte et affichées dans la barre d'état. Le compteur de lignes ne comptait autrefois que les sauts de ligne, si bien qu'un vieux fichier Mac aux retours chariot seuls apparaissait comme une seule ligne, alors que la barre d'état annonçait CR dans le même souffle. Un retour chariot isolé compte désormais aussi comme un saut de ligne.",
+          "La commande Supprimer de Jester retire une paire CRLF ou une paire de substitution comme un seul caractère, parce qu'en retirer la moitié laisse un saut de ligne égaré ou un demi-caractère.",
+        ],
+      },
+      {
+        heading: "Un seul exe, même avec une bibliothèque PDF dedans",
+        body: [
+          "Jester se livre en un Jester.exe autonome, runtime .NET 9 compressé à l'intérieur, et tourne donc sur Windows 10 et 11 sans installateur ni installation .NET séparée. Le build n'est pas signé, le premier lancement peut donc afficher une alerte SmartScreen.",
+          "QuestPDF est venu avec un piège : il copie ses polices Lato fournies à côté de l'exécutable, en fichiers séparés. Jester ne s'en sert jamais, puisqu'un PDF est composé en Consolas ou dans la police choisie dans l'éditeur ; une étape du fichier de projet les retire donc du build publié, et la version publiée reste un seul fichier.",
+          "L'export lui-même est en A4 avec des marges de 2 cm, le nom du fichier en en-tête au-dessus d'un filet doré et les numéros de page en pied de page. Les longues lignes passent à la ligne sur la page.",
+        ],
+      },
+      {
+        heading: "Une recherche qui se teste sans fenêtre",
+        body: [
+          "Le calcul derrière rechercher-remplacer vit dans TextSearch.cs, qui ne sait rien de l'éditeur. Les 57 tests xUnit couvrent ce fichier, l'enregistrement des réglages et la table des commandes, et la CI les lance à chaque push sur main. Les vues WPF, je les vérifie en lançant l'application.",
+          "La recherche dans les fichiers doit survivre à n'importe quel dossier. Elle saute les fichiers cachés et système, ignore les dossiers qu'elle n'a pas le droit de lire, et dresse la liste des fichiers avant de chercher, pour qu'un sous-dossier protégé ne lève pas d'erreur à mi-chemin. Les fichiers de plus de 4 Mo et ceux qui ne se lisent pas sont laissés de côté, et les résultats s'arrêtent à 5000.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Du développement bureau Windows natif en C# et WPF sur une pile .NET 9 actuelle.",
-      "Du soin là où personne ne fait de démo : enregistrements atomiques, sûreté au plantage, fidélité de l'encodage.",
-      "Une application de bureau portée du début à la fin, de l'interface sur mesure jusqu'à un unique build portable.",
-    ],
-    nextIterations: [
-      "La coloration syntaxique et un mode d'édition orienté code.",
-      "Un point d'extension ou de script pour des commandes personnalisées.",
-      "L'édition multi-curseurs et un rechercher-remplacer plus riche à travers les fichiers.",
+    captions: [
+      "Jester dans son thème violet et or avec une note « Untitled » non enregistrée, la barre d'état affichant 180 caractères, 9 lignes, des fins de ligne Windows (CRLF) et l'UTF-8.",
     ],
     tags: ["C#", "WPF", ".NET 9", "Windows"],
-    impactHeading: "À quoi sert ce projet",
-    impactPoints: [
-      "Donne aux utilisateurs de Windows un bloc-notes qui s'ouvre instantanément puis s'efface.",
-      "Ajoute quelques fonctions avancées (onglets, recherche, export PDF) sans le poids d'un IDE complet.",
-      "Garde le travail en sûreté, avec des enregistrements à l'épreuve des plantages et un traitement fidèle des encodages.",
-    ],
     stats: [
       { value: "1", label: "exe portable" },
       { value: "0", label: "installateurs" },
@@ -210,57 +202,49 @@ export const jester: Record<Language, LocalizedContent> = {
     overview:
       "我想要一个我松开鼠标之前就已经打开的记事本，同时还能做记事本拒绝做的那几件事。于是我用 C# 和 WPF、跑在 .NET 9 上做了一个：标签页、行号栏、跨整个文件夹查找，以及通过 QuestPDF 输出干净的 A4 PDF。还有那些丢了才会想起来的小事：会话恢复、最近打开，以及资源管理器右键菜单里的「用 Jester 打开」。它是一个便携可执行文件，运行时已经打包在内，所以没有安装程序，也没有那句「请先安装 .NET」。",
     roleSummary: "只有我：WPF 界面和整套 .NET 9 构建。",
-    problemStatement:
-      "Windows 记事本太素，住不下去；而完整的编辑器启动起来够你去泡杯咖啡。Jester 就是我真正想要的中间那档：立刻打开，再加上每天都能自证价值的那几个功能。",
-    objectives: [
-      "立刻启动、保持轻，没有启动画面，也不用预热。",
-      "把要紧的功能做进去（标签页、行号、跨文件查找、PDF 导出），其余的放过。",
-      "交付一个便携 .exe，在 Windows 10 和 11 上零安装步骤即可运行。",
-    ],
-    architectureDecisions: [
-      "C# 和 WPF 跑在 .NET 9 上，每个标签页的文档状态、编辑区和行号边栏是各自独立、各管一事的组件。",
-      "设置和上一次会话以 JSON 保存，所以窗口、标签页和偏好都回到我离开时的样子。",
-      "分页 A4 渲染用 QuestPDF，关在自己的导出器里，绝不碰启动路径。",
-    ],
-    implementationHighlights: [
-      "标签页编辑，每个文档各自保有撤销历史和编码，配行号栏与当前行高亮。",
-      "跨文件查找会扫过整个文件夹，含过滤和子目录，双击结果直接跳到那一行。",
-      "PDF 导出，一个按键就把任意一篇笔记变成干净的分页 A4 文档。",
-      "不上台面的那一半：带回环的查找替换、跳转到行、插入日期时间、字体选择、编码与行尾转换，以及一条会告诉你此刻处于哪一种的状态栏。",
-    ],
-    qualityAndSecurity: [
-      "丢弃未保存的内容前它会问一声，注销或关机时也一样；写入是原子的，崩溃不会留给你一个写了一半的文件。",
-      "对编码敏感：它会读 UTF-8 和 UTF-16 的 BOM，并按文件原本的编码和行尾原样写回。",
-      "57 个测试用例，覆盖文档、编码和查找的逻辑。",
-      "自包含且便携，运行时随包，因此从不依赖系统里装了哪个 .NET。",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "既要让启动保持瞬时，又得背着标签页、查找和 PDF 导出。",
-        solution: "我把程序拆成小的 WPF 组件，并把重活儿，尤其是 PDF 渲染，整个挪出启动路径。",
+        heading: "保存永远不会清空已有的文件",
+        body: [
+          "最直接的保存方式，是以写入模式打开文件再把文字放进去。可是以写入模式打开会先把文件清空，写到一半时程序崩溃或磁盘写满，你手里的东西就比按 Ctrl+S 之前还少。",
+          "Jester 先把文字写进同一文件夹里的一个隐藏临时文件，再用 File.Replace 把它换到原文件的位置。交换之前任何一步出错，旧文件都原封不动，临时文件也会被清理掉。",
+          "离开时也一样小心。带着未保存的修改关闭标签页、关闭窗口，甚至注销 Windows，都会先问一声；选择取消，注销就会被拦下。界面线程上的意外错误会写进 AppData 下的崩溃日志并弹出提示，其他标签页照样开着。",
+        ],
+        code: {
+          language: "csharp",
+          text: SAFE_WRITE,
+          caption:
+            "MainWindow.Files.cs 中 SafeWrite 的函数体。文字只会先落进真实文件旁边的临时文件，再由 File.Replace 换进去，所以写入失败时旧文件完好无损。",
+        },
       },
       {
-        challenge: "把每个文件按字节原样交回去，编码和行尾都要保住。",
-        solution: "打开时检测 BOM，按标签页跟踪编码和行尾，保存时原样写回，不做任何「体贴的」静默转换。",
+        heading: "文件怎么来，就怎么回去",
+        body: [
+          "打开文件时，Jester 会读取字节顺序标记（BOM），没有的话就按 UTF-8 处理。识别出的编码跟着这个标签页走，保存时照样使用，所以 UTF-16 文件不会悄悄变成 UTF-8 回来。要转换编码，就在「格式」菜单里自己选。",
+          "行尾格式从文本本身读出，显示在状态栏里。行数统计以前只数换行符，于是一个只用回车符的老 Mac 文件被算成一行，而状态栏同时却标着 CR。现在单独的回车符也算作换行。",
+          "Jester 自己的删除命令会把一对 CRLF 或一个代理对当作一个字符删掉，因为只删一半，就会留下一个多余的换行或半个字符。",
+        ],
+      },
+      {
+        heading: "一个 exe，哪怕里面装着 PDF 库",
+        body: [
+          "Jester 以一个自包含的 Jester.exe 发布，.NET 9 运行时压缩在里面，所以在 Windows 10 和 11 上无需安装程序，也不用另装 .NET。这个构建没有签名，第一次启动时可能会出现 SmartScreen 提示。",
+          "QuestPDF 带来一个麻烦：它会把自带的 Lato 字体作为零散文件复制到可执行文件旁边。Jester 从来用不到它们，因为 PDF 用的是 Consolas 或编辑器里选定的字体，所以项目文件里有一步会把它们从发布构建中剔除，发布版依旧只是一个文件。",
+          "导出本身是 A4，页边距 2 厘米，页眉是文件名，下面一条金色细线，页脚是页码。过长的行会在页面内自动换行。",
+        ],
+      },
+      {
+        heading: "不开窗口也能测试的查找",
+        body: [
+          "查找与替换的计算都在 TextSearch.cs 里，它对编辑器一无所知。57 个 xUnit 测试覆盖这个文件、设置的保存以及命令表，每次推送到 main，CI 都会运行它们。WPF 界面则由我亲自运行程序来检查。",
+          "跨文件查找必须扛得住它被指向的任何文件夹。它跳过隐藏文件和系统文件，忽略没有读取权限的文件夹，并在开始搜索前先列出全部文件，这样受保护的子文件夹就不会在半路抛出错误。超过 4 MB 的文件和读不出来的文件会被跳过，结果最多 5000 条。",
+        ],
       },
     ],
-    hiringSignals: [
-      "在当前的 .NET 9 技术栈上，用 C# 和 WPF 做原生 Windows 桌面开发。",
-      "在没人演示的地方也上心：原子保存、崩溃安全、编码保真。",
-      "一个桌面应用从头负责到尾，从自定义界面一直到单个便携构建。",
-    ],
-    nextIterations: [
-      "语法高亮，以及一个偏代码的编辑模式。",
-      "一个插件或脚本入口，用来接自定义命令。",
-      "多光标编辑，以及跨文件更完整的查找替换。",
+    captions: [
+      "紫金配色的 Jester，打开着一篇未保存的 Untitled 笔记，状态栏显示 180 个字符、9 行、Windows (CRLF) 行尾和 UTF-8。",
     ],
     tags: ["C#", "WPF", ".NET 9", "Windows"],
-    impactHeading: "这个项目有什么用",
-    impactPoints: [
-      "给 Windows 用户一个立刻就开、然后让路的记事本。",
-      "补上几个进阶功能（标签页、查找、PDF 导出），却不背完整 IDE 的重量。",
-      "用抗崩溃的保存和忠实的编码处理，把你的内容守住。",
-    ],
     stats: [
       { value: "1", label: "便携 exe" },
       { value: "0", label: "安装程序" },

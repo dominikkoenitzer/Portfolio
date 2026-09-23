@@ -85,6 +85,8 @@ export const fr = {
     heading: "Compétences",
     subheading:
       "Ce avec quoi je travaille au quotidien, et ce que je continue d'apprendre.",
+    projectCountOne: "Un projet utilise {skill}",
+    projectCountMany: "{count} projets utilisent {skill}",
     categories: {
       frontend: "Frontend",
       professional: "Professionnel",
@@ -104,7 +106,7 @@ export const fr = {
     eyebrow: "Projets personnels",
     heading: "Projets",
     subheading:
-      "Des choses que j'ai construites et mises en ligne, code source compris.",
+      "Des choses que j'ai construites, la plupart avec le code source.",
     disclosureEyebrow: "Avant de faire défiler",
     disclosureBody:
       "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer, ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
@@ -121,6 +123,8 @@ export const fr = {
     filterLabel: "Filtrer par type",
     searchPlaceholder: "Chercher par nom, techno ou mot-clé…",
     clearSearch: "Effacer la recherche",
+    techFilter: "Construit avec {tech}",
+    clearTech: "Afficher tous les projets",
     filterAll: "Tous",
     filterWeb: "Web",
     filterDesktop: "Desktop",
@@ -149,21 +153,13 @@ export const fr = {
     visitSite: "Visiter le site",
     download: "Télécharger",
     sourceCode: "Code source",
+    onThisPage: "Sur cette page",
+    builtWith: "Construit avec",
     downloadNote:
-      "Premier lancement : Windows SmartScreen peut s’afficher. Choisissez « Informations complémentaires » → « Exécuter quand même », puis approuvez l’invite administrateur UAC (nécessaire pour les hooks d’entrée globaux).",
+      "Premier lancement : Windows SmartScreen peut s’afficher. Choisissez « Informations complémentaires » → « Exécuter quand même ».",
     moreProjects: "Plus de projets",
     present: "Présent",
     role: "Rôle",
-    problem: "Le problème",
-    objectives: "Objectifs",
-    architecture: "Architecture",
-    implementation: "Implémentation",
-    quality: "Qualité et sécurité",
-    challenges: "Défis et solutions",
-    challengeLabel: "Défi",
-    solutionLabel: "Solution",
-    whatsNext: "Et ensuite",
-    signals: "Ce que ça montre",
     allProjects: "Tous les projets",
     timeline: "Période",
     gallery: "Galerie",
@@ -412,7 +408,7 @@ export const fr = {
     requested: "Vous avez demandé",
     suggestionsHeading: "Essayez plutôt ceci",
     destinations: {
-      projects: "Ce que j'ai construit, avec le code.",
+      projects: "Ce que j'ai construit, et comment.",
       about: "Qui je suis et ce que j'étudie.",
       services: "Ce que je prends en charge, et comment.",
       contact: "Envoyez-moi un message.",
@@ -486,7 +482,7 @@ export const fr = {
     projects: {
       title: "Projets d'ingénierie logicielle",
       description:
-        "Projets logiciels de Dominik Könitzer, ingénieur suisse. Déploiements en ligne en React et TypeScript, chacun avec son code source.",
+        "Projets logiciels de Dominik Könitzer, ingénieur suisse, des applications web à un gestionnaire de fenêtres en mosaïque en Rust, chacun avec son étude de cas.",
       keywords:
         "portfolio ingénieur logiciel, projets de développement web, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
     },

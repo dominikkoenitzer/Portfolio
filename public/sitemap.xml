@@ -190,6 +190,54 @@
     </image:image>
   </url>
 
+  <!-- Project: Inkling -->
+  <url>
+    <loc>https://dk.punds.ch/projects/inkling</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/inkling.jpg</image:loc>
+      <image:title>Inkling, a software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Cyberia -->
+  <url>
+    <loc>https://dk.punds.ch/projects/cyberia</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/cyberia.jpg</image:loc>
+      <image:title>Cyberia, a software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Accela -->
+  <url>
+    <loc>https://dk.punds.ch/projects/accela</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/accela.jpg</image:loc>
+      <image:title>Accela, a software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
+  <!-- Project: Mochi -->
+  <url>
+    <loc>https://dk.punds.ch/projects/mochi</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/mochi.jpg</image:loc>
+      <image:title>Mochi, a software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
   <!-- Contact -->
   <url>
     <loc>https://dk.punds.ch/contact</loc>

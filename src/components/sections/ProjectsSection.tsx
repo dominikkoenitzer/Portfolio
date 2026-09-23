@@ -33,13 +33,17 @@ type SortKey = "oldest" | "newest" | "az";
 
 const PARAM_DEFAULTS: Record<string, string> = {
   q: "",
+  tech: "",
   type: "all",
   sort: "newest",
 };
 
-/** Desktop apps ship a Windows binary; everything else is a hosted web app. */
-const isDesktopApp = (project: PortfolioProject) =>
-  project.operatingSystem === "Windows";
+/**
+ * A desktop app is one you download and install; everything else runs in a
+ * browser, hosted or local. Keyed on the download rather than the OS, because
+ * a cross-platform app names three systems.
+ */
+const isDesktopApp = (project: PortfolioProject) => Boolean(project.downloadUrl);
 
 /** One card surface for the whole page: opaque cream, hairline, no shadow. */
 const CARD =
@@ -151,11 +155,16 @@ export function ProjectsSection() {
   const rawType = searchParams.get("type");
   const type: TypeKey =
     rawType === "web" || rawType === "desktop" ? rawType : "all";
+  // Set by a skill chip on /skills: an exact match on what a project is built
+  // with, not a text search, so "Java" never finds the JavaScript projects.
+  const tech = searchParams.get("tech") ?? "";
   const rawSort = searchParams.get("sort");
   const sort: SortKey =
     rawSort === "oldest" || rawSort === "az" ? rawSort : "newest";
 
-  const updateParams = (patch: Partial<Record<"q" | "type" | "sort", string>>) => {
+  const updateParams = (
+    patch: Partial<Record<"q" | "type" | "sort" | "tech", string>>,
+  ) => {
     const next = new URLSearchParams(searchParams);
     for (const [key, value] of Object.entries(patch)) {
       if (!value || value === PARAM_DEFAULTS[key]) {
@@ -173,6 +182,7 @@ export function ProjectsSection() {
       if (type !== "all" && (type === "desktop") !== isDesktopApp(project)) {
         return false;
       }
+      if (tech && !project.stack.includes(tech)) return false;
       if (!q) return true;
       return [
         project.title,
@@ -191,7 +201,7 @@ export function ProjectsSection() {
     if (sort === "az")
       return [...list].sort((a, b) => a.title.localeCompare(b.title));
     return list;
-  }, [projects, query, type, sort]);
+  }, [projects, query, type, sort, tech]);
 
   // The grid is re-keyed per result *set* rather than per keystroke. Re-mounting
   // it is what replays the reveal after a filter or a sort, but typing
@@ -316,15 +326,30 @@ export function ProjectsSection() {
                 </div>
               </motion.div>
 
-              <motion.p
-                aria-live="polite"
-                className="mt-3 pl-1 text-muted-foreground text-xs tabular-nums"
+              <motion.div
+                className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 pl-1"
                 variants={REVEAL}
               >
-                {t.showingCount
-                  .replace("{count}", String(visible.length))
-                  .replace("{total}", String(projects.length))}
-              </motion.p>
+                <p
+                  aria-live="polite"
+                  className="text-muted-foreground text-xs tabular-nums"
+                >
+                  {t.showingCount
+                    .replace("{count}", String(visible.length))
+                    .replace("{total}", String(projects.length))}
+                </p>
+                {tech ? (
+                  <button
+                    aria-label={`${t.techFilter.replace("{tech}", tech)}. ${t.clearTech}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-xs transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
+                    onClick={() => updateParams({ tech: "" })}
+                    type="button"
+                  >
+                    {t.techFilter.replace("{tech}", tech)}
+                    <X aria-hidden className="h-3.5 w-3.5" />
+                  </button>
+                ) : null}
+              </motion.div>
             </motion.div>
           </motion.div>
 
@@ -351,7 +376,9 @@ export function ProjectsSection() {
               </p>
               <Button
                 className="mt-6 rounded-lg px-5"
-                onClick={() => updateParams({ q: "", type: "all", sort: "newest" })}
+                onClick={() =>
+                  updateParams({ q: "", type: "all", sort: "newest", tech: "" })
+                }
                 variant="cta"
               >
                 {t.resetFilters}
@@ -461,7 +488,15 @@ export function ProjectsSection() {
                         ))}
                       </div>
 
-                      <div className="mt-auto grid grid-cols-2 gap-2 border-border/60 border-t pt-4 sm:grid-cols-3">
+                      {/* Three actions, or two when the project runs only
+                          locally and has nothing to open or install. */}
+                      <div
+                        className={`mt-auto grid grid-cols-2 gap-2 border-border/60 border-t pt-4 ${
+                          project.liveUrl || project.downloadUrl
+                            ? "sm:grid-cols-3"
+                            : ""
+                        }`}
+                      >
                         {project.downloadUrl ? (
                           <a
                             aria-label={t.openDownload.replace(
@@ -477,7 +512,7 @@ export function ProjectsSection() {
                             {t.download}
                             <Download className="h-3.5 w-3.5" />
                           </a>
-                        ) : (
+                        ) : project.liveUrl ? (
                           <a
                             aria-label={t.openLive.replace(
                               "{name}",
@@ -491,7 +526,7 @@ export function ProjectsSection() {
                             {t.live}
                             <ExternalLink className="h-3.5 w-3.5" />
                           </a>
-                        )}
+                        ) : null}
                         {project.sourcePrivate ? (
                           <PrivateSource>
                             <button
