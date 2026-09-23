@@ -38,6 +38,8 @@ export interface PortfolioProject {
    * `scripts/gen-card-images.ts` fails the run when it does not.
    */
   imageWidth: number;
+  /** Set when the GitHub repo is private: the Source control explains that instead of linking to a 404. */
+  sourcePrivate?: boolean;
   /** Set for portrait (mobile/phone) screenshots so the detail page bounds them instead of stretching full-width. */
   imagePortrait?: boolean;
   /** Set when `image` is a square app icon/logo (not a screenshot): renders it contained and centered instead of full-bleed. */
@@ -86,6 +88,8 @@ export type ProjectBase = {
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   priority: number;
+  /** Set when the GitHub repo is private: the Source control explains that instead of linking to a 404. */
+  sourcePrivate?: boolean;
   /** Optional screenshot path under /public (e.g. /projects/<slug>.png). */
   image?: string;
   /** Intrinsic pixel width of `image`, when it is not the usual 1600. */

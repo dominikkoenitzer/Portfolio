@@ -47,7 +47,7 @@ const Projects = () => {
                 name: project.title,
                 description: project.description,
                 url: project.liveUrl,
-                sameAs: project.repoUrl,
+                ...(project.sourcePrivate ? {} : { sameAs: project.repoUrl }),
                 applicationCategory: "WebApplication",
                 operatingSystem: "Any",
                 keywords: project.tags.join(", "),
