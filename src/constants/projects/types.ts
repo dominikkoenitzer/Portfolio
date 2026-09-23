@@ -1,32 +1,57 @@
 /** A headline number shown in the detail page meta row. */
-export type ProjectStat = { value: string; label: string };
+export type ProjectStat = {
+  value: string;
+  label: string;
+  /**
+   * A project key of `api/test-count.js`. The number is then counted from the
+   * repository when the page loads; `value` is what shows until it arrives,
+   * and what stays if the count cannot be had.
+   */
+  liveTests?: string;
+};
+
+/**
+ * One section of a case study, titled for that project rather than from a
+ * fixed template. `figure` points into the project's pictures in reading
+ * order (0 is the main shot, then the gallery), and the picture renders under
+ * the section's text with its caption from `captions`.
+ */
+export type ProjectSection = {
+  heading: string;
+  /** Paragraphs, in order. */
+  body: string[];
+  figure?: number;
+  /** A short excerpt from the real source, where it shows a decision better than prose. */
+  code?: { language: string; text: string; caption: string };
+};
 
 export interface PortfolioProject {
   slug: string;
+  downloadNote?: string;
   title: string;
   tagline: string;
   description: string;
   overview: string;
   roleSummary: string;
-  problemStatement: string;
-  objectives: string[];
-  architectureDecisions: string[];
-  implementationHighlights: string[];
-  qualityAndSecurity: string[];
-  challengesAndSolutions: Array<{
-    challenge: string;
-    solution: string;
-  }>;
-  hiringSignals: string[];
-  nextIterations: string[];
+  /** The case study, in the project's own sections, after the overview. */
+  sections: ProjectSection[];
+  /** One caption per picture, in reading order: the main shot, then the gallery. */
+  captions: string[];
   /** ISO year-month (YYYY-MM) the project's GitHub repo was created. */
   date: string;
   /** Four-digit year derived from `date`. */
   year: string;
   /** Localized month + year label derived from `date` (e.g. "Dec 2024"). */
   dateLabel: string;
+  /** ISO year-month (YYYY-MM) work stopped; absent while the project is active. */
+  ended?: string;
+  /** Skill names the project is built with, from `stacks.ts`. */
+  stack: readonly string[];
+  /** Localized label for `ended`; absent while the project is still being worked on. */
+  endLabel?: string;
   repoUrl: string;
-  liveUrl: string;
+  /** Absent for a project that only runs locally. */
+  liveUrl?: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   priority: number;
@@ -53,28 +78,22 @@ export interface PortfolioProject {
   /** schema.org applicationCategory (defaults to "WebApplication"). */
   applicationCategory?: string;
   tags: string[];
-  impactHeading: string;
-  impactPoints: string[];
   /** Headline numbers for the detail page meta row (e.g. "9 KB" / "binary size"). */
   stats?: ProjectStat[];
 }
 
 export type LocalizedContent = {
+  /** Replaces the generic first-launch note under a download, when this binary needs more (Flow asks for admin rights). */
+  downloadNote?: string;
   tagline: string;
   description: string;
   overview: string;
   roleSummary: string;
-  problemStatement: string;
-  objectives: string[];
-  architectureDecisions: string[];
-  implementationHighlights: string[];
-  qualityAndSecurity: string[];
-  challengesAndSolutions: Array<{ challenge: string; solution: string }>;
-  hiringSignals: string[];
-  nextIterations: string[];
+  /** The case study, in the project's own sections, after the overview. */
+  sections: ProjectSection[];
+  /** One caption per picture, in reading order: the main shot, then the gallery. */
+  captions: string[];
   tags: string[];
-  impactHeading: string;
-  impactPoints: string[];
   stats?: ProjectStat[];
 };
 
@@ -83,8 +102,11 @@ export type ProjectBase = {
   title: string;
   /** ISO year-month (YYYY-MM) the GitHub repo was created, array order should match. */
   date: string;
+  /** ISO year-month (YYYY-MM) work stopped. Leave it out while the project is still active. */
+  ended?: string;
   repoUrl: string;
-  liveUrl: string;
+  /** Absent for a project that only runs locally: its card then offers no Live link. */
+  liveUrl?: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   priority: number;

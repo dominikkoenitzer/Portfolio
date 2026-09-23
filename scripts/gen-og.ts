@@ -163,7 +163,7 @@ const CARDS: { out: string; title: string; subtitle: string; path: string }[] = 
   { out: "public/og/about.png", title: "About", subtitle: "Software engineer in Zürich, Switzerland", path: "/about" },
   { out: "public/og/experience.png", title: "Experience", subtitle: "School in three countries, then an internship in Lucerne", path: "/experience" },
   { out: "public/og/skills.png", title: "Skills", subtitle: "What I work with day to day, and what I'm still getting better at", path: "/skills" },
-  { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built and put online, source included", path: "/projects" },
+  { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built, most of them with the source", path: "/projects" },
   { out: "public/og/services.png", title: "Services", subtitle: "Web development and software engineering, Zürich or remote", path: "/services" },
   { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together. One email is all it takes.", path: "/contact" },
   { out: "public/og/donate.png", title: "Tip Jar", subtitle: "If something here clicked for you", path: "/donate" },
@@ -183,6 +183,10 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
   { slug: "remnants", title: "Remnants", subtitle: "VS Code, minus the parts that talk back" },
   { slug: "portfolio", title: "Portfolio", subtitle: "The site you are looking at. Yes, it is in the portfolio." },
   { slug: "oxidize", title: "Oxidize", subtitle: "Uninstall a program, then hunt down what it left behind" },
+  { slug: "inkling", title: "Inkling", subtitle: "Your notes quietly turn into tasks and flashcards" },
+  { slug: "cyberia", title: "Cyberia", subtitle: "An anime app built around waiting as little as possible" },
+  { slug: "accela", title: "Accela", subtitle: "Films and series, in an app that trusts nothing it stores" },
+  { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager that always gives the desktop back" },
 ];
 
 const fontFiles = await ensureFonts();

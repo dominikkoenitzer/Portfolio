@@ -8,6 +8,8 @@ import {
   Server,
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
+import { Link } from "react-router-dom";
+import { countProjectsBySkill } from "@/constants/projects/stacks";
 import { SKILL_CATEGORIES, type SkillCategoryKey } from "@/constants/skills";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -45,13 +47,61 @@ const CARD =
  * page never meant to make. Padding, font-weight and glyph size are constant
  * across hover, so a row of ten chips cannot re-wrap under the pointer.
  */
+/** Projects per skill, counted once: the stacks never change at runtime. */
+const PROJECT_COUNTS = countProjectsBySkill();
+
+const CHIP_BODY =
+  "inline-flex items-center gap-2 rounded-lg border border-border/60 bg-secondary/50 px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out hover:border-primary/30";
+
+/**
+ * A skill some project is built with links to those projects, and says how
+ * many there are. The count sits on the same token surface as the category
+ * count, so the page has one way of showing a number.
+ */
+function ProjectChip({
+  icon,
+  label,
+  count,
+  countLabel,
+}: {
+  icon: ReactNode;
+  label: string;
+  count: number;
+  countLabel: string;
+}) {
+  return (
+    <motion.span className="inline-flex" variants={REVEAL}>
+      <Link
+        aria-label={countLabel}
+        className={`${CHIP_BODY} focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+        title={countLabel}
+        to={`/projects?tech=${encodeURIComponent(label)}`}
+      >
+        <span
+          aria-hidden="true"
+          className="flex h-[17px] w-[17px] shrink-0 items-center justify-center text-foreground/75"
+        >
+          {icon}
+        </span>
+        <span className="font-medium text-foreground/85">{label}</span>
+        <span
+          aria-hidden="true"
+          className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-border/60 px-1 text-[11px] text-muted-foreground tabular-nums"
+        >
+          {count}
+        </span>
+      </Link>
+    </motion.span>
+  );
+}
+
 function Chip({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <motion.span
       /* `bg-secondary/50` is the chip fill used by the identical chips on
          /experience and /projects; this one was the only `bg-background/50`,
          which composites blush over cream and reads as a different object. */
-      className="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-secondary/50 px-3 py-2 text-[13.5px] transition-colors duration-200 ease-out hover:border-primary/30"
+      className={CHIP_BODY}
       variants={REVEAL}
     >
       {/* Decorative: the skill's name is the text right beside it, and the
@@ -166,13 +216,29 @@ export function SkillsSection() {
             key={category.key}
             title={t.categories[category.key]}
           >
-            {category.skills.map((name) => (
-              <Chip
-                icon={getSkillIcon(name)}
-                key={name}
-                label={name}
-              />
-            ))}
+            {category.skills.map((name) => {
+              const count = PROJECT_COUNTS.get(name);
+              return count ? (
+                <ProjectChip
+                  count={count}
+                  countLabel={(count === 1
+                    ? t.projectCountOne
+                    : t.projectCountMany
+                  )
+                    .replace("{count}", String(count))
+                    .replace("{skill}", name)}
+                  icon={getSkillIcon(name)}
+                  key={name}
+                  label={name}
+                />
+              ) : (
+                <Chip
+                  icon={getSkillIcon(name)}
+                  key={name}
+                  label={name}
+                />
+              );
+            })}
           </CategoryCard>
         ))}
 

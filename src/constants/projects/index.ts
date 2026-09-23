@@ -1,14 +1,19 @@
 import type { Language } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
+import { accela } from "./accela";
+import { cyberia } from "./cyberia";
 import { entropy } from "./entropy";
 import { flow } from "./flow";
+import { inkling } from "./inkling";
 import { jester } from "./jester";
+import { mochi } from "./mochi";
 import { oxidize } from "./oxidize";
 import { portfolio } from "./portfolio";
 import { punds } from "./punds";
 import { remnants } from "./remnants";
 import { senbon } from "./senbon";
 import { spectrum } from "./spectrum";
+import { PROJECT_STACKS } from "./stacks";
 import { time } from "./time";
 import type { LocalizedContent, PortfolioProject, ProjectBase } from "./types";
 import { zephyr } from "./zephyr";
@@ -83,8 +88,9 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://github.com/dominikkoenitzer/Remnants",
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup.exe",
+    // The release ships per-platform archives and installers under versioned
+    // names, so the page is the only link that survives the next release.
+    downloadUrl: "https://github.com/dominikkoenitzer/Remnants/releases/latest",
     priority: 5,
     image: "/projects/remnants.jpg",
     programmingLanguages: ["TypeScript"],
@@ -171,6 +177,58 @@ const PROJECT_BASE: ProjectBase[] = [
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
   },
+  {
+    slug: "inkling",
+    title: "Inkling",
+    date: "2026-07",
+    repoUrl: "https://github.com/dominikkoenitzer/Inkling",
+    downloadUrl: "https://github.com/dominikkoenitzer/Inkling/releases/latest",
+    priority: 12,
+    image: "/projects/inkling.jpg",
+    gallery: [
+      "/projects/inkling-2.jpg",
+      "/projects/inkling-3.jpg",
+      "/projects/inkling-4.jpg",
+    ],
+    programmingLanguages: ["TypeScript"],
+    operatingSystem: "Windows, macOS, Linux",
+    applicationCategory: "EducationalApplication",
+  },
+  {
+    slug: "cyberia",
+    title: "Cyberia",
+    date: "2026-09",
+    repoUrl: "https://github.com/dominikkoenitzer/Cyberia",
+    sourcePrivate: true,
+    priority: 13,
+    image: "/projects/cyberia.jpg",
+    gallery: ["/projects/cyberia-2.jpg"],
+    programmingLanguages: ["TypeScript", "Python"],
+  },
+  {
+    slug: "accela",
+    title: "Accela",
+    date: "2026-09",
+    repoUrl: "https://github.com/dominikkoenitzer/Accela",
+    sourcePrivate: true,
+    priority: 14,
+    image: "/projects/accela.jpg",
+    gallery: ["/projects/accela-2.jpg"],
+    programmingLanguages: ["JavaScript"],
+  },
+  {
+    slug: "mochi",
+    title: "Mochi",
+    date: "2026-09",
+    repoUrl: "https://github.com/dominikkoenitzer/Mochi",
+    // Versioned archive, same as Oxidize: the release page always resolves.
+    downloadUrl: "https://github.com/dominikkoenitzer/Mochi/releases/latest",
+    image: "/projects/mochi.jpg",
+    priority: 15,
+    programmingLanguages: ["Rust"],
+    operatingSystem: "Windows",
+    applicationCategory: "UtilitiesApplication",
+  },
 ];
 
 const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
@@ -185,6 +243,10 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   punds,
   senbon,
   oxidize,
+  inkling,
+  cyberia,
+  accela,
+  mochi,
 };
 
 const resolveContent = (slug: string, lang: Language): LocalizedContent => {
@@ -247,8 +309,10 @@ const buildProject = (base: ProjectBase, lang: Language): PortfolioProject => {
     ...base,
     ...content,
     imageWidth: base.imageWidth ?? DEFAULT_IMAGE_WIDTH,
+    stack: PROJECT_STACKS[base.slug] ?? [],
     year: base.date.slice(0, 4),
     dateLabel: formatProjectDate(base.date, lang),
+    ...(base.ended ? { endLabel: formatProjectDate(base.ended, lang) } : {}),
   };
 };
 

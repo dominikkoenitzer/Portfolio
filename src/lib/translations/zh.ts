@@ -84,6 +84,8 @@ export const zh = {
     eyebrow: "技术栈与工具",
     heading: "技能",
     subheading: "我日常在用的东西，以及还在慢慢变熟的部分。",
+    projectCountOne: "1 个项目使用 {skill}",
+    projectCountMany: "{count} 个项目使用 {skill}",
     categories: {
       frontend: "前端",
       professional: "职业技能",
@@ -102,7 +104,7 @@ export const zh = {
   projects: {
     eyebrow: "个人项目",
     heading: "项目",
-    subheading: "我做出来并放到线上的东西，源码都在。",
+    subheading: "我做出来的东西，大多附有源码。",
     disclosureEyebrow: "在往下滑之前",
     disclosureBody:
       "这一页只展示了我做过的东西里能公开的那一小部分。还有一些项目藏在 NDA、私有仓库，或客户的服务器里，不太适合摆出来，所以这里没有它们的身影。下面这些都是个人项目：是我在晚上和周末闲下来时折腾出来的小东西，源于好奇，也带着一点想让某个人的日子轻松那么一点点的私心。如果其中有一个真的做到了，那就刚刚好。",
@@ -119,6 +121,8 @@ export const zh = {
     filterLabel: "按类型筛选",
     searchPlaceholder: "按名称、技术或关键词搜索…",
     clearSearch: "清除搜索",
+    techFilter: "使用 {tech} 构建",
+    clearTech: "显示全部项目",
     filterAll: "全部",
     filterWeb: "网页",
     filterDesktop: "桌面",
@@ -146,21 +150,13 @@ export const zh = {
     visitSite: "访问站点",
     download: "下载",
     sourceCode: "源代码",
+    onThisPage: "本页内容",
+    builtWith: "技术栈",
     downloadNote:
-      "首次启动：Windows SmartScreen 可能会提示，选择“更多信息”→“仍要运行”，然后允许 UAC 管理员提示（全局输入挂钩所需）。",
+      "首次启动：Windows SmartScreen 可能会提示，选择“更多信息”→“仍要运行”。",
     moreProjects: "更多项目",
     present: "至今",
     role: "角色",
-    problem: "问题",
-    objectives: "目标",
-    architecture: "架构",
-    implementation: "实现",
-    quality: "质量与安全",
-    challenges: "挑战与解决方案",
-    challengeLabel: "挑战",
-    solutionLabel: "解决方案",
-    whatsNext: "下一步",
-    signals: "这体现了什么",
     allProjects: "全部项目",
     timeline: "时间线",
     gallery: "图集",
@@ -353,7 +349,7 @@ export const zh = {
     requested: "你访问的是",
     suggestionsHeading: "试试这几页",
     destinations: {
-      projects: "我做过的项目，附源码。",
+      projects: "我做过的项目，以及怎么做的。",
       about: "我是谁，在学什么。",
       services: "我承接什么，怎么做。",
       contact: "给我留言。",
@@ -427,7 +423,7 @@ export const zh = {
     projects: {
       title: "软件工程项目",
       description:
-        "瑞士软件工程师 Dominik Könitzer 的项目。React 与 TypeScript 作品，每个都附上线地址与源码。",
+        "瑞士软件工程师 Dominik Könitzer 的项目，从 Web 应用到一个用 Rust 写的平铺窗口管理器，每个都有案例说明。",
       keywords:
         "软件工程师作品集, 网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
     },
