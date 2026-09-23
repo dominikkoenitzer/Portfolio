@@ -1,72 +1,66 @@
 import type { Language } from "@/config/languages";
 import type { LocalizedContent } from "./types";
 
+// Verbatim from Remnants/product.json (lines 36 to 44), indented with tabs as in the file.
+const PRODUCT_JSON = `\t"enableTelemetry": false,
+\t"extensionsGallery": {
+\t\t"serviceUrl": "https://open-vsx.org/vscode/gallery",
+\t\t"itemUrl": "https://open-vsx.org/vscode/item",
+\t\t"resourceUrlTemplate": "https://open-vsx.org/vscode/unpkg/{publisher}/{name}/{version}/{path}",
+\t\t"controlUrl": "",
+\t\t"nlsBaseUrl": "",
+\t\t"publisherUrl": ""
+\t},`;
+
 export const remnants: Record<Language, LocalizedContent> = {
   en: {
     tagline: "VS Code, minus the parts that talk back.",
     description:
-      "Remnants is a native Windows editor: my personal build of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact.",
+      "Remnants is a code editor for Windows, macOS and Linux: my personal build of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact.",
     overview:
-      "I love VS Code. I do not love the chat panel, the agent window, the account prompt, or anything quietly reporting my keystrokes upstream. So I took Code - OSS, the open-source core, and removed every AI surface, telemetry hook and sign-in nag, without touching what actually matters: fast editing, IntelliSense, the integrated terminal, source control and the JavaScript/Node debugger. Extensions resolve through Open VSX. It ships as a per-user Windows installer, RemnantsUserSetup.exe. The whole change is roughly 759,000 lines removed and 2,800 added on top of upstream 1.125.0, and CHANGES.md lists all of it, because almost all the code here is Microsoft's and that should be easy to check.",
+      "I love VS Code. I do not love the chat panel, the agent window, the account prompt, or the telemetry quietly sending usage data back upstream. So I took Code - OSS, the open-source core, and removed every AI surface, telemetry hook and sign-in nag, without touching what actually matters: fast editing, IntelliSense, the integrated terminal, source control and the JavaScript/Node debugger. Extensions resolve through Open VSX. It ships for Windows, macOS and Linux. The whole change is roughly 759,000 lines removed and 2,800 added on top of upstream 1.125.0, and CHANGES.md lists all of it, because almost all the code here is Microsoft's and that should be easy to check.",
     roleSummary: "Just me: the cuts, the build, the installer, and the CHANGES file.",
-    problemStatement:
-      "VS Code is a great editor wrapped in a growing layer of cloud services, chat panels, agent windows and account prompts you never asked for. Remnants removes that layer entirely, and what's left is the editor.",
-    objectives: [
-      "Remove every built-in AI surface (Copilot, chat, agents, voice) without breaking the editor underneath.",
-      "Kill telemetry and crash reporting at the product level, with no sign-in and no account prompts anywhere.",
-      "Route extensions through Open VSX so the editor still works without Microsoft's Marketplace.",
-      "Document every change, so my contribution can be audited instead of taken on faith.",
-    ],
-    architectureDecisions: [
-      "Work inside the layered Code - OSS architecture (base, platform, editor, workbench, Electron main). Reimplementing an editor was never the point.",
-      "Cut AI and telemetry at the product and contribution level, so the surfaces never register at all rather than sitting hidden behind a setting.",
-      "Repoint the extension gallery at Open VSX, replacing the Marketplace dependency instead of switching it off.",
-      "Keep the upstream tree marked linguist-vendored, so the repository's language stats measure my code and not Microsoft's.",
-    ],
-    implementationHighlights: [
-      "An AI-free build: Copilot, the chat panel, agent sessions, voice and the bundled AI extension are all gone.",
-      "Telemetry disabled at the product level, with no account prompt left in the title bar or the status bar.",
-      "Reproducible Windows packaging through the Code - OSS gulp toolchain, emitting a per-user RemnantsUserSetup.exe.",
-      "18 commits on top of a single base revision, so a diff against upstream 1.125.0 shows exactly what I did.",
-    ],
-    qualityAndSecurity: [
-      "Telemetry, crash reporting and sign-in are gone. Nothing phones home, because there is no phone.",
-      "The upstream TypeScript type-check runs across the source in CI, the same one the original project uses.",
-      "The installer is unsigned and per-user (no admin rights), and the docs say so plainly, SmartScreen guidance included.",
-      "Upstream's MIT licence and third-party notices are retained, and CHANGES.md is honest about the repository being a squashed import rather than a real git fork.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "AI and telemetry are woven deep into the editor. Pulling them out without destabilizing everything else was the hard part.",
-        solution:
-          "I cut the surfaces at the product and contribution layer so they never register, and left the editor, terminal, Git and debugger paths untouched.",
+        heading: "Taking out 2,761 files without breaking the editor",
+        body: [
+          "The largest cut was the AI itself: chat, agent sessions, Copilot, MCP and the language-model APIs, 2,761 files and about 712,000 lines. The bundled AI extension went with it.",
+          "That was not the end of it. AI code is registered all over the workbench, so later passes removed 143 files of leftover registrations, contributions and settings, the agent welcome and Copilot setup flows, and smaller traces in the Git, terminal, editor and search code. The editor, IntelliSense, the terminal, source control and the JavaScript/Node debugger stayed as they were.",
+          "One leftover broke the install itself. Upstream's postinstall step created symlinks for an AI agent harness, and once the harness was gone, npm install failed. Fixing that was part of the removal.",
+        ],
       },
       {
-        challenge:
-          "Code - OSS is enormous and moves fast. A personal fork drifts out of date the moment you blink.",
-        solution:
-          "I stay disciplined about the layered architecture and the upstream build toolchain, so my changes stay isolated and the fork stays mergeable.",
+        heading: "Telemetry and the marketplace live in product.json",
+        body: [
+          "Telemetry is switched off at the product level, and the sign-in entries in the title bar and the status bar are gone, so nothing asks you to set up an account.",
+          "The Microsoft Marketplace is not covered by the Code - OSS licence, so the extension gallery points at Open VSX instead. Both decisions come down to a few lines in one file.",
+        ],
+        code: {
+          language: "json",
+          text: PRODUCT_JSON,
+          caption:
+            "From product.json. The first line turns telemetry off for the whole product, and the gallery block sends every extension lookup to Open VSX instead of the Microsoft Marketplace.",
+        },
+      },
+      {
+        heading: "Git cannot show the deletions, so CHANGES.md does",
+        body: [
+          "I imported the upstream tree as one squashed snapshot instead of forking it on GitHub. That was a mistake in how I set the repository up, and a later history reset made it worse: the first commit already has the removals applied, so git log shows none of them.",
+          "CHANGES.md makes up for it. It names the exact upstream commit, 93cfdd48 from release 1.125.0, lists every removal with its file and line counts, and includes a short script that compares this package.json with upstream's. It reports six AI SDKs taken out and nothing put back. For everything else, you can clone upstream at that commit and diff the two trees.",
+          "The upstream tree is marked linguist-vendored, so Microsoft's code stays out of the repository's language statistics.",
+        ],
+      },
+      {
+        heading: "Every platform ships from one release",
+        body: [
+          "The release workflow builds Remnants for Windows, macOS and Linux, on x64 and arm64, and publishes every file in one GitHub release, with a checksum file and a signed provenance attestation per asset. Each asset is installed and run by the workflow that builds it, including the arm64 Windows installer on real ARM hardware and the deb and rpm packages inside Debian and Fedora containers.",
+          "Getting there meant fixing upstream build scripts that were already broken and only failed once a newer dependency exposed them, such as gulp-rename callbacks that implicitly returned the path they had just assigned.",
+          "Remnants is not code-signed on any platform, so each one asks you to confirm the first launch once. It does not update itself and never phones anywhere to check. New versions appear on the releases page.",
+        ],
       },
     ],
-    hiringSignals: [
-      "I can work inside a codebase the size of VS Code and shape it on purpose.",
-      "I am as comfortable removing complexity as adding it, which is the harder half.",
-      "I own the whole native pipeline, from source changes to a finished Windows installer.",
-      "I document provenance. CHANGES.md says what is mine, what is Microsoft's, and where I got the repository setup wrong.",
-    ],
-    nextIterations: [
-      "Code-signing the installers, so SmartScreen and Gatekeeper stop glaring at them.",
-      "Tooling for the upstream rebase, so keeping the fork current is less of a manual grind.",
-      "Re-cutting the repository as a real fork, so the git history is Microsoft's where it should be.",
-    ],
+    captions: ["The Remnants icon, a faceted blue shard, on a pale lilac background."],
     tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
-    impactHeading: "What This Project Is Good For",
-    impactPoints: [
-      "Gives developers the editor they already know, without the AI clutter, telemetry or sign-in prompts.",
-      "Real privacy here meant removing the surfaces at the source.",
-      "Shows the discipline it takes to keep a serious fork of a large open-source project alive.",
-    ],
     stats: [
       { value: "759k", label: "lines removed" },
       { value: "0", label: "telemetry" },
@@ -77,68 +71,51 @@ export const remnants: Record<Language, LocalizedContent> = {
   de: {
     tagline: "VS Code, ohne die Teile, die zurückreden.",
     description:
-      "Remnants ist ein nativer Windows-Editor: mein persönlicher Build von Code - OSS, aus dem Copilot, Chat, Agenten, Telemetrie und Sign-in herausgeschnitten sind, während Editor, Terminal, Git und Debugger vollständig erhalten bleiben.",
+      "Remnants ist ein Code-Editor für Windows, macOS und Linux: mein persönlicher Build von Code - OSS, aus dem Copilot, Chat, Agenten, Telemetrie und Sign-in herausgeschnitten sind, während Editor, Terminal, Git und Debugger vollständig erhalten bleiben.",
     overview:
-      "Ich liebe VS Code. Ich liebe nicht das Chat-Panel, das Agenten-Fenster, die Kontoaufforderung oder irgendetwas, das still meine Tastenanschläge nach oben meldet. Also nahm ich Code - OSS, den Open-Source-Kern, und entfernte jede KI-Oberfläche, jeden Telemetrie-Hook und jedes Sign-in-Genöle, ohne das anzufassen, worauf es ankommt: schnelles Editieren, IntelliSense, das integrierte Terminal, die Versionskontrolle und den JavaScript/Node-Debugger. Erweiterungen kommen über Open VSX. Ausgeliefert wird ein Per-User-Installer für Windows, RemnantsUserSetup.exe. Die ganze Änderung sind rund 759'000 entfernte und 2'800 hinzugefügte Zeilen auf Upstream 1.125.0, und CHANGES.md listet alles davon auf, weil fast der ganze Code hier von Microsoft ist und das leicht nachprüfbar sein soll.",
+      "Ich liebe VS Code. Ich liebe nicht das Chat-Panel, das Agenten-Fenster, die Kontoaufforderung oder die Telemetrie, die still Nutzungsdaten nach oben schickt. Also nahm ich Code - OSS, den Open-Source-Kern, und entfernte jede KI-Oberfläche, jeden Telemetrie-Hook und jedes Sign-in-Genöle, ohne das anzufassen, worauf es ankommt: schnelles Editieren, IntelliSense, das integrierte Terminal, die Versionskontrolle und den JavaScript/Node-Debugger. Erweiterungen kommen über Open VSX. Ausgeliefert wird für Windows, macOS und Linux. Die ganze Änderung sind rund 759'000 entfernte und 2'800 hinzugefügte Zeilen auf Upstream 1.125.0, und CHANGES.md listet alles davon auf, weil fast der ganze Code hier von Microsoft ist und das leicht nachprüfbar sein soll.",
     roleSummary: "Nur ich: die Schnitte, der Build, der Installer und die CHANGES-Datei.",
-    problemStatement:
-      "VS Code ist ein grossartiger Editor, eingewickelt in eine wachsende Schicht aus Cloud-Diensten, Chat-Panels, Agenten-Fenstern und Kontoaufforderungen, um die niemand gebeten hat. Remnants entfernt diese Schicht vollständig, und was bleibt, ist der Editor.",
-    objectives: [
-      "Jede eingebaute KI-Oberfläche entfernen (Copilot, Chat, Agenten, Voice), ohne den Editor darunter zu beschädigen.",
-      "Telemetrie und Crash-Reporting auf Produktebene abschalten, ohne Sign-in und ohne Kontoaufforderungen.",
-      "Erweiterungen über Open VSX beziehen, damit der Editor auch ohne Microsofts Marketplace funktioniert.",
-      "Jede Änderung dokumentieren, damit mein Beitrag prüfbar ist und nicht auf Vertrauen beruht.",
-    ],
-    architectureDecisions: [
-      "Innerhalb der geschichteten Code-OSS-Architektur arbeiten (base, platform, editor, workbench, Electron main). Einen Editor neu zu schreiben war nie der Punkt.",
-      "KI und Telemetrie auf Produkt- und Contribution-Ebene herausschneiden, damit die Oberflächen sich gar nie registrieren, statt hinter einer Einstellung zu warten.",
-      "Die Extension-Gallery auf Open VSX umbiegen und die Marketplace-Abhängigkeit ersetzen, statt sie nur abzuschalten.",
-      "Den Upstream-Baum als linguist-vendored markiert lassen, damit die Sprachstatistik des Repos meinen Code misst und nicht Microsofts.",
-    ],
-    implementationHighlights: [
-      "Ein KI-freier Build: Copilot, Chat-Panel, Agenten-Sessions, Voice und die mitgelieferte KI-Erweiterung sind alle weg.",
-      "Telemetrie auf Produktebene deaktiviert, ohne verbleibende Kontoaufforderung in Titel- oder Statusleiste.",
-      "Reproduzierbares Windows-Packaging über die gulp-Toolchain von Code - OSS, die eine Per-User-Datei RemnantsUserSetup.exe ausgibt.",
-      "18 Commits auf einer einzigen Basisrevision, damit ein Diff gegen Upstream 1.125.0 genau zeigt, was ich getan habe.",
-    ],
-    qualityAndSecurity: [
-      "Telemetrie, Crash-Reporting und Sign-in sind weg. Nichts telefoniert nach Hause, weil es kein Telefon gibt.",
-      "Der TypeScript-Typecheck von Upstream läuft in der CI über den Quellcode, derselbe, den das Originalprojekt nutzt.",
-      "Der Installer ist unsigniert und per-user (keine Adminrechte), und die Dokumentation sagt das klar, samt SmartScreen-Hinweis.",
-      "Die MIT-Lizenz und die Drittanbieter-Hinweise von Upstream bleiben erhalten, und CHANGES.md gibt offen zu, dass das Repo ein gequetschter Import ist und kein echter Git-Fork.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "KI und Telemetrie sind tief in den Editor eingewoben. Sie herauszuziehen, ohne alles andere zu destabilisieren, war der schwierige Teil.",
-        solution:
-          "Ich habe die Oberflächen auf Produkt- und Contribution-Ebene geschnitten, damit sie sich nie registrieren, und die Pfade für Editor, Terminal, Git und Debugger unangetastet gelassen.",
+        heading: "2'761 Dateien entfernen, ohne den Editor zu beschädigen",
+        body: [
+          "Der grösste Schnitt war die KI selbst: Chat, Agenten-Sessions, Copilot, MCP und die Language-Model-APIs, 2'761 Dateien und rund 712'000 Zeilen. Die mitgelieferte KI-Erweiterung ging gleich mit.",
+          "Damit war es nicht getan. KI-Code ist überall in der Workbench registriert, also entfernten spätere Durchgänge 143 Dateien mit übrig gebliebenen Registrierungen, Contributions und Einstellungen, die Agenten-Willkommensseite und die Copilot-Einrichtung sowie kleinere Reste im Code für Git, Terminal, Editor und Suche. Editor, IntelliSense, Terminal, Versionskontrolle und der JavaScript/Node-Debugger blieben, wie sie waren.",
+          "Ein Überbleibsel legte sogar die Installation lahm. Der postinstall-Schritt von Upstream legte Symlinks für ein KI-Agenten-Harness an, und sobald das Harness weg war, schlug npm install fehl. Das zu beheben gehörte zur Entfernung dazu.",
+        ],
       },
       {
-        challenge:
-          "Code - OSS ist riesig und bewegt sich schnell. Ein persönlicher Fork veraltet, sobald man blinzelt.",
-        solution:
-          "Ich bleibe diszipliniert bei der geschichteten Architektur und der Upstream-Build-Toolchain, damit meine Änderungen isoliert und der Fork mergebar bleibt.",
+        heading: "Telemetrie und Marketplace stehen in product.json",
+        body: [
+          "Die Telemetrie ist auf Produktebene abgeschaltet, und die Sign-in-Einträge in Titel- und Statusleiste sind weg, also fordert einen nichts auf, ein Konto einzurichten.",
+          "Die Lizenz von Code - OSS deckt den Microsoft Marketplace nicht ab, deshalb zeigt die Extension-Gallery auf Open VSX. Beide Entscheidungen sind ein paar Zeilen in einer einzigen Datei.",
+        ],
+        code: {
+          language: "json",
+          text: PRODUCT_JSON,
+          caption:
+            "Aus product.json. Die erste Zeile schaltet die Telemetrie für das ganze Produkt ab, und der Gallery-Block schickt jede Erweiterungssuche an Open VSX statt an den Microsoft Marketplace.",
+        },
+      },
+      {
+        heading: "Git zeigt die Löschungen nicht, also tut es CHANGES.md",
+        body: [
+          "Ich habe den Upstream-Baum als einen einzigen gequetschten Snapshot importiert, statt ihn auf GitHub zu forken. Das war ein Fehler beim Aufsetzen des Repos, und ein späterer Reset der Historie hat es verschlimmert: Der erste Commit enthält die Entfernungen bereits, also zeigt git log keine davon.",
+          "CHANGES.md gleicht das aus. Die Datei nennt den genauen Upstream-Commit, 93cfdd48 aus Release 1.125.0, listet jede Entfernung mit Datei- und Zeilenzahlen auf und enthält ein kurzes Skript, das die package.json hier mit der von Upstream vergleicht. Es meldet sechs entfernte KI-SDKs und nichts, was dazugekommen wäre. Für den Rest kann man Upstream bei diesem Commit klonen und die beiden Bäume vergleichen.",
+          "Der Upstream-Baum ist als linguist-vendored markiert, damit Microsofts Code nicht in die Sprachstatistik des Repos einfliesst.",
+        ],
+      },
+      {
+        heading: "Jede Plattform aus einem einzigen Release",
+        body: [
+          "Der Release-Workflow baut Remnants für Windows, macOS und Linux, jeweils für x64 und arm64, und veröffentlicht alle Dateien in einem GitHub-Release, mit einer Prüfsummendatei und einer signierten Provenance-Attestierung pro Asset. Jedes Asset wird vom Workflow, der es baut, auch installiert und gestartet, der arm64-Installer für Windows auf echter ARM-Hardware und die deb- und rpm-Pakete in Debian- und Fedora-Containern.",
+          "Dafür musste ich Build-Skripte von Upstream reparieren, die schon kaputt waren und erst mit einer neueren Abhängigkeit aufflogen, etwa gulp-rename-Callbacks, die den eben zugewiesenen Pfad implizit zurückgaben.",
+          "Remnants ist auf keiner Plattform code-signiert, deshalb muss man den ersten Start überall einmal bestätigen. Es aktualisiert sich nicht selbst und meldet sich nirgends, um nachzufragen. Neue Versionen erscheinen auf der Release-Seite.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Ich kann in einer Codebasis von der Grösse von VS Code arbeiten und sie absichtlich formen.",
-      "Komplexität zu entfernen liegt mir so gut wie sie hinzuzufügen, und das ist die schwierigere Hälfte.",
-      "Ich verantworte die ganze native Pipeline, von den Quelländerungen bis zum fertigen Windows-Installer.",
-      "Ich dokumentiere Herkunft. CHANGES.md sagt, was von mir ist, was von Microsoft, und wo ich das Repo-Setup verpatzt habe.",
-    ],
-    nextIterations: [
-      "Die Installer signieren, damit SmartScreen und Gatekeeper aufhören, sie anzustarren.",
-      "Werkzeuge für das Upstream-Rebase, damit der Fork aktuell zu halten weniger Handarbeit ist.",
-      "Das Repo als echten Fork neu aufsetzen, damit die Git-Historie dort Microsofts ist, wo sie hingehört.",
-    ],
+    captions: ["Das Remnants-Icon, ein facettierter blauer Splitter, auf blassem Flieder."],
     tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
-    impactHeading: "Wofür dieses Projekt gut ist",
-    impactPoints: [
-      "Gibt Entwicklern den Editor, den sie schon kennen, ohne KI-Ballast, Telemetrie oder Sign-in-Aufforderungen.",
-      "Echte Privatsphäre hiess hier, die Oberflächen an der Quelle zu entfernen.",
-      "Zeigt, wie viel Disziplin es braucht, einen ernsthaften Fork eines grossen Open-Source-Projekts am Leben zu halten.",
-    ],
     stats: [
       { value: "759k", label: "entfernte Zeilen" },
       { value: "0", label: "Telemetrie" },
@@ -149,68 +126,51 @@ export const remnants: Record<Language, LocalizedContent> = {
   fr: {
     tagline: "VS Code, moins les parties qui répondent.",
     description:
-      "Remnants est un éditeur Windows natif : mon build personnel de Code - OSS, avec Copilot, le chat, les agents, la télémétrie et la connexion retirés, et l'éditeur, le terminal, Git et le débogueur laissés entièrement intacts.",
+      "Remnants est un éditeur de code pour Windows, macOS et Linux : mon build personnel de Code - OSS, avec Copilot, le chat, les agents, la télémétrie et la connexion retirés, et l'éditeur, le terminal, Git et le débogueur laissés entièrement intacts.",
     overview:
-      "J'aime VS Code. Je n'aime pas le panneau de chat, la fenêtre d'agent, l'invite de compte, ni tout ce qui remonte discrètement mes frappes. J'ai donc pris Code - OSS, le cœur open source, et retiré chaque surface d'IA, chaque hook de télémétrie et chaque relance de connexion, sans toucher à ce qui compte vraiment : l'édition rapide, IntelliSense, le terminal intégré, le contrôle de version et le débogueur JavaScript/Node. Les extensions passent par Open VSX. Le tout est livré en installateur Windows par utilisateur, RemnantsUserSetup.exe. Le changement complet fait environ 759 000 lignes retirées et 2 800 ajoutées au-dessus de la version amont 1.125.0, et CHANGES.md les liste toutes, parce que presque tout le code ici est celui de Microsoft et que ça doit être facile à vérifier.",
+      "J'aime VS Code. Je n'aime pas le panneau de chat, la fenêtre d'agent, l'invite de compte, ni la télémétrie qui renvoie discrètement des données d'usage. J'ai donc pris Code - OSS, le cœur open source, et retiré chaque surface d'IA, chaque hook de télémétrie et chaque relance de connexion, sans toucher à ce qui compte vraiment : l'édition rapide, IntelliSense, le terminal intégré, le contrôle de version et le débogueur JavaScript/Node. Les extensions passent par Open VSX. Il est livré pour Windows, macOS et Linux. Le changement complet fait environ 759 000 lignes retirées et 2 800 ajoutées au-dessus de la version amont 1.125.0, et CHANGES.md les liste toutes, parce que presque tout le code ici est celui de Microsoft et que ça doit être facile à vérifier.",
     roleSummary: "Moi seul : les coupes, le build, l'installateur et le fichier CHANGES.",
-    problemStatement:
-      "VS Code est un excellent éditeur enveloppé dans une couche croissante de services cloud, de panneaux de chat, de fenêtres d'agent et d'invites de compte que personne n'a demandées. Remnants retire cette couche entièrement, et ce qui reste, c'est l'éditeur.",
-    objectives: [
-      "Retirer chaque surface d'IA intégrée (Copilot, chat, agents, voix) sans casser l'éditeur en dessous.",
-      "Couper la télémétrie et les rapports de plantage au niveau du produit, sans connexion ni invite de compte.",
-      "Faire passer les extensions par Open VSX, pour que l'éditeur fonctionne encore sans le Marketplace de Microsoft.",
-      "Documenter chaque changement, pour que ma contribution s'audite au lieu de se croire.",
-    ],
-    architectureDecisions: [
-      "Travailler à l'intérieur de l'architecture en couches de Code - OSS (base, platform, editor, workbench, Electron main). Réécrire un éditeur n'a jamais été l'objectif.",
-      "Couper l'IA et la télémétrie au niveau du produit et des contributions, pour que ces surfaces ne s'enregistrent jamais plutôt que d'attendre derrière un réglage.",
-      "Rediriger la galerie d'extensions vers Open VSX, en remplaçant la dépendance au Marketplace plutôt qu'en la désactivant.",
-      "Garder l'arbre amont marqué linguist-vendored, pour que les statistiques de langage du dépôt mesurent mon code et non celui de Microsoft.",
-    ],
-    implementationHighlights: [
-      "Un build sans IA : Copilot, le panneau de chat, les sessions d'agent, la voix et l'extension d'IA fournie ont tous disparu.",
-      "Télémétrie désactivée au niveau du produit, sans invite de compte restante dans la barre de titre ni la barre d'état.",
-      "Un empaquetage Windows reproductible via la toolchain gulp de Code - OSS, produisant un RemnantsUserSetup.exe par utilisateur.",
-      "18 commits au-dessus d'une seule révision de base, si bien qu'un diff contre la version amont 1.125.0 montre exactement ce que j'ai fait.",
-    ],
-    qualityAndSecurity: [
-      "Télémétrie, rapports de plantage et connexion ont disparu. Rien ne rappelle la maison, parce qu'il n'y a pas de téléphone.",
-      "Le contrôle de types TypeScript de l'amont tourne sur les sources en CI, le même que celui du projet d'origine.",
-      "L'installateur est non signé et par utilisateur (sans droits administrateur), et la documentation le dit clairement, consignes SmartScreen incluses.",
-      "La licence MIT de l'amont et les notices tierces sont conservées, et CHANGES.md admet franchement que le dépôt est un import écrasé et non un vrai fork git.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "L'IA et la télémétrie sont tissées profondément dans l'éditeur. Les extraire sans déstabiliser tout le reste était la partie difficile.",
-        solution:
-          "J'ai coupé les surfaces au niveau du produit et des contributions pour qu'elles ne s'enregistrent jamais, en laissant intacts les chemins de l'éditeur, du terminal, de Git et du débogueur.",
+        heading: "Retirer 2 761 fichiers sans casser l'éditeur",
+        body: [
+          "La plus grosse coupe, c'était l'IA elle-même : le chat, les sessions d'agent, Copilot, MCP et les API de modèles de langage, 2 761 fichiers et environ 712 000 lignes. L'extension d'IA fournie est partie avec.",
+          "Ça ne s'arrêtait pas là. Le code d'IA est enregistré partout dans le workbench, alors des passes suivantes ont retiré 143 fichiers d'enregistrements, de contributions et de réglages restants, l'accueil des agents et la configuration de Copilot, et de plus petites traces dans le code de Git, du terminal, de l'éditeur et de la recherche. L'éditeur, IntelliSense, le terminal, le contrôle de version et le débogueur JavaScript/Node sont restés tels quels.",
+          "Un de ces restes cassait même l'installation. L'étape postinstall de l'amont créait des liens symboliques vers un harnais d'agent IA, et une fois le harnais supprimé, npm install échouait. Le corriger faisait partie du retrait.",
+        ],
       },
       {
-        challenge:
-          "Code - OSS est énorme et avance vite. Un fork personnel se périme dès qu'on cligne des yeux.",
-        solution:
-          "Je reste discipliné sur l'architecture en couches et la toolchain de build amont, pour que mes changements restent isolés et le fork fusionnable.",
+        heading: "La télémétrie et le marketplace tiennent dans product.json",
+        body: [
+          "La télémétrie est coupée au niveau du produit, et les entrées de connexion dans la barre de titre et la barre d'état ont disparu : rien ne vous demande de créer un compte.",
+          "La licence de Code - OSS ne couvre pas le Marketplace de Microsoft, donc la galerie d'extensions pointe vers Open VSX. Ces deux décisions tiennent en quelques lignes d'un seul fichier.",
+        ],
+        code: {
+          language: "json",
+          text: PRODUCT_JSON,
+          caption:
+            "Extrait de product.json. La première ligne coupe la télémétrie pour tout le produit, et le bloc de galerie envoie chaque recherche d'extension vers Open VSX au lieu du Marketplace de Microsoft.",
+        },
+      },
+      {
+        heading: "Git ne montre pas les suppressions, alors CHANGES.md le fait",
+        body: [
+          "J'ai importé l'arbre amont en un seul instantané écrasé au lieu de le forker sur GitHub. C'était une erreur dans la mise en place du dépôt, et une réinitialisation ultérieure de l'historique l'a aggravée : le premier commit contient déjà les suppressions, donc git log n'en montre aucune.",
+          "CHANGES.md compense. Le fichier nomme le commit amont exact, 93cfdd48 de la version 1.125.0, liste chaque suppression avec ses nombres de fichiers et de lignes, et contient un court script qui compare le package.json d'ici avec celui de l'amont. Il indique six SDK d'IA retirés et rien de remis. Pour le reste, on peut cloner l'amont à ce commit et comparer les deux arbres.",
+          "L'arbre amont est marqué linguist-vendored, pour que le code de Microsoft reste hors des statistiques de langage du dépôt.",
+        ],
+      },
+      {
+        heading: "Toutes les plateformes sortent d'une seule release",
+        body: [
+          "Le workflow de release construit Remnants pour Windows, macOS et Linux, en x64 et en arm64, et publie tous les fichiers dans une seule release GitHub, avec un fichier de sommes de contrôle et une attestation de provenance signée par fichier. Chaque fichier est installé et lancé par le workflow qui le construit, y compris l'installateur Windows arm64 sur du vrai matériel ARM et les paquets deb et rpm dans des conteneurs Debian et Fedora.",
+          "Pour en arriver là, il a fallu corriger des scripts de build amont déjà cassés, qui n'échouaient qu'une fois exposés par une dépendance plus récente, comme des callbacks gulp-rename qui renvoyaient implicitement le chemin qu'ils venaient d'assigner.",
+          "Remnants n'est signé sur aucune plateforme, donc chacune demande de confirmer le premier lancement une fois. Il ne se met pas à jour tout seul et ne contacte rien pour vérifier. Les nouvelles versions paraissent sur la page des releases.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Je sais travailler dans une base de code de la taille de VS Code et la façonner exprès.",
-      "Retirer de la complexité m'est aussi naturel qu'en ajouter, et c'est la moitié la plus difficile.",
-      "Je porte toute la chaîne native, des changements de source à l'installateur Windows fini.",
-      "Je documente la provenance. CHANGES.md dit ce qui est à moi, ce qui est à Microsoft, et là où j'ai mal monté le dépôt.",
-    ],
-    nextIterations: [
-      "Signer les installateurs, pour que SmartScreen et Gatekeeper cessent de les fixer.",
-      "Des outils pour le rebase amont, pour que maintenir le fork à jour soit moins manuel.",
-      "Recréer le dépôt en vrai fork, pour que l'historique git soit celui de Microsoft là où il doit l'être.",
-    ],
+    captions: ["L'icône de Remnants, un éclat bleu à facettes, sur un fond lilas pâle."],
     tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
-    impactHeading: "À quoi sert ce projet",
-    impactPoints: [
-      "Donne aux développeurs l'éditeur qu'ils connaissent déjà, sans l'encombrement d'IA, la télémétrie ni les invites de connexion.",
-      "Ici, la vraie confidentialité voulait dire retirer les surfaces à la source.",
-      "Montre la discipline qu'il faut pour maintenir en vie un fork sérieux d'un grand projet open source.",
-    ],
     stats: [
       { value: "759k", label: "lignes retirées" },
       { value: "0", label: "télémétrie" },
@@ -221,64 +181,51 @@ export const remnants: Record<Language, LocalizedContent> = {
   zh: {
     tagline: "VS Code，减去会跟你搭话的那些部分。",
     description:
-      "Remnants 是一个原生 Windows 编辑器：我自己的 Code - OSS 构建版本，剔掉了 Copilot、聊天面板、智能体、遥测和登录，而编辑器、终端、Git 和调试器完整保留。",
+      "Remnants 是一个适用于 Windows、macOS 和 Linux 的代码编辑器：我自己的 Code - OSS 构建版本，剔掉了 Copilot、聊天面板、智能体、遥测和登录，而编辑器、终端、Git 和调试器完整保留。",
     overview:
-      "我喜欢 VS Code。我不喜欢聊天面板、智能体窗口、账号提示，也不喜欢任何悄悄把我的按键往上报的东西。于是我拿开源内核 Code - OSS，把每一处 AI 界面、每个遥测钩子和每一次登录催促都拆掉，同时不动那些真正要紧的部分：快速编辑、IntelliSense、集成终端、版本控制，以及 JavaScript/Node 调试器。扩展改走 Open VSX。交付形式是一个按用户安装的 Windows 安装包 RemnantsUserSetup.exe。整个改动在上游 1.125.0 之上大约是删掉 759,000 行、加上 2,800 行，CHANGES.md 把它们全列了出来，因为这里几乎所有代码都是微软的，这一点应该很容易核对。",
+      "我喜欢 VS Code。我不喜欢聊天面板、智能体窗口、账号提示，也不喜欢悄悄往上报使用数据的遥测。于是我拿开源内核 Code - OSS，把每一处 AI 界面、每个遥测钩子和每一次登录催促都拆掉，同时不动那些真正要紧的部分：快速编辑、IntelliSense、集成终端、版本控制，以及 JavaScript/Node 调试器。扩展改走 Open VSX。它发布 Windows、macOS 和 Linux 三个平台的版本。整个改动在上游 1.125.0 之上大约是删掉 759,000 行、加上 2,800 行，CHANGES.md 把它们全列了出来，因为这里几乎所有代码都是微软的，这一点应该很容易核对。",
     roleSummary: "只有我：那些删减、构建、安装包，以及那份 CHANGES 文件。",
-    problemStatement:
-      "VS Code 是一个很好的编辑器，只是被一层越来越厚的云服务、聊天面板、智能体窗口和账号提示包住了，而这些谁也没要过。Remnants 把那一层整个拿掉，剩下的就是编辑器。",
-    objectives: [
-      "移除每一处内置 AI 界面（Copilot、聊天、智能体、语音），同时不弄坏底下的编辑器。",
-      "在产品层关掉遥测和崩溃上报，不留登录，也不留账号提示。",
-      "让扩展改走 Open VSX，这样没有微软商店编辑器也照样能用。",
-      "把每一处改动都写下来，让我的贡献可以被核查，而不是被相信。",
-    ],
-    architectureDecisions: [
-      "在 Code - OSS 的分层架构里干活（base、platform、editor、workbench、Electron main）。重写一个编辑器从来不是目的。",
-      "在产品层和 contribution 层就把 AI 和遥测切掉，让这些界面根本不注册，而不是藏在某个设置背后等着。",
-      "把扩展市场指向 Open VSX，把对微软商店的依赖替换掉，而不是只把它关掉。",
-      "上游代码树保持 linguist-vendored 标记，让仓库的语言统计量的是我的代码，不是微软的。",
-    ],
-    implementationHighlights: [
-      "一个无 AI 的构建：Copilot、聊天面板、智能体会话、语音，以及随包的 AI 扩展，全都没了。",
-      "遥测在产品层被禁用，标题栏和状态栏里也不再留下任何账号提示。",
-      "通过 Code - OSS 的 gulp 工具链做可复现的 Windows 打包，产出按用户安装的 RemnantsUserSetup.exe。",
-      "在同一个基线版本之上 18 个提交，所以拿上游 1.125.0 做一次 diff，就能看清我到底做了什么。",
-    ],
-    qualityAndSecurity: [
-      "遥测、崩溃上报和登录都没了。没有什么会往家里打电话，因为电话本身就不在。",
-      "上游那套 TypeScript 类型检查在 CI 里跑遍源码，和原项目用的是同一套。",
-      "安装包未签名，按用户安装（不需要管理员权限），文档里把这点写清楚了，也附上了 SmartScreen 的说明。",
-      "上游的 MIT 许可和第三方声明都保留着，CHANGES.md 也坦白说这个仓库是一次压缩导入，而不是真正的 git fork。",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "AI 和遥测在编辑器里织得很深。把它们抽出来又不动摇其余部分，这才是难的地方。",
-        solution: "我在产品层和 contribution 层把这些界面切断，让它们根本不注册，同时编辑器、终端、Git 和调试器的路径一处未动。",
+        heading: "删掉 2,761 个文件，编辑器照常能用",
+        body: [
+          "最大的一刀是 AI 本身：聊天、智能体会话、Copilot、MCP 和语言模型 API，一共 2,761 个文件，约 712,000 行。随包的 AI 扩展也一起删了。",
+          "这还没完。AI 代码在整个 workbench 里到处注册，所以后面又删了 143 个文件里残留的注册、contribution 和设置，还有智能体欢迎页、Copilot 设置流程，以及 Git、终端、编辑器和搜索代码里的零星痕迹。编辑器、IntelliSense、终端、版本控制和 JavaScript/Node 调试器都原样保留。",
+          "有一处残留连安装都搞坏了。上游的 postinstall 步骤会为一个 AI 智能体工具链创建符号链接，工具链删掉之后，npm install 就失败了。修好它也是删除工作的一部分。",
+        ],
       },
       {
-        challenge: "Code - OSS 体量巨大，走得也快。个人 fork 一眨眼就旧了。",
-        solution: "我在分层架构和上游构建工具链上守规矩，让我的改动保持独立，fork 也保持可合并。",
+        heading: "遥测和扩展市场写在 product.json 里",
+        body: [
+          "遥测在产品层被关掉，标题栏和状态栏里的登录入口也没了，所以没有任何地方让你去建账号。",
+          "Code - OSS 的许可不涵盖微软的扩展商店，所以扩展库改指向 Open VSX。这两个决定就是同一个文件里的几行。",
+        ],
+        code: {
+          language: "json",
+          text: PRODUCT_JSON,
+          caption:
+            "摘自 product.json。第一行在整个产品层关掉遥测，gallery 这一段把每次扩展查询都发到 Open VSX，而不是微软的扩展商店。",
+        },
+      },
+      {
+        heading: "Git 看不到这些删除，所以由 CHANGES.md 来交代",
+        body: [
+          "我把上游代码树当成一个压缩快照导入，而没有在 GitHub 上 fork。这是我建仓库时犯的错，后来一次历史重置又让它更糟：第一个提交里删除已经做完了，所以 git log 一处也看不到。",
+          "CHANGES.md 把这一点补上。它写明了确切的上游提交，即 1.125.0 版本的 93cfdd48，列出每一项删除的文件数和行数，还附了一段小脚本，把这里的 package.json 和上游的做对比。结果是删掉了六个 AI SDK，没有加回任何东西。其余部分，可以在那个提交上克隆上游，再对比两棵树。",
+          "上游代码树标记为 linguist-vendored，这样微软的代码不会算进仓库的语言统计。",
+        ],
+      },
+      {
+        heading: "所有平台都出自同一个 release",
+        body: [
+          "发布工作流为 Windows、macOS 和 Linux 构建 Remnants，x64 和 arm64 都有，所有文件发布在同一个 GitHub release 里，附一个校验和文件，每个文件还有一份签名的来源证明。每个文件都由构建它的工作流实际安装并运行一遍，包括在真实 ARM 硬件上跑 arm64 的 Windows 安装包，以及在 Debian 和 Fedora 容器里装 deb 和 rpm 包。",
+          "为此我修了几处上游构建脚本，它们本来就有问题，只是换上更新的依赖后才暴露出来，比如 gulp-rename 的回调会隐式返回刚赋值的路径。",
+          "Remnants 在任何平台上都没有代码签名，所以每个平台首次启动时都要确认一次。它不会自动更新，也不会联网去检查。新版本只在 releases 页面发布。",
+        ],
       },
     ],
-    hiringSignals: [
-      "我能在 VS Code 这种量级的代码库里干活，并且是有意地去改它。",
-      "删掉复杂度和加上复杂度，我都做得来，而前者是更难的那一半。",
-      "整条原生流水线由我负责，从源码改动一直到做好的 Windows 安装包。",
-      "我会把来源写清楚。CHANGES.md 说明了哪部分是我的、哪部分是微软的，以及仓库我是怎么建错的。",
-    ],
-    nextIterations: [
-      "给安装包做代码签名，让 SmartScreen 和 Gatekeeper 别再瞪着它们。",
-      "为上游 rebase 做点工具，让跟上上游不至于全靠手工。",
-      "把仓库按真正的 fork 重新建一次，让 git 历史该属于微软的地方就属于微软。",
-    ],
+    captions: ["Remnants 的图标：一块多面的蓝色碎片，背景是浅淡的丁香紫。"],
     tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
-    impactHeading: "这个项目有什么用",
-    impactPoints: [
-      "把开发者已经熟悉的编辑器给他们，只是没有 AI 的杂物、遥测和登录提示。",
-      "在这里，真正的隐私意味着从源头把这些界面移除。",
-      "展示要养住一个大型开源项目的正经 fork，需要多少纪律。",
-    ],
     stats: [
       { value: "759k", label: "删除的行数" },
       { value: "0", label: "遥测" },

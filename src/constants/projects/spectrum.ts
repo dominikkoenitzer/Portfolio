@@ -1,6 +1,21 @@
 import type { Language } from "@/config/languages";
 import type { LocalizedContent } from "./types";
 
+const CONTRAST_TESTS = `  it('puts #767676 on white just over the AA boundary', () => {
+    const r = checkContrast('#767676', '#ffffff');
+    expect(r.ratio).toBeCloseTo(4.54, 1);
+    expect(r.aa.normalText).toBe(true);
+    expect(r.aaa.normalText).toBe(false);
+    expect(r.score).toBe('AA');
+  });
+
+  it('puts #595959 on white at the AAA boundary', () => {
+    const r = checkContrast('#595959', '#ffffff');
+    expect(r.ratio).toBeCloseTo(7.0, 1);
+    expect(r.aaa.normalText).toBe(true);
+    expect(r.score).toBe('AAA');
+  });`;
+
 export const spectrum: Record<Language, LocalizedContent> = {
   en: {
     tagline: "Seven color tools that finally live under one roof, and none of them phone home.",
@@ -9,59 +24,54 @@ export const spectrum: Record<Language, LocalizedContent> = {
     overview:
       "Picking a color should not mean keeping five browser tabs open, each doing one trick and none of them talking to each other. Spectrum puts sampling, generating, gradients, contrast, color-vision simulation, a browsable color library and a theory page on seven routes of one Next.js app. Every pixel is read through the Canvas API on your own machine, and the conversions run through colord in a lib folder that has never heard of React. There is no backend at all, so it deploys as static files and your images stay where they are.",
     roleSummary: "Just me: the UX, the Next.js build, and the color math.",
-    problemStatement:
-      "Designers and developers end up stitching together a pile of single-purpose color tools that never share state, and the contrast checker is usually the tab you forget to open. Spectrum keeps all of it in one place and puts the accessibility checks one click from the color you are picking.",
-    objectives: [
-      "Sample exact colors from any image, pixel by pixel, entirely in the browser.",
-      "Fold gradients, palettes, WCAG contrast and color-vision simulation into one app.",
-      "Make the accessibility check part of picking a color, not a separate detour.",
-    ],
-    architectureDecisions: [
-      "Next.js and TypeScript with one route per tool, so each stays focused and loads on its own.",
-      "The color logic lives in a framework-agnostic lib built on colord, kept well clear of the React components.",
-      "Fully client-side through the Canvas API. With no backend, images never leave the machine and the whole thing deploys as static files.",
-    ],
-    implementationHighlights: [
-      "Pixel-accurate sampling from dropped or pasted images, with the picked-color history kept in localStorage.",
-      "Multi-stop gradient composition and palette generation that hand you copy-ready CSS.",
-      "WCAG contrast checks and color-vision-deficiency simulation, so a design can be put through the accessibility tests while it is still being made.",
-      "A browsable library of named colors, palettes and brand colors, plus a theory page for the harmonies.",
-    ],
-    qualityAndSecurity: [
-      "Images are processed on-device through Canvas and never uploaded. There is no upload button to misuse.",
-      "TypeScript in strict mode, with the color math isolated in a testable library and 23 test cases over it.",
-      "CI installs, type-checks and builds on every push and pull request.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Seven distinct color tools in one app is a grab-bag waiting to happen.",
-        solution:
-          "A neutral gallery-frame design where the only saturated color on screen is the one you are working with, and one focused route per tool.",
+        heading: "What happens to a picture you drop in",
+        body: [
+          "A dropped, pasted or chosen file is drawn onto a canvas inside the tab, and every click reads one pixel back with getImageData. Anything wider or taller than 4000 pixels is scaled down first so the canvas stays manageable, and anything over 16384 is refused with an error message.",
+          "The URL tab is the one place a picture comes from somewhere else, and even then the browser fetches it directly. If the server does not allow cross-origin reads, Spectrum says so. There is no proxy to get around that, since a proxy would be a server.",
+          "The last 24 picked colors stay in localStorage. Where the browser has the EyeDropper API, a second button samples any pixel on the screen, not only inside the page. In Safari and Firefox that button is simply not rendered.",
+        ],
       },
       {
-        challenge:
-          "Reading exact pixel colors from arbitrary images, fast, and entirely in the browser.",
-        solution:
-          "The Canvas API for client-side pixel sampling, with the conversions handed off to colord in the shared lib.",
+        heading: "Grey chrome, so the color is the only color",
+        body: [
+          "A color tool whose interface has colors of its own makes every swatch harder to judge, so I took color out of the interface. The page is a greige paper tone, #e8e6e2, text and buttons are near-black ink, and the only saturated thing on screen is the color being worked on: a swatch, a palette, a gradient preview.",
+          "The rules live as tokens in one stylesheet, Tailwind v4's @theme, and every component uses the semantic names instead of raw greys. Buttons are solid ink, headings stay plain, and the app has a single light theme.",
+        ],
+        figure: 3,
+      },
+      {
+        heading: "A contrast checker that passes its own check",
+        body: [
+          "The contrast checker is the first thing anyone will point at a color tool's own interface. So the three greys used for text, and the green and red that mark pass and fail, are tuned to clear 4.5:1 on every surface they sit on, and the green and red also clear it on their own pale tint.",
+          "The ratio itself comes from colord's a11y plugin. The thresholds are mine to get right: 4.5 and 3 for AA, 7 and 4.5 for AAA. The tests pin them to WCAG reference pairs, check that swapping foreground and background never changes the ratio, and check that no level is reported that its ratio did not earn.",
+        ],
+        figure: 2,
+        code: {
+          language: "typescript",
+          text: CONTRAST_TESTS,
+          caption:
+            "From src/lib/color.test.ts. Two greys that sit right on the AA and AAA lines against white, so a rounding change or a shifted threshold fails here before anyone sees it on the page.",
+        },
+      },
+      {
+        heading: "Hue 200 used to be two colors",
+        body: [
+          "There used to be three separate tables of hue names, and they disagreed: hue 200 was Blue in one tool and Cyan in another. Now there is one table in the color library, with nine names around the wheel, and every tool that names a hue reads from it.",
+          "A test walks all 360 degrees and counts the name changes. There have to be exactly nine, because red owns both ends of the wheel, so a second table creeping back in fails CI.",
+          "The vision simulator lives in the same folder: eight kinds of color blindness, each a 3x3 matrix run over every pixel of the image. Its tests check that greys pass through almost untouched and that complete color blindness collapses to a true grey. The library has 23 tests in all.",
+        ],
+        figure: 1,
       },
     ],
-    hiringSignals: [
-      "Accessibility shipped as an actual feature: WCAG contrast and color-vision simulation sit next to the picker.",
-      "Domain logic kept out of the UI: the color math is framework-agnostic and tested on its own.",
-      "I took a live product from the first route to the seventh without the codebase turning into a pile.",
-    ],
-    nextIterations: [
-      "Export palettes and gradients in more formats: design tokens, SVG, code snippets.",
-      "Saved projects and shareable links for a color set.",
+    captions: [
+      "The picker's front page: a sample image with five points sampled, each listed with its hex code and a name, next to the drop zone and the screen eyedropper.",
+      "The generator with #2596be entered, showing its HEX, RGB, HSL and CMYK values and placing it as a cool blue at 196 degrees on the hue bar.",
+      "The contrast checker at black on white: 21.00:1, rated AAA, with a live preview of text and buttons in that pair.",
+      "The gradient maker with a two-stop linear gradient at 90 degrees, presets beside it and the CSS ready to copy.",
     ],
     tags: ["Next.js", "TypeScript", "Color", "Accessibility"],
-    impactHeading: "What This Project Is Good For",
-    impactPoints: [
-      "Replaces a handful of single-purpose color tools with one fast, cohesive toolkit.",
-      "Makes the accessible color choice the easy one, by keeping the WCAG and color-vision checks in reach.",
-      "Keeps images private, because every bit of processing happens in the browser.",
-    ],
     stats: [
       { value: "7", label: "tools, one app" },
       { value: "100%", label: "client-side" },
@@ -76,59 +86,54 @@ export const spectrum: Record<Language, LocalizedContent> = {
     overview:
       "Eine Farbe zu wählen sollte nicht bedeuten, fünf Browser-Tabs offen zu halten, von denen jeder einen Trick kann und keiner mit dem anderen redet. Spectrum legt Sampling, Generieren, Gradienten, Kontrast, Farbsehsimulation, eine durchstöberbare Farbbibliothek und eine Theorieseite auf sieben Routen einer Next.js-App. Jeder Pixel wird über die Canvas-API auf dem eigenen Rechner gelesen, und die Umrechnungen laufen über colord in einem Lib-Ordner, der noch nie von React gehört hat. Es gibt überhaupt kein Backend, also deployt das Ganze als statische Dateien und die Bilder bleiben, wo sie sind.",
     roleSummary: "Nur ich: die UX, der Next.js-Build und die Farbmathematik.",
-    problemStatement:
-      "Designer und Entwickler flicken sich am Ende einen Haufen Einzweck-Farbwerkzeuge zusammen, die nie denselben State teilen, und der Kontrast-Checker ist meist der Tab, den man vergisst. Spectrum hält alles an einem Ort und legt die Accessibility-Prüfung einen Klick neben die Farbe, die man gerade wählt.",
-    objectives: [
-      "Exakte Farben aus jedem Bild ziehen, Pixel für Pixel, vollständig im Browser.",
-      "Gradienten, Paletten, WCAG-Kontrast und Farbsehsimulation in einer App zusammenfassen.",
-      "Die Accessibility-Prüfung zum Teil der Farbwahl machen, nicht zu einem Umweg.",
-    ],
-    architectureDecisions: [
-      "Next.js und TypeScript mit einer Route pro Werkzeug, damit jedes fokussiert bleibt und für sich lädt.",
-      "Die Farblogik liegt in einer framework-agnostischen Lib auf Basis von colord, klar getrennt von den React-Komponenten.",
-      "Vollständig clientseitig über die Canvas-API. Ohne Backend verlassen Bilder den Rechner nie, und das Ganze deployt als statische Dateien.",
-    ],
-    implementationHighlights: [
-      "Pixelgenaues Sampling aus per Drop oder Paste eingefügten Bildern, mit der Farbhistorie im localStorage.",
-      "Mehrstufige Gradienten-Komposition und Palettengenerierung, die fertiges CSS zum Kopieren ausgeben.",
-      "WCAG-Kontrastprüfungen und Simulation von Farbfehlsichtigkeiten, damit ein Design die Accessibility-Tests schon während der Entstehung durchläuft.",
-      "Eine durchstöberbare Bibliothek benannter Farben, Paletten und Markenfarben, dazu eine Theorieseite für die Harmonien.",
-    ],
-    qualityAndSecurity: [
-      "Bilder werden per Canvas auf dem Gerät verarbeitet und nie hochgeladen. Es gibt keinen Upload-Button, den man missbrauchen könnte.",
-      "TypeScript im Strict Mode, die Farbmathematik in einer testbaren Library isoliert, mit 23 Testfällen darüber.",
-      "Die CI installiert, typprüft und baut bei jedem Push und Pull Request.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Sieben verschiedene Farbwerkzeuge in einer App sind eine Wundertüte, die nur darauf wartet zu passieren.",
-        solution:
-          "Ein neutrales Galerierahmen-Design, in dem die einzige gesättigte Farbe auf dem Schirm die ist, mit der man arbeitet, plus eine fokussierte Route pro Werkzeug.",
+        heading: "Was mit einem Bild passiert, das man hineinzieht",
+        body: [
+          "Eine hineingezogene, eingefügte oder ausgewählte Datei wird im Tab auf ein Canvas gezeichnet, und jeder Klick liest mit getImageData genau einen Pixel zurück. Was breiter oder höher als 4000 Pixel ist, wird vorher verkleinert, damit das Canvas handlich bleibt, und alles über 16384 Pixel wird mit einer Fehlermeldung abgelehnt.",
+          "Der URL-Tab ist die einzige Stelle, an der ein Bild von anderswo kommt, und auch dann lädt der Browser es direkt. Erlaubt der Server keine Cross-Origin-Zugriffe, sagt Spectrum das. Einen Proxy, der das umgeht, gibt es nicht, denn ein Proxy wäre ein Server.",
+          "Die letzten 24 gewählten Farben bleiben im localStorage. Wo der Browser die EyeDropper-API kennt, nimmt ein zweiter Button jeden Pixel auf dem Bildschirm auf, nicht nur auf der Seite. In Safari und Firefox wird dieser Button gar nicht erst gerendert.",
+        ],
       },
       {
-        challenge:
-          "Exakte Pixelfarben aus beliebigen Bildern lesen, schnell und vollständig im Browser.",
-        solution:
-          "Die Canvas-API für clientseitiges Pixel-Sampling, die Umrechnungen an colord in der gemeinsamen Lib übergeben.",
+        heading: "Graue Oberfläche, damit die Farbe die einzige Farbe ist",
+        body: [
+          "Hat die Oberfläche eines Farbwerkzeugs eigene Farben, lässt sich jedes Farbmuster schlechter beurteilen, also habe ich die Farbe aus der Oberfläche genommen. Die Seite hat einen greigen Papierton, #e8e6e2, Text und Buttons sind fast schwarze Tinte, und das einzige gesättigte Element auf dem Schirm ist die Farbe, an der man gerade arbeitet: ein Farbfeld, eine Palette, eine Gradientenvorschau.",
+          "Die Regeln stehen als Tokens in einem einzigen Stylesheet, im @theme von Tailwind v4, und jede Komponente nutzt die semantischen Namen statt roher Grautöne. Buttons sind voll in Tinte gefüllt, Überschriften bleiben schlicht, und die App hat genau ein helles Theme.",
+        ],
+        figure: 3,
+      },
+      {
+        heading: "Ein Kontrast-Checker, der seine eigene Prüfung besteht",
+        body: [
+          "Bei einem Farbwerkzeug richtet man den Kontrast-Checker zuerst auf dessen eigene Oberfläche. Deshalb sind die drei Grautöne für Text und das Grün und Rot für bestanden und durchgefallen so abgestimmt, dass sie auf jeder Fläche, auf der sie stehen, 4,5:1 schaffen. Grün und Rot schaffen es auch auf ihrer eigenen blassen Tönung.",
+          "Das Verhältnis selbst liefert das a11y-Plugin von colord. Die Schwellen muss ich richtig setzen: 4,5 und 3 für AA, 7 und 4,5 für AAA. Die Tests nageln sie an WCAG-Referenzpaaren fest, prüfen, dass das Vertauschen von Vorder- und Hintergrund das Verhältnis nie ändert, und dass keine Stufe gemeldet wird, die das Verhältnis nicht hergibt.",
+        ],
+        figure: 2,
+        code: {
+          language: "typescript",
+          text: CONTRAST_TESTS,
+          caption:
+            "Aus src/lib/color.test.ts. Zwei Grautöne, die auf Weiss genau an der AA- und an der AAA-Grenze liegen, damit eine geänderte Rundung oder eine verschobene Schwelle hier auffällt, bevor sie jemand auf der Seite sieht.",
+        },
+      },
+      {
+        heading: "Farbton 200 war einmal zwei Farben",
+        body: [
+          "Früher gab es drei getrennte Tabellen mit Farbtonnamen, und sie waren sich nicht einig: Farbton 200 hiess im einen Werkzeug Blue, im anderen Cyan. Jetzt gibt es eine Tabelle in der Farbbibliothek, mit neun Namen rund um den Farbkreis, und jedes Werkzeug, das einen Farbton benennt, liest aus ihr.",
+          "Ein Test läuft alle 360 Grad ab und zählt die Namenswechsel. Es müssen genau neun sein, weil Rot beide Enden des Kreises besetzt, und eine zweite Tabelle, die sich wieder einschleicht, lässt die CI scheitern.",
+          "Der Farbsehsimulator liegt im selben Ordner: acht Arten von Farbenblindheit, jede eine 3x3-Matrix, die über jeden Pixel des Bildes läuft. Seine Tests prüfen, dass Grautöne fast unverändert durchgehen und dass vollständige Farbenblindheit zu einem echten Grau zusammenfällt. Insgesamt hat die Bibliothek 23 Tests.",
+        ],
+        figure: 1,
       },
     ],
-    hiringSignals: [
-      "Accessibility als echtes Feature ausgeliefert: WCAG-Kontrast und Farbsehsimulation stehen direkt neben dem Picker.",
-      "Domänenlogik bleibt aus dem UI: die Farbmathematik ist framework-agnostisch und für sich getestet.",
-      "Ich habe ein Live-Produkt von der ersten bis zur siebten Route gebracht, ohne dass der Code zum Haufen wurde.",
-    ],
-    nextIterations: [
-      "Paletten und Gradienten in mehr Formaten exportieren: Design Tokens, SVG, Code-Snippets.",
-      "Gespeicherte Projekte und teilbare Links für ein Farbset.",
+    captions: [
+      "Die Startseite des Pickers: ein Beispielbild mit fünf aufgenommenen Punkten, jeder mit Hex-Code und Namen aufgelistet, neben der Drop-Zone und der Bildschirm-Pipette.",
+      "Der Generator mit #2596be: die Werte in HEX, RGB, HSL und CMYK, eingeordnet als kühles Blau bei 196 Grad auf dem Farbtonbalken.",
+      "Der Kontrast-Checker bei Schwarz auf Weiss: 21.00:1, bewertet mit AAA, dazu eine Live-Vorschau von Text und Buttons in diesem Paar.",
+      "Der Gradient-Maker mit einem linearen Verlauf aus zwei Stopps bei 90 Grad, daneben Presets und das CSS zum Kopieren.",
     ],
     tags: ["Next.js", "TypeScript", "Color", "Accessibility"],
-    impactHeading: "Wofür dieses Projekt gut ist",
-    impactPoints: [
-      "Ersetzt eine Handvoll Einzweck-Farbwerkzeuge durch ein schnelles, zusammenhängendes Toolkit.",
-      "Macht die zugängliche Farbwahl zur einfachen, weil WCAG- und Farbsehprüfung in Reichweite bleiben.",
-      "Hält Bilder privat, weil jede Verarbeitung im Browser passiert.",
-    ],
     stats: [
       { value: "7", label: "Tools, eine App" },
       { value: "100%", label: "im Browser" },
@@ -143,59 +148,54 @@ export const spectrum: Record<Language, LocalizedContent> = {
     overview:
       "Choisir une couleur ne devrait pas obliger à garder cinq onglets ouverts, chacun sachant faire un tour et aucun ne parlant aux autres. Spectrum met le prélèvement, la génération, les dégradés, le contraste, la simulation de vision des couleurs, une bibliothèque de couleurs à parcourir et une page de théorie sur sept routes d'une même app Next.js. Chaque pixel est lu via l'API Canvas sur votre propre machine, et les conversions passent par colord dans un dossier lib qui n'a jamais entendu parler de React. Il n'y a aucun backend, donc tout se déploie en fichiers statiques et vos images restent où elles sont.",
     roleSummary: "Moi seul : l'UX, le build Next.js et les maths de la couleur.",
-    problemStatement:
-      "Designers et développeurs finissent par recoudre une pile d'outils couleur mono-usage qui ne partagent jamais d'état, et le vérificateur de contraste est en général l'onglet qu'on oublie d'ouvrir. Spectrum garde tout au même endroit et place le contrôle d'accessibilité à un clic de la couleur qu'on est en train de choisir.",
-    objectives: [
-      "Prélever des couleurs exactes dans n'importe quelle image, pixel par pixel, entièrement dans le navigateur.",
-      "Réunir dégradés, palettes, contraste WCAG et simulation de vision des couleurs dans une seule app.",
-      "Faire du contrôle d'accessibilité une partie du choix de la couleur, pas un détour séparé.",
-    ],
-    architectureDecisions: [
-      "Next.js et TypeScript avec une route par outil, pour que chacun reste ciblé et se charge de son côté.",
-      "La logique couleur vit dans une lib indépendante du framework, bâtie sur colord, bien à l'écart des composants React.",
-      "Entièrement côté client via l'API Canvas. Sans backend, les images ne quittent jamais la machine et le tout se déploie en fichiers statiques.",
-    ],
-    implementationHighlights: [
-      "Un prélèvement au pixel près depuis des images déposées ou collées, avec l'historique des couleurs gardé dans localStorage.",
-      "Composition de dégradés multi-arrêts et génération de palettes qui vous rendent du CSS prêt à copier.",
-      "Contrôles de contraste WCAG et simulation des déficiences de vision des couleurs, pour qu'un design passe les tests d'accessibilité pendant qu'on le fabrique encore.",
-      "Une bibliothèque de couleurs nommées, de palettes et de couleurs de marque à parcourir, plus une page de théorie pour les harmonies.",
-    ],
-    qualityAndSecurity: [
-      "Les images sont traitées sur l'appareil via Canvas et jamais envoyées. Il n'y a aucun bouton d'upload à détourner.",
-      "TypeScript en mode strict, avec les maths de la couleur isolées dans une bibliothèque testable et 23 cas de test dessus.",
-      "La CI installe, vérifie les types et construit à chaque push et chaque pull request.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Sept outils de couleur distincts dans une seule app, c'est un fourre-tout qui n'attend que d'arriver.",
-        solution:
-          "Un design de cadre de galerie neutre où la seule couleur saturée à l'écran est celle sur laquelle vous travaillez, et une route ciblée par outil.",
+        heading: "Ce que devient une image qu'on dépose",
+        body: [
+          "Un fichier déposé, collé ou choisi est dessiné sur un canvas dans l'onglet, et chaque clic relit un seul pixel avec getImageData. Au-delà de 4000 pixels de large ou de haut, l'image est d'abord réduite pour que le canvas reste maniable, et au-delà de 16384 elle est refusée avec un message d'erreur.",
+          "L'onglet URL est le seul endroit où une image vient d'ailleurs, et même là, c'est le navigateur qui la récupère directement. Si le serveur n'autorise pas la lecture cross-origin, Spectrum le dit. Il n'y a pas de proxy pour contourner ça, puisqu'un proxy serait un serveur.",
+          "Les 24 dernières couleurs prélevées restent dans localStorage. Quand le navigateur connaît l'API EyeDropper, un second bouton prélève n'importe quel pixel de l'écran, pas seulement de la page. Dans Safari et Firefox, ce bouton n'est tout simplement pas affiché.",
+        ],
       },
       {
-        challenge:
-          "Lire les couleurs exactes des pixels d'images quelconques, vite, et entièrement dans le navigateur.",
-        solution:
-          "L'API Canvas pour l'échantillonnage de pixels côté client, les conversions confiées à colord dans la lib partagée.",
+        heading: "Une interface grise, pour que la couleur soit la seule couleur",
+        body: [
+          "Quand l'interface d'un outil de couleur a ses propres couleurs, chaque échantillon devient plus difficile à juger, alors j'ai retiré la couleur de l'interface. La page est d'un ton papier grège, #e8e6e2, le texte et les boutons sont d'une encre presque noire, et la seule chose saturée à l'écran est la couleur sur laquelle on travaille : un échantillon, une palette, l'aperçu d'un dégradé.",
+          "Les règles sont des tokens dans une seule feuille de style, le @theme de Tailwind v4, et chaque composant utilise les noms sémantiques plutôt que des gris bruts. Les boutons sont pleins, couleur encre, les titres restent sobres, et l'app n'a qu'un seul thème clair.",
+        ],
+        figure: 3,
+      },
+      {
+        heading: "Un vérificateur de contraste qui passe son propre test",
+        body: [
+          "Face à un outil de couleur, la première chose qu'on fait est de pointer le vérificateur de contraste sur sa propre interface. Les trois gris du texte, ainsi que le vert et le rouge qui marquent réussite et échec, sont donc réglés pour dépasser 4,5:1 sur chaque surface où ils apparaissent, et le vert et le rouge le dépassent aussi sur leur propre teinte pâle.",
+          "Le ratio lui-même vient du plugin a11y de colord. Les seuils, c'est à moi de les poser juste : 4,5 et 3 pour AA, 7 et 4,5 pour AAA. Les tests les fixent sur des paires de référence du WCAG, vérifient qu'inverser premier plan et arrière-plan ne change jamais le ratio, et qu'aucun niveau n'est annoncé sans que le ratio le justifie.",
+        ],
+        figure: 2,
+        code: {
+          language: "typescript",
+          text: CONTRAST_TESTS,
+          caption:
+            "Extrait de src/lib/color.test.ts. Deux gris qui tombent pile sur les seuils AA et AAA sur fond blanc : un arrondi modifié ou un seuil décalé échoue ici avant que quiconque le voie sur la page.",
+        },
+      },
+      {
+        heading: "La teinte 200 était deux couleurs",
+        body: [
+          "Il y avait autrefois trois tables de noms de teintes séparées, et elles ne s'accordaient pas : la teinte 200 était Blue dans un outil et Cyan dans un autre. Il n'y a plus qu'une table, dans la bibliothèque de couleurs, avec neuf noms autour du cercle, et chaque outil qui nomme une teinte la lit.",
+          "Un test parcourt les 360 degrés et compte les changements de nom. Il doit y en avoir exactement neuf, puisque le rouge occupe les deux bouts du cercle ; une deuxième table qui reviendrait en douce fait échouer la CI.",
+          "Le simulateur de vision des couleurs vit dans le même dossier : huit formes de daltonisme, chacune une matrice 3x3 appliquée à chaque pixel de l'image. Ses tests vérifient que les gris passent presque intacts et qu'un daltonisme total ramène tout à un vrai gris. La bibliothèque compte 23 tests en tout.",
+        ],
+        figure: 1,
       },
     ],
-    hiringSignals: [
-      "L'accessibilité livrée comme une vraie fonctionnalité : contraste WCAG et simulation de vision des couleurs se trouvent juste à côté du sélecteur.",
-      "La logique métier tenue hors de l'interface : les maths de la couleur sont indépendantes du framework et testées à part.",
-      "J'ai mené un produit en ligne de la première à la septième route sans que le code se transforme en tas.",
-    ],
-    nextIterations: [
-      "Exporter palettes et dégradés dans plus de formats : design tokens, SVG, extraits de code.",
-      "Des projets sauvegardés et des liens partageables pour un jeu de couleurs.",
+    captions: [
+      "La page d'accueil du sélecteur : une image d'exemple avec cinq points prélevés, chacun listé avec son code hex et un nom, à côté de la zone de dépôt et de la pipette d'écran.",
+      "Le générateur avec #2596be : ses valeurs HEX, RGB, HSL et CMYK, et sa place de bleu froid à 196 degrés sur la barre des teintes.",
+      "Le vérificateur de contraste en noir sur blanc : 21.00:1, noté AAA, avec un aperçu en direct de texte et de boutons dans cette paire.",
+      "Le créateur de dégradés avec un dégradé linéaire à deux arrêts à 90 degrés, les préréglages à côté et le CSS prêt à copier.",
     ],
     tags: ["Next.js", "TypeScript", "Color", "Accessibility"],
-    impactHeading: "À quoi sert ce projet",
-    impactPoints: [
-      "Remplace une poignée d'outils couleur mono-usage par une boîte à outils rapide et cohérente.",
-      "Rend le choix de couleur accessible plus facile, en gardant les contrôles WCAG et vision des couleurs à portée.",
-      "Garde les images privées, puisque tout le traitement se fait dans le navigateur.",
-    ],
     stats: [
       { value: "7", label: "outils, une app" },
       { value: "100%", label: "côté client" },
@@ -210,55 +210,54 @@ export const spectrum: Record<Language, LocalizedContent> = {
     overview:
       "选个颜色，不该逼你开着五个标签页，每个只会一招，彼此还都不说话。Spectrum 把取色、生成、渐变、对比度、色觉模拟、一个可翻阅的颜色库和一页色彩理论，放进同一个 Next.js 应用的七条路由里。每个像素都通过 Canvas API 在你自己的机器上读取，换算则交给 lib 目录里的 colord，那个目录压根不知道 React 的存在。整个项目没有后端，所以它以静态文件部署，你的图片也就留在原处。",
     roleSummary: "只有我：交互、Next.js 构建，以及颜色相关的数学。",
-    problemStatement:
-      "设计师和开发者最后总要把一堆单一用途的颜色工具拼在一起，它们从不共享状态，而对比度检查器往往是你忘了开的那个标签页。Spectrum 把这些都放在一处，让无障碍检查离你正在挑的那个颜色只有一次点击。",
-    objectives: [
-      "从任意图片里逐像素取出准确的颜色，全程在浏览器内完成。",
-      "把渐变、配色、WCAG 对比度和色觉模拟收进同一个应用。",
-      "让无障碍检查成为选色过程的一部分，而不是另跑一趟。",
-    ],
-    architectureDecisions: [
-      "Next.js 加 TypeScript，一个工具一条路由，各自专注、各自加载。",
-      "颜色逻辑放在一个与框架无关、基于 colord 的 lib 里，和 React 组件保持距离。",
-      "通过 Canvas API 完全在客户端处理。没有后端，图片就不会离开机器，整个项目也能以静态文件部署。",
-    ],
-    implementationHighlights: [
-      "对拖入或粘贴的图片做像素级取色，取过的颜色历史存在 localStorage 里。",
-      "多节点渐变的组合与配色生成，直接给你可复制的 CSS。",
-      "WCAG 对比度检查与色觉障碍模拟，让一个设计在还在做的时候就跑完无障碍测试。",
-      "一个可翻阅的命名色、配色与品牌色库，外加一页讲配色和谐的理论。",
-    ],
-    qualityAndSecurity: [
-      "图片通过 Canvas 在设备上处理，从不上传。这里连一个可被滥用的上传按钮都没有。",
-      "TypeScript 严格模式，颜色数学隔离在一个可测试的库里，配 23 个测试用例。",
-      "CI 在每次推送和 PR 上安装依赖、检查类型并构建。",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "七个各不相同的颜色工具塞进一个应用，很容易就变成一个杂物袋。",
-        solution: "用中性的「画廊画框」式设计，屏幕上唯一饱和的颜色就是你正在处理的那一个，再给每个工具一条专注的路由。",
+        heading: "拖进来的图片会经历什么",
+        body: [
+          "拖入、粘贴或选择的文件会被画到当前标签页里的一块 canvas 上，每次点击用 getImageData 读回一个像素。宽或高超过 4000 像素的图片会先缩小，让 canvas 保持可控；超过 16384 像素的直接拒绝，并给出错误提示。",
+          "只有 URL 标签页会从别处拿图片，即便如此也是浏览器直接去取。服务器不允许跨域读取时，Spectrum 会直说。没有用代理绕过去，因为代理本身就是一台服务器。",
+          "最近取过的 24 个颜色保存在 localStorage 里。浏览器支持 EyeDropper API 时，会多出一个按钮，可以取屏幕上任意位置的像素，而不只是页面里的。在 Safari 和 Firefox 里，这个按钮干脆不渲染。",
+        ],
       },
       {
-        challenge: "要从任意图片里读出准确的像素颜色，还要快，还要全在浏览器里。",
-        solution: "用 Canvas API 做客户端像素取样，换算交给共享 lib 里的 colord。",
+        heading: "界面是灰的，颜色才是唯一的颜色",
+        body: [
+          "颜色工具的界面如果自带颜色，每个色块都会更难判断，所以我把颜色从界面里拿掉了。页面是带灰的纸色 #e8e6e2，文字和按钮是接近黑色的墨色，屏幕上唯一饱和的东西就是你正在处理的颜色：一个色块、一组配色、一条渐变预览。",
+          "这些规则以 token 的形式写在同一个样式表里，也就是 Tailwind v4 的 @theme，每个组件都用语义化的名字，不直接用原始灰色。按钮是实心墨色，标题保持朴素，整个应用只有一套浅色主题。",
+        ],
+        figure: 3,
+      },
+      {
+        heading: "对比度检查器得先通过自己的检查",
+        body: [
+          "拿到一个颜色工具，人们往往第一件事就是用它的对比度检查器去测它自己的界面。所以正文用的三种灰，以及表示通过和失败的绿与红，都调到在它们出现的每一种底色上超过 4.5:1，绿和红在自己的浅色底上也一样。",
+          "比值本身由 colord 的 a11y 插件算出，阈值则要我自己设对：AA 是 4.5 和 3，AAA 是 7 和 4.5。测试把它们钉在 WCAG 的参考色对上，检查前景和背景互换后比值不变，也检查不会报出比值够不上的等级。",
+        ],
+        figure: 2,
+        code: {
+          language: "typescript",
+          text: CONTRAST_TESTS,
+          caption:
+            "摘自 src/lib/color.test.ts。这两种灰在白底上正好落在 AA 和 AAA 的分界线上，舍入方式变了或阈值偏了，会先在这里失败，而不是被人在页面上看到。",
+        },
+      },
+      {
+        heading: "色相 200 曾经是两种颜色",
+        body: [
+          "以前有三张各自独立的色相名称表，而且彼此对不上：色相 200 在一个工具里叫 Blue，在另一个里叫 Cyan。现在颜色库里只有一张表，色环上九个名字，所有要给色相命名的工具都从这里读。",
+          "有一个测试把 360 度走一遍，数名字变了几次。必须正好九次，因为红色占着色环的两端；如果第二张表又悄悄回来，CI 就会失败。",
+          "色觉模拟器也在同一个目录里：八种色盲，每种都是一个 3x3 矩阵，作用在图片的每个像素上。它的测试检查灰色几乎原样通过，全色盲会把一切变成真正的灰。整个库一共 23 个测试。",
+        ],
+        figure: 1,
       },
     ],
-    hiringSignals: [
-      "无障碍是当成真功能来交付的：WCAG 对比度和色觉模拟就摆在取色器旁边。",
-      "领域逻辑不进界面：颜色数学与框架无关，也单独测过。",
-      "我把一个线上产品从第一条路由做到第七条，代码没有变成一堆。",
-    ],
-    nextIterations: [
-      "把配色和渐变导出成更多格式：设计变量、SVG、代码片段。",
-      "可保存的项目，以及一组配色的可分享链接。",
+    captions: [
+      "取色器首页：一张示例图上取了五个点，每个颜色列出十六进制值和名字，旁边是拖放区和屏幕取色器。",
+      "输入 #2596be 后的生成器：列出它的 HEX、RGB、HSL 和 CMYK 值，并在色相条上把它定位为 196 度的冷蓝色。",
+      "黑字白底下的对比度检查器：21.00:1，评为 AAA，附带这组颜色下文字和按钮的实时预览。",
+      "渐变生成器：一条 90 度的双节点线性渐变，旁边是预设，CSS 可以直接复制。",
     ],
     tags: ["Next.js", "TypeScript", "Color", "Accessibility"],
-    impactHeading: "这个项目有什么用",
-    impactPoints: [
-      "用一套快而连贯的工具箱，替掉几个单一用途的颜色工具。",
-      "把 WCAG 和色觉检查留在手边，让无障碍的那个选择成为省事的选择。",
-      "所有处理都在浏览器里完成，图片因此留在本地。",
-    ],
     stats: [
       { value: "7", label: "工具，一个应用" },
       { value: "100%", label: "客户端" },

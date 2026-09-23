@@ -2,12 +2,12 @@ import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Check,
   Download,
   ExternalLink,
   Github,
   Lock,
 } from "lucide-react";
+import { useLenis } from "lenis/react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
@@ -23,10 +23,12 @@ import {
 import { PrivateSource } from "@/components/sections/PrivateSource";
 import { SITE_CONFIG } from "@/constants";
 import {
+  cardImageSrc,
   getProject,
   getProjects,
   projectCardSrcSet,
 } from "@/constants/projects";
+import type { ProjectSection } from "@/constants/projects/types";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -55,10 +57,12 @@ const HERO_SIZES =
 /* ------------------------------------------------------------------ */
 
 function FeatureSection({
+  id,
   index,
   title,
   children,
 }: {
+  id?: string;
   index: number;
   title: ReactNode;
   children: ReactNode;
@@ -66,6 +70,7 @@ function FeatureSection({
   const reduceMotion = useReducedMotion();
   return (
     <motion.section
+      id={id}
       className="scroll-mt-28 border-border/60 border-t pt-12 first:border-t-0 first:pt-0"
       {...revealOnScroll(reduceMotion)}
     >
@@ -113,29 +118,28 @@ function MicroLabel({
   );
 }
 
-function BulletList({ items }: { items: string[] }) {
+/**
+ * A few lines from the real source, where they show a decision better than a
+ * paragraph would. The body face is forced onto `pre` and `code` site-wide,
+ * so the excerpt names its own face: the system monospace, nothing to load.
+ */
+function CodeExcerpt({
+  code,
+}: {
+  code: NonNullable<ProjectSection["code"]>;
+}) {
+  const reduceMotion = useReducedMotion();
   return (
-    <ul className="list-disc space-y-3 pl-5 text-foreground/90 leading-relaxed marker:text-primary/50">
-      {items.map((item) => (
-        <li key={item}>{item}</li>
-      ))}
-    </ul>
-  );
-}
-
-function CheckList({ items }: { items: string[] }) {
-  return (
-    <ul className="space-y-3">
-      {items.map((item) => (
-        <li
-          className="flex gap-3 text-foreground/90 leading-relaxed"
-          key={item}
-        >
-          <Check aria-hidden className="mt-1 h-4 w-4 shrink-0 text-primary" />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
+    <motion.figure className="m-0" {...revealOnScroll(reduceMotion)}>
+      <pre
+        className={`${CARD} code-excerpt overflow-x-auto p-5 text-[13px] leading-relaxed sm:p-6`}
+      >
+        <code>{code.text}</code>
+      </pre>
+      <figcaption className="mt-3 max-w-prose text-muted-foreground text-sm leading-relaxed">
+        {code.caption}
+      </figcaption>
+    </motion.figure>
   );
 }
 
@@ -153,6 +157,7 @@ const ProjectDetails = () => {
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lenis = useLenis();
 
   if (!project) {
     return <Navigate replace to="/projects" />;
@@ -160,32 +165,57 @@ const ProjectDetails = () => {
 
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
-  const projectTimeline = `${project.dateLabel} – ${t.present}`;
+  const projectTimeline = `${project.dateLabel} – ${project.endLabel ?? t.present}`;
   const otherProjects = getProjects(language).filter(
     (item) => item.slug !== project.slug,
   );
-  // Caption under a screenshot: the host it was taken on. A desktop app points
-  // `liveUrl` at its repo, so it would read "github.com" under a picture of a
-  // Windows window; those get no caption.
-  const shotCaption = project.downloadUrl
-    ? undefined
-    : (() => {
-        try {
-          return new URL(project.liveUrl).host;
-        } catch {
-          return project.title;
-        }
-      })();
+  const captionFor = (position: number) => project.captions[position];
+
+  /* The case study's sections, for the list in the links rail.
+     Ids are positional: a heading is prose and changes with the language. */
+  const outline = [
+    { id: "section-1", heading: t.overview },
+    ...project.sections.map((section, index) => ({
+      id: `section-${index + 2}`,
+      heading: section.heading,
+    })),
+  ];
+  const jumpTo = (id: string) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+    // The destination is worked out here, as a number, and handed to Lenis:
+    // given the element, Lenis measured it against its own animated position
+    // and landed anywhere from short of the section to far past it. The
+    // margin is the section's own `scroll-mt-28`.
+    const margin = Number.parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+    const top = target.getBoundingClientRect().top + window.scrollY - margin;
+    if (lenis) lenis.scrollTo(top);
+    else window.scrollTo({ top });
+  };
 
   /* Spec-rail rows (year / role / languages / OS), only render what exists. */
   const specRows: Array<{ label: string; value: ReactNode }> = [
     { label: t.timeline, value: projectTimeline },
     { label: t.role, value: project.roleSummary },
   ];
-  if (project.programmingLanguages?.length) {
+  // What the project is built with, each one a way into the other projects
+  // built with the same thing.
+  if (project.stack.length) {
     specRows.push({
-      label: "Stack",
-      value: project.programmingLanguages.join(" · "),
+      label: t.builtWith,
+      value: (
+        <span className="flex flex-wrap gap-x-3 gap-y-1">
+          {project.stack.map((skill) => (
+            <Link
+              className="inline-flex items-center underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary/40"
+              key={skill}
+              to={`/projects?tech=${encodeURIComponent(skill)}`}
+            >
+              {skill}
+            </Link>
+          ))}
+        </span>
+      ),
     });
   }
   if (project.operatingSystem) {
@@ -201,8 +231,6 @@ const ProjectDetails = () => {
     ...(heroShot ? [heroShot] : []),
     ...(project.gallery ?? []),
   ];
-  const shotIndex = (galleryPosition: number) =>
-    galleryPosition + (heroShot ? 1 : 0);
   const shotLabel = (position: number) =>
     t.viewImage
       .replace("{index}", String(position + 1))
@@ -250,7 +278,11 @@ const ProjectDetails = () => {
             },
           },
           createSoftwareSourceCodeSchema(project),
-          createSoftwareApplicationSchema(project),
+          // Only something a visitor can open or install is an application
+          // offer; a project that runs locally is described by its source.
+          ...(project.liveUrl || project.downloadUrl
+            ? [createSoftwareApplicationSchema(project)]
+            : []),
         ]}
         title={getProjectSeoTitle(project.slug, project.title)}
         url={projectUrl}
@@ -328,7 +360,7 @@ const ProjectDetails = () => {
                       {t.download}
                     </a>
                   </Button>
-                ) : (
+                ) : project.liveUrl ? (
                   <Button asChild className="rounded-lg px-6" variant="cta">
                     <a
                       href={project.liveUrl}
@@ -339,7 +371,7 @@ const ProjectDetails = () => {
                       {t.visitSite}
                     </a>
                   </Button>
-                )}
+                ) : null}
                 {project.sourcePrivate ? (
                   <PrivateSource>
                     <Button className="rounded-lg px-5" type="button" variant="soft">
@@ -363,7 +395,7 @@ const ProjectDetails = () => {
 
               {project.downloadUrl ? (
                 <p className="mt-4 max-w-prose text-muted-foreground text-xs leading-relaxed">
-                  {t.downloadNote}
+                  {project.downloadNote ?? t.downloadNote}
                 </p>
               ) : null}
 
@@ -400,8 +432,8 @@ const ProjectDetails = () => {
                 ) : (
                   <ProjectFigure
                     alt={`${project.title} screenshot`}
+                    caption={captionFor(0)}
                     className="w-full max-w-xl"
-                    label={shotCaption}
                     onOpen={() => setLightboxIndex(0)}
                     openLabel={shotLabel(0)}
                     priority
@@ -453,99 +485,50 @@ const ProjectDetails = () => {
           <div className="grid gap-12 pt-8 lg:grid-cols-[1fr_auto] lg:gap-16">
             {/* -------- Reading column -------- */}
             <article className="min-w-0 max-w-3xl space-y-12">
-              <FeatureSection index={1} title={t.overview}>
+              <FeatureSection
+                id="section-1"
+                index={1}
+                title={t.overview}
+              >
                 <p className="text-foreground/90 leading-relaxed">
                   {project.overview}
                 </p>
               </FeatureSection>
 
-              <ProjectFigure
-                alt={shotAlt(shotIndex(0))}
-                label={shotCaption}
-                onOpen={() => setLightboxIndex(shotIndex(0))}
-                openLabel={shotLabel(shotIndex(0))}
-                src={project.gallery?.[0]}
-              />
-
-              <FeatureSection index={2} title={t.problem}>
-                <p className="text-foreground/90 leading-relaxed">
-                  {project.problemStatement}
-                </p>
-              </FeatureSection>
-
-              <FeatureSection index={3} title={t.objectives}>
-                <ol className="list-decimal space-y-3 pl-5 text-foreground/90 leading-relaxed marker:text-muted-foreground">
-                  {project.objectives.map((objective) => (
-                    <li key={objective}>{objective}</li>
-                  ))}
-                </ol>
-              </FeatureSection>
-
-              <FeatureSection index={4} title={t.architecture}>
-                <BulletList items={project.architectureDecisions} />
-              </FeatureSection>
-
-              <FeatureSection index={5} title={t.implementation}>
-                <BulletList items={project.implementationHighlights} />
-              </FeatureSection>
-
-              <ProjectFigure
-                alt={shotAlt(shotIndex(1))}
-                label={shotCaption}
-                onOpen={() => setLightboxIndex(shotIndex(1))}
-                openLabel={shotLabel(shotIndex(1))}
-                src={project.gallery?.[1]}
-              />
-
-              <FeatureSection index={6} title={t.quality}>
-                <BulletList items={project.qualityAndSecurity} />
-              </FeatureSection>
-
-              <FeatureSection index={7} title={t.challenges}>
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {project.challengesAndSolutions.map((item) => (
-                    <div className={`${CARD} p-5`} key={item.challenge}>
-                      <MicroLabel tone="destructive">
-                        {t.challengeLabel}
-                      </MicroLabel>
-                      <p className="mt-2 text-foreground/90 text-sm leading-relaxed">
-                        {item.challenge}
+              {project.sections.map((section, sectionIndex) => (
+                <FeatureSection
+                  id={`section-${sectionIndex + 2}`}
+                  index={sectionIndex + 2}
+                  key={section.heading}
+                  title={section.heading}
+                >
+                  <div className="space-y-5">
+                    {section.body.map((paragraph) => (
+                      <p
+                        className="text-foreground/90 leading-relaxed"
+                        key={paragraph}
+                      >
+                        {paragraph}
                       </p>
-                      <div aria-hidden className="my-4 h-px bg-border/60" />
-                      <MicroLabel tone="primary">{t.solutionLabel}</MicroLabel>
-                      <p className="mt-2 text-foreground/80 text-sm leading-relaxed">
-                        {item.solution}
-                      </p>
+                    ))}
+                  </div>
+                  {section.code ? (
+                    <div className="mt-8">
+                      <CodeExcerpt code={section.code} />
                     </div>
-                  ))}
-                </div>
-              </FeatureSection>
-
-              <ProjectFigure
-                alt={shotAlt(shotIndex(2))}
-                label={shotCaption}
-                onOpen={() => setLightboxIndex(shotIndex(2))}
-                openLabel={shotLabel(shotIndex(2))}
-                src={project.gallery?.[2]}
-              />
-
-              {/* What this demonstrates: hiring signals */}
-              <FeatureSection index={8} title={t.signals}>
-                <div className={`${CARD} p-6 sm:p-7`}>
-                  <CheckList items={project.hiringSignals} />
-                </div>
-              </FeatureSection>
-
-              {/* What's next: roadmap */}
-              <FeatureSection index={9} title={t.whatsNext}>
-                <BulletList items={project.nextIterations} />
-              </FeatureSection>
-
-              <FeatureSection index={10} title={project.impactHeading}>
-                <div className={`${CARD} p-6 sm:p-7`}>
-                  <CheckList items={project.impactPoints} />
-                </div>
-              </FeatureSection>
+                  ) : null}
+                  {section.figure !== undefined ? (
+                    <ProjectFigure
+                      alt={shotAlt(section.figure)}
+                      caption={captionFor(section.figure)}
+                      className="mt-8"
+                      onOpen={() => setLightboxIndex(section.figure ?? 0)}
+                      openLabel={shotLabel(section.figure)}
+                      src={galleryImages[section.figure]}
+                    />
+                  ) : null}
+                </FeatureSection>
+              ))}
             </article>
 
             {/* -------- Sticky links rail. The facts are in the hero spec
@@ -571,7 +554,7 @@ const ProjectDetails = () => {
                         {t.download}
                       </a>
                     </Button>
-                  ) : (
+                  ) : project.liveUrl ? (
                     <Button
                       asChild
                       className="w-full justify-start rounded-lg"
@@ -587,7 +570,7 @@ const ProjectDetails = () => {
                         {t.visitSite}
                       </a>
                     </Button>
-                  )}
+                  ) : null}
                   {project.sourcePrivate ? (
                     <PrivateSource>
                       <Button
@@ -618,6 +601,34 @@ const ProjectDetails = () => {
                     </Button>
                   )}
                 </div>
+
+                {outline.length > 1 ? (
+                  <nav
+                    aria-label={t.onThisPage}
+                    className="mt-6 border-border/60 border-t pt-5"
+                  >
+                    <MicroLabel>{t.onThisPage}</MicroLabel>
+                    <ol className="mt-3 space-y-1">
+                      {outline.map((entry, index) => (
+                        <li key={entry.id}>
+                          <button
+                            className="flex w-full gap-2.5 rounded-md py-1 text-left text-muted-foreground text-sm leading-snug transition-colors duration-200 ease-out hover:text-foreground"
+                            onClick={() => jumpTo(entry.id)}
+                            type="button"
+                          >
+                            <span
+                              aria-hidden
+                              className="w-5 shrink-0 text-[11px] leading-5"
+                            >
+                              {String(index + 1).padStart(2, "0")}
+                            </span>
+                            <span>{entry.heading}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                ) : null}
               </div>
             </aside>
           </div>
@@ -661,6 +672,20 @@ const ProjectDetails = () => {
                   to={`/projects/${item.slug}`}
                   {...warmOnIntent(`/projects/${item.slug}`)}
                 >
+                  {/* The catalogue's small copy of the shot, so a card here
+                      costs what it costs on /projects. Decorative: the title
+                      right below names it. */}
+                  {item.image && !item.imageIcon ? (
+                    <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden rounded-t-2xl border-border/60 border-b bg-secondary/40">
+                      <img
+                        alt=""
+                        className="h-full w-full object-cover object-top"
+                        decoding="async"
+                        loading="lazy"
+                        src={cardImageSrc(item.image)}
+                      />
+                    </div>
+                  ) : null}
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">

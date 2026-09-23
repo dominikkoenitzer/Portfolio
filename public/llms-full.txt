@@ -125,7 +125,7 @@ Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET
 
 ## 6. Projects
 
-Eleven personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Fifteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
 A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, with the source public.
 
@@ -145,7 +145,7 @@ Live: https://dk.punds.ch/
 Source: https://github.com/dominikkoenitzer/Portfolio
 Stack: React 19, TypeScript, Vite
 
-This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 20 prerendered routes, 89 tests.
+This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 24 prerendered routes, 216 tests.
 
 ### Entropy, February 2026
 Case study: https://dk.punds.ch/projects/entropy
@@ -153,7 +153,7 @@ Live: https://entropy.punds.ch/
 Source: private
 Stack: Next.js, TypeScript, Web Crypto
 
-A password generator and strength analyzer that runs entirely in the browser. Randomness comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random().
+A password generator and strength analyzer that runs entirely in the browser. Randomness for passwords comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random() for secrets.
 
 ### Spectrum, February 2026
 Case study: https://dk.punds.ch/projects/spectrum
@@ -190,7 +190,7 @@ Case study: https://dk.punds.ch/projects/flow
 Source and download: https://github.com/dominikkoenitzer/Flow
 Stack: C++17, Win32, GDI+
 
-A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It has to run as Administrator, because Windows only lets an elevated process install global input hooks.
+A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It runs as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.
 
 ### Punds, June 2026
 Case study: https://dk.punds.ch/projects/punds
@@ -198,7 +198,7 @@ Live: https://punds.ch/
 Source: https://github.com/dominikkoenitzer/Punds
 Stack: React, TypeScript, Vite
 
-A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at every project, profile and site he keeps online. Numbers: 3 runtime dependencies, 15 scene modules, 0 UI frameworks, 1 page.
+A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at every project, profile and site he keeps online. Numbers: 3 runtime dependencies, 15 scene modules, 4 links, 1 page.
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
@@ -213,7 +213,43 @@ Case study: https://dk.punds.ch/projects/oxidize
 Source and download: https://github.com/dominikkoenitzer/Oxidize
 Stack: Rust, Windows, CLI, egui
 
-A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. Nothing is deleted without a validated .reg backup and file quarantine first. Two binaries share one engine: oxidize-cli for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 0 deletes without a backup.
+A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. By default nothing is deleted before a validated .reg backup and a file quarantine exist. Two binaries share one engine: oxidize for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 7 commands, 55 unit tests.
+
+---
+
+### Inkling, July 2026
+Case study: https://dk.punds.ch/projects/inkling
+Source and download: https://github.com/dominikkoenitzer/Inkling
+Stack: Electron, React, TypeScript, SQLite
+
+A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox line in a note becomes a real task linked both ways, and a line with :: becomes a flashcard. It ships for Windows, macOS and Linux from one release workflow.
+
+---
+
+### Cyberia, September 2026
+Case study: https://dk.punds.ch/projects/cyberia
+Source: private
+Stack: React, TypeScript, Node.js, Python
+
+An anime discovery and streaming interface that runs only on his machine: a React front end, an Express API and a small Python bridge on loopback. Sources are raced and the first one that verifies answers while the rest are cancelled, subtitles are converted to WebVTT in the browser, and the external player runs in a sandboxed frame.
+
+---
+
+### Accela, September 2026
+Case study: https://dk.punds.ch/projects/accela
+Source: private
+Stack: React, JavaScript
+
+A films and series interface on TMDB data, built with React 19 and Vite in plain JSX, running only on his machine. It treats its own URL and its own storage as untrusted input: routes are parsed defensively, and the watch history and saved list are validated every time they are read.
+
+---
+
+### Mochi, September 2026
+Case study: https://dk.punds.ch/projects/mochi
+Source and download: https://github.com/dominikkoenitzer/Mochi
+Stack: Rust, Win32
+
+A tiling window manager for Windows, written in Rust from scratch: a pure core with no Win32 in it, and a daemon where one thread owns all state. Every window it hides is recorded in a file that is flushed before it is renamed into place, so even after a crash or a power cut the next start puts every window back. Tested with end-to-end runs on a real desktop that inject real key presses.
 
 ---
 
@@ -290,6 +326,10 @@ There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or an
 - https://dk.punds.ch/projects/punds
 - https://dk.punds.ch/projects/senbon
 - https://dk.punds.ch/projects/oxidize
+- https://dk.punds.ch/projects/inkling
+- https://dk.punds.ch/projects/cyberia
+- https://dk.punds.ch/projects/accela
+- https://dk.punds.ch/projects/mochi
 - https://dk.punds.ch/services
 - https://dk.punds.ch/contact
 - https://dk.punds.ch/donate

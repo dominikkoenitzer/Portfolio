@@ -11,66 +11,58 @@ export const portfolio: Record<Language, LocalizedContent> = {
       "Most portfolios are a template with the developer's name swapped in. I wanted mine to be the work sample. It is React, TypeScript and Vite: four languages behind an i18n layer I wrote myself (English ships in the bundle, the other three load on demand), JSON-LD on every page so search engines and crawlers can actually read it, framer-motion page transitions, and one lazy WebGL aurora ribbon. Every route also ships as a real prerendered HTML file, so a link unfurler that never runs JavaScript still gets the right title and card.",
     roleSummary:
       "Just me: the architecture, the four languages, the SEO, and the visual system.",
-    problemStatement:
-      "A developer portfolio has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other. I built for both, with readable copy for humans and structured data for machines, on top of a fast, accessible SPA.",
-    objectives: [
-      "Be genuinely multilingual (en, de, fr, zh), with copy written per language, not a translate toggle bolted on at the end.",
-      "Treat SEO and machine-readability as architecture: structured data on every page and a real HTML file behind every route.",
-      "Stay fast and accessible while still shipping real motion and a WebGL background.",
-    ],
-    architectureDecisions: [
-      "React 19, TypeScript and Vite with manual chunking, and the WebGL background loaded lazily so it never sits on the critical path.",
-      "i18n written by hand: one typed module per language, recomposed into a single object, with English in the bundle and the other three fetched on demand.",
-      "Content lives as folders of small modules behind a stable index (projects, translations, SEO data), so adding content never changes the API its consumers import.",
-      "Sections are imported by module path, never through a barrel. Going through one made every section a static dependency of the entry chunk and cost 281 kB, 113 kB gzipped, on first load.",
-    ],
-    implementationHighlights: [
-      "A four-language UI driven by one typed Language source of truth and per-language copy modules.",
-      "An SEO component that emits Person and breadcrumb JSON-LD alongside the Helmet tags and a self-canonical for each route.",
-      "A prerender step after the build that writes 20 real HTML files, one per route, plus a 404.html that says noindex in all three bot tags.",
-      "One lazy WebGL aurora ribbon, framer-motion page transitions, and smooth scrolling that stands down when you ask for reduced motion.",
-    ],
-    qualityAndSecurity: [
-      "CI gates every push and pull request on typecheck, lint, 89 unit tests, two SEO guard scripts and the production build.",
-      "Production runs behind a Content-Security-Policy in vercel.json, scoped by host so preview deployments are unaffected.",
-      "The GitHub token for the contributions widget lives in a Vercel serverless function. It never reaches the client bundle.",
-      "Accessible, responsive, reduced-motion-aware UI built on shadcn/ui and Radix primitives.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Shipping real motion and a WebGL background without paying for it in load time or accessibility.",
-        solution:
-          "Manual chunking, a background that loads lazily and stays off the critical path, and animation that quietly stands down under reduced-motion.",
+        heading: "A real file behind every URL",
+        body: [
+          "The site is a single-page app, so at first every URL served the same index.html, with the home page's title, description and preview image. Google runs JavaScript and coped. Link previews do not: a project page shared on LinkedIn, Slack or WhatsApp showed up as the home page.",
+          "After the Vite build, a prerender script now writes one HTML file per route, each with its own title, description, canonical, preview image and JSON-LD in the head. The app markup in the body is left as Vite emitted it, so React mounts as usual and there is no hydration to reason about. That is 21 files today, nine pages and one per project, plus a 404.html.",
+          "With a file behind every route I could drop the catch-all rewrite in vercel.json. A rewrite can only answer 200, so every junk URL had been a soft 404. Now anything without a file gets 404.html with a real 404 status, and the build fails if the router has a route the prerender step does not cover.",
+        ],
       },
       {
-        challenge:
-          "A single catch-all rewrite in vercel.json turned every junk URL into a soft 404, because a rewrite can only ever answer 200.",
-        solution:
-          "Dropped the rewrite and let the prerender step put a real file behind every route, so Vercel serves 404.html with an actual 404 status for anything else.",
+        heading: "Four languages and no i18n library",
+        body: [
+          "English, German, French and Chinese are one module each, typed against the English one, and a single config file decides which languages exist. English ships in the bundle. The other three are fetched when a visitor asks for them, and the language provider renders nothing until that language has arrived, so no component can read a string that is not there yet.",
+          "Types only guarantee the shape. A test checks what they cannot: the same list lengths as English, no blank strings, no leftover placeholders, and a failure if a language turns out to be English copied over. The case studies on these pages are written per language too, not machine-switched at runtime.",
+        ],
+      },
+      {
+        heading: "281 kB from one convenient import",
+        body: [
+          "Every page except the home page is lazy loaded, so a visitor should only pay for the page they open. For a while that was not true, because the pages imported their sections through a barrel file. A barrel re-export makes every section a static dependency of whichever chunk touches it, and the projects section brings the whole catalogue along, every case study in four languages.",
+          "I measured it at 281 kB, 113 kB gzipped, on the entry chunk. Sections are now imported by their module path and the barrel only re-exports the layout, which mounts on every page anyway. The reason is written into the barrel file itself, where the next person tempted by the shortcut will read it.",
+        ],
+        figure: 1,
+      },
+      {
+        heading: "One theme, and the two scenes that stayed",
+        body: [
+          "There is one theme: dusty violet, sage and blush on a warm cream page, with a single aurora ribbon in the same three colours across the top. The ribbon is a WebGL shader, loaded lazily so it stays off the critical path. There is no dark mode and no toggle.",
+          "In September I took every decorative effect off the site in one pass: glow shadows, glass surfaces, gradient text, shimmer, parallax and count-up numbers. What is left is one fade per block, hovers that only change colour, the custom cursor and the aurora. Every card on the site is built from the same recipe.",
+          "Two three.js scenes survived that pass: the tree on the services page and the sphere of logos on /skills. They are the reason three.js is in the build at all.",
+        ],
+        figure: 2,
+      },
+      {
+        heading: "Overlays that can be open at the same time",
+        body: [
+          "Four things can cover the page: the navigation drawer, the search palette, the project lightbox and the CV preview. At first each one locked scrolling on its own. When two were open, the second read the scroll position after the first had already fixed the page, saved 0, and closing them in the wrong order left the page scrolling behind the one still open and dropped the visitor back at the top.",
+          "The lock is now one counter and one saved position for the whole module: the page is fixed when the first overlay opens and released when the last one closes. Escape had the same flaw, one keypress closed everything, so the overlays register on a small stack and only the top one answers. The stack has its own tests, including overlays that close out of order.",
+        ],
       },
     ],
-    hiringSignals: [
-      "I can own a deployed product on my own: architecture, content, four languages, SEO and design.",
-      "I treat SEO and machine-readability as engineering. Structured data has to describe what the page actually shows, or it is spam.",
-      "I measure the cost of my own decisions. I found a barrel import dragging 281 kB into the entry chunk and fixed it.",
-    ],
-    nextIterations: [
-      "Structured-data coverage for the pages that still do not have a schema of their own.",
-      "A check that catches a de, fr or zh string still sitting at its English value, since the type system only guarantees the shape.",
+    captions: [
+      "The home page: the hero on the cream page, under the aurora in violet, sage and blush.",
+      "The projects page, with the search field, the web and desktop filter and the sort order above the first card.",
+      "The skills page, where the tools I work with sit as logos on a three.js sphere.",
     ],
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "languages" },
       { value: "0", label: "i18n libraries" },
-      { value: "20", label: "prerendered routes" },
-      { value: "89", label: "tests" },
-    ],
-    impactHeading: "What This Project Is Good For",
-    impactPoints: [
-      "Presents my work to recruiters in their own language.",
-      "Stays readable to search engines and AI crawlers, because every route is a real file with structured data in it.",
-      "The site is the sample, so nothing here has to be taken on trust.",
+      { value: "24", label: "prerendered routes" },
+      { value: "216", label: "tests" },
     ],
   },
   de: {
@@ -81,66 +73,58 @@ export const portfolio: Record<Language, LocalizedContent> = {
       "Die meisten Portfolios sind ein Template, in dem der Name ausgetauscht wurde. Ich wollte, dass meines das Arbeitsbeispiel ist. Es läuft auf React, TypeScript und Vite: vier Sprachen hinter einer i18n-Schicht, die ich selbst geschrieben habe (Englisch liegt im Bundle, die anderen drei laden auf Abruf), JSON-LD auf jeder Seite, damit Suchmaschinen und Crawler sie wirklich lesen können, Seitenübergänge mit framer-motion und ein einzelnes, lazy geladenes WebGL-Aurora-Band. Jede Route wird zusätzlich als echte vorgerenderte HTML-Datei ausgeliefert, damit ein Link-Vorschau-Dienst, der kein JavaScript ausführt, trotzdem den richtigen Titel und die richtige Karte bekommt.",
     roleSummary:
       "Nur ich: die Architektur, die vier Sprachen, das SEO und das visuelle System.",
-    problemStatement:
-      "Ein Entwickler-Portfolio muss zwei sehr verschiedene Leser überzeugen: eine Recruiterin, die auf dem Handy überfliegt, und einen Crawler, der nur Markup sieht. Die meisten Seiten entscheiden sich für eines und zucken beim anderen mit den Schultern. Ich habe für beide gebaut, mit lesbarem Text für Menschen und strukturierten Daten für Maschinen, auf einer schnellen, zugänglichen SPA.",
-    objectives: [
-      "Wirklich mehrsprachig sein (en, de, fr, zh), mit pro Sprache geschriebenem Text, nicht mit einem am Ende angeschraubten Übersetzungsschalter.",
-      "SEO und Maschinenlesbarkeit als Architektur behandeln: strukturierte Daten auf jeder Seite und eine echte HTML-Datei hinter jeder Route.",
-      "Schnell und zugänglich bleiben und trotzdem echte Animation und einen WebGL-Hintergrund ausliefern.",
-    ],
-    architectureDecisions: [
-      "React 19, TypeScript und Vite mit manuellem Chunking, und der WebGL-Hintergrund lädt lazy, damit er nie auf dem kritischen Pfad liegt.",
-      "i18n von Hand: ein typisiertes Modul pro Sprache, zu einem Objekt zusammengesetzt, Englisch im Bundle, die anderen drei auf Abruf.",
-      "Inhalte liegen als Ordner kleiner Module hinter einem stabilen Index (Projekte, Übersetzungen, SEO-Daten), damit neuer Inhalt nie die API ändert, die ihre Konsumenten importieren.",
-      "Sections werden über den Modulpfad importiert, nie über ein Barrel. Über ein Barrel wurde jede Section zur statischen Abhängigkeit des Entry-Chunks und kostete 281 kB, gzipped 113 kB, beim ersten Laden.",
-    ],
-    implementationHighlights: [
-      "Eine viersprachige UI, getrieben von einer typisierten Language-Quelle der Wahrheit und Textmodulen pro Sprache.",
-      "Eine SEO-Komponente, die Person- und Breadcrumb-JSON-LD ausgibt, dazu die Helmet-Tags und ein Self-Canonical pro Route.",
-      "Ein Prerender-Schritt nach dem Build, der 20 echte HTML-Dateien schreibt, eine pro Route, plus eine 404.html, die in allen drei Bot-Tags noindex sagt.",
-      "Ein lazy geladenes WebGL-Aurora-Band, Seitenübergänge mit framer-motion und sanftes Scrollen, das sich zurückzieht, wenn man weniger Bewegung verlangt.",
-    ],
-    qualityAndSecurity: [
-      "Die CI hängt jeden Push und Pull Request an Typecheck, Lint, 89 Unit-Tests, zwei SEO-Guard-Skripte und den Produktions-Build.",
-      "Die Produktion läuft hinter einer Content-Security-Policy in der vercel.json, per Host eingegrenzt, damit Preview-Deployments unberührt bleiben.",
-      "Das GitHub-Token für das Contributions-Widget liegt in einer Vercel-Serverless-Funktion. Es erreicht das Client-Bundle nie.",
-      "Zugängliche, responsive, Reduced-Motion-bewusste UI auf shadcn/ui- und Radix-Primitiven.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Echte Animation und einen WebGL-Hintergrund ausliefern, ohne das mit Ladezeit oder Zugänglichkeit zu bezahlen.",
-        solution:
-          "Manuelles Chunking, ein Hintergrund, der lazy lädt und vom kritischen Pfad wegbleibt, und Animation, die sich unter Reduced-Motion still zurückzieht.",
+        heading: "Hinter jeder URL eine echte Datei",
+        body: [
+          "Die Seite ist eine Single-Page-App, also lieferte anfangs jede URL dieselbe index.html aus, mit Titel, Beschreibung und Vorschaubild der Startseite. Google führt JavaScript aus und kam damit zurecht. Link-Vorschauen tun das nicht: Eine Projektseite, auf LinkedIn, Slack oder WhatsApp geteilt, erschien als Startseite.",
+          "Nach dem Vite-Build schreibt jetzt ein Prerender-Skript eine HTML-Datei pro Route, jede mit eigenem Titel, eigener Beschreibung, Canonical, Vorschaubild und JSON-LD im Head. Das App-Markup im Body bleibt so, wie Vite es ausgegeben hat, React startet also wie gewohnt, und es gibt keine Hydration, über die man nachdenken müsste. Heute sind das 21 Dateien, neun Seiten und eine pro Projekt, dazu eine 404.html.",
+          "Mit einer Datei hinter jeder Route konnte der Catch-all-Rewrite in der vercel.json weg. Ein Rewrite kann nur mit 200 antworten, also war jede Müll-URL ein Soft-404. Jetzt bekommt alles ohne Datei die 404.html mit echtem 404-Status, und der Build bricht ab, wenn der Router eine Route kennt, die der Prerender-Schritt nicht abdeckt.",
+        ],
       },
       {
-        challenge:
-          "Ein einziger Catch-all-Rewrite in der vercel.json machte aus jeder Müll-URL einen Soft-404, weil ein Rewrite immer nur mit 200 antworten kann.",
-        solution:
-          "Den Rewrite entfernt und den Prerender-Schritt eine echte Datei hinter jede Route legen lassen, damit Vercel für alles andere die 404.html mit echtem 404-Status ausliefert.",
+        heading: "Vier Sprachen ohne i18n-Library",
+        body: [
+          "Englisch, Deutsch, Französisch und Chinesisch sind je ein Modul, typisiert gegen das englische, und eine einzige Konfigurationsdatei legt fest, welche Sprachen es gibt. Englisch liegt im Bundle. Die anderen drei werden geholt, wenn jemand sie will, und der Language-Provider rendert nichts, bis diese Sprache da ist. Keine Komponente kann also einen Text lesen, der noch fehlt.",
+          "Typen garantieren nur die Form. Ein Test prüft, was sie nicht können: gleich lange Listen wie im Englischen, keine leeren Strings, keine übrig gebliebenen Platzhalter, und er schlägt fehl, wenn eine Sprache in Wahrheit kopiertes Englisch ist. Auch die Fallstudien auf diesen Seiten sind pro Sprache geschrieben und werden nicht zur Laufzeit maschinell umgeschaltet.",
+        ],
+      },
+      {
+        heading: "281 kB wegen eines bequemen Imports",
+        body: [
+          "Jede Seite ausser der Startseite lädt lazy, ein Besucher sollte also nur für die Seite bezahlen, die er öffnet. Eine Zeit lang stimmte das nicht, weil die Seiten ihre Sections über eine Barrel-Datei importierten. Ein Re-Export im Barrel macht jede Section zur statischen Abhängigkeit jedes Chunks, der ihn berührt, und die Projekt-Section bringt den ganzen Katalog mit, jede Fallstudie in vier Sprachen.",
+          "Gemessen waren das 281 kB, gzipped 113 kB, im Entry-Chunk. Sections werden jetzt über ihren Modulpfad importiert, und das Barrel exportiert nur noch das Layout, das ohnehin auf jeder Seite hängt. Der Grund steht im Barrel selbst, dort, wo ihn die nächste Person liest, die die Abkürzung nehmen will.",
+        ],
+        figure: 1,
+      },
+      {
+        heading: "Ein Theme und die zwei Szenen, die bleiben durften",
+        body: [
+          "Es gibt ein Theme: gedämpftes Violett, Salbei und Rosé auf warmem Crème, mit einem einzelnen Aurora-Band in denselben drei Farben am oberen Rand. Das Band ist ein WebGL-Shader und lädt lazy, damit es vom kritischen Pfad wegbleibt. Einen Dark Mode oder einen Umschalter gibt es nicht.",
+          "Im September habe ich in einem Durchgang jeden dekorativen Effekt von der Seite genommen: Glow-Schatten, Glasflächen, Verlaufstext, Schimmer, Parallax und hochzählende Zahlen. Übrig sind ein Einblenden pro Block, Hovers, die nur die Farbe ändern, der eigene Cursor und die Aurora. Jede Karte auf der Seite folgt demselben Rezept.",
+          "Zwei three.js-Szenen haben diesen Durchgang überlebt: der Baum auf der Services-Seite und die Logo-Kugel auf /skills. Ihretwegen ist three.js überhaupt im Build.",
+        ],
+        figure: 2,
+      },
+      {
+        heading: "Overlays, die gleichzeitig offen sein können",
+        body: [
+          "Vier Dinge können die Seite überdecken: das Navigationsmenü, die Suchpalette, die Projekt-Lightbox und die Lebenslauf-Vorschau. Anfangs sperrte jedes das Scrollen für sich. Waren zwei offen, las das zweite die Scrollposition, nachdem das erste die Seite schon fixiert hatte, speicherte 0, und wer sie in der falschen Reihenfolge schloss, hatte eine Seite, die hinter dem noch offenen Overlay scrollte, und landete wieder ganz oben.",
+          "Die Sperre ist jetzt ein Zähler und eine gespeicherte Position für das ganze Modul: Die Seite wird fixiert, wenn das erste Overlay aufgeht, und freigegeben, wenn das letzte zugeht. Escape hatte denselben Fehler, ein Tastendruck schloss alles, also melden sich die Overlays auf einem kleinen Stapel an, und nur das oberste antwortet. Der Stapel hat eigene Tests, auch für Overlays, die in anderer Reihenfolge zugehen.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Ich kann ein deployed Produkt allein verantworten: Architektur, Inhalt, vier Sprachen, SEO und Design.",
-      "Ich behandle SEO und Maschinenlesbarkeit als Engineering. Strukturierte Daten müssen beschreiben, was die Seite wirklich zeigt, sonst sind sie Spam.",
-      "Ich messe die Kosten meiner eigenen Entscheidungen. Ich habe einen Barrel-Import gefunden, der 281 kB in den Entry-Chunk zog, und ihn behoben.",
-    ],
-    nextIterations: [
-      "Strukturierte Daten für die Seiten, die noch kein eigenes Schema haben.",
-      "Eine Prüfung, die einen de-, fr- oder zh-String erkennt, der noch auf seinem englischen Wert steht, weil das Typsystem nur die Form garantiert.",
+    captions: [
+      "Die Startseite: der Hero auf dem Crème-Grund, unter der Aurora in Violett, Salbei und Rosé.",
+      "Die Projektseite mit Suchfeld, dem Filter für Web und Desktop und der Sortierung über der ersten Karte.",
+      "Die Skills-Seite, auf der die Werkzeuge, mit denen ich arbeite, als Logos auf einer three.js-Kugel sitzen.",
     ],
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "Sprachen" },
       { value: "0", label: "i18n-Libraries" },
-      { value: "20", label: "vorgerenderte Routen" },
-      { value: "89", label: "Tests" },
-    ],
-    impactHeading: "Wofür dieses Projekt gut ist",
-    impactPoints: [
-      "Zeigt meine Arbeit Recruitern in ihrer eigenen Sprache.",
-      "Bleibt für Suchmaschinen und KI-Crawler lesbar, weil jede Route eine echte Datei mit strukturierten Daten darin ist.",
-      "Die Seite ist das Beispiel, also muss man hier nichts auf Vertrauen hinnehmen.",
+      { value: "24", label: "vorgerenderte Routen" },
+      { value: "216", label: "Tests" },
     ],
   },
   fr: {
@@ -151,66 +135,58 @@ export const portfolio: Record<Language, LocalizedContent> = {
       "La plupart des portfolios sont un template dans lequel on a remplacé le nom. Je voulais que le mien soit l'échantillon de travail. C'est React, TypeScript et Vite : quatre langues derrière une couche i18n que j'ai écrite moi-même (l'anglais est dans le bundle, les trois autres se chargent à la demande), du JSON-LD sur chaque page pour que moteurs et crawlers puissent vraiment la lire, des transitions framer-motion, et un seul ruban d'aurore WebGL chargé en lazy. Chaque route est aussi livrée comme un vrai fichier HTML prérendu, si bien qu'un service d'aperçu de lien qui n'exécute jamais de JavaScript obtient tout de même le bon titre et la bonne carte.",
     roleSummary:
       "Moi seul : l'architecture, les quatre langues, le SEO et le système visuel.",
-    problemStatement:
-      "Un portfolio de développeur doit convaincre deux lecteurs très différents : un recruteur qui survole sur son téléphone, et un crawler qui ne voit que du markup. La plupart des sites choisissent l'un et haussent les épaules pour l'autre. J'ai construit pour les deux, du texte lisible pour les humains et des données structurées pour les machines, sur une SPA rapide et accessible.",
-    objectives: [
-      "Être réellement multilingue (en, de, fr, zh), avec un texte écrit par langue, pas un bouton de traduction ajouté à la fin.",
-      "Traiter le SEO et la lisibilité machine comme de l'architecture : des données structurées sur chaque page et un vrai fichier HTML derrière chaque route.",
-      "Rester rapide et accessible tout en livrant de vraies animations et un fond WebGL.",
-    ],
-    architectureDecisions: [
-      "React 19, TypeScript et Vite avec un découpage manuel des chunks, et le fond WebGL chargé en lazy pour qu'il ne soit jamais sur le chemin critique.",
-      "Une i18n écrite à la main : un module typé par langue, recomposé en un seul objet, l'anglais dans le bundle et les trois autres récupérés à la demande.",
-      "Le contenu vit en dossiers de petits modules derrière un index stable (projets, traductions, données SEO), donc ajouter du contenu ne change jamais l'API que ses consommateurs importent.",
-      "Les sections s'importent par chemin de module, jamais par un barrel. Passer par un barrel faisait de chaque section une dépendance statique du chunk d'entrée et coûtait 281 ko, 113 ko gzippés, au premier chargement.",
-    ],
-    implementationHighlights: [
-      "Une interface en quatre langues pilotée par une source de vérité Language typée et des modules de texte par langue.",
-      "Un composant SEO qui émet du JSON-LD Person et breadcrumb en plus des balises Helmet et d'un canonique propre à chaque route.",
-      "Une étape de prérendu après le build qui écrit 20 vrais fichiers HTML, un par route, plus un 404.html qui dit noindex dans les trois balises de bots.",
-      "Un ruban d'aurore WebGL en lazy, des transitions framer-motion, et un défilement doux qui se retire si vous demandez moins de mouvement.",
-    ],
-    qualityAndSecurity: [
-      "La CI conditionne chaque push et chaque pull request au typecheck, au lint, à 89 tests unitaires, à deux scripts de garde SEO et au build de production.",
-      "La production tourne derrière une Content-Security-Policy dans vercel.json, restreinte par hôte pour que les déploiements de preview ne soient pas touchés.",
-      "Le jeton GitHub du widget de contributions vit dans une fonction serverless Vercel. Il n'atteint jamais le bundle client.",
-      "Une interface accessible, responsive et attentive au mouvement réduit, bâtie sur les primitives shadcn/ui et Radix.",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge:
-          "Livrer de vraies animations et un fond WebGL sans le payer en temps de chargement ni en accessibilité.",
-        solution:
-          "Un découpage manuel des chunks, un fond qui charge en lazy et reste hors du chemin critique, et des animations qui se retirent discrètement sous mouvement réduit.",
+        heading: "Un vrai fichier derrière chaque URL",
+        body: [
+          "Le site est une application monopage, donc au début chaque URL servait le même index.html, avec le titre, la description et l'image d'aperçu de l'accueil. Google exécute le JavaScript et s'en sortait. Les aperçus de liens, non : une page de projet partagée sur LinkedIn, Slack ou WhatsApp s'affichait comme la page d'accueil.",
+          "Après le build Vite, un script de prérendu écrit maintenant un fichier HTML par route, chacun avec son propre titre, sa description, son canonique, son image d'aperçu et son JSON-LD dans le head. Le balisage de l'app dans le body reste tel que Vite l'a produit, React démarre donc normalement et il n'y a pas d'hydratation à surveiller. Cela fait 21 fichiers aujourd'hui, neuf pages et un par projet, plus un 404.html.",
+          "Avec un fichier derrière chaque route, j'ai pu retirer la réécriture attrape-tout de vercel.json. Une réécriture ne peut répondre que 200, donc chaque URL parasite était une 404 douce. Désormais, tout ce qui n'a pas de fichier reçoit 404.html avec un vrai statut 404, et le build échoue si le routeur connaît une route que l'étape de prérendu ne couvre pas.",
+        ],
       },
       {
-        challenge:
-          "Une seule réécriture attrape-tout dans vercel.json transformait chaque URL parasite en 404 douce, parce qu'une réécriture ne peut répondre que 200.",
-        solution:
-          "Retiré la réécriture et laissé l'étape de prérendu poser un vrai fichier derrière chaque route, si bien que Vercel sert 404.html avec un vrai statut 404 pour tout le reste.",
+        heading: "Quatre langues sans bibliothèque i18n",
+        body: [
+          "L'anglais, l'allemand, le français et le chinois sont chacun un module, typé d'après le module anglais, et un seul fichier de configuration décide quelles langues existent. L'anglais est dans le bundle. Les trois autres sont récupérées quand un visiteur les demande, et le fournisseur de langue n'affiche rien tant que cette langue n'est pas arrivée : aucun composant ne peut lire un texte qui n'est pas encore là.",
+          "Les types ne garantissent que la forme. Un test vérifie ce qu'ils ne voient pas : des listes de même longueur qu'en anglais, aucune chaîne vide, aucun placeholder oublié, et un échec si une langue s'avère être de l'anglais recopié. Les études de cas de ces pages sont elles aussi écrites dans chaque langue, pas traduites automatiquement à l'exécution.",
+        ],
+      },
+      {
+        heading: "281 ko pour un import pratique",
+        body: [
+          "Chaque page sauf l'accueil est chargée en lazy, un visiteur ne devrait donc payer que pour la page qu'il ouvre. Pendant un temps, ce n'était pas le cas, parce que les pages importaient leurs sections par un fichier barrel. Une réexportation dans un barrel fait de chaque section une dépendance statique de tout chunk qui le touche, et la section des projets entraîne tout le catalogue, chaque étude de cas en quatre langues.",
+          "Mesuré : 281 ko, 113 ko gzippés, dans le chunk d'entrée. Les sections s'importent maintenant par leur chemin de module et le barrel ne réexporte plus que la mise en page, montée sur chaque page de toute façon. La raison est écrite dans le barrel lui-même, là où la lira la prochaine personne tentée par le raccourci.",
+        ],
+        figure: 1,
+      },
+      {
+        heading: "Un seul thème, et les deux scènes restées",
+        body: [
+          "Il y a un seul thème : violet poudré, sauge et rose pâle sur une page crème chaude, avec un unique ruban d'aurore dans ces trois couleurs en haut de l'écran. Le ruban est un shader WebGL, chargé en lazy pour rester hors du chemin critique. Il n'y a ni mode sombre ni bouton pour en changer.",
+          "En septembre, j'ai retiré tous les effets décoratifs du site en une seule passe : ombres lumineuses, surfaces de verre, texte en dégradé, reflets, parallaxe et chiffres qui s'incrémentent. Il reste un fondu par bloc, des survols qui ne changent que la couleur, le curseur maison et l'aurore. Chaque carte du site suit la même recette.",
+          "Deux scènes three.js ont survécu à cette passe : l'arbre de la page Services et la sphère de logos sur /skills. C'est pour elles que three.js est dans le build.",
+        ],
+        figure: 2,
+      },
+      {
+        heading: "Des overlays qui peuvent être ouverts en même temps",
+        body: [
+          "Quatre éléments peuvent recouvrir la page : le menu de navigation, la palette de recherche, la lightbox des projets et l'aperçu du CV. Au début, chacun bloquait le défilement de son côté. Avec deux ouverts, le second lisait la position de défilement alors que le premier avait déjà figé la page, enregistrait 0, et les fermer dans le mauvais ordre laissait la page défiler derrière celui encore ouvert, puis ramenait le visiteur tout en haut.",
+          "Le verrou est désormais un compteur et une position enregistrée pour tout le module : la page est figée à l'ouverture du premier overlay et libérée à la fermeture du dernier. Échap avait le même défaut, une touche fermait tout, donc les overlays s'inscrivent sur une petite pile et seul celui du dessus répond. La pile a ses propres tests, y compris pour des overlays fermés dans le désordre.",
+        ],
       },
     ],
-    hiringSignals: [
-      "Je peux porter seul un produit déployé : architecture, contenu, quatre langues, SEO et design.",
-      "Je traite le SEO et la lisibilité machine comme de l'ingénierie. Les données structurées doivent décrire ce que la page montre vraiment, sinon c'est du spam.",
-      "Je mesure le coût de mes propres décisions. J'ai trouvé un import par barrel qui tirait 281 ko dans le chunk d'entrée, et je l'ai corrigé.",
-    ],
-    nextIterations: [
-      "Des données structurées pour les pages qui n'ont pas encore leur propre schéma.",
-      "Un contrôle qui repère une chaîne de, fr ou zh restée sur sa valeur anglaise, puisque le système de types ne garantit que la forme.",
+    captions: [
+      "La page d'accueil : le hero sur le fond crème, sous l'aurore violette, sauge et rose.",
+      "La page des projets, avec le champ de recherche, le filtre web et bureau et l'ordre de tri au-dessus de la première carte.",
+      "La page des compétences, où les outils avec lesquels je travaille forment une sphère de logos en three.js.",
     ],
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "langues" },
       { value: "0", label: "bibliothèques i18n" },
-      { value: "20", label: "routes prérendues" },
-      { value: "89", label: "tests" },
-    ],
-    impactHeading: "À quoi sert ce projet",
-    impactPoints: [
-      "Présente mon travail aux recruteurs dans leur propre langue.",
-      "Reste lisible pour les moteurs de recherche et les crawlers d'IA, parce que chaque route est un vrai fichier avec des données structurées dedans.",
-      "Le site est l'échantillon, donc rien ici n'est à prendre sur parole.",
+      { value: "24", label: "routes prérendues" },
+      { value: "216", label: "tests" },
     ],
   },
   zh: {
@@ -220,62 +196,58 @@ export const portfolio: Record<Language, LocalizedContent> = {
     overview:
       "多数作品集都是把模板里的名字换成自己的。我想让我的这一份本身就是作品。它跑在 React、TypeScript 和 Vite 上：四种语言背后是我自己写的 i18n 层（英文打进包里，另外三种按需加载），每页都有 JSON-LD，好让搜索引擎和抓取程序真的读得懂，页面切换用 framer-motion，还有一条懒加载的 WebGL 极光带。每条路由同时会输出一个真实的预渲染 HTML 文件，所以那些从不执行 JavaScript 的链接预览服务，也照样能拿到正确的标题和卡片。",
     roleSummary: "只有我：架构、四种语言、SEO，以及整套视觉。",
-    problemStatement:
-      "一份开发者作品集要说服两种截然不同的读者：一个在手机上快速翻看的招聘者，和一个只看得见标签的抓取程序。多数站点会选一个，然后对另一个耸耸肩。我为两者都做了：给人看的是能读的文字，给机器看的是结构化数据，底下是一个快速、可访问的单页应用。",
-    objectives: [
-      "真正做到多语言（en、de、fr、zh），文案按语言分别写，而不是最后挂一个翻译开关。",
-      "把 SEO 和机器可读性当成架构：每页都有结构化数据，每条路由背后都有一个真实的 HTML 文件。",
-      "在保持快速和可访问的同时，仍然交付真实的动效和一层 WebGL 背景。",
-    ],
-    architectureDecisions: [
-      "React 19、TypeScript 和 Vite，手动分包，WebGL 背景懒加载，绝不落在关键路径上。",
-      "i18n 手写：每种语言一个带类型的模块，再合成一个对象，英文在包内，另外三种按需取回。",
-      "内容以小模块目录的形式存放在一个稳定的索引之后（项目、翻译、SEO 数据），所以新增内容永远不会改变使用方 import 的那套 API。",
-      "各个 section 按模块路径 import，绝不走 barrel。走 barrel 会让每个 section 都变成入口 chunk 的静态依赖，首屏因此多出 281 kB，gzip 后 113 kB。",
-    ],
-    implementationHighlights: [
-      "四语言界面，由一个带类型的 Language 单一真源和按语言拆分的文案模块驱动。",
-      "一个 SEO 组件，除 Helmet 标签和每条路由的自指 canonical 之外，还输出 Person 与面包屑的 JSON-LD。",
-      "构建之后有一步预渲染，写出 20 个真实的 HTML 文件，一条路由一个，另加一个在三处 bot 标签里都写着 noindex 的 404.html。",
-      "一条懒加载的 WebGL 极光带、framer-motion 的页面转场，以及在你要求减少动态时会自行退下的平滑滚动。",
-    ],
-    qualityAndSecurity: [
-      "CI 对每次推送和 PR 都设了闸：类型检查、lint、89 个单元测试、两个 SEO 守卫脚本，以及生产构建。",
-      "生产环境跑在 vercel.json 里的一条 Content-Security-Policy 之后，按主机名限定，因此预览部署不受影响。",
-      "贡献图用到的 GitHub token 放在一个 Vercel 无服务器函数里，永远不会进到客户端包。",
-      "基于 shadcn/ui 与 Radix 基元的界面，可访问、响应式，并顾及减少动态的偏好。",
-    ],
-    challengesAndSolutions: [
+    sections: [
       {
-        challenge: "既要交付真实的动效和一层 WebGL 背景，又不能拿加载时间或可访问性去换。",
-        solution: "手动分包，背景懒加载并留在关键路径之外，动效在减少动态的偏好下安静退下。",
+        heading: "每个 URL 背后都有一个真实文件",
+        body: [
+          "这个站是单页应用，所以起初每个 URL 返回的都是同一个 index.html，带着首页的标题、描述和预览图。Google 会执行 JavaScript，还能应付。链接预览不会：把一个项目页分享到 LinkedIn、Slack 或 WhatsApp，显示出来的却是首页。",
+          "现在 Vite 构建完成后，一个预渲染脚本会为每条路由写一个 HTML 文件，head 里各有自己的标题、描述、canonical、预览图和 JSON-LD。body 里的应用标记保持 Vite 输出的原样，React 照常挂载，不存在需要操心的 hydration。目前一共 21 个文件：九个页面，每个项目一个，另外还有一个 404.html。",
+          "每条路由都有了文件，我就能去掉 vercel.json 里的通配重写。重写只能回 200，所以每个垃圾 URL 都曾是软 404。现在凡是没有文件的路径都会以真正的 404 状态拿到 404.html；如果路由器里有预渲染步骤没覆盖的路由，构建会直接失败。",
+        ],
       },
       {
-        challenge: "vercel.json 里一条通配重写，把每个垃圾 URL 都变成了软 404，因为重写只能回 200。",
-        solution: "去掉那条重写，让预渲染步骤给每条路由都放一个真实文件，其余路径 Vercel 就会以真正的 404 状态送出 404.html。",
+        heading: "四种语言，不用 i18n 库",
+        body: [
+          "英文、德文、法文和中文各是一个模块，按英文模块的类型来写，哪些语言存在由一个配置文件说了算。英文打进包里，另外三种在访客需要时才去取；那种语言到达之前，语言 provider 什么都不渲染，所以没有哪个组件会读到一段还不存在的文字。",
+          "类型只保证结构。剩下的交给一个测试：列表长度要和英文一致，不能有空字符串，不能留下占位符，而且如果某种语言其实是照搬的英文，测试就会失败。这些页面上的项目案例也是按语言分别写的，不是运行时机器切换的。",
+        ],
+      },
+      {
+        heading: "一个图省事的 import，多出 281 kB",
+        body: [
+          "除首页外每个页面都是懒加载的，访客本该只为打开的那一页付出代价。有一阵子并非如此，因为各页面是通过一个 barrel 文件引入 section 的。barrel 里的重新导出会让每个 section 都成为所有碰到它的 chunk 的静态依赖，而项目 section 会把整个目录一起带进来，四种语言的每一篇案例。",
+          "实测入口 chunk 因此多了 281 kB，gzip 后 113 kB。现在 section 按模块路径引入，barrel 只重新导出布局组件，反正它们每页都会挂载。原因就写在 barrel 文件里，下一个想走捷径的人一打开就会看到。",
+        ],
+        figure: 1,
+      },
+      {
+        heading: "一套主题，和留下来的两个场景",
+        body: [
+          "全站只有一套主题：暖奶油色的页面上，灰调的紫、鼠尾草绿和淡粉，顶部横着一条同样三种颜色的极光带。极光带是一个 WebGL 着色器，懒加载，不占关键路径。没有深色模式，也没有切换开关。",
+          "九月我一次性拿掉了站上所有装饰效果：发光阴影、玻璃质感、渐变文字、光泽扫过、视差和数字滚动。留下来的是每个区块一次淡入、只变颜色的悬停、自定义光标和极光。站上每张卡片都用同一套做法。",
+          "有两个 three.js 场景留了下来：服务页上的树，以及 /skills 上的图标球体。three.js 之所以在构建里，就是因为它们。",
+        ],
+        figure: 2,
+      },
+      {
+        heading: "可以同时打开的浮层",
+        body: [
+          "有四样东西会盖住页面：导航抽屉、搜索面板、项目灯箱和简历预览。起初它们各自锁定滚动。两个同时打开时，第二个读取滚动位置时第一个已经把页面固定住了，于是记下 0；关闭顺序一错，页面就会在还开着的那个浮层后面滚动，访客还会被送回顶部。",
+          "现在锁是模块级的一个计数器加一个保存的位置：第一个浮层打开时固定页面，最后一个关闭时才释放。Esc 键也有同样的毛病，按一下全部关掉，所以浮层会登记到一个小栈上，只有最上面那个响应。这个栈有自己的测试，包括浮层不按顺序关闭的情况。",
+        ],
       },
     ],
-    hiringSignals: [
-      "我能独自负责一个已上线的产品：架构、内容、四种语言、SEO 和设计。",
-      "我把 SEO 和机器可读性当工程做。结构化数据必须描述页面真的展示了什么，否则那就是垃圾信息。",
-      "我会衡量自己决策的代价。我发现一个 barrel import 往入口 chunk 里拖了 281 kB，然后把它改掉了。",
-    ],
-    nextIterations: [
-      "给还没有自己 schema 的页面补上结构化数据。",
-      "加一道检查，抓出 de、fr、zh 里仍停留在英文原值的字符串，毕竟类型系统只保证结构。",
+    captions: [
+      "首页：奶油色底上的开场区，上方是紫、鼠尾草绿和粉三色的极光。",
+      "项目页，第一张卡片上方是搜索框、网页与桌面的筛选，以及排序方式。",
+      "技能页，我日常用的工具以图标的形式排成一个 three.js 球体。",
     ],
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "语言" },
       { value: "0", label: "i18n 库" },
-      { value: "20", label: "预渲染路由" },
-      { value: "89", label: "测试" },
-    ],
-    impactHeading: "这个项目有什么用",
-    impactPoints: [
-      "用招聘者自己的语言展示我的工作。",
-      "对搜索引擎和 AI 抓取程序都保持可读，因为每条路由都是一个内含结构化数据的真实文件。",
-      "这个站本身就是样本，所以这里没有什么需要你先信了再说。",
+      { value: "24", label: "预渲染路由" },
+      { value: "216", label: "测试" },
     ],
   },
 };

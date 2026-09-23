@@ -224,10 +224,15 @@ export const createSpeakableSchema = (url: string, cssSelectors: string[]) => {
  * SoftwareSourceCode schema for project detail pages, richer than the base
  * version because AI engines surface this when answering "show me X's code".
  */
+/** Where a project lives: its own site, or its case study when it has none. */
+const projectHome = (project: { slug: string; liveUrl?: string }) =>
+  project.liveUrl ?? `${SITE_CONFIG.url}/projects/${project.slug}`;
+
 export const createSoftwareSourceCodeSchema = (project: {
+  slug: string;
   title: string;
   description: string;
-  liveUrl: string;
+  liveUrl?: string;
   repoUrl: string;
   sourcePrivate?: boolean;
   tags: string[];
@@ -240,7 +245,7 @@ export const createSoftwareSourceCodeSchema = (project: {
   "@type": "SoftwareSourceCode",
   name: project.title,
   description: project.description,
-  url: project.liveUrl,
+  url: projectHome(project),
   // A private repo answers visitors with a 404, so it is not advertised.
   ...(project.sourcePrivate ? {} : { codeRepository: project.repoUrl }),
   codeSampleType: "full",
@@ -261,9 +266,10 @@ export const createSoftwareSourceCodeSchema = (project: {
  * deployed product behind a project.
  */
 export const createSoftwareApplicationSchema = (project: {
+  slug: string;
   title: string;
   description: string;
-  liveUrl: string;
+  liveUrl?: string;
   tags: string[];
   downloadUrl?: string;
   applicationCategory?: string;
@@ -276,7 +282,7 @@ export const createSoftwareApplicationSchema = (project: {
   // `url` is where the application lives, `downloadUrl` is the binary. These
   // used to be the same .exe for the desktop projects, which pointed the
   // entity's canonical URL at a file download.
-  url: project.liveUrl,
+  url: projectHome(project),
   ...(project.downloadUrl && { downloadUrl: project.downloadUrl }),
   applicationCategory: project.applicationCategory ?? "WebApplication",
   operatingSystem: project.operatingSystem ?? "Any",

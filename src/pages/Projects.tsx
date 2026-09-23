@@ -46,7 +46,7 @@ const Projects = () => {
                 "@type": "SoftwareApplication",
                 name: project.title,
                 description: project.description,
-                url: project.liveUrl,
+                url: project.liveUrl ?? `${SITE_CONFIG.url}/projects/${project.slug}`,
                 ...(project.sourcePrivate ? {} : { sameAs: project.repoUrl }),
                 applicationCategory: "WebApplication",
                 operatingSystem: "Any",

@@ -10,7 +10,12 @@ import {
 } from "vite";
 
 /** The serverless routes in `api/` that the local servers should answer. */
-const LOCAL_API_ROUTES = ["github-contributions", "contact", "keepalive"] as const;
+const LOCAL_API_ROUTES = [
+  "github-contributions",
+  "contact",
+  "keepalive",
+  "test-count",
+] as const;
 
 /** Server-side secrets copied from `.env.local` into the handlers' environment. */
 const SERVER_ENV_KEYS = [

@@ -85,6 +85,8 @@ export const de = {
     heading: "Fähigkeiten",
     subheading:
       "Womit ich täglich arbeite, und worin ich noch besser werde.",
+    projectCountOne: "Ein Projekt nutzt {skill}",
+    projectCountMany: "{count} Projekte nutzen {skill}",
     categories: {
       frontend: "Frontend",
       professional: "Soft Skills",
@@ -104,7 +106,7 @@ export const de = {
     eyebrow: "Eigene Projekte",
     heading: "Projekte",
     subheading:
-      "Sachen, die ich gebaut und online gestellt habe, Quellcode inklusive.",
+      "Sachen, die ich gebaut habe, die meisten mit Quellcode.",
     disclosureEyebrow: "Bevor du weiterscrollst",
     disclosureBody:
       "Diese Seite ist nur der öffentlich sichtbare Ausschnitt dessen, was ich gebaut habe. Ein paar weitere Projekte liegen hinter NDAs, in privaten Repos oder auf Kunden-Infrastruktur, die ich lieber nicht zur Schau stelle, deshalb tauchen sie hier nicht auf. Alles, was du unten siehst, ist persönlich: kleine Dinge, an denen ich abends und am Wochenende bastle, aus Neugier und der leisen Hoffnung, jemandem den Tag ein winziges Stück leichter zu machen. Wenn eines davon genau das bei dir tut: Mission erfüllt.",
@@ -121,6 +123,8 @@ export const de = {
     filterLabel: "Nach Art filtern",
     searchPlaceholder: "Nach Name, Technologie oder Stichwort suchen…",
     clearSearch: "Suche leeren",
+    techFilter: "Gebaut mit {tech}",
+    clearTech: "Alle Projekte anzeigen",
     filterAll: "Alle",
     filterWeb: "Web",
     filterDesktop: "Desktop",
@@ -149,21 +153,13 @@ export const de = {
     visitSite: "Website besuchen",
     download: "Download",
     sourceCode: "Quellcode",
+    onThisPage: "Auf dieser Seite",
+    builtWith: "Gebaut mit",
     downloadNote:
-      "Erster Start: Windows SmartScreen kann warnen. Wähle „Weitere Informationen“ → „Trotzdem ausführen“ und bestätige dann die UAC-Administratoranfrage (für globale Eingabe-Hooks erforderlich).",
+      "Erster Start: Windows SmartScreen kann warnen. Wähle „Weitere Informationen“ → „Trotzdem ausführen“.",
     moreProjects: "Weitere Projekte",
     present: "Heute",
     role: "Rolle",
-    problem: "Das Problem",
-    objectives: "Ziele",
-    architecture: "Architektur",
-    implementation: "Umsetzung",
-    quality: "Qualität & Sicherheit",
-    challenges: "Herausforderungen & Lösungen",
-    challengeLabel: "Herausforderung",
-    solutionLabel: "Lösung",
-    whatsNext: "Was als Nächstes kommt",
-    signals: "Was das zeigt",
     allProjects: "Alle Projekte",
     timeline: "Zeitraum",
     gallery: "Galerie",
@@ -414,7 +410,7 @@ export const de = {
     requested: "Angefragt war",
     suggestionsHeading: "Vielleicht eines davon",
     destinations: {
-      projects: "Was ich gebaut habe, mit Quellcode.",
+      projects: "Was ich gebaut habe, und wie.",
       about: "Wer ich bin und was ich lerne.",
       services: "Was ich übernehme und wie ich arbeite.",
       contact: "Schreib mir eine Nachricht.",
@@ -489,7 +485,7 @@ export const de = {
     projects: {
       title: "Software-Engineering-Projekte",
       description:
-        "Software-Projekte von Dominik Könitzer, Software Engineer aus der Schweiz. Live-Deployments in React und TypeScript, jeweils mit Quellcode.",
+        "Software-Projekte von Dominik Könitzer, Software Engineer aus der Schweiz, von Web-Apps bis zu einem Tiling-Fenstermanager in Rust, jeweils mit Fallstudie.",
       keywords:
         "Software-Engineer-Portfolio, Webentwicklungs-Projekte, React TypeScript Portfolio, Frontend-Engineer Schweiz, Software-Engineer anstellen",
     },
