@@ -58,8 +58,6 @@ Fifteen personal projects, listed oldest first by the date their repository was 
 - [Senbon](https://dk.punds.ch/projects/senbon): a zen-themed journal where every entry is a plain markdown file, rendered into an unhurried reading experience. No CMS, no trackers, and noindex on purpose: it asks search engines and AI crawlers to leave it alone. June 2026. Next.js, React 19, Markdown. Live at https://senbon.ch/, source code private.
 - [Oxidize](https://dk.punds.ch/projects/oxidize): a thorough Windows uninstaller written in Rust. It runs a program's own uninstaller, then finds and removes the registry keys and files it left behind, backing up first by default. Ships as a scriptable CLI and a native egui GUI sharing one engine. June 2026. Rust. Source and download at https://github.com/dominikkoenitzer/Oxidize.
 - [Inkling](https://dk.punds.ch/projects/inkling): a desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox in a note becomes a real task, and a line with :: becomes a flashcard. July 2026. Electron, React, TypeScript, SQLite. Source and download at https://github.com/dominikkoenitzer/Inkling.
-- [Cyberia](https://dk.punds.ch/projects/cyberia): an anime discovery and streaming interface that runs locally, with a React front end, an Express API and a small Python bridge. Most of the work went into answering fast and honestly when the sources behind it are slow or gone. September 2026. React, TypeScript, Node.js, Python. Runs locally only, source code private.
-- [Accela](https://dk.punds.ch/projects/accela): a films and series interface on TMDB data, built with React 19 and Vite in plain JSX, that treats its own URL and storage as untrusted input. September 2026. React, JavaScript. Runs locally only, source code private.
 - [Mochi](https://dk.punds.ch/projects/mochi): a tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash. September 2026. Rust, Win32. Source and download at https://github.com/dominikkoenitzer/Mochi.
 
 Worth saying plainly, because the projects page says it too: these fifteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
@@ -74,7 +72,7 @@ Taken from https://dk.punds.ch/skills, in the categories that page uses.
 - Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 - Professional: communication, project management, direct sales, social media outreach.
 
-Shipped evidence for the less obvious ones: Rust in Oxidize and Mochi, Python in Cyberia, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
+Shipped evidence for the less obvious ones: Rust in Oxidize and Mochi, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
 
 ## Services
 

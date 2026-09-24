@@ -32,8 +32,6 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   senbon: "Senbon, a markdown digital garden",
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",
-  cyberia: "Cyberia, a local anime streaming app",
-  accela: "Accela, a films and series app",
   mochi: "Mochi, a tiling window manager in Rust",
 };
 
