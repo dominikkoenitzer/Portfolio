@@ -8,10 +8,9 @@ import App from "./App.tsx";
 // needs it. Kaisei Decol sets every title, at 700 only because nothing
 // paints a title at another weight. Umlauts and accents (Könitzer, Zürich,
 // Français) are in the Latin files; Chinese falls back to the system CJK
-// font. M PLUS Rounded 1c stays for the hero name alone.
+// font. The hero name uses Kaisei Decol too.
 import "@fontsource-variable/geist/wght.css";
 import "@fontsource/kaisei-decol/latin-700.css";
-import "@fontsource/m-plus-rounded-1c/latin-800.css";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(

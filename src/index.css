@@ -68,8 +68,7 @@
   --font-display:
     "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-title:
-    M PLUS Rounded 1c, ui-sans-serif, system-ui, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    "Kaisei Decol", "Geist Variable", Georgia, "Times New Roman", serif;
 
   --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -494,15 +493,16 @@
     font-family: inherit !important;
   }
 
-  /* Title face for the hero name only (Tailwind `font-title`). M PLUS Rounded
-     1c at its ExtraBold cut. Only the 800 subset is loaded, so the weight is
-     pinned to it here. */
+  /* The hero name (Tailwind `font-title`), in the same Kaisei Decol as every
+     page title, so the site speaks in two faces. Only the 700 cut is loaded,
+     so the weight is pinned to it here; normal spacing, because tightening a
+     serif crowds it. */
   .font-title,
   .font-title * {
     font-family:
-      "M PLUS Rounded 1c", "Geist Variable", -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif !important;
-    font-weight: 800 !important;
+      "Kaisei Decol", "Geist Variable", Georgia, "Times New Roman", serif !important;
+    font-weight: 700 !important;
+    letter-spacing: normal !important;
   }
 }
 
