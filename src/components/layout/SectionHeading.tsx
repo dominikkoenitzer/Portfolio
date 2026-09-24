@@ -31,7 +31,7 @@ interface SectionHeadingProps {
 
 /**
  * The shared page/section title. Fixes the element (h1 by default), font
- * (Zen Maru Gothic via the global heading rule), weight, responsive size scale,
+ * (Kaisei Decol via `.title-serif`), weight, responsive size scale,
  * and alignment so every page's title is typographically identical.
  *
  * Overview pages pass all three parts (eyebrow, title, subtitle) and no margin
@@ -63,7 +63,7 @@ export function SectionHeading({
       {/* The gap under the title lives on the subtitle alone. With it on both
           elements the two margins collapsed into one anyway, and a page that
           passes no subtitle was left carrying the leftover. */}
-      <Tag className="font-bold text-3xl md:text-4xl">
+      <Tag className="title-serif font-bold text-3xl md:text-4xl">
         {/* The mask carries the descender room it clips (a "y" or a "g" reaches
             below the line box) and takes the same amount back off the margin,
             so the title sits exactly where it did and nothing below it moves. */}

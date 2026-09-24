@@ -46,7 +46,7 @@ export function PageLayout({ children }: PageLayoutProps) {
     }
     window.scrollTo(0, 0);
     document.body.style.fontFamily =
-      "'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
+      "'Geist Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif";
   }, []);
 
   return (

@@ -81,8 +81,8 @@ function Clause({
           is hidden from the accessible name of the heading. It sits outside the
           heading rather than inside it: index.css makes a span inside h1..h6
           inherit the heading face with !important, which rendered this
-          micro-label in Zen Maru while every other one on the site is body
-          face. It was already `block mb-2`, so nothing moves. */}
+          micro-label in the heading weight while every other one on the site
+          is body text. It was already `block mb-2`, so nothing moves. */}
       <p aria-hidden="true" className={`${INDEX_LABEL} mb-2`}>
         {String(index + 1).padStart(2, "0")}
       </p>

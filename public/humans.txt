@@ -8,7 +8,7 @@ From: Zürich, Switzerland
 /* THANKS */
 Design & build: Dominik Könitzer (all of it)
 Hosting: Vercel
-Fonts: Zen Kaku Gothic New, Zen Maru Gothic, M PLUS Rounded 1c (self-hosted Latin subsets)
+Fonts: Geist, Kaisei Decol, M PLUS Rounded 1c (self-hosted)
 
 /* SITE */
 Last update: 2026/08/31
