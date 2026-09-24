@@ -80,7 +80,7 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["The FLOW app icon: two white chevrons on a rounded blue square."],
+    captions: ["The Flow mark: recorded input drawn as seven soft bars on a blue square, one half mirroring the other."],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "static exe" },
@@ -142,7 +142,7 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["Das App-Icon von FLOW: zwei weisse Winkel auf einem abgerundeten blauen Quadrat."],
+    captions: ["Das Flow-Zeichen: aufgenommene Eingaben als sieben weiche Balken auf einem blauen Quadrat, die eine Hälfte spiegelt die andere."],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "statische Exe" },
@@ -204,7 +204,7 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["L'icône de FLOW : deux chevrons blancs sur un carré bleu aux coins arrondis."],
+    captions: ["Le logo de Flow : des entrées enregistrées dessinées en sept barres arrondies sur un carré bleu, une moitié en miroir de l'autre."],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 Mo", label: "exe statique" },
@@ -266,7 +266,7 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["FLOW 的应用图标：圆角蓝色方块上的两个白色箭头。"],
+    captions: ["Flow 的标志：录下的输入画成蓝色方块上的七根圆润竖条，左右两半互为镜像。"],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "静态 exe" },

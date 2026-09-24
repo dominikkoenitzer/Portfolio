@@ -73,7 +73,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "An uninstall in an elevated terminal: the registered uninstaller confirmed in the registry, the leftovers graded HIGH, MED and LOW, then backed up, quarantined and removed.",
+      "The Oxidize mark: a thick O, copper on one side and the verdigris it oxidises into on the other.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
     stats: [
@@ -131,7 +131,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Eine Deinstallation in einem Terminal mit Adminrechten: der registrierte Uninstaller in der Registry bestätigt, die Reste als HIGH, MED und LOW eingestuft, dann gesichert, in Quarantäne verschoben und entfernt.",
+      "Das Oxidize-Zeichen: ein dickes O, auf der einen Seite Kupfer, auf der anderen der Grünspan, zu dem es oxidiert.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
     stats: [
@@ -189,7 +189,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Une désinstallation dans un terminal administrateur : le désinstalleur enregistré confirmé dans le registre, les restes classés HIGH, MED et LOW, puis sauvegardés, mis en quarantaine et supprimés.",
+      "Le logo d'Oxidize : un O épais, cuivre d'un côté, et de l'autre le vert-de-gris en lequel il s'oxyde.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
     stats: [
@@ -245,7 +245,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "在管理员终端里的一次卸载：注册的卸载器已在注册表中确认完成，残留被分为 HIGH、MED 和 LOW，随后备份、隔离并删除。",
+      "Oxidize 的标志：一个粗粗的 O，一半是铜，另一半是它氧化后的铜绿。",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
     stats: [

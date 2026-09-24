@@ -168,11 +168,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // latest/download breaks on every release. The release page always resolves.
     downloadUrl: "https://github.com/dominikkoenitzer/Oxidize/releases/latest",
     priority: 11,
-    image: "/projects/oxidize.png",
-    // The one shot that is not 1600px wide. Left alone on purpose: it is flat
-    // terminal text, and a lanczos downscale to 1600 turns crisp glyph edges
-    // into gradients that PNG cannot pack, taking the file from 144 kB to 388.
-    imageWidth: 1920,
+    image: "/projects/oxidize.jpg",
     programmingLanguages: ["Rust"],
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
