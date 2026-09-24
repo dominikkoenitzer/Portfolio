@@ -61,14 +61,12 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   --font-sans:
-    Zen Kaku Gothic New, ui-sans-serif, system-ui, sans-serif,
+    Geist Variable, ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-heading:
-    Zen Maru Gothic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display:
-    Zen Maru Gothic, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-title:
     M PLUS Rounded 1c, ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -307,7 +305,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family:
-      "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
       "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
@@ -349,9 +347,11 @@
   h6 {
     @apply tracking-tight;
     font-family:
-      "Zen Maru Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
       "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
-    font-weight: 700;
+    /* 600, not 700: Geist's semibold holds a heading on its own, and the bold
+       cut crowds at display sizes. */
+    font-weight: 600;
     /* Long German compounds (Datenschutzerklärung, Webentwicklung) wrap
        instead of overflowing; hyphens: auto relies on the html[lang] attribute
        that LanguageProvider keeps in sync. */
@@ -388,7 +388,7 @@
   pre,
   blockquote {
     font-family:
-      "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI",
       "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif !important;
   }
 
@@ -406,6 +406,22 @@
     tab-size: 2;
   }
 
+  /* Kaisei Decol, the title face, opted into by class rather than set on every
+     heading: it is a display serif, lovely at page-title size and in short
+     project titles, and heavy in dense card titles full of brackets and
+     dates, which is where it was taken back out. Used for each page's big
+     title (SectionHeading), project names, the numbered case-study sections
+     and the stat numbers. Normal spacing, because tightening a serif crowds
+     it. The class beats the heading rule above on specificity, and `*`
+     covers the animated spans inside a title. */
+  .title-serif,
+  .title-serif * {
+    font-family:
+      "Kaisei Decol", "Geist Variable", Georgia, "Times New Roman", serif !important;
+    font-weight: 700 !important;
+    letter-spacing: normal !important;
+  }
+
   /* The element rule above would otherwise pull spans inside a heading back
      to the body face, so headings with inline spans rendered in two fonts. */
   h1 span,
@@ -418,8 +434,8 @@
   }
 
   /* Visually hidden text paints no glyphs, so it must not fetch a heading
-     face of its own: the hero's sr-only h1 was the only reason Zen Maru
-     loaded on the home page at all. */
+     face of its own: the hero's sr-only h1 once pulled a whole heading
+     face onto the home page for nothing. */
   .sr-only {
     font-family: inherit !important;
   }
@@ -430,7 +446,7 @@
   .font-title,
   .font-title * {
     font-family:
-      "M PLUS Rounded 1c", "Zen Maru Gothic", -apple-system, BlinkMacSystemFont,
+      "M PLUS Rounded 1c", "Geist Variable", -apple-system, BlinkMacSystemFont,
       "Segoe UI", sans-serif !important;
     font-weight: 800 !important;
   }

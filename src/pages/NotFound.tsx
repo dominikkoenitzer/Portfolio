@@ -134,7 +134,7 @@ export default function NotFound() {
           </motion.p>
 
           <motion.h1
-            className="mt-5 font-bold text-4xl sm:text-5xl"
+            className="title-serif mt-5 font-bold text-4xl sm:text-5xl"
             variants={REVEAL}
           >
             {t.title}

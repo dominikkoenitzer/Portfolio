@@ -205,23 +205,22 @@ function vendorChunk(id: string): string | undefined {
 
 /**
  * Preloads the woff2 files that paint the first screen (the hero name's
- * M PLUS Rounded face and the body font's three weights) straight from the HTML. Without this
+ * M PLUS Rounded face and the Geist file, body and headings in one) straight from the HTML. Without this
  * the browser only learns about them after the stylesheet has arrived and been
  * parsed, one full round trip later, and on a phone that hop sat right on the
  * LCP text. Vite hashes the file names, so the tags are injected at build time
  * from the emitted bundle rather than hand-written in index.html. The
  * prerender script reuses dist/index.html as its shell, so every route gets
- * them. Zen Maru Gothic is not preloaded: no heading is on the home page's
- * first screen, and preloading a font that is not used within seconds earns a
- * console warning instead of a win.
+ * them. Only files the first screen actually paints are listed: preloading a
+ * font that is not used within seconds earns a console warning instead of a
+ * win.
  */
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
   /^assets[\\/]m-plus-rounded-1c-latin-800-normal-[\w-]+\.woff2$/,
-  /^assets[\\/]zen-kaku-gothic-new-latin-(400|500|700)-normal-[\w-]+\.woff2$/,
-  // The heading face. It paints on every route but was the only first-screen
-  // font left for the CSS to discover, so headings were the last thing on the
-  // page to stop swapping.
-  /^assets[\\/]zen-maru-gothic-latin-700-normal-[\w-]+\.woff2$/,
+  // Geist, the reading face: one variable file for every weight.
+  /^assets[\\/]geist-latin-wght-normal-[\w-]+\.woff2$/,
+  // Kaisei Decol, the title face: every route opens on a title.
+  /^assets[\\/]kaisei-decol-latin-700-normal-[\w-]+\.woff2$/,
 ];
 
 function preloadFirstScreenFonts(): Plugin {
