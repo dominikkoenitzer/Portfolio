@@ -2,7 +2,7 @@
  * The `<title>` a project detail page claims in search results.
  *
  * `project.title` on its own is a one-word product name ("Zephyr", "Flow"),
- * so all eleven project pages used to ship a title with no query surface at
+ * so every project page used to ship a title with no query surface at
  * all: nobody searches for "Zephyr". Each entry here appends the short, factual
  * description of what the thing actually is, which is also what the page
  * renders below the heading, so the title matches the page and adds the terms a
@@ -31,6 +31,10 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   punds: "Punds, a 3D Lain-style link hub",
   senbon: "Senbon, a markdown digital garden",
   oxidize: "Oxidize, a thorough Windows uninstaller",
+  inkling: "Inkling, a desktop study companion",
+  cyberia: "Cyberia, a local anime streaming app",
+  accela: "Accela, a films and series app",
+  mochi: "Mochi, a tiling window manager in Rust",
 };
 
 /**
