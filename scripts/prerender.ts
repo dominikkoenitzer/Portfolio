@@ -269,37 +269,13 @@ const withNoscript = (
 
 const shell = await readFile(join(DIST, "index.html"), "utf8");
 
-/**
- * The shell preloads every first-screen font, but no route paints all of
- * them: the home page is the hero alone (the name in M PLUS Rounded, text in
- * Geist, no Kaisei title), and every other route opens on a Kaisei title and
- * never shows the hero name. A preload nothing uses competes with what the
- * screen does need and earns a "preloaded but not used" console warning, so
- * each document keeps only the faces its first screen paints.
- */
-const dropFontPreload = (html: string, family: string): string => {
-  const pattern = new RegExp(
-    `\\s*<link rel="preload" as="font"[^>]*/assets/${family}-[^>]*>`,
-    "i",
-  );
-  if (!pattern.test(html)) {
-    console.error(`prerender: no ${family} preload in the shell to drop`);
-    process.exit(1);
-  }
-  return html.replace(pattern, "");
-};
-const firstScreenFonts = (html: string, route: string): string =>
-  route === "/"
-    ? dropFontPreload(html, "kaisei-decol")
-    : dropFontPreload(html, "m-plus-rounded-1c");
-
 let written = 0;
 for (const page of pages) {
   const url = `${SITE_CONFIG.url}${page.route === "/" ? "/" : page.route}`;
   const fullTitle = `${page.title} | ${SITE_CONFIG.name}`;
   const img = `${SITE_CONFIG.url}${page.image}`;
 
-  let html = firstScreenFonts(shell, page.route);
+  let html = shell;
   html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${esc(fullTitle)}</title>`);
 
   for (const [k, v] of [
@@ -399,7 +375,7 @@ for (const page of pages) {
  * JavaScript runs: noindex in all three bot tags, and no canonical claiming
  * some other page.
  */
-let notFound = firstScreenFonts(shell, "/404");
+let notFound = shell;
 notFound = notFound.replace(
   /<title>[\s\S]*?<\/title>/i,
   `<title>Page not found | ${esc(SITE_CONFIG.name)}</title>`,
