@@ -11,7 +11,7 @@ Hosting: Vercel
 Fonts: Geist, Kaisei Decol, M PLUS Rounded 1c (self-hosted)
 
 /* SITE */
-Last update: 2026/08/31
+Last update: 2026/09/24
 Language: English / Deutsch / Français / 中文
 Doctype: HTML5
 Standards: HTML5, CSS3, ECMAScript 2022+, WAI-ARIA, JSON-LD
