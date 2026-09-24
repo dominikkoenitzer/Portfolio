@@ -221,7 +221,7 @@ function DetailCard({
           <Icon className="h-[18px] w-[18px]" />
         </span>
         <span
-          className="inline-flex items-center rounded-full px-[11px] py-1 font-bold text-[11.5px] uppercase tracking-[0.06em]"
+          className="inline-flex items-center rounded-full px-[11px] py-1 font-semibold text-xs"
           style={{
             background: withAlpha(accentText, 0.12),
             border: `1px solid ${withAlpha(accentText, 0.32)}`,

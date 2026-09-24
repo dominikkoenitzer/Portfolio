@@ -271,7 +271,7 @@ const Privacy = () => {
           <aside className="hidden xl:col-start-3 xl:block">
             <nav aria-labelledby="privacy-toc" className="sticky top-28">
               <p
-                className="text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
+                className="font-semibold text-foreground text-sm"
                 id="privacy-toc"
               >
                 {t.onThisPage}

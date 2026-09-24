@@ -83,7 +83,7 @@ export function DonateSection() {
           variants={stagger(0.15, 0.06)}
         >
           <motion.p
-            className="mb-5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.2em]"
+            className="mb-5 font-semibold text-foreground text-sm"
             variants={REVEAL}
           >
             {t.pickAmount}
@@ -103,7 +103,7 @@ export function DonateSection() {
                   variants={REVEAL}
                 >
                   <span className={TILE_TOP}>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                    <span className="text-muted-foreground text-sm">
                       {t.currency}
                     </span>
                     <ArrowUpRight
@@ -137,7 +137,7 @@ export function DonateSection() {
               variants={REVEAL}
             >
               <span className={TILE_TOP}>
-                <span className="text-[10px] text-primary/85 uppercase tracking-[0.18em]">
+                <span className="font-medium text-primary text-sm">
                   {t.anyAmount.title}
                 </span>
                 <ArrowUpRight
