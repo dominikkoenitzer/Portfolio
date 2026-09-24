@@ -5,7 +5,7 @@
  * /projects, etc. looked identical when shared (Slack/Discord/X) or shown
  * in AI answer cards. This renders a distinct 1200x630 card for the home
  * page, each section and each project in the site's own look (the bloom
- * palette and the three site fonts), served statically and wired through
+ * palette and the two site fonts), served statically and wired through
  * the <SEO image=...> prop.
  *
  * Run: `bun scripts/gen-og.ts`. Needs `@resvg/resvg-js` and `sharp`, which are
@@ -13,8 +13,8 @@
  * the temp folder below (`cd %TEMP%/resvg && bun add @resvg/resvg-js sharp`) or
  * into the repo transiently. The fonts are fetched into the temp folder on
  * first run, static cuts only (resvg cannot see web fonts and would draw a
- * variable font at its default weight): Geist from its own repo, the other
- * two from the Google Fonts repo.
+ * variable font at its default weight): Geist from its own repo, Kaisei
+ * Decol from the Google Fonts repo.
  *
  * The cards are written as 128-colour palette PNGs. resvg's 32-bit output is
  * ~950 KB per card because the grain filter defeats PNG compression, and
@@ -42,7 +42,6 @@ const FONT_DIR = join(tmpdir(), "og-fonts");
 const GOOGLE_FONTS = "https://github.com/google/fonts/raw/main/ofl";
 const GEIST = "https://github.com/vercel/geist-font/raw/main/fonts/Geist/ttf";
 const FONT_URLS = [
-  `${GOOGLE_FONTS}/mplusrounded1c/MPLUSRounded1c-ExtraBold.ttf`,
   `${GOOGLE_FONTS}/kaiseidecol/KaiseiDecol-Bold.ttf`,
   `${GEIST}/Geist-Regular.ttf`,
   `${GEIST}/Geist-Medium.ttf`,
@@ -79,12 +78,8 @@ const VIOLET = "#5a4276";
 const SAGE = "#a9c39a";
 const BLUSH = "#e4d3e0";
 
-// The site's three faces in their site roles: the hero name's face for the
-// name on the home card, Kaisei Decol for every other title, Geist for text.
-// resvg matches the family name inside the file, and M PLUS Rounded 1c calls
-// itself "Rounded Mplus 1c" there; under the web name the home card fell back
-// to the body face.
-const NAME_FONT = "Rounded Mplus 1c";
+// The site's two faces in their site roles: Kaisei Decol for the name and
+// every title, Geist for text.
 const TITLE_FONT = "Kaisei Decol";
 const BODY_FONT = "Geist";
 
@@ -161,8 +156,8 @@ const homeCard = () =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
   ${eyebrow("Hi, I'm", 168)}
-  <text x="114" y="292" font-family="${NAME_FONT}" font-weight="800" font-size="112" fill="url(#name)">Dominik</text>
-  <text x="114" y="404" font-family="${NAME_FONT}" font-weight="800" font-size="112" fill="url(#name)">Könitzer</text>
+  <text x="114" y="292" font-family="${TITLE_FONT}" font-weight="700" font-size="112" fill="url(#name)">Dominik</text>
+  <text x="114" y="404" font-family="${TITLE_FONT}" font-weight="700" font-size="112" fill="url(#name)">Könitzer</text>
   ${subtitle("Software engineer and web developer in Zürich", 470)}
   ${footer("dk.punds.ch")}
 </svg>`;
