@@ -18,6 +18,8 @@ export const de = {
     loading: "Wird geladen",
   },
   toggles: {
+    darkTheme: "Zum dunklen Design wechseln",
+    lightTheme: "Zum hellen Design wechseln",
     language: "Sprache wechseln",
     useSystem: "Systemsprache verwenden",
   },

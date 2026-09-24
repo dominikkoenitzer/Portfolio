@@ -23,10 +23,10 @@
       name="keywords"
       content="Dominik Könitzer, Dominik Konitzer, software engineer, web developer, React developer, TypeScript developer, full-stack developer, Switzerland, Swiss developer, web development services, frontend developer, backend developer, portfolio"
     >
-    <!-- There is one theme and it is light (bloom). Saying so keeps the UA from
-         handing a visitor whose OS is dark a dark scrollbar, dark form controls
-         (the projects search field) and a dark canvas behind this cream page. -->
-    <meta name="color-scheme" content="light">
+    <!-- Two themes, light (bloom) and dark. theme-init.js below sets
+         `color-scheme` on <html> to the one in use, so scrollbars and form
+         controls always match the page rather than the OS. -->
+    <meta name="color-scheme" content="light dark">
     <meta name="author" content="Dominik Könitzer">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="generator" content="Vite + React">
@@ -66,6 +66,9 @@
     <meta name="msapplication-TileColor" content="#f6f0e6">
     <meta name="msapplication-config" content="/browserconfig.xml">
     <meta name="theme-color" content="#f6f0e6">
+    <!-- Picks the light or dark theme before anything paints. A file, not an
+         inline script: the production CSP allows no inline script. -->
+    <script src="/theme-init.js"></script>
 
     <!-- Geographic SEO -->
     <meta name="geo.region" content="CH-ZH">

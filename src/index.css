@@ -170,8 +170,8 @@
   /* Bloom: the site's only palette, taken from the owner's Reze reference
      illustrations and kept deliberately muted: the dusty, hazy version of the
      colours rather than the saturated one, because the page is meant to be
-     easy to sit in front of. These are the root tokens; there is no theme
-     switch.
+     easy to sit in front of. These are the root tokens, the light theme;
+     the dark theme below overrides them under `.dark`.
 
        page        shirt / paper    #f6f0e6   warm cream, no glare
        ink         hair             #332a38   soft plum-black, never pure black
@@ -246,6 +246,56 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
     --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+  /* Night: the same illustration after dark. The page is the shadow in her
+     hair, a violet-black rather than a neutral one; text is the pale blush of
+     her skin, never pure white. Primary is the hair violet lifted until it
+     reads on the dark, sage becomes the acid green of her eyes and stays as
+     rare as it is on the light page, blush is the pink in her face. Every
+     text pair here clears AA on the page and on a card.
+
+       page        hair shadow      #0f0b14   violet-black
+       ink         skin             #f0e3ea   blush white
+       primary     hair             #b28cf0   violet, lifted for the dark
+       sage        eyes             #b4e04c   acid green, the one signal
+       blush       cheeks / tongue  #eb8fb0   warmth */
+  .dark {
+    --background: 265 30% 6%;
+    --foreground: 330 30% 92%;
+    --card: 265 26% 9%;
+    --card-foreground: 330 30% 92%;
+    --popover: 265 26% 10%;
+    --popover-foreground: 330 30% 92%;
+    --primary: 266 70% 73%;
+    --primary-foreground: 265 30% 6%;
+    --lilac: 268 55% 62%;
+    --secondary: 266 24% 14%;
+    --secondary-foreground: 268 45% 86%;
+    --muted: 265 20% 13%;
+    --muted-foreground: 268 14% 68%;
+    --accent: 82 32% 13%;
+    --accent-foreground: 80 70% 66%;
+    --sage: 80 72% 58%;
+    --sage-bright: 80 78% 65%;
+    --sage-deep: 80 68% 62%;
+    --sage-foreground: 265 30% 6%;
+    --blush: 342 62% 72%;
+    --blush-deep: 342 60% 74%;
+    --blush-foreground: 265 30% 6%;
+    --border: 266 22% 18%;
+    --input: 266 22% 18%;
+    --ring: 266 70% 73%;
+    --destructive: 354 75% 62%;
+    --destructive-foreground: 0 0% 100%;
+    --theme-gradient: linear-gradient(
+      135deg,
+      hsl(266 70% 73%) 0%,
+      hsl(268 55% 62%) 38%,
+      hsl(80 72% 58%) 72%,
+      hsl(342 62% 72%) 100%
+    );
+    --theme-shadow-color: 266 70% 20%;
   }
 
   * {
@@ -489,6 +539,12 @@
   ::selection {
     background-color: hsl(var(--sage) / 0.55);
     color: hsl(var(--foreground));
+  }
+
+  /* The eye green is bright on the dark page, so the selection wash is
+     thinner there to keep the pale text legible on it. */
+  .dark ::selection {
+    background-color: hsl(var(--sage) / 0.32);
   }
 }
 

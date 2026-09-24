@@ -18,6 +18,8 @@ export const fr = {
     loading: "Chargement",
   },
   toggles: {
+    darkTheme: "Passer au thème sombre",
+    lightTheme: "Passer au thème clair",
     language: "Changer de langue",
     useSystem: "Utiliser la langue du système",
   },
