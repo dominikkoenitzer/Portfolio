@@ -370,10 +370,13 @@ export function Navbar() {
           {/* No mark or wordmark: Home is the first entry of the nav list, so
               the whole row is one set of links and nothing else. That is what
               lets it be centred honestly: the group holds only the eight
-              links, so its geometric centre is also its optical centre. */}
+              links, so its geometric centre is also its optical centre.
+              Below xl it sits 12px left of centre: at 1024 the French and
+              German rows are wide enough that the scrolled pill would
+              otherwise touch the controls on the right. */}
           <nav
             aria-label={t.nav.navigation}
-            className="pointer-events-auto relative hidden w-fit shrink-0 lg:block"
+            className="-translate-x-3 pointer-events-auto relative hidden w-fit shrink-0 lg:block xl:translate-x-0"
           >
             <Island show={isScrolled} />
 
@@ -383,7 +386,7 @@ export function Navbar() {
                  positioned sibling earlier in the tree. The px-4 is the
                  pill's air: it sits on this element, not on the surface, so
                  the surface can only ever be the row plus 16px each side. */
-              className="relative flex h-16 items-center gap-0.5 px-4 md:h-18"
+              className="relative flex h-16 items-center gap-0 px-3 md:h-18 xl:gap-0.5 xl:px-4"
               initial={reduceMotion ? "show" : "hidden"}
               onMouseLeave={() =>
                 setHover((h) => (h ? { ...h, on: false } : null))
@@ -403,11 +406,13 @@ export function Navbar() {
                         // The current page is marked by the violet underline
                         // below and by `aria-current`, so the label itself
                         // does not have to carry a second, weaker signal.
-                        // Tighter below xl: the French row is the widest,
-                        // and at 1024 it has to fit beside three controls
-                        // (search, theme, language). Measured at 1024: 11px
-                        // left in French, 23 in German, 49 in English.
-                        "group relative flex min-h-11 items-center whitespace-nowrap rounded-full px-2 font-medium text-sm transition-colors duration-200 ease-out xl:px-3",
+                        // Tighter below xl (with no gap between entries): the
+                        // French row is the widest, and at 1024 it has to fit
+                        // beside three controls (search, theme, language)
+                        // with the scrolled pill clear of them too. Measure
+                        // again after any font or label change; Geist is
+                        // wider than the face this was first tuned for.
+                        "group relative flex min-h-11 items-center whitespace-nowrap rounded-full px-1.5 font-medium text-sm transition-colors duration-200 ease-out xl:px-3",
                         isActive
                           ? "font-semibold text-foreground"
                           : "text-foreground/90 hover:text-foreground",
