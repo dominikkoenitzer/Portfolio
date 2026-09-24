@@ -18,6 +18,8 @@ export const zh = {
     loading: "加载中",
   },
   toggles: {
+    darkTheme: "切换到深色主题",
+    lightTheme: "切换到浅色主题",
     language: "切换语言",
     useSystem: "使用系统语言",
   },

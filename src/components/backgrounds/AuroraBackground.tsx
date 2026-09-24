@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/use-theme";
 import Aurora from "./Aurora";
 
 /**
@@ -10,6 +11,15 @@ import Aurora from "./Aurora";
  */
 const STOPS: [string, string, string] = ["#7b5f9e", "#86ad78", "#c68c99"];
 
+/**
+ * The same ribbon at night: her hair violet, the acid green of her eyes and
+ * the pink of her face, as light over the dark page instead of colour on
+ * paper. Deeper than the text tokens, so the ribbon glows without turning
+ * into a neon sign, and a little more present, because on a dark page an
+ * opacity that reads as a sky on cream reads as nothing.
+ */
+const NIGHT_STOPS: [string, string, string] = ["#6a3cc4", "#7fae36", "#c4608a"];
+
 function pixelDensity(): number {
   if (typeof window === "undefined") {
     return 1;
@@ -18,16 +28,17 @@ function pixelDensity(): number {
 }
 
 export default function AuroraBackground() {
+  const night = useTheme() === "dark";
   return (
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 -z-10 select-none"
-      style={{ opacity: 0.65 }}
+      style={{ opacity: night ? 0.8 : 0.65 }}
     >
       <Aurora
         amplitude={1}
         blend={0.6}
-        colorStops={STOPS}
+        colorStops={night ? NIGHT_STOPS : STOPS}
         dpr={pixelDensity()}
         flat
         speed={0.45}

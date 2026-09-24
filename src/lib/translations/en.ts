@@ -18,6 +18,8 @@ export const en = {
     loading: "Loading",
   },
   toggles: {
+    darkTheme: "Switch to the dark theme",
+    lightTheme: "Switch to the light theme",
     language: "Toggle language",
     useSystem: "Use system language",
   },
