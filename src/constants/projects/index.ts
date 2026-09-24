@@ -1,7 +1,5 @@
 import type { Language } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
-import { accela } from "./accela";
-import { cyberia } from "./cyberia";
 import { entropy } from "./entropy";
 import { flow } from "./flow";
 import { inkling } from "./inkling";
@@ -191,28 +189,6 @@ const PROJECT_BASE: ProjectBase[] = [
     applicationCategory: "EducationalApplication",
   },
   {
-    slug: "cyberia",
-    title: "Cyberia",
-    date: "2026-09",
-    repoUrl: "https://github.com/dominikkoenitzer/Cyberia",
-    sourcePrivate: true,
-    priority: 13,
-    image: "/projects/cyberia.jpg",
-    gallery: ["/projects/cyberia-2.jpg"],
-    programmingLanguages: ["TypeScript", "Python"],
-  },
-  {
-    slug: "accela",
-    title: "Accela",
-    date: "2026-09",
-    repoUrl: "https://github.com/dominikkoenitzer/Accela",
-    sourcePrivate: true,
-    priority: 14,
-    image: "/projects/accela.jpg",
-    gallery: ["/projects/accela-2.jpg"],
-    programmingLanguages: ["JavaScript"],
-  },
-  {
     slug: "mochi",
     title: "Mochi",
     date: "2026-09",
@@ -220,7 +196,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // Versioned archive, same as Oxidize: the release page always resolves.
     downloadUrl: "https://github.com/dominikkoenitzer/Mochi/releases/latest",
     image: "/projects/mochi.jpg",
-    priority: 15,
+    priority: 13,
     programmingLanguages: ["Rust"],
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
@@ -240,8 +216,6 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   senbon,
   oxidize,
   inkling,
-  cyberia,
-  accela,
   mochi,
 };
 
