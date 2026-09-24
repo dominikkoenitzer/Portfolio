@@ -415,7 +415,7 @@ export function ServicesSection() {
             <div className="pointer-events-none absolute inset-x-0 top-0 z-2 px-6 text-center">
               <p className="eyebrow mb-3">{t.eyebrow}</p>
               <h1
-                className="font-bold text-3xl md:text-4xl"
+                className="title-serif font-bold text-3xl md:text-4xl"
                 style={{ textShadow: "0 2px 30px hsl(var(--background))" }}
               >
                 {t.heading}

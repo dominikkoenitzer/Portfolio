@@ -207,7 +207,7 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
               screen-reader-only copy and the visible one is decorative. */}
           <dt className="sr-only">{stat.label}</dt>
           <dd className="m-0">
-            <span className="block font-heading text-3xl text-primary tabular-nums sm:text-4xl">
+            <span className="title-serif block text-3xl text-primary tabular-nums sm:text-4xl">
               {stat.liveTests ? (
                 <LiveTestCount fallback={stat.value} project={stat.liveTests} />
               ) : (

@@ -80,15 +80,15 @@ function FeatureSection({
             copy below gets, so a section's heading and its own paragraphs share
             one left edge. Left to itself the span was ~13px wide and the
             heading sat 11px left of its own text, with a ragged edge on top of
-            that: `tabular-nums` does nothing in Zen Kaku Gothic New, so "01"
-            and "05" measured differently. */}
+            that: the old body face ignored `tabular-nums`, so "01" and "05"
+            measured differently. */}
         <span
           aria-hidden
           className="w-6 shrink-0 select-none text-muted-foreground text-sm"
         >
           {String(index).padStart(2, "0")}
         </span>
-        <h2 className="font-bold text-2xl leading-tight tracking-tight sm:text-3xl">
+        <h2 className="title-serif font-bold text-2xl leading-tight sm:text-3xl">
           {title}
         </h2>
       </div>
