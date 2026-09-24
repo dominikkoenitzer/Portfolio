@@ -37,6 +37,7 @@ import {
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
+import { useTheme } from "@/hooks/use-theme";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
@@ -273,15 +274,17 @@ function DetailCard({
 export function ServicesSection() {
   const { language } = useLanguage();
   const t = translations[language].services;
-  const designTheme = SITE_SERVICE_TREE_THEME;
+  const siteTheme = useTheme();
+  const designTheme = SITE_SERVICE_TREE_THEME[siteTheme];
   const reduceMotion = useReducedMotion();
   // Same source the page's JSON-LD is built from, rendered here so the
   // visible content and the structured data can't drift apart.
   const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
   // The tree's decorative accents are unreadable as small text on the light
-  // page (a pastel on cream is under 2:1), so words use the text set.
-  const accentText = CATEGORY_ACCENT_TEXT.light;
+  // page (a pastel on cream is under 2:1), so words use the text set for the
+  // theme in use.
+  const accentText = CATEGORY_ACCENT_TEXT[siteTheme];
 
   const [active, setActive] = useState<Category>("all");
   const [selectedKey, setSelectedKey] = useState<ItemKey | null>(null);

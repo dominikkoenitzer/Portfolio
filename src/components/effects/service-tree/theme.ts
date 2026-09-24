@@ -15,7 +15,7 @@
 
 export type Group3 = "build" | "protect" | "grow";
 
-export type ServiceTreeTheme = "Bloom" | "Violet" | "Midnight";
+export type ServiceTreeTheme = "Bloom" | "Night" | "Violet" | "Midnight";
 
 export interface ServiceTreePalette {
   /**
@@ -54,6 +54,18 @@ export const SERVICE_TREE_THEMES: Record<ServiceTreeTheme, ServiceTreePalette> =
       particle: 0x8d74a8,
       trunk: 0x4e7040,
       accent: { build: 0x7358a0, protect: 0xb06a7a, grow: 0x7aa36a },
+    },
+    // Night, the dark page. The same three branches as light on the dark:
+    // violet hair, blush, and the acid green of her eyes, which also runs up
+    // the trunk. The fog is the page itself, so dimmed branches sink into it.
+    Night: {
+      onLight: false,
+      fog: 0x0f0b14,
+      core: 0xe7d6ff,
+      halo: 0x6a3cc4,
+      particle: 0xb592f0,
+      trunk: 0xb4e04c,
+      accent: { build: 0xb28cf0, protect: 0xeb8fb0, grow: 0xb4e04c },
     },
     Violet: {
       onLight: false,
@@ -98,13 +110,17 @@ export const CATEGORY_ACCENT_TEXT: Record<
   // 6.8:1, 4.9:1 and 5.0:1 on the page, and still over 4.5:1 on the tinted
   // chip fill, which is the accent at 7% and near enough to the page.
   light: { build: "#62477f", protect: "#8b5761", grow: "#4e7040" },
-  // On a dark page: the pastel set, which already passes comfortably.
-  dark: { build: "#c3b0dc", protect: "#e2b4bc", grow: "#b9d3ad" },
+  // On the dark page: the night branch colours, lifted a step for small
+  // text; each is over 8:1 on the page.
+  dark: { build: "#c4a6f5", protect: "#f0a6c2", grow: "#bfe36a" },
 };
 
 /**
- * The site has one palette, bloom, which is a light page: it gets the drawn
- * Bloom sapling. Midnight and Violet stay defined as tuned token sets, nothing
- * selects them.
+ * The sapling per site theme: the drawn Bloom one on the light page, the
+ * emissive Night one on the dark page. Midnight and Violet stay defined as
+ * tuned token sets; nothing selects them.
  */
-export const SITE_SERVICE_TREE_THEME: ServiceTreeTheme = "Bloom";
+export const SITE_SERVICE_TREE_THEME: Record<"light" | "dark", ServiceTreeTheme> = {
+  light: "Bloom",
+  dark: "Night",
+};

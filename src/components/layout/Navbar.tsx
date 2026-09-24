@@ -17,6 +17,7 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { LanguageToggle } from "./LanguageToggle";
+import { ThemeToggle } from "./ThemeToggle";
 import { NavbarMobileMenu } from "./NavbarMobileMenu";
 
 /**
@@ -402,10 +403,11 @@ export function Navbar() {
                         // The current page is marked by the violet underline
                         // below and by `aria-current`, so the label itself
                         // does not have to carry a second, weaker signal.
-                        // One padding at every width: the French row is the
-                        // widest, and at 1024 the roomier lg padding brought
-                        // it within 15px of the language button.
-                        "group relative flex min-h-11 items-center whitespace-nowrap rounded-full px-3 font-medium text-sm transition-colors duration-200 ease-out",
+                        // Tighter below xl: the French row is the widest,
+                        // and at 1024 it has to fit beside three controls
+                        // (search, theme, language). Measured at 1024: 11px
+                        // left in French, 23 in German, 49 in English.
+                        "group relative flex min-h-11 items-center whitespace-nowrap rounded-full px-2 font-medium text-sm transition-colors duration-200 ease-out xl:px-3",
                         isActive
                           ? "font-semibold text-foreground"
                           : "text-foreground/90 hover:text-foreground",
@@ -503,6 +505,7 @@ export function Navbar() {
                   onOpen={openSearch}
                   onPreload={preloadSearch}
                 />
+                <ThemeToggle />
                 <LanguageToggle />
                 <button
                   aria-expanded={mobileMenuOpen}

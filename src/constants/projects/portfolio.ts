@@ -36,9 +36,9 @@ export const portfolio: Record<Language, LocalizedContent> = {
         figure: 1,
       },
       {
-        heading: "One theme, and the two scenes that stayed",
+        heading: "Two themes, and the two scenes that stayed",
         body: [
-          "There is one theme: dusty violet, sage and blush on a warm cream page, with a single aurora ribbon in the same three colours across the top. The ribbon is a WebGL shader, loaded lazily so it stays off the critical path. There is no dark mode and no toggle.",
+          "There are two themes. The light one is dusty violet, sage and blush on a warm cream page; the dark one takes the same colours into the night, a violet-black page with a brighter violet, a sharp green and a warm pink. A single aurora ribbon in the theme's three colours runs across the top, a WebGL shader loaded lazily so it stays off the critical path. The site starts in the theme the system asks for and remembers a choice made with the toggle. A small script in the head picks the theme before the first paint, so the dark page never flashes cream.",
           "In September I took every decorative effect off the site in one pass: glow shadows, glass surfaces, gradient text, shimmer, parallax and count-up numbers. What is left is one fade per block, hovers that only change colour, the custom cursor and the aurora. Every card on the site is built from the same recipe.",
           "Two three.js scenes survived that pass: the tree on the services page and the sphere of logos on /skills. They are the reason three.js is in the build at all.",
         ],
@@ -98,9 +98,9 @@ export const portfolio: Record<Language, LocalizedContent> = {
         figure: 1,
       },
       {
-        heading: "Ein Theme und die zwei Szenen, die bleiben durften",
+        heading: "Zwei Themes und die zwei Szenen, die bleiben durften",
         body: [
-          "Es gibt ein Theme: gedämpftes Violett, Salbei und Rosé auf warmem Crème, mit einem einzelnen Aurora-Band in denselben drei Farben am oberen Rand. Das Band ist ein WebGL-Shader und lädt lazy, damit es vom kritischen Pfad wegbleibt. Einen Dark Mode oder einen Umschalter gibt es nicht.",
+          "Es gibt zwei Themes. Das helle ist gedämpftes Violett, Salbei und Rosé auf warmem Crème; das dunkle nimmt dieselben Farben in die Nacht mit, eine violett-schwarze Seite mit hellerem Violett, kräftigem Grün und warmem Rosa. Oben läuft ein einzelnes Aurora-Band in den drei Farben des Themes, ein WebGL-Shader, der lazy lädt, damit er vom kritischen Pfad wegbleibt. Die Seite startet im Theme, das das System verlangt, und merkt sich eine Wahl über den Umschalter. Ein kleines Skript im Head wählt das Theme vor dem ersten Paint, damit die dunkle Seite nie crèmefarben aufblitzt.",
           "Im September habe ich in einem Durchgang jeden dekorativen Effekt von der Seite genommen: Glow-Schatten, Glasflächen, Verlaufstext, Schimmer, Parallax und hochzählende Zahlen. Übrig sind ein Einblenden pro Block, Hovers, die nur die Farbe ändern, der eigene Cursor und die Aurora. Jede Karte auf der Seite folgt demselben Rezept.",
           "Zwei three.js-Szenen haben diesen Durchgang überlebt: der Baum auf der Services-Seite und die Logo-Kugel auf /skills. Ihretwegen ist three.js überhaupt im Build.",
         ],
@@ -160,9 +160,9 @@ export const portfolio: Record<Language, LocalizedContent> = {
         figure: 1,
       },
       {
-        heading: "Un seul thème, et les deux scènes restées",
+        heading: "Deux thèmes, et les deux scènes restées",
         body: [
-          "Il y a un seul thème : violet poudré, sauge et rose pâle sur une page crème chaude, avec un unique ruban d'aurore dans ces trois couleurs en haut de l'écran. Le ruban est un shader WebGL, chargé en lazy pour rester hors du chemin critique. Il n'y a ni mode sombre ni bouton pour en changer.",
+          "Il y a deux thèmes. Le clair, c'est du violet poudré, de la sauge et du rose pâle sur une page crème chaude ; le sombre emmène les mêmes couleurs dans la nuit, une page noir violacé avec un violet plus clair, un vert vif et un rose chaud. En haut passe un unique ruban d'aurore dans les trois couleurs du thème, un shader WebGL chargé en lazy pour rester hors du chemin critique. Le site démarre dans le thème que demande le système et retient un choix fait avec le bouton. Un petit script dans le head choisit le thème avant le premier rendu, pour que la page sombre ne clignote jamais en crème.",
           "En septembre, j'ai retiré tous les effets décoratifs du site en une seule passe : ombres lumineuses, surfaces de verre, texte en dégradé, reflets, parallaxe et chiffres qui s'incrémentent. Il reste un fondu par bloc, des survols qui ne changent que la couleur, le curseur maison et l'aurore. Chaque carte du site suit la même recette.",
           "Deux scènes three.js ont survécu à cette passe : l'arbre de la page Services et la sphère de logos sur /skills. C'est pour elles que three.js est dans le build.",
         ],
@@ -221,9 +221,9 @@ export const portfolio: Record<Language, LocalizedContent> = {
         figure: 1,
       },
       {
-        heading: "一套主题，和留下来的两个场景",
+        heading: "两套主题，和留下来的两个场景",
         body: [
-          "全站只有一套主题：暖奶油色的页面上，灰调的紫、鼠尾草绿和淡粉，顶部横着一条同样三种颜色的极光带。极光带是一个 WebGL 着色器，懒加载，不占关键路径。没有深色模式，也没有切换开关。",
+          "站上有两套主题。浅色是暖奶油色页面上灰调的紫、鼠尾草绿和淡粉；深色把同样的颜色带进夜里：紫黑色的页面，配更亮的紫、鲜明的绿和暖粉。顶部横着一条主题三色的极光带，是一个懒加载的 WebGL 着色器，不占关键路径。网站按系统设置选择主题，用切换按钮选过之后会记住。head 里的一小段脚本在首次绘制前就定好主题，所以深色页面不会先闪一下奶油色。",
           "九月我一次性拿掉了站上所有装饰效果：发光阴影、玻璃质感、渐变文字、光泽扫过、视差和数字滚动。留下来的是每个区块一次淡入、只变颜色的悬停、自定义光标和极光。站上每张卡片都用同一套做法。",
           "有两个 three.js 场景留了下来：服务页上的树，以及 /skills 上的图标球体。three.js 之所以在构建里，就是因为它们。",
         ],
