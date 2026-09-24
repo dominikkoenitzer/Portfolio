@@ -55,7 +55,7 @@ const CARD =
  * radius and focus behaviour; the variant only supplies the surface.
  */
 const ACTION_BASE =
-  "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-xs transition-colors duration-200 ease-out";
+  "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-sm transition-colors duration-200 ease-out";
 
 const TOOLBAR =
   "flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-2 lg:flex-row lg:items-center";
@@ -118,7 +118,7 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`h-9 flex-1 rounded-lg px-3.5 font-medium text-xs transition-colors duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
+            className={`h-9 flex-1 rounded-lg px-3.5 font-medium text-sm transition-colors duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
               active
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -230,7 +230,6 @@ export function ProjectsSection() {
           as a single column. */}
       <SectionHeading
         align="left"
-        eyebrow={t.eyebrow}
         subtitle={t.subheading}
         title={t.heading}
       />
@@ -245,7 +244,7 @@ export function ProjectsSection() {
           <span className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-full border border-border/60 text-primary">
             <Wrench className="h-6 w-6" />
           </span>
-          <p className="eyebrow mb-3">{t.wipEyebrow}</p>
+          <p className="mb-3 font-semibold text-foreground text-sm">{t.wipEyebrow}</p>
           <h2 className="font-bold text-xl sm:text-2xl">{t.wipTitle}</h2>
           <p className="mt-4 max-w-md text-balance text-muted-foreground leading-relaxed">
             {t.wipBody}
@@ -264,7 +263,7 @@ export function ProjectsSection() {
               className="mb-10 max-w-3xl border-l-2 border-primary/35 pl-5 sm:pl-6"
               variants={REVEAL}
             >
-              <p className="eyebrow mb-2.5">{t.disclosureEyebrow}</p>
+              <p className="mb-2 font-semibold text-foreground text-sm">{t.disclosureEyebrow}</p>
               <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
                 {t.disclosureBody}
               </p>
@@ -332,7 +331,7 @@ export function ProjectsSection() {
               >
                 <p
                   aria-live="polite"
-                  className="text-muted-foreground text-xs tabular-nums"
+                  className="text-muted-foreground text-sm tabular-nums"
                 >
                   {t.showingCount
                     .replace("{count}", String(visible.length))
@@ -341,7 +340,7 @@ export function ProjectsSection() {
                 {tech ? (
                   <button
                     aria-label={`${t.techFilter.replace("{tech}", tech)}. ${t.clearTech}`}
-                    className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-xs transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-sm transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
                     onClick={() => updateParams({ tech: "" })}
                     type="button"
                   >
@@ -464,13 +463,13 @@ export function ProjectsSection() {
                     {/* Content panel: title, date, tagline, description, tags,
                         actions, in that order and nowhere else. */}
                     <div className="flex flex-col p-5 sm:p-6">
-                      <h2 className="font-semibold text-xl leading-tight tracking-tight sm:text-2xl">
+                      <h2 className="title-serif font-semibold text-xl leading-tight sm:text-2xl">
                         {project.title}
                       </h2>
                       {/* Date and platform on one line: the type filter needs a
                           visible counterpart on the card, and a meta line is
                           quieter than a chip on top of the screenshot. */}
-                      <p className="mt-1.5 font-medium text-[11px] text-muted-foreground uppercase tracking-[0.18em]">
+                      <p className="mt-1.5 text-muted-foreground text-sm">
                         {project.dateLabel} ·{" "}
                         {isDesktopApp(project) ? t.filterDesktop : t.filterWeb}
                       </p>

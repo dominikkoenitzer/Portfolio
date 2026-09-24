@@ -137,7 +137,7 @@ export function ProjectFigure({
           {caption}
         </figcaption>
       ) : label ? (
-        <figcaption className="mt-2.5 text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+        <figcaption className="mt-2.5 text-muted-foreground text-sm">
           {label}
         </figcaption>
       ) : null}
@@ -216,7 +216,7 @@ export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
             </span>
             <span
               aria-hidden
-              className="mt-1.5 block text-[10px] text-muted-foreground uppercase tracking-[0.18em]"
+              className="mt-1.5 block text-muted-foreground text-sm"
             >
               {stat.label}
             </span>
@@ -414,7 +414,7 @@ export function Lightbox({
       />
 
       <div className="relative flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <p className="text-[11px] text-muted-foreground uppercase tracking-[0.18em] tabular-nums">
+        <p className="text-muted-foreground text-sm tabular-nums">
           {labels.counter
             .replace("{index}", String(index + 1))
             .replace("{total}", String(total))}
