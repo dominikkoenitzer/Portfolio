@@ -116,8 +116,12 @@ function CodeExcerpt({
   const reduceMotion = useReducedMotion();
   return (
     <motion.figure className="m-0" {...revealOnScroll(reduceMotion)}>
+      {/* Focusable because it scrolls sideways: without a tab stop a keyboard
+          user cannot reach the end of a long line. The site-wide
+          :focus-visible ring shows where focus is. */}
       <pre
         className={`${CARD} code-excerpt overflow-x-auto p-5 text-[13px] leading-relaxed sm:p-6`}
+        tabIndex={0}
       >
         <code>{code.text}</code>
       </pre>
