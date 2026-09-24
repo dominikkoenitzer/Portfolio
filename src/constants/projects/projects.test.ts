@@ -9,6 +9,7 @@ import {
 } from "./index";
 import { PROJECT_STACKS } from "./stacks";
 import { SKILL_CATEGORIES } from "@/constants/skills";
+import { getProjectSeoTitle } from "@/config/seo-data/projects";
 
 /**
  * The project list is hand-maintained data that feeds the cards, the detail
@@ -177,6 +178,18 @@ describe("the project list", () => {
       if (!project.ended) continue;
       expect(project.ended, project.slug).toMatch(/^\d{4}-(?:0[1-9]|1[0-2])$/);
       expect(project.ended >= project.date, project.slug).toBe(true);
+    }
+  });
+
+  // Without an entry the page falls back to the bare name ("Mochi"), which
+  // four projects shipped with unnoticed. The site appends a 19-character
+  // suffix, and Google cuts a title at roughly 60.
+  it("gives every project a search title that says what it is", () => {
+    for (const project of projects) {
+      const title = getProjectSeoTitle(project.slug, project.title);
+      expect(title, project.slug).not.toBe(project.title);
+      expect(title.startsWith(`${project.title}, `), project.slug).toBe(true);
+      expect(title.length, project.slug).toBeLessThanOrEqual(40);
     }
   });
 });
