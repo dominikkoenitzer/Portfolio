@@ -21,8 +21,6 @@ export const PROJECT_STACKS: Record<string, readonly string[]> = {
   senbon: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Bun", "Vercel", "PostgreSQL"],
   oxidize: ["Rust"],
   inkling: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Bun", "SQLite"],
-  cyberia: ["React", "TypeScript", "Node.js", "Python", "Bun"],
-  accela: ["React", "JavaScript (ES6+)", "Bun"],
   mochi: ["Rust"],
 };
 

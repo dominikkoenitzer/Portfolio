@@ -226,24 +226,6 @@ A desktop study companion for notes, tasks, flashcards and grades, kept in one S
 
 ---
 
-### Cyberia, September 2026
-Case study: https://dk.punds.ch/projects/cyberia
-Source: private
-Stack: React, TypeScript, Node.js, Python
-
-An anime discovery and streaming interface that runs only on his machine: a React front end, an Express API and a small Python bridge on loopback. Sources are raced and the first one that verifies answers while the rest are cancelled, subtitles are converted to WebVTT in the browser, and the external player runs in a sandboxed frame.
-
----
-
-### Accela, September 2026
-Case study: https://dk.punds.ch/projects/accela
-Source: private
-Stack: React, JavaScript
-
-A films and series interface on TMDB data, built with React 19 and Vite in plain JSX, running only on his machine. It treats its own URL and its own storage as untrusted input: routes are parsed defensively, and the watch history and saved list are validated every time they are read.
-
----
-
 ### Mochi, September 2026
 Case study: https://dk.punds.ch/projects/mochi
 Source and download: https://github.com/dominikkoenitzer/Mochi
@@ -327,8 +309,6 @@ There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or an
 - https://dk.punds.ch/projects/senbon
 - https://dk.punds.ch/projects/oxidize
 - https://dk.punds.ch/projects/inkling
-- https://dk.punds.ch/projects/cyberia
-- https://dk.punds.ch/projects/accela
 - https://dk.punds.ch/projects/mochi
 - https://dk.punds.ch/services
 - https://dk.punds.ch/contact

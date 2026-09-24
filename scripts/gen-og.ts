@@ -187,8 +187,6 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
   { slug: "portfolio", title: "Portfolio", subtitle: "The site you are looking at. Yes, it is in the portfolio." },
   { slug: "oxidize", title: "Oxidize", subtitle: "Uninstall a program, then hunt down what it left behind" },
   { slug: "inkling", title: "Inkling", subtitle: "Your notes quietly turn into tasks and flashcards" },
-  { slug: "cyberia", title: "Cyberia", subtitle: "An anime app built around waiting as little as possible" },
-  { slug: "accela", title: "Accela", subtitle: "Films and series, in an app that trusts nothing it stores" },
   { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager that always gives the desktop back" },
 ];
 
