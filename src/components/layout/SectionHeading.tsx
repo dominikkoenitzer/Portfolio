@@ -16,7 +16,7 @@ const TITLE_LINE = {
 interface SectionHeadingProps {
   title: string;
   subtitle?: string;
-  /** Optional mono-uppercase label rendered above the title. */
+  /** Optional label rendered above the title. */
   eyebrow?: string;
   /**
    * Heading level. Defaults to `h1` so a page's primary title is a real `<h1>`
