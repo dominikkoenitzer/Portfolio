@@ -97,25 +97,10 @@ function FeatureSection({
   );
 }
 
-/* A single mono micro-label, used everywhere for rhythm. */
-function MicroLabel({
-  children,
-  tone = "muted",
-}: {
-  children: ReactNode;
-  tone?: "muted" | "primary" | "destructive";
-}) {
-  const color =
-    tone === "primary"
-      ? "text-primary"
-      : tone === "destructive"
-        ? "text-destructive"
-        : "text-muted-foreground";
-  return (
-    <p className={`text-[10px] uppercase tracking-[0.22em] ${color}`}>
-      {children}
-    </p>
-  );
+/* A label above a group in the links rail: plain words at reading size, set
+   apart by weight, not by capitals and letter-spacing. */
+function RailLabel({ children }: { children: ReactNode }) {
+  return <p className="font-semibold text-foreground text-sm">{children}</p>;
 }
 
 /**
@@ -297,7 +282,7 @@ const ProjectDetails = () => {
           <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
             <nav
               aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em]"
+              className="flex items-center gap-2 text-muted-foreground text-sm"
             >
               {/* `inline-flex` is not cosmetic here: it is what the touch
                   tap-target rule in index.css matches, so a breadcrumb is a
@@ -325,7 +310,7 @@ const ProjectDetails = () => {
             </nav>
 
             <Link
-              className="inline-flex items-center gap-2 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
               to="/projects"
               {...warmOnIntent("/projects")}
             >
@@ -337,9 +322,9 @@ const ProjectDetails = () => {
           {/* Title and tagline left, the picture right. */}
           <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
             <motion.div {...revealOnScroll(reduceMotion)}>
-              <p className="eyebrow">{projectTimeline}</p>
+              <p className="font-medium text-sage-deep text-sm">{projectTimeline}</p>
 
-              <h1 className="mt-5 font-bold text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+              <h1 className="title-serif mt-5 font-bold text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
                 {project.title}
               </h1>
 
@@ -394,7 +379,7 @@ const ProjectDetails = () => {
               </div>
 
               {project.downloadUrl ? (
-                <p className="mt-4 max-w-prose text-muted-foreground text-xs leading-relaxed">
+                <p className="mt-4 max-w-prose text-muted-foreground text-sm leading-relaxed">
                   {project.downloadNote ?? t.downloadNote}
                 </p>
               ) : null}
@@ -461,7 +446,7 @@ const ProjectDetails = () => {
           >
             {specRows.map((row) => (
               <div className="max-w-xs" key={row.label}>
-                <dt className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                <dt className="font-medium text-muted-foreground text-sm">
                   {row.label}
                 </dt>
                 <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
@@ -535,7 +520,7 @@ const ProjectDetails = () => {
                     rail; repeating them here only doubled the page. -------- */}
             <aside className="hidden lg:block">
               <div className={`sticky top-28 w-64 ${CARD} p-6`}>
-                <MicroLabel>{t.links}</MicroLabel>
+                <RailLabel>{t.links}</RailLabel>
                 <div className="mt-4 flex flex-col gap-2">
                   {project.downloadUrl ? (
                     <Button
@@ -607,7 +592,7 @@ const ProjectDetails = () => {
                     aria-label={t.onThisPage}
                     className="mt-6 border-border/60 border-t pt-5"
                   >
-                    <MicroLabel>{t.onThisPage}</MicroLabel>
+                    <RailLabel>{t.onThisPage}</RailLabel>
                     <ol className="mt-3 space-y-1">
                       {outline.map((entry, index) => (
                         <li key={entry.id}>
@@ -618,7 +603,7 @@ const ProjectDetails = () => {
                           >
                             <span
                               aria-hidden
-                              className="w-5 shrink-0 text-[11px] leading-5"
+                              className="w-6 shrink-0 tabular-nums"
                             >
                               {String(index + 1).padStart(2, "0")}
                             </span>
@@ -639,11 +624,11 @@ const ProjectDetails = () => {
             {...revealOnScroll(reduceMotion)}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <h2 className="font-bold text-2xl tracking-tight sm:text-3xl">
+              <h2 className="title-serif font-bold text-2xl sm:text-3xl">
                 {t.moreProjects}
               </h2>
               <Link
-                className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground uppercase tracking-[0.18em] transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
                 to="/projects"
                 {...warmOnIntent("/projects")}
               >
@@ -688,10 +673,10 @@ const ProjectDetails = () => {
                   ) : null}
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-heading text-lg tracking-tight transition-colors duration-200 group-hover:text-primary">
+                      <p className="title-serif text-lg transition-colors duration-200 group-hover:text-primary">
                         {item.title}
                       </p>
-                      <p className="mt-1 text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+                      <p className="mt-1 text-muted-foreground text-sm">
                         {item.dateLabel}
                       </p>
                     </div>
