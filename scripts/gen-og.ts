@@ -11,8 +11,10 @@
  * Run: `bun scripts/gen-og.ts`. Needs `@resvg/resvg-js` and `sharp`, which are
  * not kept in package.json because these change rarely: install them once into
  * the temp folder below (`cd %TEMP%/resvg && bun add @resvg/resvg-js sharp`) or
- * into the repo transiently. The fonts are fetched from the Google Fonts repo
- * into the temp folder on first run; resvg cannot see web fonts.
+ * into the repo transiently. The fonts are fetched into the temp folder on
+ * first run, static cuts only (resvg cannot see web fonts and would draw a
+ * variable font at its default weight): Geist from its own repo, the other
+ * two from the Google Fonts repo.
  *
  * The cards are written as 128-colour palette PNGs. resvg's 32-bit output is
  * ~950 KB per card because the grain filter defeats PNG compression, and
@@ -37,22 +39,23 @@ const { Resvg } = transient<typeof import("@resvg/resvg-js")>("@resvg/resvg-js",
 const sharp = transient<typeof import("sharp")>("sharp", "sharp");
 
 const FONT_DIR = join(tmpdir(), "og-fonts");
-const FONT_FILES = [
-  "mplusrounded1c/MPLUSRounded1c-ExtraBold.ttf",
-  "zenmarugothic/ZenMaruGothic-Medium.ttf",
-  "zenmarugothic/ZenMaruGothic-Bold.ttf",
-  "zenkakugothicnew/ZenKakuGothicNew-Regular.ttf",
-  "zenkakugothicnew/ZenKakuGothicNew-Medium.ttf",
+const GOOGLE_FONTS = "https://github.com/google/fonts/raw/main/ofl";
+const GEIST = "https://github.com/vercel/geist-font/raw/main/fonts/Geist/ttf";
+const FONT_URLS = [
+  `${GOOGLE_FONTS}/mplusrounded1c/MPLUSRounded1c-ExtraBold.ttf`,
+  `${GOOGLE_FONTS}/kaiseidecol/KaiseiDecol-Bold.ttf`,
+  `${GEIST}/Geist-Regular.ttf`,
+  `${GEIST}/Geist-Medium.ttf`,
 ];
 
 async function ensureFonts(): Promise<string[]> {
   mkdirSync(FONT_DIR, { recursive: true });
   const paths: string[] = [];
-  for (const rel of FONT_FILES) {
-    const out = join(FONT_DIR, rel.split("/")[1]);
+  for (const url of FONT_URLS) {
+    const out = join(FONT_DIR, url.split("/").at(-1) as string);
     if (!existsSync(out)) {
-      const res = await fetch(`https://github.com/google/fonts/raw/main/ofl/${rel}`);
-      if (!res.ok) throw new Error(`font download failed: ${rel} (${res.status})`);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`font download failed: ${url} (${res.status})`);
       writeFileSync(out, new Uint8Array(await res.arrayBuffer()));
     }
     paths.push(out);
@@ -76,9 +79,14 @@ const VIOLET = "#5a4276";
 const SAGE = "#a9c39a";
 const BLUSH = "#e4d3e0";
 
-const TITLE_FONT = "M PLUS Rounded 1c";
-const SUB_FONT = "Zen Maru Gothic";
-const BODY_FONT = "Zen Kaku Gothic New";
+// The site's three faces in their site roles: the hero name's face for the
+// name on the home card, Kaisei Decol for every other title, Geist for text.
+// resvg matches the family name inside the file, and M PLUS Rounded 1c calls
+// itself "Rounded Mplus 1c" there; under the web name the home card fell back
+// to the body face.
+const NAME_FONT = "Rounded Mplus 1c";
+const TITLE_FONT = "Kaisei Decol";
+const BODY_FONT = "Geist";
 
 /** Greedy word wrap for the subtitle: two lines at most, so it never runs
  *  under the footer. */
@@ -126,7 +134,7 @@ const backdrop = `
   <rect width="1200" height="630" filter="url(#grain)"/>`;
 
 const eyebrow = (text: string, y: number) =>
-  `<text x="120" y="${y}" font-family="${BODY_FONT}" font-weight="500" font-size="24" letter-spacing="6" fill="${SAGE_DEEP}">${esc(text)}</text>`;
+  `<text x="120" y="${y}" font-family="${BODY_FONT}" font-weight="500" font-size="26" fill="${SAGE_DEEP}">${esc(text)}</text>`;
 
 const footer = (text: string) =>
   `<text x="120" y="552" font-family="${BODY_FONT}" font-weight="400" font-size="24" fill="${MUTED}">${esc(text)}</text>`;
@@ -135,15 +143,15 @@ const subtitle = (text: string, y: number) =>
   wrap(text, 58)
     .map(
       (line, i) =>
-        `<text x="120" y="${y + i * 46}" font-family="${SUB_FONT}" font-weight="500" font-size="34" fill="${FOREGROUND}" fill-opacity="0.82">${esc(line)}</text>`,
+        `<text x="120" y="${y + i * 46}" font-family="${BODY_FONT}" font-weight="500" font-size="34" fill="${FOREGROUND}" fill-opacity="0.82">${esc(line)}</text>`,
     )
     .join("\n  ");
 
 const card = (title: string, sub: string, path: string) =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
-  ${eyebrow("DOMINIK KÖNITZER", 196)}
-  <text x="114" y="330" font-family="${TITLE_FONT}" font-weight="800" font-size="104" fill="url(#name)">${esc(title)}</text>
+  ${eyebrow("Dominik Könitzer", 196)}
+  <text x="114" y="330" font-family="${TITLE_FONT}" font-weight="700" font-size="104" fill="url(#name)">${esc(title)}</text>
   ${subtitle(sub, 404)}
   ${footer(`dk.punds.ch${path}`)}
 </svg>`;
@@ -152,9 +160,9 @@ const card = (title: string, sub: string, path: string) =>
 const homeCard = () =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
-  ${eyebrow("HI, I'M", 168)}
-  <text x="114" y="292" font-family="${TITLE_FONT}" font-weight="800" font-size="112" fill="url(#name)">Dominik</text>
-  <text x="114" y="404" font-family="${TITLE_FONT}" font-weight="800" font-size="112" fill="url(#name)">Könitzer</text>
+  ${eyebrow("Hi, I'm", 168)}
+  <text x="114" y="292" font-family="${NAME_FONT}" font-weight="800" font-size="112" fill="url(#name)">Dominik</text>
+  <text x="114" y="404" font-family="${NAME_FONT}" font-weight="800" font-size="112" fill="url(#name)">Könitzer</text>
   ${subtitle("Software engineer and web developer in Zürich", 470)}
   ${footer("dk.punds.ch")}
 </svg>`;
