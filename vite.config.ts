@@ -204,22 +204,22 @@ function vendorChunk(id: string): string | undefined {
 }
 
 /**
- * Preloads the woff2 files that paint the first screen (the hero name's
- * M PLUS Rounded face and the Geist file, body and headings in one) straight from the HTML. Without this
+ * Preloads the woff2 files that paint the first screen (Kaisei Decol for the
+ * hero name and every page title, and the Geist file for all text) straight
+ * from the HTML. Without this
  * the browser only learns about them after the stylesheet has arrived and been
  * parsed, one full round trip later, and on a phone that hop sat right on the
  * LCP text. Vite hashes the file names, so the tags are injected at build time
  * from the emitted bundle rather than hand-written in index.html. The
- * prerender script reuses dist/index.html as its shell and then keeps, per
- * route, only the faces that route's first screen paints (`firstScreenFonts`
- * there): preloading a font that is not used within seconds earns a console
- * warning instead of a win.
+ * prerender script reuses dist/index.html as its shell, so every route gets
+ * them, and every route's first screen paints both. Preloading a font that
+ * is not used within seconds earns a console warning instead of a win, so
+ * list only what the first screen paints.
  */
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
-  /^assets[\\/]m-plus-rounded-1c-latin-800-normal-[\w-]+\.woff2$/,
   // Geist, the reading face: one variable file for every weight.
   /^assets[\\/]geist-latin-wght-normal-[\w-]+\.woff2$/,
-  // Kaisei Decol, the title face: every route but home opens on a title.
+  // Kaisei Decol: the hero name on home, the title everywhere else.
   /^assets[\\/]kaisei-decol-latin-700-normal-[\w-]+\.woff2$/,
 ];
 
