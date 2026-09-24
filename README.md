@@ -78,7 +78,7 @@ bun run dev     # → http://localhost:1000
 | `src/constants/projects/` | Project data, one module per project |
 | `src/config/seo-data/` | FAQ / HowTo content feeding the structured data |
 | `public/` | Static assets, `og/` social cards, `llms.txt`, `sitemap.xml` |
-| `api/` | Vercel serverless functions (contact form, GitHub contributions, keepalive) |
+| `api/` | Vercel serverless functions (contact form, GitHub contributions, live test counts, keepalive) |
 
 ## Contributing
 
