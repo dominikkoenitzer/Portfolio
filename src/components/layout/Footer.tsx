@@ -30,8 +30,7 @@ const NAV_KEY_BY_PATH: Record<string, keyof typeof translations.en.nav> = {
  * `.eyebrow`: the eyebrow is sage, and sage is the signal colour. Three of them
  * stacked in a footer on all 21 routes would stop being a signal.
  */
-const COL_LABEL =
-  "text-[11px] text-muted-foreground uppercase tracking-[0.18em]";
+const COL_LABEL = "font-semibold text-foreground text-sm";
 
 /**
  * Every footer link is a 44px row, so the whole grid is a column of legal

@@ -122,8 +122,12 @@
      class cannot beat, so every eyebrow on the site has always rendered in the
      body sans. The class now says what it does, and the two places that really
      did render mono (`dt`, `figcaption`) are in the element list above, so all
-     micro-labels finally share one face. */
-  @apply text-[10px] uppercase tracking-[0.22em] text-sage-deep;
+     micro-labels finally share one face.
+
+     Sentence case at reading size, set apart by colour and weight: the
+     uppercase, letter-spaced version read as machine-made and was hard to
+     read at 10px. */
+  @apply text-sm font-medium text-sage-deep;
 }
 
 @utility btn-icon-nudge {

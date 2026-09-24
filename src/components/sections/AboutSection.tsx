@@ -218,7 +218,7 @@ function InfoCard({ icon, label, value, to }: InfoCardProps) {
           {icon}
         </span>
         <div className="min-w-0">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-[0.18em]">
+          <p className="text-muted-foreground text-sm">
             {label}
           </p>
           <p className="mt-1 font-medium text-sm transition-colors duration-200 ease-out group-hover/tile:text-primary sm:text-base">
