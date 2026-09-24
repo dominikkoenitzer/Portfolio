@@ -210,16 +210,16 @@ function vendorChunk(id: string): string | undefined {
  * parsed, one full round trip later, and on a phone that hop sat right on the
  * LCP text. Vite hashes the file names, so the tags are injected at build time
  * from the emitted bundle rather than hand-written in index.html. The
- * prerender script reuses dist/index.html as its shell, so every route gets
- * them. Only files the first screen actually paints are listed: preloading a
- * font that is not used within seconds earns a console warning instead of a
- * win.
+ * prerender script reuses dist/index.html as its shell and then keeps, per
+ * route, only the faces that route's first screen paints (`firstScreenFonts`
+ * there): preloading a font that is not used within seconds earns a console
+ * warning instead of a win.
  */
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
   /^assets[\\/]m-plus-rounded-1c-latin-800-normal-[\w-]+\.woff2$/,
   // Geist, the reading face: one variable file for every weight.
   /^assets[\\/]geist-latin-wght-normal-[\w-]+\.woff2$/,
-  // Kaisei Decol, the title face: every route opens on a title.
+  // Kaisei Decol, the title face: every route but home opens on a title.
   /^assets[\\/]kaisei-decol-latin-700-normal-[\w-]+\.woff2$/,
 ];
 
