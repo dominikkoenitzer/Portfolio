@@ -4,6 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { TechIcon } from "@/components/ui/tech-badge";
 import { fitTags } from "@/lib/fit-tags";
 
 /**
@@ -18,6 +19,8 @@ import { fitTags } from "@/lib/fit-tags";
  */
 
 const CHIP = "rounded-full border border-border/60 px-3 py-1 text-xs";
+/** A skill chip: its mark, then its name, like the tags on the projects. */
+const WITH_ICON = "inline-flex items-center gap-1.5";
 /** The off-layout copies must report their natural width: never shrunk, never wrapped. */
 const MEASURED = "shrink-0 whitespace-nowrap";
 const TAG_CHIP = `${CHIP} bg-secondary/50 text-foreground/80`;
@@ -36,9 +39,15 @@ const GAP = 8;
 const MAX_ROWS = 2;
 
 export function TimelineTags({
+  iconNames,
   tags,
   moreLabel,
 }: {
+  /**
+   * The same tags in English, index for index. The marks are keyed by their
+   * English names, so a German or Chinese card finds its icons through these.
+   */
+  iconNames?: string[];
   tags: string[];
   moreLabel: (count: number) => string;
 }) {
@@ -103,8 +112,9 @@ export function TimelineTags({
         className="pointer-events-none absolute inset-x-0 top-0 h-0 overflow-hidden"
       >
         <div className="flex w-max flex-nowrap gap-2" ref={measureRef}>
-          {tags.map((tag) => (
-            <span className={`${TAG_CHIP} ${MEASURED}`} key={tag}>
+          {tags.map((tag, i) => (
+            <span className={`${TAG_CHIP} ${WITH_ICON} ${MEASURED}`} key={tag}>
+              <TechIcon name={iconNames?.[i] ?? tag} />
               {tag}
             </span>
           ))}
@@ -113,8 +123,9 @@ export function TimelineTags({
       </div>
 
       <div className="flex flex-wrap items-center gap-2" ref={rowRef}>
-        {shown.map((tag) => (
-          <span className={TAG_CHIP} key={tag}>
+        {shown.map((tag, i) => (
+          <span className={`${TAG_CHIP} ${WITH_ICON}`} key={tag}>
+            <TechIcon name={iconNames?.[i] ?? tag} />
             {tag}
           </span>
         ))}
@@ -150,8 +161,9 @@ export function TimelineTags({
               side="top"
             >
               <div className="flex flex-wrap gap-1.5">
-                {hidden.map((tag) => (
-                  <span className={TAG_CHIP} key={tag}>
+                {hidden.map((tag, i) => (
+                  <span className={`${TAG_CHIP} ${WITH_ICON}`} key={tag}>
+                    <TechIcon name={iconNames?.[visible + i] ?? tag} />
                     {tag}
                   </span>
                 ))}
