@@ -1,21 +1,22 @@
 import type { PortfolioProject } from "@/constants/projects";
-import { getTechHref, TechIcon } from "@/components/ui/tech-badge";
+import { getTechHref, getTechIcon, TechIcon } from "@/components/ui/tech-badge";
 import LogoLoop, { type LogoItem } from "./LogoLoop";
 
 /**
- * The tech a project names that has a home of its own, each once: the stack
- * first (what it is built with), then the tags. Topics without a website (CLI,
- * Systems) stay on the tag row and out of the loop.
+ * Everything a project names, each once: the stack first (what it is built
+ * with), then the tags (what it is about). This strip is the page's one list
+ * of its tech, so topics without a website (CLI, Systems, Security) ride along
+ * unlinked, and the tools link to their own sites.
  */
 function getProjectLogos(project: PortfolioProject): LogoItem[] {
   const names = [...new Set([...project.stack, ...project.tags])];
   return names.flatMap((name) => {
+    if (!getTechIcon(name)) return [];
     const href = getTechHref(name);
-    if (!href) return [];
     return [
       {
         ariaLabel: name,
-        href,
+        ...(href ? { href } : {}),
         node: (
           <span className="inline-flex items-center gap-2.5">
             <TechIcon className="h-[1em] w-[1em]" name={name} />

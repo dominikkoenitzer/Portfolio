@@ -153,7 +153,6 @@ export const zh = {
     download: "下载",
     sourceCode: "源代码",
     onThisPage: "本页内容",
-    builtWith: "技术栈",
     downloadNote:
       "首次启动：Windows SmartScreen 可能会提示，选择“更多信息”→“仍要运行”。",
     moreProjects: "更多项目",
