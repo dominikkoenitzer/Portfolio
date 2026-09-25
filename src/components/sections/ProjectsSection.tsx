@@ -55,7 +55,7 @@ const CARD =
  * radius and focus behaviour; the variant only supplies the surface.
  */
 const ACTION_BASE =
-  "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-sm transition-colors duration-200 ease-out";
+  "press inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-sm";
 
 const TOOLBAR =
   "flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-2 lg:flex-row lg:items-center";
@@ -118,7 +118,7 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`h-9 flex-1 rounded-lg px-3.5 font-medium text-sm transition-colors duration-200 ease-out sm:flex-none ${FOCUS_RING} ${
+            className={`press h-9 flex-1 rounded-lg px-3.5 font-medium text-sm sm:flex-none ${FOCUS_RING} ${
               active
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground"
