@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { ChevronRight, X } from "lucide-react";
 import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -7,7 +7,7 @@ import { LanguageToggle } from "@/components/layout/LanguageToggle";
 import { SearchTrigger } from "@/components/search/SearchTrigger";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { isActivePath } from "@/lib/active-path";
-import { DUR, EASE_OUT, SPRING_SOFT, stagger } from "@/lib/motion";
+import { DUR, EASE_OUT, SPRING_FLUID, SPRING_SOFT, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
@@ -24,7 +24,11 @@ interface NavbarMobileMenuProps {
   nav: Translation["nav"];
 }
 
-/** Full-screen mobile navigation drawer, portaled to document.body. */
+/**
+ * The mobile navigation as an iOS sheet, portaled to document.body: it rises
+ * from the bottom edge over a dimmed page, carries a grab bar, and a pull down
+ * on its top edge sends it away.
+ */
 export function NavbarMobileMenu({
   activePath,
   nav,
@@ -40,15 +44,18 @@ export function NavbarMobileMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
+  // The sheet is dragged only from its top edge (grab bar and controls), so
+  // the list below stays free to scroll when it is taller than the sheet.
+  const dragControls = useDragControls();
   // Motion-sensitive users get the drawer in place: it fades where it stands
   // instead of sliding, and its rows arrive together instead of cascading.
   const reduceMotion = prefersReducedMotion();
   const rowsVariants = reduceMotion ? stagger(0, 0) : stagger(0.12, 0.05);
   const rowVariants = {
-    hidden: { opacity: 0, x: reduceMotion ? 0 : 24 },
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 12 },
     show: {
       opacity: 1,
-      x: 0,
+      y: 0,
       transition: reduceMotion
         ? { duration: DUR.fast, ease: EASE_OUT }
         : SPRING_SOFT,
@@ -104,32 +111,34 @@ export function NavbarMobileMenu({
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop: tap to dismiss */}
+          {/* Backdrop: the page dims behind the sheet; tap to dismiss. */}
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-60 bg-background/95 lg:hidden"
+            className="fixed inset-0 z-60 bg-foreground/35 lg:hidden"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
             onClick={onClose}
             transition={{ duration: DUR.base, ease: EASE_OUT }}
           />
 
-          {/* Drawer: swipe right to close. The panel tracks the finger 1:1 to
-              the right and springs back when the throw is too short. */}
+          {/* The sheet: pull its top edge down to close. It follows the finger
+              1:1 downwards, resists upwards, and springs back when the throw
+              is too short to count. */}
           <motion.div
-            animate={reduceMotion ? { opacity: 1, x: 0 } : { x: 0 }}
+            animate={reduceMotion ? { opacity: 1, y: 0 } : { y: 0 }}
             aria-label={nav.menu}
             aria-modal="true"
-            className="overflow-y-auto overscroll-contain border-border/60 border-l bg-background shadow-xl lg:hidden"
-            data-mobile-scroll
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0, right: 1 }}
+            className="flex max-h-[88dvh] flex-col rounded-t-[28px] border-border/60 border-t bg-background shadow-xl lg:hidden"
+            drag={reduceMotion ? false : "y"}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragControls={dragControls}
+            dragElastic={{ top: 0.04, bottom: 1 }}
+            dragListener={false}
             dragMomentum={false}
-            exit={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
-            initial={reduceMotion ? { opacity: 0, x: 0 } : { x: "100%" }}
+            exit={reduceMotion ? { opacity: 0, y: 0 } : { y: "100%" }}
+            initial={reduceMotion ? { opacity: 0, y: 0 } : { y: "100%" }}
             onDragEnd={(_, info) => {
-              if (info.offset.x > 90 || info.velocity.x > 400) {
+              if (info.offset.y > 110 || info.velocity.y > 500) {
                 onClose();
               }
             }}
@@ -138,27 +147,38 @@ export function NavbarMobileMenu({
             role="dialog"
             style={{
               position: "fixed",
-              top: 0,
               bottom: 0,
+              left: 0,
               right: 0,
-              left: "auto",
               zIndex: 70,
+              marginInline: "auto",
               width: "100%",
-              maxWidth: "28rem",
-              paddingTop: "var(--safe-top, 0px)",
+              maxWidth: "32rem",
               paddingBottom: "var(--safe-bottom, 0px)",
             }}
             transition={
               reduceMotion
                 ? { duration: DUR.fast, ease: EASE_OUT }
-                : SPRING_SOFT
+                : SPRING_FLUID
             }
           >
-            {/* Home is the first row of the list below, so the head of the
-                drawer holds only the controls. The language picker and the
-                search button have to be here: the drawer covers the header, so
-                without them there is no way to reach either on a phone. */}
-            <div className="flex items-center justify-end gap-2 border-border/40 border-b px-6 pt-8 pb-6">
+            {/* The sheet's handle: grab bar and controls. A drag starts here
+                only, and `touch-none` hands the gesture to the drag instead of
+                the page. Home is the first row of the list below, so this row
+                holds only the controls. The language picker and the search
+                button have to be here: the sheet covers the header, so without
+                them there is no way to reach either on a phone. */}
+            <div
+              className="shrink-0 cursor-grab touch-none active:cursor-grabbing"
+              onPointerDown={(event) => {
+                if (!reduceMotion) dragControls.start(event);
+              }}
+            >
+              <div
+                aria-hidden
+                className="mx-auto mt-2.5 h-1.5 w-10 rounded-full bg-muted-foreground/30"
+              />
+            <div className="flex items-center justify-end gap-2 px-5 pt-3 pb-4">
               <SearchTrigger
                 onOpen={onOpenSearch}
                 onPreload={onPreloadSearch}
@@ -174,11 +194,18 @@ export function NavbarMobileMenu({
                 <X className="h-5 w-5" />
               </button>
             </div>
+            </div>
 
-            <nav aria-label={nav.menu} className="px-6 py-6">
+            <nav
+              aria-label={nav.menu}
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-6"
+              data-mobile-scroll
+            >
+              {/* One inset group, the way iOS lists its settings: a single
+                  rounded card with hairlines between the rows. */}
               <motion.ul
                 animate="show"
-                className="space-y-2"
+                className="divide-y divide-border/60 overflow-hidden rounded-2xl border border-border/60 bg-card"
                 initial="hidden"
                 variants={rowsVariants}
               >
@@ -189,10 +216,10 @@ export function NavbarMobileMenu({
                       <Link
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                          "flex min-h-14 items-center justify-between gap-4 rounded-xl border px-4 font-semibold text-base transition-colors duration-200 ease-out",
+                          "flex min-h-14 items-center justify-between gap-4 px-4 font-semibold text-base transition-colors duration-200 ease-out active:bg-primary/6",
                           isActive
-                            ? "border-primary/30 bg-primary/6 text-primary"
-                            : "border-border/60 bg-card text-foreground hover:border-primary/30 hover:text-primary",
+                            ? "bg-primary/6 text-primary"
+                            : "text-foreground hover:text-primary",
                         )}
                         /* A drag that starts on a row is a swipe-to-close, not
                            an attempt to drag the link somewhere. */
@@ -215,7 +242,7 @@ export function NavbarMobileMenu({
                 })}
               </motion.ul>
 
-              <div className="mt-8 border-border/40 border-t pt-6">
+              <div className="mt-4">
                 <Link
                   className="flex min-h-11 items-center justify-center text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-foreground"
                   onClick={onClose}
