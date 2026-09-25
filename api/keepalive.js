@@ -2,9 +2,11 @@
  * GET /api/keepalive
  *
  * Supabase pauses free projects after a week without activity, which would
- * take the contact form down with it. A daily Vercel cron (see `vercel.json`)
- * calls this route, and the one counting query it makes is enough to count
- * as activity. Nothing is written and nothing is returned but the count.
+ * take the contact form down with it. Supabase wants "a few requests each
+ * day"; one daily read still drew the pause warning. So four Vercel crons (see
+ * `vercel.json`, Hobby allows each only once a day) call this route, and each
+ * call stamps the single row in `keepalive` with the current time. Nothing
+ * else is touched.
  *
  * Environment: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (the table is behind RLS).
  */
@@ -28,9 +30,15 @@ export default async function handler(req, res) {
   // difference between "the service key is dead" and "the table is gone".
   let upstream;
   try {
-    upstream = await fetch(`${base}/rest/v1/contact_messages?select=id`, {
-      method: "HEAD",
-      headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact" },
+    upstream = await fetch(`${base}/rest/v1/keepalive?id=eq.1`, {
+      method: "PATCH",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({ touched_at: new Date().toISOString() }),
     });
   } catch (err) {
     console.error("keepalive: upstream request failed", err);
@@ -41,10 +49,14 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "Supabase unreachable" });
   }
 
-  // The count is what makes the query count as activity; it is not something an
-  // anonymous caller needs to know, so it goes to the log and not the response.
-  const total = Number((upstream.headers.get("content-range") || "").split("/")[1]);
-  console.log("keepalive: ok", Number.isFinite(total) ? total : "unknown");
+  // A PATCH that matches no row still answers 200, so an empty result means the
+  // row is missing and nothing was written.
+  const rows = await upstream.json().catch(() => []);
+  if (!Array.isArray(rows) || rows.length !== 1) {
+    console.error("keepalive: heartbeat row missing");
+    return res.status(502).json({ error: "Supabase unreachable" });
+  }
+  console.log("keepalive: ok", rows[0].touched_at);
   res.setHeader("Cache-Control", "no-store");
   return res.status(200).json({ ok: true });
 }
