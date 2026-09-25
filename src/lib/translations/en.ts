@@ -184,7 +184,7 @@ export const en = {
     close: "Close",
     loading: "Growing the tree…",
     intro:
-      "Freelance work for small teams and businesses, in three parts: building the thing, keeping it running, and getting it found. The prices below are starting points, so tell me what you need and you get a real number back.",
+      "Freelance work for small teams and businesses, in three parts: building the thing, keeping it running, and getting it found. The prices are starting points, so tell me what you need and you get a real number back.",
     inquireAbout: "Get in touch about {service}",
     includesLabel: "Includes",
     categoryMeta: {
