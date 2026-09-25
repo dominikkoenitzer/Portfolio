@@ -275,6 +275,13 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       target: "es2020",
+      // Fonts always ship as files. The production CSP allows `font-src 'self'`
+      // only, and Vite inlines anything under 4 kB as a data: URL, which the
+      // policy blocks: the small unicode-range slices of the Japanese faces
+      // (M PLUS 1 Code, Klee One) landed in the CSS as data: fonts and failed
+      // to load. Everything else keeps the default decision.
+      assetsInlineLimit: (file) =>
+        /\.(woff2?|ttf|otf)$/i.test(file) ? false : undefined,
       rollupOptions: {
         output: {
           manualChunks: vendorChunk,
