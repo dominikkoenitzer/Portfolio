@@ -26,7 +26,8 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     <ReactLenis
       root
       options={{
-        lerp: 0.1,
+        // A longer glide than the default, so the page drifts to rest.
+        lerp: 0.085,
         smoothWheel: true,
         wheelMultiplier: 1,
         // Leave touch scrolling native: smoothing it fights iOS momentum.
