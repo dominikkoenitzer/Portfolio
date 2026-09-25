@@ -103,6 +103,11 @@ const SKILL_ICONS: Record<string, ReactNode> = {
   french: <span className="text-[1.05rem] leading-none">🇫🇷</span>,
 };
 
+/** Whether a skill has its own mark (the tech badges reuse these). */
+export function hasSkillIcon(key: string): boolean {
+  return key in SKILL_ICONS;
+}
+
 export function getSkillIcon(key: string): ReactNode {
   return SKILL_ICONS[key] ?? <Sparkles size={S} />;
 }
