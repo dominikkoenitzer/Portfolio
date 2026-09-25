@@ -23,9 +23,10 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
+import { useOpenerOrigin } from "@/hooks/use-opener-origin";
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT } from "@/lib/motion";
+import { DUR, EASE_OUT, SPRING_FLUID } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import {
   groupHits,
@@ -64,12 +65,15 @@ interface SearchDialogProps {
 
 /**
  * One arrival and one departure, both transform and opacity only so neither
- * can trigger layout. The panel comes in on the slower of the two durations
- * because it has to read as arriving; it leaves on the faster one, because a
- * dismissal that lingers feels like lag. No spring: a bounce here would be the
- * kind of decoration this design has spent a pass removing.
+ * can trigger layout. The panel grows out of the search button on the fluid
+ * spring, the way iOS opens an app from its icon, while its fade keeps a short
+ * clock so the field is readable at once; it leaves on the fast curve, back
+ * into the button, because a dismissal that lingers feels like lag.
  */
-const PANEL_IN = { duration: DUR.base, ease: EASE_OUT } as const;
+const PANEL_IN = {
+  scale: SPRING_FLUID,
+  opacity: { duration: DUR.fast, ease: EASE_OUT },
+} as const;
 const PANEL_OUT = { duration: DUR.fast, ease: EASE_OUT } as const;
 const WASH = { duration: DUR.fast, ease: EASE_OUT } as const;
 
@@ -110,6 +114,8 @@ export default function SearchDialog({
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  // The panel grows out of the search button and returns into it.
+  useOpenerOrigin(panelRef, open && !reduceMotion);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
@@ -360,7 +366,7 @@ export default function SearchDialog({
     flat.length === 1
       ? copy.resultsOne
       : copy.results.replace("{count}", String(flat.length));
-  const rest = reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98, y: 6 };
+  const rest = reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.5 };
 
   return createPortal(
     <AnimatePresence>
@@ -384,7 +390,7 @@ export default function SearchDialog({
               shrunken dialog. */}
           <div className="pointer-events-none fixed inset-0 z-90 flex items-start justify-center sm:px-4 sm:pt-28">
             <motion.div
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
               aria-label={copy.label}
               aria-modal="true"
               className="pointer-events-auto flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-b-xl border-border/60 border-b bg-card shadow-xl sm:rounded-xl sm:border"
