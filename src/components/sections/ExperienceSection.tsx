@@ -136,11 +136,26 @@ function englishTags(entry: TimelineEntry): string[] | undefined {
   )?.tags;
 }
 
+/**
+ * How far back an entry lies, 0 for this year and 1 for a dozen years ago: the
+ * older a stage of life, the more its logo fades, like an old photograph.
+ */
+function ageOf(entry: TimelineEntry): number {
+  const years = new Date().getFullYear() - Number(entry.start.slice(0, 4));
+  return Math.min(Math.max(years / 12, 0), 1);
+}
+
 function LogoTile({ entry }: { entry: TimelineEntry }) {
+  // Only the picture fades, never the text beside it; hovering the card
+  // brings the colour back.
+  const age = ageOf(entry);
+  const faded = {
+    filter: `saturate(${(1 - 0.55 * age).toFixed(2)}) sepia(${(0.18 * age).toFixed(2)})`,
+  };
   if (entry.logo) {
     return (
       <div
-        className={`h-12 w-12 overflow-hidden rounded-xl border border-border/60 sm:h-14 sm:w-14 ${
+        className={`memory-logo h-12 w-12 overflow-hidden rounded-xl border border-border/60 sm:h-14 sm:w-14 ${
           entry.logoFill ? "" : "flex items-center justify-center bg-white p-1.5"
         }`}
       >
@@ -151,6 +166,7 @@ function LogoTile({ entry }: { entry: TimelineEntry }) {
           height={56}
           loading="lazy"
           src={entry.logo}
+          style={faded}
           width={56}
         />
       </div>
