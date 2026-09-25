@@ -1,12 +1,15 @@
 /**
  * The aurora's colours through the day, as keyframes on the visitor's own
  * clock. Daytime is the site's palette as it always was; the evening warms
- * towards the festival dusk, the night cools and deepens, and the morning
+ * into the festival night: her violet and her green stay, the green warmed a
+ * little as if lit by the lanterns, and the pink turns to the coral red of the
+ * fireworks, the night cools and deepens, and the morning
  * eases back into the day. Between two keyframes the colours blend linearly,
  * so the sky never switches, it drifts.
  *
- * Every other keyframe sits only half a step from the day palette, so the
- * change reads as the light moving, never as a new colour scheme.
+ * Morning and night sit only half a step from the day palette, so the change
+ * reads as the light moving; the festival evening is the one scene allowed to
+ * be seen.
  *
  * Light stays dusty on purpose (see the token table in index.css): every
  * keyframe keeps the low saturation of the day palette. Dark lets her green
@@ -28,8 +31,8 @@ const DAY_DARK: Stops = ["#6a3cc4", "#7fae36", "#c4608a"];
 const NIGHT_LIGHT: Stops = ["#705796", "#7ca47f", "#ba8b9c"];
 const NIGHT_DARK: Stops = ["#6038bc", "#84bb39", "#bb5d8b"];
 
-const EVENING_LIGHT: Stops = ["#775a98", "#8faa78", "#ca8d96"];
-const EVENING_DARK: Stops = ["#6c3cbe", "#84ab38", "#ca6384"];
+const EVENING_LIGHT: Stops = ["#745996", "#9ca970", "#d2877f"];
+const EVENING_DARK: Stops = ["#6436c0", "#a4b034", "#d8565e"];
 
 const MORNING_LIGHT: Stops = ["#8068a3", "#8ab07d", "#c893a0"];
 const MORNING_DARK: Stops = ["#6b41c2", "#80b040", "#c5658f"];
@@ -40,9 +43,11 @@ const KEYFRAMES: Keyframe[] = [
   { hour: 5, light: NIGHT_LIGHT, dark: NIGHT_DARK },
   { hour: 7, light: MORNING_LIGHT, dark: MORNING_DARK },
   { hour: 10, light: DAY_LIGHT, dark: DAY_DARK },
-  { hour: 17, light: DAY_LIGHT, dark: DAY_DARK },
-  { hour: 19.5, light: EVENING_LIGHT, dark: EVENING_DARK },
-  { hour: 22, light: NIGHT_LIGHT, dark: NIGHT_DARK },
+  { hour: 17.5, light: DAY_LIGHT, dark: DAY_DARK },
+  // The festival evening holds from 19:00 to 21:00, the hours of the fireworks.
+  { hour: 19, light: EVENING_LIGHT, dark: EVENING_DARK },
+  { hour: 21, light: EVENING_LIGHT, dark: EVENING_DARK },
+  { hour: 22.5, light: NIGHT_LIGHT, dark: NIGHT_DARK },
   { hour: 24, light: NIGHT_LIGHT, dark: NIGHT_DARK },
 ];
 

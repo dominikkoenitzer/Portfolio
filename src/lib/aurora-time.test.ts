@@ -13,11 +13,17 @@ describe("auroraStops", () => {
   });
 
   it("blends between keyframes instead of switching", () => {
-    const before = auroraStops(17, false)[2];
+    const before = auroraStops(17.5, false)[2];
     const halfway = auroraStops(18.25, false)[2];
-    const evening = auroraStops(19.5, false)[2];
+    const evening = auroraStops(19, false)[2];
     expect(halfway).not.toBe(before);
     expect(halfway).not.toBe(evening);
+  });
+
+  it("holds the festival evening from 19:00 to 21:00", () => {
+    expect(auroraStops(19, false)).toEqual(auroraStops(21, false));
+    expect(auroraStops(20, true)).toEqual(auroraStops(19, true));
+    expect(auroraStops(21.75, false)).not.toEqual(auroraStops(21, false));
   });
 
   it("accepts any clock reading", () => {
