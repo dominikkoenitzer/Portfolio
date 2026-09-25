@@ -14,7 +14,7 @@
  * into the repo transiently. The fonts are fetched into the temp folder on
  * first run, static cuts only (resvg cannot see web fonts and would draw a
  * variable font at its default weight): Geist from its own repo, Kaisei
- * Decol from the Google Fonts repo.
+ * Decol and Hina Mincho from the Google Fonts repo.
  *
  * The cards are written as 128-colour palette PNGs. resvg's 32-bit output is
  * ~950 KB per card because the grain filter defeats PNG compression, and
@@ -43,6 +43,7 @@ const GOOGLE_FONTS = "https://github.com/google/fonts/raw/main/ofl";
 const GEIST = "https://github.com/vercel/geist-font/raw/main/fonts/Geist/ttf";
 const FONT_URLS = [
   `${GOOGLE_FONTS}/kaiseidecol/KaiseiDecol-Bold.ttf`,
+  `${GOOGLE_FONTS}/hinamincho/HinaMincho-Regular.ttf`,
   `${GEIST}/Geist-Regular.ttf`,
   `${GEIST}/Geist-Medium.ttf`,
 ];
@@ -78,8 +79,9 @@ const VIOLET = "#5a4276";
 const SAGE = "#a9c39a";
 const BLUSH = "#e4d3e0";
 
-// The site's two faces in their site roles: Kaisei Decol for the name and
-// every title, Geist for text.
+// The site's faces in their site roles: Hina Mincho for the name (as in the
+// hero), Kaisei Decol for every title, Geist for text.
+const NAME_FONT = "Hina Mincho";
 const TITLE_FONT = "Kaisei Decol";
 const BODY_FONT = "Geist";
 
@@ -156,8 +158,8 @@ const homeCard = () =>
   `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
   ${backdrop}
   ${eyebrow("Hi, I'm", 168)}
-  <text x="114" y="292" font-family="${TITLE_FONT}" font-weight="700" font-size="112" fill="url(#name)">Dominik</text>
-  <text x="114" y="404" font-family="${TITLE_FONT}" font-weight="700" font-size="112" fill="url(#name)">Könitzer</text>
+  <text x="114" y="292" font-family="${NAME_FONT}" font-weight="400" font-size="116" fill="url(#name)" stroke="url(#name)" stroke-width="1.5">Dominik</text>
+  <text x="114" y="404" font-family="${NAME_FONT}" font-weight="400" font-size="116" fill="url(#name)" stroke="url(#name)" stroke-width="1.5">Könitzer</text>
   ${subtitle("Software engineer and web developer in Zürich", 470)}
   ${footer("dk.punds.ch")}
 </svg>`;
