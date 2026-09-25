@@ -17,7 +17,7 @@ import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
@@ -26,11 +26,13 @@ const EMAIL = SITE_CONFIG.email;
 
 /**
  * One recipe for every field, the card recipe turned inwards: the same hairline
- * border and surface as a card, the primary ring on focus. `text-base` on
- * touch screens, because iOS zooms into anything smaller than 16px.
+ * border and surface as a card. Focus reads the way iOS draws it: the border
+ * turns full violet, which is the indicator that carries the contrast, and a
+ * wide soft halo grows around it. `text-base` on touch screens, because iOS
+ * zooms into anything smaller than 16px.
  */
 const FIELD =
-  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-colors duration-200 ease-out hover:border-primary/30 focus-visible:border-primary/45 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40 sm:text-sm";
+  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/30 focus-visible:border-primary focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-primary/15 sm:text-sm";
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -415,10 +417,45 @@ export function ContactSection() {
             and stay visible, placeholders only hint. */}
         <motion.div className="mt-10 sm:mt-12" variants={REVEAL}>
           {status === "sent" ? (
-            <div
+            // The confirmation springs in where the form was, and a check
+            // draws itself in a sage circle: the answer to "did it go?" is a
+            // picture before it is a sentence. Reduced motion shows it drawn.
+            <motion.div
+              animate={{ opacity: 1, scale: 1, y: 0 }}
               aria-live="polite"
               className="max-w-xl rounded-2xl border border-border/60 bg-card p-6 sm:p-8"
+              initial={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, scale: 0.96, y: 8 }
+              }
+              transition={
+                reduceMotion
+                  ? { duration: DUR.fast, ease: EASE_OUT }
+                  : { ...SPRING_FLUID, opacity: { duration: DUR.fast } }
+              }
             >
+              <span
+                aria-hidden
+                className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-sage/25 text-sage-deep"
+              >
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  viewBox="0 0 24 24"
+                >
+                  <motion.path
+                    animate={{ pathLength: 1 }}
+                    d="M5 12.5l4.5 4.5L19 7.5"
+                    initial={{ pathLength: reduceMotion ? 1 : 0 }}
+                    transition={{ delay: 0.15, duration: 0.45, ease: EASE_OUT }}
+                  />
+                </svg>
+              </span>
               <p className="font-semibold text-lg">{t.form.sentTitle}</p>
               <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
                 {t.form.sentBody}
@@ -431,7 +468,7 @@ export function ContactSection() {
               >
                 {t.form.sendAnother}
               </Button>
-            </div>
+            </motion.div>
           ) : (
             <form
               className="grid max-w-xl gap-5"
