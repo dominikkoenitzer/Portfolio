@@ -85,7 +85,7 @@ function FeatureSection({
             measured differently. */}
         <span
           aria-hidden
-          className="accent-jp w-6 shrink-0 select-none text-lg text-primary/70"
+          className="accent-jp w-6 shrink-0 select-none text-lg text-primary"
         >
           {String(index).padStart(2, "0")}
         </span>
