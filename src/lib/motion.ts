@@ -25,6 +25,19 @@ export const SPRING_SOFT = {
 } as const;
 
 /**
+ * The iOS feel for things that move between places: an image growing out of
+ * its thumbnail, a panel settling. Quick to start, a touch of overshoot at the
+ * end, and no fixed duration, so a short hop and a long flight both feel
+ * physical.
+ */
+export const SPRING_FLUID = {
+  type: "spring",
+  stiffness: 330,
+  damping: 30,
+  mass: 0.85,
+} as const;
+
+/**
  * Scroll reveal for any element: a rise and fade on the shared curve. Use as
  * `variants={REVEAL}` with `initial="hidden" whileInView="show"`, inside a
  * parent that carries `stagger()` so siblings cascade instead of popping in

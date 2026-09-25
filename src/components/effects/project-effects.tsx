@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import type { ProjectStat } from "@/constants/projects/types";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
-import { DUR, EASE_OUT, VIEWPORT } from "@/lib/motion";
+import { DUR, EASE_OUT, SPRING_FLUID, VIEWPORT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /* ------------------------------------------------------------------ */
@@ -27,6 +27,7 @@ export function ProjectFigure({
   label,
   caption,
   className,
+  layoutId,
   onOpen,
   openLabel,
   priority = false,
@@ -53,6 +54,11 @@ export function ProjectFigure({
   className?: string;
   /** When set, the frame becomes a button that opens the image in a lightbox. */
   onOpen?: () => void;
+  /**
+   * Shared with the lightbox's copy of the same picture, so opening it grows
+   * the image out of this frame and closing it flies it back here.
+   */
+  layoutId?: string;
   /** Accessible name for that button (required for it to render). */
   openLabel?: string;
   priority?: boolean;
@@ -85,9 +91,11 @@ export function ProjectFigure({
   // that 404s leaves the frame standing instead of collapsing it.
   const picture = (
     <div className="relative w-full" style={{ aspectRatio: box }}>
-      <img
+      <motion.img
         alt={alt}
         className={`absolute inset-0 h-full w-full object-contain ${failed ? "opacity-0" : ""}`}
+        layoutId={layoutId}
+        transition={{ layout: SPRING_FLUID }}
         decoding="async"
         fetchPriority={priority ? "high" : "auto"}
         loading={priority ? "eager" : "lazy"}
@@ -259,10 +267,17 @@ export function Lightbox({
   labels,
   onClose,
   onSelect,
+  originIndex,
 }: {
   alt: string;
   images: string[];
   index: number;
+  /**
+   * The picture the viewer was opened from. While it is the one on show it
+   * shares its frame's `layoutId`, so it grows out of the page on open and
+   * returns there on close; any other picture simply fades.
+   */
+  originIndex?: number;
   labels: LightboxLabels;
   onClose: () => void;
   onSelect: (next: number) => void;
@@ -388,12 +403,16 @@ export function Lightbox({
   const control =
     "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-colors duration-200 ease-out hover:text-foreground";
 
+  const sharedId =
+    !reduced && originIndex === index ? `project-shot-${index}` : undefined;
+
   return createPortal(
     <motion.div
       animate={{ opacity: 1 }}
       aria-label={labels.title}
       aria-modal="true"
       className="fixed inset-0 z-100 flex flex-col bg-background/95"
+      exit={{ opacity: 0 }}
       initial={{ opacity: reduced ? 1 : 0 }}
       ref={panelRef}
       role="dialog"
@@ -447,12 +466,13 @@ export function Lightbox({
         <motion.img
           alt={alt}
           animate={{ opacity: 1 }}
-          className="max-h-full min-h-0 w-auto max-w-full rounded-2xl border border-border/60 object-contain"
+          className="max-h-full min-h-0 w-auto max-w-full border border-border/60 object-contain"
           drag={reduced || total < 2 ? false : "x"}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.16}
-          initial={{ opacity: reduced ? 1 : 0 }}
+          initial={{ opacity: reduced || sharedId ? 1 : 0 }}
           key={images[index]}
+          layoutId={sharedId}
           onDragEnd={(_, info) => {
             // Either a deliberate drag or a flick: a fast swipe on a phone
             // covers barely 40px before the finger leaves the glass, and
@@ -463,7 +483,14 @@ export function Lightbox({
             else if (right) go(-1);
           }}
           src={images[index]}
-          transition={{ duration: DUR.fast, ease: EASE_OUT }}
+          // The radius lives in `style` rather than a class so the shared
+          // layout animation can correct it while the box scales; a class
+          // radius stretches into an oval mid-flight.
+          style={{ borderRadius: 16 }}
+          transition={{
+            layout: SPRING_FLUID,
+            opacity: { duration: DUR.fast, ease: EASE_OUT },
+          }}
         />
 
         {total > 1 ? (
