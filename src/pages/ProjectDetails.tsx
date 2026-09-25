@@ -11,7 +11,7 @@ import { useLenis } from "lenis/react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
-import { Badge } from "@/components/ui/badge";
+import { TechBadge, TechIcon } from "@/components/ui/tech-badge";
 import { Button } from "@/components/ui/button";
 // Module path, not the seo-data barrel: that barrel also re-exports
 // services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
@@ -196,10 +196,11 @@ const ProjectDetails = () => {
         <span className="flex flex-wrap gap-x-3 gap-y-1">
           {project.stack.map((skill) => (
             <Link
-              className="inline-flex items-center underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary/40"
+              className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary/40"
               key={skill}
               to={`/projects?tech=${encodeURIComponent(skill)}`}
             >
+              <TechIcon name={skill} />
               {skill}
             </Link>
           ))}
@@ -390,9 +391,7 @@ const ProjectDetails = () => {
 
               <div className="mt-7 flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
-                  <Badge key={tag} variant="primary">
-                    {tag}
-                  </Badge>
+                  <TechBadge key={tag} name={tag} variant="primary" />
                 ))}
               </div>
             </motion.div>
@@ -691,7 +690,7 @@ const ProjectDetails = () => {
                   </p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
-                      <Badge key={tag}>{tag}</Badge>
+                      <TechBadge key={tag} name={tag} />
                     ))}
                   </div>
                 </Link>
