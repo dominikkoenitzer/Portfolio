@@ -9,13 +9,15 @@ import App from "./App.tsx";
 // paints a title at another weight. Umlauts and accents (Könitzer, Zürich,
 // Français) are in the Latin files; Chinese falls back to the system CJK
 // font. The hero name uses Kaisei Decol too. M PLUS 1 Code sets the code
-// excerpts in the case studies; its Japanese glyphs come in unicode-range
-// slices, so a page downloads only the slices it actually shows. Klee One,
-// a hand-lettered Japanese face, sets the small accents: the section numbers.
+// excerpts in the case studies and Klee One, a hand-lettered Japanese face,
+// the small accents such as the section numbers. Both are imported for Latin
+// only: their full sets add about 240 @font-face rules (one per slice of the
+// Japanese character set) to the render-blocking stylesheet, which took it
+// from 16 kB to 83 kB gzipped, and the site sets no Japanese text in them.
 import "@fontsource-variable/geist/wght.css";
 import "@fontsource/kaisei-decol/latin-700.css";
-import "@fontsource/klee-one/600.css";
-import "@fontsource/m-plus-1-code/400.css";
+import "@fontsource/klee-one/latin-600.css";
+import "@fontsource/m-plus-1-code/latin-400.css";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
