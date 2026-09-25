@@ -35,6 +35,7 @@ import {
   createBreadcrumbSchema,
   createFAQSchema,
   createHowToSchema,
+  createProfilePageSchema,
   createSoftwareApplicationSchema,
   createSoftwareSourceCodeSchema,
   getDefaultCitations,
@@ -99,6 +100,10 @@ const staticSchemas = (route: string): object[] => {
   // Services is the one page that renders the FAQ and the step-by-step copy, so
   // it is the one page allowed to claim them. English, because that is what
   // this document says and what Googlebot resolves to.
+  // The About page is his profile page; Google reads it as such only when the
+  // ProfilePage graph is in the served document.
+  if (route === "/about") graphs.push(createProfilePageSchema());
+
   if (route === "/services") {
     const faq = createFAQSchema(getServicesFaqs("en"), citations);
     if (faq) graphs.push(faq);
@@ -329,7 +334,7 @@ for (const page of pages) {
   if (page.route === "/about") {
     html = html.replace(
       /<\/head>/i,
-      `  <link rel="preload" as="image" href="/avatar.jpg" fetchpriority="high">\n  </head>`,
+      `  <link rel="preload" as="image" href="/dominik-koenitzer.jpg" fetchpriority="high">\n  </head>`,
     );
   }
 
