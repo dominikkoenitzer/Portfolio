@@ -1,4 +1,10 @@
-import { MotionConfig, motion, useReducedMotion } from "framer-motion";
+import {
+  MotionConfig,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 import {
   ArrowUpRight,
   Briefcase,
@@ -6,7 +12,7 @@ import {
   GraduationCap,
   MapPin,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import type { Language } from "@/config/languages";
 import { getTimeline, type TimelineEntry } from "@/constants/timeline";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
@@ -176,6 +182,18 @@ function TimelineEntryRow({
 
   return (
     <li className={`group/entry relative ${RAIL_ROW}`}>
+      {/* The year this stage began, large and faint beside the rail on wide
+          screens, where there is room left of the column. It stays put while
+          its card scrolls past, so the page reads as a walk through the
+          years. Hidden from assistive tech: the card prints the full period. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 right-full bottom-0 mr-10 hidden xl:block"
+      >
+        <span className="title-serif sticky top-36 block text-5xl text-primary/25 tabular-nums">
+          {entry.start.slice(0, 4)}
+        </span>
+      </div>
       <RailNode reduceMotion={reduceMotion} />
 
       {/* The entry arrives as one object and then unpacks: role, employer,
@@ -340,6 +358,20 @@ function TimelineGroup({
 export function ExperienceSection() {
   const { language } = useLanguage();
   const t = getTimeline(language);
+  const reduceMotion = useReducedMotion();
+  // The spine fills with colour as the reader moves down it: 0 when the top
+  // of the timeline reaches 70% of the viewport, 1 when its end does. A soft
+  // spring takes the jitter out of wheel steps without lagging behind.
+  const railRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: railRef,
+    offset: ["start 70%", "end 70%"],
+  });
+  const fill = useSpring(scrollYProgress, {
+    stiffness: 180,
+    damping: 32,
+    restDelta: 0.001,
+  });
 
   return (
     <MotionConfig reducedMotion="user">
@@ -352,7 +384,10 @@ export function ExperienceSection() {
 
         {/* The CV lives on /about now, behind one button that opens the
             document for the language the site is in. */}
-        <div className="relative mx-auto max-w-3xl space-y-14 sm:space-y-16">
+        <div
+          className="relative mx-auto max-w-3xl space-y-14 sm:space-y-16"
+          ref={railRef}
+        >
           {/* The spine: one static hairline behind the whole stack, starting
               under the first group marker and stopping above the last year. */}
           <span
@@ -362,6 +397,15 @@ export function ExperienceSection() {
             // running a few hundred pixels past the last date.
             className={`-z-10 pointer-events-none absolute top-8 bottom-6 bg-border mask-[linear-gradient(to_bottom,black_82%,transparent)] sm:top-11 ${SPINE}`}
           />
+          {/* The same line in violet over it, grown from the top by the
+              scroll. Reduced motion keeps the plain line only. */}
+          {reduceMotion ? null : (
+            <motion.span
+              aria-hidden="true"
+              className={`-z-10 pointer-events-none absolute top-8 bottom-6 origin-top bg-primary/70 mask-[linear-gradient(to_bottom,black_82%,transparent)] sm:top-11 ${SPINE}`}
+              style={{ scaleY: fill }}
+            />
+          )}
           <TimelineGroup
             entries={t.experience}
             icon={<Briefcase />}
