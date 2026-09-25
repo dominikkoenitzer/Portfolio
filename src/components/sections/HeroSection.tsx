@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
+import { EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
 /** How long each name holds before the next one takes over. */
-const HOLD_MS = 4000;
+const HOLD_MS = 5500;
 
 /**
  * The owner's names (Dominik, Punds, DK), one at a time, on a plain crossfade.
@@ -65,7 +65,9 @@ function Name() {
               exit={{ opacity: 0 }}
               initial={{ opacity: 0 }}
               key={name}
-              transition={{ duration: DUR.fast, ease: EASE_OUT }}
+              // A slow crossfade, so one name dissolves into the next like
+              // a thought passing rather than a switch.
+              transition={{ duration: 1.2, ease: EASE_OUT }}
             >
               {name}
             </motion.span>
