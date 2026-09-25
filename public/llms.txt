@@ -8,7 +8,7 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 
 ## Identity
 
-- Name: Dominik Könitzer. Also written Dominik Konitzer (without the umlaut) and D. Könitzer.
+- Name: Dominik Könitzer. Also written Dominik Koenitzer, Dominik Konitzer (without the umlaut) and D. Könitzer.
 - Born 2008. Swiss and Chinese citizenship.
 - Location: Zürich, Switzerland. Works remotely with clients anywhere.
 - Role: software engineer, frontend-leaning full stack.
