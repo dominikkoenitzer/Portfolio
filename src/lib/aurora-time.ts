@@ -77,6 +77,20 @@ export function auroraStops(hour: number, night: boolean): Stops {
   return [mix(from[0], to[0], t), mix(from[1], to[1], t), mix(from[2], to[2], t)];
 }
 
+/** The glow the sky leans into while a visitor lingers: low sun, not neon. */
+const WARM_LIGHT = "#e3a47a";
+const WARM_DARK = "#e88a4e";
+
+/**
+ * The stops leaned towards a low evening sun by `amount` (0 to 1); at 1 each
+ * stop is 14% of the way there, enough to feel and too little to name.
+ */
+export function warmStops(stops: Stops, amount: number, night: boolean): Stops {
+  const t = Math.min(Math.max(amount, 0), 1) * 0.14;
+  const warm = night ? WARM_DARK : WARM_LIGHT;
+  return [mix(stops[0], warm, t), mix(stops[1], warm, t), mix(stops[2], warm, t)];
+}
+
 /** The local time as a fractional hour. */
 export function localHour(now: Date = new Date()): number {
   return now.getHours() + now.getMinutes() / 60;
