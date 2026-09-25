@@ -505,7 +505,7 @@ export const en = {
       description:
         "Support Dominik Könitzer's software projects with a small donation. It covers hosting and the time that goes into building and maintaining them.",
       keywords:
-        "donate to developer, support software projects, support open source developer, PayPal donation, support Dominik Konitzer",
+        "donate to developer, support software projects, support open source developer, PayPal donation, support Dominik Könitzer",
     },
     privacy: {
       title: "Privacy Policy",

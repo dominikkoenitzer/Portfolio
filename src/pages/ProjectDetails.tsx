@@ -249,7 +249,7 @@ const ProjectDetails = () => {
         type="article"
         image={`${SITE_CONFIG.url}/og/projects/${project.slug}.png`}
         geoLocation={getDefaultGeoLocation()}
-        keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Konitzer`}
+        keywords={`${project.title} ${seoSuffix}, ${project.tags.join(", ")}, Dominik Könitzer, Dominik Koenitzer`}
         speakableSelectors={["h1", "h2"]}
         structuredData={[
           {

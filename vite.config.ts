@@ -125,11 +125,10 @@ function localApi(env: Record<string, string>): Plugin {
 /**
  * Declares UTF-8 on the plain-text files in dev and preview.
  *
- * `vercel.json` sends `text/plain; charset=utf-8` for these in production, but
- * Vite's static middleware sends a bare `text/plain`, so a browser falls back
- * to its own default encoding and renders llms.txt as "Dominik KÃ¶nitzer". The
- * bytes were always correct UTF-8; only the local header was missing, which
- * made the file look broken in the one place it gets proofread.
+ * `vercel.json` sends `text/plain; charset=utf-8` for these in production.
+ * Vite's static middleware sends a bare `text/plain`, so this adds the charset
+ * locally too, and the umlauts in llms.txt render the same in dev, preview and
+ * production.
  */
 function textCharset(): Plugin {
   const attach = (server: ViteDevServer | PreviewServer) => {
