@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
-import { auroraStops, localHour } from "@/lib/aurora-time";
+import { auroraStops, localHour, warmStops } from "@/lib/aurora-time";
 import Aurora from "./Aurora";
 
 /**
@@ -23,12 +23,16 @@ import Aurora from "./Aurora";
  * night. The clock is re-read every five minutes, which is far finer than the
  * colours can be told apart, and costs three uniform writes.
  *
- * The sky also waits for the visitor: it dims while they are elsewhere and
- * brightens slowly when they come back.
+ * Two quiet responses to the visitor: the sky dims while they are in another
+ * tab and brightens slowly when they come back, and while they linger without
+ * touching anything it leans a little warmer, as if the evening were settling.
  */
 
 /** How often the time of day is re-read. */
 const CLOCK_MS = 5 * 60 * 1000;
+
+/** How long without input before the sky starts to warm. */
+const LINGER_MS = 20_000;
 
 /** How far the sky dims while the visitor is away, and how slowly it returns. */
 const AWAY_LEVEL = 0.5;
@@ -75,7 +79,44 @@ export default function AuroraBackground() {
     return () => window.clearInterval(id);
   }, [preview]);
 
-  const stops = useMemo(() => auroraStops(hour, night), [hour, night]);
+  // Lingering warms the sky: after twenty seconds without input the warmth
+  // climbs to 1 over about five seconds, and any input lets it settle back.
+  const [warmth, setWarmth] = useState(0);
+  useEffect(() => {
+    let target = 0;
+    let idleTimer = window.setTimeout(() => {
+      target = 1;
+    }, LINGER_MS);
+    const wake = () => {
+      target = 0;
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        target = 1;
+      }, LINGER_MS);
+    };
+    const events = ["pointermove", "pointerdown", "keydown", "wheel", "touchstart", "scroll"];
+    for (const name of events) {
+      window.addEventListener(name, wake, { passive: true });
+    }
+    const step = window.setInterval(() => {
+      setWarmth((current) => {
+        const next = current + Math.sign(target - current) * 0.03;
+        return Math.abs(target - current) < 0.03 ? target : next;
+      });
+    }, 150);
+    return () => {
+      window.clearTimeout(idleTimer);
+      window.clearInterval(step);
+      for (const name of events) {
+        window.removeEventListener(name, wake);
+      }
+    };
+  }, []);
+
+  const stops = useMemo(
+    () => warmStops(auroraStops(hour, night), warmth, night),
+    [hour, night, warmth],
+  );
 
   // The sky waits: it dims while the visitor is elsewhere and brightens slowly
   // when they come back, a small welcome home. Another tab hides the page, so
