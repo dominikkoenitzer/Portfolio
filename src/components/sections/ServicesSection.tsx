@@ -40,7 +40,14 @@ import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
 import { useTheme } from "@/hooks/use-theme";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, SPRING_SOFT, stagger } from "@/lib/motion";
+import {
+  DUR,
+  EASE_OUT,
+  REVEAL,
+  SPRING_FLUID,
+  SPRING_SOFT,
+  stagger,
+} from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
@@ -438,32 +445,46 @@ export function ServicesSection() {
                   // colour change, so the row cannot re-wrap under the pointer.
                   // "All services" stays ink, because the build accent is the
                   // primary violet and the two would otherwise be the same chip.
+                  // The fill is one shared element that slides to the chosen
+                  // chip, like an iOS segmented control; reduced motion gets it
+                  // in place.
                   const tint = id === "all" ? null : accentText[id];
                   return (
                     <button
                       aria-pressed={on}
                       className={cn(
-                        "inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] transition-[color,background-color,box-shadow] duration-200 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+                        "press relative inline-flex min-h-[40px] items-center rounded-full px-[18px] font-semibold text-[14.5px] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background",
                         on
                           ? "text-foreground"
                           : "bg-transparent text-muted-foreground hover:bg-primary/6 hover:text-foreground",
-                        on &&
-                          !tint &&
-                          "bg-foreground/8 shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.6)]",
                       )}
                       key={id}
                       onClick={() => selectCategory(id)}
-                      style={
-                        on && tint
-                          ? {
-                              backgroundColor: withAlpha(tint, 0.16),
-                              boxShadow: `inset 0 0 0 1px ${withAlpha(tint, 0.85)}`,
-                            }
-                          : undefined
-                      }
                       type="button"
                     >
-                      {t.filters[id]}
+                      {on ? (
+                        <motion.span
+                          aria-hidden
+                          className={cn(
+                            "absolute inset-0 rounded-full",
+                            !tint &&
+                              "bg-foreground/8 shadow-[inset_0_0_0_1px_hsl(var(--foreground)/0.6)]",
+                          )}
+                          layoutId={
+                            reduceMotion ? undefined : "services-filter-pill"
+                          }
+                          style={
+                            tint
+                              ? {
+                                  backgroundColor: withAlpha(tint, 0.16),
+                                  boxShadow: `inset 0 0 0 1px ${withAlpha(tint, 0.85)}`,
+                                }
+                              : undefined
+                          }
+                          transition={SPRING_FLUID}
+                        />
+                      ) : null}
+                      <span className="relative">{t.filters[id]}</span>
                     </button>
                   );
                 })}
