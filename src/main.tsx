@@ -16,6 +16,7 @@ import App from "./App.tsx";
 // from 16 kB to 83 kB gzipped, and the site sets no Japanese text in them.
 import "@fontsource-variable/geist/wght.css";
 import "@fontsource/kaisei-decol/latin-700.css";
+import "@fontsource/hina-mincho/latin-400.css";
 import "@fontsource/klee-one/latin-600.css";
 import "@fontsource/m-plus-1-code/latin-400.css";
 import "./index.css";

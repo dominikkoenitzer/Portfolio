@@ -68,7 +68,7 @@
   --font-display:
     "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-title:
-    "Kaisei Decol", "Geist Variable", Georgia, "Times New Roman", serif;
+    "Hina Mincho", "Kaisei Decol", Georgia, "Times New Roman", serif;
 
   --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
@@ -574,16 +574,20 @@
     font-family: inherit !important;
   }
 
-  /* The hero name (Tailwind `font-title`), in the same Kaisei Decol as every
-     page title, so the site speaks in two faces. Only the 700 cut is loaded,
-     so the weight is pinned to it here; normal spacing, because tightening a
-     serif crowds it. */
+  /* The hero name (Tailwind `font-title`) in Hina Mincho, a delicate, sweet
+     mincho picked by the owner for the name alone: Reze's soft side, where
+     the page titles keep Kaisei Decol. The face has one weight, 400, so it is
+     pinned; normal spacing, because tightening a serif crowds it. */
   .font-title,
   .font-title * {
     font-family:
-      "Kaisei Decol", "Geist Variable", Georgia, "Times New Roman", serif !important;
-    font-weight: 700 !important;
+      "Hina Mincho", "Kaisei Decol", Georgia, "Times New Roman", serif !important;
+    font-weight: 400 !important;
     letter-spacing: normal !important;
+    /* The face has no bold, and a synthesised one smears its hairlines; a
+       hairline stroke in the text's own colour gives the strokes a little
+       more body while the letterforms stay exactly Hina's. */
+    -webkit-text-stroke: 0.013em currentColor;
   }
 }
 
