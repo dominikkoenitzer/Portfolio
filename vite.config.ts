@@ -218,7 +218,10 @@ function vendorChunk(id: string): string | undefined {
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
   // Geist, the reading face: one variable file for every weight.
   /^assets[\\/]geist-latin-wght-normal-[\w-]+\.woff2$/,
-  // Kaisei Decol: the hero name on home, the title everywhere else.
+  // Hina Mincho: the hero name, the largest thing on the home page's first
+  // screen.
+  /^assets[\\/]hina-mincho-latin-400-normal-[\w-]+\.woff2$/,
+  // Kaisei Decol: the page title everywhere but home.
   /^assets[\\/]kaisei-decol-latin-700-normal-[\w-]+\.woff2$/,
 ];
 
