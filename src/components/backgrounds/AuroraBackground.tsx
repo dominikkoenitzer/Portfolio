@@ -1,3 +1,4 @@
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
 import { auroraStops, localHour } from "@/lib/aurora-time";
@@ -62,6 +63,16 @@ export default function AuroraBackground() {
 
   const stops = useMemo(() => auroraStops(hour, night), [hour, night]);
 
+  // The sky stays behind: over the first two screens of scrolling the ribbon
+  // eases down to 60% of itself, like evening light seen from a car driving
+  // away, and it is all there again back at the top.
+  const base = night ? 0.8 : 0.65;
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, (y) => {
+    const screens = typeof window === "undefined" ? 0 : y / (window.innerHeight * 2);
+    return base * (1 - 0.4 * Math.min(Math.max(screens, 0), 1));
+  });
+
   return (
     <>
     {preview !== null ? (
@@ -69,10 +80,10 @@ export default function AuroraBackground() {
         {`${String(Math.floor(hour)).padStart(2, "0")}:${String(Math.floor((hour % 1) * 60)).padStart(2, "0")}`}
       </span>
     ) : null}
-    <div
+    <motion.div
       aria-hidden
       className="pointer-events-none fixed inset-0 -z-10 select-none"
-      style={{ opacity: night ? 0.8 : 0.65 }}
+      style={{ opacity }}
     >
       <Aurora
         amplitude={1}
@@ -80,9 +91,9 @@ export default function AuroraBackground() {
         colorStops={stops}
         dpr={pixelDensity()}
         flat
-        speed={0.45}
+        speed={0.38}
       />
-    </div>
+    </motion.div>
     </>
   );
 }
