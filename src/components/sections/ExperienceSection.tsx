@@ -116,6 +116,20 @@ function RailNode({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
+/**
+ * The English tags of the same entry (same organisation, same start), which
+ * is what the tag marks are keyed by. Every language lists an entry's tags in
+ * the same order.
+ */
+function englishTags(entry: TimelineEntry): string[] | undefined {
+  const en = getTimeline("en");
+  return [...en.experience, ...en.education].find(
+    (candidate) =>
+      candidate.organizationUrl === entry.organizationUrl &&
+      candidate.start === entry.start,
+  )?.tags;
+}
+
 function LogoTile({ entry }: { entry: TimelineEntry }) {
   if (entry.logo) {
     return (
@@ -260,7 +274,11 @@ function TimelineEntryRow({
 
         {entry.tags.length > 0 && (
           <motion.div variants={REVEAL}>
-            <TimelineTags moreLabel={moreLabel} tags={entry.tags} />
+            <TimelineTags
+              iconNames={englishTags(entry)}
+              moreLabel={moreLabel}
+              tags={entry.tags}
+            />
           </motion.div>
         )}
       </motion.article>
