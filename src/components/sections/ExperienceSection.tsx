@@ -190,7 +190,7 @@ function TimelineEntryRow({
         aria-hidden="true"
         className="pointer-events-none absolute top-0 right-full bottom-0 mr-10 hidden xl:block"
       >
-        <span className="title-serif sticky top-36 block text-5xl text-primary/25 tabular-nums">
+        <span className="title-serif sticky top-36 block text-5xl text-primary/70 tabular-nums">
           {entry.start.slice(0, 4)}
         </span>
       </div>
