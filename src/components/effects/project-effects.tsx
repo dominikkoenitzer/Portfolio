@@ -117,7 +117,7 @@ export function ProjectFigure({
       viewport={VIEWPORT}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out hover:border-primary/30">
+      <div className="memory-photo relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out hover:border-primary/30">
         {onOpen && openLabel ? (
           <button
             aria-label={openLabel}
