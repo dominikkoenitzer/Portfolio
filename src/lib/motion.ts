@@ -44,11 +44,13 @@ export const SPRING_FLUID = {
  * together.
  */
 export const REVEAL = {
-  hidden: { opacity: 0, y: 24 },
+  // A little slower and a little shorter a rise than the rest of the motion:
+  // blocks arrive the way a warm evening does, unhurried.
+  hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: DUR.slow, ease: EASE_OUT },
+    transition: { duration: 0.8, ease: EASE_OUT },
   },
 } as const;
 
