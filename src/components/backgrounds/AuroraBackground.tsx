@@ -34,6 +34,10 @@ const CLOCK_MS = 5 * 60 * 1000;
 /** How long without input before the sky starts to warm. */
 const LINGER_MS = 20_000;
 
+/** How slowly the sky gathers on the first page of a visit. */
+const ARRIVE_S = 2.2;
+const ARRIVED_KEY = "aurora-arrived";
+
 /** How far the sky dims while the visitor is away, and how slowly it returns. */
 const AWAY_LEVEL = 0.5;
 const LEAVE_S = 1.5;
@@ -118,12 +122,37 @@ export default function AuroraBackground() {
     [hour, night, warmth],
   );
 
+  // The evening arrives: on the first page of a visit the sky gathers from
+  // nothing instead of already being there. Once per session, and never
+  // under reduced motion.
+  const [arriving] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    try {
+      return !sessionStorage.getItem(ARRIVED_KEY);
+    } catch {
+      return false;
+    }
+  });
+  const presence = useMotionValue(arriving ? 0 : 1);
+  useEffect(() => {
+    if (!arriving) return;
+    // Marked here, not in the initializer: StrictMode runs that twice, and the
+    // second run would read the mark the first one left.
+    try {
+      sessionStorage.setItem(ARRIVED_KEY, "1");
+    } catch {
+      // Storage refused: the sky simply gathers again on the next page.
+    }
+    const controls = animate(presence, 1, { duration: ARRIVE_S, ease: "easeInOut" });
+    return () => controls.stop();
+  }, [arriving, presence]);
+
   // The sky waits: it dims while the visitor is elsewhere and brightens slowly
   // when they come back, a small welcome home. Another tab hides the page, so
   // the dimming is instant; another window or app leaves it on screen (a
   // second monitor), so it dims gently there. Any switch counts, however
   // short.
-  const presence = useMotionValue(1);
   useEffect(() => {
     const leave = (hidden: boolean) => {
       if (hidden) presence.set(AWAY_LEVEL);
