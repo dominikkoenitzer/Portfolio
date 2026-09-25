@@ -141,7 +141,9 @@ export const createPersonSchema = (
   "@type": "Person",
   "@id": `${SITE_CONFIG.url}/#person`,
   name: SITE_CONFIG.name,
-  alternateName: ["Dominik Konitzer", "D. Könitzer"],
+  alternateName: ["Dominik Koenitzer", "Dominik Konitzer", "D. Könitzer"],
+  givenName: "Dominik",
+  familyName: "Könitzer",
   url: SITE_CONFIG.url,
   // The portrait, not the OG card. `image` on a Person is the picture *of the
   // person*, which is what a knowledge panel would show; the 1200x630 card is
