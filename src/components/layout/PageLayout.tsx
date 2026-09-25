@@ -69,8 +69,12 @@ export function PageLayout({ children }: PageLayoutProps) {
 
       <Navbar />
 
+      {/* `overflow-x-clip`, not `-hidden`: both cut off sideways overflow, but
+          `hidden` also makes <main> a scroll container, and every `sticky`
+          element inside it (the project contents box, the privacy contents,
+          the Experience years) then sticks to a box that never scrolls. */}
       <main
-        className="min-h-screen-mobile w-full overflow-x-hidden pt-24 focus:outline-hidden sm:pt-28 md:pt-32"
+        className="min-h-screen-mobile w-full overflow-x-clip pt-24 focus:outline-hidden sm:pt-28 md:pt-32"
         id="main-content"
         tabIndex={-1}
       >
