@@ -51,7 +51,7 @@ function Name() {
       <div
         aria-hidden="true"
         className="ml-[-0.013em] grid leading-none tracking-[-0.01em]"
-        style={{ fontSize: "clamp(2.75rem, 8vw, 7.5rem)" }}
+        style={{ fontSize: "clamp(3rem, 9vw, 8.5rem)" }}
       >
         {reduceMotion ? (
           <span className="font-title block pb-[0.1em] text-primary">
