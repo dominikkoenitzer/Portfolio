@@ -6,7 +6,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { motion, useReducedMotion } from "framer-motion";
 import { GitCommit } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -104,6 +104,25 @@ function ContributionsCalendar() {
   const dfLocale = DATE_FNS_LOCALE[language];
   const username = SITE_CONFIG.github.split("/").pop() || "dominikkoenitzer";
   const reduceMotion = useReducedMotion();
+  // The grid only mounts once the data has arrived, so it is observed through
+  // a callback ref: a ref object read on the first render would still be empty
+  // and the lights would never come on.
+  const [gridEl, setGridEl] = useState<HTMLDivElement | null>(null);
+  const [lit, setLit] = useState(false);
+  useEffect(() => {
+    if (!gridEl || lit) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLit(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(gridEl);
+    return () => observer.disconnect();
+  }, [gridEl, lit]);
 
   // The ~365-cell calendar wraps every cell in a Radix Tooltip + motion node.
   // That's fine to mount on desktop but blocks the first scroll on a phone,
@@ -214,6 +233,7 @@ function ContributionsCalendar() {
                 never overflows or hijacks vertical scroll on touch. */}
             <div
               className="grid gap-[2px]"
+              ref={setGridEl}
               style={{
                 gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
               }}
@@ -226,7 +246,17 @@ function ContributionsCalendar() {
                   slots[day.weekday] = day;
                 }
                 return (
-                  <div className="grid gap-[2px]" key={weekIndex}>
+                  // Streetlights: the first time the grid comes into view the
+                  // weeks light up one after another, left to right, like
+                  // lamps along a road at night. Reduced motion: lit at once.
+                  <div
+                    className="grid gap-[2px] transition-opacity duration-700 ease-out"
+                    key={weekIndex}
+                    style={{
+                      opacity: lit ? 1 : 0.12,
+                      transitionDelay: lit && !reduceMotion ? `${weekIndex * 22}ms` : "0ms",
+                    }}
+                  >
                     {slots.map((day, dayIndex) => {
                       if (!day) {
                         return (
