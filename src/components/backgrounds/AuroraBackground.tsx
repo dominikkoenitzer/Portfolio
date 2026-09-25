@@ -38,6 +38,10 @@ const LINGER_MS = 20_000;
 const ARRIVE_S = 2.2;
 const ARRIVED_KEY = "aurora-arrived";
 
+/** The ribbon's drift, and the slower drift of the late night. */
+const SPEED = 0.38;
+const LATE_SPEED = 0.26;
+
 /** How far the sky dims while the visitor is away, and how slowly it returns. */
 const AWAY_LEVEL = 0.5;
 const LEAVE_S = 1.5;
@@ -202,7 +206,9 @@ export default function AuroraBackground() {
         colorStops={stops}
         dpr={pixelDensity()}
         flat
-        speed={0.38}
+        // The late night is quieter: from 23:00 to 05:00 the sky drifts
+        // slower, as if the world had gone to sleep.
+        speed={hour >= 23 || hour < 5 ? LATE_SPEED : SPEED}
       />
     </motion.div>
     </>
