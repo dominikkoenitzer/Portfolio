@@ -39,7 +39,7 @@ const COL_LABEL = "font-semibold text-foreground text-sm";
  * links reads as the page twitching.
  */
 const LINK =
-  "inline-flex min-h-[44px] items-center gap-2.5 rounded-sm text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary";
+  "link-draw inline-flex min-h-[44px] items-center gap-2.5 rounded-sm text-muted-foreground text-sm transition-colors duration-200 ease-out hover:text-primary";
 
 const ICON = "h-4 w-4 shrink-0 opacity-80";
 
@@ -138,7 +138,7 @@ export function Footer() {
               {pages.map((page) => (
                 <li key={page.to}>
                   <Link className={LINK} to={page.to}>
-                    {page.name}
+                    <span className="link-text">{page.name}</span>
                   </Link>
                 </li>
               ))}
@@ -163,7 +163,7 @@ export function Footer() {
                     target="_blank"
                   >
                     {item.icon}
-                    {item.label}
+                    <span className="link-text">{item.label}</span>
                   </a>
                 </li>
               ))}

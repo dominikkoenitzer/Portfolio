@@ -194,6 +194,21 @@
   }
 }
 
+@utility link-draw {
+  /* The underline writes itself from left to right on hover and keyboard
+     focus, instead of the link only changing colour. It lives on the label,
+     so an icon beside it stays out of the line. */
+  & .link-text {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px
+      no-repeat;
+    transition: background-size 0.5s var(--ease-out);
+  }
+  &:hover .link-text,
+  &:focus-visible .link-text {
+    background-size: 100% 1px;
+  }
+}
+
 @utility faq-panel {
   /* Answer panel of the /services FAQ. The native <details> box snaps to its
      open height (height animations repaint every frame and are banned
