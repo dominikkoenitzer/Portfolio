@@ -185,7 +185,7 @@ export const fr = {
     close: "Fermer",
     loading: "L'arbre pousse…",
     intro:
-      "Du travail en freelance pour les petites équipes et les entreprises, en trois volets : construire la chose, la garder en état de marche et la rendre visible. Les prix ci-dessous sont des points de départ, alors dites-moi ce qu'il vous faut et vous recevrez un vrai chiffre.",
+      "Du travail en freelance pour les petites équipes et les entreprises, en trois volets : construire la chose, la garder en état de marche et la rendre visible. Les prix sont des points de départ, alors dites-moi ce qu'il vous faut et vous recevrez un vrai chiffre.",
     inquireAbout: "Prendre contact au sujet de {service}",
     includesLabel: "Inclus",
     categoryMeta: {
