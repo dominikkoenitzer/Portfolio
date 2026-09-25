@@ -1,3 +1,4 @@
+import { flushSync } from "react-dom";
 /**
  * The two themes: bloom, the bright page, and its night side. The theme is a
  * `dark` class on <html>, set before first paint by `public/theme-init.js`
@@ -46,14 +47,26 @@ const apply = (theme: Theme) => {
   for (const listener of listeners) listener();
 };
 
-/** Switches the theme and remembers it as the visitor's choice. */
+/**
+ * Switches the theme and remembers it as the visitor's choice. Where the
+ * browser has view transitions the page crossfades into the other theme over
+ * about a second, the way evening falls or morning comes, instead of cutting.
+ * Reduced motion, and browsers without the API, switch at once. `flushSync`
+ * makes React paint the new theme inside the transition, so the snapshot it
+ * fades to is the finished page.
+ */
 export const setTheme = (theme: Theme) => {
   try {
     localStorage.setItem(STORAGE_KEY, theme);
   } catch {
     // Storage blocked: the switch still holds for this page view.
   }
-  apply(theme);
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || typeof document.startViewTransition !== "function") {
+    apply(theme);
+    return;
+  }
+  document.startViewTransition(() => flushSync(() => apply(theme)));
 };
 
 let watching = false;
