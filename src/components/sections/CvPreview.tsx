@@ -1,10 +1,13 @@
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ExternalLink, FileText, X } from "lucide-react";
 import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useOpenerOrigin } from "@/hooks/use-opener-origin";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useLanguage } from "@/lib/language-context";
+import { DUR, EASE_OUT, SPRING_FLUID } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 
 /**
@@ -37,15 +40,17 @@ export function CvPreview() {
         <FileText aria-hidden />
         {t.viewCv}
       </Button>
-      {open ? (
-        <CvDialog
-          closeLabel={t.cvClose}
-          href={doc.href}
-          name={doc.name}
-          newTabLabel={t.cvOpenNewTab}
-          onClose={() => setOpen(false)}
-        />
-      ) : null}
+      <AnimatePresence>
+        {open ? (
+          <CvDialog
+            closeLabel={t.cvClose}
+            href={doc.href}
+            name={doc.name}
+            newTabLabel={t.cvOpenNewTab}
+            onClose={() => setOpen(false)}
+          />
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }
@@ -71,6 +76,10 @@ function CvDialog({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  // The panel grows out of the "View CV" button and returns into it.
+  const reduceMotion = useReducedMotion();
+  useOpenerOrigin(panelRef, !reduceMotion);
+  const rest = reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.5 };
   const previousFocus = useRef<HTMLElement | null>(null);
 
   useBodyScrollLock(true);
@@ -151,22 +160,33 @@ function CvDialog({
           cursor's magnet off it: it is a viewport-sized button, so the box
           morphed onto the whole page whenever the pointer sat beside the
           panel. */}
-      <button
+      <motion.button
+        animate={{ opacity: 1 }}
         aria-hidden
         className="-z-10 fixed inset-0 cursor-default bg-foreground/40"
         data-cursor-ignore
+        exit={{ opacity: 0 }}
+        initial={{ opacity: 0 }}
         onClick={onClose}
         tabIndex={-1}
+        transition={{ duration: DUR.fast, ease: EASE_OUT }}
         type="button"
       />
 
-      <div
+      <motion.div
+        animate={{ opacity: 1, scale: 1 }}
         aria-labelledby="cv-preview-title"
         aria-modal="true"
         className="mx-auto flex h-full w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border/60 bg-card"
+        exit={{ ...rest, transition: { duration: DUR.fast, ease: EASE_OUT } }}
+        initial={rest}
         onKeyDown={trapTab}
         ref={panelRef}
         role="dialog"
+        transition={{
+          scale: SPRING_FLUID,
+          opacity: { duration: DUR.fast, ease: EASE_OUT },
+        }}
       >
         <div className="flex items-center gap-3 border-border/60 border-b px-4 py-3">
           <h2
@@ -196,7 +216,7 @@ function CvDialog({
         </div>
 
         <CvFrame href={href} name={name} />
-      </div>
+      </motion.div>
     </div>,
     document.body,
   );
