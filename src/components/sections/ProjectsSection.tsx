@@ -10,7 +10,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
-import { type KeyboardEvent, useMemo, useRef } from "react";
+import { type KeyboardEvent, useId, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ import {
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { REVEAL, stagger } from "@/lib/motion";
+import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { PrivateSource } from "./PrivateSource";
@@ -80,6 +80,11 @@ function SegmentedControl<Key extends string>({
   value: Key;
 }) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
+  // The selected option's highlight is one shared element that slides to the
+  // new option, the way an iOS segmented control moves its thumb. Reduced
+  // motion gets the highlight in place, without the slide.
+  const pillId = useId();
+  const reduceMotion = useReducedMotion();
 
   // A radiogroup is a single tab stop: Tab lands on the checked option and the
   // arrow keys move between (and select) the rest, which is what a native radio
@@ -118,9 +123,9 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`press h-9 flex-1 rounded-lg px-3.5 font-medium text-sm sm:flex-none ${FOCUS_RING} ${
+            className={`press relative h-9 flex-1 rounded-lg px-3.5 font-medium text-sm sm:flex-none ${FOCUS_RING} ${
               active
-                ? "bg-primary/10 text-primary"
+                ? "text-primary"
                 : "text-muted-foreground hover:text-foreground"
             }`}
             key={option.key}
@@ -132,7 +137,15 @@ function SegmentedControl<Key extends string>({
             tabIndex={active ? 0 : -1}
             type="button"
           >
-            {option.label}
+            {active ? (
+              <motion.span
+                aria-hidden
+                className="absolute inset-0 rounded-lg bg-primary/10"
+                layoutId={reduceMotion ? undefined : pillId}
+                transition={SPRING_FLUID}
+              />
+            ) : null}
+            <span className="relative">{option.label}</span>
           </button>
         );
       })}
