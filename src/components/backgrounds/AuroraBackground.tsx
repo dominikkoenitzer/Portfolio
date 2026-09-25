@@ -1,4 +1,10 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
 import { auroraStops, localHour } from "@/lib/aurora-time";
@@ -16,10 +22,18 @@ import Aurora from "./Aurora";
  * palette through the day, warmer towards the evening, cooler and deeper at
  * night. The clock is re-read every five minutes, which is far finer than the
  * colours can be told apart, and costs three uniform writes.
+ *
+ * The sky also waits for the visitor: it dims while they are elsewhere and
+ * brightens slowly when they come back.
  */
 
 /** How often the time of day is re-read. */
 const CLOCK_MS = 5 * 60 * 1000;
+
+/** How far the sky dims while the visitor is away, and how slowly it returns. */
+const AWAY_LEVEL = 0.5;
+const LEAVE_S = 1.5;
+const RETURN_S = 2.8;
 
 function pixelDensity(): number {
   if (typeof window === "undefined") {
@@ -63,14 +77,41 @@ export default function AuroraBackground() {
 
   const stops = useMemo(() => auroraStops(hour, night), [hour, night]);
 
+  // The sky waits: it dims while the visitor is elsewhere and brightens slowly
+  // when they come back, a small welcome home. Another tab hides the page, so
+  // the dimming is instant; another window or app leaves it on screen (a
+  // second monitor), so it dims gently there. Any switch counts, however
+  // short.
+  const presence = useMotionValue(1);
+  useEffect(() => {
+    const leave = (hidden: boolean) => {
+      if (hidden) presence.set(AWAY_LEVEL);
+      else animate(presence, AWAY_LEVEL, { duration: LEAVE_S, ease: "easeInOut" });
+    };
+    const come = () => {
+      animate(presence, 1, { duration: RETURN_S, ease: "easeOut" });
+    };
+    const onVisibility = () => (document.hidden ? leave(true) : come());
+    const onBlur = () => leave(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("blur", onBlur);
+    window.addEventListener("focus", come);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("focus", come);
+    };
+  }, [presence]);
+
   // The sky stays behind: over the first two screens of scrolling the ribbon
   // eases down to 60% of itself, like evening light seen from a car driving
   // away, and it is all there again back at the top.
   const base = night ? 0.8 : 0.65;
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, (y) => {
-    const screens = typeof window === "undefined" ? 0 : y / (window.innerHeight * 2);
-    return base * (1 - 0.4 * Math.min(Math.max(screens, 0), 1));
+  const opacity = useTransform([scrollY, presence], ([y, here]) => {
+    const screens =
+      typeof window === "undefined" ? 0 : (y as number) / (window.innerHeight * 2);
+    return base * (1 - 0.4 * Math.min(Math.max(screens, 0), 1)) * (here as number);
   });
 
   return (
