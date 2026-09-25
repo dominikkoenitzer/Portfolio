@@ -136,7 +136,7 @@ for (const p of getProjects("en")) {
     route: `/projects/${p.slug}`,
     title: getProjectSeoTitle(p.slug, p.title),
     description: getProjectSeoDescription(p).slice(0, 300),
-    keywords: `${p.title} ${seo.projectDetailsKeywordsSuffix}, ${p.tags.join(", ")}, Dominik Konitzer`,
+    keywords: `${p.title} ${seo.projectDetailsKeywordsSuffix}, ${p.tags.join(", ")}, Dominik Könitzer, Dominik Koenitzer`,
     image: `/og/projects/${p.slug}.png`,
     // ProjectDetails passes type="article" to <SEO>.
     ogType: "article",
@@ -272,7 +272,11 @@ const shell = await readFile(join(DIST, "index.html"), "utf8");
 let written = 0;
 for (const page of pages) {
   const url = `${SITE_CONFIG.url}${page.route === "/" ? "/" : page.route}`;
-  const fullTitle = `${page.title} | ${SITE_CONFIG.name}`;
+  // Same rule as <SEO>: the home page leads with the name.
+  const fullTitle =
+    page.route === "/"
+      ? `${SITE_CONFIG.name}: ${page.title}`
+      : `${page.title} | ${SITE_CONFIG.name}`;
   const img = `${SITE_CONFIG.url}${page.image}`;
 
   let html = shell;

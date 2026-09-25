@@ -27,7 +27,7 @@ const Projects = () => {
             "@type": "CollectionPage",
             name: "Projects",
             description:
-              "Software projects by Dominik Konitzer, each with a live site and its source code",
+              "Software projects by Dominik Könitzer, each with a live site and its source code",
             url: projectsUrl,
             inLanguage: language,
             isPartOf: { "@id": `${SITE_CONFIG.url}/#website` },

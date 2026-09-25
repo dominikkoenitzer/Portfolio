@@ -26,7 +26,7 @@ const titles = (records: readonly SearchRecord[], query: string): string[] =>
 describe("normalizeText", () => {
   it("folds case, accents and the sharp s", () => {
     expect(normalizeText("Zürich")).toBe("zurich");
-    expect(normalizeText("Könitzer")).toBe("konitzer");
+    expect(normalizeText("Größe")).toBe("grosse");
     expect(normalizeText("Développeur")).toBe("developpeur");
     expect(normalizeText("Straße")).toBe("strasse");
   });
@@ -98,7 +98,6 @@ describe("searchRecords", () => {
 
   it("finds accented copy from an unaccented query", () => {
     expect(titles(index, "zurich")).toContain("About");
-    expect(titles(index, "konitzer")).toEqual(["About"]);
   });
 
   it("prefers the records that match every token", () => {

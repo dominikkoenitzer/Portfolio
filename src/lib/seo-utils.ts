@@ -141,7 +141,7 @@ export const createPersonSchema = (
   "@type": "Person",
   "@id": `${SITE_CONFIG.url}/#person`,
   name: SITE_CONFIG.name,
-  alternateName: ["Dominik Koenitzer", "Dominik Konitzer", "D. Könitzer"],
+  alternateName: ["Dominik Koenitzer", "D. Könitzer"],
   givenName: "Dominik",
   familyName: "Könitzer",
   url: SITE_CONFIG.url,

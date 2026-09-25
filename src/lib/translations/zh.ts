@@ -448,7 +448,7 @@ export const zh = {
       description:
         "用一笔小额捐赠支持 Dominik Könitzer 的软件项目。这笔钱用于托管，以及构建和维护它们所花的时间。",
       keywords:
-        "向开发者捐款, 支持软件项目, 支持开源开发者, PayPal 捐款, 支持 Dominik Konitzer",
+        "向开发者捐款, 支持软件项目, 支持开源开发者, PayPal 捐款, 支持 Dominik Könitzer",
     },
     privacy: {
       title: "隐私政策",
