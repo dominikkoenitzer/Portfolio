@@ -1,0 +1,19 @@
+name: Keepalive
+
+on:
+  # The Vercel crons already call this route four times a day. This is the
+  # second, independent caller: if those crons ever stop, the database still
+  # gets its daily writes, and a failing run here says so by mail.
+  schedule:
+    - cron: '40 6,18 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Call /api/keepalive
+        run: curl --fail --silent --show-error --retry 3 --retry-delay 20 --max-time 30 https://dk.punds.ch/api/keepalive
