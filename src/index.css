@@ -183,6 +183,17 @@
   }
 }
 
+@utility memory-logo {
+  /* An Experience logo faded by its age (the filter is set inline); the card
+     it sits on brings the colour back on hover. */
+  & img {
+    transition: filter 0.6s var(--ease-out);
+  }
+  :where(.group\/entry):hover & img {
+    filter: none !important;
+  }
+}
+
 @utility faq-panel {
   /* Answer panel of the /services FAQ. The native <details> box snaps to its
      open height (height animations repaint every frame and are banned
