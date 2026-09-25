@@ -43,7 +43,7 @@ export function AboutSection() {
             <div className="aspect-square overflow-hidden rounded-2xl border border-border/60">
               {/* LCP element on /about: fetchPriority high + async decode so it
                   paints fast; explicit square dimensions reserve space (no CLS).
-                  Self-hosted copy of the GitHub avatar (public/avatar.jpg, 460px):
+                  Self-hosted copy of the GitHub avatar (public/dominik-koenitzer.jpg, 460px):
                   no third-party connection on the critical path, and it keeps
                   rendering when github.com is unreachable. */}
               <img
@@ -52,7 +52,7 @@ export function AboutSection() {
                 decoding="async"
                 fetchPriority="high"
                 height={460}
-                src="/avatar.jpg"
+                src="/dominik-koenitzer.jpg"
                 width={460}
               />
             </div>
