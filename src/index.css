@@ -469,6 +469,16 @@
      and the stat numbers. Normal spacing, because tightening a serif crowds
      it. The class beats the heading rule above on specificity, and `*`
      covers the animated spans inside a title. */
+  /* Klee One, a soft hand-lettered Japanese face, for small accents only: the
+     numbered case-study sections and their contents list. Opted in by class
+     for the same reason as the title face below, and in this layer so it
+     beats the element rule that pins spans to the body face. */
+  .accent-jp {
+    font-family:
+      "Klee One", "Geist Variable", system-ui, sans-serif !important;
+    font-weight: 600 !important;
+  }
+
   .title-serif,
   .title-serif * {
     font-family:
