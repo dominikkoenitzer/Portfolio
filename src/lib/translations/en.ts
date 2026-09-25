@@ -155,7 +155,6 @@ export const en = {
     download: "Download",
     sourceCode: "Source Code",
     onThisPage: "On this page",
-    builtWith: "Built with",
     downloadNote:
       "First launch: Windows SmartScreen may appear. Choose “More info” → “Run anyway”.",
     moreProjects: "More Projects",

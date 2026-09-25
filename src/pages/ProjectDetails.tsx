@@ -11,7 +11,7 @@ import { useLenis } from "lenis/react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
-import { TechBadge, TechIcon } from "@/components/ui/tech-badge";
+import { TechBadge } from "@/components/ui/tech-badge";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
 import { Button } from "@/components/ui/button";
 // Module path, not the seo-data barrel: that barrel also re-exports
@@ -213,27 +213,6 @@ const ProjectDetails = () => {
     { label: t.timeline, value: projectTimeline },
     { label: t.role, value: project.roleSummary },
   ];
-  // What the project is built with, each one a way into the other projects
-  // built with the same thing.
-  if (project.stack.length) {
-    specRows.push({
-      label: t.builtWith,
-      value: (
-        <span className="flex flex-wrap gap-x-3 gap-y-1">
-          {project.stack.map((skill) => (
-            <Link
-              className="inline-flex items-center gap-1.5 underline decoration-border underline-offset-4 transition-colors duration-200 ease-out hover:text-primary hover:decoration-primary/40"
-              key={skill}
-              to={`/projects?tech=${encodeURIComponent(skill)}`}
-            >
-              <TechIcon name={skill} />
-              {skill}
-            </Link>
-          ))}
-        </span>
-      ),
-    });
-  }
   if (project.operatingSystem) {
     specRows.push({ label: "Platform", value: project.operatingSystem });
   }
@@ -415,11 +394,6 @@ const ProjectDetails = () => {
                 </p>
               ) : null}
 
-              <div className="mt-7 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <TechBadge key={tag} name={tag} variant="primary" />
-                ))}
-              </div>
             </motion.div>
 
             {/* A square app icon gets the same frame as a screenshot, so both
