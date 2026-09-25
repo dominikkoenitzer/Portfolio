@@ -185,7 +185,7 @@ export const de = {
     close: "Schliessen",
     loading: "Der Baum wächst…",
     intro:
-      "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise unten sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
+      "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
     inquireAbout: "Kontakt aufnehmen wegen {service}",
     includesLabel: "Enthalten",
     categoryMeta: {
