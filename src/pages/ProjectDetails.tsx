@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -147,6 +147,31 @@ const ProjectDetails = () => {
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Which picture the viewer was opened from, for the grow-from-thumbnail
+  // animation. Kept apart from the current index, which changes on a swipe.
+  const [lightboxOrigin, setLightboxOrigin] = useState(0);
+  // The viewer opens once the full-size file is decoded, or after 350ms at the
+  // latest. The shared-layout flight measures the enlarged image when it
+  // mounts, and an image still loading measures as an empty box: the first
+  // frames then scaled the picture from nothing into a squashed rectangle.
+  const openLightbox = (at: number) => {
+    const open = () => {
+      setLightboxOrigin(at);
+      setLightboxIndex(at);
+    };
+    const src = galleryImages[at];
+    if (!src) return open();
+    const full = new Image();
+    full.src = src;
+    let opened = false;
+    const once = () => {
+      if (opened) return;
+      opened = true;
+      open();
+    };
+    full.decode().then(once, once);
+    window.setTimeout(once, 350);
+  };
   const lenis = useLenis();
 
   if (!project) {
@@ -423,7 +448,8 @@ const ProjectDetails = () => {
                     alt={`${project.title} screenshot`}
                     caption={captionFor(0)}
                     className="w-full max-w-xl"
-                    onOpen={() => setLightboxIndex(0)}
+                    layoutId="project-shot-0"
+                    onOpen={() => openLightbox(0)}
                     openLabel={shotLabel(0)}
                     priority
                     /* Measured in a browser at every breakpoint, not estimated:
@@ -515,7 +541,8 @@ const ProjectDetails = () => {
                       alt={shotAlt(section.figure)}
                       caption={captionFor(section.figure)}
                       className="mt-8"
-                      onOpen={() => setLightboxIndex(section.figure ?? 0)}
+                      layoutId={`project-shot-${section.figure}`}
+                      onOpen={() => openLightbox(section.figure ?? 0)}
                       openLabel={shotLabel(section.figure)}
                       src={galleryImages[section.figure]}
                     />
@@ -705,7 +732,8 @@ const ProjectDetails = () => {
         </div>
       </div>
 
-      {lightboxIndex !== null && galleryImages.length > 0 ? (
+      <AnimatePresence>
+        {lightboxIndex !== null && galleryImages.length > 0 ? (
         <Lightbox
           alt={`${project.title} screenshot`}
           images={galleryImages}
@@ -720,8 +748,10 @@ const ProjectDetails = () => {
           }}
           onClose={() => setLightboxIndex(null)}
           onSelect={setLightboxIndex}
+          originIndex={lightboxOrigin}
         />
-      ) : null}
+        ) : null}
+      </AnimatePresence>
     </>
   );
 };
