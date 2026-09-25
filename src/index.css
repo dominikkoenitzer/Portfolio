@@ -166,6 +166,14 @@
   }
 }
 
+/* The theme switch as dusk and dawn: the default view-transition crossfade,
+   slowed to a second and eased at both ends. See `setTheme` in lib/theme.ts. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 1.1s;
+  animation-timing-function: ease-in-out;
+}
+
 @utility memory-photo {
   /* A screenshot seen as a memory: a little faded and a little warm, and fully
      itself the moment the pointer or the keyboard comes to it. Only where
