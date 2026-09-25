@@ -416,7 +416,7 @@ export function ProjectsSection() {
             >
               {visible.map((project, cardIndex) => (
                 <motion.article
-                  className={`${CARD} group overflow-hidden hover:border-primary/30`}
+                  className={`${CARD} memory-photo group overflow-hidden hover:border-primary/30`}
                   key={project.slug}
                   variants={REVEAL}
                 >
