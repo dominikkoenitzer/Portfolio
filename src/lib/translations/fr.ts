@@ -156,7 +156,6 @@ export const fr = {
     download: "Télécharger",
     sourceCode: "Code source",
     onThisPage: "Sur cette page",
-    builtWith: "Construit avec",
     downloadNote:
       "Premier lancement : Windows SmartScreen peut s’afficher. Choisissez « Informations complémentaires » → « Exécuter quand même ».",
     moreProjects: "Plus de projets",

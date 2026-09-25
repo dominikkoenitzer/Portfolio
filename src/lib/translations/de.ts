@@ -156,7 +156,6 @@ export const de = {
     download: "Download",
     sourceCode: "Quellcode",
     onThisPage: "Auf dieser Seite",
-    builtWith: "Gebaut mit",
     downloadNote:
       "Erster Start: Windows SmartScreen kann warnen. Wähle „Weitere Informationen“ → „Trotzdem ausführen“.",
     moreProjects: "Weitere Projekte",
