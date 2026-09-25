@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { auroraStops, localHour } from "./aurora-time";
+import { auroraStops, localHour, warmStops } from "./aurora-time";
 
 describe("auroraStops", () => {
   it("shows the site's own palette through the day", () => {
@@ -38,5 +38,15 @@ describe("auroraStops", () => {
 describe("localHour", () => {
   it("turns a clock into a fractional hour", () => {
     expect(localHour(new Date(2026, 8, 25, 19, 45))).toBe(19.75);
+  });
+});
+
+describe("warmStops", () => {
+  it("leaves the sky alone at rest and only leans it when lingering", () => {
+    const day = auroraStops(12, false);
+    expect(warmStops(day, 0, false)).toEqual(day);
+    const warm = warmStops(day, 1, false);
+    expect(warm).not.toEqual(day);
+    expect(warmStops(day, 5, false)).toEqual(warm);
   });
 });
