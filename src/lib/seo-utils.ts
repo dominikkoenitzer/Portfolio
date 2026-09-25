@@ -98,6 +98,21 @@ export const createHowToSchema = (
  * Breadcrumb schema for the given URL. Skips emission on the homepage so
  * search consoles don't flag a single-item breadcrumb.
  */
+/**
+ * The About page as Google's ProfilePage: a page whose main subject is one
+ * person. `mainEntity` points at the site-wide Person by `@id`, so the profile
+ * and every other page describe the same entity.
+ */
+export const createProfilePageSchema = () => ({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${SITE_CONFIG.url}/about#profilepage`,
+  url: `${SITE_CONFIG.url}/about`,
+  name: `About ${SITE_CONFIG.name}`,
+  description: `Who ${SITE_CONFIG.name} is: a software engineer in Zürich who builds for the web.`,
+  mainEntity: { "@id": `${SITE_CONFIG.url}/#person` },
+});
+
 export const createBreadcrumbSchema = (url: string) => {
   if (!url || url === SITE_CONFIG.url || url === `${SITE_CONFIG.url}/`) {
     return null;
@@ -148,10 +163,10 @@ export const createPersonSchema = (
   // The portrait, not the OG card. `image` on a Person is the picture *of the
   // person*, which is what a knowledge panel would show; the 1200x630 card is
   // a title slate with no face in it. Self-hosted copy of the GitHub avatar
-  // (public/avatar.jpg), so it stays reachable and inside the CSP.
+  // (public/dominik-koenitzer.jpg), so it stays reachable and inside the CSP.
   image: {
     "@type": "ImageObject",
-    url: `${SITE_CONFIG.url}/avatar.jpg`,
+    url: `${SITE_CONFIG.url}/dominik-koenitzer.jpg`,
     width: 460,
     height: 460,
   },

@@ -13,6 +13,11 @@
     {
       "source": "/lebenslauf",
       "destination": "/cv/lebenslauf.html"
+    },
+    {
+      "source": "/avatar.jpg",
+      "destination": "/dominik-koenitzer.jpg",
+      "permanent": true
     }
   ],
   "headers": [
@@ -88,7 +93,7 @@
       ]
     },
     {
-      "source": "/(favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|android-chrome-192x192\\.png|android-chrome-512x512\\.png|og-image\\.png|avatar\\.jpg)",
+      "source": "/(favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|android-chrome-192x192\\.png|android-chrome-512x512\\.png|og-image\\.png|dominik-koenitzer\\.jpg)",
       "headers": [
         {
           "key": "Cache-Control",
