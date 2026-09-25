@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { type KeyboardEvent, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
+import { TechBadge } from "@/components/ui/tech-badge";
 import { Button } from "@/components/ui/button";
 import {
   getProjects,
@@ -483,7 +483,7 @@ export function ProjectsSection() {
 
                       <div className="mt-5 mb-6 flex flex-wrap gap-1.5">
                         {project.tags.map((tag) => (
-                          <Badge key={tag}>{tag}</Badge>
+                          <TechBadge key={tag} name={tag} />
                         ))}
                       </div>
 
