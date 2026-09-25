@@ -23,7 +23,7 @@ const PAYPAL = "https://www.paypal.com/paypalme/dominikkoenitzer";
 
 /** Every amount is the same control, so the four share one class string. */
 const TILE =
-  "group/tile flex flex-col gap-2 rounded-2xl border bg-card p-4 transition-colors duration-200 ease-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5";
+  "press group/tile flex flex-col gap-2 rounded-2xl border bg-card p-4 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:p-5";
 
 /** Fixed glyph row: the amounts and the infinity mark share one height, so all
     four captions sit on the same line however tall the mark is. */
