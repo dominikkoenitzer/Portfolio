@@ -60,7 +60,12 @@ export function ScrollToTopFab() {
     // instantly, an explicit behavior:"smooth" would animate despite the
     // reduced-motion CSS, since it overrides the `scroll-behavior` property.
     if (lenis) {
-      lenis.scrollTo(0);
+      // A slow, calm glide home rather than a jump: long, and easing out
+      // at the top the way a car rolls to a stop.
+      lenis.scrollTo(0, {
+        duration: 1.8,
+        easing: (t: number) => 1 - (1 - t) ** 4,
+      });
     } else {
       window.scrollTo({
         top: 0,
