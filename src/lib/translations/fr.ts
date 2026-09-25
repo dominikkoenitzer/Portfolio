@@ -507,7 +507,7 @@ export const fr = {
       description:
         "Soutenez les projets logiciels de Dominik Könitzer par un petit don. Il couvre l'hébergement et le temps passé à les construire et à les maintenir.",
       keywords:
-        "donner à un développeur, soutenir des projets logiciels, soutenir un développeur open source, don PayPal, soutenir Dominik Konitzer",
+        "donner à un développeur, soutenir des projets logiciels, soutenir un développeur open source, don PayPal, soutenir Dominik Könitzer",
     },
     privacy: {
       title: "Politique de confidentialité",

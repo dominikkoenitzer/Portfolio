@@ -37,9 +37,12 @@ export function SEO({
 }: SEOProps) {
   const { language } = useLanguage();
   const { pathname } = useLocation();
-  const siteTitle = title
-    ? `${title} | ${SITE_CONFIG.name}`
-    : `${SITE_CONFIG.title} | ${SITE_CONFIG.name}`;
+  // The home page leads with the name: it is the page that answers a search
+  // for the name itself. Every other page keeps the name as a suffix.
+  const siteTitle =
+    pathname === "/"
+      ? `${SITE_CONFIG.name}: ${title || SITE_CONFIG.title}`
+      : `${title || SITE_CONFIG.title} | ${SITE_CONFIG.name}`;
 
   const siteDescription = description || SITE_CONFIG.description;
   // Default to the route being viewed rather than the site root. Pages pass

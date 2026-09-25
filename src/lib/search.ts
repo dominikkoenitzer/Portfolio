@@ -67,9 +67,9 @@ export interface SearchGroup {
 }
 
 /**
- * Case- and accent-insensitive form. "Zürich" and "Könitzer" have to be
- * reachable by typing "zurich" and "konitzer", which is what a visitor on a
- * keyboard without umlauts will do. ß folds to ss for the same reason.
+ * Case- and accent-insensitive form. "Zürich" has to be reachable by
+ * typing "zurich", which is what a visitor on a keyboard without umlauts
+ * will do. ß folds to ss for the same reason.
  * Decomposition leaves CJK untouched, so Chinese copy passes through as-is.
  */
 export function normalizeText(value: string): string {

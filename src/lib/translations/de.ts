@@ -510,7 +510,7 @@ export const de = {
       description:
         "Unterstütze Dominik Könitzers Software-Projekte mit einer kleinen Spende. Sie deckt Hosting und die Zeit, die im Bauen und Warten steckt.",
       keywords:
-        "Entwickler unterstützen, Software-Projekte unterstützen, Open-Source-Entwickler unterstützen, PayPal-Spende, Dominik Konitzer unterstützen",
+        "Entwickler unterstützen, Software-Projekte unterstützen, Open-Source-Entwickler unterstützen, PayPal-Spende, Dominik Könitzer unterstützen",
     },
     privacy: {
       title: "Datenschutzerklärung",
