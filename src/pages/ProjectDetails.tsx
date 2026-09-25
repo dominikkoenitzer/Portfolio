@@ -12,6 +12,7 @@ import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { TechBadge, TechIcon } from "@/components/ui/tech-badge";
+import { ProjectTechLoop } from "@/components/effects/tech-stack";
 import { Button } from "@/components/ui/button";
 // Module path, not the seo-data barrel: that barrel also re-exports
 // services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
@@ -464,6 +465,10 @@ const ProjectDetails = () => {
               <StatStrip stats={project.stats} />
             </div>
           ) : null}
+
+          <div className="mt-12">
+            <ProjectTechLoop project={project} />
+          </div>
         </section>
 
         {/* ============================================================ */}
