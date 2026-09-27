@@ -55,8 +55,8 @@ interface Page {
    *  ends up with a prerendered `website` arguing with a Helmet `article`. */
   ogType: "website" | "article";
   /**
-   * Route-specific JSON-LD, on top of the four site-wide graphs already in the
-   * shell (Person, WebSite, ProfessionalService, Organization).
+   * Route-specific JSON-LD, on top of the three site-wide graphs already in the
+   * shell (Person, WebSite, ProfessionalService).
    */
   jsonLd: object[];
 }
