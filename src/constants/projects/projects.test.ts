@@ -9,7 +9,10 @@ import {
 } from "./index";
 import { PROJECT_STACKS } from "./stacks";
 import { SKILL_CATEGORIES } from "@/constants/skills";
-import { getProjectSeoTitle } from "@/config/seo-data/projects";
+import {
+  getProjectSeoDescription,
+  getProjectSeoTitle,
+} from "@/config/seo-data/projects";
 
 /**
  * The project list is hand-maintained data that feeds the cards, the detail
@@ -190,6 +193,16 @@ describe("the project list", () => {
       expect(title, project.slug).not.toBe(project.title);
       expect(title.startsWith(`${project.title}, `), project.slug).toBe(true);
       expect(title.length, project.slug).toBeLessThanOrEqual(40);
+    }
+  });
+
+  // Google shows about 155 characters of a description and cuts the rest,
+  // which left every project snippet ending mid-sentence.
+  it("gives every project a search snippet Google shows in full", () => {
+    for (const project of projects) {
+      const snippet = getProjectSeoDescription(project);
+      expect(snippet, project.slug).not.toBe(project.description);
+      expect(snippet.length, project.slug).toBeLessThanOrEqual(155);
     }
   });
 });
