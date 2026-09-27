@@ -47,15 +47,45 @@ export const getProjectSeoTitle = (slug: string, fallback: string): string =>
   PROJECT_SEO_TITLES[slug] ?? fallback;
 
 /**
- * Meta description for one project page.
- *
- * Prefers `description` over `tagline`. The taglines are one-line jokes written
- * for the page ("VS Code, minus the parts that talk back.", 40 characters) and
- * gave Google almost nothing to build a snippet from; `description` is the
- * 130 to 240 character factual paragraph, which is exactly the shape a meta
- * description wants.
+ * The snippet a project page offers Google, cut from the page's own
+ * `description` to fit under the ~155 characters Google shows before it
+ * truncates. Language-neutral for the same reason as the titles above.
+ */
+const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
+  zephyr:
+    "Zephyr is a local-first to-do list and Pomodoro focus timer in one place. No login, no backend, and nothing you enter ever leaves your browser.",
+  portfolio:
+    "My personal portfolio: a fast React single-page app in four languages, with a prerendered HTML file per route and structured data on every page.",
+  entropy:
+    "A password generator and analyzer that runs entirely in the browser, with Web Crypto randomness and crack times for five attacker models.",
+  spectrum:
+    "A client-side color toolkit: pull colors out of an image, build gradients and palettes, check WCAG contrast and simulate color blindness.",
+  remnants:
+    "My build of Code - OSS for Windows, macOS and Linux, with Copilot, chat, agents, telemetry and sign-in cut out and the editor fully intact.",
+  time: "An NTP-synced web clock, accurate to hundredths of a second: the time, date, ISO week and timezone on one bare screen, with nothing to press.",
+  jester:
+    "A native Windows notepad with tabs, line numbers, find-in-files and PDF export, all in one portable Jester.exe with no installer.",
+  flow: "A C++17 Windows app that records mouse and keyboard macros, replays them with sub-10 ms timing and runs a fast auto-clicker. One exe, no install.",
+  punds:
+    "My one-page link hub, built as a navigable Three.js world in the style of Copland OS from Serial Experiments Lain. Drag to look, scroll to fly.",
+  senbon:
+    "My markdown journal: plain files with four frontmatter keys, rendered into an unhurried reading page, with no CMS and no third-party trackers.",
+  oxidize:
+    "A Windows uninstaller in Rust: it runs the program's own uninstaller, then removes leftover registry keys, files, services and tasks, backing each up.",
+  inkling:
+    "A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your machine. A checkbox in a note becomes a task.",
+  mochi:
+    "A tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it.",
+};
+
+/**
+ * Meta description for one project page: the short snippet above, falling
+ * back to `description` and then `tagline` for a project without one.
  */
 export const getProjectSeoDescription = (project: {
+  slug: string;
   description: string;
   tagline: string;
-}): string => project.description || project.tagline;
+}): string =>
+  PROJECT_SEO_DESCRIPTIONS[project.slug] ??
+  (project.description || project.tagline);
