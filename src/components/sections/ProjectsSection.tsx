@@ -3,13 +3,13 @@ import {
   ArrowRight,
   Download,
   ExternalLink,
-  Github,
   Lock,
   Search,
   SearchX,
   Wrench,
   X,
 } from "lucide-react";
+import { Github } from "@/components/ui/github-icon";
 import { type KeyboardEvent, useId, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { TechBadge } from "@/components/ui/tech-badge";
