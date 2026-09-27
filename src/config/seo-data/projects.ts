@@ -32,7 +32,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   senbon: "Senbon, a markdown digital garden",
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",
-  mochi: "Mochi, a tiling window manager in Rust",
+  mochi: "Mochi, a Windows tiling window manager",
 };
 
 /**
