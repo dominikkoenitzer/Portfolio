@@ -200,7 +200,6 @@ export const createPersonSchema = (
     skills:
       "React, Next.js, TypeScript, JavaScript, Node.js, Java, Spring Framework, Full-Stack Development, Docker, PostgreSQL",
   },
-  worksFor: { "@id": `${SITE_CONFIG.url}/#organization` },
   seeks: {
     "@type": "Demand",
     name: "Software engineering roles, internships, and freelance opportunities",
