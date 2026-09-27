@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Bot, FileText, Github, Mail } from "lucide-react";
+import { Bot, FileText, Mail } from "lucide-react";
+import { Github } from "@/components/ui/github-icon";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS, SITE_CONFIG } from "@/constants";

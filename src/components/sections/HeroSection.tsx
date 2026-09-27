@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Github, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
+import { Github } from "@/components/ui/github-icon";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
