@@ -1,3 +1,4 @@
+import * as React from "react";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { DefaultContext } from "react-icons";
 
@@ -14,7 +15,32 @@ import { DefaultContext } from "react-icons";
  * else throws, so a new kind of component cannot fail silently into a blank
  * texture. Output is byte-identical to renderToStaticMarkup for these trees;
  * `svg-string.test.ts` holds it to that.
+ *
+ * lucide-react 1.x reads its optional LucideProvider with useContext inside
+ * every icon, and outside a React render there is no hook dispatcher, so that
+ * call throws. No provider ever wraps these textures, so while one tree
+ * renders, useContext answers with the context's default value, which is what
+ * React itself returns without a provider. Any other hook still throws.
  */
+
+type HookDispatcher = { useContext: (context: { _currentValue: unknown }) => unknown };
+const REACT_INTERNALS = (
+  React as unknown as Record<string, { H: HookDispatcher | null } | undefined>
+).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+const DEFAULT_CONTEXTS: HookDispatcher = {
+  useContext: (context) => context._currentValue,
+};
+
+function withDefaultContexts<T>(render: () => T): T {
+  if (!REACT_INTERNALS) return render();
+  const previous = REACT_INTERNALS.H;
+  REACT_INTERNALS.H = DEFAULT_CONTEXTS;
+  try {
+    return render();
+  } finally {
+    REACT_INTERNALS.H = previous;
+  }
+}
 
 const FORWARD_REF = Symbol.for("react.forward_ref");
 const MEMO = Symbol.for("react.memo");
@@ -218,7 +244,9 @@ function renderNode(node: ReactNode): string {
 
 /** Static SVG markup for an icon element, ready for a data URL. */
 export function renderSvgString(element: ReactElement): string {
-  return renderElement(element as ReactElement<AnyProps>);
+  return withDefaultContexts(() =>
+    renderElement(element as ReactElement<AnyProps>),
+  );
 }
 
 /** The same markup wrapped as a `data:image/svg+xml` URL for TextureLoader. */

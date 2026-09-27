@@ -4,9 +4,9 @@ import {
   ArrowUpRight,
   Download,
   ExternalLink,
-  Github,
   Lock,
 } from "lucide-react";
+import { Github } from "@/components/ui/github-icon";
 import { useLenis } from "lenis/react";
 import { type ReactNode, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
