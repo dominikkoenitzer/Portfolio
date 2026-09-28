@@ -203,8 +203,8 @@ function vendorChunk(id: string): string | undefined {
 }
 
 /**
- * Preloads the woff2 files that paint the first screen (Kaisei Decol for the
- * hero name and every page title, and the Geist file for all text) straight
+ * Preloads the woff2 files that paint the first screen (Kaisei Decol for
+ * every page title, and the Geist file for all text and the hero name) straight
  * from the HTML. Without this
  * the browser only learns about them after the stylesheet has arrived and been
  * parsed, one full round trip later, and on a phone that hop sat right on the
@@ -216,11 +216,9 @@ function vendorChunk(id: string): string | undefined {
  * list only what the first screen paints.
  */
 const FIRST_SCREEN_FONTS: ReadonlyArray<RegExp> = [
-  // Geist, the reading face: one variable file for every weight.
+  // Geist, the reading face and the hero name: one variable file for every
+  // weight.
   /^assets[\\/]geist-latin-wght-normal-[\w-]+\.woff2$/,
-  // Hina Mincho: the hero name, the largest thing on the home page's first
-  // screen.
-  /^assets[\\/]hina-mincho-latin-400-normal-[\w-]+\.woff2$/,
   // Kaisei Decol: the page title everywhere but home.
   /^assets[\\/]kaisei-decol-latin-700-normal-[\w-]+\.woff2$/,
 ];
