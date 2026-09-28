@@ -46,12 +46,12 @@ function Name() {
       <h1 className="sr-only">Dominik Könitzer, {title}</h1>
       {/* Both names share one grid cell, so the outgoing one is still fading
           while the next is already arriving: the biggest element on the page
-          never blinks empty. `ml-[-0.013em]` takes back half of Kaisei
-          Decol's left sidebearing, which puts the serif of the first letter
+          never blinks empty. `ml-[-0.055em]` takes back Geist's left
+          sidebearing at this size, which puts the stem of the first letter
           on the same column as the text above and below (measured at 1440). */}
       <div
         aria-hidden="true"
-        className="ml-[-0.013em] grid leading-none tracking-[-0.01em]"
+        className="ml-[-0.055em] grid leading-none tracking-[-0.01em]"
         style={{ fontSize: "clamp(3rem, 9vw, 8.5rem)" }}
       >
         {reduceMotion ? (
