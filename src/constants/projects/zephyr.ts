@@ -161,7 +161,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
         heading: "Deux écrans, le reste est parti",
         body: [
           "Zephyr avait autrefois des notes, un journal et un calendrier à côté des tâches et du minuteur. Je les ai retirés un par un, les notes en dernier en août 2026, et j'ai gardé les deux outils que j'ouvrais vraiment chaque jour. Les anciennes adresses redirigent vers la liste de tâches. L'app connaît encore leurs clés de stockage, si bien qu'une réinitialisation efface toujours les anciennes données et qu'un export les emporte toujours.",
-          "Deux destinations ne justifiaient pas une barre latérale : la barre du haut est toute la navigation. Les deux noms sont le seul texte en grand de l'app : l'actif est en capitales sur un trait, l'autre reste en minuscules et atténué. La barre sert aussi de titre de page, donc les pages des tâches et du focus n'affichent pas un second titre qui répéterait le même mot.",
+          "En septembre 2026, je l'ai entièrement redessiné. La mise en page s'inspire d'une maquette de tableau de bord qui me plaisait ; le reste lui est propre : un fond couleur pierre chaude, des cartes blanches, un seul accent abricot et un indigo profond pour les rares éléments qui comptent. La navigation est passée dans une barre latérale, une barre flottante sur téléphone, et l'accueil est devenu un tableau de bord qui n'affiche que ce sur quoi on peut agir, tant qu'il n'y a rien à compter.",
         ],
         figure: 1,
       },
