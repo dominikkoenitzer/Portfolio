@@ -108,6 +108,9 @@ function ContributionsCalendar() {
   // a callback ref: a ref object read on the first render would still be empty
   // and the lights would never come on.
   const [gridEl, setGridEl] = useState<HTMLDivElement | null>(null);
+  // The one day that takes Tab; the arrow keys move it. Null means the latest
+  // day, so the grid is a single stop in the tab order however long it is.
+  const [focusDay, setFocusDay] = useState<string | null>(null);
   const [lit, setLit] = useState(false);
   useEffect(() => {
     if (!gridEl || lit) return;
@@ -146,6 +149,8 @@ function ContributionsCalendar() {
 
   // Use weeks directly from API (each week is a column)
   const weeks = data?.weeks || [];
+  const lastWeekDays = weeks[weeks.length - 1]?.contributionDays ?? [];
+  const latestDate = lastWeekDays[lastWeekDays.length - 1]?.date ?? null;
 
   // Get month labels for the top row (localized to the active language)
   const monthLabels: { index: number; label: string }[] = [];
@@ -233,6 +238,31 @@ function ContributionsCalendar() {
                 never overflows or hijacks vertical scroll on touch. */}
             <div
               className="grid gap-[2px]"
+              onKeyDown={(e) => {
+                const step: Record<string, [number, number]> = {
+                  ArrowLeft: [-1, 0],
+                  ArrowRight: [1, 0],
+                  ArrowUp: [0, -1],
+                  ArrowDown: [0, 1],
+                };
+                const move = step[e.key];
+                const from = (e.target as HTMLElement).dataset.cell;
+                if (!move || !from || !gridEl) return;
+                e.preventDefault();
+                let [w, d] = from.split(":").map(Number);
+                // Skip the empty slots before the first and after the last day.
+                for (let i = 0; i < 7 * weeks.length; i++) {
+                  w += move[0];
+                  d += move[1];
+                  if (d < 0 || d > 6 || w < 0 || w >= weeks.length) return;
+                  const next = gridEl.querySelector<HTMLElement>(`[data-cell="${w}:${d}"]`);
+                  if (next) {
+                    setFocusDay(next.dataset.date ?? null);
+                    next.focus();
+                    return;
+                  }
+                }
+              }}
               ref={setGridEl}
               style={{
                 gridTemplateColumns: `repeat(${weeks.length}, minmax(0, 1fr))`,
@@ -293,12 +323,22 @@ function ContributionsCalendar() {
                         year: "numeric",
                       });
 
+                      const isFocusDay = focusDay
+                        ? day.date === focusDay
+                        : day.date === latestDate;
+
                       return (
                         <Tooltip key={dayIndex}>
                           <TooltipTrigger asChild>
-                            <div
-                              className="aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 ease-out hover:border-primary/50"
+                            <button
+                              aria-label={`${day.contributionCount} ${countLabel}, ${formattedDate}`}
+                              className="block aspect-square w-full cursor-pointer rounded-[2px] border border-transparent transition-colors duration-200 ease-out hover:border-primary/50 focus-visible:border-primary focus-visible:outline-none"
+                              data-cell={`${weekIndex}:${dayIndex}`}
+                              data-date={day.date}
+                              onFocus={() => setFocusDay(day.date)}
                               style={{ backgroundColor: color }}
+                              tabIndex={isFocusDay ? 0 : -1}
+                              type="button"
                             />
                           </TooltipTrigger>
                           <TooltipContent
