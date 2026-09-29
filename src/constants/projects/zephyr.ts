@@ -53,6 +53,12 @@ export const zephyr: Record<Language, LocalizedContent> = {
         ],
       },
       {
+        heading: "The timer is a sunset",
+        body: [
+          "Every timer has a progress ring, so mine is a day passing instead: a sun rises at the left of a horizon, crosses the sky and sets as the session ends. On a break it is a moon. The sun rides one rotating group, so each second is a single transform and it glides rather than ticks.",
+        ],
+      },
+      {
         heading: "The parts of a timer you only notice when they are wrong",
         body: [
           "The timer has stored a day streak since the beginning, but the code that writes it never expires it. So the code that reads it decides: a streak whose last day is older than yesterday is worth nothing, whatever the stored count says, and on a day with no session yet the focus page warns that it is about to lapse.",
