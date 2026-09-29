@@ -50,6 +50,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
           "Ids used to be the current time as a string. Two tasks quick-added in the same millisecond got the same id, and since delete matches on id, deleting one deleted both. Ids come from crypto.randomUUID now.",
           "Reminders were deduplicated by title inside a 60-second window, which was exactly the interval the poller ran on. Every due task announced itself again every minute, chime included. Each reminder now carries a key made of the task and the day.",
           "The chime also built a new AudioContext every time and never closed it. Browsers allow a page six, so the seventh chime threw and every chime after it was silent. There is one context now, and it is reused.",
+          "Skip used to count as finishing, so five quick skips logged five 25-minute sessions and inflated the week. It moves on now and logs nothing.",
         ],
       },
       {
