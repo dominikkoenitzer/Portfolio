@@ -214,6 +214,18 @@
     </image:image>
   </url>
 
+  <!-- Project: Daifuku -->
+  <url>
+    <loc>https://dk.punds.ch/projects/daifuku</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dk.punds.ch/projects/daifuku.jpg</image:loc>
+      <image:title>Daifuku, a software project by Dominik Könitzer</image:title>
+    </image:image>
+  </url>
+
   <!-- Contact -->
   <url>
     <loc>https://dk.punds.ch/contact</loc>
