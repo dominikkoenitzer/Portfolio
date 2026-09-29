@@ -136,10 +136,10 @@ export const zephyr: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Die Startseite nach einer frischen Installation: das Datum, die vier Wochenzahlen auf null und nichts fällig heute.",
-      "Die Fokus-Seite im hellen Modus, mit dem Pomodoro-Preset auf 25:00 und der Preset-Liste neben dem Zifferblatt.",
-      "Nochmals die Startseite, jetzt mit drei aktiven Aufgaben und nichts fällig heute.",
-      "Dieselbe Fokus-Seite im dunklen Modus.",
+      "Das Dashboard im hellen Modus: offene und überfällige Aufgaben, Fokuszeit, die Woche und der Timer.",
+      "Die Fokus-Seite mitten in einer Session, die Sonne etwas mehr als ein Drittel über den Himmel.",
+      "Die Aufgabenliste nach Fälligkeit gruppiert, mit der Übersicht daneben.",
+      "Der Timer im Vollbild, bei Nacht.",
     ],
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
