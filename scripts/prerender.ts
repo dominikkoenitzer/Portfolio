@@ -332,6 +332,15 @@ for (const page of pages) {
     html = html.replace(/<\/head>/i, `${blocks}\n  </head>`);
   }
 
+  // Home paints no page title, only the hero in Geist, so the title face's
+  // preload there fetched 36 kB nothing used and earned a console warning.
+  if (page.route === "/") {
+    html = html.replace(
+      /\s*<link rel="preload" as="font"[^>]*kaisei-decol[^>]*>/i,
+      "",
+    );
+  }
+
   // The avatar is the LCP element on /about but lives in a lazy route chunk,
   // so the browser would only discover it after React renders the page. A
   // preload in the head starts that fetch alongside the entry script instead.
