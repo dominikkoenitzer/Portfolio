@@ -5,6 +5,7 @@ import { flow } from "./flow";
 import { inkling } from "./inkling";
 import { jester } from "./jester";
 import { mochi } from "./mochi";
+import { daifuku } from "./daifuku";
 import { oxidize } from "./oxidize";
 import { portfolio } from "./portfolio";
 import { punds } from "./punds";
@@ -201,6 +202,17 @@ const PROJECT_BASE: ProjectBase[] = [
     operatingSystem: "Windows",
     applicationCategory: "UtilitiesApplication",
   },
+  {
+    slug: "daifuku",
+    title: "Daifuku",
+    date: "2026-09",
+    repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
+    image: "/projects/daifuku.jpg",
+    priority: 14,
+    programmingLanguages: ["Rust"],
+    operatingSystem: "Windows",
+    applicationCategory: "DeveloperApplication",
+  },
 ];
 
 const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
@@ -217,6 +229,7 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   oxidize,
   inkling,
   mochi,
+  daifuku,
 };
 
 const resolveContent = (slug: string, lang: Language): LocalizedContent => {
