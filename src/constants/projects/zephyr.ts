@@ -183,7 +183,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
         heading: "Un seul stockage, et un événement à chaque écriture",
         body: [
           "Il n'y a pas de bibliothèque d'état global. Les tâches, les sessions et les réglages vivent dans des services singleton qui écrivent dans le localStorage sous un préfixe zephyr_, et chaque écriture émet un événement zephyr:change auquel quelques petits hooks s'abonnent.",
-          "L'événement storage du navigateur ne se déclenche que dans les autres onglets, d'où ce second événement : l'onglet qui a fait la modification doit lui aussi l'apprendre. À eux deux, ils gardent les chiffres de l'accueil, la liste et un second onglet ouvert synchronisés, sans base de données derrière.",
+          "L'événement storage du navigateur ne se déclenche que dans les autres onglets, d'où ce second événement : l'onglet qui a fait la modification doit lui aussi l'apprendre. À eux deux, ils gardent les chiffres du tableau de bord, la liste et un second onglet ouvert synchronisés, sans base de données derrière.",
         ],
         figure: 2,
       },
