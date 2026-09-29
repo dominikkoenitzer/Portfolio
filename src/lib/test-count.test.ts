@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { countInTarball } from "../../api/test-count.js";
+import { PROJECTS, countInTarball } from "../../api/test-count.js";
 
 // Built with web APIs only: this file is checked against the app's browser
 // types, which have no Node globals.
@@ -53,5 +53,21 @@ describe("countInTarball", () => {
       entry(long.slice(0, 100), "#[test]\n#[test]"),
     );
     expect(countInTarball(tar, rust, /#\[test\]/g)).toEqual({ count: 2, files: 1 });
+  });
+
+  it("counts Zephyr's named vitest cases and nothing else", async () => {
+    const { include, marker } = PROJECTS.zephyr;
+    const tar = await archive(
+      entry(
+        "repo-abc/src/lib/a.test.js",
+        "describe('a', () => {\n  it('one', () => {});\n  it(\"two\", () => {});\n  test(`three`, () => {});\n});",
+      ),
+      entry(
+        "repo-abc/src/lib/b.test.jsx",
+        "it.each([1])('skipped by the marker', () => {});\nfoo.it('not a case');",
+      ),
+      entry("repo-abc/src/lib/a.js", "it('not in a test file');"),
+    );
+    expect(countInTarball(tar, include, marker)).toEqual({ count: 3, files: 2 });
   });
 });
