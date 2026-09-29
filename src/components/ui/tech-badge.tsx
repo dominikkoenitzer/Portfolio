@@ -100,7 +100,7 @@ const TECH: Record<string, Tech> = {
     href: "https://learn.microsoft.com/dotnet/csharp/",
   },
   "C++": { icon: <SiCplusplus color="#0086D4" />, href: "https://isocpp.org" },
-  ".NET 9": {
+  ".NET 10": {
     icon: <SiDotnet color="#8A6FE8" />,
     href: "https://dotnet.microsoft.com",
   },
