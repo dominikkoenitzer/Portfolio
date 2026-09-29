@@ -201,6 +201,12 @@ export const zephyr: Record<Language, LocalizedContent> = {
         ],
       },
       {
+        heading: "Le minuteur est un coucher de soleil",
+        body: [
+          "Tous les minuteurs ont un anneau de progression, alors le mien est une journée qui passe : un soleil se lève à gauche de l'horizon, traverse le ciel et se couche quand la session se termine. Pendant une pause, c'est une lune. Le soleil est porté par un seul groupe qui tourne, donc chaque seconde n'est qu'une transformation, et il glisse au lieu de sauter.",
+        ],
+      },
+      {
         heading: "Ce qu'on ne remarque dans un minuteur que lorsque c'est faux",
         body: [
           "Le minuteur enregistre une série de jours depuis le début, mais le code qui l'écrit ne la fait jamais expirer. C'est donc le code qui la lit qui tranche : une série dont le dernier jour est plus ancien qu'hier ne vaut plus rien, quoi que dise le compte enregistré, et un jour sans session la page de focus prévient qu'elle est sur le point de s'interrompre.",
