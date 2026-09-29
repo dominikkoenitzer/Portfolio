@@ -211,6 +211,7 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Daifuku",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
+    downloadUrl: "https://github.com/dominikkoenitzer/Daifuku/releases/latest",
     image: "/projects/daifuku.jpg",
     priority: 14,
     programmingLanguages: ["Rust"],

@@ -237,7 +237,7 @@ A tiling window manager for Windows, written in Rust from scratch: a pure core w
 
 ### Daifuku, September 2026
 Case study: https://dk.punds.ch/projects/daifuku
-Source: https://github.com/dominikkoenitzer/Daifuku
+Source and download: https://github.com/dominikkoenitzer/Daifuku
 Stack: Rust, Win32
 
 Fleets of AI agent terminals for Windows. One key opens them in a grid on a chosen monitor, and each terminal's border shows what its agent is doing: working, waiting for an answer, done or failed, told apart by width as well as colour. Agents report through Claude Code or Codex hooks, which find their own Windows Terminal window through the owner of their pseudo console. The daemon runs elevated, so its binaries, config and command pipe are locked to administrators. CI runs the whole path on a real Windows desktop.
