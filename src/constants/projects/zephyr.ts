@@ -22,7 +22,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
     roleSummary: "All of it, on my own.",
     sections: [
       {
-        heading: "Two screens, and the rest came out",
+        heading: "Two tools, and the rest came out",
         body: [
           "Zephyr used to have notes, a journal and a calendar next to the tasks and the timer. I removed them one by one, notes last in August 2026, and kept the two tools I actually opened every day. The old addresses redirect to the task list. Their storage keys are still known to the app, so a wipe still clears old data and an export still carries it.",
           "In September 2026 I redesigned it from the ground up. The layout borrows from a dashboard shot I liked; the rest is its own: a warm stone background, white cards, one apricot accent and deep indigo for the few parts that matter. Navigation moved into a sidebar, a floating bar on phones, and the home page became a dashboard that shows only what you can act on until there is something to count.",
