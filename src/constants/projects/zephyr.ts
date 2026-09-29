@@ -85,7 +85,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "tools, on purpose" },
       { value: "0", label: "backend" },
       { value: "100%", label: "on-device" },
-      { value: "95", label: "tests" },
+      { value: "107", label: "tests", liveTests: "zephyr" },
     ],
   },
   de: {
