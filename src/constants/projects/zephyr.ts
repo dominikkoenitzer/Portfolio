@@ -108,7 +108,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
         heading: "Ein Speicher und ein Event bei jedem Schreiben",
         body: [
           "Es gibt keine globale State-Bibliothek. Aufgaben, Sessions und Einstellungen leben in Singleton-Services, die unter einem zephyr_-Präfix in den localStorage schreiben, und jeder Schreibvorgang feuert ein zephyr:change-Event, das ein paar kleine Hooks abonnieren.",
-          "Das storage-Event des Browsers feuert nur in den anderen Tabs, deshalb gibt es das zweite Event: Auch der Tab, der etwas geändert hat, muss davon erfahren. Zusammen halten die beiden die Zahlen auf der Startseite, die Liste und einen zweiten offenen Tab synchron, ohne Datenbank dahinter.",
+          "Das storage-Event des Browsers feuert nur in den anderen Tabs, deshalb gibt es das zweite Event: Auch der Tab, der etwas geändert hat, muss davon erfahren. Zusammen halten die beiden die Zahlen auf dem Dashboard, die Liste und einen zweiten offenen Tab synchron, ohne Datenbank dahinter.",
         ],
         figure: 2,
       },
