@@ -90,7 +90,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
     roleSummary: "Alles, allein.",
     sections: [
       {
-        heading: "Zwei Screens, der Rest ist rausgeflogen",
+        heading: "Zwei Tools, der Rest ist rausgeflogen",
         body: [
           "Zephyr hatte früher Notizen, ein Journal und einen Kalender neben den Aufgaben und dem Timer. Ich habe sie nacheinander entfernt, die Notizen zuletzt im August 2026, und die zwei Tools behalten, die ich wirklich jeden Tag geöffnet habe. Die alten Adressen leiten auf die Aufgabenliste weiter. Ihre Speicherschlüssel kennt die App noch, damit ein Zurücksetzen alte Daten weiterhin löscht und ein Export sie weiterhin mitnimmt.",
           "Im September 2026 habe ich es von Grund auf neu gestaltet. Das Layout lehnt sich an einen Dashboard-Entwurf an, der mir gefiel; alles andere ist eigen: ein warmer Steinton als Hintergrund, weisse Karten, ein einziger Aprikosen-Akzent und tiefes Indigo für die wenigen Teile, auf die es ankommt. Die Navigation ist in eine Seitenleiste gewandert, auf dem Handy eine schwebende Leiste, und die Startseite wurde zu einem Dashboard, das nur zeigt, womit man etwas anfangen kann, bis es etwas zu zählen gibt.",
