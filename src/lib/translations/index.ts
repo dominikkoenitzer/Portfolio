@@ -62,10 +62,16 @@ export function loadTranslation(lang: Language): Promise<void> {
   if (isTranslationLoaded(lang)) return Promise.resolve();
   const inFlight = pending.get(lang);
   if (inFlight) return inFlight;
-  const load = loaders[lang as Exclude<Language, "en">]().then((loaded) => {
-    translations[lang] = loaded;
-    pending.delete(lang);
-  });
+  // Forget the attempt either way: a rejected promise left in `pending` was
+  // handed to every later call, so one failed fetch blocked the language for
+  // the rest of the visit.
+  const load = loaders[lang as Exclude<Language, "en">]()
+    .then((loaded) => {
+      translations[lang] = loaded;
+    })
+    .finally(() => {
+      pending.delete(lang);
+    });
   pending.set(lang, load);
   return load;
 }
