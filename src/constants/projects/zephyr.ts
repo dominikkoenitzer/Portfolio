@@ -204,10 +204,10 @@ export const zephyr: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "L'accueil après une installation neuve : la date, les quatre chiffres de la semaine à zéro et rien de dû aujourd'hui.",
-      "La page de focus en mode clair, avec le preset Pomodoro chargé à 25:00 et la liste des presets à côté du cadran.",
-      "L'accueil à nouveau, qui compte maintenant trois tâches actives, sans rien de dû aujourd'hui.",
-      "La même page de focus en mode sombre.",
+      "Le tableau de bord en mode clair : tâches ouvertes et en retard, temps de focus, la semaine et le minuteur.",
+      "La page de focus en pleine session, le soleil un peu au-delà du tiers de sa course.",
+      "La liste des tâches regroupée par échéance, avec le résumé à côté.",
+      "Le minuteur en plein écran, la nuit.",
     ],
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
