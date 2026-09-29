@@ -297,10 +297,14 @@ for (const page of pages) {
     ["og:url", url],
     ["og:image", img],
     ["og:image:secure_url", img],
+    // <SEO> names the card by the page title; the shell's home alt stayed on
+    // every other route's own card until the page ran.
+    ["og:image:alt", fullTitle],
     ["twitter:title", fullTitle],
     ["twitter:description", page.description],
     ["twitter:url", url],
     ["twitter:image", img],
+    ["twitter:image:alt", fullTitle],
     // Dublin Core is nearly dead as a ranking signal, but the shell's copy
     // names the home URL, so every other route shipped a DC.identifier that
     // disagreed with its own canonical.
