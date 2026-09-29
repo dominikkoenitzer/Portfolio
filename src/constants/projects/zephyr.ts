@@ -160,7 +160,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "Tools, mit Absicht" },
       { value: "0", label: "Backend" },
       { value: "100%", label: "auf dem Gerät" },
-      { value: "95", label: "Tests" },
+      { value: "107", label: "Tests", liveTests: "zephyr" },
     ],
   },
   fr: {
