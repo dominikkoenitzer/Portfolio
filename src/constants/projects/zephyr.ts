@@ -127,6 +127,12 @@ export const zephyr: Record<Language, LocalizedContent> = {
         ],
       },
       {
+        heading: "Der Timer ist ein Sonnenuntergang",
+        body: [
+          "Jeder Timer hat einen Fortschrittsring, also ist meiner ein vergehender Tag: Eine Sonne geht links am Horizont auf, zieht über den Himmel und geht unter, wenn die Session endet. In der Pause ist es ein Mond. Die Sonne sitzt auf einer einzigen rotierenden Gruppe, also ist jede Sekunde eine einzige Transformation, und sie gleitet, statt zu ticken.",
+        ],
+      },
+      {
         heading: "Was man an einem Timer erst merkt, wenn es falsch ist",
         body: [
           "Der Timer speichert von Anfang an eine Tagesserie, aber der Code, der sie schreibt, lässt sie nie verfallen. Darum entscheidet der Code, der sie liest: Eine Serie, deren letzter Tag vor gestern liegt, zählt nichts mehr, egal was gespeichert ist, und an einem Tag ohne Session warnt die Fokus-Seite, dass sie gleich reisst.",
