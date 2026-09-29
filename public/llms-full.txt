@@ -119,7 +119,7 @@ PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 **Professional**
 Communication, project management, direct sales, social media outreach.
 
-Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 9 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in Time and in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
+Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 10 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in Time and in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
 
 ---
 
@@ -181,9 +181,9 @@ A web clock that does not trust the device it runs on. It corrects itself the wa
 ### Jester, June 2026
 Case study: https://dk.punds.ch/projects/jester
 Source and download: https://github.com/dominikkoenitzer/Jester
-Stack: C#, WPF, .NET 9, Windows
+Stack: C#, WPF, .NET 10, Windows
 
-A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch." Numbers: 1 portable exe, 0 installers, .NET 9 bundled, A4 PDF export.
+A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch." Numbers: 1 portable exe, 0 installers, .NET 10 bundled, A4 PDF export.
 
 ### Flow, June 2026
 Case study: https://dk.punds.ch/projects/flow
