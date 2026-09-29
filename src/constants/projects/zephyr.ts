@@ -125,6 +125,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
           "IDs waren früher die aktuelle Zeit als String. Zwei Aufgaben, die in derselben Millisekunde per Quick-Add entstanden, bekamen dieselbe ID, und weil Löschen über die ID geht, löschte das Löschen der einen beide. Heute kommen IDs aus crypto.randomUUID.",
           "Erinnerungen wurden per Titel innerhalb eines 60-Sekunden-Fensters dedupliziert, und genau in diesem Takt lief die Abfrage. Jede fällige Aufgabe meldete sich also jede Minute neu, samt Ton. Jede Erinnerung trägt jetzt einen Schlüssel aus Aufgabe und Tag.",
           "Der Ton baute ausserdem jedes Mal einen neuen AudioContext und schloss ihn nie. Browser erlauben einer Seite sechs, also warf der siebte Ton einen Fehler und jeder danach blieb stumm. Heute gibt es einen einzigen Context, der wiederverwendet wird.",
+          "Überspringen zählte früher als Abschliessen, also trugen fünf schnelle Klicks fünf 25-Minuten-Sessions ein und blähten die Woche auf. Heute geht es einfach weiter und trägt nichts ein.",
         ],
       },
       {
