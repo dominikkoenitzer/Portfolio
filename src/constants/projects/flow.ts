@@ -80,7 +80,10 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["The Flow mark: recorded input drawn as seven soft bars on a blue square, one half mirroring the other."],
+    captions: [
+      "Flow's one window: record and play back with F8 and F9, and the auto-clicker set to 10 ms, about 100 clicks a second.",
+      "The Flow mark: recorded input drawn as seven soft bars on a blue square, one half mirroring the other.",
+    ],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "static exe" },
@@ -142,7 +145,10 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["Das Flow-Zeichen: aufgenommene Eingaben als sieben weiche Balken auf einem blauen Quadrat, die eine Hälfte spiegelt die andere."],
+    captions: [
+      "Das eine Fenster von Flow: Aufnehmen und Abspielen mit F8 und F9, darunter der Autoklicker auf 10 ms, etwa 100 Klicks pro Sekunde.",
+      "Das Flow-Zeichen: aufgenommene Eingaben als sieben weiche Balken auf einem blauen Quadrat, die eine Hälfte spiegelt die andere.",
+    ],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "statische Exe" },
@@ -204,7 +210,10 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["Le logo de Flow : des entrées enregistrées dessinées en sept barres arrondies sur un carré bleu, une moitié en miroir de l'autre."],
+    captions: [
+      "L'unique fenêtre de Flow : enregistrer et rejouer avec F8 et F9, et l'autocliqueur réglé sur 10 ms, environ 100 clics par seconde.",
+      "Le logo de Flow : des entrées enregistrées dessinées en sept barres arrondies sur un carré bleu, une moitié en miroir de l'autre.",
+    ],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 Mo", label: "exe statique" },
@@ -266,7 +275,10 @@ export const flow: Record<Language, LocalizedContent> = {
         ],
       },
     ],
-    captions: ["Flow 的标志：录下的输入画成蓝色方块上的七根圆润竖条，左右两半互为镜像。"],
+    captions: [
+      "Flow 唯一的窗口：用 F8 和 F9 录制和回放，下方的自动连点器设为 10 毫秒，约每秒 100 次点击。",
+      "Flow 的标志：录下的输入画成蓝色方块上的七根圆润竖条，左右两半互为镜像。",
+    ],
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "静态 exe" },

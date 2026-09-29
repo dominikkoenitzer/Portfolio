@@ -73,6 +73,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
+      "The Oxidize window with the list filtered to Microsoft's runtimes and SDKs. Pick a program on the left to uninstall it and see what it left behind.",
       "The Oxidize mark: a thick O, copper on one side and the verdigris it oxidises into on the other.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -131,6 +132,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
+      "Das Oxidize-Fenster, die Liste gefiltert auf die Laufzeiten und SDKs von Microsoft. Links ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
       "Das Oxidize-Zeichen: ein dickes O, auf der einen Seite Kupfer, auf der anderen der Grünspan, zu dem es oxidiert.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -189,6 +191,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
+      "La fenêtre d'Oxidize, la liste filtrée sur les runtimes et SDK de Microsoft. Choisis un programme à gauche pour le désinstaller et voir ce qu'il a laissé derrière lui.",
       "Le logo d'Oxidize : un O épais, cuivre d'un côté, et de l'autre le vert-de-gris en lequel il s'oxyde.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -245,6 +248,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
+      "Oxidize 窗口，列表筛选为微软的运行库和 SDK。在左边选一个程序，就能卸载它并查看它留下了什么。",
       "Oxidize 的标志：一个粗粗的 O，一半是铜，另一半是它氧化后的铜绿。",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
