@@ -67,6 +67,10 @@ async function sentLastHour(ipHash) {
     `contact_messages?select=id&ip_hash=eq.${encodeURIComponent(ipHash)}&created_at=gte.${encodeURIComponent(since)}`,
     { method: "HEAD", headers: { Prefer: "count=exact" } },
   );
+  // A failed count lets the message through, on purpose: a lost enquiry costs
+  // more than a rare extra one. It is logged, so a limiter that stopped
+  // counting does not go unnoticed.
+  if (!res.ok) console.error("contact: rate count failed", res.status);
   const range = res.headers.get("content-range") || "";
   const total = Number(range.split("/")[1]);
   return Number.isFinite(total) ? total : 0;
