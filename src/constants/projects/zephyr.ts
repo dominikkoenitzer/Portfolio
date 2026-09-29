@@ -68,10 +68,10 @@ export const zephyr: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "The home page on a fresh install: the date, the week's four figures at zero and nothing due today.",
-      "The focus page in light mode, with the Pomodoro preset loaded at 25:00 and the preset list beside the dial.",
-      "The home page again, now counting three active tasks, with nothing due today.",
-      "The same focus page in dark mode.",
+      "The dashboard in light mode: open and overdue tasks, focus time, the week and the timer.",
+      "The Focus page mid-session, the sun a little past a third of the way across.",
+      "The task list grouped by due date, with the summary beside it.",
+      "The timer in full screen, at night.",
     ],
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
