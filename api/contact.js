@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 import nodemailer from "nodemailer";
 
 /**
@@ -60,6 +60,17 @@ const supabase = (path, init = {}) => {
     },
   });
 };
+
+// A plain SHA-256 of an IPv4 address is reversed by hashing all four billion
+// of them, which a laptop does in minutes. Keyed with a secret only the server
+// knows, the stored value says nothing about the address. Without the secret
+// (a local run) it falls back to the plain hash, so the form still works.
+function hashIp(ip) {
+  const secret = process.env.CONTACT_HASH_SECRET;
+  return secret
+    ? createHmac("sha256", secret).update(ip).digest("hex")
+    : createHash("sha256").update(ip).digest("hex");
+}
 
 async function sentLastHour(ipHash) {
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
@@ -196,7 +207,7 @@ export default async function handler(req, res) {
   }
 
   const ip = clientIp(req);
-  row.ip_hash = ip ? createHash("sha256").update(ip).digest("hex") : null;
+  row.ip_hash = ip ? hashIp(ip) : null;
 
   try {
     if (row.ip_hash && (await sentLastHour(row.ip_hash)) >= MAX_PER_HOUR) {
