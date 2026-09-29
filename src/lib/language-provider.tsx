@@ -82,9 +82,18 @@ export function LanguageProvider({
   useEffect(() => {
     if (ready) return;
     let cancelled = false;
-    loadTranslation(language).then(() => {
-      if (!cancelled) setReady(true);
-    });
+    loadTranslation(language).then(
+      () => {
+        if (!cancelled) setReady(true);
+      },
+      () => {
+        // English ships in the entry chunk, so a page is always possible;
+        // without this the whole site stayed blank, cursor included.
+        if (cancelled) return;
+        setLanguageState("en");
+        setReady(true);
+      },
+    );
     return () => {
       cancelled = true;
     };
@@ -93,7 +102,16 @@ export function LanguageProvider({
   // Every path that changes the language goes through here, so the copy is
   // always loaded before the switch is visible.
   const applyLanguage = useCallback((next: Language) => {
-    loadTranslation(next).then(() => setLanguageState(next));
+    loadTranslation(next).then(
+      () => setLanguageState(next),
+      () => {
+        // A tab left open across a deploy asks for a chunk that no longer
+        // exists, and every retry fails the same way. The choice is already
+        // stored, so a reload picks the new build up in that language; offline,
+        // the page stays as it is and a later switch tries again.
+        if (navigator.onLine) window.location.reload();
+      },
+    );
   }, []);
 
   const setLanguage = useCallback(
