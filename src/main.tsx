@@ -8,7 +8,7 @@ import App from "./App.tsx";
 // needs it. Kaisei Decol sets every title, at 700 only because nothing
 // paints a title at another weight. Umlauts and accents (Könitzer, Zürich,
 // Français) are in the Latin files; Chinese falls back to the system CJK
-// font. The hero name uses Kaisei Decol too. M PLUS 1 Code sets the code
+// font. The hero name is Geist at 600 (`font-title`). M PLUS 1 Code sets the code
 // excerpts in the case studies and Klee One, a hand-lettered Japanese face,
 // the small accents such as the section numbers. Both are imported for Latin
 // only: their full sets add about 240 @font-face rules (one per slice of the
