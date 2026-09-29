@@ -33,6 +33,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",
   mochi: "Mochi, a Windows tiling window manager",
+  daifuku: "Daifuku, a Windows AI agent fleet tool",
 };
 
 /**
@@ -76,6 +77,8 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
     "A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your machine. A checkbox in a note becomes a task.",
   mochi:
     "A tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it.",
+  daifuku:
+    "Fleets of AI agent terminals on Windows: one key opens them in a grid, and each border shows if its agent works, waits for you, is done or failed.",
 };
 
 /**

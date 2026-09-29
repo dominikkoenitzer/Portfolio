@@ -29,7 +29,7 @@ Open to software engineering roles, internships, freelance and contract projects
 - [About](https://dk.punds.ch/about): who he is, the WISS programme, how he approaches building things, and the CV (English, or German when the site is in German).
 - [Experience](https://dk.punds.ch/experience): work experience and education, newest first.
 - [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
-- [Projects](https://dk.punds.ch/projects): the fifteen personal projects, searchable and filterable by web or desktop.
+- [Projects](https://dk.punds.ch/projects): the fourteen personal projects, searchable and filterable by web or desktop.
 - [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
 - [Contact](https://dk.punds.ch/contact): choose an intent (a role, a freelance project, a collaboration, something else) and it prefills the email.
 - [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
@@ -59,8 +59,9 @@ Fifteen personal projects, listed oldest first by the date their repository was 
 - [Oxidize](https://dk.punds.ch/projects/oxidize): a thorough Windows uninstaller written in Rust. It runs a program's own uninstaller, then finds and removes the registry keys and files it left behind, backing up first by default. Ships as a scriptable CLI and a native egui GUI sharing one engine. June 2026. Rust. Source and download at https://github.com/dominikkoenitzer/Oxidize.
 - [Inkling](https://dk.punds.ch/projects/inkling): a desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox in a note becomes a real task, and a line with :: becomes a flashcard. July 2026. Electron, React, TypeScript, SQLite. Source and download at https://github.com/dominikkoenitzer/Inkling.
 - [Mochi](https://dk.punds.ch/projects/mochi): a tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash. September 2026. Rust, Win32. Source and download at https://github.com/dominikkoenitzer/Mochi.
+- [Daifuku](https://dk.punds.ch/projects/daifuku): fleets of AI agent terminals for Windows. One key opens them in a grid, and each terminal's border shows whether its agent is working, waiting for you, done or failed. Works with Claude Code and Codex. September 2026. Rust, Win32. Source at https://github.com/dominikkoenitzer/Daifuku.
 
-Worth saying plainly, because the projects page says it too: these fifteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
+Worth saying plainly, because the projects page says it too: these fourteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
 
 ## Skills
 
@@ -72,7 +73,7 @@ Taken from https://dk.punds.ch/skills, in the categories that page uses.
 - Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 - Professional: communication, project management, direct sales, social media outreach.
 
-Shipped evidence for the less obvious ones: Rust in Oxidize and Mochi, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
+Shipped evidence for the less obvious ones: Rust in Oxidize, Mochi and Daifuku, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
 
 ## Services
 
