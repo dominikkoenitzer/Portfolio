@@ -63,8 +63,9 @@ const en: LocalizedContent = {
     },
   ],
   captions: [
-      "The Mochi mark: three windows the way its default layout tiles them, one tall on the left and two stacked on the right.",
-    ],
+    "Three windows in Mochi's default layout: Remnants tall on the left, Jester and a terminal stacked on the right, the focused one in its pink border.",
+    "The Mochi mark: three windows the way its default layout tiles them, one tall on the left and two stacked on the right.",
+  ],
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "crates" },
@@ -121,8 +122,9 @@ const de: LocalizedContent = {
     },
   ],
   captions: [
-      "Das Mochi-Zeichen: drei Fenster so, wie das Standardlayout sie kachelt, eines hoch links und zwei übereinander rechts.",
-    ],
+    "Drei Fenster im Standardlayout von Mochi: Remnants hoch links, Jester und ein Terminal übereinander rechts, das fokussierte im rosa Rahmen.",
+    "Das Mochi-Zeichen: drei Fenster so, wie das Standardlayout sie kachelt, eines hoch links und zwei übereinander rechts.",
+  ],
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "Crates" },
@@ -178,8 +180,9 @@ const fr: LocalizedContent = {
     },
   ],
   captions: [
-      "Le logo de Mochi : trois fenêtres telles que la disposition par défaut les place, une haute à gauche et deux empilées à droite.",
-    ],
+    "Trois fenêtres dans la disposition par défaut de Mochi : Remnants en hauteur à gauche, Jester et un terminal empilés à droite, celle qui a le focus dans sa bordure rose.",
+    "Le logo de Mochi : trois fenêtres telles que la disposition par défaut les place, une haute à gauche et deux empilées à droite.",
+  ],
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "crates" },
@@ -235,8 +238,9 @@ const zh: LocalizedContent = {
     },
   ],
   captions: [
-      "Mochi 的标志：三个窗口按默认布局平铺，左边一个竖长的，右边两个上下叠放。",
-    ],
+    "Mochi 默认布局中的三个窗口：左边竖长的是 Remnants，右边上下叠放着 Jester 和一个终端，获得焦点的那个带着粉色边框。",
+    "Mochi 的标志：三个窗口按默认布局平铺，左边一个竖长的，右边两个上下叠放。",
+  ],
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "个 crate" },
