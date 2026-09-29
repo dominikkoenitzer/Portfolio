@@ -310,7 +310,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "工具，有意为之" },
       { value: "0", label: "后端" },
       { value: "100%", label: "本地存储" },
-      { value: "84", label: "测试" },
+      { value: "95", label: "测试" },
     ],
   },
 };
