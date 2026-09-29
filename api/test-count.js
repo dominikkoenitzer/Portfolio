@@ -13,12 +13,19 @@ import { gunzipSync } from "node:zlib";
  * `git grep -c` reports locally. It is not a run: a test that is counted here
  * can still fail, which is what the project's own CI is for.
  */
-const PROJECTS = {
+export const PROJECTS = {
   mochi: {
     repo: "dominikkoenitzer/Mochi",
     // Every crate lives under crates/; nothing outside it holds tests.
     include: (path) => path.includes("/crates/") && path.endsWith(".rs"),
     marker: /#\[test\]/g,
+  },
+  zephyr: {
+    repo: "dominikkoenitzer/Zephyr",
+    // Vitest files sit next to the code they test, under src/.
+    include: (path) => path.includes("/src/") && /\.test\.jsx?$/.test(path),
+    // A named case: it('...') or test('...'), not it.each or a method call.
+    marker: /(?:^|[^.\w])(?:it|test)\(\s*['"`]/gm,
   },
 };
 
