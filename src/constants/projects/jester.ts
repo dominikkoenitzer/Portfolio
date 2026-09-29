@@ -29,8 +29,8 @@ export const jester: Record<Language, LocalizedContent> = {
     description:
       "Jester is a native Windows notepad with tabbed editing, a line-number gutter, find-in-files and PDF export, all in one portable Jester.exe with no installer.",
     overview:
-      "I wanted a notepad that opens before I let go of the mouse, but still does the few things Notepad refuses to. So I built one in C# and WPF on .NET 9: tabs, a line-number gutter, find across a whole folder, and clean A4 PDF export through QuestPDF. It also has the small things you only miss once they are gone, like session restore, Open Recent, and \"Open with Jester\" in the Explorer context menu. It ships as a single portable executable with the runtime baked in, so there is no installer and no \"please install .NET\" dialog.",
-    roleSummary: "Just me: the WPF UI and the whole .NET 9 build.",
+      "I wanted a notepad that opens before I let go of the mouse, but still does the few things Notepad refuses to. So I built one in C# and WPF on .NET 10: tabs, a line-number gutter, find across a whole folder, and clean A4 PDF export through QuestPDF. It also has the small things you only miss once they are gone, like session restore, Open Recent, and \"Open with Jester\" in the Explorer context menu. It ships as a single portable executable with the runtime baked in, so there is no installer and no \"please install .NET\" dialog.",
+    roleSummary: "Just me: the WPF UI and the whole .NET 10 build.",
     sections: [
       {
         heading: "Saving never truncates the file you already have",
@@ -57,7 +57,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "One exe, even with a PDF library inside",
         body: [
-          "Jester ships as one self-contained Jester.exe with the .NET 9 runtime compressed inside it, so it runs on Windows 10 and 11 without an installer or a separate .NET install. The build is unsigned, so the first launch can show a SmartScreen prompt.",
+          "Jester ships as one self-contained Jester.exe with the .NET 10 runtime compressed inside it, so it runs on Windows 10 and 11 without an installer or a separate .NET install. The build is unsigned, so the first launch can show a SmartScreen prompt.",
           "QuestPDF came with a catch: it copies its bundled Lato fonts next to the executable as loose files. Jester never uses them, since a PDF is set in Consolas or the font chosen in the editor, so a step in the project file strips them from the published build and the release stays a single file.",
           "The export itself is A4 with 2 cm margins, the file name as a header over a gold rule and page numbers in the footer. Long lines wrap to the page.",
         ],
@@ -73,7 +73,7 @@ export const jester: Record<Language, LocalizedContent> = {
     captions: [
       "Jester in its purple and gold theme with an unsaved Untitled note, the status bar showing 180 characters, 9 lines, Windows (CRLF) line endings and UTF-8.",
     ],
-    tags: ["C#", "WPF", ".NET 9", "Windows"],
+    tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
       { value: "1", label: "portable exe" },
       { value: "0", label: "installers" },
@@ -86,7 +86,7 @@ export const jester: Record<Language, LocalizedContent> = {
     description:
       "Jester ist ein nativer Windows-Notizblock mit Tabs, Zeilennummern-Spalte, Suche über ganze Ordner und PDF-Export, alles in einer portablen Jester.exe ohne Installer.",
     overview:
-      "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die Notepad verweigert. Also habe ich einen in C# und WPF auf .NET 9 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
+      "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die Notepad verweigert. Also habe ich einen in C# und WPF auf .NET 10 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
     roleSummary: "Nur ich: die WPF-Oberfläche und der ganze .NET-9-Build.",
     sections: [
       {
@@ -130,7 +130,7 @@ export const jester: Record<Language, LocalizedContent> = {
     captions: [
       "Jester im Violett-Gold-Theme mit einer ungespeicherten Notiz „Untitled“, die Statusleiste zeigt 180 Zeichen, 9 Zeilen, Windows-Zeilenenden (CRLF) und UTF-8.",
     ],
-    tags: ["C#", "WPF", ".NET 9", "Windows"],
+    tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
       { value: "1", label: "portable Exe" },
       { value: "0", label: "Installer" },
@@ -143,8 +143,8 @@ export const jester: Record<Language, LocalizedContent> = {
     description:
       "Jester est un bloc-notes Windows natif avec édition par onglets, une gouttière de numéros de ligne, la recherche dans un dossier et l'export PDF, le tout dans un seul Jester.exe portable, sans installateur.",
     overview:
-      "Je voulais un bloc-notes qui s'ouvre avant que je lâche la souris, mais qui fasse les quelques choses que Notepad refuse. J'en ai donc construit un en C# et WPF sur .NET 9 : onglets, gouttière de numéros de ligne, recherche dans un dossier entier, et export A4 propre via QuestPDF. Avec aussi les petites choses qui ne manquent qu'une fois disparues : la restauration de session, « Fichiers récents », et « Ouvrir avec Jester » dans le menu contextuel de l'Explorateur. Il se livre en un exécutable portable unique, runtime inclus, donc pas d'installateur et pas de boîte de dialogue « veuillez installer .NET ».",
-    roleSummary: "Moi seul : l'interface WPF et tout le build .NET 9.",
+      "Je voulais un bloc-notes qui s'ouvre avant que je lâche la souris, mais qui fasse les quelques choses que Notepad refuse. J'en ai donc construit un en C# et WPF sur .NET 10 : onglets, gouttière de numéros de ligne, recherche dans un dossier entier, et export A4 propre via QuestPDF. Avec aussi les petites choses qui ne manquent qu'une fois disparues : la restauration de session, « Fichiers récents », et « Ouvrir avec Jester » dans le menu contextuel de l'Explorateur. Il se livre en un exécutable portable unique, runtime inclus, donc pas d'installateur et pas de boîte de dialogue « veuillez installer .NET ».",
+    roleSummary: "Moi seul : l'interface WPF et tout le build .NET 10.",
     sections: [
       {
         heading: "Enregistrer ne vide jamais le fichier existant",
@@ -171,7 +171,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Un seul exe, même avec une bibliothèque PDF dedans",
         body: [
-          "Jester se livre en un Jester.exe autonome, runtime .NET 9 compressé à l'intérieur, et tourne donc sur Windows 10 et 11 sans installateur ni installation .NET séparée. Le build n'est pas signé, le premier lancement peut donc afficher une alerte SmartScreen.",
+          "Jester se livre en un Jester.exe autonome, runtime .NET 10 compressé à l'intérieur, et tourne donc sur Windows 10 et 11 sans installateur ni installation .NET séparée. Le build n'est pas signé, le premier lancement peut donc afficher une alerte SmartScreen.",
           "QuestPDF est venu avec un piège : il copie ses polices Lato fournies à côté de l'exécutable, en fichiers séparés. Jester ne s'en sert jamais, puisqu'un PDF est composé en Consolas ou dans la police choisie dans l'éditeur ; une étape du fichier de projet les retire donc du build publié, et la version publiée reste un seul fichier.",
           "L'export lui-même est en A4 avec des marges de 2 cm, le nom du fichier en en-tête au-dessus d'un filet doré et les numéros de page en pied de page. Les longues lignes passent à la ligne sur la page.",
         ],
@@ -187,7 +187,7 @@ export const jester: Record<Language, LocalizedContent> = {
     captions: [
       "Jester dans son thème violet et or avec une note « Untitled » non enregistrée, la barre d'état affichant 180 caractères, 9 lignes, des fins de ligne Windows (CRLF) et l'UTF-8.",
     ],
-    tags: ["C#", "WPF", ".NET 9", "Windows"],
+    tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
       { value: "1", label: "exe portable" },
       { value: "0", label: "installateurs" },
@@ -200,8 +200,8 @@ export const jester: Record<Language, LocalizedContent> = {
     description:
       "Jester 是一个原生 Windows 记事本，带标签页编辑、行号栏、跨文件夹查找和 PDF 导出，全部装在一个便携的 Jester.exe 里，不需要安装。",
     overview:
-      "我想要一个我松开鼠标之前就已经打开的记事本，同时还能做记事本拒绝做的那几件事。于是我用 C# 和 WPF、跑在 .NET 9 上做了一个：标签页、行号栏、跨整个文件夹查找，以及通过 QuestPDF 输出干净的 A4 PDF。还有那些丢了才会想起来的小事：会话恢复、最近打开，以及资源管理器右键菜单里的「用 Jester 打开」。它是一个便携可执行文件，运行时已经打包在内，所以没有安装程序，也没有那句「请先安装 .NET」。",
-    roleSummary: "只有我：WPF 界面和整套 .NET 9 构建。",
+      "我想要一个我松开鼠标之前就已经打开的记事本，同时还能做记事本拒绝做的那几件事。于是我用 C# 和 WPF、跑在 .NET 10 上做了一个：标签页、行号栏、跨整个文件夹查找，以及通过 QuestPDF 输出干净的 A4 PDF。还有那些丢了才会想起来的小事：会话恢复、最近打开，以及资源管理器右键菜单里的「用 Jester 打开」。它是一个便携可执行文件，运行时已经打包在内，所以没有安装程序，也没有那句「请先安装 .NET」。",
+    roleSummary: "只有我：WPF 界面和整套 .NET 10 构建。",
     sections: [
       {
         heading: "保存永远不会清空已有的文件",
@@ -228,7 +228,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "一个 exe，哪怕里面装着 PDF 库",
         body: [
-          "Jester 以一个自包含的 Jester.exe 发布，.NET 9 运行时压缩在里面，所以在 Windows 10 和 11 上无需安装程序，也不用另装 .NET。这个构建没有签名，第一次启动时可能会出现 SmartScreen 提示。",
+          "Jester 以一个自包含的 Jester.exe 发布，.NET 10 运行时压缩在里面，所以在 Windows 10 和 11 上无需安装程序，也不用另装 .NET。这个构建没有签名，第一次启动时可能会出现 SmartScreen 提示。",
           "QuestPDF 带来一个麻烦：它会把自带的 Lato 字体作为零散文件复制到可执行文件旁边。Jester 从来用不到它们，因为 PDF 用的是 Consolas 或编辑器里选定的字体，所以项目文件里有一步会把它们从发布构建中剔除，发布版依旧只是一个文件。",
           "导出本身是 A4，页边距 2 厘米，页眉是文件名，下面一条金色细线，页脚是页码。过长的行会在页面内自动换行。",
         ],
@@ -244,7 +244,7 @@ export const jester: Record<Language, LocalizedContent> = {
     captions: [
       "紫金配色的 Jester，打开着一篇未保存的 Untitled 笔记，状态栏显示 180 个字符、9 行、Windows (CRLF) 行尾和 UTF-8。",
     ],
-    tags: ["C#", "WPF", ".NET 9", "Windows"],
+    tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
       { value: "1", label: "便携 exe" },
       { value: "0", label: "安装程序" },
