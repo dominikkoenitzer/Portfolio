@@ -200,6 +200,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
           "Les identifiants étaient autrefois l'heure courante sous forme de chaîne. Deux tâches ajoutées dans la même milliseconde recevaient le même identifiant, et comme la suppression se fait par identifiant, supprimer l'une supprimait les deux. Ils viennent désormais de crypto.randomUUID.",
           "Les rappels étaient dédoublonnés par titre dans une fenêtre de 60 secondes, soit exactement l'intervalle de la vérification. Chaque tâche due s'annonçait donc de nouveau chaque minute, son compris. Chaque rappel porte maintenant une clé faite de la tâche et du jour.",
           "Le son créait aussi un nouvel AudioContext à chaque fois sans jamais le fermer. Les navigateurs en accordent six par page : le septième son levait une erreur et tous les suivants restaient muets. Il n'y a plus qu'un seul contexte, réutilisé.",
+          "Passer comptait autrefois comme terminer : cinq clics rapides enregistraient cinq sessions de 25 minutes et gonflaient la semaine. Désormais, il passe simplement à la suite sans rien enregistrer.",
         ],
       },
       {
