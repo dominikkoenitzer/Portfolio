@@ -81,15 +81,15 @@ interface Service {
 // Order within a category maps onto the tree's three leaf slots (see
 // ServiceExplorer's LEAVES layout), so keep build/protect/grow grouped.
 const services: Service[] = [
-  { itemKey: "webDev", price: "2'000 CHF", icon: Code, category: "build" },
+  { itemKey: "webDev", price: "2'500 CHF", icon: Code, category: "build" },
   {
     itemKey: "customSoftware",
-    price: "3'000 CHF",
+    price: "5'000 CHF",
     icon: Settings,
     category: "build",
   },
-  { itemKey: "serverSetup", price: "600 CHF", icon: Server, category: "build" },
-  { itemKey: "security", price: "100 CHF/hr", icon: Shield, category: "protect" },
+  { itemKey: "serverSetup", price: "800 CHF", icon: Server, category: "build" },
+  { itemKey: "security", price: "120 CHF/hr", icon: Shield, category: "protect" },
   {
     itemKey: "maintenance",
     price: "50 CHF/mo",
@@ -98,18 +98,18 @@ const services: Service[] = [
   },
   {
     itemKey: "emergency",
-    price: "300 CHF",
+    price: "400 CHF",
     icon: LifeBuoy,
     category: "protect",
   },
-  { itemKey: "seo", price: "500 CHF", icon: Search, category: "grow" },
+  { itemKey: "seo", price: "800 CHF", icon: Search, category: "grow" },
   {
     itemKey: "relaunch",
-    price: "1'500 CHF",
+    price: "2'500 CHF",
     icon: RefreshCw,
     category: "grow",
   },
-  { itemKey: "support", price: "80 CHF/hr", icon: Laptop, category: "grow" },
+  { itemKey: "support", price: "110 CHF/hr", icon: Laptop, category: "grow" },
 ];
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
@@ -120,7 +120,7 @@ const CATEGORY_ORDER: OfferCategoryKey[] = ["build", "protect", "grow"];
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
  * unit. Taking a numeric minimum across the raw strings would be wrong, they
- * mix models ("2'000 CHF", "100 CHF/hr", "50 CHF/mo"), so we
+ * mix models ("2'500 CHF", "120 CHF/hr", "50 CHF/mo"), so we
  * pick the cheapest entry figure and show that service's price verbatim. Derived
  * rather than hard-coded so it can't drift when a price changes. The Swiss
  * thousands apostrophe is stripped first, or "2'000" would count as 2.
