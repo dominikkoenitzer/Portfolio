@@ -105,11 +105,19 @@ async function notify(row) {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
   if (!user || !pass) return false;
+  // The visitor's browser gives up after 20 s, and the mail is awaited before
+  // the answer. With nodemailer's defaults (2 min to connect, 30 s for the
+  // greeting, 10 min of silence) a slow Gmail turned a stored message into
+  // "didn't go through", and the retry stored it twice. Stalled, the mail now
+  // fails into the catch below and the visitor still gets the 200.
   const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: { user, pass },
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
+    socketTimeout: 8000,
   });
   const to = process.env.CONTACT_TO || user;
   const text = [
