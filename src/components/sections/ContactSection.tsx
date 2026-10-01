@@ -363,9 +363,12 @@ export function ContactSection() {
                   <IntentLabel label={label} />
                 </span>
               ))}
+              {/* The name leads with the visible subject: the fixed string
+                  alone hid which subject the form will send, and voice
+                  control could not reach the button by what it shows. */}
               <PopoverTrigger asChild>
                 <button
-                  aria-label={t.changeSubject}
+                  aria-label={`${selected.label}, ${t.changeSubject}`}
                   className="group/intent col-start-1 row-start-1 inline-grid justify-self-start rounded-sm text-left font-medium text-foreground transition-colors duration-200 ease-out hover:text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                   type="button"
                 >
@@ -381,7 +384,11 @@ export function ContactSection() {
                 </button>
               </PopoverTrigger>
             </span>
-            <PopoverContent align="start" className="w-72 p-1.5">
+            <PopoverContent
+              align="start"
+              aria-label={t.changeSubject}
+              className="w-72 p-1.5"
+            >
               <div className="grid gap-0.5">
                 {options.map(({ key, label }) => {
                   const isActive = key === effectiveIntent;
