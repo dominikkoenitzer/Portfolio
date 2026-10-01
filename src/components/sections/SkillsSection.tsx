@@ -10,7 +10,11 @@ import {
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
 import { countProjectsBySkill } from "@/constants/projects/stacks";
-import { SKILL_CATEGORIES, type SkillCategoryKey } from "@/constants/skills";
+import {
+  SKILL_CATEGORIES,
+  type SkillCategoryKey,
+  skillLabel,
+} from "@/constants/skills";
 import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
@@ -60,11 +64,14 @@ const CHIP_BODY =
  */
 function ProjectChip({
   icon,
+  name,
   label,
   count,
   countLabel,
 }: {
   icon: ReactNode;
+  /** The skill's own name, which the project filter matches on. */
+  name: string;
   label: string;
   count: number;
   countLabel: string;
@@ -75,7 +82,7 @@ function ProjectChip({
         aria-label={countLabel}
         className={`${CHIP_BODY} focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
         title={countLabel}
-        to={`/projects?tech=${encodeURIComponent(label)}`}
+        to={`/projects?tech=${encodeURIComponent(name)}`}
       >
         <span
           aria-hidden="true"
@@ -218,6 +225,7 @@ export function SkillsSection() {
           >
             {category.skills.map((name) => {
               const count = PROJECT_COUNTS.get(name);
+              const label = skillLabel(name, t.skillNames);
               return count ? (
                 <ProjectChip
                   count={count}
@@ -226,16 +234,17 @@ export function SkillsSection() {
                     : t.projectCountMany
                   )
                     .replace("{count}", String(count))
-                    .replace("{skill}", name)}
+                    .replace("{skill}", label)}
                   icon={getSkillIcon(name)}
                   key={name}
-                  label={name}
+                  label={label}
+                  name={name}
                 />
               ) : (
                 <Chip
                   icon={getSkillIcon(name)}
                   key={name}
-                  label={name}
+                  label={label}
                 />
               );
             })}

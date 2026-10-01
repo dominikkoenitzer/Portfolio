@@ -52,6 +52,7 @@ export const zh = {
       "苏黎世的软件工程师。我做快速、无障碍的网站，以及背后的工具。",
     hireMe: "雇用我",
     viewWork: "查看作品",
+    emailLabel: "邮箱",
   },
   about: {
     eyebrow: "个人简介",
@@ -101,6 +102,13 @@ export const zh = {
       german: "德语",
       chinese: "中文/普通话",
       french: "法语",
+    },
+    // Keyed by the skill's name in constants/skills.ts.
+    skillNames: {
+      Communication: "沟通",
+      "Project Management": "项目管理",
+      "Direct Sales": "直销",
+      "Social Media Outreach": "社交媒体拓展",
     },
   },
   projects: {
@@ -167,6 +175,8 @@ export const zh = {
     nextImage: "下一张",
     previousImage: "上一张",
     showImage: "显示第 {index} 张",
+    breadcrumb: "面包屑导航",
+    platform: "平台",
   },
   services: {
     eyebrow: "我提供",
@@ -195,6 +205,8 @@ export const zh = {
     ctaButton: "立即联系",
     getInTouch: "立即联系",
     fromPrice: "{price} 起",
+    perHour: "{price}/小时",
+    perMonth: "{price}/月",
     processTitle: "合作流程",
     faqTitle: "常见问题",
     items: {
@@ -342,6 +354,13 @@ export const zh = {
     pages: "页面",
     elsewhere: "其他去处",
     emailMe: "给我发邮件",
+  },
+  errorBoundary: {
+    eyebrow: "出了点问题",
+    heading: "这个页面卡住了",
+    body: "加载此页面时发生了意外错误。重新加载通常就能解决。网站刚更新后可能会出现这种情况。",
+    reload: "重新加载页面",
+    home: "返回首页",
   },
   notFound: {
     title: "页面未找到",

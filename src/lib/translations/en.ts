@@ -52,6 +52,7 @@ export const en = {
       "Software engineer in Zürich. I build fast, accessible websites and the tools behind them.",
     hireMe: "Hire Me",
     viewWork: "View Work",
+    emailLabel: "Email",
   },
   about: {
     eyebrow: "Profile",
@@ -102,6 +103,13 @@ export const en = {
       german: "German",
       chinese: "Chinese/Mandarin",
       french: "French",
+    },
+    // Keyed by the skill's name in constants/skills.ts.
+    skillNames: {
+      Communication: "Communication",
+      "Project Management": "Project Management",
+      "Direct Sales": "Direct Sales",
+      "Social Media Outreach": "Social Media Outreach",
     },
   },
   projects: {
@@ -169,6 +177,8 @@ export const en = {
     nextImage: "Next image",
     previousImage: "Previous image",
     showImage: "Show image {index}",
+    breadcrumb: "Breadcrumb",
+    platform: "Platform",
   },
   services: {
     eyebrow: "What I offer",
@@ -197,6 +207,8 @@ export const en = {
     ctaButton: "Get in Touch",
     getInTouch: "Get in touch",
     fromPrice: "from {price}",
+    perHour: "{price}/hr",
+    perMonth: "{price}/mo",
     processTitle: "How it works",
     faqTitle: "Questions",
     items: {
@@ -399,6 +411,14 @@ export const en = {
     pages: "Pages",
     elsewhere: "Elsewhere",
     emailMe: "Email me",
+  },
+  errorBoundary: {
+    eyebrow: "Something went wrong",
+    heading: "This page hit a snag",
+    body:
+      "An unexpected error occurred while loading this view. Reloading usually fixes it. This can happen right after the site is updated.",
+    reload: "Reload page",
+    home: "Go home",
   },
   notFound: {
     title: "Page not found",

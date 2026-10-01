@@ -1,6 +1,8 @@
 import { Component, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/lib/language-context";
+import { translations } from "@/lib/translations";
 
 interface Props {
   children: ReactNode;
@@ -45,25 +47,34 @@ export class ErrorBoundary extends Component<Props, State> {
       return this.props.fallback;
     }
 
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 px-6 text-center">
-        <div className="space-y-3">
-          <p className="eyebrow">Something went wrong</p>
-          <h1 className="font-bold text-2xl md:text-3xl">This page hit a snag</h1>
-          <p className="mx-auto max-w-md text-muted-foreground text-sm leading-relaxed">
-            An unexpected error occurred while loading this view. Reloading
-            usually fixes it. This can happen right after the site is updated.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button onClick={() => window.location.reload()} variant="cta">
-            Reload page
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/">Go home</Link>
-          </Button>
-        </div>
-      </div>
-    );
+    return <RecoveryCard />;
   }
+}
+
+/**
+ * The card itself, a function component so it can read the visitor's language:
+ * the boundary is a class, and classes cannot call hooks. Every boundary sits
+ * inside the LanguageProvider, so the copy is always loaded.
+ */
+function RecoveryCard() {
+  const t = translations[useLanguage().language].errorBoundary;
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 px-6 text-center">
+      <div className="space-y-3">
+        <p className="eyebrow">{t.eyebrow}</p>
+        <h1 className="font-bold text-2xl md:text-3xl">{t.heading}</h1>
+        <p className="mx-auto max-w-md text-muted-foreground text-sm leading-relaxed">
+          {t.body}
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button onClick={() => window.location.reload()} variant="cta">
+          {t.reload}
+        </Button>
+        <Button asChild variant="outline">
+          <Link to="/">{t.home}</Link>
+        </Button>
+      </div>
+    </div>
+  );
 }

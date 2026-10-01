@@ -79,6 +79,8 @@ function Name() {
   );
 }
 
+/* `label` is the brand name, said the same in every language; `labelKey`
+   names translated copy instead. */
 const SOCIAL = [
   {
     href: SITE_CONFIG.github,
@@ -87,10 +89,10 @@ const SOCIAL = [
   },
   {
     href: `mailto:${SITE_CONFIG.email}`,
-    label: "Email",
+    labelKey: "emailLabel",
     icon: <Mail className="h-[18px] w-[18px]" />,
   },
-];
+] as const;
 
 export function HeroSection() {
   const { language } = useLanguage();
@@ -133,16 +135,16 @@ export function HeroSection() {
           className="mb-5 flex items-center gap-2.5 sm:mb-6 sm:gap-3"
           variants={REVEAL}
         >
-          {SOCIAL.map(({ href, label, icon }) => (
+          {SOCIAL.map((link) => (
             <a
-              aria-label={label}
+              aria-label={"labelKey" in link ? t[link.labelKey] : link.label}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/25 text-muted-foreground transition-colors duration-200 ease-out hover:border-primary/45 hover:text-primary"
-              href={href}
-              key={label}
+              href={link.href}
+              key={link.href}
               rel="noopener noreferrer"
-              target={href.startsWith("mailto") ? undefined : "_blank"}
+              target={link.href.startsWith("mailto") ? undefined : "_blank"}
             >
-              {icon}
+              {link.icon}
             </a>
           ))}
         </motion.div>
