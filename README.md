@@ -27,7 +27,7 @@ widget.
 - **Four languages.** English, German, French, Chinese, on hand-rolled i18n with no library.
 - **Two themes, lifted from one illustration.** Light is dusty violet, sage and blush on a warm cream page; dark takes the same colours into the night. Both come from the reference art rather than a scale and are kept deliberately muted, with a slow WebGL aurora (React Bits' Aurora) in the theme's three colours drifting across the top. The site follows the system setting, remembers a choice made with the toggle, and picks the theme before the first paint.
 - **SEO and AI-SEO treated as real work.** JSON-LD (Person / FAQ / HowTo / Service), `llms.txt`, and per-page Open Graph cards.
-- **Prerendered routes.** The build emits a real HTML document per route, twenty-two of them, each with its own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview.
+- **Prerendered routes.** The build emits a real HTML document per route, twenty-three of them, each with its own title, description, canonical and OG image, so link unfurlers that don't run JavaScript still get the right preview.
 - **Live GitHub contributions** widget, via a Vercel serverless function.
 - **Accessible and responsive**, with reduced-motion-aware animation.
 

@@ -13,6 +13,7 @@ import {
   getProjectSeoDescription,
   getProjectSeoTitle,
 } from "@/config/seo-data/projects";
+import prerender from "../../../scripts/prerender.ts?raw";
 
 /**
  * The project list is hand-maintained data that feeds the cards, the detail
@@ -204,6 +205,32 @@ describe("the project list", () => {
       expect(snippet, project.slug).not.toBe(project.description);
       expect(snippet.length, project.slug).toBeLessThanOrEqual(155);
     }
+  });
+});
+
+/**
+ * The Portfolio case study counts the documents the prerender step writes:
+ * every page in its STATIC list plus one per project. Both the stat and the
+ * sentence that explains it went stale when projects were added, so the
+ * number is recomputed here from the same two sources.
+ */
+describe("the Portfolio case study", () => {
+  const staticBlock = prerender.match(/const STATIC\b[^=]*=\s*\[([\s\S]*?)\n\];/);
+  const staticPages = [...(staticBlock?.[1] ?? "").matchAll(/^\s*\["\//gm)].length;
+  const routes = String(staticPages + projects.length);
+
+  it("reads the static pages from the prerender script", () => {
+    expect(staticPages).toBeGreaterThan(0);
+  });
+
+  it.each(SUPPORTED_LANGUAGE_CODES)("counts the prerendered routes in %s", (code) => {
+    const portfolio = getProject("portfolio", code);
+    // The third stat is the route count in every language.
+    expect(portfolio?.stats?.[2]?.value).toBe(routes);
+    const sentence = portfolio?.sections
+      .flatMap((section) => section.body)
+      .find((paragraph) => paragraph.includes("404.html"));
+    expect(sentence?.match(/\d+/)?.[0]).toBe(routes);
   });
 });
 
