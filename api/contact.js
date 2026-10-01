@@ -87,6 +87,20 @@ async function sentLastHour(ipHash) {
   return Number.isFinite(total) ? total : 0;
 }
 
+// Takes back a row that went over the hourly cap. A failure here only leaves
+// one extra stored row that is never mailed, so it is logged, not thrown.
+async function removeMessage(id) {
+  try {
+    const res = await supabase(`contact_messages?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { Prefer: "return=minimal" },
+    });
+    if (!res.ok) console.error("contact: could not remove a row over the cap", res.status);
+  } catch (err) {
+    console.error("contact: could not remove a row over the cap", err);
+  }
+}
+
 async function notify(row) {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
@@ -232,6 +246,17 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error("contact: stored but could not read the id", err);
       return res.status(200).json({ ok: true });
+    }
+
+    // The count above runs before the insert, so a burst of parallel requests
+    // all read the same low number and every one of them got through. Counted
+    // again with this row stored, the number includes every row committed
+    // before it, so a request past the cap sees more than MAX_PER_HOUR and
+    // takes its own row back. A request that keeps its row saw at most
+    // MAX_PER_HOUR, its own included, so no more than that many survive.
+    if (row.ip_hash && (await sentLastHour(row.ip_hash)) > MAX_PER_HOUR) {
+      await removeMessage(id);
+      return res.status(429).json({ error: "Too many messages, try again later" });
     }
 
     // The row is the record; the mail is a courtesy. A mail failure must not
