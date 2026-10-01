@@ -46,16 +46,26 @@ const toastVariants = cva(
   },
 );
 
+/**
+ * The close button is an icon, so it needs a name, and the name has to be in
+ * the visitor's language. The Toaster renders it beside the content and sits
+ * outside the language provider, so the caller hands the label in with the
+ * toast (`toast({ closeLabel })`) and it reaches the button through here.
+ */
+const ToastCloseLabel = React.createContext("Close");
+
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => (
-  <ToastPrimitives.Root
-    className={cn(toastVariants({ variant }), className)}
-    ref={ref}
-    {...props}
-  />
+    VariantProps<typeof toastVariants> & { closeLabel?: string }
+>(({ className, variant, closeLabel = "Close", ...props }, ref) => (
+  <ToastCloseLabel.Provider value={closeLabel}>
+    <ToastPrimitives.Root
+      className={cn(toastVariants({ variant }), className)}
+      ref={ref}
+      {...props}
+    />
+  </ToastCloseLabel.Provider>
 ));
 Toast.displayName = ToastPrimitives.Root.displayName;
 
@@ -77,22 +87,26 @@ ToastAction.displayName = ToastPrimitives.Action.displayName;
 const ToastClose = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Close>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Close
-    className={cn(
-      // Always visible: hiding the dismiss until hover leaves it unreachable on
-      // a touch device, which is where a toast is hardest to wait out. 32px
-      // square so the tap target is real without crowding the copy.
-      "absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-lg text-foreground/50 transition-colors duration-200 ease-out hover:text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring group-[.destructive]:text-red-300 focus:group-[.destructive]:ring-red-400 focus:group-[.destructive]:ring-offset-red-600 hover:group-[.destructive]:text-red-50",
-      className,
-    )}
-    ref={ref}
-    toast-close=""
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </ToastPrimitives.Close>
-));
+>(({ className, ...props }, ref) => {
+  const label = React.useContext(ToastCloseLabel);
+  return (
+    <ToastPrimitives.Close
+      aria-label={label}
+      className={cn(
+        // Always visible: hiding the dismiss until hover leaves it unreachable
+        // on a touch device, which is where a toast is hardest to wait out.
+        // 32px square so the tap target is real without crowding the copy.
+        "absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-lg text-foreground/50 transition-colors duration-200 ease-out hover:text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring group-[.destructive]:text-red-300 focus:group-[.destructive]:ring-red-400 focus:group-[.destructive]:ring-offset-red-600 hover:group-[.destructive]:text-red-50",
+        className,
+      )}
+      ref={ref}
+      toast-close=""
+      {...props}
+    >
+      <X aria-hidden className="h-4 w-4" />
+    </ToastPrimitives.Close>
+  );
+});
 ToastClose.displayName = ToastPrimitives.Close.displayName;
 
 const ToastTitle = React.forwardRef<

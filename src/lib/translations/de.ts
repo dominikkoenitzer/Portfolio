@@ -361,6 +361,7 @@ export const de = {
     copied: "Kopiert.",
     copyFailed:
       "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
+    closeNotice: "Schliessen",
     eyebrow: "Kontakt",
     form: {
       nameLabel: "Name",

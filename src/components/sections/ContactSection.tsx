@@ -220,7 +220,11 @@ export function ContactSection() {
         setCopied(false);
       }, 2000);
     } catch {
-      toast({ title: t.copyFailed, variant: "destructive" });
+      toast({
+        closeLabel: t.closeNotice,
+        title: t.copyFailed,
+        variant: "destructive",
+      });
     }
   };
   useEffect(
@@ -249,10 +253,20 @@ export function ContactSection() {
   const submitRef = useRef<HTMLButtonElement>(null);
   // Not a bare `.focus()`: at the moment the failure branch runs, React has not
   // re-rendered yet, so the button is still `disabled` and focusing it does
-  // nothing at all. The frame after the commit is the first moment it can take
-  // focus again.
-  const restoreFocus = () =>
-    requestAnimationFrame(() => submitRef.current?.focus());
+  // nothing at all. The next animation frame was not reliably after the commit
+  // either: on desktop focus stayed on <body>. An effect always runs after
+  // the commit, so the failure branch leaves its focus move here and the
+  // effect runs it once the form is back to idle.
+  const afterSend = useRef<(() => void) | null>(null);
+  const restoreFocus = () => {
+    afterSend.current = () => submitRef.current?.focus();
+  };
+  useEffect(() => {
+    if (status !== "idle" || !afterSend.current) return;
+    const run = afterSend.current;
+    afterSend.current = null;
+    run();
+  }, [status]);
   useEffect(() => {
     startedAt.current = performance.now();
   }, []);
@@ -284,18 +298,23 @@ export function ContactSection() {
       });
       if (!res.ok) {
         toast({
+          closeLabel: t.closeNotice,
           title: res.status === 429 ? t.form.tooMany : t.form.failed,
           variant: "destructive",
         });
-        setStatus("idle");
         restoreFocus();
+        setStatus("idle");
         return;
       }
       setStatus("sent");
     } catch {
-      toast({ title: t.form.failed, variant: "destructive" });
-      setStatus("idle");
+      toast({
+        closeLabel: t.closeNotice,
+        title: t.form.failed,
+        variant: "destructive",
+      });
       restoreFocus();
+      setStatus("idle");
     }
   };
 
