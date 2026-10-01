@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { LANGUAGES } from "@/config/languages";
+import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,10 @@ export function LanguageToggle() {
   const { language, setLanguage, detectedLanguage } = useLanguage();
   const t = translations[language];
   const [open, setOpen] = useState(false);
+  // Inside the phone menu the popover sits on top of the sheet, and without a
+  // layer of its own one Escape closed both: the sheet's handler only knew
+  // about the overlays in the stack.
+  const isTopLayer = useOverlayLayer(open);
   const listRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
 
@@ -71,6 +76,9 @@ export function LanguageToggle() {
         align="end"
         aria-label={t.toggles.language}
         className="w-56 rounded-2xl p-2 duration-200"
+        onEscapeKeyDown={(e) => {
+          if (!isTopLayer(e)) e.preventDefault();
+        }}
         onOpenAutoFocus={(e) => {
           // Land on the current language instead of the sheet itself, so the
           // first arrow press moves rather than merely entering the list.
