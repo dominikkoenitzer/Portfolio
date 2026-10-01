@@ -384,7 +384,12 @@ export function Navbar() {
          React. `:focus-visible` keeps a mouse click on a control from pinning
          the bar in place for the rest of the scroll. */
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+        const next = event.relatedTarget as Element | null;
+        // The language popover is portaled out of the header too, but it is
+        // the header's own menu: focus moving into it must keep the bar, or the
+        // bar slides away and drags the open popover off screen with it.
+        const intoHeaderPopover = Boolean(next?.closest?.("[data-radix-popper-content-wrapper]"));
+        if (!event.currentTarget.contains(next) && !intoHeaderPopover) {
           setKeyboardFocusWithin(false);
         }
       }}
