@@ -49,21 +49,33 @@ type SearchDialogComponent = Awaited<
  * row belongs to the real panel, which replaces this the moment it resolves.
  * With the preloads on hover, focus and the modifier key, this is rarely seen.
  */
-function SearchShell({ hint, label }: { hint: string; label: string }) {
+function SearchShell({
+  hint,
+  label,
+  onClose,
+}: {
+  hint: string;
+  label: string;
+  onClose: () => void;
+}) {
   return (
     // Announced rather than hidden: it covers the page with an opaque wash, so
     // an assistive technology that was told nothing would leave its user on a
-    // trigger they can no longer see. Escape still closes it.
+    // trigger they can no longer see. Escape still closes it, and so does a
+    // tap beside the card, as on the real panel: a phone has no Escape key.
+    // `pointer-events-auto` because it renders inside the header, which lets
+    // clicks through, and a wash that let taps through to the page under it
+    // was worse than none.
     <div
       aria-busy="true"
       aria-label={label}
       aria-modal="true"
-      className="fixed inset-0 z-80"
+      className="pointer-events-auto fixed inset-0 z-80"
       role="dialog"
     >
-      <div className="absolute inset-0 bg-background/95" />
-      <div className="absolute inset-0 flex justify-center sm:px-4 sm:pt-28">
-        <div className="flex h-14 w-full max-w-xl items-center gap-3 overflow-hidden rounded-b-2xl border-border/60 border-b bg-card px-4 shadow-xs sm:rounded-2xl sm:border">
+      <div className="absolute inset-0 bg-background/95" onClick={onClose} />
+      <div className="pointer-events-none absolute inset-0 flex justify-center sm:px-4 sm:pt-28">
+        <div className="pointer-events-auto flex h-14 w-full max-w-xl items-center gap-3 overflow-hidden rounded-b-2xl border-border/60 border-b bg-card px-4 shadow-xs sm:rounded-2xl sm:border">
           <Search className="size-[18px] shrink-0 text-muted-foreground" />
           <span className="truncate text-base text-muted-foreground">
             {hint}
@@ -226,11 +238,14 @@ export function Navbar() {
    * a page that had already changed underneath it. Adjusted during render
    * rather than in an effect, which is what React asks for when state has to
    * follow a prop: an effect here costs a second render pass every navigation.
+   * The palette follows for the same reason: the back button left it open and
+   * scroll-locked over the page it had been opened on.
    */
   const [lastPath, setLastPath] = useState(location.pathname);
   if (lastPath !== location.pathname) {
     setLastPath(location.pathname);
     if (mobileMenuOpen) setMobileMenuOpen(false);
+    if (searchOpen) setSearchOpen(false);
   }
 
   const closeMobileMenu = useCallback(() => {
@@ -254,7 +269,9 @@ export function Navbar() {
     loadSearchDialog()
       // The updater form, because the value is itself a function.
       .then((module) => setSearchDialog(() => module.default))
-      .catch(() => {});
+      // Offline, or a tab left open across a deploy: the panel is not coming,
+      // so the stand-in must not wait for it with the page locked behind it.
+      .catch(() => setSearchOpen(false));
     loadSearchIndex()
       .then((module) => module.buildSearchIndex(language, t))
       .catch(() => {});
@@ -596,7 +613,11 @@ export function Navbar() {
       {/* The one frame (or the one slow network) where the palette has been
           asked for and its chunk has not landed. Escape still closes it. */}
       {searchOpen && !SearchDialog ? (
-        <SearchShell hint={t.search.placeholder} label={t.search.label} />
+        <SearchShell
+          hint={t.search.placeholder}
+          label={t.search.label}
+          onClose={closeSearch}
+        />
       ) : null}
     </motion.header>
   );
