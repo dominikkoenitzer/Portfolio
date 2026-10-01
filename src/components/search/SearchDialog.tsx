@@ -575,8 +575,11 @@ export default function SearchDialog({
                                   <span
                                     className={cn(
                                       "block truncate text-xs",
+                                      // 90%, not lower: on the highlighted
+                                      // row's tint 70% measured 3.3:1 light
+                                      // and 3.6:1 dark; 90% is 5.0 and 5.1.
                                       isActive
-                                        ? "text-primary/70"
+                                        ? "text-primary/90"
                                         : "text-muted-foreground",
                                     )}
                                   >
