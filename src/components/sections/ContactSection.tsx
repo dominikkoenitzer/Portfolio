@@ -232,9 +232,13 @@ export function ContactSection() {
     [],
   );
 
-  // The form. `startedAt` is when the page mounted: the API drops anything
-  // "filled in" faster than a person can type, and `website` is the honeypot
-  // no person sees. Both are read by `api/contact.js`.
+  // The form. `startedAt` is when the page mounted, on the page's own
+  // monotonic clock, and the request carries the time since as `fillMs`: the
+  // API drops anything "filled in" faster than a person can type, and
+  // `website` is the honeypot no person sees. Both are read by
+  // `api/contact.js`. An absolute timestamp compared there against the
+  // server's clock threw away real messages from a visitor whose clock ran
+  // ahead.
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const startedAt = useRef(0);
   const formRef = useRef<HTMLFormElement>(null);
@@ -250,7 +254,7 @@ export function ContactSection() {
   const restoreFocus = () =>
     requestAnimationFrame(() => submitRef.current?.focus());
   useEffect(() => {
-    startedAt.current = Date.now();
+    startedAt.current = performance.now();
   }, []);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -275,7 +279,7 @@ export function ContactSection() {
           subject: selected.formSubject ?? selected.subject,
           intent: effectiveIntent,
           language,
-          startedAt: startedAt.current,
+          fillMs: Math.round(performance.now() - startedAt.current),
         }),
       });
       if (!res.ok) {
@@ -297,7 +301,7 @@ export function ContactSection() {
 
   const reset = () => {
     formRef.current?.reset();
-    startedAt.current = Date.now();
+    startedAt.current = performance.now();
     setStatus("idle");
   };
 

@@ -177,6 +177,33 @@ describe("contact API hourly cap", () => {
   });
 });
 
+describe("contact API fill-time gate", () => {
+  it("keeps a real message from a visitor whose clock runs a minute ahead", async () => {
+    // 61.5 s of typing on a clock 60 s fast: the absolute timestamp says 1.5 s.
+    const reply = await post(
+      message({ fillMs: 61_500, startedAt: Date.now() - 1_500 }),
+    );
+    expect(reply.status).toBe(200);
+    expect(rows).toHaveLength(1);
+  });
+
+  it("drops a form filled faster than a person types", async () => {
+    await post(message({ fillMs: 1_500 }));
+    expect(rows).toHaveLength(0);
+  });
+
+  it("drops an unreadable fill time", async () => {
+    await post(message({ fillMs: "soon" }));
+    await post(message({ fillMs: null }));
+    expect(rows).toHaveLength(0);
+  });
+
+  it("drops a message with no timing at all", async () => {
+    await post(message({ startedAt: undefined }));
+    expect(rows).toHaveLength(0);
+  });
+});
+
 /** The little of `net.Server` and `net.Socket` this file touches. */
 type StalledSocket = { destroy(): void; on(event: string, fn: () => void): void };
 type StalledServer = {
