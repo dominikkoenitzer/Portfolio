@@ -140,6 +140,9 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollingDown, setScrollingDown] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // A keyboard user tabbing into the bar while it is slid away would otherwise
+  // be moving focus through links drawn above the viewport.
+  const [keyboardFocusWithin, setKeyboardFocusWithin] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   // Counts openings, and stays 0 until the first one: it mounts the dialog and
   // then re-keys it, so every opening starts on an empty query and a fresh
@@ -207,8 +210,10 @@ export function Navbar() {
 
   // Off-screen while scrolling down past the hero, back the moment the user
   // scrolls up. Never hidden while the drawer is open: the same button that
-  // closes it lives in this row, so hiding the bar would trap the user.
-  const navHidden = scrollingDown && !mobileMenuOpen && !reduceMotion;
+  // closes it lives in this row, so hiding the bar would trap the user. Nor
+  // while keyboard focus is inside it, so the focused control is on screen.
+  const navHidden =
+    scrollingDown && !mobileMenuOpen && !reduceMotion && !keyboardFocusWithin;
   // Shared-layout gliding is movement across the screen, which is exactly what
   // reduced motion asks us not to do; without a layoutId each indicator simply
   // appears on the link it belongs to.
@@ -357,6 +362,23 @@ export function Navbar() {
       className="pointer-events-none fixed top-0 right-0 left-0 z-50"
       data-no-callout
       initial={{ y: reduceMotion ? "0%" : "-100%" }}
+      /* Only the header's own DOM counts: the drawer and the palette are
+         portaled out of it but their focus events still bubble here through
+         React. `:focus-visible` keeps a mouse click on a control from pinning
+         the bar in place for the rest of the scroll. */
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setKeyboardFocusWithin(false);
+        }
+      }}
+      onFocus={(event) => {
+        if (
+          event.currentTarget.contains(event.target) &&
+          event.target.matches(":focus-visible")
+        ) {
+          setKeyboardFocusWithin(true);
+        }
+      }}
       style={{ paddingTop: "var(--safe-top, 0px)" }}
       transition={SPRING_SOFT}
     >
