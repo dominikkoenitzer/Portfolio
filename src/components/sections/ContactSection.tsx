@@ -34,6 +34,16 @@ const EMAIL = SITE_CONFIG.email;
 const FIELD =
   "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/30 focus-visible:border-primary focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-primary/15 sm:text-sm";
 
+/**
+ * The fields the visitor types, and the address check `api/contact.js` runs.
+ * `type="email"` alone lets "name@gmailcom" and "a@gmail" through, and
+ * `required` lets a message of only spaces through; the API refuses all three,
+ * so they are caught here, before the request, with the same rule.
+ */
+const TYPED_FIELDS = ["name", "email", "message"] as const;
+type TypedField = (typeof TYPED_FIELDS)[number];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
 const INTENT_KEYS = ["job", "freelance", "collab", "other"] as const;
@@ -271,10 +281,50 @@ export function ContactSection() {
     startedAt.current = performance.now();
   }, []);
 
+  // A field the API would refuse is marked the way the browser marks an empty
+  // required one: its own validation bubble with the reason, focus on the
+  // first, `aria-invalid` until the visitor types in it again. A generic
+  // "try again" toast left them retrying the same typo.
+  const [invalid, setInvalid] = useState<readonly TypedField[]>([]);
+  const markFields = (fields: readonly TypedField[]) => {
+    for (const field of fields) {
+      const el = formRef.current?.elements.namedItem(field);
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        el.setCustomValidity(
+          field === "email" && el.value.trim()
+            ? t.form.emailInvalid
+            : t.form.fieldEmpty,
+        );
+      }
+    }
+    setInvalid(fields);
+  };
+  const clearMark = (event: FormEvent<HTMLFormElement>) => {
+    const el = event.target;
+    if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) {
+      return;
+    }
+    el.setCustomValidity("");
+    setInvalid((prev) =>
+      prev.some((field) => field === el.name)
+        ? prev.filter((field) => field !== el.name)
+        : prev,
+    );
+  };
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (status === "sending") return;
     const data = new FormData(event.currentTarget);
+    const typed = (field: TypedField) => String(data.get(field) ?? "").trim();
+    const refused = TYPED_FIELDS.filter((field) =>
+      field === "email" ? !EMAIL_RE.test(typed(field)) : !typed(field),
+    );
+    if (refused.length) {
+      markFields(refused);
+      formRef.current?.reportValidity();
+      return;
+    }
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -296,6 +346,24 @@ export function ContactSection() {
           fillMs: Math.round(performance.now() - startedAt.current),
         }),
       });
+      if (res.status === 400) {
+        // The API names the fields it refused; anything else it says about a
+        // 400 is not the visitor's to fix, and falls through to the toast.
+        const body: unknown = await res.json().catch(() => null);
+        const named =
+          body && typeof body === "object" && "fields" in body
+            ? (body as { fields: unknown }).fields
+            : null;
+        const fields = Array.isArray(named)
+          ? TYPED_FIELDS.filter((field) => named.includes(field))
+          : [];
+        if (fields.length) {
+          markFields(fields);
+          afterSend.current = () => formRef.current?.reportValidity();
+          setStatus("idle");
+          return;
+        }
+      }
       if (!res.ok) {
         toast({
           closeLabel: t.closeNotice,
@@ -503,6 +571,7 @@ export function ContactSection() {
             <form
               className="grid max-w-xl gap-5"
               noValidate={false}
+              onInput={clearMark}
               onSubmit={submit}
               ref={formRef}
             >
@@ -510,6 +579,7 @@ export function ContactSection() {
                 <label className="grid gap-1.5 text-sm">
                   <span className="font-medium">{t.form.nameLabel}</span>
                   <input
+                    aria-invalid={invalid.includes("name") || undefined}
                     autoComplete="name"
                     className={FIELD}
                     maxLength={120}
@@ -521,6 +591,7 @@ export function ContactSection() {
                 <label className="grid gap-1.5 text-sm">
                   <span className="font-medium">{t.form.emailLabel}</span>
                   <input
+                    aria-invalid={invalid.includes("email") || undefined}
                     autoComplete="email"
                     className={FIELD}
                     maxLength={254}
@@ -533,6 +604,7 @@ export function ContactSection() {
               <label className="grid gap-1.5 text-sm">
                 <span className="font-medium">{t.form.messageLabel}</span>
                 <textarea
+                  aria-invalid={invalid.includes("message") || undefined}
                   className={cn(FIELD, "min-h-36 resize-y leading-relaxed")}
                   maxLength={5000}
                   name="message"
