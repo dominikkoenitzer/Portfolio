@@ -19,6 +19,7 @@ export function PrivateSource({ children }: { children: ReactElement }) {
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
+        aria-label={t.source}
         className="w-auto max-w-64 border-border/60 px-3 py-2 text-sm"
         side="top"
       >
