@@ -314,6 +314,8 @@ export const zh = {
       sendAnother: "再发一条",
       failed: "没发出去。请再试一次，或直接给我写邮件。",
       tooMany: "你这个网络发的留言有点多。一小时后再试，或直接给我写邮件。",
+      fieldEmpty: "这一项不能为空。",
+      emailInvalid: "这个地址好像不完整，是不是打错了？",
       orDirect: "或者直接给我写邮件：",
     },
     responseTime: "我通常会在一天内回复。",
