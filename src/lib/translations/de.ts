@@ -117,7 +117,7 @@ export const de = {
     live: "Live",
     download: "Download",
     details: "Details",
-    openRepo: "{name}-Repository öffnen",
+    openRepo: "Quellcode von {name}",
     openLive: "{name} live ansehen",
     openDownload: "{name} herunterladen",
     viewDetails: "Details zu {name} ansehen",
