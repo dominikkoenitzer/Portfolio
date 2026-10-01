@@ -52,6 +52,7 @@ export const fr = {
       "Ingénieur logiciel à Zurich. Je construis des sites rapides et accessibles, et les outils qui vont avec.",
     hireMe: "Engagez-moi",
     viewWork: "Voir le travail",
+    emailLabel: "E-mail",
   },
   about: {
     eyebrow: "Profil",
@@ -102,6 +103,13 @@ export const fr = {
       german: "Allemand",
       chinese: "Chinois/Mandarin",
       french: "Français",
+    },
+    // Keyed by the skill's name in constants/skills.ts.
+    skillNames: {
+      Communication: "Communication",
+      "Project Management": "Gestion de projet",
+      "Direct Sales": "Vente directe",
+      "Social Media Outreach": "Prospection sur les réseaux sociaux",
     },
   },
   projects: {
@@ -170,6 +178,8 @@ export const fr = {
     nextImage: "Image suivante",
     previousImage: "Image précédente",
     showImage: "Afficher l’image {index}",
+    breadcrumb: "Fil d’Ariane",
+    platform: "Plateforme",
   },
   services: {
     eyebrow: "Ce que je propose",
@@ -198,6 +208,8 @@ export const fr = {
     ctaButton: "Prendre contact",
     getInTouch: "Prendre contact",
     fromPrice: "à partir de {price}",
+    perHour: "{price}/h",
+    perMonth: "{price}/mois",
     processTitle: "Comment ça se passe",
     faqTitle: "Questions fréquentes",
     items: {
@@ -401,6 +413,14 @@ export const fr = {
     pages: "Pages",
     elsewhere: "Ailleurs",
     emailMe: "M'écrire un e-mail",
+  },
+  errorBoundary: {
+    eyebrow: "Une erreur s’est produite",
+    heading: "Cette page a rencontré un problème",
+    body:
+      "Une erreur inattendue s’est produite au chargement de cette vue. Recharger la page suffit généralement. Cela peut arriver juste après une mise à jour du site.",
+    reload: "Recharger la page",
+    home: "Retour à l’accueil",
   },
   notFound: {
     title: "Page introuvable",

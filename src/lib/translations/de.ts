@@ -52,6 +52,7 @@ export const de = {
       "Softwareentwickler in Zürich. Ich baue schnelle, barrierefreie Websites und die Tools dahinter.",
     hireMe: "Anstellen",
     viewWork: "Arbeiten ansehen",
+    emailLabel: "E-Mail",
   },
   about: {
     eyebrow: "Profil",
@@ -102,6 +103,13 @@ export const de = {
       german: "Deutsch",
       chinese: "Chinesisch/Mandarin",
       french: "Französisch",
+    },
+    // Keyed by the skill's name in constants/skills.ts.
+    skillNames: {
+      Communication: "Kommunikation",
+      "Project Management": "Projektmanagement",
+      "Direct Sales": "Direktvertrieb",
+      "Social Media Outreach": "Social-Media-Akquise",
     },
   },
   projects: {
@@ -170,6 +178,8 @@ export const de = {
     nextImage: "Nächstes Bild",
     previousImage: "Vorheriges Bild",
     showImage: "Bild {index} anzeigen",
+    breadcrumb: "Brotkrümelnavigation",
+    platform: "Plattform",
   },
   services: {
     eyebrow: "Was ich anbiete",
@@ -198,6 +208,8 @@ export const de = {
     ctaButton: "Jetzt Kontakt aufnehmen",
     getInTouch: "Kontakt aufnehmen",
     fromPrice: "ab {price}",
+    perHour: "{price}/Std.",
+    perMonth: "{price}/Monat",
     processTitle: "So läuft's ab",
     faqTitle: "Fragen",
     items: {
@@ -403,6 +415,14 @@ export const de = {
     pages: "Seiten",
     elsewhere: "Anderswo",
     emailMe: "E-Mail schreiben",
+  },
+  errorBoundary: {
+    eyebrow: "Etwas ist schiefgelaufen",
+    heading: "Diese Seite hat gehakt",
+    body:
+      "Beim Laden dieser Ansicht ist ein unerwarteter Fehler aufgetreten. Neu laden behebt das meistens. Das kann direkt nach einem Update der Website passieren.",
+    reload: "Seite neu laden",
+    home: "Zur Startseite",
   },
   notFound: {
     title: "Seite nicht gefunden",

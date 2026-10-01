@@ -73,7 +73,9 @@ type Inquiry = { label: string; subject: string; message: string };
 
 interface Service {
   itemKey: ItemKey;
+  /** The amount alone; a rate's unit is translated, see `priceLabel`. */
   price: string;
+  per?: "hour" | "month";
   icon: LucideIcon;
   category: OfferCategoryKey;
 }
@@ -89,10 +91,17 @@ const services: Service[] = [
     category: "build",
   },
   { itemKey: "serverSetup", price: "800 CHF", icon: Server, category: "build" },
-  { itemKey: "security", price: "120 CHF/hr", icon: Shield, category: "protect" },
+  {
+    itemKey: "security",
+    price: "120 CHF",
+    per: "hour",
+    icon: Shield,
+    category: "protect",
+  },
   {
     itemKey: "maintenance",
-    price: "50 CHF/mo",
+    price: "50 CHF",
+    per: "month",
     icon: Wrench,
     category: "protect",
   },
@@ -109,7 +118,13 @@ const services: Service[] = [
     icon: RefreshCw,
     category: "grow",
   },
-  { itemKey: "support", price: "110 CHF/hr", icon: Laptop, category: "grow" },
+  {
+    itemKey: "support",
+    price: "110 CHF",
+    per: "hour",
+    icon: Laptop,
+    category: "grow",
+  },
 ];
 
 const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
@@ -117,21 +132,32 @@ const FILTER_IDS: Category[] = ["all", "build", "protect", "grow"];
 // The page's structure, and the tree's branch order.
 const CATEGORY_ORDER: OfferCategoryKey[] = ["build", "protect", "grow"];
 
+/** A price as the page shows it: a rate carries its unit in the visitor's language. */
+const priceLabel = (
+  service: Service,
+  t: { perHour: string; perMonth: string },
+) =>
+  service.per === "hour"
+    ? t.perHour.replace("{price}", service.price)
+    : service.per === "month"
+      ? t.perMonth.replace("{price}", service.price)
+      : service.price;
+
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
- * unit. Taking a numeric minimum across the raw strings would be wrong, they
- * mix models ("2'500 CHF", "120 CHF/hr", "50 CHF/mo"), so we
- * pick the cheapest entry figure and show that service's price verbatim. Derived
+ * unit. Taking a numeric minimum across the prices would be wrong, they mix
+ * models (2'500 CHF once, 120 CHF an hour, 50 CHF a month), so we pick the
+ * cheapest entry figure and show that service's price as it is. Derived
  * rather than hard-coded so it can't drift when a price changes. The Swiss
  * thousands apostrophe is stripped first, or "2'000" would count as 2.
  */
 const entryFigure = (price: string) =>
   Number(price.replace(/'/g, "").match(/\d+/)?.[0] ?? Number.POSITIVE_INFINITY);
 
-const entryPrice = (items: Service[]) =>
+const entryService = (items: Service[]) =>
   items.reduce((cheapest, s) =>
     entryFigure(s.price) < entryFigure(cheapest.price) ? s : cheapest,
-  ).price;
+  );
 
 // The immersive 3D tree is desktop + motion only; everything else is cards.
 const DESKTOP_QUERY = "(min-width: 1024px)";
@@ -152,6 +178,7 @@ const withAlpha = (hex: string, alpha: number) =>
  */
 function DetailCard({
   service,
+  price,
   item,
   accent,
   accentText,
@@ -163,6 +190,7 @@ function DetailCard({
   onClose,
 }: {
   service: Service;
+  price: string;
   item: ServiceCopy;
   accent: string;
   accentText: string;
@@ -265,7 +293,7 @@ function DetailCard({
           className="font-semibold text-[15px] tabular-nums"
           style={{ color: accentText }}
         >
-          {service.price}
+          {price}
         </span>
         <Button asChild className="rounded-lg" size="sm" variant="soft">
           <Link state={inquiry} to="/contact">
@@ -542,7 +570,7 @@ export function ServicesSection() {
                       onClick={() => handleSelect(item.itemKey)}
                       type="button"
                     >
-                      {`${t.items[item.itemKey].title}, ${t.categoryMeta[item.category].label}, ${item.price}`}
+                      {`${t.items[item.itemKey].title}, ${t.categoryMeta[item.category].label}, ${priceLabel(item, t)}`}
                     </button>
                   </li>
                 ))}
@@ -561,6 +589,7 @@ export function ServicesSection() {
                   item={t.items[selected.itemKey]}
                   key={selected.itemKey}
                   onClose={closeCard}
+                  price={priceLabel(selected, t)}
                   service={selected}
                 />
               ) : null}
@@ -622,13 +651,16 @@ export function ServicesSection() {
               key: category,
               label: meta.label,
               desc: meta.desc,
-              fromLabel: t.fromPrice.replace("{price}", entryPrice(items)),
+              fromLabel: t.fromPrice.replace(
+                "{price}",
+                priceLabel(entryService(items), t),
+              ),
               services: items.map((service) => ({
                 key: service.itemKey,
                 title: t.items[service.itemKey].title,
                 description: t.items[service.itemKey].description,
                 features: t.items[service.itemKey].features,
-                price: service.price,
+                price: priceLabel(service, t),
                 icon: service.icon,
                 inquiry: buildInquiry(t.items[service.itemKey]),
               })),
