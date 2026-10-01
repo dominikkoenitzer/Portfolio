@@ -41,6 +41,13 @@ import {
   getDefaultCitations,
 } from "../src/lib/seo-utils";
 import { translations } from "../src/lib/translations";
+import {
+  esc,
+  NOT_FOUND_DESCRIPTION,
+  notFoundHead,
+  notFoundTitle,
+  setMeta,
+} from "./head-meta";
 
 const DIST = join(process.cwd(), "dist");
 const seo = translations.en.seo;
@@ -201,13 +208,6 @@ if (uncovered.length > 0) {
   process.exit(1);
 }
 
-const esc = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-
 /**
  * JSON-LD goes inside a <script>, where HTML escaping does not apply but a
  * literal `</script>` in any string value would end the block early. Only the
@@ -215,20 +215,6 @@ const esc = (s: string): string =>
  */
 const escJsonLd = (data: object): string =>
   JSON.stringify(data).replace(/<\//g, "<\\/");
-
-/** Replace the content="" of the <meta> carrying this name/property. */
-const setMeta = (html: string, key: string, value: string): string => {
-  // [^>] matches newlines too, so multi-line meta tags are handled.
-  const re = new RegExp(
-    `<meta\\b(?=[^>]*(?:name|property)="${key}")[^>]*>`,
-    "i",
-  );
-  return html.replace(re, (tag) =>
-    /content="/.test(tag)
-      ? tag.replace(/content="[^"]*"/, `content="${esc(value)}"`)
-      : tag,
-  );
-};
 
 /**
  * The no-JavaScript fallback.
@@ -394,29 +380,13 @@ for (const page of pages) {
  * in vercel.json: one would have to answer 200 and turn every junk URL into a
  * soft 404. This document is the same shell, so the app still boots and
  * client-routes normally, it just tells crawlers the truth before any
- * JavaScript runs: noindex in all three bot tags, and no canonical claiming
- * some other page.
+ * JavaScript runs: noindex in all three bot tags, and no canonical or og:url
+ * claiming some other page.
  */
-let notFound = shell;
-notFound = notFound.replace(
-  /<title>[\s\S]*?<\/title>/i,
-  `<title>Page not found | ${esc(SITE_CONFIG.name)}</title>`,
-);
-for (const [k, v] of [
-  ["description", "This page does not exist."],
-  ["title", `Page not found | ${SITE_CONFIG.name}`],
-  ["og:title", `Page not found | ${SITE_CONFIG.name}`],
-  ["og:description", "This page does not exist."],
-  ["robots", "noindex, nofollow"],
-  ["googlebot", "noindex, nofollow"],
-  ["bingbot", "noindex, nofollow"],
-] as const) {
-  notFound = setMeta(notFound, k, v);
-}
-notFound = withNoscript(
-  notFound,
-  `Page not found | ${SITE_CONFIG.name}`,
-  "This page does not exist.",
+const notFound = withNoscript(
+  notFoundHead(shell, SITE_CONFIG.name),
+  notFoundTitle(SITE_CONFIG.name),
+  NOT_FOUND_DESCRIPTION,
 );
 await writeFile(join(DIST, "404.html"), notFound);
 
