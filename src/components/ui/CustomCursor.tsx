@@ -5,11 +5,10 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 import { coversViewport, magnetRectOf } from "@/lib/cursor-magnet";
-import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 /**
  * CustomCursor, a free-stack re-implementation of Motion+ `<Cursor/>`.
@@ -161,23 +160,39 @@ const clamp = (v: number, lo: number, hi: number) =>
   v < lo ? lo : v > hi ? hi : v;
 
 /**
- * A fine pointer means a mouse or trackpad. Read during render, like
- * `prefersReducedMotion`: a synchronous media-query read is render-safe.
+ * A media query as live state. The CSS that hides or restores the native
+ * cursor follows these queries the moment they change, so the component has
+ * to as well: read once, a visitor who switched reduced motion off with the
+ * page open had the native cursor hidden and no custom one until a reload.
  */
-const hasFinePointer = (): boolean =>
-  typeof window !== "undefined" &&
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(pointer: fine)").matches;
+function useMediaQuery(query: string): boolean {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+        return () => {};
+      }
+      const list = window.matchMedia(query);
+      list.addEventListener("change", onChange);
+      return () => list.removeEventListener("change", onChange);
+    },
+    [query],
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () =>
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia(query).matches,
+    () => false,
+  );
+}
 
 export function CustomCursor() {
-  // Both read during render (synchronous media-query reads, render-safe). On a
-  // coarse pointer or with reduced motion we render nothing and the CSS leaves
-  // the native cursor alone.
-  const fine = hasFinePointer();
-
-  // Reduced motion is read once during render (synchronous, render-safe). When
-  // true we render nothing at all: the CSS restores the native cursor.
-  const reduced = prefersReducedMotion();
+  // A fine pointer means a mouse or trackpad. On a coarse pointer or with
+  // reduced motion we render nothing and the CSS leaves the native cursor
+  // alone; both follow the live setting, like the CSS does.
+  const fine = useMediaQuery("(pointer: fine)");
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   // ── Raw motion values (written imperatively, never re-render React) ────────
   // Destination centre, size, radius, fill/ring alpha and visibility; the
@@ -245,11 +260,7 @@ export function CustomCursor() {
     // Activate only for fine pointers (mouse/trackpad) and non-reduced motion.
     // On coarse/touch or reduced-motion the native cursor stays and we render
     // nothing (the early `return null` below also guards render).
-    if (
-      typeof window === "undefined" ||
-      !window.matchMedia("(pointer: fine)").matches ||
-      reduced
-    ) {
+    if (typeof window === "undefined" || !fine || reduced) {
       return;
     }
 
@@ -680,7 +691,7 @@ export function CustomCursor() {
       window.removeEventListener("dragend", onDragEnd);
       window.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("mouseout", onWindowOut);
-      window.removeEventListener("blur-sm", onBlur);
+      window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
       document.removeEventListener("visibilitychange", onVisibility);
       document.documentElement.removeEventListener("mouseleave", onWindowLeave);
@@ -690,6 +701,7 @@ export function CustomCursor() {
       activeTargetRef.current = null;
     };
   }, [
+    fine,
     reduced,
     destX,
     destY,
