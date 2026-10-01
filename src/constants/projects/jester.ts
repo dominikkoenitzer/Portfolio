@@ -87,7 +87,7 @@ export const jester: Record<Language, LocalizedContent> = {
       "Jester ist ein nativer Windows-Notizblock mit Tabs, Zeilennummern-Spalte, Suche über ganze Ordner und PDF-Export, alles in einer portablen Jester.exe ohne Installer.",
     overview:
       "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die Notepad verweigert. Also habe ich einen in C# und WPF auf .NET 10 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
-    roleSummary: "Nur ich: die WPF-Oberfläche und der ganze .NET-9-Build.",
+    roleSummary: "Nur ich: die WPF-Oberfläche und der ganze .NET-10-Build.",
     sections: [
       {
         heading: "Speichern kürzt nie die Datei, die schon da ist",
@@ -114,7 +114,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Eine Exe, auch mit PDF-Bibliothek drin",
         body: [
-          "Jester kommt als eine eigenständige Jester.exe, die .NET-9-Runtime komprimiert darin, und läuft so auf Windows 10 und 11 ohne Installer und ohne separate .NET-Installation. Der Build ist nicht signiert, beim ersten Start kann also SmartScreen nachfragen.",
+          "Jester kommt als eine eigenständige Jester.exe, die .NET-10-Runtime komprimiert darin, und läuft so auf Windows 10 und 11 ohne Installer und ohne separate .NET-Installation. Der Build ist nicht signiert, beim ersten Start kann also SmartScreen nachfragen.",
           "QuestPDF brachte einen Haken mit: Es kopiert seine mitgelieferten Lato-Schriften als lose Dateien neben die Exe. Jester braucht sie nie, denn ein PDF wird in Consolas oder in der im Editor gewählten Schrift gesetzt. Ein Schritt in der Projektdatei nimmt sie deshalb aus dem veröffentlichten Build, und das Release bleibt eine einzige Datei.",
           "Der Export selbst ist A4 mit 2 cm Rand, dem Dateinamen als Kopfzeile über einer goldenen Linie und Seitenzahlen in der Fusszeile. Lange Zeilen brechen auf der Seite um.",
         ],
