@@ -459,7 +459,7 @@ export const de = {
           "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics ausschliesslich anonymisiert erhoben. Cookies oder Tracking-Identifier werden nicht verwendet.",
         contactLabel: "E-Mail:",
         contactBody:
-          "Wenn du mir eine E-Mail schreibst oder das Kontaktformular benutzt, behalte ich nur, was du schickst (deinen Namen, deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären. Nachrichten aus dem Formular liegen in einer Supabase-Datenbank in Frankfurt, Deutschland, zusammen mit einer gehashten IP-Adresse, die nur zur Spam-Begrenzung dient.",
+          "Wenn du mir eine E-Mail schreibst oder das Kontaktformular benutzt, behalte ich nur, was du schickst (deinen Namen, deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären. Nachrichten aus dem Formular liegen in einer Supabase-Datenbank in Frankfurt, Deutschland, zusammen mit dem User-Agent deines Browsers und einem mit geheimem Schlüssel gebildeten Hash deiner IP-Adresse, der nur zur Spam-Begrenzung dient.",
       },
       rights: {
         heading: "Deine Rechte",
