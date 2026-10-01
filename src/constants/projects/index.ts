@@ -94,7 +94,7 @@ const PROJECT_BASE: ProjectBase[] = [
     image: "/projects/remnants.jpg",
     gallery: ["/projects/remnants-mark.jpg"],
     programmingLanguages: ["TypeScript"],
-    operatingSystem: "Windows",
+    operatingSystem: "Windows, macOS, Linux",
     applicationCategory: "DeveloperApplication",
   },
   {
