@@ -3,6 +3,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -99,12 +100,21 @@ export function LanguageProvider({
     };
   }, [language, ready]);
 
+  // The language asked for last. Two quick picks load in parallel and can
+  // resolve in either order; only the latest may take effect, or the page
+  // shows one language while the other is stored.
+  const latestRequest = useRef<Language>(language);
+
   // Every path that changes the language goes through here, so the copy is
   // always loaded before the switch is visible.
   const applyLanguage = useCallback((next: Language) => {
+    latestRequest.current = next;
     loadTranslation(next).then(
-      () => setLanguageState(next),
       () => {
+        if (latestRequest.current === next) setLanguageState(next);
+      },
+      () => {
+        if (latestRequest.current !== next) return;
         // A tab left open across a deploy asks for a chunk that no longer
         // exists, and every retry fails the same way. The choice is already
         // stored, so a reload picks the new build up in that language; offline,
