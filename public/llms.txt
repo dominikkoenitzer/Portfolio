@@ -31,7 +31,7 @@ Open to software engineering roles, internships, freelance and contract projects
 - [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
 - [Projects](https://dk.punds.ch/projects): the fourteen personal projects, searchable and filterable by web or desktop.
 - [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
-- [Contact](https://dk.punds.ch/contact): choose an intent (a role, a freelance project, a collaboration, something else) and it prefills the email.
+- [Contact](https://dk.punds.ch/contact): a short form: choose an intent (a role, a freelance project, a collaboration, something else), write the message, and it reaches him directly. A prefilled mailto link sits underneath as the fallback.
 - [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
 - [Privacy](https://dk.punds.ch/privacy): Vercel server logs and anonymised Vercel Analytics, no cookies and no tracking identifiers, under Swiss FADP and EU GDPR.
 
@@ -44,7 +44,7 @@ Open to software engineering roles, internships, freelance and contract projects
 
 ## Projects
 
-Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
+Fourteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
 
 - [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
 - [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
