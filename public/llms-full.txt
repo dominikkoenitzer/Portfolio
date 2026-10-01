@@ -119,15 +119,15 @@ PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 **Professional**
 Communication, project management, direct sales, social media outreach.
 
-Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 10 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in Time and in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
+Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 10 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
 
 ---
 
 ## 6. Projects
 
-Fifteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Fourteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
-A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, with the source public.
+A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, most of it with the source public (Entropy, Spectrum and Senbon are private).
 
 The page also says more are coming: "A few new projects are almost finished and will show up here soon." If your copy of this file is old, check https://dk.punds.ch/projects for the current list.
 
@@ -319,6 +319,7 @@ There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or an
 - https://dk.punds.ch/projects/oxidize
 - https://dk.punds.ch/projects/inkling
 - https://dk.punds.ch/projects/mochi
+- https://dk.punds.ch/projects/daifuku
 - https://dk.punds.ch/services
 - https://dk.punds.ch/contact
 - https://dk.punds.ch/donate
