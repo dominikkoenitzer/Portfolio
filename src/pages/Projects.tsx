@@ -48,8 +48,10 @@ const Projects = () => {
                 description: project.description,
                 url: project.liveUrl ?? `${SITE_CONFIG.url}/projects/${project.slug}`,
                 ...(project.sourcePrivate ? {} : { sameAs: project.repoUrl }),
-                applicationCategory: "WebApplication",
-                operatingSystem: "Any",
+                // Same fallbacks as the project's own page, so a desktop tool
+                // is not listed here as a web app that runs anywhere.
+                applicationCategory: project.applicationCategory ?? "WebApplication",
+                operatingSystem: project.operatingSystem ?? "Any",
                 keywords: project.tags.join(", "),
                 creator: {
                   "@type": "Person",
