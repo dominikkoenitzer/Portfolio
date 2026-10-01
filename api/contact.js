@@ -101,6 +101,19 @@ async function removeMessage(id) {
   }
 }
 
+// The transport timeouts each cover one phase or one quiet stretch, so a mail
+// server that answers slowly but steadily could still hold the answer past the
+// browser's 20 s. The whole send gets one deadline on top.
+const MAIL_DEADLINE_MS = () => Number(process.env.CONTACT_MAIL_DEADLINE_MS) || 10000;
+
+function withDeadline(promise, ms) {
+  let timer;
+  const deadline = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`mail took longer than ${ms} ms`)), ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => clearTimeout(timer));
+}
+
 async function notify(row) {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
@@ -267,15 +280,21 @@ export default async function handler(req, res) {
     // before it, so a request past the cap sees more than MAX_PER_HOUR and
     // takes its own row back. A request that keeps its row saw at most
     // MAX_PER_HOUR, its own included, so no more than that many survive.
-    if (row.ip_hash && (await sentLastHour(row.ip_hash)) > MAX_PER_HOUR) {
-      await removeMessage(id);
-      return res.status(429).json({ error: "Too many messages, try again later" });
+    // A failure here comes after the row is stored, so it keeps the row and
+    // answers 200; an error would make the visitor send the same message again.
+    try {
+      if (row.ip_hash && (await sentLastHour(row.ip_hash)) > MAX_PER_HOUR) {
+        await removeMessage(id);
+        return res.status(429).json({ error: "Too many messages, try again later" });
+      }
+    } catch (err) {
+      console.error("contact: could not recount after storing", err);
     }
 
     // The row is the record; the mail is a courtesy. A mail failure must not
     // turn a stored message into an error the visitor sees.
     try {
-      if (await notify(row)) {
+      if (await withDeadline(notify(row), MAIL_DEADLINE_MS())) {
         await supabase(`contact_messages?id=eq.${id}`, {
           method: "PATCH",
           headers: { Prefer: "return=minimal" },

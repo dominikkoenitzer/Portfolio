@@ -43,6 +43,7 @@ type Row = {
  */
 let rows: Row[] = [];
 let seq = 0;
+let failCountAfterInsert = false;
 const filterValue = (params: URLSearchParams, key: string) =>
   params.get(key)?.replace(/^(eq|gte)\./, "");
 
@@ -55,6 +56,7 @@ async function fakeSupabase(
   await new Promise((r) => setTimeout(r, 2 + Math.random() * 18));
   const params = url.searchParams;
   if (method === "HEAD") {
+    if (failCountAfterInsert && seq > 0) throw new TypeError("fetch failed");
     const ip = filterValue(params, "ip_hash");
     const since = Date.parse(filterValue(params, "created_at") ?? "");
     const total = rows.filter(
@@ -132,6 +134,7 @@ const message = (extra: object = {}) => ({
 beforeEach(() => {
   rows = [];
   seq = 0;
+  failCountAfterInsert = false;
   vi.stubGlobal("fetch", fakeSupabase);
   vi.stubEnv("SUPABASE_URL", "https://supabase.test");
   vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "test-key");
@@ -174,6 +177,15 @@ describe("contact API hourly cap", () => {
     );
     expect(replies.every((r) => r.status === 200)).toBe(true);
     expect(rows).toHaveLength(10);
+  });
+});
+
+describe("contact API after the row is stored", () => {
+  it("answers 200 and keeps the message when the recount fails", async () => {
+    failCountAfterInsert = true;
+    const reply = await post(message());
+    expect(reply.status).toBe(200);
+    expect(rows).toHaveLength(1);
   });
 });
 
