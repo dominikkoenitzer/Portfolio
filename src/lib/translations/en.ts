@@ -455,7 +455,7 @@ export const en = {
           "This site is hosted by Vercel. Server logs (IP address, browser type, access time) are stored for security and reliability. Visitor statistics are collected via Vercel Analytics with anonymized data only. No cookies or tracking identifiers are used.",
         contactLabel: "Email:",
         contactBody:
-          "If you email me or use the contact form, I keep what you send (your name, your address and your message) only to answer you and any follow-up questions. Form messages are stored in a Supabase database in Frankfurt, Germany, together with a hashed IP address that is used only to limit spam.",
+          "If you email me or use the contact form, I keep what you send (your name, your address and your message) only to answer you and any follow-up questions. Form messages are stored in a Supabase database in Frankfurt, Germany, together with your browser's user agent and a keyed hash of your IP address that is used only to limit spam.",
       },
       rights: {
         heading: "Your Rights",
