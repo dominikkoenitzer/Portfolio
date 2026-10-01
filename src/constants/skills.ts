@@ -72,3 +72,14 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     skills: ["PostgreSQL", "MongoDB", "Redis", "SQLite", "Git", "pnpm", "Figma", "Lighthouse"],
   },
 ];
+
+/**
+ * A skill's name as the page shows it. Tech names are proper nouns and read
+ * the same in every language; the professional skills are ordinary words and
+ * come from `skills.skillNames`, keyed by the English name above (which also
+ * stays the icon key).
+ */
+export const skillLabel = (
+  name: string,
+  names: Translation["skills"]["skillNames"],
+): string => (names as Partial<Record<string, string>>)[name] ?? name;

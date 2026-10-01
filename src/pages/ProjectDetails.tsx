@@ -214,7 +214,7 @@ const ProjectDetails = () => {
     { label: t.role, value: project.roleSummary },
   ];
   if (project.operatingSystem) {
-    specRows.push({ label: "Platform", value: project.operatingSystem });
+    specRows.push({ label: t.platform, value: project.operatingSystem });
   }
 
   /* Every full-size image on the page, in reading order: the hero screenshot
@@ -291,7 +291,7 @@ const ProjectDetails = () => {
           {/* Breadcrumb + back */}
           <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
             <nav
-              aria-label="Breadcrumb"
+              aria-label={t.breadcrumb}
               className="flex items-center gap-2 text-muted-foreground text-sm"
             >
               {/* `inline-flex` is not cosmetic here: it is what the touch
