@@ -373,6 +373,8 @@ export const fr = {
       sendAnother: "Envoyer un autre message",
       failed: "Ça n'est pas passé. Réessayez, ou écrivez-moi directement.",
       tooMany: "Beaucoup de messages depuis votre connexion. Réessayez dans une heure, ou écrivez-moi directement.",
+      fieldEmpty: "Ce champ ne peut pas être vide.",
+      emailInvalid: "Cette adresse semble incomplète. Une faute de frappe ?",
       orDirect: "Ou écrivez-moi directement :",
     },
     responseTime: "Je réponds généralement dans la journée.",
