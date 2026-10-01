@@ -280,7 +280,7 @@ Freelance work for small teams and businesses, described on the services page as
 
 Email: dominik.koenitzer@gmail.com. He usually replies within a day.
 
-The contact page (https://dk.punds.ch/contact) has a short form. You pick what the message is about (a role, a freelance project, building something together, or something else), write it, and it reaches him directly: the message is stored in a Supabase database in Frankfurt with a hashed IP address and mailed on. Underneath it sits a prefilled mailto link for anyone who would rather use their own mail client, and a copy-the-address fallback for anyone on webmail.
+The contact page (https://dk.punds.ch/contact) has a short form. You pick what the message is about (a role, a freelance project, building something together, or something else), write it, and it reaches him directly: the message is stored in a Supabase database in Frankfurt with the browser's user agent and a keyed hash of the IP address, and mailed on. Underneath it sits a prefilled mailto link for anyone who would rather use their own mail client, and a copy-the-address fallback for anyone on webmail.
 
 He is open to: software engineering roles, internships, freelance and contract projects, and collaborations. In Switzerland or fully remote.
 
