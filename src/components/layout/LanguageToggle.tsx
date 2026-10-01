@@ -69,6 +69,7 @@ export function LanguageToggle() {
       </PopoverTrigger>
       <PopoverContent
         align="end"
+        aria-label={t.toggles.language}
         className="w-56 rounded-2xl p-2 duration-200"
         onOpenAutoFocus={(e) => {
           // Land on the current language instead of the sheet itself, so the
