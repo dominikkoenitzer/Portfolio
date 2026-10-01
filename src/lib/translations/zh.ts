@@ -115,7 +115,7 @@ export const zh = {
     live: "在线",
     download: "下载",
     details: "详情",
-    openRepo: "打开 {name} 仓库",
+    openRepo: "{name} 的源码",
     openLive: "打开 {name} 在线站点",
     openDownload: "下载 {name}",
     viewDetails: "查看 {name} 的详情",
