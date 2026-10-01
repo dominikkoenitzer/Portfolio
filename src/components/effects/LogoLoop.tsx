@@ -1,5 +1,6 @@
 import {
   type CSSProperties,
+  type FocusEvent,
   type Key,
   memo,
   type ReactNode,
@@ -19,6 +20,13 @@ import "./LogoLoop.css";
  */
 
 const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 };
+
+/**
+ * How far in from each end of the strip a focused link is brought, as a share
+ * of the strip's length. Clears the 12% edge fade the project pages mask the
+ * strip with, so the focused logo is fully visible.
+ */
+const FOCUS_INSET = 0.15;
 
 export type LogoNodeItem = {
   node: ReactNode;
@@ -128,6 +136,7 @@ const useAnimationLoop = (
   isHovered: boolean,
   hoverSpeed: number | undefined,
   isVertical: boolean,
+  heldRef: RefObject<boolean>,
 ) => {
   const rafRef = useRef<number | null>(null);
   const lastTimestampRef = useRef<number | null>(null);
@@ -140,7 +149,9 @@ const useAnimationLoop = (
 
     const seqSize = isVertical ? seqHeight : seqWidth;
 
-    if (seqSize > 0) {
+    // Not while held: the focused link may sit at an offset outside one
+    // sequence, and wrapping it here would move it out of view.
+    if (seqSize > 0 && !heldRef.current) {
       offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
       track.style.transform = isVertical
         ? `translate3d(0, ${-offsetRef.current}px, 0)`
@@ -152,6 +163,15 @@ const useAnimationLoop = (
       const deltaTime =
         Math.max(0, timestamp - lastTimestampRef.current) / 1000;
       lastTimestampRef.current = timestamp;
+
+      // A keyboard user is on one of the links: stand still exactly where the
+      // focus handler put it. Not even wrapped, because the focused link
+      // belongs to the first copy and wrapping would hand its place to a copy.
+      if (heldRef.current) {
+        velocityRef.current = 0;
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
 
       const target =
         isHovered && hoverSpeed !== undefined ? hoverSpeed : targetVelocity;
@@ -186,7 +206,10 @@ const useAnimationLoop = (
     hoverSpeed,
     isVertical,
     trackRef,
+    heldRef,
   ]);
+
+  return offsetRef;
 };
 
 export const LogoLoop = memo(
@@ -215,6 +238,9 @@ export const LogoLoop = memo(
     const [seqHeight, setSeqHeight] = useState(0);
     const [copyCount, setCopyCount] = useState(ANIMATION_CONFIG.MIN_COPIES);
     const [isHovered, setIsHovered] = useState(false);
+    // True while a link in the strip has keyboard focus: the strip stops, so
+    // the focused logo neither drifts out of view nor keeps moving under it.
+    const focusHeldRef = useRef(false);
 
     const effectiveHoverSpeed = useMemo(() => {
       if (hoverSpeed !== undefined) return hoverSpeed;
@@ -283,7 +309,7 @@ export const LogoLoop = memo(
       isVertical,
     ]);
 
-    useAnimationLoop(
+    const offsetRef = useAnimationLoop(
       trackRef,
       targetVelocity,
       seqWidth,
@@ -291,6 +317,7 @@ export const LogoLoop = memo(
       isHovered,
       effectiveHoverSpeed,
       isVertical,
+      focusHeldRef,
     );
 
     const cssVariables = useMemo<Record<string, string>>(
@@ -322,6 +349,41 @@ export const LogoLoop = memo(
     const handleMouseLeave = useCallback(() => {
       if (effectiveHoverSpeed !== undefined) setIsHovered(false);
     }, [effectiveHoverSpeed]);
+
+    // Keyboard focus pauses the strip and slides the focused link inside it,
+    // clear of the faded ends. Only a visible focus counts: a mouse click on a
+    // logo focuses it too, and that should not freeze the strip until the
+    // visitor happens to click somewhere else.
+    const handleFocus = useCallback(
+      (event: FocusEvent<HTMLDivElement>) => {
+        const link = event.target;
+        const container = containerRef.current;
+        const track = trackRef.current;
+        if (!container || !track || !link.matches(":focus-visible")) return;
+        focusHeldRef.current = true;
+        const box = container.getBoundingClientRect();
+        const item = link.getBoundingClientRect();
+        const span = isVertical ? box.height : box.width;
+        const start = isVertical ? item.top - box.top : item.left - box.left;
+        const end = start + (isVertical ? item.height : item.width);
+        const inset = span * FOCUS_INSET;
+        let shift = 0;
+        if (start < inset) shift = start - inset;
+        else if (end > span - inset) {
+          shift = Math.min(end - (span - inset), start - inset);
+        }
+        if (shift === 0) return;
+        offsetRef.current += shift;
+        track.style.transform = isVertical
+          ? `translate3d(0, ${-offsetRef.current}px, 0)`
+          : `translate3d(${-offsetRef.current}px, 0, 0)`;
+      },
+      [isVertical, offsetRef],
+    );
+    const handleBlur = useCallback((event: FocusEvent<HTMLDivElement>) => {
+      if (event.currentTarget.contains(event.relatedTarget)) return;
+      focusHeldRef.current = false;
+    }, []);
 
     const renderLogoItem = useCallback(
       (item: LogoItem, key: Key, focusable: boolean) => {
@@ -437,6 +499,8 @@ export const LogoLoop = memo(
       >
         <div
           className="logoloop__track"
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           ref={trackRef}
