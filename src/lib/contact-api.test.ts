@@ -1,4 +1,31 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+// @ts-expect-error -- the app tsconfig carries no Node types; vitest runs this file in Node.
+import { createServer } from "node:net";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+
+// The mail goes to a local socket that accepts and then never answers, the way
+// a stalled SMTP server behaves. Every option the handler passes is kept; only
+// the address changes.
+const smtp = vi.hoisted(() => ({ port: 0 }));
+vi.mock("nodemailer", async (importOriginal) => {
+  const real = ((await importOriginal()) as {
+    default: { createTransport: (options: object) => unknown };
+  }).default;
+  return {
+    default: {
+      createTransport: (options: object) =>
+        real.createTransport({ ...options, host: "127.0.0.1", port: smtp.port }),
+    },
+  };
+});
 
 import handler from "../../api/contact.js";
 
@@ -148,4 +175,45 @@ describe("contact API hourly cap", () => {
     expect(replies.every((r) => r.status === 200)).toBe(true);
     expect(rows).toHaveLength(10);
   });
+});
+
+/** The little of `net.Server` and `net.Socket` this file touches. */
+type StalledSocket = { destroy(): void; on(event: string, fn: () => void): void };
+type StalledServer = {
+  address(): { port: number };
+  close(done: () => void): void;
+  listen(port: number, host: string, done: () => void): void;
+};
+
+describe("contact API with a stalled mail server", () => {
+  let server: StalledServer;
+  const sockets = new Set<StalledSocket>();
+
+  beforeAll(async () => {
+    server = createServer((socket: StalledSocket) => {
+      sockets.add(socket);
+      socket.on("error", () => {});
+    });
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    smtp.port = server.address().port;
+  });
+
+  afterAll(async () => {
+    for (const socket of sockets) socket.destroy();
+    await new Promise<void>((resolve) => server.close(resolve));
+  });
+
+  it(
+    "answers a stored message well inside the browser's 20 s deadline",
+    async () => {
+      vi.stubEnv("GMAIL_USER", "someone@example.com");
+      vi.stubEnv("GMAIL_APP_PASSWORD", "app-password");
+      const start = Date.now();
+      const reply = await post(message({ fillMs: 60_000 }));
+      expect(reply.status).toBe(200);
+      expect(rows).toHaveLength(1);
+      expect(Date.now() - start).toBeLessThan(15_000);
+    },
+    20_000,
+  );
 });
