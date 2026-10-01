@@ -357,6 +357,7 @@ export const en = {
     copyEmail: "Or copy the address.",
     copied: "Copied.",
     copyFailed: "Couldn't copy. The address is dominik.koenitzer@gmail.com",
+    closeNotice: "Close",
     eyebrow: "Contact",
     form: {
       nameLabel: "Name",

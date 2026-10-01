@@ -300,6 +300,7 @@ export const zh = {
     copyEmail: "或复制地址。",
     copied: "已复制。",
     copyFailed: "复制失败，地址为 dominik.koenitzer@gmail.com",
+    closeNotice: "关闭",
     eyebrow: "联系",
     form: {
       nameLabel: "姓名",
