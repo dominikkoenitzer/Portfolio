@@ -196,17 +196,22 @@ export default async function handler(req, res) {
 
   // Honeypot and timing: answer as if it worked, store nothing.
   // Both gates used to be skippable by leaving the field out, which is the first
-  // thing a bot does, so a missing or unreadable `startedAt` now counts as one.
-  // The elapsed time is judged only when it is positive: a visitor whose clock
-  // runs ahead of the server produces a negative one, and that silently threw
-  // their message away.
-  const startedAt = Number(body.startedAt);
-  const elapsed = Date.now() - startedAt;
-  if (
-    (typeof body.website === "string" && body.website.trim() !== "") ||
-    !Number.isFinite(startedAt) ||
-    (elapsed >= 0 && elapsed < MIN_FILL_MS)
-  ) {
+  // thing a bot does, so a missing or unreadable time now counts as one.
+  // The form sends `fillMs`, the fill time measured on the visitor's own
+  // clock. Subtracting their absolute `startedAt` from the server's clock
+  // mixed two clocks: one running a minute ahead turned 61.5 s of typing into
+  // 1.5 s, and a real message was thrown away behind a "Sent." `startedAt` is
+  // still read from a page loaded before the form sent `fillMs`.
+  const tooFast = (() => {
+    if (body.fillMs !== undefined) {
+      const fillMs = Number(body.fillMs);
+      return !Number.isFinite(fillMs) || fillMs < MIN_FILL_MS;
+    }
+    const startedAt = Number(body.startedAt);
+    const elapsed = Date.now() - startedAt;
+    return !Number.isFinite(startedAt) || (elapsed >= 0 && elapsed < MIN_FILL_MS);
+  })();
+  if ((typeof body.website === "string" && body.website.trim() !== "") || tooFast) {
     return res.status(200).json({ ok: true });
   }
 
