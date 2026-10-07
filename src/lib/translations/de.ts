@@ -269,7 +269,7 @@ export const de = {
         ],
       },
       emergency: {
-        title: "Website-Notfall",
+        title: "Website-Reparatur",
         description:
           "Seite down, gehackt oder nach einem Update kaputt? Innert 48 Stunden läuft sie wieder, zum Fixpreis.",
         features: [

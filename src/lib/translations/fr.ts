@@ -269,7 +269,7 @@ export const fr = {
         ],
       },
       emergency: {
-        title: "Urgence site web",
+        title: "Réparation de site",
         description:
           "Site hors ligne, piraté ou cassé après une mise à jour ? De retour en 48 heures, à prix fixe.",
         features: [
