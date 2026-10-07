@@ -21,6 +21,9 @@ export function PrivateSource({ children }: { children: ReactElement }) {
       <PopoverContent
         aria-label={t.source}
         className="w-auto max-w-64 border-border/60 px-3 py-2 text-sm"
+        // Centred on a Source button near the edge of a phone, the note was
+        // pushed flush against the screen edge; keep it inside the gutter.
+        collisionPadding={24}
         side="top"
       >
         {t.sourcePrivate}
