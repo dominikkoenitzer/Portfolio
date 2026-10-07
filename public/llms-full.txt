@@ -24,7 +24,7 @@ Zürich, Switzerland. He works remotely with clients in Switzerland and abroad, 
 English (native), German (native), Chinese/Mandarin (fluent), French (basic). The Mandarin comes from four years at the German Embassy School in Beijing.
 
 **Can I hire him for a website?**
-Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 2'500 CHF for a website through to 5'000 CHF and up for custom software, plus hourly and monthly options for support, hosting and security work.
+Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 3'500 CHF for a website relaunch and 4'500 CHF for a new website through to 5'000 CHF and up for custom software, plus hourly and monthly options for support, hosting and security work.
 
 **Where is his CV?**
 https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. Both are static HTML and readable without JavaScript.
@@ -250,7 +250,7 @@ Freelance work for small teams and businesses, described on the services page as
 
 **Build**
 
-- Web Development, from 2'500 CHF. A whole website, from the first sketch to the live domain. Includes responsive design, SEO-friendly markup, fast loading, cross-browser support.
+- Web Development, from 4'500 CHF. A whole website, from the first sketch to the live domain. Includes responsive design, SEO-friendly markup, fast loading, cross-browser support.
 - Custom Software, from 5'000 CHF, priced per project. Software built to fit how a business already works. Includes requirements analysis, custom architecture, full testing, handover.
 - Server Setup, from 800 CHF. A server set up properly the first time, with security and monitoring in place. Includes installation, security hardening, performance tuning, monitoring.
 
@@ -263,7 +263,7 @@ Freelance work for small teams and businesses, described on the services page as
 **Grow**
 
 - SEO Optimization, from 800 CHF. Technical SEO and page-speed work aimed at the searches you actually want. Includes keyword research, on-page SEO, technical audit, reporting.
-- Website Relaunch, from 2'500 CHF. An existing site rebuilt: mobile, fast, secure and findable. Includes the rebuild, the content move, and the switchover.
+- Website Relaunch, from 3'500 CHF. An existing site rebuilt: mobile, fast, secure and findable. Includes the rebuild, the content move, and the switchover.
 - Support and Content, 110 CHF per hour. New text and images put in, small bugs fixed, things made quicker. Includes fast response, bug fixes, content updates.
 
 **How a project runs**

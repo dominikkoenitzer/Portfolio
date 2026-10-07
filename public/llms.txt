@@ -80,7 +80,7 @@ Shipped evidence for the less obvious ones: Rust in Oxidize, Mochi and Daifuku, 
 Freelance work for small teams and businesses, in three groups. Prices are in Swiss francs and are starting points, not quotes. Everything is delivered remotely.
 
 Build:
-- Web Development, from 2'500 CHF: a whole website, from the first sketch to the live domain.
+- Web Development, from 4'500 CHF: a whole website, from the first sketch to the live domain.
 - Custom Software, from 5'000 CHF: software built to fit how your business already works.
 - Server Setup, from 800 CHF: a server set up properly the first time, with security and monitoring.
 
@@ -91,7 +91,7 @@ Protect:
 
 Grow:
 - SEO Optimization, from 800 CHF: technical SEO and page-speed work aimed at the searches you actually want.
-- Website Relaunch, from 2'500 CHF: your existing site rebuilt, mobile, fast, secure and findable.
+- Website Relaunch, from 3'500 CHF: your existing site rebuilt, mobile, fast, secure and findable.
 - Support and Content, 110 CHF per hour: new text and images put in, small bugs fixed, things made quicker.
 
 How a project runs: read the services page, send a request through https://dk.punds.ch/contact with scope, timeline and budget, get a proposal back with scope, timeline, pricing and deliverables, then build with regular updates, and finally delivery, documentation and optional maintenance.
