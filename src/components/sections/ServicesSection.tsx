@@ -83,7 +83,7 @@ interface Service {
 // Order within a category maps onto the tree's three leaf slots (see
 // ServiceExplorer's LEAVES layout), so keep build/protect/grow grouped.
 const services: Service[] = [
-  { itemKey: "webDev", price: "4'500 CHF", icon: Code, category: "build" },
+  { itemKey: "webDev", price: "4'000 CHF", icon: Code, category: "build" },
   {
     itemKey: "customSoftware",
     price: "5'000 CHF",
@@ -114,7 +114,7 @@ const services: Service[] = [
   { itemKey: "seo", price: "800 CHF", icon: Search, category: "grow" },
   {
     itemKey: "relaunch",
-    price: "3'500 CHF",
+    price: "3'000 CHF",
     icon: RefreshCw,
     category: "grow",
   },
@@ -146,7 +146,7 @@ const priceLabel = (
 /**
  * The "from" price for a category: the lowest headline number, carrying its own
  * unit. Taking a numeric minimum across the prices would be wrong, they mix
- * models (4'500 CHF once, 120 CHF an hour, 50 CHF a month), so we pick the
+ * models (4'000 CHF once, 120 CHF an hour, 50 CHF a month), so we pick the
  * cheapest entry figure and show that service's price as it is. Derived
  * rather than hard-coded so it can't drift when a price changes. The Swiss
  * thousands apostrophe is stripped first, or "2'000" would count as 2.
