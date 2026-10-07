@@ -8,6 +8,7 @@ import { mochi } from "./mochi";
 import { daifuku } from "./daifuku";
 import { oxidize } from "./oxidize";
 import { portfolio } from "./portfolio";
+import { psyche } from "./psyche";
 import { punds } from "./punds";
 import { remnants } from "./remnants";
 import { senbon } from "./senbon";
@@ -218,6 +219,19 @@ const PROJECT_BASE: ProjectBase[] = [
     operatingSystem: "Windows",
     applicationCategory: "DeveloperApplication",
   },
+  {
+    slug: "psyche",
+    title: "Psyche",
+    date: "2026-10",
+    repoUrl: "https://github.com/dominikkoenitzer/Psyche",
+    sourcePrivate: true,
+    priority: 15,
+    image: "/projects/psyche.jpg",
+    gallery: ["/projects/psyche-2.jpg"],
+    programmingLanguages: ["C#"],
+    operatingSystem: "Windows",
+    applicationCategory: "SecurityApplication",
+  },
 ];
 
 const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
@@ -235,6 +249,7 @@ const PROJECT_CONTENT: Record<string, Record<Language, LocalizedContent>> = {
   inkling,
   mochi,
   daifuku,
+  psyche,
 };
 
 const resolveContent = (slug: string, lang: Language): LocalizedContent => {

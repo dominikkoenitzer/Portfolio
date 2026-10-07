@@ -34,6 +34,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   inkling: "Inkling, a desktop study companion",
   mochi: "Mochi, a Windows tiling window manager",
   daifuku: "Daifuku, a Windows AI agent fleet tool",
+  psyche: "Psyche, a 2FA authenticator for Windows",
 };
 
 /**
@@ -79,6 +80,8 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
     "A tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it.",
   daifuku:
     "Fleets of AI agent terminals on Windows: one key opens them in a grid, and each border shows if its agent works, waits for you, is done or failed.",
+  psyche:
+    "Two-factor codes on the Windows desktop: press Alt+P on any 2FA prompt and Psyche types the code for the site in front. No phone needed.",
 };
 
 /**
