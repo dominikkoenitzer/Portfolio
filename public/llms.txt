@@ -29,7 +29,7 @@ Open to software engineering roles, internships, freelance and contract projects
 - [About](https://dk.punds.ch/about): who he is, the WISS programme, how he approaches building things, and the CV (English, or German when the site is in German).
 - [Experience](https://dk.punds.ch/experience): work experience and education, newest first.
 - [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
-- [Projects](https://dk.punds.ch/projects): the fourteen personal projects, searchable and filterable by web or desktop.
+- [Projects](https://dk.punds.ch/projects): the fifteen personal projects, searchable and filterable by web or desktop.
 - [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
 - [Contact](https://dk.punds.ch/contact): a short form: choose an intent (a role, a freelance project, a collaboration, something else), write the message, and it reaches him directly. A prefilled mailto link sits underneath as the fallback.
 - [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
@@ -44,7 +44,7 @@ Open to software engineering roles, internships, freelance and contract projects
 
 ## Projects
 
-Fourteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
+Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
 
 - [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
 - [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
@@ -60,8 +60,9 @@ Fourteen personal projects, listed oldest first by the date their repository was
 - [Inkling](https://dk.punds.ch/projects/inkling): a desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox in a note becomes a real task, and a line with :: becomes a flashcard. July 2026. Electron, React, TypeScript, SQLite. Source and download at https://github.com/dominikkoenitzer/Inkling.
 - [Mochi](https://dk.punds.ch/projects/mochi): a tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash. September 2026. Rust, Win32. Source and download at https://github.com/dominikkoenitzer/Mochi.
 - [Daifuku](https://dk.punds.ch/projects/daifuku): fleets of AI agent terminals for Windows. One key opens them in a grid, and each terminal's border shows whether its agent is working, waiting for you, done or failed. Works with Claude Code and Codex. September 2026. Rust, Win32. Source and download at https://github.com/dominikkoenitzer/Daifuku.
+- [Psyche](https://dk.punds.ch/projects/psyche): two-factor codes on the Windows desktop. Press Alt+P on any 2FA prompt and it types the code for the site in front. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects for the signed-in account, and accounts move over from Google Authenticator through the webcam or from Aegis, 2FAS, Proton Authenticator, Ente Auth and Bitwarden exports. October 2026. C#, .NET 10, WinUI 3, Native AOT. Source code private.
 
-Worth saying plainly, because the projects page says it too: these fourteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
+Worth saying plainly, because the projects page says it too: these fifteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
 
 ## Skills
 
@@ -73,7 +74,7 @@ Taken from https://dk.punds.ch/skills, in the categories that page uses.
 - Data and tooling: PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 - Professional: communication, project management, direct sales, social media outreach.
 
-Shipped evidence for the less obvious ones: Rust in Oxidize, Mochi and Daifuku, C# and .NET in Jester, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
+Shipped evidence for the less obvious ones: Rust in Oxidize, Mochi and Daifuku, C# and .NET in Jester and Psyche, C++17 and Win32 in Flow, Electron and TypeScript in Remnants, Three.js in Punds and WebGL in this site's background.
 
 ## Services
 

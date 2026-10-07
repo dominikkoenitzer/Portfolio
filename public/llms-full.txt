@@ -119,15 +119,15 @@ PostgreSQL, MongoDB, Redis, SQLite, Git, pnpm, Figma, Lighthouse.
 **Professional**
 Communication, project management, direct sales, social media outreach.
 
-Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 10 in Jester, C++17 and Win32 in Flow, Electron in Remnants, WebGL in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
+Where the less common ones show up in shipped work: Rust in Oxidize, C# and .NET 10 in Jester and Psyche, C++17 and Win32 in Flow, Electron in Remnants, WebGL in this site's background, Web Crypto in Entropy, Canvas in Spectrum.
 
 ---
 
 ## 6. Projects
 
-Fourteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Fifteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
 
-A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, most of it with the source public (Entropy, Spectrum and Senbon are private).
+A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, most of it with the source public (Entropy, Spectrum, Senbon and Psyche are private).
 
 The page also says more are coming: "A few new projects are almost finished and will show up here soon." If your copy of this file is old, check https://dk.punds.ch/projects for the current list.
 
@@ -145,7 +145,7 @@ Live: https://dk.punds.ch/
 Source: https://github.com/dominikkoenitzer/Portfolio
 Stack: React 19, TypeScript, Vite
 
-This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 23 prerendered routes, 252 tests.
+This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 24 prerendered routes, 252 tests.
 
 ### Entropy, February 2026
 Case study: https://dk.punds.ch/projects/entropy
@@ -241,6 +241,15 @@ Source and download: https://github.com/dominikkoenitzer/Daifuku
 Stack: Rust, Win32
 
 Fleets of AI agent terminals for Windows. One key opens them in a grid on a chosen monitor, and each terminal's border shows what its agent is doing: working, waiting for an answer, done or failed, told apart by width as well as colour. Agents report through Claude Code or Codex hooks, which find their own Windows Terminal window through the owner of their pseudo console. The daemon runs elevated, so its binaries, config and command pipe are locked to administrators. CI runs the whole path on a real Windows desktop.
+
+---
+
+### Psyche, October 2026
+Case study: https://dk.punds.ch/projects/psyche
+Source: private
+Stack: C#, .NET 10, WinUI 3, Native AOT
+
+Two-factor codes on the Windows desktop. Press Alt+P on any 2FA prompt and Psyche reads the address of the page in front through UI Automation (Brave, Chrome, Edge, Vivaldi, Opera, Arc, Firefox). When exactly one account belongs to that site and the cursor is in a text field, it types the code at once; otherwise a small picker opens. Sites are matched through the embedded Public Suffix List and a table of 152 known services, and a code with less than two seconds left is never typed. Windows that run as administrator cannot receive typed input, so the code goes to the clipboard instead, kept out of clipboard history and cloud sync and cleared after 30 seconds. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects (DPAPI) for the signed-in account; backups carry their own Argon2id password. Accounts move over from Google Authenticator through the webcam, or from Aegis, 2FAS, Proton Authenticator, Ente Auth and Bitwarden exports. Numbers: 1 hotkey, 6 apps it imports from, 152 known services, 667 tests.
 
 ---
 
