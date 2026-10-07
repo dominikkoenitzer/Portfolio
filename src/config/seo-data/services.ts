@@ -7,7 +7,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "What web development services do you offer?",
       answer:
-        "Here they all are, with prices: web development (from 2'500 CHF), custom software (from 5'000 CHF, priced per project), server setup (800 CHF), security consultation (120 CHF/hour), hosting and maintenance (50 CHF/month), website emergency (400 CHF fixed), SEO optimization (800 CHF), website relaunch (from 2'500 CHF) and support and content work (110 CHF/hour).",
+        "Here they all are, with prices: web development (from 4'500 CHF), custom software (from 5'000 CHF, priced per project), server setup (800 CHF), security consultation (120 CHF/hour), hosting and maintenance (50 CHF/month), website emergency (400 CHF fixed), SEO optimization (800 CHF), website relaunch (from 3'500 CHF) and support and content work (110 CHF/hour).",
     },
     {
       question: "Do you work with clients in Switzerland?",
@@ -39,7 +39,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Welche Webentwicklungs-Leistungen bietest du an?",
       answer:
-        "Hier sind sie alle, mit Preisen: Webentwicklung (ab 2'500 CHF), individuelle Software (ab 5'000 CHF, projektbezogen), Server-Setup (800 CHF), Security-Beratung (120 CHF/Stunde), Hosting und Wartung (50 CHF/Monat), Website-Notfall (400 CHF Fixpreis), SEO-Optimierung (800 CHF), Website-Relaunch (ab 2'500 CHF) sowie Support und Inhalte (110 CHF/Stunde).",
+        "Hier sind sie alle, mit Preisen: Webentwicklung (ab 4'500 CHF), individuelle Software (ab 5'000 CHF, projektbezogen), Server-Setup (800 CHF), Security-Beratung (120 CHF/Stunde), Hosting und Wartung (50 CHF/Monat), Website-Notfall (400 CHF Fixpreis), SEO-Optimierung (800 CHF), Website-Relaunch (ab 3'500 CHF) sowie Support und Inhalte (110 CHF/Stunde).",
     },
     {
       question: "Arbeitest du mit Kunden in der Schweiz?",
@@ -71,7 +71,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "Quels services de développement web proposez-vous ?",
       answer:
-        "Les voici tous, avec les tarifs : développement web (dès 2'500 CHF), logiciel sur mesure (à partir de 5'000 CHF au projet), configuration serveur (800 CHF), conseil en sécurité (120 CHF/heure), hébergement et maintenance (50 CHF/mois), urgence site web (400 CHF forfait), optimisation SEO (800 CHF), refonte de site (dès 2'500 CHF) et support et contenu (110 CHF/heure).",
+        "Les voici tous, avec les tarifs : développement web (dès 4'500 CHF), logiciel sur mesure (à partir de 5'000 CHF au projet), configuration serveur (800 CHF), conseil en sécurité (120 CHF/heure), hébergement et maintenance (50 CHF/mois), urgence site web (400 CHF forfait), optimisation SEO (800 CHF), refonte de site (dès 3'500 CHF) et support et contenu (110 CHF/heure).",
     },
     {
       question: "Travaillez-vous avec des clients en Suisse ?",
@@ -104,7 +104,7 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
     {
       question: "您提供哪些网页开发服务？",
       answer:
-        "全部在这里，附价格：网页开发（2'500 瑞士法郎起）、定制软件（按项目，5'000 瑞士法郎起）、服务器配置（800 瑞士法郎）、安全咨询（120 瑞士法郎/小时）、托管与维护（50 瑞士法郎/月）、网站急救（固定 400 瑞士法郎）、SEO 优化（800 瑞士法郎）、网站改版（2'500 瑞士法郎起）以及支持与内容（110 瑞士法郎/小时）。",
+        "全部在这里，附价格：网页开发（4'500 瑞士法郎起）、定制软件（按项目，5'000 瑞士法郎起）、服务器配置（800 瑞士法郎）、安全咨询（120 瑞士法郎/小时）、托管与维护（50 瑞士法郎/月）、网站急救（固定 400 瑞士法郎）、SEO 优化（800 瑞士法郎）、网站改版（3'500 瑞士法郎起）以及支持与内容（110 瑞士法郎/小时）。",
     },
     {
       question: "您是否服务瑞士客户？",
