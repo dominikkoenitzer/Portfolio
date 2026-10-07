@@ -191,6 +191,7 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
   { slug: "inkling", title: "Inkling", subtitle: "Your notes quietly turn into tasks and flashcards" },
   { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager that always gives the desktop back" },
   { slug: "daifuku", title: "Daifuku", subtitle: "Six agents, one key, and a border that says who needs you" },
+  { slug: "psyche", title: "Psyche", subtitle: "Press Alt+P on a 2FA prompt and the code types itself" },
 ];
 
 const fontFiles = await ensureFonts();
