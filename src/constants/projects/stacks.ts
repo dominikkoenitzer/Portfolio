@@ -23,6 +23,7 @@ export const PROJECT_STACKS: Record<string, readonly string[]> = {
   inkling: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Bun", "SQLite"],
   mochi: ["Rust"],
   daifuku: ["Rust"],
+  psyche: ["C#"],
 };
 
 /** How many projects use each skill. Skills no project uses are absent. */
