@@ -268,7 +268,7 @@ export const en = {
         ],
       },
       emergency: {
-        title: "Website Repair",
+        title: "Website Lifeline",
         description:
           "Site down, hacked, or broken after an update? Back online within 48 hours, at a fixed price.",
         features: [
