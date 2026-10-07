@@ -49,8 +49,10 @@ const WISS_URL = "https://wiss.ch";
 const MPS_URL = "https://bezirksschulenschwyz.ch/oberarth/profil-oberarth";
 // This was plain http for two years because the school's certificate had
 // expired and https served a browser interstitial. They renewed on 2026-09-17
-// (GoDaddy, valid to 2027-04-03), so https reaches the site again.
-const DSP_URL = "https://dspeking.de/";
+// (GoDaddy, valid to 2027-04-03), but by 2026-10-08 dspeking.de answered https
+// with a certificate for *.dspeking.cn only, so the link points at the school's
+// .cn domain, which serves the same site with a valid certificate.
+const DSP_URL = "https://www.dspeking.cn/";
 const SSS_URL = "https://swiss-school.edu.sg";
 
 const WISS_LOGO = "/timeline/wiss.ico";
