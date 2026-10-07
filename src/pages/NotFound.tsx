@@ -121,6 +121,7 @@ export default function NotFound() {
     <section className="section-padding">
       <SEO
         description="This page does not exist."
+        nofollow
         noindex
         title="Page not found"
       />
