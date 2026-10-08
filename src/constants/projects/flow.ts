@@ -60,7 +60,7 @@ export const flow: Record<Language, LocalizedContent> = {
       {
         heading: "A .rec file is checked before it is believed",
         body: [
-          "Macros are saved as a four-byte FLOW header, an event count and the raw event structs. That is quick and small, but it also means a broken download or a damaged file can declare any count it likes.",
+          "Macros are saved as a four-byte FLOW header, a version marker and format version, an event count and the raw event structs. That is quick and small, but it also means a broken download or a damaged file can declare any count it likes.",
           "LoadMacro measures the file first and rejects a count the remaining bytes cannot hold, so a bad header cannot trigger an allocation big enough to crash the program. It also rejects a truncated payload and a file whose timestamps run backwards: playback subtracts consecutive timestamps, and one step back would underflow into a pause of several weeks.",
           "The tests save and reload a macro byte for byte, and hand LoadMacro a file that is not a macro, a count the payload cannot hold and a truncated payload.",
         ],
@@ -69,7 +69,7 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "One table places everything in the window",
         body: [
           "There is no UI framework. The window is raw Win32 with GDI+ for the anti-aliased shapes, and every button, switch and number field is owner-drawn.",
-          "Painting and control creation used to keep their own coordinates, and a nudge to one drifted silently from the other. Now both read every Y position from one header, Theme.h, in design units at 96 DPI that are scaled once at launch.",
+          "Painting and control creation used to keep their own coordinates, and a nudge to one drifted silently from the other. Now both read every Y position from one header, Theme.h, in design units at 96 DPI, scaled to the monitor the window is on and scaled again when it moves to a monitor with another scale.",
         ],
       },
       {
@@ -125,7 +125,7 @@ export const flow: Record<Language, LocalizedContent> = {
       {
         heading: "Eine .rec-Datei wird geprüft, bevor man ihr glaubt",
         body: [
-          "Makros werden als vier Byte langer FLOW-Header, eine Ereigniszahl und die rohen Event-Structs gespeichert. Das ist schnell und klein, heisst aber auch, dass ein abgebrochener Download oder eine beschädigte Datei jede beliebige Zahl behaupten kann.",
+          "Makros werden als vier Byte langer FLOW-Header, eine Versionsmarke mit Formatversion, eine Ereigniszahl und die rohen Event-Structs gespeichert. Das ist schnell und klein, heisst aber auch, dass ein abgebrochener Download oder eine beschädigte Datei jede beliebige Zahl behaupten kann.",
           "LoadMacro misst zuerst die Datei und lehnt eine Zahl ab, für die die restlichen Bytes nicht reichen, damit ein kaputter Header keine Allokation auslösen kann, die das Programm abstürzen lässt. Abgelehnt werden auch ein abgeschnittener Inhalt und eine Datei, deren Zeitstempel rückwärts laufen: Die Wiedergabe subtrahiert aufeinanderfolgende Zeitstempel, und ein Schritt zurück würde zu einer Pause von mehreren Wochen überlaufen.",
           "Die Tests speichern ein Makro und laden es Byte für Byte wieder, und sie geben LoadMacro eine Datei, die kein Makro ist, eine Zahl, die der Inhalt nicht fassen kann, und einen abgeschnittenen Inhalt.",
         ],
@@ -134,7 +134,7 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "Eine Tabelle platziert alles im Fenster",
         body: [
           "Es gibt kein UI-Framework. Das Fenster ist rohes Win32 mit GDI+ für die geglätteten Formen, und jeder Button, jeder Schalter und jedes Zahlenfeld ist owner-drawn.",
-          "Früher führten das Zeichnen und das Anlegen der Controls je eigene Koordinaten, und eine Korrektur an der einen Stelle driftete still von der anderen weg. Heute lesen beide jede Y-Position aus einem einzigen Header, Theme.h, in Designeinheiten bei 96 DPI, die beim Start einmal skaliert werden.",
+          "Früher führten das Zeichnen und das Anlegen der Controls je eigene Koordinaten, und eine Korrektur an der einen Stelle driftete still von der anderen weg. Heute lesen beide jede Y-Position aus einem einzigen Header, Theme.h, in Designeinheiten bei 96 DPI, die auf den Monitor skaliert werden, auf dem das Fenster liegt, und neu, sobald es auf einen Monitor mit anderer Skalierung wechselt.",
         ],
       },
       {
@@ -190,7 +190,7 @@ export const flow: Record<Language, LocalizedContent> = {
       {
         heading: "Un fichier .rec est vérifié avant d'être cru",
         body: [
-          "Les macros sont enregistrées sous forme d'un en-tête FLOW de quatre octets, d'un nombre d'événements et des structures brutes. C'est rapide et compact, mais un téléchargement interrompu ou un fichier abîmé peut annoncer n'importe quel nombre.",
+          "Les macros sont enregistrées sous forme d'un en-tête FLOW de quatre octets, d'un marqueur et d'un numéro de version du format, d'un nombre d'événements et des structures brutes. C'est rapide et compact, mais un téléchargement interrompu ou un fichier abîmé peut annoncer n'importe quel nombre.",
           "LoadMacro mesure d'abord le fichier et refuse un nombre que les octets restants ne peuvent pas contenir, pour qu'un en-tête corrompu ne déclenche pas une allocation assez grosse pour faire planter le programme. Il refuse aussi un contenu tronqué et un fichier dont les horodatages reculent : la lecture soustrait des horodatages consécutifs, et un pas en arrière déborderait en une pause de plusieurs semaines.",
           "Les tests enregistrent puis rechargent une macro octet pour octet, et soumettent à LoadMacro un fichier qui n'est pas une macro, un nombre que le contenu ne peut pas tenir et un contenu tronqué.",
         ],
@@ -199,7 +199,7 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "Une seule table place tout dans la fenêtre",
         body: [
           "Il n'y a aucun framework d'interface. La fenêtre est du Win32 brut, avec GDI+ pour les formes lissées, et chaque bouton, interrupteur et champ numérique est dessiné par l'application elle-même (owner-drawn).",
-          "Le dessin et la création des contrôles tenaient autrefois chacun leurs propres coordonnées, et un ajustement de l'un dérivait en silence de l'autre. Aujourd'hui, les deux lisent chaque position verticale dans un seul en-tête, Theme.h, en unités de conception à 96 DPI mises à l'échelle une fois au lancement.",
+          "Le dessin et la création des contrôles tenaient autrefois chacun leurs propres coordonnées, et un ajustement de l'un dérivait en silence de l'autre. Aujourd'hui, les deux lisent chaque position verticale dans un seul en-tête, Theme.h, en unités de conception à 96 DPI, mises à l'échelle selon l'écran où se trouve la fenêtre, et de nouveau quand elle passe sur un écran d'une autre échelle.",
         ],
       },
       {
@@ -255,7 +255,7 @@ export const flow: Record<Language, LocalizedContent> = {
       {
         heading: ".rec 文件先检查，再相信",
         body: [
-          "宏文件的格式是四字节的 FLOW 文件头、一个事件数量，然后是原始的事件结构体。这样又快又小，但也意味着下载中断或文件损坏时，文件头可以声明任意数量。",
+          "宏文件的格式是四字节的 FLOW 文件头、一个版本标记和格式版本号、一个事件数量，然后是原始的事件结构体。这样又快又小，但也意味着下载中断或文件损坏时，文件头可以声明任意数量。",
           "LoadMacro 会先测量文件大小，剩余字节装不下的数量直接拒绝，免得坏掉的文件头触发一次大到让程序崩溃的内存分配。被截断的内容也会被拒绝，时间戳倒退的文件同样如此：回放时要把相邻时间戳相减，倒退一步就会下溢成长达数周的停顿。",
           "测试会把宏逐字节地保存再读回，并把不是宏的文件、内容装不下的数量和被截断的内容分别交给 LoadMacro。",
         ],
@@ -264,7 +264,7 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "一张表决定窗口里的所有位置",
         body: [
           "没有任何界面框架。窗口是原生 Win32，抗锯齿图形用 GDI+ 绘制，每个按钮、开关和数字输入框都是 owner-drawn 自绘的。",
-          "以前绘制代码和创建控件的代码各有一份坐标，改了一边，另一边就会悄悄错位。现在两边的每个纵向位置都从同一个头文件 Theme.h 读取，单位是 96 DPI 下的设计单位，启动时统一缩放一次。",
+          "以前绘制代码和创建控件的代码各有一份坐标，改了一边，另一边就会悄悄错位。现在两边的每个纵向位置都从同一个头文件 Theme.h 读取，单位是 96 DPI 下的设计单位，按窗口所在显示器缩放，移到缩放比例不同的显示器上时会重新缩放。",
         ],
       },
       {
