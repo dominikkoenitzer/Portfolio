@@ -18,9 +18,9 @@ export const entropy: Record<Language, LocalizedContent> = {
   en: {
     tagline: "Real randomness, and an honest guess at how long your password would last.",
     description:
-      "A password generator and analyzer that runs entirely in the browser: randomness from Web Crypto, a strength estimator I wrote myself, and crack times for five attacker models. Nothing is sent anywhere.",
+      "A password generator and analyzer that runs entirely in the browser: randomness from Web Crypto, a strength estimator I wrote myself, and crack times for five attacker models. Nothing is sent anywhere. Its Windows app, a local password manager on the same engine, types logins with Alt+E.",
     overview:
-      "I did not want to paste a password into a website to find out whether it was any good, and the generators that do not ask you to are usually the ones reaching for Math.random(). So I wrote my own in Next.js and TypeScript. Generation pulls its bytes from Web Crypto. The analyzer is mine too: it matches dictionary words (reversed and l33t spellings included), keyboard walks, repeats, sequences and dates, brute-forces whatever is left at the password's real cardinality, and runs a dynamic-programming search for the cheapest attack path. What comes out is a guess count, which becomes bits, which becomes crack times. There are no API routes, so nothing you type has anywhere to go.",
+      "I did not want to paste a password into a website to find out whether it was any good, and the generators that do not ask you to are usually the ones reaching for Math.random(). So I wrote my own in Next.js and TypeScript. Generation pulls its bytes from Web Crypto. The analyzer is mine too: it matches dictionary words (reversed and l33t spellings included), keyboard walks, repeats, sequences and dates, brute-forces whatever is left at the password's real cardinality, and runs a dynamic-programming search for the cheapest attack path. What comes out is a guess count, which becomes bits, which becomes crack times. There are no API routes, so nothing you type has anywhere to go. Since October 2026 the same engine also runs in a password manager for Windows.",
     roleSummary: "Just me, and the analyzer took longer than the rest of the app together.",
     sections: [
       {
@@ -59,12 +59,23 @@ export const entropy: Record<Language, LocalizedContent> = {
           "The analyzer has a suite of 49 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
         ],
       },
+      {
+        heading: "A password manager for Windows on the same engine",
+        body: [
+          "The Windows app keeps logins in a local vault and types them for you. It is written in C# on .NET 10 with WinUI 3 and compiled with Native AOT. It started from the code of Psyche, my two-factor app. Press Alt+E on a sign-in page and Entropy reads the address of the page in front. If exactly one saved login belongs to that site and the cursor is in a text field, it types the username, a Tab and the password. Otherwise a small picker opens with the site's logins on top. There is no server and no account.",
+          "The generator and the analyzer from the website are ported to C#, the randInt above included. A script runs the site's own TypeScript over 643 passwords and 672 generator settings and saves the results, and the C# tests have to reproduce every guess count, bit value, tier and crack time in that file. The Health page puts each saved password through the analyzer and sorts the problems into four groups: found in a leak, weak, reused and old. The leak check runs offline against about a million of the most common passwords from public leaks. A binary fuse filter of 2.26 MB keeps a 16-bit fingerprint of each one's SHA-256 and raises a false alarm for about 1 in 65,536 passwords that never leaked.",
+          "A login keeps its last ten passwords with the date each one was replaced, and can hold a one-time code that a second Alt+E types into the code field. Secure notes and payment cards live in the same vault. An import reads the password exports of browsers and other password managers and, once every entry is saved, overwrites the export file with zeros and deletes it.",
+          "The vault is encrypted with XChaCha20-Poly1305 under a key that Windows protects for the signed-in account, so it opens after sign-in with no master password and on no other account. A backup carries a password of its own, stretched with Argon2id, and opens on any PC. Entropy wipes its keys after 15 minutes without use and when Windows locks or sleeps, and can ask for Windows Hello before it hands out a secret. The windows use the website's Y2K poster look and fonts. There are 785 xUnit test cases for the core library and 144 for the Windows layer.",
+        ],
+        figure: 2,
+      },
     ],
     captions: [
       "The Generate tab: a 16-character password from all four character sets at 103 bits, rated maximum, with the generative art for its seed above it.",
       "The Analyze tab on a four-word passphrase: 94 bits, the five attacker scenarios, and the attack path that splits it into dictionary words and random pieces.",
+      "The Windows app's vault with demo logins on example domains. The Git login shows its one-time code, and the warning labels come from the analyzer and the leak filter.",
     ],
-    tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
+    tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "client-side" },
       { value: "0", label: "secrets sent" },
@@ -75,9 +86,9 @@ export const entropy: Record<Language, LocalizedContent> = {
   de: {
     tagline: "Echte Zufälligkeit und eine ehrliche Schätzung, wie lange dein Passwort hält.",
     description:
-      "Ein Passwortgenerator und -analysator, der komplett im Browser läuft: Zufall aus Web Crypto, eine selbst geschriebene Stärkeschätzung und Knackzeiten für fünf Angreifermodelle. Nichts wird irgendwohin gesendet.",
+      "Ein Passwortgenerator und -analysator, der komplett im Browser läuft: Zufall aus Web Crypto, eine selbst geschriebene Stärkeschätzung und Knackzeiten für fünf Angreifermodelle. Nichts wird irgendwohin gesendet. Die Windows-App, ein lokaler Passwortmanager auf derselben Engine, tippt Logins mit Alt+E ein.",
     overview:
-      "Ich wollte kein Passwort in eine Website tippen, nur um zu erfahren, ob es gut ist, und die Generatoren, die das nicht verlangen, greifen meist zu Math.random(). Also schrieb ich meinen eigenen in Next.js und TypeScript. Die Erzeugung holt ihre Bytes aus Web Crypto. Die Analyse ist ebenfalls meine: Sie erkennt Wörterbuchwörter (rückwärts und in Leetschreibweise inklusive), Tastaturwege, Wiederholungen, Sequenzen und Datumsangaben, brute-forced den Rest mit der echten Kardinalität des Passworts und sucht per dynamischer Programmierung den billigsten Angriffspfad. Heraus kommt eine Anzahl an Versuchen, daraus Bits, daraus Knackzeiten. Es gibt keine API-Routen, also hat das Getippte gar keinen Weg nach draussen.",
+      "Ich wollte kein Passwort in eine Website tippen, nur um zu erfahren, ob es gut ist, und die Generatoren, die das nicht verlangen, greifen meist zu Math.random(). Also schrieb ich meinen eigenen in Next.js und TypeScript. Die Erzeugung holt ihre Bytes aus Web Crypto. Die Analyse ist ebenfalls meine: Sie erkennt Wörterbuchwörter (rückwärts und in Leetschreibweise inklusive), Tastaturwege, Wiederholungen, Sequenzen und Datumsangaben, brute-forced den Rest mit der echten Kardinalität des Passworts und sucht per dynamischer Programmierung den billigsten Angriffspfad. Heraus kommt eine Anzahl an Versuchen, daraus Bits, daraus Knackzeiten. Es gibt keine API-Routen, also hat das Getippte gar keinen Weg nach draussen. Seit Oktober 2026 läuft dieselbe Engine auch in einem Passwortmanager für Windows.",
     roleSummary: "Nur ich, und die Analyse dauerte länger als der ganze Rest der App.",
     sections: [
       {
@@ -116,12 +127,23 @@ export const entropy: Record<Language, LocalizedContent> = {
           "Die Analyse hat eine Suite von 49 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
         ],
       },
+      {
+        heading: "Ein Passwortmanager für Windows auf derselben Engine",
+        body: [
+          "Die Windows-App bewahrt Logins in einem lokalen Tresor auf und tippt sie ein. Sie ist in C# auf .NET 10 mit WinUI 3 geschrieben und mit Native AOT kompiliert. Entstanden ist sie aus dem Code von Psyche, meiner Zwei-Faktor-App. Drückt man auf einer Anmeldeseite Alt+E, liest Entropy die Adresse der Seite im Vordergrund. Gehört genau ein gespeichertes Login zu dieser Seite und steht der Cursor in einem Textfeld, tippt Entropy den Benutzernamen, einen Tab und das Passwort ein. Sonst öffnet sich ein kleines Auswahlfenster mit den Logins der Seite zuoberst. Es gibt keinen Server und kein Konto.",
+          "Generator und Analyse der Website sind nach C# portiert, das randInt von oben eingeschlossen. Ein Skript lässt das TypeScript der Website über 643 Passwörter und 672 Generator-Einstellungen laufen und speichert die Ergebnisse, und die C#-Tests müssen jede Anzahl Versuche, jeden Bitwert, jede Stufe und jede Knackzeit in dieser Datei genau treffen. Die Health-Seite schickt jedes gespeicherte Passwort durch die Analyse und ordnet die Probleme in vier Gruppen: in einem Leak gefunden, schwach, mehrfach verwendet und alt. Die Leak-Prüfung läuft offline gegen rund eine Million der häufigsten Passwörter aus öffentlichen Leaks. Ein Binary Fuse Filter von 2,26 MB hält vom SHA-256 jedes Passworts einen 16-Bit-Fingerabdruck und meldet etwa 1 von 65'536 nie geleakten Passwörtern fälschlich als gefunden.",
+          "Ein Login behält seine letzten zehn Passwörter mit dem Datum, an dem jedes ersetzt wurde, und kann einen Einmalcode enthalten, den ein zweites Alt+E ins Codefeld tippt. Sichere Notizen und Zahlungskarten liegen im selben Tresor. Ein Import liest die Passwort-Exporte von Browsern und anderen Passwortmanagern, und sobald jeder Eintrag gespeichert ist, überschreibt er die Exportdatei mit Nullen und löscht sie.",
+          "Der Tresor ist mit XChaCha20-Poly1305 verschlüsselt, unter einem Schlüssel, den Windows für das angemeldete Konto schützt, also öffnet er sich nach dem Anmelden ohne Master-Passwort und auf keinem anderen Konto. Ein Backup hat ein eigenes Passwort, mit Argon2id gestreckt, und öffnet sich auf jedem PC. Entropy verwirft seine Schlüssel nach 15 Minuten ohne Benutzung und wenn Windows sperrt oder in den Energiesparmodus geht, und kann vor der Herausgabe eines Geheimnisses nach Windows Hello fragen. Die Fenster übernehmen den Y2K-Posterlook und die Schriften der Website. Für die Kernbibliothek gibt es 785 xUnit-Testfälle und für die Windows-Schicht 144.",
+        ],
+        figure: 2,
+      },
     ],
     captions: [
       "Der Generieren-Tab: ein Passwort mit 16 Zeichen aus allen vier Zeichensätzen, 103 Bit, als maximal bewertet, darüber die generative Grafik zu seinem Seed.",
       "Der Analysieren-Tab mit einer Passphrase aus vier Wörtern: 94 Bit, die fünf Angreiferszenarien und der Angriffspfad, der sie in Wörterbuchwörter und zufällige Stücke zerlegt.",
+      "Der Tresor der Windows-App mit Demo-Logins auf Beispiel-Domains. Das Git-Login zeigt seinen Einmalcode, und die Warnungen kommen von der Analyse und vom Leak-Filter.",
     ],
-    tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
+    tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "im Browser" },
       { value: "0", label: "gesendete Secrets" },
@@ -132,9 +154,9 @@ export const entropy: Record<Language, LocalizedContent> = {
   fr: {
     tagline: "Du vrai aléa, et une estimation honnête du temps que tiendrait votre mot de passe.",
     description:
-      "Un générateur et analyseur de mots de passe qui tourne entièrement dans le navigateur : aléa issu de Web Crypto, un estimateur de robustesse que j'ai écrit moi-même, et des temps de cassage pour cinq modèles d'attaquant. Rien n'est envoyé nulle part.",
+      "Un générateur et analyseur de mots de passe qui tourne entièrement dans le navigateur : aléa issu de Web Crypto, un estimateur de robustesse que j'ai écrit moi-même, et des temps de cassage pour cinq modèles d'attaquant. Rien n'est envoyé nulle part. Son app Windows, un gestionnaire de mots de passe local sur le même moteur, tape les identifiants avec Alt+E.",
     overview:
-      "Je ne voulais pas coller un mot de passe dans un site web pour savoir s'il valait quelque chose, et les générateurs qui ne le demandent pas sont en général ceux qui utilisent Math.random(). J'ai donc écrit le mien en Next.js et TypeScript. La génération tire ses octets de Web Crypto. L'analyseur est de moi aussi : il repère les mots du dictionnaire (à l'envers et en leet compris), les chemins de clavier, les répétitions, les suites et les dates, force le reste à la vraie cardinalité du mot de passe, et cherche le chemin d'attaque le moins coûteux par programmation dynamique. Il en sort un nombre d'essais, qui devient des bits, qui deviennent des temps de cassage. Il n'y a aucune route d'API, donc ce que vous tapez n'a nulle part où aller.",
+      "Je ne voulais pas coller un mot de passe dans un site web pour savoir s'il valait quelque chose, et les générateurs qui ne le demandent pas sont en général ceux qui utilisent Math.random(). J'ai donc écrit le mien en Next.js et TypeScript. La génération tire ses octets de Web Crypto. L'analyseur est de moi aussi : il repère les mots du dictionnaire (à l'envers et en leet compris), les chemins de clavier, les répétitions, les suites et les dates, force le reste à la vraie cardinalité du mot de passe, et cherche le chemin d'attaque le moins coûteux par programmation dynamique. Il en sort un nombre d'essais, qui devient des bits, qui deviennent des temps de cassage. Il n'y a aucune route d'API, donc ce que vous tapez n'a nulle part où aller. Depuis octobre 2026, le même moteur tourne aussi dans un gestionnaire de mots de passe pour Windows.",
     roleSummary: "Moi seul, et l'analyseur m'a pris plus de temps que tout le reste de l'app.",
     sections: [
       {
@@ -173,12 +195,23 @@ export const entropy: Record<Language, LocalizedContent> = {
           "L'analyseur a une suite de 49 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
         ],
       },
+      {
+        heading: "Un gestionnaire de mots de passe pour Windows sur le même moteur",
+        body: [
+          "L'app Windows garde les identifiants dans un coffre local et les tape à votre place. Elle est écrite en C# sur .NET 10 avec WinUI 3 et compilée avec Native AOT. Elle est partie du code de Psyche, mon app de double authentification. Sur une page de connexion, Alt+E fait lire à Entropy l'adresse de la page au premier plan. Si un seul identifiant enregistré correspond à ce site et que le curseur est dans un champ de texte, il tape le nom d'utilisateur, une tabulation et le mot de passe. Sinon, un petit sélecteur s'ouvre avec les identifiants du site en tête. Il n'y a ni serveur ni compte.",
+          "Le générateur et l'analyseur du site sont portés en C#, le randInt ci-dessus compris. Un script fait tourner le TypeScript du site sur 643 mots de passe et 672 réglages du générateur et enregistre les résultats, et les tests C# doivent retrouver chaque nombre d'essais, chaque valeur en bits, chaque palier et chaque temps de cassage de ce fichier. La page Health passe chaque mot de passe enregistré dans l'analyseur et range les problèmes en quatre groupes : trouvé dans une fuite, faible, réutilisé et ancien. La vérification des fuites se fait hors ligne, contre environ un million des mots de passe les plus courants issus de fuites publiques. Un filtre binary fuse de 2,26 Mo garde une empreinte de 16 bits du SHA-256 de chacun, et signale à tort environ 1 mot de passe sur 65 536 qui n'a jamais fuité.",
+          "Un identifiant garde ses dix derniers mots de passe avec la date où chacun a été remplacé, et peut contenir un code à usage unique qu'un second Alt+E tape dans le champ du code. Les notes sécurisées et les cartes de paiement sont dans le même coffre. Une importation lit les exports de mots de passe des navigateurs et d'autres gestionnaires, puis, une fois chaque entrée enregistrée, écrase le fichier d'export avec des zéros et le supprime.",
+          "Le coffre est chiffré avec XChaCha20-Poly1305 sous une clé que Windows protège pour le compte connecté : il s'ouvre après la connexion sans mot de passe maître, et sur aucun autre compte. Une sauvegarde a son propre mot de passe, étiré avec Argon2id, et s'ouvre sur n'importe quel PC. Entropy efface ses clés après 15 minutes d'inactivité et quand Windows se verrouille ou se met en veille, et peut demander Windows Hello avant de livrer un secret. Les fenêtres reprennent le style d'affiche Y2K et les polices du site. La bibliothèque centrale a 785 cas de test xUnit, la couche Windows 144.",
+        ],
+        figure: 2,
+      },
     ],
     captions: [
       "L'onglet Générer : un mot de passe de 16 caractères issu des quatre jeux, 103 bits, noté maximal, avec au-dessus l'art génératif de sa graine.",
       "L'onglet Analyser sur une phrase de passe de quatre mots : 94 bits, les cinq scénarios d'attaque et le chemin d'attaque qui la découpe en mots du dictionnaire et en morceaux aléatoires.",
+      "Le coffre de l'app Windows avec des identifiants de démonstration sur des domaines d'exemple. L'identifiant Git affiche son code à usage unique, et les avertissements viennent de l'analyseur et du filtre de fuites.",
     ],
-    tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
+    tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "côté client" },
       { value: "0", label: "secrets envoyés" },
@@ -189,9 +222,9 @@ export const entropy: Record<Language, LocalizedContent> = {
   zh: {
     tagline: "真正的随机，加上一个诚实的估计：你的密码能撑多久。",
     description:
-      "一个完全在浏览器里跑的密码生成与分析工具：随机数来自 Web Crypto，强度估算由我自己写，破解时间按五种攻击者模型给出。什么都不会被发出去。",
+      "一个完全在浏览器里跑的密码生成与分析工具：随机数来自 Web Crypto，强度估算由我自己写，破解时间按五种攻击者模型给出。什么都不会被发出去。它的 Windows 应用是基于同一引擎的本地密码管理器，按 Alt+E 就能输入登录信息。",
     overview:
-      "我不想为了确认一个密码好不好，就把它粘进某个网站；而那些不要求你这么做的生成器，往下一翻往往在用 Math.random()。于是我用 Next.js 和 TypeScript 写了自己的一个。生成部分的每个字节都取自 Web Crypto。分析部分也是我写的：它会匹配词表里的单词（含倒写和 leet 拼法）、键盘走位、重复、递增序列和日期，剩下的按密码真实的字符空间做暴力估算，再用动态规划搜出最省力的那条攻击路径。算出来的是尝试次数，再换成比特，再换成破解时间。项目没有任何 API 路由，所以你输入的东西根本无处可去。",
+      "我不想为了确认一个密码好不好，就把它粘进某个网站；而那些不要求你这么做的生成器，往下一翻往往在用 Math.random()。于是我用 Next.js 和 TypeScript 写了自己的一个。生成部分的每个字节都取自 Web Crypto。分析部分也是我写的：它会匹配词表里的单词（含倒写和 leet 拼法）、键盘走位、重复、递增序列和日期，剩下的按密码真实的字符空间做暴力估算，再用动态规划搜出最省力的那条攻击路径。算出来的是尝试次数，再换成比特，再换成破解时间。项目没有任何 API 路由，所以你输入的东西根本无处可去。从 2026 年 10 月起，同一套引擎也跑在一个 Windows 密码管理器里。",
     roleSummary: "只有我，而分析引擎花的时间比应用其余部分加起来还多。",
     sections: [
       {
@@ -230,12 +263,23 @@ export const entropy: Record<Language, LocalizedContent> = {
           "分析器有一套 49 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
         ],
       },
+      {
+        heading: "同一套引擎上的 Windows 密码管理器",
+        body: [
+          "Windows 应用把登录信息存在本地保险库里，并替你输入。它用 C# 在 .NET 10 上配合 WinUI 3 写成，并用 Native AOT 编译。最初的代码来自我的双重验证应用 Psyche。在登录页面按下 Alt+E，Entropy 会读取前台页面的地址。如果恰好有一条已保存的登录属于这个网站，并且光标在文本框里，它就输入用户名、一个 Tab 和密码。否则会弹出一个小选择窗口，这个网站的登录排在最前面。没有服务器，也没有账号。",
+          "网站的生成器和分析器都移植到了 C#，上面那个 randInt 也在内。一个脚本用网站自己的 TypeScript 跑 643 个密码和 672 种生成器设置，把结果存成文件，C# 测试必须逐一还原其中每个尝试次数、比特值、等级和破解时间。Health 页面把每个已保存的密码交给分析器，把问题分成四组：出现在泄露中、弱、重复使用和过旧。泄露检查完全离线，对照的是公开泄露中最常见的约一百万个密码。一个 2.26 MB 的 binary fuse 过滤器为每个密码的 SHA-256 保存一个 16 位指纹，对从未泄露的密码，大约每 65,536 个会误报一个。",
+          "每条登录会保留最近十个旧密码和各自被替换的日期，也可以存一个一次性验证码，再按一次 Alt+E 就会把它输入验证码框。安全笔记和支付卡放在同一个保险库里。导入功能读取浏览器和其他密码管理器导出的密码文件，等每一条都保存好后，用零覆盖导出文件再把它删除。",
+          "保险库用 XChaCha20-Poly1305 加密，密钥由 Windows 为当前登录的账户保护，所以登录系统后无需主密码就能打开，换一个账户则打不开。备份有自己的密码，经 Argon2id 加强，在任何电脑上都能打开。闲置 15 分钟、Windows 锁屏或睡眠时，Entropy 会清除密钥；它还可以在交出任何机密之前先要求 Windows Hello 验证。窗口沿用网站的 Y2K 海报风格和字体。核心库有 785 个 xUnit 测试用例，Windows 层有 144 个。",
+        ],
+        figure: 2,
+      },
     ],
     captions: [
       "生成页：一个取自全部四个字符集的 16 位密码，103 比特，评为最高档，上方是按它的种子画出的生成艺术。",
       "分析页里的一个四词口令短语：94 比特、五种攻击场景，以及把它拆成词表单词和随机片段的攻击路径。",
+      "Windows 应用的保险库，里面是示例域名上的演示登录。Git 登录显示着它的一次性验证码，警告标签来自分析器和泄露过滤器。",
     ],
-    tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
+    tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "在浏览器内" },
       { value: "0", label: "外发的密码" },

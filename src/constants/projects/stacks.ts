@@ -11,7 +11,7 @@
 export const PROJECT_STACKS: Record<string, readonly string[]> = {
   zephyr: ["React", "JavaScript (ES6+)", "Tailwind CSS", "shadcn/ui", "Radix UI", "Framer Motion", "Bun", "Vercel"],
   portfolio: ["React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Radix UI", "Framer Motion", "Node.js", "Bun", "Vercel", "PostgreSQL"],
-  entropy: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bun", "Vercel"],
+  entropy: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bun", "Vercel", "C#"],
   spectrum: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bun", "Vercel"],
   remnants: ["TypeScript", "Node.js"],
   time: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Radix UI", "Bun", "Vercel"],
