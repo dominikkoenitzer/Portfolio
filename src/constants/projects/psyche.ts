@@ -67,7 +67,7 @@ const en: LocalizedContent = {
       body: [
         "Google Authenticator exports its accounts as a series of QR codes. Psyche reads them through the webcam. Auto exposure meters the whole room and blows out a phone screen held close, so Psyche steps through a few shorter exposures, and each frame goes to zxing-cpp first and to ZXing.Net with mirrored and inverted retries after that. The codes can be shown in any order, a code seen twice is ignored, and every account is saved the moment its code is read. The export packs the accounts as protobuf, which Psyche decodes by hand without a protobuf library.",
         "Encrypted exports from Aegis, 2FAS, Proton Authenticator and Ente Auth open with their own key derivation, scrypt, PBKDF2 or Argon2id, followed by AES-GCM or libsodium's secretstream. Bitwarden's plain JSON and CSV exports work too. A new site's setup QR code can be read straight off the screen, or added from a pasted image, an otpauth:// link or the typed secret.",
-        "There are 555 xUnit test cases for the core library and 112 for the Windows layer. The camera path is tested against simulated webcam frames, and the domain parser against the Public Suffix List's official test file. CI on Windows checks the formatting, runs both suites and publishes the AOT build on every push to main.",
+        "There are 578 xUnit test cases for the core library and 141 for the Windows layer. The camera path is tested against simulated webcam frames, and the domain parser against the Public Suffix List's official test file. CI on Windows checks the formatting, runs both suites and publishes the AOT build on every push to main.",
       ],
     },
   ],
@@ -80,7 +80,7 @@ const en: LocalizedContent = {
     { value: "1", label: "hotkey" },
     { value: "6", label: "apps it imports from" },
     { value: "151", label: "known services" },
-    { value: "667", label: "tests" },
+    { value: "719", label: "tests" },
   ],
 };
 
@@ -128,7 +128,7 @@ const de: LocalizedContent = {
       body: [
         "Google Authenticator exportiert seine Konten als Folge von QR-Codes. Psyche liest sie über die Webcam. Die automatische Belichtung misst den ganzen Raum und überbelichtet einen nah gehaltenen Handybildschirm, deshalb probiert Psyche nacheinander ein paar kürzere Belichtungen durch, und jedes Bild geht zuerst an zxing-cpp und danach an ZXing.Net, das es gespiegelt und invertiert erneut versucht. Die Codes können in beliebiger Reihenfolge gezeigt werden, ein doppelt gesehener Code wird ignoriert, und jedes Konto wird gespeichert, sobald sein Code gelesen ist. Der Export packt die Konten als Protobuf, das Psyche von Hand dekodiert, ohne Protobuf-Bibliothek.",
         "Verschlüsselte Exporte aus Aegis, 2FAS, Proton Authenticator und Ente Auth öffnen sich mit ihrer jeweils eigenen Schlüsselableitung (scrypt, PBKDF2 oder Argon2id), gefolgt von AES-GCM oder dem secretstream von libsodium. Die unverschlüsselten JSON- und CSV-Exporte von Bitwarden funktionieren ebenfalls. Der Einrichtungs-QR-Code einer neuen Seite lässt sich direkt vom Bildschirm lesen oder aus einem eingefügten Bild, einem otpauth://-Link oder dem eingetippten Geheimnis hinzufügen.",
-        "Für die Kernbibliothek gibt es 555 xUnit-Testfälle und für die Windows-Schicht 112. Der Kamerapfad wird gegen simulierte Webcam-Bilder getestet, der Domain-Parser gegen die offizielle Testdatei der Public Suffix List. Die CI auf Windows prüft bei jedem Push auf main die Formatierung, lässt beide Suiten laufen und veröffentlicht den AOT-Build.",
+        "Für die Kernbibliothek gibt es 578 xUnit-Testfälle und für die Windows-Schicht 141. Der Kamerapfad wird gegen simulierte Webcam-Bilder getestet, der Domain-Parser gegen die offizielle Testdatei der Public Suffix List. Die CI auf Windows prüft bei jedem Push auf main die Formatierung, lässt beide Suiten laufen und veröffentlicht den AOT-Build.",
       ],
     },
   ],
@@ -141,7 +141,7 @@ const de: LocalizedContent = {
     { value: "1", label: "Hotkey" },
     { value: "6", label: "Apps als Importquelle" },
     { value: "151", label: "bekannte Dienste" },
-    { value: "667", label: "Tests" },
+    { value: "719", label: "Tests" },
   ],
 };
 
@@ -189,7 +189,7 @@ const fr: LocalizedContent = {
       body: [
         "Google Authenticator exporte ses comptes sous forme d'une série de codes QR. Psyche les lit par la webcam. L'exposition automatique mesure toute la pièce et surexpose l'écran d'un téléphone tenu de près, alors Psyche passe par quelques expositions plus courtes, et chaque image va d'abord à zxing-cpp, puis à ZXing.Net avec de nouveaux essais en miroir et en négatif. Les codes peuvent être montrés dans n'importe quel ordre, un code vu deux fois est ignoré, et chaque compte est enregistré dès que son code est lu. L'export encode les comptes en protobuf, que Psyche décode à la main, sans bibliothèque protobuf.",
         "Les exports chiffrés d'Aegis, 2FAS, Proton Authenticator et Ente Auth s'ouvrent avec leur propre dérivation de clé, scrypt, PBKDF2 ou Argon2id, suivie d'AES-GCM ou du secretstream de libsodium. Les exports JSON et CSV en clair de Bitwarden marchent aussi. Le code QR de configuration d'un nouveau site peut se lire directement sur l'écran, ou s'ajouter depuis une image collée, un lien otpauth:// ou le secret saisi au clavier.",
-        "Il y a 555 cas de test xUnit pour la bibliothèque centrale et 112 pour la couche Windows. Le chemin de la caméra est testé sur des images de webcam simulées, et l'analyseur de domaines sur le fichier de test officiel de la Public Suffix List. La CI sous Windows vérifie le formatage, lance les deux suites et publie le build AOT à chaque push sur main.",
+        "Il y a 578 cas de test xUnit pour la bibliothèque centrale et 141 pour la couche Windows. Le chemin de la caméra est testé sur des images de webcam simulées, et l'analyseur de domaines sur le fichier de test officiel de la Public Suffix List. La CI sous Windows vérifie le formatage, lance les deux suites et publie le build AOT à chaque push sur main.",
       ],
     },
   ],
@@ -202,7 +202,7 @@ const fr: LocalizedContent = {
     { value: "1", label: "raccourci" },
     { value: "6", label: "applications d'où importer" },
     { value: "151", label: "services connus" },
-    { value: "667", label: "tests" },
+    { value: "719", label: "tests" },
   ],
 };
 
@@ -250,7 +250,7 @@ const zh: LocalizedContent = {
       body: [
         "Google Authenticator 会把账户导出成一组二维码。Psyche 通过网络摄像头读取它们。自动曝光按整个房间测光，凑近的手机屏幕就会过曝，所以 Psyche 会依次试几档更短的曝光，每一帧先交给 zxing-cpp，然后再交给 ZXing.Net，并做镜像和反色重试。这些二维码可以按任意顺序展示，看到两次的码会被忽略，每个账户在它的码被读出的那一刻就会保存。导出数据用 protobuf 打包账户，Psyche 不用 protobuf 库，自己手写解码。",
         "Aegis、2FAS、Proton Authenticator 和 Ente Auth 的加密导出，用各自的密钥派生方式打开（scrypt、PBKDF2 或 Argon2id），之后是 AES-GCM 或 libsodium 的 secretstream。Bitwarden 的明文 JSON 和 CSV 导出也能用。新网站的设置二维码可以直接从屏幕上读取，也可以从粘贴的图片、otpauth:// 链接或手动输入的密钥添加。",
-        "核心库有 555 个 xUnit 测试用例，Windows 层有 112 个。摄像头这条路径用模拟的网络摄像头画面来测试，域名解析器则用 Public Suffix List 官方的测试文件来测试。每次推送到 main，Windows 上的 CI 都会检查代码格式、运行两套测试，并发布 AOT 构建。",
+        "核心库有 578 个 xUnit 测试用例，Windows 层有 141 个。摄像头这条路径用模拟的网络摄像头画面来测试，域名解析器则用 Public Suffix List 官方的测试文件来测试。每次推送到 main，Windows 上的 CI 都会检查代码格式、运行两套测试，并发布 AOT 构建。",
       ],
     },
   ],
@@ -263,7 +263,7 @@ const zh: LocalizedContent = {
     { value: "1", label: "个快捷键" },
     { value: "6", label: "个可导入的应用" },
     { value: "151", label: "个已知服务" },
-    { value: "667", label: "个测试" },
+    { value: "719", label: "个测试" },
   ],
 };
 
