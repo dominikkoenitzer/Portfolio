@@ -190,7 +190,7 @@ Case study: https://dk.punds.ch/projects/flow
 Source and download: https://github.com/dominikkoenitzer/Flow
 Stack: C++17, Win32, GDI+
 
-A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with millisecond timing, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It runs as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.
+A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with microsecond timestamps, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It runs as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.
 
 ### Punds, June 2026
 Case study: https://dk.punds.ch/projects/punds
@@ -198,7 +198,7 @@ Live: https://punds.ch/
 Source: https://github.com/dominikkoenitzer/Punds
 Stack: React, TypeScript, Vite
 
-A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at every project, profile and site he keeps online. Numbers: 3 runtime dependencies, 15 scene modules, 4 links, 1 page.
+A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at four places: this portfolio, senbon.ch, his GitHub profile and a tip jar. Numbers: 3 runtime dependencies, 15 scene modules, 4 links, 1 page.
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
@@ -213,7 +213,7 @@ Case study: https://dk.punds.ch/projects/oxidize
 Source and download: https://github.com/dominikkoenitzer/Oxidize
 Stack: Rust, Windows, CLI, egui
 
-A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. By default nothing is deleted before a validated .reg backup and a file quarantine exist. Two binaries share one engine: oxidize for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 7 commands, 125 unit tests.
+A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. By default no leftover is deleted before a validated .reg backup and a file quarantine exist. Two binaries share one engine: oxidize for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 7 commands, 125 unit tests.
 
 ---
 
