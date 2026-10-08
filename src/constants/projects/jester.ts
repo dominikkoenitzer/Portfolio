@@ -37,7 +37,7 @@ export const jester: Record<Language, LocalizedContent> = {
         body: [
           "The obvious way to save is to open the file for writing and put the text in. Opening for writing empties the file first, so a crash or a full disk halfway through leaves you with less than you had before you pressed Ctrl+S.",
           "Jester writes the text to a hidden temporary file in the same folder and then swaps it in over the original with File.Replace. If anything fails before the swap, the old file is untouched and the temporary one is cleaned up.",
-          "Leaving gets the same care. Closing a tab, the window or even signing out of Windows with unsaved changes asks first, and Cancel holds the sign-out back. An unexpected error on the UI thread is written to a crash log in AppData and shown in a message, and the other tabs stay open.",
+          "Leaving gets the same care. Closing a tab with unsaved changes asks first. Closing the window or signing out of Windows keeps unsaved and untitled tabs with their text and brings them back on the next start; only if that session cannot be written does Jester ask, and then Cancel holds the sign-out back. An unexpected error on the UI thread is written to a crash log in AppData and shown in a message, and the other tabs stay open.",
         ],
         code: {
           language: "csharp",
@@ -49,7 +49,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "A file goes back the way it came",
         body: [
-          "On open, Jester reads the byte-order mark if there is one and falls back to UTF-8 if there is not. The encoding it found stays with that tab and is used again on save, so a UTF-16 file does not quietly come back as UTF-8. Converting is something you choose in the Format menu.",
+          "On open, Jester reads the byte-order mark if there is one. Without one, it reads the file as UTF-8 when the bytes are valid UTF-8 and in the Windows ANSI code page when they are not. The encoding it found stays with that tab and is used again on save, so a UTF-16 file does not quietly come back as UTF-8. Converting is something you choose in the Format menu.",
           "Line endings are read from the text and shown in the status bar. The line counter used to count only newlines, so an old Mac file with bare carriage returns showed up as one line while the status bar called it CR in the same breath. A lone carriage return now counts as a line break too.",
           "Jester's own Delete command removes a CRLF pair or a surrogate pair as one character, because removing half of either leaves a stray line break or half a character behind.",
         ],
@@ -94,7 +94,7 @@ export const jester: Record<Language, LocalizedContent> = {
         body: [
           "Der naheliegende Weg zum Speichern: Datei zum Schreiben öffnen, Text hinein. Nur leert das Öffnen zum Schreiben die Datei zuerst, und ein Absturz oder eine volle Festplatte mittendrin hinterlässt weniger, als vor Ctrl+S da war.",
           "Jester schreibt den Text in eine versteckte temporäre Datei im selben Ordner und tauscht sie dann mit File.Replace gegen das Original aus. Scheitert vor dem Tausch etwas, bleibt die alte Datei unberührt, und die temporäre wird aufgeräumt.",
-          "Beim Verlassen gilt dieselbe Sorgfalt. Wer einen Tab, das Fenster oder sogar die Windows-Sitzung mit ungespeicherten Änderungen schliesst, wird zuerst gefragt, und Abbrechen hält die Abmeldung auf. Ein unerwarteter Fehler im UI-Thread landet in einem Absturzprotokoll unter AppData und in einer Meldung, und die anderen Tabs bleiben offen.",
+          "Beim Verlassen gilt dieselbe Sorgfalt. Wer einen Tab mit ungespeicherten Änderungen schliesst, wird zuerst gefragt. Beim Schliessen des Fensters oder beim Abmelden von Windows bleiben ungespeicherte und unbenannte Tabs samt Text erhalten und kommen beim nächsten Start zurück; nur wenn sich diese Sitzung nicht schreiben lässt, fragt Jester nach, und dann hält Abbrechen die Abmeldung auf. Ein unerwarteter Fehler im UI-Thread landet in einem Absturzprotokoll unter AppData und in einer Meldung, und die anderen Tabs bleiben offen.",
         ],
         code: {
           language: "csharp",
@@ -106,7 +106,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Eine Datei geht so zurück, wie sie gekommen ist",
         body: [
-          "Beim Öffnen liest Jester die Byte-Order-Mark, falls es eine gibt, und nimmt sonst UTF-8 an. Die gefundene Kodierung bleibt beim Tab und wird beim Speichern wieder verwendet, damit eine UTF-16-Datei nicht still als UTF-8 zurückkommt. Umwandeln ist etwas, das man im Format-Menü selbst wählt.",
+          "Beim Öffnen liest Jester die Byte-Order-Mark, falls es eine gibt. Ohne sie liest es die Datei als UTF-8, wenn die Bytes gültiges UTF-8 sind, und sonst in der ANSI-Codepage von Windows. Die gefundene Kodierung bleibt beim Tab und wird beim Speichern wieder verwendet, damit eine UTF-16-Datei nicht still als UTF-8 zurückkommt. Umwandeln ist etwas, das man im Format-Menü selbst wählt.",
           "Zeilenenden werden aus dem Text gelesen und in der Statusleiste angezeigt. Der Zeilenzähler hat früher nur Zeilenumbrüche mit Newline gezählt, also stand eine alte Mac-Datei mit reinen Wagenrückläufen als eine einzige Zeile da, während die Statusleiste im selben Atemzug CR meldete. Ein einzelner Wagenrücklauf zählt jetzt auch als Zeilenumbruch.",
           "Jesters eigener Löschen-Befehl entfernt ein CRLF-Paar oder ein Surrogatpaar als ein Zeichen, weil die Hälfte davon einen verirrten Zeilenumbruch oder ein halbes Zeichen zurücklässt.",
         ],
@@ -151,7 +151,7 @@ export const jester: Record<Language, LocalizedContent> = {
         body: [
           "La façon évidente d'enregistrer, c'est d'ouvrir le fichier en écriture et d'y mettre le texte. Or l'ouverture en écriture vide d'abord le fichier, et un plantage ou un disque plein en cours de route vous laisse avec moins qu'avant le Ctrl+S.",
           "Jester écrit le texte dans un fichier temporaire caché du même dossier, puis le met à la place de l'original avec File.Replace. Si quelque chose échoue avant l'échange, l'ancien fichier reste intact et le temporaire est nettoyé.",
-          "Partir demande le même soin. Fermer un onglet, la fenêtre ou même la session Windows avec des modifications non enregistrées pose d'abord la question, et Annuler retient la déconnexion. Une erreur inattendue sur le thread d'interface est écrite dans un journal de plantage sous AppData et affichée dans un message, et les autres onglets restent ouverts.",
+          "Partir demande le même soin. Fermer un onglet avec des modifications non enregistrées pose d'abord la question. Fermer la fenêtre ou la session Windows conserve les onglets non enregistrés et sans titre avec leur texte, et les rouvre au lancement suivant ; Jester ne pose la question que si cette session ne peut pas être écrite, et Annuler retient alors la déconnexion. Une erreur inattendue sur le thread d'interface est écrite dans un journal de plantage sous AppData et affichée dans un message, et les autres onglets restent ouverts.",
         ],
         code: {
           language: "csharp",
@@ -163,7 +163,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Un fichier repart comme il est arrivé",
         body: [
-          "À l'ouverture, Jester lit l'indicateur d'ordre des octets (BOM) s'il y en a un, et suppose l'UTF-8 sinon. L'encodage trouvé reste attaché à l'onglet et sert de nouveau à l'enregistrement, pour qu'un fichier UTF-16 ne revienne pas en douce en UTF-8. Convertir se choisit dans le menu Format.",
+          "À l'ouverture, Jester lit l'indicateur d'ordre des octets (BOM) s'il y en a un. Sans lui, il lit le fichier en UTF-8 si les octets sont de l'UTF-8 valide, et sinon dans la page de codes ANSI de Windows. L'encodage trouvé reste attaché à l'onglet et sert de nouveau à l'enregistrement, pour qu'un fichier UTF-16 ne revienne pas en douce en UTF-8. Convertir se choisit dans le menu Format.",
           "Les fins de ligne sont lues dans le texte et affichées dans la barre d'état. Le compteur de lignes ne comptait autrefois que les sauts de ligne, si bien qu'un vieux fichier Mac aux retours chariot seuls apparaissait comme une seule ligne, alors que la barre d'état annonçait CR dans le même souffle. Un retour chariot isolé compte désormais aussi comme un saut de ligne.",
           "La commande Supprimer de Jester retire une paire CRLF ou une paire de substitution comme un seul caractère, parce qu'en retirer la moitié laisse un saut de ligne égaré ou un demi-caractère.",
         ],
@@ -208,7 +208,7 @@ export const jester: Record<Language, LocalizedContent> = {
         body: [
           "最直接的保存方式，是以写入模式打开文件再把文字放进去。可是以写入模式打开会先把文件清空，写到一半时程序崩溃或磁盘写满，你手里的东西就比按 Ctrl+S 之前还少。",
           "Jester 先把文字写进同一文件夹里的一个隐藏临时文件，再用 File.Replace 把它换到原文件的位置。交换之前任何一步出错，旧文件都原封不动，临时文件也会被清理掉。",
-          "离开时也一样小心。带着未保存的修改关闭标签页、关闭窗口，甚至注销 Windows，都会先问一声；选择取消，注销就会被拦下。界面线程上的意外错误会写进 AppData 下的崩溃日志并弹出提示，其他标签页照样开着。",
+          "离开时也一样小心。带着未保存的修改关闭标签页，会先问一声。关闭窗口或注销 Windows 时，未保存和未命名的标签页连同文字都会保留，下次启动时原样回来；只有这份会话写不进去时，Jester 才会询问，这时选择取消，注销就会被拦下。界面线程上的意外错误会写进 AppData 下的崩溃日志并弹出提示，其他标签页照样开着。",
         ],
         code: {
           language: "csharp",
@@ -220,7 +220,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "文件怎么来，就怎么回去",
         body: [
-          "打开文件时，Jester 会读取字节顺序标记（BOM），没有的话就按 UTF-8 处理。识别出的编码跟着这个标签页走，保存时照样使用，所以 UTF-16 文件不会悄悄变成 UTF-8 回来。要转换编码，就在「格式」菜单里自己选。",
+          "打开文件时，Jester 会读取字节顺序标记（BOM）。没有 BOM 时，字节是有效的 UTF-8 就按 UTF-8 读取，否则按 Windows 的 ANSI 代码页读取。识别出的编码跟着这个标签页走，保存时照样使用，所以 UTF-16 文件不会悄悄变成 UTF-8 回来。要转换编码，就在「格式」菜单里自己选。",
           "行尾格式从文本本身读出，显示在状态栏里。行数统计以前只数换行符，于是一个只用回车符的老 Mac 文件被算成一行，而状态栏同时却标着 CR。现在单独的回车符也算作换行。",
           "Jester 自己的删除命令会把一对 CRLF 或一个代理对当作一个字符删掉，因为只删一半，就会留下一个多余的换行或半个字符。",
         ],
