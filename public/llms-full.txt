@@ -151,9 +151,11 @@ This site, built as the work sample rather than a template with a name swapped i
 Case study: https://dk.punds.ch/projects/entropy
 Live: https://entropy.punds.ch/
 Source: private
-Stack: Next.js, TypeScript, Web Crypto
+Stack: Next.js, TypeScript, Web Crypto; the Windows app in C#, .NET 10, WinUI 3, Native AOT
 
 A password generator and strength analyzer that runs entirely in the browser. Randomness for passwords comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random() for secrets.
+
+Since October 2026 the same repository also holds a Windows app: a local password manager written in C# on .NET 10 with WinUI 3 and compiled with Native AOT. It started from the code of Psyche. Press Alt+E on a sign-in page and it reads the address of the page in front; when exactly one saved login belongs to that site and the cursor is in a text field, it types the username, Tab and the password, otherwise a small picker opens. The website's generator and analyzer are ported to C#, and parity tests check 643 passwords and 672 generator settings against what the website's own TypeScript computes. A Health page sorts saved passwords into found in a leak, weak, reused and old (unchanged for 12 months). The leak check is offline: a 2.26 MB binary fuse filter of about a million of the most common leaked passwords, with about 1 false alarm in 65,536. Logins keep their last ten passwords and can hold one-time codes, and secure notes and payment cards live in the same vault. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects (DPAPI) for the signed-in account, backups carry their own Argon2id password, keys are wiped after 15 minutes without use and when Windows locks or sleeps, and Windows Hello can be required before a secret is shown or typed. Tests: 785 xUnit test cases for the core library and 144 for the Windows layer.
 
 ### Spectrum, February 2026
 Case study: https://dk.punds.ch/projects/spectrum
