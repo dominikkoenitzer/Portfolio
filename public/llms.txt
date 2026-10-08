@@ -2,7 +2,7 @@
 
 > Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He is open to software engineering roles, internships, freelance projects and collaborations, in Switzerland or fully remote, and reads email at dominik.koenitzer@gmail.com.
 
-This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-09-02.
+This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-10-08.
 
 One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React app. Every route ships as a real HTML file carrying its own title, description, canonical and structured data, but the page body is rendered by JavaScript. If your crawler does not execute JS, this file, /llms-full.txt and the static CV at /cv are the readable text of this site.
 
