@@ -30,7 +30,7 @@ const en: LocalizedContent = {
   description:
     "A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox in a note becomes a real task, and a line with :: becomes a flashcard.",
   overview:
-    "Inkling is an Electron app I built for studying. It has notes, tasks, flashcards with a focus timer, and grades, and it opens on a Today page that puts together a short plan from what is already in there: the decks that are due, the tasks due today, the subject with the lowest average and one focus block. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.6.0, ships for Windows, macOS and Linux and updates itself from GitHub Releases.",
+    "Inkling is an Electron app I built for studying. It has notes, tasks, flashcards with a focus timer, and grades, and it opens on a Today page that puts together a short plan from what is already in there: the decks that are due, the tasks due today, the subject with the lowest average and one focus block. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.7.0, ships for Windows, macOS and Linux and updates itself from GitHub Releases.",
   roleSummary: "Just me: the data model, the Electron shell, the interface and the release pipeline.",
   sections: [
     {
@@ -50,7 +50,7 @@ const en: LocalizedContent = {
     {
       heading: "Flashcards that schedule themselves",
       body: [
-        "Reviews run on FSRS-4.5, which keeps two numbers per card, stability and difficulty, and schedules each card for a 90 percent chance that you still remember it. Every button shows the interval it would buy before you press it, and keys 1 to 4 answer without the mouse.",
+        "Reviews run on FSRS-6, which keeps two numbers per card, stability and difficulty, and schedules each card for a 90 percent chance that you still remember it. Every button shows the interval it would buy before you press it, and keys 1 to 4 answer without the mouse.",
         "Every answer goes into a permanent review log, and the Progress page reads that log back for retention, reviews and the streak, so those numbers are counted from what you did. Next to the decks sits a focus timer that can be linked to a task or a deck, and its minutes count towards the streak too.",
       ],
       figure: 2,
@@ -67,7 +67,7 @@ const en: LocalizedContent = {
       heading: "Local-first, one file on disk",
       body: [
         "All data sits in one SQLite database in WAL mode. On start it is checkpointed and copied into a backups folder that keeps the last five. Search across notes, tasks and decks runs on SQLite's FTS5 behind Ctrl K.",
-        "The renderer never touches the database. It runs with context isolation on and Node integration off, and everything goes through 48 IPC handlers in the preload bridge.",
+        "The renderer never touches the database. It runs with context isolation on and Node integration off, and everything goes through 49 IPC handlers in the preload bridge.",
       ],
     },
     {
@@ -86,9 +86,9 @@ const en: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "101", label: "unit tests" },
+    { value: "284", label: "unit tests" },
     { value: "12", label: "end-to-end smoke checks" },
-    { value: "48", label: "IPC handlers" },
+    { value: "49", label: "IPC handlers" },
     { value: "3", label: "platforms" },
   ],
 };
@@ -98,7 +98,7 @@ const de: LocalizedContent = {
   description:
     "Ein Lernbegleiter für den Desktop mit Notizen, Aufgaben, Karteikarten und Noten, gespeichert in einer SQLite-Datei auf dem eigenen Rechner. Eine Checkbox in einer Notiz wird zur echten Aufgabe, eine Zeile mit :: zur Karteikarte.",
   overview:
-    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Sie hat Notizen, Aufgaben, Karteikarten mit einem Fokus-Timer und Noten, und sie öffnet auf einer Heute-Seite, die aus dem, was schon drin ist, einen kurzen Plan zusammenstellt: die fälligen Stapel, die heute fälligen Aufgaben, das Fach mit dem tiefsten Schnitt und einen Fokusblock. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.6.0, erscheint für Windows, macOS und Linux und aktualisiert sich selbst über GitHub Releases.",
+    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Sie hat Notizen, Aufgaben, Karteikarten mit einem Fokus-Timer und Noten, und sie öffnet auf einer Heute-Seite, die aus dem, was schon drin ist, einen kurzen Plan zusammenstellt: die fälligen Stapel, die heute fälligen Aufgaben, das Fach mit dem tiefsten Schnitt und einen Fokusblock. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.7.0, erscheint für Windows, macOS und Linux und aktualisiert sich selbst über GitHub Releases.",
   roleSummary: "Nur ich: das Datenmodell, die Electron-Schale, die Oberfläche und die Release-Pipeline.",
   sections: [
     {
@@ -118,7 +118,7 @@ const de: LocalizedContent = {
     {
       heading: "Karteikarten, die sich selbst einplanen",
       body: [
-        "Wiederholungen laufen über FSRS-4.5. Das Verfahren führt pro Karte zwei Werte, Stabilität und Schwierigkeit, und plant jede Karte so, dass man sie mit 90 Prozent Wahrscheinlichkeit noch weiss. Jeder Knopf zeigt vor dem Drücken, welches Intervall er bringen würde, und die Tasten 1 bis 4 antworten ohne Maus.",
+        "Wiederholungen laufen über FSRS-6. Das Verfahren führt pro Karte zwei Werte, Stabilität und Schwierigkeit, und plant jede Karte so, dass man sie mit 90 Prozent Wahrscheinlichkeit noch weiss. Jeder Knopf zeigt vor dem Drücken, welches Intervall er bringen würde, und die Tasten 1 bis 4 antworten ohne Maus.",
         "Jede Antwort landet in einem dauerhaften Wiederholungsprotokoll, und die Fortschrittsseite liest daraus Behaltensquote, Wiederholungen und die Serie. Diese Zahlen sind also gezählt und nicht geschätzt. Neben den Stapeln sitzt ein Fokus-Timer, der sich mit einer Aufgabe oder einem Stapel verknüpfen lässt, und seine Minuten zählen ebenfalls zur Serie.",
       ],
       figure: 2,
@@ -135,7 +135,7 @@ const de: LocalizedContent = {
       heading: "Lokal zuerst, eine Datei auf der Platte",
       body: [
         "Alle Daten liegen in einer SQLite-Datenbank im WAL-Modus. Beim Start wird sie mit einem Checkpoint abgeschlossen und in einen Backup-Ordner kopiert, der die letzten fünf behält. Die Suche über Notizen, Aufgaben und Stapel läuft über SQLites FTS5 hinter Ctrl K.",
-        "Der Renderer fasst die Datenbank nie an. Er läuft mit Context Isolation und ohne Node-Integration, und alles geht über 48 IPC-Handler in der Preload-Brücke.",
+        "Der Renderer fasst die Datenbank nie an. Er läuft mit Context Isolation und ohne Node-Integration, und alles geht über 49 IPC-Handler in der Preload-Brücke.",
       ],
     },
     {
@@ -154,9 +154,9 @@ const de: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "101", label: "Unit-Tests" },
+    { value: "284", label: "Unit-Tests" },
     { value: "12", label: "End-to-End-Prüfungen" },
-    { value: "48", label: "IPC-Handler" },
+    { value: "49", label: "IPC-Handler" },
     { value: "3", label: "Plattformen" },
   ],
 };
@@ -166,7 +166,7 @@ const fr: LocalizedContent = {
   description:
     "Un compagnon d'étude pour le bureau, avec notes, tâches, cartes mémoire et notes scolaires, conservés dans un seul fichier SQLite sur votre machine. Une case à cocher dans une note devient une vraie tâche, et une ligne avec :: devient une carte.",
   overview:
-    "Inkling est une application Electron que j'ai construite pour étudier. Elle réunit des notes, des tâches, des cartes mémoire avec un minuteur de concentration, et les notes scolaires, et elle s'ouvre sur une page Aujourd'hui qui compose un court plan à partir de ce qui s'y trouve déjà : les paquets à réviser, les tâches du jour, la matière à la moyenne la plus basse et un bloc de concentration. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.6.0, sort pour Windows, macOS et Linux et se met à jour elle-même depuis GitHub Releases.",
+    "Inkling est une application Electron que j'ai construite pour étudier. Elle réunit des notes, des tâches, des cartes mémoire avec un minuteur de concentration, et les notes scolaires, et elle s'ouvre sur une page Aujourd'hui qui compose un court plan à partir de ce qui s'y trouve déjà : les paquets à réviser, les tâches du jour, la matière à la moyenne la plus basse et un bloc de concentration. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.7.0, sort pour Windows, macOS et Linux et se met à jour elle-même depuis GitHub Releases.",
   roleSummary: "Moi seul : le modèle de données, la coque Electron, l'interface et la chaîne de publication.",
   sections: [
     {
@@ -186,7 +186,7 @@ const fr: LocalizedContent = {
     {
       heading: "Des cartes qui se planifient toutes seules",
       body: [
-        "Les révisions tournent sur FSRS-4.5, qui garde deux valeurs par carte, la stabilité et la difficulté, et planifie chaque carte pour 90 % de chances de s'en souvenir encore. Chaque bouton affiche l'intervalle qu'il donnerait avant qu'on le presse, et les touches 1 à 4 répondent sans la souris.",
+        "Les révisions tournent sur FSRS-6, qui garde deux valeurs par carte, la stabilité et la difficulté, et planifie chaque carte pour 90 % de chances de s'en souvenir encore. Chaque bouton affiche l'intervalle qu'il donnerait avant qu'on le presse, et les touches 1 à 4 répondent sans la souris.",
         "Chaque réponse est écrite dans un journal de révisions permanent, et la page Progrès relit ce journal pour la rétention, les révisions et la série. Ces chiffres sont donc comptés, pas estimés. À côté des paquets se trouve un minuteur de concentration qu'on peut lier à une tâche ou à un paquet, et ses minutes comptent aussi pour la série.",
       ],
       figure: 2,
@@ -203,7 +203,7 @@ const fr: LocalizedContent = {
       heading: "Local d'abord, un seul fichier sur le disque",
       body: [
         "Toutes les données tiennent dans une base SQLite en mode WAL. Au démarrage, elle passe par un checkpoint puis est copiée dans un dossier de sauvegardes qui garde les cinq dernières. La recherche dans les notes, les tâches et les paquets passe par FTS5 de SQLite, derrière Ctrl K.",
-        "Le rendu ne touche jamais la base. Il tourne avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 48 gestionnaires IPC dans le pont de preload.",
+        "Le rendu ne touche jamais la base. Il tourne avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 49 gestionnaires IPC dans le pont de preload.",
       ],
     },
     {
@@ -222,9 +222,9 @@ const fr: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "101", label: "tests unitaires" },
+    { value: "284", label: "tests unitaires" },
     { value: "12", label: "vérifications de bout en bout" },
-    { value: "48", label: "gestionnaires IPC" },
+    { value: "49", label: "gestionnaires IPC" },
     { value: "3", label: "plateformes" },
   ],
 };
@@ -234,7 +234,7 @@ const zh: LocalizedContent = {
   description:
     "一个桌面学习助手，包含笔记、任务、抽认卡和成绩，全部保存在你自己电脑上的一个 SQLite 文件里。笔记里的复选框会变成真正的任务，带 :: 的一行会变成一张抽认卡。",
   overview:
-    "Inkling 是我为学习做的一个 Electron 应用。它有笔记、任务、带专注计时器的抽认卡，还有成绩，打开时是一个“今天”页面，从已有的内容里拼出一份简短的计划：到期的卡组、今天到期的任务、平均分最低的科目，以及一个专注时段。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.6.0 支持 Windows、macOS 和 Linux，并通过 GitHub Releases 自动更新。",
+    "Inkling 是我为学习做的一个 Electron 应用。它有笔记、任务、带专注计时器的抽认卡，还有成绩，打开时是一个“今天”页面，从已有的内容里拼出一份简短的计划：到期的卡组、今天到期的任务、平均分最低的科目，以及一个专注时段。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.7.0 支持 Windows、macOS 和 Linux，并通过 GitHub Releases 自动更新。",
   roleSummary: "只有我：数据模型、Electron 外壳、界面和发布流程。",
   sections: [
     {
@@ -254,7 +254,7 @@ const zh: LocalizedContent = {
     {
       heading: "自己安排复习时间的抽认卡",
       body: [
-        "复习基于 FSRS-4.5。它为每张卡记录两个值，稳定度和难度，并按照你仍有 90% 概率记得来安排每张卡。每个按钮在按下之前就显示它会带来的间隔，数字键 1 到 4 不用鼠标就能作答。",
+        "复习基于 FSRS-6。它为每张卡记录两个值，稳定度和难度，并按照你仍有 90% 概率记得来安排每张卡。每个按钮在按下之前就显示它会带来的间隔，数字键 1 到 4 不用鼠标就能作答。",
         "每一次作答都写进一份永久的复习日志，“进度”页面从这份日志里读出保持率、复习次数和连续天数，所以这些数字是数出来的，不是估出来的。卡组旁边是一个专注计时器，可以关联到某个任务或卡组，它的分钟数也计入连续天数。",
       ],
       figure: 2,
@@ -271,7 +271,7 @@ const zh: LocalizedContent = {
       heading: "本地优先，磁盘上的一个文件",
       body: [
         "所有数据都在一个 WAL 模式的 SQLite 数据库里。启动时先做一次检查点，再复制到备份文件夹，那里保留最近的五份。笔记、任务和卡组的搜索用的是 SQLite 的 FTS5，入口在 Ctrl K。",
-        "渲染进程从不直接碰数据库。它开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 48 个 IPC 处理函数。",
+        "渲染进程从不直接碰数据库。它开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 49 个 IPC 处理函数。",
       ],
     },
     {
@@ -290,9 +290,9 @@ const zh: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "101", label: "单元测试" },
+    { value: "284", label: "单元测试" },
     { value: "12", label: "端到端冒烟检查" },
-    { value: "48", label: "IPC 处理函数" },
+    { value: "49", label: "IPC 处理函数" },
     { value: "3", label: "平台" },
   ],
 };
