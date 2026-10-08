@@ -65,7 +65,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Search that can be tested without a window",
         body: [
-          "The find and replace arithmetic lives in TextSearch.cs, which knows nothing about the editor. The 57 xUnit tests cover that file, settings persistence and the command table, and CI runs them on every push to main. The WPF views I check by running the app.",
+          "The find and replace arithmetic lives in TextSearch.cs, which knows nothing about the editor. The 186 xUnit tests cover that file, settings persistence and the command table, and CI runs them on every push to main. The WPF views I check by running the app.",
           "Find in Files has to survive whatever folder it is pointed at. It skips hidden and system files, ignores folders it may not read, and builds the file list before the search starts, so a protected subfolder cannot throw halfway through. Files over 4 MB and files that fail to read are passed over, and the results stop at 5000.",
         ],
       },
@@ -77,7 +77,7 @@ export const jester: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1", label: "portable exe" },
       { value: "0", label: "installers" },
-      { value: "57", label: "tests" },
+      { value: "186", label: "tests" },
       { value: "A4", label: "PDF export" },
     ],
   },
@@ -122,7 +122,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Suche, die sich ohne Fenster testen lässt",
         body: [
-          "Die Rechnerei hinter Suchen und Ersetzen steckt in TextSearch.cs, das nichts vom Editor weiss. Die 57 xUnit-Tests decken diese Datei, das Speichern der Einstellungen und die Befehlstabelle ab, und die CI lässt sie bei jedem Push auf main laufen. Die WPF-Ansichten prüfe ich, indem ich die App starte.",
+          "Die Rechnerei hinter Suchen und Ersetzen steckt in TextSearch.cs, das nichts vom Editor weiss. Die 186 xUnit-Tests decken diese Datei, das Speichern der Einstellungen und die Befehlstabelle ab, und die CI lässt sie bei jedem Push auf main laufen. Die WPF-Ansichten prüfe ich, indem ich die App starte.",
           "Die Suche im Ordner muss jeden Ordner überstehen, auf den man sie ansetzt. Sie überspringt versteckte und Systemdateien, ignoriert Ordner ohne Leserecht und stellt die Dateiliste vor der Suche zusammen, damit ein geschützter Unterordner nicht mittendrin einen Fehler wirft. Dateien über 4 MB und Dateien, die sich nicht lesen lassen, fallen weg, und bei 5000 Treffern ist Schluss.",
         ],
       },
@@ -134,7 +134,7 @@ export const jester: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1", label: "portable Exe" },
       { value: "0", label: "Installer" },
-      { value: "57", label: "Tests" },
+      { value: "186", label: "Tests" },
       { value: "A4", label: "PDF-Export" },
     ],
   },
@@ -179,7 +179,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "Une recherche qui se teste sans fenêtre",
         body: [
-          "Le calcul derrière rechercher-remplacer vit dans TextSearch.cs, qui ne sait rien de l'éditeur. Les 57 tests xUnit couvrent ce fichier, l'enregistrement des réglages et la table des commandes, et la CI les lance à chaque push sur main. Les vues WPF, je les vérifie en lançant l'application.",
+          "Le calcul derrière rechercher-remplacer vit dans TextSearch.cs, qui ne sait rien de l'éditeur. Les 186 tests xUnit couvrent ce fichier, l'enregistrement des réglages et la table des commandes, et la CI les lance à chaque push sur main. Les vues WPF, je les vérifie en lançant l'application.",
           "La recherche dans les fichiers doit survivre à n'importe quel dossier. Elle saute les fichiers cachés et système, ignore les dossiers qu'elle n'a pas le droit de lire, et dresse la liste des fichiers avant de chercher, pour qu'un sous-dossier protégé ne lève pas d'erreur à mi-chemin. Les fichiers de plus de 4 Mo et ceux qui ne se lisent pas sont laissés de côté, et les résultats s'arrêtent à 5000.",
         ],
       },
@@ -191,7 +191,7 @@ export const jester: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1", label: "exe portable" },
       { value: "0", label: "installateurs" },
-      { value: "57", label: "tests" },
+      { value: "186", label: "tests" },
       { value: "A4", label: "export PDF" },
     ],
   },
@@ -236,7 +236,7 @@ export const jester: Record<Language, LocalizedContent> = {
       {
         heading: "不开窗口也能测试的查找",
         body: [
-          "查找与替换的计算都在 TextSearch.cs 里，它对编辑器一无所知。57 个 xUnit 测试覆盖这个文件、设置的保存以及命令表，每次推送到 main，CI 都会运行它们。WPF 界面则由我亲自运行程序来检查。",
+          "查找与替换的计算都在 TextSearch.cs 里，它对编辑器一无所知。186 个 xUnit 测试覆盖这个文件、设置的保存以及命令表，每次推送到 main，CI 都会运行它们。WPF 界面则由我亲自运行程序来检查。",
           "跨文件查找必须扛得住它被指向的任何文件夹。它跳过隐藏文件和系统文件，忽略没有读取权限的文件夹，并在开始搜索前先列出全部文件，这样受保护的子文件夹就不会在半路抛出错误。超过 4 MB 的文件和读不出来的文件会被跳过，结果最多 5000 条。",
         ],
       },
@@ -248,7 +248,7 @@ export const jester: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1", label: "便携 exe" },
       { value: "0", label: "安装程序" },
-      { value: "57", label: "测试" },
+      { value: "186", label: "测试" },
       { value: "A4", label: "PDF 导出" },
     ],
   },

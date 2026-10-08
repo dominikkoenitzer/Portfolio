@@ -68,7 +68,7 @@ const en: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "AI agents"],
   stats: [
     { value: "5", label: "crates" },
-    { value: "145", label: "tests" },
+    { value: "302", label: "tests" },
     { value: "4", label: "states" },
     { value: "0.3 s", label: "for a border to follow" },
   ],
@@ -125,7 +125,7 @@ const de: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "KI-Agenten"],
   stats: [
     { value: "5", label: "Crates" },
-    { value: "145", label: "Tests" },
+    { value: "302", label: "Tests" },
     { value: "4", label: "Zustände" },
     { value: "0,3 s", label: "bis ein Rahmen folgt" },
   ],
@@ -182,7 +182,7 @@ const fr: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "Agents IA"],
   stats: [
     { value: "5", label: "crates" },
-    { value: "145", label: "tests" },
+    { value: "302", label: "tests" },
     { value: "4", label: "états" },
     { value: "0,3 s", label: "pour qu'une bordure suive" },
   ],
@@ -236,7 +236,7 @@ const zh: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "AI 智能体"],
   stats: [
     { value: "5", label: "个 crate" },
-    { value: "145", label: "个测试" },
+    { value: "302", label: "个测试" },
     { value: "4", label: "种状态" },
     { value: "0.3 秒", label: "边框跟上" },
   ],

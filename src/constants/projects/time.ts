@@ -34,7 +34,7 @@ export const time: Record<Language, LocalizedContent> = {
         heading: "Five round trips, and only the fastest one counts",
         body: [
           "In the browser, lib/clock-sync.ts asks /api/time five times in a row. Each round trip is timed with performance.now(), which is monotonic, so a clock change in the middle of a measurement cannot corrupt it. The server's stamp is assumed to sit halfway through the trip, which means a sample can be wrong by at most half its round trip.",
-          "The sample with the shortest round trip wins and the rest are discarded. The winning offset lives in its own variable, so the clock never drops back to raw device time while a new measurement is running. 28 tests cover this maths and the date helpers around it.",
+          "The sample with the shortest round trip wins and the rest are discarded. The winning offset lives in its own variable, so the clock never drops back to raw device time while a new measurement is running. 33 tests cover this maths and the date helpers around it.",
           "It measures again when it has a reason to. Every five seconds it compares the wall clock with the monotonic one, and a jump of more than a second means the clock was changed or the machine slept. A tab that comes back into view more than five minutes after the last measurement measures again too.",
         ],
         code: {
@@ -93,7 +93,7 @@ export const time: Record<Language, LocalizedContent> = {
         heading: "Fünf Messungen, und nur die schnellste zählt",
         body: [
           "Im Browser fragt lib/clock-sync.ts fünfmal hintereinander /api/time ab. Jede Laufzeit wird mit performance.now() gemessen, das monoton läuft, also kann eine Uhrenänderung mitten in der Messung sie nicht verfälschen. Der Zeitstempel des Servers wird in der Mitte der Laufzeit angenommen, damit liegt eine Messung höchstens um die halbe Laufzeit daneben.",
-          "Die Messung mit der kürzesten Laufzeit gewinnt, die anderen werden verworfen. Der gewonnene Offset steht in einer eigenen Variable, damit die Uhr nie auf die rohe Gerätezeit zurückfällt, während eine neue Messung läuft. 28 Tests decken diese Rechnung und die Datumshelfer darum herum ab.",
+          "Die Messung mit der kürzesten Laufzeit gewinnt, die anderen werden verworfen. Der gewonnene Offset steht in einer eigenen Variable, damit die Uhr nie auf die rohe Gerätezeit zurückfällt, während eine neue Messung läuft. 33 Tests decken diese Rechnung und die Datumshelfer darum herum ab.",
           "Neu gemessen wird, wenn es einen Grund gibt. Alle fünf Sekunden vergleicht der Client die Wanduhr mit der monotonen Uhr, und ein Sprung von mehr als einer Sekunde heisst, dass die Uhr verstellt wurde oder das Gerät geschlafen hat. Ein Tab, der mehr als fünf Minuten nach der letzten Messung wieder sichtbar wird, misst ebenfalls neu.",
         ],
         code: {
@@ -152,7 +152,7 @@ export const time: Record<Language, LocalizedContent> = {
         heading: "Cinq allers-retours, et seul le plus rapide compte",
         body: [
           "Dans le navigateur, lib/clock-sync.ts interroge /api/time cinq fois de suite. Chaque aller-retour est chronométré avec performance.now(), qui est monotone, si bien qu'un changement d'horloge en pleine mesure ne peut pas la fausser. L'horodatage du serveur est supposé tomber au milieu du trajet, donc une mesure se trompe au plus de la moitié de son aller-retour.",
-          "La mesure au plus court aller-retour l'emporte et les autres sont jetées. Le décalage retenu vit dans sa propre variable, pour que l'horloge ne retombe jamais sur l'heure brute de l'appareil pendant qu'une nouvelle mesure tourne. 28 tests couvrent ce calcul et les utilitaires de date qui l'entourent.",
+          "La mesure au plus court aller-retour l'emporte et les autres sont jetées. Le décalage retenu vit dans sa propre variable, pour que l'horloge ne retombe jamais sur l'heure brute de l'appareil pendant qu'une nouvelle mesure tourne. 33 tests couvrent ce calcul et les utilitaires de date qui l'entourent.",
           "Elle remesure quand elle a une raison de le faire. Toutes les cinq secondes, elle compare l'horloge murale à l'horloge monotone, et un saut de plus d'une seconde signifie que l'horloge a été changée ou que la machine a dormi. Un onglet qui redevient visible plus de cinq minutes après la dernière mesure remesure aussi.",
         ],
         code: {
@@ -211,7 +211,7 @@ export const time: Record<Language, LocalizedContent> = {
         heading: "测五次往返，只算最快的那一次",
         body: [
           "在浏览器里，lib/clock-sync.ts 连续向 /api/time 请求五次。每次往返都用单调递增的 performance.now() 计时，所以测量途中改了系统时钟也破坏不了它。服务器的时间戳被假定落在往返的正中间，因此一次采样最多错半个往返。",
-          "往返最短的那次采样胜出，其余的直接丢掉。胜出的偏移量存在自己的变量里，这样在新一轮测量进行时，时钟也不会退回设备的原始时间。28 个测试覆盖了这段计算和它周围的日期辅助函数。",
+          "往返最短的那次采样胜出，其余的直接丢掉。胜出的偏移量存在自己的变量里，这样在新一轮测量进行时，时钟也不会退回设备的原始时间。33 个测试覆盖了这段计算和它周围的日期辅助函数。",
           "有理由的时候它才重新测量。每隔五秒，它比较一次墙上时钟和单调时钟，跳变超过一秒就说明时钟被改过，或者机器睡过一觉。距离上次测量超过五分钟后重新变为可见的标签页，也会重新测量。",
         ],
         code: {
