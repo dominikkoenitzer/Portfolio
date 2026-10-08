@@ -62,7 +62,7 @@ export const entropy: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "The Generate tab: a 16-character password from all four character sets at 103 bits, rated maximum, with the generative art for its seed above it.",
-      "The Analyze tab on a four-word passphrase: 84 bits, the five attacker scenarios, and the attack path that splits it into dictionary words and random pieces.",
+      "The Analyze tab on a four-word passphrase: 94 bits, the five attacker scenarios, and the attack path that splits it into dictionary words and random pieces.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
     stats: [
@@ -119,7 +119,7 @@ export const entropy: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "Der Generieren-Tab: ein Passwort mit 16 Zeichen aus allen vier Zeichensätzen, 103 Bit, als maximal bewertet, darüber die generative Grafik zu seinem Seed.",
-      "Der Analysieren-Tab mit einer Passphrase aus vier Wörtern: 84 Bit, die fünf Angreiferszenarien und der Angriffspfad, der sie in Wörterbuchwörter und zufällige Stücke zerlegt.",
+      "Der Analysieren-Tab mit einer Passphrase aus vier Wörtern: 94 Bit, die fünf Angreiferszenarien und der Angriffspfad, der sie in Wörterbuchwörter und zufällige Stücke zerlegt.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
     stats: [
@@ -176,7 +176,7 @@ export const entropy: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "L'onglet Générer : un mot de passe de 16 caractères issu des quatre jeux, 103 bits, noté maximal, avec au-dessus l'art génératif de sa graine.",
-      "L'onglet Analyser sur une phrase de passe de quatre mots : 84 bits, les cinq scénarios d'attaque et le chemin d'attaque qui la découpe en mots du dictionnaire et en morceaux aléatoires.",
+      "L'onglet Analyser sur une phrase de passe de quatre mots : 94 bits, les cinq scénarios d'attaque et le chemin d'attaque qui la découpe en mots du dictionnaire et en morceaux aléatoires.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
     stats: [
@@ -233,7 +233,7 @@ export const entropy: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "生成页：一个取自全部四个字符集的 16 位密码，103 比特，评为最高档，上方是按它的种子画出的生成艺术。",
-      "分析页里的一个四词口令短语：84 比特、五种攻击场景，以及把它拆成词表单词和随机片段的攻击路径。",
+      "分析页里的一个四词口令短语：94 比特、五种攻击场景，以及把它拆成词表单词和随机片段的攻击路径。",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
     stats: [
