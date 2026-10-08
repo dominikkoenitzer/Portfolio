@@ -22,7 +22,7 @@ const en: LocalizedContent = {
   description:
     "A tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash.",
   overview:
-    "Mochi arranges every window on the screen into tiles and lets you move between them from the keyboard. I wrote it from scratch in Rust: seven crates, a pure core with no Win32 in it at all, and a daemon where one thread owns all the state and talks to Windows. It does layouts, workspaces, multiple monitors, rules, borders, transparency and animated moves, and every setting can be changed by a command that takes effect the moment it lands.",
+    "Mochi arranges every window on the screen into tiles and lets you move between them from the keyboard. I wrote it from scratch in Rust: seven crates, a pure core with no Win32 in it at all, and a daemon where one thread owns all the state and talks to Windows. It does layouts, workspaces, multiple monitors, rules, borders, transparency and animated moves, and every visual setting can be changed by a command that takes effect the moment it lands.",
   roleSummary: "Just me: the design, the Win32 layer and the test harness.",
   sections: [
     {
@@ -81,7 +81,7 @@ const de: LocalizedContent = {
   description:
     "Ein Tiling-Fenstermanager für Windows, geschrieben in Rust. Er kachelt echte Fenster, belegt seine eigenen Tasten und stellt den Desktop genau so wieder her, wie er ihn vorgefunden hat, auch nach einem Absturz.",
   overview:
-    "Mochi ordnet jedes Fenster auf dem Bildschirm in Kacheln an und lässt dich mit der Tastatur zwischen ihnen wechseln. Ich habe ihn von Grund auf in Rust geschrieben: sieben Crates, ein reiner Kern ganz ohne Win32 und ein Daemon, in dem ein einziger Thread den ganzen Zustand besitzt und mit Windows spricht. Er kann Layouts, Arbeitsbereiche, mehrere Monitore, Regeln, Rahmen, Transparenz und animierte Verschiebungen, und jede Einstellung lässt sich mit einem Befehl ändern, der wirkt, sobald er ankommt.",
+    "Mochi ordnet jedes Fenster auf dem Bildschirm in Kacheln an und lässt dich mit der Tastatur zwischen ihnen wechseln. Ich habe ihn von Grund auf in Rust geschrieben: sieben Crates, ein reiner Kern ganz ohne Win32 und ein Daemon, in dem ein einziger Thread den ganzen Zustand besitzt und mit Windows spricht. Er kann Layouts, Arbeitsbereiche, mehrere Monitore, Regeln, Rahmen, Transparenz und animierte Verschiebungen, und jede visuelle Einstellung lässt sich mit einem Befehl ändern, der wirkt, sobald er ankommt.",
   roleSummary: "Nur ich: das Design, die Win32-Schicht und die Testumgebung.",
   sections: [
     {
@@ -139,7 +139,7 @@ const fr: LocalizedContent = {
   description:
     "Un gestionnaire de fenêtres en mosaïque pour Windows, écrit en Rust. Il dispose de vraies fenêtres en mosaïque, gère ses propres raccourcis et remet le bureau exactement comme il l'a trouvé, même après un plantage.",
   overview:
-    "Mochi range chaque fenêtre de l'écran en tuiles et permet de passer de l'une à l'autre au clavier. Je l'ai écrit de zéro en Rust : sept crates, un cœur pur sans la moindre trace de Win32, et un démon où un seul thread détient tout l'état et parle à Windows. Il gère les dispositions, les espaces de travail, plusieurs écrans, les règles, les bordures, la transparence et les déplacements animés, et chaque réglage peut être changé par une commande qui prend effet dès qu'elle arrive.",
+    "Mochi range chaque fenêtre de l'écran en tuiles et permet de passer de l'une à l'autre au clavier. Je l'ai écrit de zéro en Rust : sept crates, un cœur pur sans la moindre trace de Win32, et un démon où un seul thread détient tout l'état et parle à Windows. Il gère les dispositions, les espaces de travail, plusieurs écrans, les règles, les bordures, la transparence et les déplacements animés, et chaque réglage visuel peut être changé par une commande qui prend effet dès qu'elle arrive.",
   roleSummary: "Moi seul : la conception, la couche Win32 et le banc de test.",
   sections: [
     {
@@ -197,7 +197,7 @@ const zh: LocalizedContent = {
   description:
     "一个用 Rust 写的 Windows 平铺窗口管理器。它平铺的是真实的窗口，自己绑定快捷键，并且会把桌面恢复成它接手时的样子，哪怕是在崩溃之后。",
   overview:
-    "Mochi 把屏幕上的每个窗口排成平铺的格子，让你用键盘在它们之间移动。我用 Rust 从零写了它：七个 crate，一个完全不含 Win32 的纯核心，以及一个守护进程，其中只有一个线程持有全部状态并与 Windows 打交道。它支持布局、工作区、多显示器、规则、边框、透明度和带动画的移动，而且每一项设置都能用一条命令修改，命令一到就立刻生效。",
+    "Mochi 把屏幕上的每个窗口排成平铺的格子，让你用键盘在它们之间移动。我用 Rust 从零写了它：七个 crate，一个完全不含 Win32 的纯核心，以及一个守护进程，其中只有一个线程持有全部状态并与 Windows 打交道。它支持布局、工作区、多显示器、规则、边框、透明度和带动画的移动，而且每一项视觉设置都能用一条命令修改，命令一到就立刻生效。",
   roleSummary: "只有我：设计、Win32 层和测试框架。",
   sections: [
     {
