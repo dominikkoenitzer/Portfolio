@@ -31,7 +31,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "A thorough Windows uninstaller written in Rust: it runs a program's own uninstaller, then finds and removes the registry keys, files, services, tasks and PATH entries it left behind, backing each one up first. Ships as a scriptable CLI and a native egui GUI sharing one engine.",
     overview:
-      "Windows' built-in uninstall leaves junk behind constantly: orphaned registry keys, leftover files, and empty folders under AppData, ProgramData and Program Files. So I built Oxidize in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find with a high, medium or low confidence. By default nothing is deleted without a validated .reg backup and file quarantine, and one command puts a removal back. Two binaries, one engine: oxidize for scripts, oxidize-gui if you would rather click. Junk cleaners, browser-trace cleaning and a startup manager are deliberately out of scope, because that is how these tools turn into suites.",
+      "Windows' built-in uninstall leaves junk behind constantly: orphaned registry keys, leftover files, and empty folders under AppData, ProgramData and Program Files. So I built Oxidize in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find with a high, medium or low confidence. By default no leftover is deleted without a validated .reg backup and file quarantine, and one command puts a removal back. Two binaries, one engine: oxidize for scripts, oxidize-gui if you would rather click. Junk cleaners, browser-trace cleaning and a startup manager are deliberately out of scope, because that is how these tools turn into suites.",
     roleSummary:
       "Just me: the engine, the CLI, the GUI, and the safety net that came before all three.",
     sections: [
@@ -46,7 +46,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       {
         heading: "One function is allowed to delete",
         body: [
-          "Every removal in Oxidize goes through safety::remove_leftovers, and nothing else in the engine deletes anything. A dry run stops there and changes nothing. If the backup folder cannot be created, the run aborts instead of carrying on without one; deleting permanently takes an explicit --no-backup.",
+          "Every leftover Oxidize removes goes through safety::remove_leftovers; the one other destructive call is the guarded Store-app removal, which Windows itself carries out. A dry run stops there and changes nothing. If the backup folder cannot be created, the run aborts instead of carrying on without one; deleting permanently takes an explicit --no-backup.",
           "Each registry key is exported with reg.exe first, and the export is checked before the key may go. Files and folders are moved into the backup with their original path kept, scheduled task definitions are copied, and a manifest records every step. oxidize restore replays that manifest in reverse, and its dry run checks that each quarantined copy is still there before promising to put it back.",
         ],
         code: {
@@ -90,7 +90,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "Ein gründlicher Windows-Deinstallierer in Rust: Er führt den eigenen Uninstaller eines Programms aus und entfernt danach die Registry-Schlüssel, Dateien, Dienste, Aufgaben und PATH-Einträge, die es hinterlassen hat, jeweils mit Backup zuerst. Kommt als skriptbare CLI und als native egui-GUI auf einer Engine.",
     overview:
-      "Die eingebaute Deinstallation von Windows lässt ständig Müll zurück: verwaiste Registry-Schlüssel, übrige Dateien und leere Ordner unter AppData, ProgramData und Program Files. Also habe ich Oxidize in Rust gebaut, direkt gegen die Win32-API. Es liest alle drei Uninstall-Registry-Ansichten, führt den registrierten Uninstaller aus (bei MSI-Produkten ein synchrones msiexec) und durchsucht dann Registry und Dateisystem nach Resten, wobei jeder Fund eine hohe, mittlere oder tiefe Sicherheit bekommt. Standardmässig wird nichts gelöscht ohne validiertes .reg-Backup und Datei-Quarantäne, und ein Befehl macht eine Entfernung wieder rückgängig. Zwei Binaries, eine Engine: oxidize für Skripte, oxidize-gui, wenn man lieber klickt. Junk-Cleaner, Browser-Spuren und ein Autostart-Manager sind bewusst ausserhalb des Umfangs, denn genau so werden solche Werkzeuge zu Suiten.",
+      "Die eingebaute Deinstallation von Windows lässt ständig Müll zurück: verwaiste Registry-Schlüssel, übrige Dateien und leere Ordner unter AppData, ProgramData und Program Files. Also habe ich Oxidize in Rust gebaut, direkt gegen die Win32-API. Es liest alle drei Uninstall-Registry-Ansichten, führt den registrierten Uninstaller aus (bei MSI-Produkten ein synchrones msiexec) und durchsucht dann Registry und Dateisystem nach Resten, wobei jeder Fund eine hohe, mittlere oder tiefe Sicherheit bekommt. Standardmässig wird kein Rest gelöscht ohne validiertes .reg-Backup und Datei-Quarantäne, und ein Befehl macht eine Entfernung wieder rückgängig. Zwei Binaries, eine Engine: oxidize für Skripte, oxidize-gui, wenn man lieber klickt. Junk-Cleaner, Browser-Spuren und ein Autostart-Manager sind bewusst ausserhalb des Umfangs, denn genau so werden solche Werkzeuge zu Suiten.",
     roleSummary:
       "Nur ich: die Engine, die CLI, die GUI und das Sicherheitsnetz, das vor allen dreien kam.",
     sections: [
@@ -105,7 +105,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       {
         heading: "Nur eine Funktion darf löschen",
         body: [
-          "Jede Entfernung in Oxidize läuft über safety::remove_leftovers, und sonst löscht nichts in der Engine irgendetwas. Ein Dry Run hört dort auf und ändert nichts. Lässt sich der Backup-Ordner nicht anlegen, bricht der Lauf ab, statt ohne weiterzumachen; endgültig löschen geht nur mit einem ausdrücklichen --no-backup.",
+          "Jeder Rest, den Oxidize entfernt, läuft über safety::remove_leftovers; der einzige andere zerstörerische Aufruf ist die abgesicherte Entfernung von Store-Apps, die Windows selbst ausführt. Ein Dry Run hört dort auf und ändert nichts. Lässt sich der Backup-Ordner nicht anlegen, bricht der Lauf ab, statt ohne weiterzumachen; endgültig löschen geht nur mit einem ausdrücklichen --no-backup.",
           "Jeder Registry-Schlüssel wird zuerst mit reg.exe exportiert, und der Export wird geprüft, bevor der Schlüssel weg darf. Dateien und Ordner werden mit ihrem ursprünglichen Pfad ins Backup verschoben, Definitionen geplanter Aufgaben werden kopiert, und ein Manifest hält jeden Schritt fest. oxidize restore spielt dieses Manifest rückwärts ab, und sein Dry Run prüft, ob jede Kopie in der Quarantäne noch da ist, bevor er verspricht, sie zurückzulegen.",
         ],
         code: {
@@ -149,7 +149,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "Un désinstalleur Windows minutieux écrit en Rust : il lance le désinstalleur du programme, puis trouve et retire les clés de registre, fichiers, services, tâches et entrées PATH laissés derrière, en sauvegardant chacun d'abord. Livré en CLI scriptable et en GUI egui native, partageant un seul moteur.",
     overview:
-      "La désinstallation intégrée de Windows laisse constamment des restes : clés de registre orphelines, fichiers résiduels, dossiers vides sous AppData, ProgramData et Program Files. J'ai donc construit Oxidize en Rust, directement contre l'API Win32. Il lit les trois vues de registre de désinstallation, lance le désinstalleur enregistré du programme (un msiexec synchrone pour les produits MSI), puis parcourt registre et système de fichiers à la recherche des restes, en attribuant à chaque trouvaille une confiance haute, moyenne ou basse. Par défaut, rien n'est supprimé sans une sauvegarde .reg validée et une mise en quarantaine des fichiers, et une seule commande annule une suppression. Deux binaires, un moteur : oxidize pour les scripts, oxidize-gui si vous préférez cliquer. Les nettoyeurs de fichiers temporaires, l'effacement des traces de navigation et un gestionnaire de démarrage sont délibérément hors périmètre, parce que c'est ainsi que ce genre d'outil devient une suite.",
+      "La désinstallation intégrée de Windows laisse constamment des restes : clés de registre orphelines, fichiers résiduels, dossiers vides sous AppData, ProgramData et Program Files. J'ai donc construit Oxidize en Rust, directement contre l'API Win32. Il lit les trois vues de registre de désinstallation, lance le désinstalleur enregistré du programme (un msiexec synchrone pour les produits MSI), puis parcourt registre et système de fichiers à la recherche des restes, en attribuant à chaque trouvaille une confiance haute, moyenne ou basse. Par défaut, aucun reste n'est supprimé sans une sauvegarde .reg validée et une mise en quarantaine des fichiers, et une seule commande annule une suppression. Deux binaires, un moteur : oxidize pour les scripts, oxidize-gui si vous préférez cliquer. Les nettoyeurs de fichiers temporaires, l'effacement des traces de navigation et un gestionnaire de démarrage sont délibérément hors périmètre, parce que c'est ainsi que ce genre d'outil devient une suite.",
     roleSummary:
       "Moi seul : le moteur, la CLI, la GUI, et le filet de sécurité qui est venu avant les trois.",
     sections: [
@@ -164,7 +164,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       {
         heading: "Une seule fonction a le droit de supprimer",
         body: [
-          "Chaque suppression dans Oxidize passe par safety::remove_leftovers, et rien d'autre dans le moteur ne supprime quoi que ce soit. Un dry run s'arrête là et ne change rien. Si le dossier de sauvegarde ne peut pas être créé, l'exécution s'interrompt au lieu de continuer sans ; supprimer définitivement demande un --no-backup explicite.",
+          "Chaque reste que retire Oxidize passe par safety::remove_leftovers ; le seul autre appel destructeur est la suppression encadrée des applications du Store, que Windows exécute lui-même. Un dry run s'arrête là et ne change rien. Si le dossier de sauvegarde ne peut pas être créé, l'exécution s'interrompt au lieu de continuer sans ; supprimer définitivement demande un --no-backup explicite.",
           "Chaque clé de registre est d'abord exportée avec reg.exe, et l'export est vérifié avant que la clé puisse partir. Fichiers et dossiers sont déplacés dans la sauvegarde avec leur chemin d'origine, les définitions de tâches planifiées sont copiées, et un manifeste consigne chaque étape. oxidize restore rejoue ce manifeste à l'envers, et son dry run vérifie que chaque copie en quarantaine est toujours là avant de promettre de la remettre en place.",
         ],
         code: {
@@ -207,7 +207,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "一个用 Rust 写的彻底的 Windows 卸载工具：先跑程序自带的卸载器，再找出并清掉它留下的注册表项、文件、服务、计划任务和 PATH 条目，每一项都先备份。同时提供可脚本化的 CLI 和原生 egui 图形界面，共用同一个引擎。",
     overview:
-      "Windows 自带的卸载总在留下垃圾：孤立的注册表项、残余文件，以及 AppData、ProgramData 和 Program Files 下的空文件夹。于是我用 Rust 写了 Oxidize，直接对着 Win32 API。它会读全部三个卸载注册表视图，运行程序注册的卸载器（MSI 产品走同步的 msiexec），然后扫描注册表和文件系统里的残留，并给每一处标上高、中或低的置信度。默认情况下，没有经过校验的 .reg 备份和文件隔离，什么都不会被删，而且一条命令就能把一次删除还原回去。两个可执行文件，一个引擎：oxidize 给脚本用，oxidize-gui 给想点鼠标的人用。垃圾清理、浏览器痕迹清理和启动项管理都刻意不在范围内，因为这类工具正是这样变成「全家桶」的。",
+      "Windows 自带的卸载总在留下垃圾：孤立的注册表项、残余文件，以及 AppData、ProgramData 和 Program Files 下的空文件夹。于是我用 Rust 写了 Oxidize，直接对着 Win32 API。它会读全部三个卸载注册表视图，运行程序注册的卸载器（MSI 产品走同步的 msiexec），然后扫描注册表和文件系统里的残留，并给每一处标上高、中或低的置信度。默认情况下，没有经过校验的 .reg 备份和文件隔离，任何残留都不会被删，而且一条命令就能把一次删除还原回去。两个可执行文件，一个引擎：oxidize 给脚本用，oxidize-gui 给想点鼠标的人用。垃圾清理、浏览器痕迹清理和启动项管理都刻意不在范围内，因为这类工具正是这样变成「全家桶」的。",
     roleSummary: "只有我：引擎、CLI、图形界面，以及比这三样都更早写好的那道保险。",
     sections: [
       {
@@ -221,7 +221,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       {
         heading: "只有一个函数可以删除",
         body: [
-          "Oxidize 里的每一次删除都经过 safety::remove_leftovers，引擎里别的地方什么都不删。dry run 在这里就停下，什么都不改。如果备份目录建不起来，这次运行就中止，不会在没有备份的情况下继续；要永久删除，必须明确加上 --no-backup。",
+          "Oxidize 删除的每一处残留都经过 safety::remove_leftovers；唯一另一个会删东西的调用，是受保护检查把关、由 Windows 自己执行的应用商店应用卸载。dry run 在这里就停下，什么都不改。如果备份目录建不起来，这次运行就中止，不会在没有备份的情况下继续；要永久删除，必须明确加上 --no-backup。",
           "每个注册表项先用 reg.exe 导出，导出文件校验通过后，这个项才允许删除。文件和文件夹连同原始路径一起移进备份，计划任务的定义被复制下来，每一步都记在一份清单里。oxidize restore 把这份清单倒着重放一遍；它的 dry run 会先确认隔离区里的每份副本都还在，才答应把它放回去。",
         ],
         code: {
