@@ -59,7 +59,7 @@ export const senbon: Record<Language, LocalizedContent> = {
           language: "ts",
           text: ADDRESS_CODE,
           caption:
-            "From app/guestbook/actions.ts, with its comments left out. The right-most forwarded hop is the one the platform appended; the ones before it can be forged by the client.",
+            "From src/app/guestbook/actions.ts, with its comments left out. The right-most forwarded hop is the one the platform appended; the ones before it can be forged by the client.",
         },
       },
       {
@@ -126,7 +126,7 @@ export const senbon: Record<Language, LocalizedContent> = {
           language: "ts",
           text: ADDRESS_CODE,
           caption:
-            "Aus app/guestbook/actions.ts, ohne die Kommentare. Der letzte weitergeleitete Hop ist der, den die Plattform angehängt hat; die davor kann der Client fälschen.",
+            "Aus src/app/guestbook/actions.ts, ohne die Kommentare. Der letzte weitergeleitete Hop ist der, den die Plattform angehängt hat; die davor kann der Client fälschen.",
         },
       },
       {
@@ -193,7 +193,7 @@ export const senbon: Record<Language, LocalizedContent> = {
           language: "ts",
           text: ADDRESS_CODE,
           caption:
-            "Tiré de app/guestbook/actions.ts, sans ses commentaires. Le saut le plus à droite est celui que la plateforme a ajouté ; ceux qui le précèdent peuvent être falsifiés par le client.",
+            "Tiré de src/app/guestbook/actions.ts, sans ses commentaires. Le saut le plus à droite est celui que la plateforme a ajouté ; ceux qui le précèdent peuvent être falsifiés par le client.",
         },
       },
       {
@@ -260,7 +260,7 @@ export const senbon: Record<Language, LocalizedContent> = {
           language: "ts",
           text: ADDRESS_CODE,
           caption:
-            "摘自 app/guestbook/actions.ts，省略了注释。最右边的转发跳是平台追加的，前面那些都可能被客户端伪造。",
+            "摘自 src/app/guestbook/actions.ts，省略了注释。最右边的转发跳是平台追加的，前面那些都可能被客户端伪造。",
         },
       },
       {
