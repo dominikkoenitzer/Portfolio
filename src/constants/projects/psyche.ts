@@ -35,7 +35,7 @@ const en: LocalizedContent = {
       heading: "The right account for the page in front",
       body: [
         "Psyche notes the foreground window inside the hotkey message itself, before the picker or anything else can take focus. If that window is Brave, Chrome, Edge, Vivaldi, Opera, Arc or Firefox, it reads the address bar through UI Automation on a thread of its own and gives the browser 300 ms to answer. While you are editing the address bar it reads nothing, because what is in there is not the page you are on.",
-        "An address matches an account at one of three levels. Exact means the host is a domain the account was used on, or a subdomain of one. Known means the issuer is one of 152 services whose sign-in domains ship with the app. Probable means the first label of the site's registrable domain is the issuer's name. The registrable domain comes from the Public Suffix List, embedded in the app, so an account saved for github.io never matches a stranger's site at name.github.io.",
+        "An address matches an account at one of three levels. Exact means the host is a domain the account was used on, or a subdomain of one. Known means the issuer is one of 151 services whose sign-in domains ship with the app. Probable means the first label of the site's registrable domain is the issuer's name. The registrable domain comes from the Public Suffix List, embedded in the app, so an account saved for github.io never matches a stranger's site at name.github.io.",
         "Only an exact or known match is typed without asking, and only when there is exactly one. A probable match always opens the picker. Once I pick an account on a site, Psyche saves that domain on the account, inside the encrypted vault, and the next match is exact.",
       ],
     },
@@ -79,7 +79,7 @@ const en: LocalizedContent = {
   stats: [
     { value: "1", label: "hotkey" },
     { value: "6", label: "apps it imports from" },
-    { value: "152", label: "known services" },
+    { value: "151", label: "known services" },
     { value: "667", label: "tests" },
   ],
 };
@@ -96,7 +96,7 @@ const de: LocalizedContent = {
       heading: "Das richtige Konto für die Seite im Vordergrund",
       body: [
         "Psyche hält das Vordergrundfenster schon beim Verarbeiten der Hotkey-Nachricht fest, bevor das Auswahlfenster oder sonst etwas den Fokus übernehmen kann. Ist dieses Fenster Brave, Chrome, Edge, Vivaldi, Opera, Arc oder Firefox, liest Psyche die Adressleiste über UI Automation in einem eigenen Thread und gibt dem Browser 300 ms Zeit für die Antwort. Während du die Adressleiste bearbeitest, wird nichts gelesen, denn was dort steht, ist nicht die Seite, auf der du bist.",
-        "Eine Adresse passt auf einer von drei Stufen zu einem Konto. Exakt heisst, der Host ist eine Domain, auf der das Konto benutzt wurde, oder eine Subdomain davon. Bekannt heisst, der Aussteller ist einer von 152 Diensten, deren Anmelde-Domains mit der App mitkommen. Wahrscheinlich heisst, der erste Teil der registrierbaren Domain der Seite ist der Name des Ausstellers. Die registrierbare Domain kommt aus der Public Suffix List, die in die App eingebaut ist, deshalb passt ein für github.io gespeichertes Konto nie auf die Seite eines Fremden unter name.github.io.",
+        "Eine Adresse passt auf einer von drei Stufen zu einem Konto. Exakt heisst, der Host ist eine Domain, auf der das Konto benutzt wurde, oder eine Subdomain davon. Bekannt heisst, der Aussteller ist einer von 151 Diensten, deren Anmelde-Domains mit der App mitkommen. Wahrscheinlich heisst, der erste Teil der registrierbaren Domain der Seite ist der Name des Ausstellers. Die registrierbare Domain kommt aus der Public Suffix List, die in die App eingebaut ist, deshalb passt ein für github.io gespeichertes Konto nie auf die Seite eines Fremden unter name.github.io.",
         "Ohne Nachfrage getippt wird nur bei einem exakten oder bekannten Treffer, und nur, wenn es genau einen gibt. Ein wahrscheinlicher Treffer öffnet immer das Auswahlfenster. Sobald ich auf einer Seite ein Konto auswähle, speichert Psyche diese Domain beim Konto, im verschlüsselten Tresor, und der nächste Treffer ist exakt.",
       ],
     },
@@ -140,7 +140,7 @@ const de: LocalizedContent = {
   stats: [
     { value: "1", label: "Hotkey" },
     { value: "6", label: "Apps als Importquelle" },
-    { value: "152", label: "bekannte Dienste" },
+    { value: "151", label: "bekannte Dienste" },
     { value: "667", label: "Tests" },
   ],
 };
@@ -157,7 +157,7 @@ const fr: LocalizedContent = {
       heading: "Le bon compte pour la page au premier plan",
       body: [
         "Psyche note la fenêtre au premier plan dans le message du raccourci lui-même, avant que le sélecteur ou quoi que ce soit d'autre ne puisse prendre le focus. Si cette fenêtre est Brave, Chrome, Edge, Vivaldi, Opera, Arc ou Firefox, Psyche lit la barre d'adresse via UI Automation sur un thread à part et laisse 300 ms au navigateur pour répondre. Pendant que vous modifiez la barre d'adresse, Psyche ne lit rien, parce que ce qui s'y trouve n'est pas la page où vous êtes.",
-        "Une adresse correspond à un compte à l'un de trois niveaux. Exact veut dire que l'hôte est un domaine sur lequel le compte a servi, ou un sous-domaine de l'un d'eux. Connu veut dire que l'émetteur est l'un des 152 services dont les domaines de connexion sont livrés avec l'application. Probable veut dire que le premier label du domaine enregistrable du site est le nom de l'émetteur. Le domaine enregistrable vient de la Public Suffix List, intégrée à l'application, si bien qu'un compte enregistré pour github.io ne correspond jamais au site d'un inconnu sous nom.github.io.",
+        "Une adresse correspond à un compte à l'un de trois niveaux. Exact veut dire que l'hôte est un domaine sur lequel le compte a servi, ou un sous-domaine de l'un d'eux. Connu veut dire que l'émetteur est l'un des 151 services dont les domaines de connexion sont livrés avec l'application. Probable veut dire que le premier label du domaine enregistrable du site est le nom de l'émetteur. Le domaine enregistrable vient de la Public Suffix List, intégrée à l'application, si bien qu'un compte enregistré pour github.io ne correspond jamais au site d'un inconnu sous nom.github.io.",
         "Psyche ne tape sans demander que sur une correspondance exacte ou connue, et seulement s'il y en a exactement une. Une correspondance probable ouvre toujours le sélecteur. Dès que je choisis un compte sur un site, Psyche enregistre ce domaine sur le compte, dans le coffre chiffré, et la correspondance suivante est exacte.",
       ],
     },
@@ -201,7 +201,7 @@ const fr: LocalizedContent = {
   stats: [
     { value: "1", label: "raccourci" },
     { value: "6", label: "applications d'où importer" },
-    { value: "152", label: "services connus" },
+    { value: "151", label: "services connus" },
     { value: "667", label: "tests" },
   ],
 };
@@ -218,7 +218,7 @@ const zh: LocalizedContent = {
       heading: "为眼前的页面选对账户",
       body: [
         "Psyche 在处理快捷键消息时就当场记下前台窗口，赶在选择框或别的任何东西拿走焦点之前。如果这个窗口是 Brave、Chrome、Edge、Vivaldi、Opera、Arc 或 Firefox，它会在一个单独的线程上通过 UI Automation 读取地址栏，并给浏览器 300 毫秒的时间作答。你正在编辑地址栏时，它什么也不读，因为那里面的内容并不是你所在的页面。",
-        "地址与账户的匹配分三个等级。「精确」指主机名是这个账户用过的域名，或是其中某个域名的子域名。「已知」指发行方属于 152 个服务之一，这些服务的登录域名随应用一起提供。「可能」指网站可注册域名的第一段就是发行方的名字。可注册域名来自内置在应用里的 Public Suffix List，所以为 github.io 保存的账户，永远不会匹配到别人放在 name.github.io 上的网站。",
+        "地址与账户的匹配分三个等级。「精确」指主机名是这个账户用过的域名，或是其中某个域名的子域名。「已知」指发行方属于 151 个服务之一，这些服务的登录域名随应用一起提供。「可能」指网站可注册域名的第一段就是发行方的名字。可注册域名来自内置在应用里的 Public Suffix List，所以为 github.io 保存的账户，永远不会匹配到别人放在 name.github.io 上的网站。",
         "只有精确或已知的匹配才会不经询问直接输入，而且前提是正好只有一个。可能的匹配总是会打开选择框。我在某个网站上选过一次账户之后，Psyche 会把这个域名存到该账户上，存在加密的保险库里，下一次的匹配就是精确的了。",
       ],
     },
@@ -262,7 +262,7 @@ const zh: LocalizedContent = {
   stats: [
     { value: "1", label: "个快捷键" },
     { value: "6", label: "个可导入的应用" },
-    { value: "152", label: "个已知服务" },
+    { value: "151", label: "个已知服务" },
     { value: "667", label: "个测试" },
   ],
 };
