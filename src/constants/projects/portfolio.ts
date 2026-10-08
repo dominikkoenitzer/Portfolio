@@ -62,7 +62,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       { value: "4", label: "languages" },
       { value: "0", label: "i18n libraries" },
       { value: "24", label: "prerendered routes" },
-      { value: "252", label: "tests" },
+      { value: "253", label: "tests" },
     ],
   },
   de: {
@@ -124,7 +124,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       { value: "4", label: "Sprachen" },
       { value: "0", label: "i18n-Libraries" },
       { value: "24", label: "vorgerenderte Routen" },
-      { value: "252", label: "Tests" },
+      { value: "253", label: "Tests" },
     ],
   },
   fr: {
@@ -186,7 +186,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       { value: "4", label: "langues" },
       { value: "0", label: "bibliothèques i18n" },
       { value: "24", label: "routes prérendues" },
-      { value: "252", label: "tests" },
+      { value: "253", label: "tests" },
     ],
   },
   zh: {
@@ -247,7 +247,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       { value: "4", label: "语言" },
       { value: "0", label: "i18n 库" },
       { value: "24", label: "预渲染路由" },
-      { value: "252", label: "测试" },
+      { value: "253", label: "测试" },
     ],
   },
 };

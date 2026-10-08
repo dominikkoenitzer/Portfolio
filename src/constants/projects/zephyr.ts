@@ -85,7 +85,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "tools, on purpose" },
       { value: "0", label: "backend" },
       { value: "100%", label: "on-device" },
-      { value: "107", label: "tests", liveTests: "zephyr" },
+      { value: "204", label: "tests", liveTests: "zephyr" },
     ],
   },
   de: {
@@ -160,7 +160,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "Tools, mit Absicht" },
       { value: "0", label: "Backend" },
       { value: "100%", label: "auf dem Gerät" },
-      { value: "107", label: "Tests", liveTests: "zephyr" },
+      { value: "204", label: "Tests", liveTests: "zephyr" },
     ],
   },
   fr: {
@@ -235,7 +235,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "outils, à dessein" },
       { value: "0", label: "backend" },
       { value: "100%", label: "sur l'appareil" },
-      { value: "107", label: "tests", liveTests: "zephyr" },
+      { value: "204", label: "tests", liveTests: "zephyr" },
     ],
   },
   zh: {
@@ -310,7 +310,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
       { value: "2", label: "工具，有意为之" },
       { value: "0", label: "后端" },
       { value: "100%", label: "本地存储" },
-      { value: "107", label: "测试", liveTests: "zephyr" },
+      { value: "204", label: "测试", liveTests: "zephyr" },
     ],
   },
 };

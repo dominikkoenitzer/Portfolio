@@ -69,7 +69,7 @@ const en: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "crates" },
-    { value: "965", label: "tests", liveTests: "mochi" },
+    { value: "1043", label: "tests", liveTests: "mochi" },
     { value: "0", label: "admin rights" },
     { value: "1", label: "key to stop" },
   ],
@@ -128,7 +128,7 @@ const de: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "Crates" },
-    { value: "965", label: "Tests", liveTests: "mochi" },
+    { value: "1043", label: "Tests", liveTests: "mochi" },
     { value: "0", label: "Adminrechte" },
     { value: "1", label: "Taste zum Anhalten" },
   ],
@@ -186,7 +186,7 @@ const fr: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "crates" },
-    { value: "965", label: "tests", liveTests: "mochi" },
+    { value: "1043", label: "tests", liveTests: "mochi" },
     { value: "0", label: "droits d'admin" },
     { value: "1", label: "touche pour arrêter" },
   ],
@@ -244,7 +244,7 @@ const zh: LocalizedContent = {
   tags: ["Rust", "Win32", "Windows", "Systems"],
   stats: [
     { value: "7", label: "个 crate" },
-    { value: "965", label: "个测试", liveTests: "mochi" },
+    { value: "1043", label: "个测试", liveTests: "mochi" },
     { value: "0", label: "管理员权限" },
     { value: "1", label: "个键即可停止" },
   ],

@@ -81,7 +81,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "front-ends, one engine" },
       { value: "3", label: "registry views scanned" },
       { value: "7", label: "commands" },
-      { value: "55", label: "unit tests" },
+      { value: "125", label: "unit tests" },
     ],
   },
   de: {
@@ -140,7 +140,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "Front-Ends, eine Engine" },
       { value: "3", label: "Registry-Ansichten" },
       { value: "7", label: "Befehle" },
-      { value: "55", label: "Unit-Tests" },
+      { value: "125", label: "Unit-Tests" },
     ],
   },
   fr: {
@@ -199,7 +199,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "front-ends, un moteur" },
       { value: "3", label: "vues de registre" },
       { value: "7", label: "commandes" },
-      { value: "55", label: "tests unitaires" },
+      { value: "125", label: "tests unitaires" },
     ],
   },
   zh: {
@@ -256,7 +256,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "前端，一个引擎" },
       { value: "3", label: "注册表视图" },
       { value: "7", label: "条命令" },
-      { value: "55", label: "单元测试" },
+      { value: "125", label: "单元测试" },
     ],
   },
 };
