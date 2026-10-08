@@ -60,7 +60,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         body: [
           "There used to be three separate tables of hue names, and they disagreed: hue 200 was Blue in one tool and Cyan in another. Now there is one table in the color library, with nine names around the wheel, and every tool that names a hue reads from it.",
           "A test walks all 360 degrees and counts the name changes. There have to be exactly nine, because red owns both ends of the wheel, so a second table creeping back in fails CI.",
-          "The vision simulator lives in the same folder: eight kinds of color blindness, each a 3x3 matrix run over every pixel of the image. Its tests check that greys pass through almost untouched and that complete color blindness collapses to a true grey. The library has 23 tests in all.",
+          "The vision simulator lives in the same folder: eight kinds of color blindness, each a 3x3 matrix run over every pixel of the image. Its tests check that greys pass through almost untouched and that complete color blindness collapses to a true grey. The library has 126 tests in all.",
         ],
         figure: 1,
       },
@@ -122,7 +122,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         body: [
           "Früher gab es drei getrennte Tabellen mit Farbtonnamen, und sie waren sich nicht einig: Farbton 200 hiess im einen Werkzeug Blue, im anderen Cyan. Jetzt gibt es eine Tabelle in der Farbbibliothek, mit neun Namen rund um den Farbkreis, und jedes Werkzeug, das einen Farbton benennt, liest aus ihr.",
           "Ein Test läuft alle 360 Grad ab und zählt die Namenswechsel. Es müssen genau neun sein, weil Rot beide Enden des Kreises besetzt, und eine zweite Tabelle, die sich wieder einschleicht, lässt die CI scheitern.",
-          "Der Farbsehsimulator liegt im selben Ordner: acht Arten von Farbenblindheit, jede eine 3x3-Matrix, die über jeden Pixel des Bildes läuft. Seine Tests prüfen, dass Grautöne fast unverändert durchgehen und dass vollständige Farbenblindheit zu einem echten Grau zusammenfällt. Insgesamt hat die Bibliothek 23 Tests.",
+          "Der Farbsehsimulator liegt im selben Ordner: acht Arten von Farbenblindheit, jede eine 3x3-Matrix, die über jeden Pixel des Bildes läuft. Seine Tests prüfen, dass Grautöne fast unverändert durchgehen und dass vollständige Farbenblindheit zu einem echten Grau zusammenfällt. Insgesamt hat die Bibliothek 126 Tests.",
         ],
         figure: 1,
       },
@@ -184,7 +184,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         body: [
           "Il y avait autrefois trois tables de noms de teintes séparées, et elles ne s'accordaient pas : la teinte 200 était Blue dans un outil et Cyan dans un autre. Il n'y a plus qu'une table, dans la bibliothèque de couleurs, avec neuf noms autour du cercle, et chaque outil qui nomme une teinte la lit.",
           "Un test parcourt les 360 degrés et compte les changements de nom. Il doit y en avoir exactement neuf, puisque le rouge occupe les deux bouts du cercle ; une deuxième table qui reviendrait en douce fait échouer la CI.",
-          "Le simulateur de vision des couleurs vit dans le même dossier : huit formes de daltonisme, chacune une matrice 3x3 appliquée à chaque pixel de l'image. Ses tests vérifient que les gris passent presque intacts et qu'un daltonisme total ramène tout à un vrai gris. La bibliothèque compte 23 tests en tout.",
+          "Le simulateur de vision des couleurs vit dans le même dossier : huit formes de daltonisme, chacune une matrice 3x3 appliquée à chaque pixel de l'image. Ses tests vérifient que les gris passent presque intacts et qu'un daltonisme total ramène tout à un vrai gris. La bibliothèque compte 126 tests en tout.",
         ],
         figure: 1,
       },
@@ -246,7 +246,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         body: [
           "以前有三张各自独立的色相名称表，而且彼此对不上：色相 200 在一个工具里叫 Blue，在另一个里叫 Cyan。现在颜色库里只有一张表，色环上九个名字，所有要给色相命名的工具都从这里读。",
           "有一个测试把 360 度走一遍，数名字变了几次。必须正好九次，因为红色占着色环的两端；如果第二张表又悄悄回来，CI 就会失败。",
-          "色觉模拟器也在同一个目录里：八种色盲，每种都是一个 3x3 矩阵，作用在图片的每个像素上。它的测试检查灰色几乎原样通过，全色盲会把一切变成真正的灰。整个库一共 23 个测试。",
+          "色觉模拟器也在同一个目录里：八种色盲，每种都是一个 3x3 矩阵，作用在图片的每个像素上。它的测试检查灰色几乎原样通过，全色盲会把一切变成真正的灰。整个库一共 126 个测试。",
         ],
         figure: 1,
       },
