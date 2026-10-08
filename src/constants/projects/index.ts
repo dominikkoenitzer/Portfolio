@@ -65,7 +65,11 @@ const PROJECT_BASE: ProjectBase[] = [
     image: "/projects/entropy.jpg",
     gallery: [
       "/projects/entropy-2.jpg",
+      "/projects/entropy-3.jpg",
     ],
+    // The website and, since October 2026, its Windows app in the same repo.
+    programmingLanguages: ["TypeScript", "C#"],
+    operatingSystem: "Web, Windows",
   },
   {
     slug: "spectrum",
