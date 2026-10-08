@@ -62,14 +62,14 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "A password manager for Windows on the same engine",
         body: [
-          "The Windows app keeps logins in a local vault and types them for you. It is written in C# on .NET 10 with WinUI 3 and compiled with Native AOT. It started from the code of Psyche, my two-factor app. Press Alt+E on a sign-in page and Entropy reads the address of the page in front. If exactly one saved login belongs to that site and the cursor is in a text field, it types the username, a Tab and the password. Otherwise a small picker opens with the site's logins on top. A login with saved sites is offered only on those sites and their subdomains, never on an address that merely looks like one of them. There is no server and no account.",
+          "The Windows app keeps logins in a local vault and types them for you. There is no server and no account to sign up for. Press Alt+E on a sign-in page and Entropy reads the address of the page in front. If exactly one saved login belongs to that site and the cursor is in a text field, it types the username, a Tab and the password. Otherwise a small picker opens with the site's logins on top. A login with saved sites is offered only on those sites and their subdomains, never on an address that merely looks like one of them. I wrote the app in C# on .NET 10 with WinUI 3, starting from the code of Psyche, my two-factor app, and compiled it with Native AOT. Its windows use the website's Y2K poster look and fonts.",
         ],
         figure: 3,
       },
       {
         heading: "A health check that stays on the PC",
         body: [
-          "The generator and the analyzer from the website are ported to C#, the randInt above included. A script runs the site's own TypeScript over 643 passwords and 672 generator settings and saves the results, and the C# tests have to reproduce every guess count, bit value, tier and crack time in that file. The Health page puts each saved password through the analyzer and sorts the problems into four groups: found in a leak, weak, reused and old. The leak check runs offline against about a million of the most common passwords from public leaks. A binary fuse filter of 2.26 MB keeps a 16-bit fingerprint of each one's SHA-256 and raises a false alarm for about 1 in 65,536 passwords that never leaked.",
+          "The Health page puts each saved password through the analyzer and sorts the problems into four groups: found in a leak, weak, reused and old. The leak check runs offline against about a million of the most common passwords from public leaks. A binary fuse filter of 2.26 MB keeps a 16-bit fingerprint of each one's SHA-256 and raises a false alarm for about 1 in 65,536 passwords that never leaked. I ported the website's generator and analyzer to C#, including randInt, the function that draws random numbers without modulo bias. A script runs the website's own TypeScript over 643 passwords and 672 generator settings and saves the results, and the C# tests have to reproduce every guess count, bit value, tier and crack time in that file. In all there are 828 xUnit test cases for the core library and 153 for the Windows layer.",
         ],
         figure: 4,
       },
@@ -77,7 +77,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, imports and the vault",
         body: [
           "A login keeps its last ten passwords with the date each one was replaced, and can hold a one-time code that a second Alt+E types into the code field. Secure notes and payment cards live in the same vault. An import reads the password exports of browsers and other password apps and, once every entry is saved, overwrites the export file with zeros and deletes it.",
-          "The vault is encrypted with XChaCha20-Poly1305 under a key that Windows protects for the signed-in account, so it opens after sign-in with no master password and on no other account. A backup carries a password of its own, stretched with Argon2id, and restores on any PC: in full into an empty vault, and into a filled one by adding only what it lacks. Entropy wipes its keys after 15 minutes without use and when Windows locks or sleeps. After its own idle lock, the first password, code or backup asks for Windows Hello once; locking or signing in to Windows never asks. The windows use the website's Y2K poster look and fonts. There are 828 xUnit test cases for the core library and 153 for the Windows layer.",
+          "The vault is encrypted with XChaCha20-Poly1305 under a key that Windows protects for the signed-in account, so it needs no master password and opens on no other account. Entropy wipes its keys when Windows locks or sleeps, and signing back in to Windows is enough to open the vault again. After 15 minutes without use it wipes them as well, and the first password, code or backup after that asks for Windows Hello once. A backup carries a password of its own, stretched with Argon2id, and restores on any PC: in full into an empty vault, and into a filled one by adding only what it lacks.",
         ],
         figure: 2,
       },
@@ -86,8 +86,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       "The Generate tab: a 16-character password from all four character sets at 103 bits, rated maximum, with the generative art for its seed above it.",
       "The Analyze tab on a four-word passphrase: 94 bits, the five attacker scenarios, and the attack path that splits it into dictionary words and random pieces.",
       "The vault with demo logins. One-time codes count down beside their logins, and the reused and weak labels come from the analyzer.",
-      "The Alt+E picker on a sign-in page: the login saved for the site in front comes first, marked as this site, above the keys to type, copy or close.",
-      "The Health page with demo logins: found in a leak, weak, reused and old, all checked on the PC with nothing sent anywhere.",
+      "The Alt+E picker on a sign-in page. The top login is marked as this site, and the keys below it type, copy or close.",
+      "The Health page with demo logins, sorted into the four groups.",
     ],
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
@@ -144,14 +144,14 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Ein Passwortmanager für Windows auf derselben Engine",
         body: [
-          "Die Windows-App bewahrt Logins in einem lokalen Tresor auf und tippt sie ein. Sie ist in C# auf .NET 10 mit WinUI 3 geschrieben und mit Native AOT kompiliert. Entstanden ist sie aus dem Code von Psyche, meiner Zwei-Faktor-App. Drückt man auf einer Anmeldeseite Alt+E, liest Entropy die Adresse der Seite im Vordergrund. Gehört genau ein gespeichertes Login zu dieser Seite und steht der Cursor in einem Textfeld, tippt Entropy den Benutzernamen, einen Tab und das Passwort ein. Sonst öffnet sich ein kleines Auswahlfenster mit den Logins der Seite zuoberst. Ein Login mit gespeicherten Seiten wird nur auf diesen Seiten und ihren Subdomains angeboten, nie auf einer Adresse, die einer von ihnen bloss ähnlich sieht. Es gibt keinen Server und kein Konto.",
+          "Die Windows-App bewahrt Logins in einem lokalen Tresor auf und tippt sie ein. Es gibt keinen Server und kein Konto, das man eröffnen müsste. Drückt man auf einer Anmeldeseite Alt+E, liest Entropy die Adresse der Seite im Vordergrund. Gehört genau ein gespeichertes Login zu dieser Seite und steht der Cursor in einem Textfeld, tippt Entropy den Benutzernamen, einen Tab und das Passwort ein. Sonst öffnet sich ein kleines Auswahlfenster mit den Logins der Seite zuoberst. Ein Login mit gespeicherten Seiten wird nur auf diesen Seiten und ihren Subdomains angeboten, nie auf einer Adresse, die einer von ihnen bloss ähnlich sieht. Die App habe ich in C# auf .NET 10 mit WinUI 3 geschrieben, ausgehend vom Code von Psyche, meiner Zwei-Faktor-App, und mit Native AOT kompiliert. Ihre Fenster übernehmen den Y2K-Posterlook und die Schriften der Website.",
         ],
         figure: 3,
       },
       {
         heading: "Ein Gesundheitscheck, der auf dem PC bleibt",
         body: [
-          "Generator und Analyse der Website sind nach C# portiert, das randInt von oben eingeschlossen. Ein Skript lässt das TypeScript der Website über 643 Passwörter und 672 Generator-Einstellungen laufen und speichert die Ergebnisse, und die C#-Tests müssen jede Anzahl Versuche, jeden Bitwert, jede Stufe und jede Knackzeit in dieser Datei genau treffen. Die Health-Seite schickt jedes gespeicherte Passwort durch die Analyse und ordnet die Probleme in vier Gruppen: in einem Leak gefunden, schwach, mehrfach verwendet und alt. Die Leak-Prüfung läuft offline gegen rund eine Million der häufigsten Passwörter aus öffentlichen Leaks. Ein Binary Fuse Filter von 2,26 MB hält vom SHA-256 jedes Passworts einen 16-Bit-Fingerabdruck und meldet etwa 1 von 65'536 nie geleakten Passwörtern fälschlich als gefunden.",
+          "Die Health-Seite schickt jedes gespeicherte Passwort durch die Analyse und ordnet die Probleme in vier Gruppen: in einem Leak gefunden, schwach, mehrfach verwendet und alt. Die Leak-Prüfung läuft offline gegen rund eine Million der häufigsten Passwörter aus öffentlichen Leaks. Ein Binary Fuse Filter von 2,26 MB hält vom SHA-256 jedes Passworts einen 16-Bit-Fingerabdruck und meldet etwa 1 von 65'536 nie geleakten Passwörtern fälschlich als gefunden. Generator und Analyse der Website habe ich nach C# portiert, samt randInt, der Funktion, die Zufallszahlen ohne Modulo-Verzerrung zieht. Ein Skript lässt das TypeScript der Website über 643 Passwörter und 672 Generator-Einstellungen laufen und speichert die Ergebnisse, und die C#-Tests müssen jede Anzahl Versuche, jeden Bitwert, jede Stufe und jede Knackzeit in dieser Datei genau treffen. Insgesamt gibt es für die Kernbibliothek 828 xUnit-Testfälle und für die Windows-Schicht 153.",
         ],
         figure: 4,
       },
@@ -159,7 +159,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, Importe und der Tresor",
         body: [
           "Ein Login behält seine letzten zehn Passwörter mit dem Datum, an dem jedes ersetzt wurde, und kann einen Einmalcode enthalten, den ein zweites Alt+E ins Codefeld tippt. Sichere Notizen und Zahlungskarten liegen im selben Tresor. Ein Import liest die Passwort-Exporte von Browsern und anderen Passwort-Apps, und sobald jeder Eintrag gespeichert ist, überschreibt er die Exportdatei mit Nullen und löscht sie.",
-          "Der Tresor ist mit XChaCha20-Poly1305 verschlüsselt, unter einem Schlüssel, den Windows für das angemeldete Konto schützt, also öffnet er sich nach dem Anmelden ohne Master-Passwort und auf keinem anderen Konto. Ein Backup hat ein eigenes Passwort, mit Argon2id gestreckt, und lässt sich auf jedem PC wiederherstellen: in einen leeren Tresor vollständig, in einen gefüllten nur mit dem, was ihm fehlt. Entropy verwirft seine Schlüssel nach 15 Minuten ohne Benutzung und wenn Windows sperrt oder in den Energiesparmodus geht. Nach der eigenen Sperre wegen Inaktivität fragt das erste Passwort, der erste Code oder das erste Backup einmal nach Windows Hello; das Sperren von Windows oder die Anmeldung fragt nie. Die Fenster übernehmen den Y2K-Posterlook und die Schriften der Website. Für die Kernbibliothek gibt es 828 xUnit-Testfälle und für die Windows-Schicht 153.",
+          "Der Tresor ist mit XChaCha20-Poly1305 verschlüsselt, unter einem Schlüssel, den Windows für das angemeldete Konto schützt, also braucht er kein Master-Passwort und öffnet sich auf keinem anderen Konto. Entropy verwirft seine Schlüssel, wenn Windows sperrt oder in den Energiesparmodus geht, und die nächste Anmeldung bei Windows genügt, um den Tresor wieder zu öffnen. Nach 15 Minuten ohne Benutzung verwirft es sie ebenfalls, und danach fragt das erste Passwort, der erste Code oder das erste Backup einmal nach Windows Hello. Ein Backup hat ein eigenes Passwort, mit Argon2id gestreckt, und lässt sich auf jedem PC wiederherstellen: in einen leeren Tresor vollständig, in einen gefüllten nur mit dem, was ihm fehlt.",
         ],
         figure: 2,
       },
@@ -168,8 +168,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       "Der Generieren-Tab: ein Passwort mit 16 Zeichen aus allen vier Zeichensätzen, 103 Bit, als maximal bewertet, darüber die generative Grafik zu seinem Seed.",
       "Der Analysieren-Tab mit einer Passphrase aus vier Wörtern: 94 Bit, die fünf Angreiferszenarien und der Angriffspfad, der sie in Wörterbuchwörter und zufällige Stücke zerlegt.",
       "Der Tresor mit Demo-Logins. Einmalcodes laufen neben ihren Logins ab, und die Hinweise auf mehrfach verwendete und schwache Passwörter kommen von der Analyse.",
-      "Die Auswahl mit Alt+E auf einer Anmeldeseite: Das Login für die Seite im Vordergrund steht zuoberst und ist als diese Seite markiert, darunter die Tasten zum Tippen, Kopieren und Schliessen.",
-      "Die Health-Seite mit Demo-Logins: in einem Leak gefunden, schwach, mehrfach verwendet und alt, alles auf dem PC geprüft, ohne dass etwas gesendet wird.",
+      "Die Auswahl mit Alt+E auf einer Anmeldeseite. Das oberste Login ist als diese Seite markiert, darunter liegen die Tasten zum Tippen, Kopieren und Schliessen.",
+      "Die Health-Seite mit Demo-Logins, in die vier Gruppen sortiert.",
     ],
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
@@ -226,14 +226,14 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Un gestionnaire de mots de passe pour Windows sur le même moteur",
         body: [
-          "L'app Windows garde les identifiants dans un coffre local et les tape à votre place. Elle est écrite en C# sur .NET 10 avec WinUI 3 et compilée avec Native AOT. Elle est partie du code de Psyche, mon app de double authentification. Sur une page de connexion, Alt+E fait lire à Entropy l'adresse de la page au premier plan. Si un seul identifiant enregistré correspond à ce site et que le curseur est dans un champ de texte, il tape le nom d'utilisateur, une tabulation et le mot de passe. Sinon, un petit sélecteur s'ouvre avec les identifiants du site en tête. Un identifiant avec des sites enregistrés n'est proposé que sur ces sites et leurs sous-domaines, jamais sur une adresse qui ne fait que leur ressembler. Il n'y a ni serveur ni compte.",
+          "L'app Windows garde les identifiants dans un coffre local et les tape à votre place. Il n'y a ni serveur ni compte à créer. Sur une page de connexion, Alt+E fait lire à Entropy l'adresse de la page au premier plan. Si un seul identifiant enregistré correspond à ce site et que le curseur est dans un champ de texte, il tape le nom d'utilisateur, une tabulation et le mot de passe. Sinon, un petit sélecteur s'ouvre avec les identifiants du site en tête. Un identifiant avec des sites enregistrés n'est proposé que sur ces sites et leurs sous-domaines, jamais sur une adresse qui ne fait que leur ressembler. J'ai écrit l'app en C# sur .NET 10 avec WinUI 3, à partir du code de Psyche, mon app de double authentification, et je l'ai compilée avec Native AOT. Ses fenêtres reprennent le style d'affiche Y2K et les polices du site.",
         ],
         figure: 3,
       },
       {
         heading: "Un bilan de santé qui reste sur le PC",
         body: [
-          "Le générateur et l'analyseur du site sont portés en C#, le randInt ci-dessus compris. Un script fait tourner le TypeScript du site sur 643 mots de passe et 672 réglages du générateur et enregistre les résultats, et les tests C# doivent retrouver chaque nombre d'essais, chaque valeur en bits, chaque palier et chaque temps de cassage de ce fichier. La page Health passe chaque mot de passe enregistré dans l'analyseur et range les problèmes en quatre groupes : trouvé dans une fuite, faible, réutilisé et ancien. La vérification des fuites se fait hors ligne, contre environ un million des mots de passe les plus courants issus de fuites publiques. Un filtre binary fuse de 2,26 Mo garde une empreinte de 16 bits du SHA-256 de chacun, et signale à tort environ 1 mot de passe sur 65 536 qui n'a jamais fuité.",
+          "La page Health passe chaque mot de passe enregistré dans l'analyseur et range les problèmes en quatre groupes : trouvé dans une fuite, faible, réutilisé et ancien. La vérification des fuites se fait hors ligne, contre environ un million des mots de passe les plus courants issus de fuites publiques. Un filtre binary fuse de 2,26 Mo garde une empreinte de 16 bits du SHA-256 de chacun, et signale à tort environ 1 mot de passe sur 65 536 qui n'a jamais fuité. J'ai porté en C# le générateur et l'analyseur du site, y compris randInt, la fonction qui tire des nombres aléatoires sans biais de modulo. Un script fait tourner le TypeScript du site sur 643 mots de passe et 672 réglages du générateur et enregistre les résultats, et les tests C# doivent retrouver chaque nombre d'essais, chaque valeur en bits, chaque palier et chaque temps de cassage de ce fichier. Au total, la bibliothèque centrale a 828 cas de test xUnit, la couche Windows 153.",
         ],
         figure: 4,
       },
@@ -241,7 +241,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, importations et coffre",
         body: [
           "Un identifiant garde ses dix derniers mots de passe avec la date où chacun a été remplacé, et peut contenir un code à usage unique qu'un second Alt+E tape dans le champ du code. Les notes sécurisées et les cartes de paiement sont dans le même coffre. Une importation lit les exports de mots de passe des navigateurs et d'autres apps de mots de passe, puis, une fois chaque entrée enregistrée, écrase le fichier d'export avec des zéros et le supprime.",
-          "Le coffre est chiffré avec XChaCha20-Poly1305 sous une clé que Windows protège pour le compte connecté : il s'ouvre après la connexion sans mot de passe maître, et sur aucun autre compte. Une sauvegarde a son propre mot de passe, étiré avec Argon2id, et se restaure sur n'importe quel PC : en entier dans un coffre vide, et dans un coffre déjà rempli en n'ajoutant que ce qui lui manque. Entropy efface ses clés après 15 minutes d'inactivité et quand Windows se verrouille ou se met en veille. Après son propre verrouillage pour inactivité, le premier mot de passe, code ou sauvegarde demande Windows Hello une fois ; verrouiller Windows ou s'y connecter ne le demande jamais. Les fenêtres reprennent le style d'affiche Y2K et les polices du site. La bibliothèque centrale a 828 cas de test xUnit, la couche Windows 153.",
+          "Le coffre est chiffré avec XChaCha20-Poly1305 sous une clé que Windows protège pour le compte connecté : il n'a besoin d'aucun mot de passe maître et ne s'ouvre sur aucun autre compte. Entropy efface ses clés quand Windows se verrouille ou se met en veille, et se reconnecter à Windows suffit pour rouvrir le coffre. Il les efface aussi après 15 minutes d'inactivité, et ensuite, le premier mot de passe, code ou sauvegarde demande Windows Hello une fois. Une sauvegarde a son propre mot de passe, étiré avec Argon2id, et se restaure sur n'importe quel PC : en entier dans un coffre vide, et dans un coffre déjà rempli en n'ajoutant que ce qui lui manque.",
         ],
         figure: 2,
       },
@@ -250,8 +250,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       "L'onglet Générer : un mot de passe de 16 caractères issu des quatre jeux, 103 bits, noté maximal, avec au-dessus l'art génératif de sa graine.",
       "L'onglet Analyser sur une phrase de passe de quatre mots : 94 bits, les cinq scénarios d'attaque et le chemin d'attaque qui la découpe en mots du dictionnaire et en morceaux aléatoires.",
       "Le coffre avec des identifiants de démonstration. Les codes à usage unique défilent à côté de leurs identifiants, et les mentions réutilisé et faible viennent de l'analyseur.",
-      "Le sélecteur Alt+E sur une page de connexion : l'identifiant enregistré pour le site au premier plan passe en tête, marqué comme ce site, au-dessus des touches pour taper, copier ou fermer.",
-      "La page Health avec des identifiants de démonstration : trouvé dans une fuite, faible, réutilisé et ancien, le tout vérifié sur le PC sans rien envoyer.",
+      "Le sélecteur Alt+E sur une page de connexion. L'identifiant du haut est marqué comme ce site, et les touches en dessous servent à taper, copier ou fermer.",
+      "La page Health avec des identifiants de démonstration, triés dans les quatre groupes.",
     ],
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
@@ -308,14 +308,14 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "同一套引擎上的 Windows 密码管理器",
         body: [
-          "Windows 应用把登录信息存在本地保险库里，并替你输入。它用 C# 在 .NET 10 上配合 WinUI 3 写成，并用 Native AOT 编译。最初的代码来自我的双重验证应用 Psyche。在登录页面按下 Alt+E，Entropy 会读取前台页面的地址。如果恰好有一条已保存的登录属于这个网站，并且光标在文本框里，它就输入用户名、一个 Tab 和密码。否则会弹出一个小选择窗口，这个网站的登录排在最前面。已保存网站的登录只会在这些网站及其子域名上出现，绝不会出现在只是看起来相像的地址上。没有服务器，也没有账号。",
+          "Windows 应用把登录信息存在本地保险库里，并替你输入。没有服务器，也不用注册账号。在登录页面按下 Alt+E，Entropy 会读取前台页面的地址。如果恰好有一条已保存的登录属于这个网站，并且光标在文本框里，它就输入用户名、一个 Tab 和密码。否则会弹出一个小选择窗口，这个网站的登录排在最前面。已保存网站的登录只会在这些网站及其子域名上出现，绝不会出现在只是看起来相像的地址上。这个应用是我用 C# 在 .NET 10 上配合 WinUI 3 写的，以我的双重验证应用 Psyche 的代码为起点，并用 Native AOT 编译。它的窗口沿用网站的 Y2K 海报风格和字体。",
         ],
         figure: 3,
       },
       {
         heading: "留在本机上的健康检查",
         body: [
-          "网站的生成器和分析器都移植到了 C#，上面那个 randInt 也在内。一个脚本用网站自己的 TypeScript 跑 643 个密码和 672 种生成器设置，把结果存成文件，C# 测试必须逐一还原其中每个尝试次数、比特值、等级和破解时间。Health 页面把每个已保存的密码交给分析器，把问题分成四组：出现在泄露中、弱、重复使用和过旧。泄露检查完全离线，对照的是公开泄露中最常见的约一百万个密码。一个 2.26 MB 的 binary fuse 过滤器为每个密码的 SHA-256 保存一个 16 位指纹，对从未泄露的密码，大约每 65,536 个会误报一个。",
+          "Health 页面把每个已保存的密码交给分析器，把问题分成四组：出现在泄露中、弱、重复使用和过旧。泄露检查完全离线，对照的是公开泄露中最常见的约一百万个密码。一个 2.26 MB 的 binary fuse 过滤器为每个密码的 SHA-256 保存一个 16 位指纹，对从未泄露的密码，大约每 65,536 个会误报一个。我把网站的生成器和分析器移植到了 C#，包括不带取模偏差地抽取随机数的 randInt 函数。一个脚本用网站自己的 TypeScript 跑 643 个密码和 672 种生成器设置，把结果存成文件，C# 测试必须逐一还原其中每个尝试次数、比特值、等级和破解时间。核心库共有 828 个 xUnit 测试用例，Windows 层有 153 个。",
         ],
         figure: 4,
       },
@@ -323,7 +323,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "验证码、导入与保险库",
         body: [
           "每条登录会保留最近十个旧密码和各自被替换的日期，也可以存一个一次性验证码，再按一次 Alt+E 就会把它输入验证码框。安全笔记和支付卡放在同一个保险库里。导入功能读取浏览器和其他密码应用导出的密码文件，等每一条都保存好后，用零覆盖导出文件再把它删除。",
-          "保险库用 XChaCha20-Poly1305 加密，密钥由 Windows 为当前登录的账户保护，所以登录系统后无需主密码就能打开，换一个账户则打不开。备份有自己的密码，经 Argon2id 加强，可以在任何电脑上恢复：恢复到空保险库时全部导入，恢复到已有内容的保险库时只补上缺少的条目。闲置 15 分钟、Windows 锁屏或睡眠时，Entropy 会清除密钥。它因闲置自行锁定之后，第一次取用密码、验证码或备份时会要求一次 Windows Hello；锁定或登录 Windows 本身从不要求。窗口沿用网站的 Y2K 海报风格和字体。核心库有 828 个 xUnit 测试用例，Windows 层有 153 个。",
+          "保险库用 XChaCha20-Poly1305 加密，密钥由 Windows 为当前登录的账户保护，所以不需要主密码，换一个账户也打不开。Windows 锁屏或睡眠时，Entropy 会清除密钥，重新登录 Windows 就能再次打开保险库。闲置 15 分钟后它也会清除密钥，之后第一次取用密码、验证码或备份时会要求一次 Windows Hello。备份有自己的密码，经 Argon2id 加强，可以在任何电脑上恢复：恢复到空保险库时全部导入，恢复到已有内容的保险库时只补上缺少的条目。",
         ],
         figure: 2,
       },
@@ -332,8 +332,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       "生成页：一个取自全部四个字符集的 16 位密码，103 比特，评为最高档，上方是按它的种子画出的生成艺术。",
       "分析页里的一个四词口令短语：94 比特、五种攻击场景，以及把它拆成词表单词和随机片段的攻击路径。",
       "保险库里的演示登录。一次性验证码在各自的登录旁倒计时，重复使用和弱密码的标签来自分析器。",
-      "登录页面上的 Alt+E 选择窗口：前台网站保存的登录排在最前面，标为本站，下面是输入、复制和关闭的按键。",
-      "装着演示登录的 Health 页面：出现在泄露中、弱、重复使用和过旧，全部在本机检查，不发送任何内容。",
+      "登录页面上的 Alt+E 选择窗口。最上面的登录标为本站，下面的按键用来输入、复制和关闭。",
+      "Health 页面上的演示登录，已分进四个组。",
     ],
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
