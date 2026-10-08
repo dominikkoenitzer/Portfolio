@@ -27,14 +27,14 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Random bytes, without the modulo bias",
         body: [
           "Taking a random 32-bit number modulo the size of the character pool looks fine and is slightly wrong: unless the pool divides 2³² evenly, the first few characters come up a little more often than the rest. So every pick goes through one small function that throws away the values from the uneven tail and draws again.",
-          "The generator first takes one character from each set you switched on, fills the rest from the combined pool and then shuffles the whole thing with Fisher-Yates, using the same function for every swap. Passphrases draw from the EFF long wordlist, about 12.9 bits a word.",
+          "The generator draws every character from the combined pool of the sets you switched on and redraws the whole password until each of those sets appears in it, so the result stays uniform over exactly the passwords that fit the settings. Passphrases draw from the EFF long wordlist, about 12.9 bits a word.",
           "Math.random() appears exactly once in the app: it seeds the generative art behind the password, which is decoration and guards nothing.",
         ],
         code: {
           language: "ts",
           text: RAND_INT,
           caption:
-            "From src/lib/entropy-core.ts. Every character and every shuffle swap goes through this: values at or above the largest multiple of max are rejected, so each outcome is exactly as likely as the others.",
+            "From src/lib/entropy-core.ts. Every character and every passphrase word goes through this: values at or above the largest multiple of max are rejected, so each outcome is exactly as likely as the others.",
         },
       },
       {
@@ -61,7 +61,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "The Generate tab: a 16-character password from all four character sets at 104 bits, rated maximum, with the generative art for its seed above it.",
+      "The Generate tab: a 16-character password from all four character sets at 103 bits, rated maximum, with the generative art for its seed above it.",
       "The Analyze tab on a four-word passphrase: 84 bits, the five attacker scenarios, and the attack path that splits it into dictionary words and random pieces.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
@@ -84,14 +84,14 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Zufallsbytes ohne Modulo-Verzerrung",
         body: [
           "Eine zufällige 32-Bit-Zahl modulo der Grösse des Zeichenvorrats zu nehmen, sieht richtig aus und ist leicht falsch: Solange der Vorrat 2³² nicht glatt teilt, kommen die ersten paar Zeichen etwas häufiger vor als der Rest. Deshalb läuft jede Auswahl durch eine kleine Funktion, die die Werte aus dem ungeraden Rest verwirft und neu zieht.",
-          "Der Generator nimmt zuerst ein Zeichen aus jedem eingeschalteten Satz, füllt den Rest aus dem gemeinsamen Vorrat und mischt dann alles mit Fisher-Yates, wobei jeder Tausch dieselbe Funktion nutzt. Passphrasen kommen aus der langen EFF-Wortliste, etwa 12,9 Bit pro Wort.",
+          "Der Generator zieht jedes Zeichen aus dem gemeinsamen Vorrat der eingeschalteten Sätze und zieht das ganze Passwort neu, bis jeder dieser Sätze darin vorkommt; so bleibt das Ergebnis gleichverteilt über genau die Passwörter, die zu den Einstellungen passen. Passphrasen kommen aus der langen EFF-Wortliste, etwa 12,9 Bit pro Wort.",
           "Math.random() kommt in der App genau einmal vor: Es setzt den Seed für die generative Grafik hinter dem Passwort, und die ist Dekoration und bewacht nichts.",
         ],
         code: {
           language: "ts",
           text: RAND_INT,
           caption:
-            "Aus src/lib/entropy-core.ts. Jedes Zeichen und jeder Tausch beim Mischen geht hier durch: Werte ab dem grössten Vielfachen von max werden verworfen, damit jedes Ergebnis genau gleich wahrscheinlich ist.",
+            "Aus src/lib/entropy-core.ts. Jedes Zeichen und jedes Wort einer Passphrase geht hier durch: Werte ab dem grössten Vielfachen von max werden verworfen, damit jedes Ergebnis genau gleich wahrscheinlich ist.",
         },
       },
       {
@@ -118,7 +118,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Der Generieren-Tab: ein Passwort mit 16 Zeichen aus allen vier Zeichensätzen, 104 Bit, als maximal bewertet, darüber die generative Grafik zu seinem Seed.",
+      "Der Generieren-Tab: ein Passwort mit 16 Zeichen aus allen vier Zeichensätzen, 103 Bit, als maximal bewertet, darüber die generative Grafik zu seinem Seed.",
       "Der Analysieren-Tab mit einer Passphrase aus vier Wörtern: 84 Bit, die fünf Angreiferszenarien und der Angriffspfad, der sie in Wörterbuchwörter und zufällige Stücke zerlegt.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
@@ -141,14 +141,14 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Des octets aléatoires, sans biais de modulo",
         body: [
           "Prendre un nombre aléatoire de 32 bits modulo la taille du jeu de caractères a l'air correct et ne l'est pas tout à fait : si le jeu ne divise pas 2³² exactement, les premiers caractères sortent un peu plus souvent que les autres. Chaque tirage passe donc par une petite fonction qui jette les valeurs de la queue inégale et tire à nouveau.",
-          "Le générateur prend d'abord un caractère dans chaque jeu activé, complète avec le jeu combiné, puis mélange le tout avec Fisher-Yates, la même fonction servant à chaque échange. Les phrases de passe puisent dans la grande liste de l'EFF, environ 12,9 bits par mot.",
+          "Le générateur tire chaque caractère dans le jeu combiné des jeux activés et tire de nouveau tout le mot de passe jusqu'à ce que chacun de ces jeux y figure, pour que le résultat reste uniforme sur exactement les mots de passe conformes aux réglages. Les phrases de passe puisent dans la grande liste de l'EFF, environ 12,9 bits par mot.",
           "Math.random() n'apparaît qu'une fois dans l'app : il sert de graine à l'art génératif derrière le mot de passe, qui est décoratif et ne protège rien.",
         ],
         code: {
           language: "ts",
           text: RAND_INT,
           caption:
-            "Extrait de src/lib/entropy-core.ts. Chaque caractère et chaque échange du mélange passent par là : les valeurs à partir du plus grand multiple de max sont rejetées, pour que chaque résultat ait exactement la même probabilité.",
+            "Extrait de src/lib/entropy-core.ts. Chaque caractère et chaque mot de phrase de passe passent par là : les valeurs à partir du plus grand multiple de max sont rejetées, pour que chaque résultat ait exactement la même probabilité.",
         },
       },
       {
@@ -175,7 +175,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "L'onglet Générer : un mot de passe de 16 caractères issu des quatre jeux, 104 bits, noté maximal, avec au-dessus l'art génératif de sa graine.",
+      "L'onglet Générer : un mot de passe de 16 caractères issu des quatre jeux, 103 bits, noté maximal, avec au-dessus l'art génératif de sa graine.",
       "L'onglet Analyser sur une phrase de passe de quatre mots : 84 bits, les cinq scénarios d'attaque et le chemin d'attaque qui la découpe en mots du dictionnaire et en morceaux aléatoires.",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
@@ -198,14 +198,14 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "随机字节，但不带取模偏差",
         body: [
           "拿一个 32 位随机数对字符池大小取模，看起来没问题，其实略有偏差：只要池子的大小不能整除 2³²，排在前面的几个字符就会比其他字符出现得稍微多一点。所以每一次抽取都经过一个小函数，它把落在不均匀尾段的值扔掉，重新再抽。",
-          "生成器先从每个启用的字符集里各取一个字符，再从合并后的字符池补足长度，最后用 Fisher-Yates 把整串打乱，每一次交换用的也是同一个函数。口令短语取自 EFF 的长词表，每个词约 12.9 比特。",
+          "生成器从所有启用字符集合并后的字符池里抽取每一个字符，只要有一个启用的字符集没有出现，就整串重新抽取，因此结果在所有符合设置的密码上保持均匀分布。口令短语取自 EFF 的长词表，每个词约 12.9 比特。",
           "整个应用里 Math.random() 只出现一次：给密码背后的生成艺术图案提供种子。那只是装饰，不守护任何东西。",
         ],
         code: {
           language: "ts",
           text: RAND_INT,
           caption:
-            "摘自 src/lib/entropy-core.ts。每个字符、每次洗牌交换都经过这里：大于等于 max 最大倍数的值会被拒绝，所以每个结果的概率完全相同。",
+            "摘自 src/lib/entropy-core.ts。每个字符、每个口令短语里的词都经过这里：大于等于 max 最大倍数的值会被拒绝，所以每个结果的概率完全相同。",
         },
       },
       {
@@ -232,7 +232,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "生成页：一个取自全部四个字符集的 16 位密码，104 比特，评为最高档，上方是按它的种子画出的生成艺术。",
+      "生成页：一个取自全部四个字符集的 16 位密码，103 比特，评为最高档，上方是按它的种子画出的生成艺术。",
       "分析页里的一个四词口令短语：84 比特、五种攻击场景，以及把它拆成词表单词和随机片段的攻击路径。",
     ],
     tags: ["Next.js", "TypeScript", "Web Crypto", "Security"],
