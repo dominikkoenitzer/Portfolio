@@ -59,7 +59,7 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
   portfolio:
     "My personal portfolio: a fast React single-page app in four languages, with a prerendered HTML file per route and structured data on every page.",
   entropy:
-    "A password generator and analyzer that runs entirely in the browser, with Web Crypto randomness and crack times for five attacker models.",
+    "A password generator and analyzer that runs entirely in the browser, and a local password manager for Windows that types logins with Alt+E.",
   spectrum:
     "A client-side color toolkit: pull colors out of an image, build gradients and palettes, check WCAG contrast and simulate color blindness.",
   remnants:
