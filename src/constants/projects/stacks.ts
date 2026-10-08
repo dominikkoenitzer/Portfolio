@@ -18,7 +18,7 @@ export const PROJECT_STACKS: Record<string, readonly string[]> = {
   jester: ["C#"],
   flow: ["C++"],
   punds: ["React", "TypeScript", "Bun", "Vercel"],
-  senbon: ["React", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Bun", "Vercel", "PostgreSQL"],
+  senbon: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Bun", "Vercel", "PostgreSQL"],
   oxidize: ["Rust"],
   inkling: ["React", "TypeScript", "Tailwind CSS", "Node.js", "Bun", "SQLite"],
   mochi: ["Rust"],
