@@ -177,6 +177,23 @@ describe("the project list", () => {
     }
   });
 
+  // A figure shares its picture's layoutId with the lightbox, so the viewer
+  // grows out of it and flies back into it. Two figures with one picture share
+  // that id too: closing the viewer then flew the hero shot into the copy
+  // further down and left the hero's frame empty (Psyche, 8 October).
+  it("shows every picture in one figure only", () => {
+    for (const code of SUPPORTED_LANGUAGE_CODES) {
+      for (const project of getProjects(code)) {
+        const shown = project.image && !project.imageIcon ? [0] : [];
+        for (const section of project.sections) {
+          if (section.figure === undefined) continue;
+          expect(shown, `${project.slug} ${code} ${section.heading}`).not.toContain(section.figure);
+          shown.push(section.figure);
+        }
+      }
+    }
+  });
+
   it("ends a project no earlier than it started", () => {
     for (const project of projects) {
       if (!project.ended) continue;
