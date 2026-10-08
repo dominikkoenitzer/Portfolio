@@ -1,28 +1,52 @@
 import type { Language } from "@/config/languages";
 import type { LocalizedContent } from "./types";
 
-const CHECKBOX_CODE = `function updateNoteCheckbox(noteId: number, taskId: number, checked: boolean): void {
+const CHECKBOX_CODE = `function editNoteItem(noteId: number, taskId: number, edit: (item: DocNode) => boolean | 'remove'): void {
   const note = getNote(noteId)
   if (!note) return
+  let doc: DocNode
   try {
-    const doc = JSON.parse(note.content)
-    let changed = false
-    const walk = (n: { type?: string; attrs?: Record<string, unknown>; content?: unknown[] }): void => {
-      if (n.type === 'taskItem' && n.attrs && Number(n.attrs.taskId) === taskId) {
-        if (n.attrs.checked !== checked) {
-          n.attrs.checked = checked
-          changed = true
-        }
-      }
-      if (Array.isArray(n.content)) n.content.forEach((c) => walk(c as never))
-    }
-    walk(doc)
-    if (changed) {
-      getDb().prepare(\`UPDATE notes SET content = ?, updated_at = ? WHERE id = ?\`).run(JSON.stringify(doc), now(), noteId)
-    }
+    doc = JSON.parse(note.content) as DocNode
   } catch {
-    /* malformed content, skip */
+    return // malformed content, skip
   }
+  let changed = false
+  const walk = (n: DocNode): void => {
+    if (!Array.isArray(n.content)) return
+    const next: DocNode[] = []
+    let removed = false
+    for (const child of n.content) {
+      const result = child.type === 'taskItem' && Number(child.attrs?.taskId) === taskId ? edit(child) : false
+      if (result === 'remove') {
+        // Its sub-items are tasks of their own, so they move up into its place.
+        for (const c of child.content ?? []) if (c.type === 'taskList') next.push(...(c.content ?? []))
+        changed = removed = true
+        continue
+      }
+      if (result) changed = true
+      walk(child)
+      // A taskList must hold at least one item; one left empty goes too.
+      if (child.type === 'taskList' && (child.content ?? []).length === 0) {
+        removed = true
+        continue
+      }
+      next.push(child)
+    }
+    if (!removed) return
+    // Any other block must hold something: a doc left without its only list gets a paragraph.
+    n.content = next.length > 0 || n.type === 'taskList' ? next : [{ type: 'paragraph' }]
+  }
+  walk(doc)
+  if (!changed) return
+  const content = JSON.stringify(doc)
+  getDb().prepare(\`UPDATE notes SET content = ?, updated_at = ? WHERE id = ?\`).run(content, now(), noteId)
+  if (note.deleted_at === null) ftsUpsert('note', noteId, note.title ?? 'Untitled', tiptapToText(content))
+}
+
+function setChecked(item: DocNode, checked: boolean): boolean {
+  if (!item.attrs || item.attrs.checked === checked) return false
+  item.attrs.checked = checked
+  return true
 }`;
 
 const en: LocalizedContent = {
