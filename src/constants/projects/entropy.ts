@@ -48,15 +48,15 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "The word and the time come from the same attacker",
         body: [
-          "A meter that says strong beside a crack time of four minutes has lost the argument. Every tier label is therefore set against one attacker, an offline fast hash on a GPU at ten billion guesses a second: under 40 bits is weak, 96 and above is maximum, and the time shown under the Generate tab uses that same rate.",
-          "The analyzer shows five attackers side by side, from a login form that allows 100 guesses an hour to a GPU farm at a trillion a second, because the honest answer to how long a password lasts depends on who has the hash. Advice follows the same scale: from 56 bits up the page stops warning, and at most suggests a little more length.",
+          "A meter that says strong beside a crack time of four minutes has lost the argument. Every tier label is therefore set against one attacker, an offline fast hash on a GPU at a hundred billion guesses a second: under 43 bits is weak, 99 and above is maximum, and the time shown under the Generate tab uses that same rate.",
+          "The analyzer shows five attackers side by side, from a login form that allows 100 guesses an hour to a GPU farm at ten trillion a second, because the honest answer to how long a password lasts depends on who has the hash. Advice follows the same scale: from 59 bits up the page stops warning, and at most suggests a little more length.",
         ],
       },
       {
         heading: "Nowhere for a password to go",
         body: [
           "The app has no API routes and stores nothing. A script downloads the dictionaries the analyzer needs and writes them into generated files that ship with the app, so looking up a word while you type costs no request. They sit in their own chunk that only loads when the Analyze tab opens, which keeps the generator light.",
-          "The analyzer has a suite of 33 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
+          "The analyzer has a suite of 49 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
         ],
       },
     ],
@@ -105,15 +105,15 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Wort und Zeit kommen vom selben Angreifer",
         body: [
-          "Eine Anzeige, die „stark“ neben eine Knackzeit von vier Minuten schreibt, hat schon verloren. Deshalb ist jedes Stufenlabel an einem einzigen Angreifer ausgerichtet, einem Offline-Fast-Hash auf einer GPU mit zehn Milliarden Versuchen pro Sekunde: Unter 40 Bit ist schwach, ab 96 maximal, und die Zeit im Generieren-Tab rechnet mit derselben Rate.",
-          "Die Analyse zeigt fünf Angreifer nebeneinander, vom Login-Formular mit 100 Versuchen pro Stunde bis zur GPU-Farm mit einer Billion pro Sekunde, weil die ehrliche Antwort auf die Frage, wie lange ein Passwort hält, davon abhängt, wer den Hash hat. Die Ratschläge folgen derselben Skala: Ab 56 Bit hört die Seite auf zu warnen und schlägt höchstens noch etwas mehr Länge vor.",
+          "Eine Anzeige, die „stark“ neben eine Knackzeit von vier Minuten schreibt, hat schon verloren. Deshalb ist jedes Stufenlabel an einem einzigen Angreifer ausgerichtet, einem Offline-Fast-Hash auf einer GPU mit hundert Milliarden Versuchen pro Sekunde: Unter 43 Bit ist schwach, ab 99 maximal, und die Zeit im Generieren-Tab rechnet mit derselben Rate.",
+          "Die Analyse zeigt fünf Angreifer nebeneinander, vom Login-Formular mit 100 Versuchen pro Stunde bis zur GPU-Farm mit zehn Billionen pro Sekunde, weil die ehrliche Antwort auf die Frage, wie lange ein Passwort hält, davon abhängt, wer den Hash hat. Die Ratschläge folgen derselben Skala: Ab 59 Bit hört die Seite auf zu warnen und schlägt höchstens noch etwas mehr Länge vor.",
         ],
       },
       {
         heading: "Kein Ort, an den ein Passwort gehen könnte",
         body: [
           "Die App hat keine API-Routen und speichert nichts. Die Wörterbücher für die Analyse lädt ein Skript herunter und schreibt sie in generierte Dateien, die mit der App ausgeliefert werden, darum kostet eine Wortsuche beim Tippen keinen Request. Sie liegen in einem eigenen Chunk, der erst lädt, wenn der Analysieren-Tab aufgeht, so bleibt der Generator leicht.",
-          "Die Analyse hat eine Suite von 33 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
+          "Die Analyse hat eine Suite von 49 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
         ],
       },
     ],
@@ -162,15 +162,15 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Le mot et le temps viennent du même attaquant",
         body: [
-          "Une jauge qui affiche « fort » à côté d'un temps de cassage de quatre minutes a déjà perdu. Chaque libellé de palier est donc réglé sur un seul attaquant, un hachage rapide hors ligne sur GPU à dix milliards d'essais par seconde : sous 40 bits c'est faible, à partir de 96 c'est maximal, et le temps affiché dans l'onglet Générer utilise ce même débit.",
-          "L'analyseur montre cinq attaquants côte à côte, du formulaire de connexion qui accepte 100 essais par heure à la ferme de GPU à mille milliards par seconde, parce que la réponse honnête à la question de la durée dépend de qui détient le hachage. Les conseils suivent la même échelle : à partir de 56 bits, la page cesse d'avertir et suggère tout au plus un peu plus de longueur.",
+          "Une jauge qui affiche « fort » à côté d'un temps de cassage de quatre minutes a déjà perdu. Chaque libellé de palier est donc réglé sur un seul attaquant, un hachage rapide hors ligne sur GPU à cent milliards d'essais par seconde : sous 43 bits c'est faible, à partir de 99 c'est maximal, et le temps affiché dans l'onglet Générer utilise ce même débit.",
+          "L'analyseur montre cinq attaquants côte à côte, du formulaire de connexion qui accepte 100 essais par heure à la ferme de GPU à dix mille milliards par seconde, parce que la réponse honnête à la question de la durée dépend de qui détient le hachage. Les conseils suivent la même échelle : à partir de 59 bits, la page cesse d'avertir et suggère tout au plus un peu plus de longueur.",
         ],
       },
       {
         heading: "Nulle part où un mot de passe pourrait aller",
         body: [
           "L'app n'a aucune route d'API et ne stocke rien. Un script télécharge les dictionnaires de l'analyseur et les écrit dans des fichiers générés livrés avec l'app, si bien que chercher un mot pendant la frappe ne coûte aucune requête. Ils sont dans un chunk à part qui ne se charge qu'à l'ouverture de l'onglet Analyser, ce qui garde le générateur léger.",
-          "L'analyseur a une suite de 33 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
+          "L'analyseur a une suite de 49 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
         ],
       },
     ],
@@ -219,15 +219,15 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "等级和时间出自同一个攻击者",
         body: [
-          "一个在四分钟破解时间旁边写着「强」的强度条，已经输了。所以每一档标签都按同一个攻击者来定：用 GPU 做离线快速哈希，每秒一百亿次。低于 40 比特是弱，96 比特及以上是最高档，生成页上显示的时间也按这个速度算。",
-          "分析页把五种攻击者并排列出，从每小时只允许 100 次的登录表单，到每秒一万亿次的 GPU 农场，因为一个密码能撑多久，诚实的答案取决于谁拿到了哈希。建议也按同一把尺子：达到 56 比特以后，页面不再发出警告，最多建议再加一点长度。",
+          "一个在四分钟破解时间旁边写着「强」的强度条，已经输了。所以每一档标签都按同一个攻击者来定：用 GPU 做离线快速哈希，每秒一千亿次。低于 43 比特是弱，99 比特及以上是最高档，生成页上显示的时间也按这个速度算。",
+          "分析页把五种攻击者并排列出，从每小时只允许 100 次的登录表单，到每秒十万亿次的 GPU 农场，因为一个密码能撑多久，诚实的答案取决于谁拿到了哈希。建议也按同一把尺子：达到 59 比特以后，页面不再发出警告，最多建议再加一点长度。",
         ],
       },
       {
         heading: "密码无处可去",
         body: [
           "应用没有 API 路由，也不存储任何东西。分析所需的词表由一个脚本下载，写进随应用一起发布的生成文件里，所以打字时查词不产生任何请求。词表放在单独的代码块里，只有打开分析页时才加载，生成器因此保持轻量。",
-          "分析器有一套 33 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
+          "分析器有一套 49 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
         ],
       },
     ],
