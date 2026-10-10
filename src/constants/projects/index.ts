@@ -94,9 +94,11 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://github.com/dominikkoenitzer/Remnants",
-    // The release ships per-platform archives and installers under versioned
-    // names, so the page is the only link that survives the next release.
-    downloadUrl: "https://github.com/dominikkoenitzer/Remnants/releases/latest",
+    // The Windows user installer keeps a fixed name on every release, so
+    // latest/download always serves the newest one. Other platforms are on the
+    // release page.
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-x64.exe",
     priority: 5,
     image: "/projects/remnants.jpg",
     gallery: ["/projects/remnants-mark.jpg"],
