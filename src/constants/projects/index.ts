@@ -210,8 +210,10 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Mochi",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Mochi",
-    // Versioned archive, same as Oxidize: the release page always resolves.
-    downloadUrl: "https://github.com/dominikkoenitzer/Mochi/releases/latest",
+    // The installer keeps a fixed name on every release, so latest/download
+    // always serves the newest one.
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/Mochi-Setup.exe",
     image: "/projects/mochi.jpg",
     gallery: ["/projects/mochi-mark.jpg"],
     priority: 13,
@@ -225,7 +227,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
     downloadUrl:
-      "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-x64.zip",
+      "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku.exe",
     image: "/projects/daifuku.jpg",
     priority: 14,
     programmingLanguages: ["Rust"],
