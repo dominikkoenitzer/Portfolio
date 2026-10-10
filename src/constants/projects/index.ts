@@ -174,9 +174,10 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
     liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
-    // Oxidize ships a versioned archive, so a fixed asset name under
-    // latest/download breaks on every release. The release page always resolves.
-    downloadUrl: "https://github.com/dominikkoenitzer/Oxidize/releases/latest",
+    // The GUI ships as one exe under a fixed name, so latest/download always
+    // serves the newest build.
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
     priority: 11,
     image: "/projects/oxidize.jpg",
     gallery: ["/projects/oxidize-mark.jpg"],
@@ -189,7 +190,10 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Inkling",
     date: "2026-07",
     repoUrl: "https://github.com/dominikkoenitzer/Inkling",
-    downloadUrl: "https://github.com/dominikkoenitzer/Inkling/releases/latest",
+    // The Windows installer keeps a fixed name on every release. Other
+    // platforms are on the release page.
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-Setup.exe",
     priority: 12,
     image: "/projects/inkling.jpg",
     gallery: [
@@ -220,7 +224,8 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Daifuku",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
-    downloadUrl: "https://github.com/dominikkoenitzer/Daifuku/releases/latest",
+    downloadUrl:
+      "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-x64.zip",
     image: "/projects/daifuku.jpg",
     priority: 14,
     programmingLanguages: ["Rust"],
