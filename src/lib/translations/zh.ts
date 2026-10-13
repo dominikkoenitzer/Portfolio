@@ -193,6 +193,7 @@ export const zh = {
     loading: "正在生长…",
     intro:
       "面向小团队和小企业的自由职业服务，分成三块：把东西做出来、让它稳定运行、让别人找得到它。价格都是起步价，告诉我你的需求，我给你一个真实的报价。",
+    vatNote: "价格以瑞士法郎计。我未进行增值税登记，因此不另加增值税。",
     inquireAbout: "就「{service}」与我联系",
     includesLabel: "包含",
     categoryMeta: {

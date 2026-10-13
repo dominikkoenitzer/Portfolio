@@ -196,6 +196,8 @@ export const fr = {
     loading: "L'arbre pousse…",
     intro:
       "Du travail en freelance pour les petites équipes et les entreprises, en trois volets : construire la chose, la garder en état de marche et la rendre visible. Les prix sont des points de départ, alors dites-moi ce qu'il vous faut et vous recevrez un vrai chiffre.",
+    vatNote:
+      "Prix en CHF. Aucune TVA n'est ajoutée, car je ne suis pas assujetti à la TVA.",
     inquireAbout: "Prendre contact au sujet de {service}",
     includesLabel: "Inclus",
     categoryMeta: {
