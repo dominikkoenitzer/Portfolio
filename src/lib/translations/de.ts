@@ -196,6 +196,8 @@ export const de = {
     loading: "Der Baum wächst…",
     intro:
       "Freelance-Arbeit für kleine Teams und Unternehmen, in drei Teilen: die Sache bauen, sie am Laufen halten und dafür sorgen, dass sie gefunden wird. Die Preise sind Startwerte, sag mir also, was du brauchst, und du bekommst eine echte Zahl zurück.",
+    vatNote:
+      "Preise in CHF. Es kommt keine Mehrwertsteuer dazu, da ich nicht mehrwertsteuerpflichtig bin.",
     inquireAbout: "Kontakt aufnehmen wegen {service}",
     includesLabel: "Enthalten",
     categoryMeta: {

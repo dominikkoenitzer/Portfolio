@@ -630,12 +630,20 @@ export function ServicesSection() {
           measure is 35rem rather than `max-w-2xl`, which fitted 87 characters
           a line in English and 89 in French; this holds every language between
           70 and 75. */}
-      <motion.p
-        className="mb-16 max-w-140 text-base text-muted-foreground leading-relaxed sm:text-lg"
+      <motion.div
+        className="mb-16 max-w-140"
         {...revealOnScroll(reduceMotion)}
       >
-        {t.intro}
-      </motion.p>
+        <p className="text-base text-muted-foreground leading-relaxed sm:text-lg">
+          {t.intro}
+        </p>
+        {/* Clients ask whether VAT comes on top. It does not: below the
+            CHF 100'000 threshold there is no VAT registration, so none may be
+            charged. Said once, right under the sentence about the prices. */}
+        <p className="mt-3 text-muted-foreground text-sm leading-relaxed">
+          {t.vatNote}
+        </p>
+      </motion.div>
 
       {/* The nine offers as cards, only where the tree is not: the tree already
           carries every service, its price and its feature list behind a leaf,

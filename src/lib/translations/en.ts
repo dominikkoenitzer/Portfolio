@@ -195,6 +195,7 @@ export const en = {
     loading: "Growing the tree…",
     intro:
       "Freelance work for small teams and businesses, in three parts: building the thing, keeping it running, and getting it found. The prices are starting points, so tell me what you need and you get a real number back.",
+    vatNote: "Prices in CHF. No VAT is added, as I am not registered for VAT.",
     inquireAbout: "Get in touch about {service}",
     includesLabel: "Includes",
     categoryMeta: {
