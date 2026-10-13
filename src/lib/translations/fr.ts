@@ -162,6 +162,7 @@ export const fr = {
     links: "Liens",
     visitSite: "Visiter le site",
     download: "Télécharger",
+    downloadPage: "Page de téléchargement",
     sourceCode: "Code source",
     onThisPage: "Sur cette page",
     downloadNote:

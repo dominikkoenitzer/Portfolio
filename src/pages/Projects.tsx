@@ -5,6 +5,7 @@ import { getProjects } from "@/constants/projects";
 import { useLanguage } from "@/lib/language-context";
 import {  getDefaultCitations,
   getDefaultGeoLocation,
+  projectHome,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
 
@@ -46,7 +47,7 @@ const Projects = () => {
                 "@type": "SoftwareApplication",
                 name: project.title,
                 description: project.description,
-                url: project.liveUrl ?? `${SITE_CONFIG.url}/projects/${project.slug}`,
+                url: projectHome(project),
                 ...(project.sourcePrivate ? {} : { sameAs: project.repoUrl }),
                 // Same fallbacks as the project's own page, so a desktop tool
                 // is not listed here as a web app that runs anywhere.

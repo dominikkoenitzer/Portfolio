@@ -81,9 +81,28 @@ describe("the project list", () => {
   // it does link to has to be a real URL.
   it("links a live site and a download only by absolute URL", () => {
     for (const project of projects) {
-      for (const target of [project.liveUrl, project.downloadUrl]) {
+      for (const target of [
+        project.liveUrl,
+        project.downloadUrl,
+        project.downloadPage,
+      ]) {
         if (target === undefined) continue;
         expect(() => new URL(target), project.slug).not.toThrow();
+      }
+    }
+  });
+
+  // The direct download stays the main button; the app's own page sits
+  // beside it, so a page without a binary has nothing to sit beside.
+  it("gives every download its app's own page", () => {
+    for (const project of projects) {
+      expect(Boolean(project.downloadPage), project.slug).toBe(
+        Boolean(project.downloadUrl),
+      );
+      if (project.downloadPage) {
+        expect(project.downloadPage, project.slug).toMatch(
+          /^https:\/\/get-[a-z-]+\.vercel\.app\/$/,
+        );
       }
     }
   });

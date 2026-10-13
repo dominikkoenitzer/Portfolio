@@ -22,7 +22,10 @@ import { SITE_CONFIG } from "../src/constants";
 import {
   cardImageSrc,
   getProjects,
+  mediumImageSrc,
   PROJECT_CARD_SIZES,
+  PROJECT_MEDIUM_WIDTH,
+  pictureWidth,
   projectCardSrcSet,
 } from "../src/constants/projects";
 import {
@@ -172,7 +175,14 @@ for (const p of getProjects("en")) {
  */
 const missingCards = getProjects("en")
   .filter((p) => p.image && !p.imageIcon)
-  .map((p) => cardImageSrc(p.image as string))
+  .flatMap((p) => [
+    cardImageSrc(p.image as string),
+    // The 1600px middle copy of every wider picture, which the card and the
+    // reading column offer before the full capture.
+    ...[p.image as string, ...(p.gallery ?? [])]
+      .filter((picture) => pictureWidth(picture) > PROJECT_MEDIUM_WIDTH)
+      .map(mediumImageSrc),
+  ])
   .filter((card) => !existsSync(join(process.cwd(), "public", card)));
 
 if (missingCards.length > 0) {
