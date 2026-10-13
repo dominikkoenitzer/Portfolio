@@ -54,6 +54,8 @@ export interface PortfolioProject {
   liveUrl?: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
+  /** The app's own download page, linked beside the direct download on the detail page. */
+  downloadPage?: string;
   priority: number;
   image?: string;
   /**
@@ -109,6 +111,8 @@ export type ProjectBase = {
   liveUrl?: string;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
+  /** The app's own download page, linked beside the direct download on the detail page. */
+  downloadPage?: string;
   priority: number;
   /** Set when the GitHub repo is private: the Source control explains that instead of linking to a 404. */
   sourcePrivate?: boolean;

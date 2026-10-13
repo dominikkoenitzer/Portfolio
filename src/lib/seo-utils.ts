@@ -240,15 +240,25 @@ export const createSpeakableSchema = (url: string, cssSelectors: string[]) => {
  * SoftwareSourceCode schema for project detail pages, richer than the base
  * version because AI engines surface this when answering "show me X's code".
  */
-/** Where a project lives: its own site, or its case study when it has none. */
-const projectHome = (project: { slug: string; liveUrl?: string }) =>
-  project.liveUrl ?? `${SITE_CONFIG.url}/projects/${project.slug}`;
+/**
+ * Where a project lives: a desktop app's download page, its own site, or its
+ * case study when it has neither.
+ */
+export const projectHome = (project: {
+  slug: string;
+  liveUrl?: string;
+  downloadPage?: string;
+}) =>
+  project.downloadPage ??
+  project.liveUrl ??
+  `${SITE_CONFIG.url}/projects/${project.slug}`;
 
 export const createSoftwareSourceCodeSchema = (project: {
   slug: string;
   title: string;
   description: string;
   liveUrl?: string;
+  downloadPage?: string;
   repoUrl: string;
   sourcePrivate?: boolean;
   tags: string[];
@@ -286,6 +296,7 @@ export const createSoftwareApplicationSchema = (project: {
   title: string;
   description: string;
   liveUrl?: string;
+  downloadPage?: string;
   tags: string[];
   downloadUrl?: string;
   applicationCategory?: string;

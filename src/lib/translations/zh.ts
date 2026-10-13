@@ -159,6 +159,7 @@ export const zh = {
     links: "链接",
     visitSite: "访问站点",
     download: "下载",
+    downloadPage: "下载页面",
     sourceCode: "源代码",
     onThisPage: "本页内容",
     downloadNote:

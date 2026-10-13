@@ -23,6 +23,12 @@
  * The script also re-checks every source against the `imageWidth` the data
  * declares, because that number is the `w` descriptor the browser picks by: a
  * stale one quietly sends the wrong file.
+ *
+ * Pictures captured wider than 1600 px (the web projects, at twice their
+ * viewport) also get a 1600 px middle copy, main shot and gallery alike. The
+ * card and the reading column offer it before the full capture, so a retina
+ * card costs what it did when 1600 px was the original and only the lightbox
+ * fetches the full file.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -31,8 +37,11 @@ import { join } from "node:path";
 
 import {
   cardImageSrc,
+  mediumImageSrc,
   PORTFOLIO_PROJECTS,
   PROJECT_CARD_WIDTH,
+  PROJECT_MEDIUM_WIDTH,
+  pictureWidth,
 } from "../src/constants/projects";
 
 const require = createRequire(import.meta.url);
@@ -55,9 +64,9 @@ const PUBLIC = join(process.cwd(), "public");
  * indistinguishable in a 534 px box. 4:4:4 is there for the one terminal
  * screenshot, whose coloured text bleeds under chroma subsampling.
  */
-const encode = (input: Buffer) =>
+const encode = (input: Buffer, width = PROJECT_CARD_WIDTH) =>
   sharp(input)
-    .resize(PROJECT_CARD_WIDTH, null, { kernel: "lanczos3" })
+    .resize(width, null, { kernel: "lanczos3" })
     .jpeg({ quality: 82, mozjpeg: true, chromaSubsampling: "4:4:4" })
     .toBuffer();
 
@@ -89,6 +98,29 @@ for (const project of PORTFOLIO_PROJECTS) {
     `  ${project.slug.padEnd(10)} ${String(Math.round(source.length / 1024)).padStart(4)} kB -> ` +
       `${String(Math.round(buffer.length / 1024)).padStart(4)} kB  ${card}`,
   );
+}
+
+for (const project of PORTFOLIO_PROJECTS) {
+  if (project.imageIcon) continue;
+  for (const picture of [project.image, ...(project.gallery ?? [])]) {
+    if (!picture) continue;
+    const source = await readFile(join(PUBLIC, picture));
+    const { width } = await sharp(source).metadata();
+    if (width !== pictureWidth(picture)) {
+      console.error(
+        `  ! ${picture}: the file is ${width}px wide, the data says ${pictureWidth(picture)}px`,
+      );
+      mismatches += 1;
+    }
+    if (pictureWidth(picture) <= PROJECT_MEDIUM_WIDTH) continue;
+    const medium = mediumImageSrc(picture);
+    const buffer = await encode(source, PROJECT_MEDIUM_WIDTH);
+    await writeFile(join(PUBLIC, medium), buffer);
+    console.log(
+      `  ${String(Math.round(source.length / 1024)).padStart(4)} kB -> ` +
+        `${String(Math.round(buffer.length / 1024)).padStart(4)} kB  ${medium}`,
+    );
+  }
 }
 
 console.log(

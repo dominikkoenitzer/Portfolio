@@ -99,6 +99,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // release page.
     downloadUrl:
       "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-x64.exe",
+    downloadPage: "https://get-remnants.vercel.app/",
     priority: 5,
     image: "/projects/remnants.jpg",
     gallery: ["/projects/remnants-mark.jpg"],
@@ -125,6 +126,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://github.com/dominikkoenitzer/Jester",
     downloadUrl:
       "https://github.com/dominikkoenitzer/Jester/releases/latest/download/Jester.exe",
+    downloadPage: "https://get-jester.vercel.app/",
     priority: 7,
     image: "/projects/jester.jpg",
     programmingLanguages: ["C#"],
@@ -139,6 +141,7 @@ const PROJECT_BASE: ProjectBase[] = [
     liveUrl: "https://github.com/dominikkoenitzer/Flow",
     downloadUrl:
       "https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe",
+    downloadPage: "https://get-flow-app.vercel.app/",
     priority: 8,
     image: "/projects/flow.jpg",
     gallery: ["/projects/flow-mark.jpg"],
@@ -178,6 +181,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // serves the newest build.
     downloadUrl:
       "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
+    downloadPage: "https://get-oxidize.vercel.app/",
     priority: 11,
     image: "/projects/oxidize.jpg",
     gallery: ["/projects/oxidize-mark.jpg"],
@@ -194,6 +198,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // platforms are on the release page.
     downloadUrl:
       "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-Setup.exe",
+    downloadPage: "https://get-inkling.vercel.app/",
     priority: 12,
     image: "/projects/inkling.jpg",
     gallery: [
@@ -214,6 +219,7 @@ const PROJECT_BASE: ProjectBase[] = [
     // always serves the newest one.
     downloadUrl:
       "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/Mochi-Setup.exe",
+    downloadPage: "https://get-mochi.vercel.app/",
     image: "/projects/mochi.jpg",
     gallery: ["/projects/mochi-mark.jpg"],
     priority: 13,
@@ -228,6 +234,7 @@ const PROJECT_BASE: ProjectBase[] = [
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
     downloadUrl:
       "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku.exe",
+    downloadPage: "https://get-daifuku.vercel.app/",
     image: "/projects/daifuku.jpg",
     priority: 14,
     programmingLanguages: ["Rust"],
@@ -293,8 +300,45 @@ const formatProjectDate = (date: string, lang: Language): string => {
 /** Intrinsic width of a project screenshot unless the entry says otherwise. */
 const DEFAULT_IMAGE_WIDTH = 1600;
 
+/**
+ * Every picture that is not 1600px wide: the web projects are captured at
+ * twice the 1600x1000 viewport, so the lightbox shows them sharp on any
+ * screen. `scripts/gen-card-images.ts` checks each entry against the file.
+ */
+const PICTURE_WIDTHS: Record<string, number> = Object.fromEntries(
+  [
+    "/projects/zephyr.jpg",
+    "/projects/zephyr-2.jpg",
+    "/projects/zephyr-3.jpg",
+    "/projects/zephyr-4.jpg",
+    "/projects/portfolio.jpg",
+    "/projects/portfolio-2.jpg",
+    "/projects/portfolio-3.jpg",
+    "/projects/entropy.jpg",
+    "/projects/entropy-2.jpg",
+    "/projects/spectrum.jpg",
+    "/projects/spectrum-3.jpg",
+    "/projects/spectrum-4.jpg",
+    "/projects/time.jpg",
+    "/projects/punds.jpg",
+    "/projects/senbon.jpg",
+    "/projects/senbon-2.jpg",
+  ].map((path) => [path, 3200]),
+);
+
+/** Intrinsic pixel width of any project picture, main shot or gallery. */
+export const pictureWidth = (path: string): number =>
+  PICTURE_WIDTHS[path] ?? DEFAULT_IMAGE_WIDTH;
+
 /** Width of the downscaled catalogue copies `gen-card-images.ts` writes. */
 export const PROJECT_CARD_WIDTH = 800;
+
+/**
+ * Width of the middle copy `gen-card-images.ts` writes beside every picture
+ * wider than this. A retina card (534px at 2x) or a reading-column figure
+ * takes it, so only the lightbox ever downloads the full capture.
+ */
+export const PROJECT_MEDIUM_WIDTH = 1600;
 
 /**
  * The /projects catalogue's copy of a project's picture: the same shot at
@@ -306,9 +350,28 @@ export const PROJECT_CARD_WIDTH = 800;
 export const cardImageSrc = (image: string): string =>
   image.replace(/\.(jpe?g|png)$/i, "-card.jpg");
 
-/** The two candidates a catalogue card offers for a project's picture. */
+/** The middle copy of a picture wider than `PROJECT_MEDIUM_WIDTH`. */
+export const mediumImageSrc = (image: string): string =>
+  image.replace(/\.(jpe?g|png)$/i, `-${PROJECT_MEDIUM_WIDTH}.jpg`);
+
+/** The middle copy and the original, or nothing when the original is the middle size. */
+const largeCandidates = (image: string, imageWidth: number): string =>
+  imageWidth > PROJECT_MEDIUM_WIDTH
+    ? `${mediumImageSrc(image)} ${PROJECT_MEDIUM_WIDTH}w, ${image} ${imageWidth}w`
+    : `${image} ${imageWidth}w`;
+
+/** The candidates a catalogue card offers for a project's picture. */
 export const projectCardSrcSet = (image: string, imageWidth: number): string =>
-  `${cardImageSrc(image)} ${PROJECT_CARD_WIDTH}w, ${image} ${imageWidth}w`;
+  `${cardImageSrc(image)} ${PROJECT_CARD_WIDTH}w, ${largeCandidates(image, imageWidth)}`;
+
+/**
+ * The candidates for a picture in the reading column, which has no card copy:
+ * undefined for a 1600px picture, where the plain `src` is the only file.
+ */
+export const pictureSrcSet = (image: string): string | undefined => {
+  const width = pictureWidth(image);
+  return width > PROJECT_MEDIUM_WIDTH ? largeCandidates(image, width) : undefined;
+};
 
 /**
  * How wide a catalogue card renders its picture, measured in a browser rather
@@ -326,7 +389,8 @@ const buildProject = (base: ProjectBase, lang: Language): PortfolioProject => {
   return {
     ...base,
     ...content,
-    imageWidth: base.imageWidth ?? DEFAULT_IMAGE_WIDTH,
+    imageWidth:
+      base.imageWidth ?? (base.image ? pictureWidth(base.image) : DEFAULT_IMAGE_WIDTH),
     stack: PROJECT_STACKS[base.slug] ?? [],
     year: base.date.slice(0, 4),
     dateLabel: formatProjectDate(base.date, lang),

@@ -161,6 +161,7 @@ export const en = {
     links: "Links",
     visitSite: "Visit Site",
     download: "Download",
+    downloadPage: "Download page",
     sourceCode: "Source Code",
     onThisPage: "On this page",
     downloadNote:

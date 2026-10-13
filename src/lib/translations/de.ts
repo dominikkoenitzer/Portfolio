@@ -162,6 +162,7 @@ export const de = {
     links: "Links",
     visitSite: "Website besuchen",
     download: "Download",
+    downloadPage: "Download-Seite",
     sourceCode: "Quellcode",
     onThisPage: "Auf dieser Seite",
     downloadNote:

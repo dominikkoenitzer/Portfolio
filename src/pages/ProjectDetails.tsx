@@ -27,6 +27,7 @@ import {
   cardImageSrc,
   getProject,
   getProjects,
+  pictureSrcSet,
   projectCardSrcSet,
 } from "@/constants/projects";
 import type { ProjectSection } from "@/constants/projects/types";
@@ -367,6 +368,18 @@ const ProjectDetails = () => {
                     </a>
                   </Button>
                 ) : null}
+                {project.downloadPage ? (
+                  <Button asChild className="rounded-lg px-5" variant="soft">
+                    <a
+                      href={project.downloadPage}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      {t.downloadPage}
+                    </a>
+                  </Button>
+                ) : null}
                 {project.sourcePrivate ? (
                   <PrivateSource>
                     <Button className="rounded-lg px-5" type="button" variant="soft">
@@ -518,7 +531,12 @@ const ProjectDetails = () => {
                       layoutId={`project-shot-${section.figure}`}
                       onOpen={() => openLightbox(section.figure ?? 0)}
                       openLabel={shotLabel(section.figure)}
+                      /* The reading column stops at 768px, so the middle
+                         copy covers it at 2x and the full capture is left
+                         to the lightbox. */
+                      sizes="(min-width: 768px) 768px, 100vw"
                       src={galleryImages[section.figure]}
+                      srcSet={pictureSrcSet(galleryImages[section.figure])}
                     />
                   ) : null}
                 </FeatureSection>
@@ -562,6 +580,23 @@ const ProjectDetails = () => {
                       >
                         <ExternalLink className="h-4 w-4" />
                         {t.visitSite}
+                      </a>
+                    </Button>
+                  ) : null}
+                  {project.downloadPage ? (
+                    <Button
+                      asChild
+                      className="w-full justify-start rounded-lg"
+                      size="sm"
+                      variant="soft"
+                    >
+                      <a
+                        href={project.downloadPage}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        {t.downloadPage}
                       </a>
                     </Button>
                   ) : null}
