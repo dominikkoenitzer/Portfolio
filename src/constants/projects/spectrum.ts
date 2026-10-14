@@ -67,7 +67,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "The picker's front page: a sample image with five points sampled, each listed with its hex code and a name, next to the drop zone and the screen eyedropper.",
-      "The generator with #2596be entered, showing its HEX, RGB, HSL and CMYK values and placing it as a cool blue at 196 degrees on the hue bar.",
+      "The generator with #2596be entered, showing its HEX, RGB, HSL, OKLCH and CMYK values and placing it as a cool blue at 196 degrees on the hue bar.",
       "The contrast checker at black on white: 21.00:1, rated AAA, with a live preview of text and buttons in that pair.",
       "The gradient maker with a two-stop linear gradient at 90 degrees, presets beside it and the CSS ready to copy.",
     ],
@@ -129,7 +129,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "Die Startseite des Pickers: ein Beispielbild mit fünf aufgenommenen Punkten, jeder mit Hex-Code und Namen aufgelistet, neben der Drop-Zone und der Bildschirm-Pipette.",
-      "Der Generator mit #2596be: die Werte in HEX, RGB, HSL und CMYK, eingeordnet als kühles Blau bei 196 Grad auf dem Farbtonbalken.",
+      "Der Generator mit #2596be: die Werte in HEX, RGB, HSL, OKLCH und CMYK, eingeordnet als kühles Blau bei 196 Grad auf dem Farbtonbalken.",
       "Der Kontrast-Checker bei Schwarz auf Weiss: 21.00:1, bewertet mit AAA, dazu eine Live-Vorschau von Text und Buttons in diesem Paar.",
       "Der Gradient-Maker mit einem linearen Verlauf aus zwei Stopps bei 90 Grad, daneben Presets und das CSS zum Kopieren.",
     ],
@@ -191,7 +191,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "La page d'accueil du sélecteur : une image d'exemple avec cinq points prélevés, chacun listé avec son code hex et un nom, à côté de la zone de dépôt et de la pipette d'écran.",
-      "Le générateur avec #2596be : ses valeurs HEX, RGB, HSL et CMYK, et sa place de bleu froid à 196 degrés sur la barre des teintes.",
+      "Le générateur avec #2596be : ses valeurs HEX, RGB, HSL, OKLCH et CMYK, et sa place de bleu froid à 196 degrés sur la barre des teintes.",
       "Le vérificateur de contraste en noir sur blanc : 21.00:1, noté AAA, avec un aperçu en direct de texte et de boutons dans cette paire.",
       "Le créateur de dégradés avec un dégradé linéaire à deux arrêts à 90 degrés, les préréglages à côté et le CSS prêt à copier.",
     ],
@@ -253,7 +253,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     ],
     captions: [
       "取色器首页：一张示例图上取了五个点，每个颜色列出十六进制值和名字，旁边是拖放区和屏幕取色器。",
-      "输入 #2596be 后的生成器：列出它的 HEX、RGB、HSL 和 CMYK 值，并在色相条上把它定位为 196 度的冷蓝色。",
+      "输入 #2596be 后的生成器：列出它的 HEX、RGB、HSL、OKLCH 和 CMYK 值，并在色相条上把它定位为 196 度的冷蓝色。",
       "黑字白底下的对比度检查器：21.00:1，评为 AAA，附带这组颜色下文字和按钮的实时预览。",
       "渐变生成器：一条 90 度的双节点线性渐变，旁边是预设，CSS 可以直接复制。",
     ],

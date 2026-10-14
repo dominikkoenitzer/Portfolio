@@ -317,6 +317,7 @@ const PICTURE_WIDTHS: Record<string, number> = Object.fromEntries(
     "/projects/entropy.jpg",
     "/projects/entropy-2.jpg",
     "/projects/spectrum.jpg",
+    "/projects/spectrum-2.jpg",
     "/projects/spectrum-3.jpg",
     "/projects/spectrum-4.jpg",
     "/projects/time.jpg",
