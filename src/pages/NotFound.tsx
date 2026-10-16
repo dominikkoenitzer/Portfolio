@@ -123,7 +123,7 @@ export default function NotFound() {
         description="This page does not exist."
         nofollow
         noindex
-        title="Page not found"
+        title={t.title}
       />
       <motion.div
         className="mx-auto w-full max-w-3xl"
