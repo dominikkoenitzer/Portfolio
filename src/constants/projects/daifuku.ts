@@ -63,7 +63,7 @@ const en: LocalizedContent = {
     },
   ],
   captions: [
-    "Six demo agents on a portrait monitor: blue working, yellow waiting for an answer, green done, red failed.",
+    "Six demo agents on a 4K monitor: blue working, yellow waiting for an answer, green done, red failed.",
   ],
   tags: ["Rust", "Win32", "Windows", "AI agents"],
   stats: [
@@ -120,7 +120,7 @@ const de: LocalizedContent = {
     },
   ],
   captions: [
-    "Sechs Demo-Agenten auf einem Hochkant-Bildschirm: blau arbeitet, gelb wartet auf eine Antwort, grün fertig, rot gescheitert.",
+    "Sechs Demo-Agenten auf einem 4K-Bildschirm: blau arbeitet, gelb wartet auf eine Antwort, grün fertig, rot gescheitert.",
   ],
   tags: ["Rust", "Win32", "Windows", "KI-Agenten"],
   stats: [
@@ -177,7 +177,7 @@ const fr: LocalizedContent = {
     },
   ],
   captions: [
-    "Six agents de démo sur un écran en portrait : bleu travaille, jaune attend une réponse, vert terminé, rouge échoué.",
+    "Six agents de démo sur un écran 4K : bleu travaille, jaune attend une réponse, vert terminé, rouge échoué.",
   ],
   tags: ["Rust", "Win32", "Windows", "Agents IA"],
   stats: [
@@ -232,7 +232,7 @@ const zh: LocalizedContent = {
       ],
     },
   ],
-  captions: ["竖屏显示器上的六个演示智能体：蓝色在工作，黄色在等回答，绿色已完成，红色失败。"],
+  captions: ["4K 显示器上的六个演示智能体：蓝色在工作，黄色在等回答，绿色已完成，红色失败。"],
   tags: ["Rust", "Win32", "Windows", "AI 智能体"],
   stats: [
     { value: "5", label: "个 crate" },
