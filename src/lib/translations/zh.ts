@@ -462,7 +462,7 @@ export const zh = {
     contact: {
       title: "联系软件工程师",
       description:
-        "联系 Dominik Könitzer，瑞士苏黎世软件工程师，洽谈网页开发与全栈项目合作、自由职业及咨询机会。",
+        "联系 Dominik Könitzer，瑞士苏黎世软件工程师，洽谈网页开发与全栈项目、自由职业工作、合作与咨询。",
       keywords:
         "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 雇用软件工程师, 瑞士自由职业开发者, 软件工程咨询",
     },
