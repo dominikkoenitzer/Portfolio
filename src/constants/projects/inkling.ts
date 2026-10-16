@@ -40,7 +40,7 @@ const en: LocalizedContent = {
   description:
     "A desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your own machine. A checkbox in a note shows up on Today, and a line with :: becomes a flashcard.",
   overview:
-    "Inkling is an Electron app I built for studying. Everything starts as a note: a checkbox in a note is a to-do, and a Term :: Definition line becomes a flashcard. It opens on a Today page that lists the to-dos still open and the decks with cards due, and nothing else. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.8.2, ships for Windows, macOS and Linux and updates itself from GitHub Releases.",
+    "Inkling is an Electron app I built for studying. Everything starts as a note: a checkbox in a note is a to-do, and a Term :: Definition line becomes a flashcard. It opens on a Today page that lists the to-dos still open and the decks with cards due, and nothing else. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.8.2, ships for Windows, macOS and Linux, and on Windows and Linux it updates itself from GitHub Releases.",
   roleSummary: "Just me: the data model, the Electron shell, the interface and the release pipeline.",
   sections: [
     {
@@ -108,7 +108,7 @@ const de: LocalizedContent = {
   description:
     "Eine Lern-App für den Desktop mit Notizen, To-dos und Karteikarten, gespeichert in einer SQLite-Datei auf dem eigenen Rechner. Eine Checkbox in einer Notiz erscheint auf der Heute-Seite, eine Zeile mit :: wird zur Karteikarte.",
   overview:
-    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Alles beginnt als Notiz: Eine Checkbox in einer Notiz ist ein To-do, und eine Zeile Begriff :: Definition wird zur Karteikarte. Die App öffnet auf einer Heute-Seite, die die offenen To-dos und die Stapel mit fälligen Karten zeigt, und sonst nichts. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.8.2, erscheint für Windows, macOS und Linux und aktualisiert sich selbst über GitHub Releases.",
+    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Alles beginnt als Notiz: Eine Checkbox in einer Notiz ist ein To-do, und eine Zeile Begriff :: Definition wird zur Karteikarte. Die App öffnet auf einer Heute-Seite, die die offenen To-dos und die Stapel mit fälligen Karten zeigt, und sonst nichts. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.8.2, erscheint für Windows, macOS und Linux; unter Windows und Linux aktualisiert es sich selbst über GitHub Releases.",
   roleSummary: "Nur ich: das Datenmodell, die Electron-Schale, die Oberfläche und die Release-Pipeline.",
   sections: [
     {
@@ -176,7 +176,7 @@ const fr: LocalizedContent = {
   description:
     "Une app d'étude pour le bureau, avec notes, tâches et cartes mémoire, conservées dans un seul fichier SQLite sur votre machine. Une case à cocher dans une note apparaît sur la page Aujourd'hui, et une ligne avec :: devient une carte.",
   overview:
-    "Inkling est une application Electron que j'ai construite pour étudier. Tout commence par une note : une case à cocher dans une note est une tâche, et une ligne Terme :: Définition devient une carte mémoire. Elle s'ouvre sur une page Aujourd'hui qui affiche les tâches encore ouvertes et les paquets avec des cartes à réviser, et rien d'autre. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.8.2, sort pour Windows, macOS et Linux et se met à jour elle-même depuis GitHub Releases.",
+    "Inkling est une application Electron que j'ai construite pour étudier. Tout commence par une note : une case à cocher dans une note est une tâche, et une ligne Terme :: Définition devient une carte mémoire. Elle s'ouvre sur une page Aujourd'hui qui affiche les tâches encore ouvertes et les paquets avec des cartes à réviser, et rien d'autre. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.8.2, sort pour Windows, macOS et Linux, et sous Windows et Linux elle se met à jour elle-même depuis GitHub Releases.",
   roleSummary: "Moi seul : le modèle de données, la coque Electron, l'interface et la chaîne de publication.",
   sections: [
     {
@@ -244,7 +244,7 @@ const zh: LocalizedContent = {
   description:
     "一个桌面学习应用，包含笔记、待办和抽认卡，全部保存在你自己电脑上的一个 SQLite 文件里。笔记里的复选框会出现在“今天”页面上，带 :: 的一行会变成一张抽认卡。",
   overview:
-    "Inkling 是我为学习做的一个 Electron 应用。一切都从笔记开始：笔记里的复选框就是待办，术语 :: 定义 这样的一行会变成抽认卡。打开时是一个“今天”页面，只列出还没完成的待办和有到期卡片的卡组，别的什么都没有。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.8.2 支持 Windows、macOS 和 Linux，并通过 GitHub Releases 自动更新。",
+    "Inkling 是我为学习做的一个 Electron 应用。一切都从笔记开始：笔记里的复选框就是待办，术语 :: 定义 这样的一行会变成抽认卡。打开时是一个“今天”页面，只列出还没完成的待办和有到期卡片的卡组，别的什么都没有。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.8.2 支持 Windows、macOS 和 Linux，在 Windows 和 Linux 上会通过 GitHub Releases 自动更新。",
   roleSummary: "只有我：数据模型、Electron 外壳、界面和发布流程。",
   sections: [
     {
