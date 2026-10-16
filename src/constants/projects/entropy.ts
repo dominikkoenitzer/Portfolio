@@ -27,7 +27,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Random bytes, without the modulo bias",
         body: [
           "Taking a random 32-bit number modulo the size of the character pool looks fine and is slightly wrong: unless the pool divides 2³² evenly, the first few characters come up a little more often than the rest. So every pick goes through one small function that throws away the values from the uneven tail and draws again.",
-          "The generator draws every character from the combined pool of the sets you switched on and redraws the whole password until each of those sets appears in it, so the result stays uniform over exactly the passwords that fit the settings. Passphrases draw from the EFF long wordlist, about 12.9 bits a word.",
+          "The generator draws every character from the combined pool of the sets you switched on and redraws the whole password until each of those sets appears in it, so the result stays uniform over exactly the passwords that fit the settings. Passphrases draw from Entropy's own list of 7,776 common English words, about 12.9 bits a word.",
           "Math.random() appears exactly once in the app: it seeds the generative art behind the password, which is decoration and guards nothing.",
         ],
         code: {
@@ -109,7 +109,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Zufallsbytes ohne Modulo-Verzerrung",
         body: [
           "Eine zufällige 32-Bit-Zahl modulo der Grösse des Zeichenvorrats zu nehmen, sieht richtig aus und ist leicht falsch: Solange der Vorrat 2³² nicht glatt teilt, kommen die ersten paar Zeichen etwas häufiger vor als der Rest. Deshalb läuft jede Auswahl durch eine kleine Funktion, die die Werte aus dem ungeraden Rest verwirft und neu zieht.",
-          "Der Generator zieht jedes Zeichen aus dem gemeinsamen Vorrat der eingeschalteten Sätze und zieht das ganze Passwort neu, bis jeder dieser Sätze darin vorkommt; so bleibt das Ergebnis gleichverteilt über genau die Passwörter, die zu den Einstellungen passen. Passphrasen kommen aus der langen EFF-Wortliste, etwa 12,9 Bit pro Wort.",
+          "Der Generator zieht jedes Zeichen aus dem gemeinsamen Vorrat der eingeschalteten Sätze und zieht das ganze Passwort neu, bis jeder dieser Sätze darin vorkommt; so bleibt das Ergebnis gleichverteilt über genau die Passwörter, die zu den Einstellungen passen. Passphrasen kommen aus Entropys eigener Liste von 7'776 gebräuchlichen englischen Wörtern, etwa 12,9 Bit pro Wort.",
           "Math.random() kommt in der App genau einmal vor: Es setzt den Seed für die generative Grafik hinter dem Passwort, und die ist Dekoration und bewacht nichts.",
         ],
         code: {
@@ -191,7 +191,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Des octets aléatoires, sans biais de modulo",
         body: [
           "Prendre un nombre aléatoire de 32 bits modulo la taille du jeu de caractères a l'air correct et ne l'est pas tout à fait : si le jeu ne divise pas 2³² exactement, les premiers caractères sortent un peu plus souvent que les autres. Chaque tirage passe donc par une petite fonction qui jette les valeurs de la queue inégale et tire à nouveau.",
-          "Le générateur tire chaque caractère dans le jeu combiné des jeux activés et tire de nouveau tout le mot de passe jusqu'à ce que chacun de ces jeux y figure, pour que le résultat reste uniforme sur exactement les mots de passe conformes aux réglages. Les phrases de passe puisent dans la grande liste de l'EFF, environ 12,9 bits par mot.",
+          "Le générateur tire chaque caractère dans le jeu combiné des jeux activés et tire de nouveau tout le mot de passe jusqu'à ce que chacun de ces jeux y figure, pour que le résultat reste uniforme sur exactement les mots de passe conformes aux réglages. Les phrases de passe puisent dans la propre liste d'Entropy, 7 776 mots anglais courants, environ 12,9 bits par mot.",
           "Math.random() n'apparaît qu'une fois dans l'app : il sert de graine à l'art génératif derrière le mot de passe, qui est décoratif et ne protège rien.",
         ],
         code: {
@@ -273,7 +273,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "随机字节，但不带取模偏差",
         body: [
           "拿一个 32 位随机数对字符池大小取模，看起来没问题，其实略有偏差：只要池子的大小不能整除 2³²，排在前面的几个字符就会比其他字符出现得稍微多一点。所以每一次抽取都经过一个小函数，它把落在不均匀尾段的值扔掉，重新再抽。",
-          "生成器从所有启用字符集合并后的字符池里抽取每一个字符，只要有一个启用的字符集没有出现，就整串重新抽取，因此结果在所有符合设置的密码上保持均匀分布。口令短语取自 EFF 的长词表，每个词约 12.9 比特。",
+          "生成器从所有启用字符集合并后的字符池里抽取每一个字符，只要有一个启用的字符集没有出现，就整串重新抽取，因此结果在所有符合设置的密码上保持均匀分布。口令短语取自 Entropy 自己的词表，共 7,776 个常用英语单词，每个词约 12.9 比特。",
           "整个应用里 Math.random() 只出现一次：给密码背后的生成艺术图案提供种子。那只是装饰，不守护任何东西。",
         ],
         code: {
