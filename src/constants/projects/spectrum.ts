@@ -22,7 +22,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     description:
       "Spectrum is a client-side color toolkit: pull exact colors out of an image, build gradients and palettes, check WCAG contrast, and simulate color blindness. All in the browser, nothing uploaded.",
     overview:
-      "Picking a color should not mean keeping five browser tabs open, each doing one trick and none of them talking to each other. Spectrum puts sampling, generating, palettes, gradients, contrast, color-vision simulation, a browsable color library and a theory page on eight routes of one Next.js app. Every pixel is read through the Canvas API on your own machine, and the conversions run through colord in a lib folder that has never heard of React. There is no backend at all, so it deploys as static files and your images stay where they are.",
+      "Picking a color should not mean keeping five browser tabs open, each doing one trick and none of them talking to each other. Spectrum puts sampling, generating, palettes, gradients, contrast, color-vision simulation, a browsable color library and a theory page on eight routes of one Next.js app. Every pixel is read through the Canvas API on your own machine, and the conversions run through colord in plain TypeScript modules that never import React. There is no API and nowhere to upload to, so your images stay where they are.",
     roleSummary: "Just me: the UX, the Next.js build, and the color math.",
     sections: [
       {
@@ -84,7 +84,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     description:
       "Spectrum ist ein clientseitiges Farb-Toolkit: exakte Farben aus einem Bild ziehen, Gradienten und Paletten bauen, WCAG-Kontrast prüfen und Farbenblindheit simulieren. Alles im Browser, nichts wird hochgeladen.",
     overview:
-      "Eine Farbe zu wählen sollte nicht bedeuten, fünf Browser-Tabs offen zu halten, von denen jeder einen Trick kann und keiner mit dem anderen redet. Spectrum legt Sampling, Generieren, Paletten, Gradienten, Kontrast, Farbsehsimulation, eine durchstöberbare Farbbibliothek und eine Theorieseite auf acht Routen einer Next.js-App. Jeder Pixel wird über die Canvas-API auf dem eigenen Rechner gelesen, und die Umrechnungen laufen über colord in einem Lib-Ordner, der noch nie von React gehört hat. Es gibt überhaupt kein Backend, also deployt das Ganze als statische Dateien und die Bilder bleiben, wo sie sind.",
+      "Eine Farbe zu wählen sollte nicht bedeuten, fünf Browser-Tabs offen zu halten, von denen jeder einen Trick kann und keiner mit dem anderen redet. Spectrum legt Sampling, Generieren, Paletten, Gradienten, Kontrast, Farbsehsimulation, eine durchstöberbare Farbbibliothek und eine Theorieseite auf acht Routen einer Next.js-App. Jeder Pixel wird über die Canvas-API auf dem eigenen Rechner gelesen, und die Umrechnungen laufen über colord in reinen TypeScript-Modulen, die React nie importieren. Es gibt keine API und nichts, wohin man hochladen könnte, also bleiben die Bilder, wo sie sind.",
     roleSummary: "Nur ich: die UX, der Next.js-Build und die Farbmathematik.",
     sections: [
       {
@@ -146,7 +146,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     description:
       "Spectrum est une boîte à outils couleur côté client : prélever des couleurs exactes dans une image, composer des dégradés et des palettes, vérifier le contraste WCAG et simuler le daltonisme. Tout dans le navigateur, rien n'est envoyé.",
     overview:
-      "Choisir une couleur ne devrait pas obliger à garder cinq onglets ouverts, chacun sachant faire un tour et aucun ne parlant aux autres. Spectrum met le prélèvement, la génération, les palettes, les dégradés, le contraste, la simulation de vision des couleurs, une bibliothèque de couleurs à parcourir et une page de théorie sur huit routes d'une même app Next.js. Chaque pixel est lu via l'API Canvas sur votre propre machine, et les conversions passent par colord dans un dossier lib qui n'a jamais entendu parler de React. Il n'y a aucun backend, donc tout se déploie en fichiers statiques et vos images restent où elles sont.",
+      "Choisir une couleur ne devrait pas obliger à garder cinq onglets ouverts, chacun sachant faire un tour et aucun ne parlant aux autres. Spectrum met le prélèvement, la génération, les palettes, les dégradés, le contraste, la simulation de vision des couleurs, une bibliothèque de couleurs à parcourir et une page de théorie sur huit routes d'une même app Next.js. Chaque pixel est lu via l'API Canvas sur votre propre machine, et les conversions passent par colord dans de simples modules TypeScript qui n'importent jamais React. Il n'y a aucune API ni rien vers quoi envoyer, donc vos images restent où elles sont.",
     roleSummary: "Moi seul : l'UX, le build Next.js et les maths de la couleur.",
     sections: [
       {
@@ -208,7 +208,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     description:
       "Spectrum 是一套纯客户端的颜色工具：从图片里取准确的颜色、做渐变与配色、检查 WCAG 对比度、模拟色盲。全在浏览器里跑，什么都不上传。",
     overview:
-      "选个颜色，不该逼你开着五个标签页，每个只会一招，彼此还都不说话。Spectrum 把取色、生成、配色板、渐变、对比度、色觉模拟、一个可翻阅的颜色库和一页色彩理论，放进同一个 Next.js 应用的八条路由里。每个像素都通过 Canvas API 在你自己的机器上读取，换算则交给 lib 目录里的 colord，那个目录压根不知道 React 的存在。整个项目没有后端，所以它以静态文件部署，你的图片也就留在原处。",
+      "选个颜色，不该逼你开着五个标签页，每个只会一招，彼此还都不说话。Spectrum 把取色、生成、配色板、渐变、对比度、色觉模拟、一个可翻阅的颜色库和一页色彩理论，放进同一个 Next.js 应用的八条路由里。每个像素都通过 Canvas API 在你自己的机器上读取，换算则交给 colord，写在从不引入 React 的纯 TypeScript 模块里。项目没有任何 API，也没有可以上传的地方，所以你的图片就留在原处。",
     roleSummary: "只有我：交互、Next.js 构建，以及颜色相关的数学。",
     sections: [
       {
