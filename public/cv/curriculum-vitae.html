@@ -267,6 +267,13 @@
             color: white;
         }
 
+        /* The second page repeats the name as an h2 (one h1 per document) and keeps the h1's look. */
+        h2.name {
+            display: block;
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
         .title {
             font-size: 14px;
             color: #bdc3c7;
@@ -1021,6 +1028,7 @@
         body { font-size: 8.8pt !important; }
         h1 { font-size: 15pt !important; }
         h2 { font-size: 10.5pt !important; }
+        h2.name { font-size: 15pt !important; }
         h3 { font-size: 9.2pt !important; }
 
         .title,
@@ -1146,6 +1154,7 @@
         <symbol id="i-building" viewBox="0 0 24 24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></symbol>
         <symbol id="i-briefcase" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></symbol>
     </svg>
+    <main>
     <div class="container" id="cv-content">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -1279,7 +1288,7 @@
         <div class="sidebar sidebar-placeholder">
             <div class="profile-section">
                 <img src="/dominik-koenitzer.jpg" alt="Profile picture of Dominik Könitzer" class="profile-picture">
-                <h1 class="name">Dominik Könitzer</h1>
+                <h2 class="name">Dominik Könitzer</h2>
                 <p class="title">Software Engineer</p>
             </div>
 
@@ -1362,5 +1371,6 @@
             </div>
         </div>
     </div>
+    </main>
 </body>
 </html>
