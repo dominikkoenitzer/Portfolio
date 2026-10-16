@@ -455,7 +455,10 @@ export function Lightbox({
       {/* The arrows overlay the frame rather than sitting beside it: as flex
           siblings they competed with the image for width, and on a phone that
           pushed both of them off the screen. */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center px-3 pb-4 sm:px-16 sm:pb-8">
+      <div
+        className="relative flex min-h-0 flex-1 items-center justify-center px-3 pb-4 sm:px-16 sm:pb-8"
+        style={{ containerType: "size" }}
+      >
         {total > 1 ? (
           <button
             aria-label={labels.previous}
@@ -467,35 +470,47 @@ export function Lightbox({
           </button>
         ) : null}
 
-        <motion.img
-          alt={alt}
-          animate={{ opacity: 1 }}
-          className="max-h-full min-h-0 w-auto max-w-full border border-border/60 object-contain"
-          drag={reduced || total < 2 ? false : "x"}
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.16}
-          initial={{ opacity: reduced || sharedId ? 1 : 0 }}
-          key={images[index]}
-          layoutId={sharedId}
-          onDragEnd={(_, info) => {
-            // Either a deliberate drag or a flick: a fast swipe on a phone
-            // covers barely 40px before the finger leaves the glass, and
-            // distance alone swallowed it.
-            const right = info.offset.x > 70 || info.velocity.x > 500;
-            const left = info.offset.x < -70 || info.velocity.x < -500;
-            if (left) go(1);
-            else if (right) go(-1);
+        {/* One stage for every picture: the largest SHOT_RATIO box the space
+            allows, sized before any file arrives. Each image is contained in
+            it, so the next one, a slow one or an odd ratio opens in exactly
+            the same place at exactly the same size. */}
+        <div
+          className="relative shrink-0"
+          style={{
+            width: `min(100cqw, ${SHOT_RATIO * 100}cqh)`,
+            aspectRatio: String(SHOT_RATIO),
           }}
-          src={images[index]}
-          // The radius lives in `style` rather than a class so the shared
-          // layout animation can correct it while the box scales; a class
-          // radius stretches into an oval mid-flight.
-          style={{ borderRadius: 16 }}
-          transition={{
-            layout: SPRING_FLUID,
-            opacity: { duration: DUR.fast, ease: EASE_OUT },
-          }}
-        />
+        >
+          <motion.img
+            alt={alt}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 h-full w-full border border-border/60 bg-card object-contain"
+            drag={reduced || total < 2 ? false : "x"}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.16}
+            initial={{ opacity: reduced || sharedId ? 1 : 0 }}
+            key={images[index]}
+            layoutId={sharedId}
+            onDragEnd={(_, info) => {
+              // Either a deliberate drag or a flick: a fast swipe on a phone
+              // covers barely 40px before the finger leaves the glass, and
+              // distance alone swallowed it.
+              const right = info.offset.x > 70 || info.velocity.x > 500;
+              const left = info.offset.x < -70 || info.velocity.x < -500;
+              if (left) go(1);
+              else if (right) go(-1);
+            }}
+            src={images[index]}
+            // The radius lives in `style` rather than a class so the shared
+            // layout animation can correct it while the box scales; a class
+            // radius stretches into an oval mid-flight.
+            style={{ borderRadius: 16 }}
+            transition={{
+              layout: SPRING_FLUID,
+              opacity: { duration: DUR.fast, ease: EASE_OUT },
+            }}
+          />
+        </div>
 
         {total > 1 ? (
           <button
