@@ -170,28 +170,28 @@ const CARDS: { out: string; title: string; subtitle: string; path: string }[] = 
   { out: "public/og/skills.png", title: "Skills", subtitle: "What I work with day to day, and what I'm still getting better at", path: "/skills" },
   { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built, most of them with the source", path: "/projects" },
   { out: "public/og/services.png", title: "Services", subtitle: "Web development and software engineering, Zürich or remote", path: "/services" },
-  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together. One email is all it takes.", path: "/contact" },
+  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together. A short form is all it takes.", path: "/contact" },
   { out: "public/og/donate.png", title: "Tip Jar", subtitle: "If something here clicked for you", path: "/donate" },
 ];
 
 // Per-project share cards (wired through ProjectDetails' <SEO image=...>, which
 // points at /og/projects/<slug>.png). Subtitles follow each project's tagline.
 const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
-  { slug: "time", title: "Time", subtitle: "An NTP-synced clock, accurate to a hundredth of a second" },
-  { slug: "spectrum", title: "Spectrum", subtitle: "Five color tools under one roof, and none of them phone home" },
-  { slug: "entropy", title: "Entropy", subtitle: "Real randomness and an honest strength score, nothing leaves your browser" },
+  { slug: "time", title: "Time", subtitle: "Your device's clock is probably wrong. This one isn't." },
+  { slug: "spectrum", title: "Spectrum", subtitle: "Eight color tools that finally live under one roof, and none of them phone home" },
+  { slug: "entropy", title: "Entropy", subtitle: "Real randomness, and an honest guess at how long your password would last" },
   { slug: "zephyr", title: "Zephyr", subtitle: "A to-do list and a focus timer, all yours and all offline" },
-  { slug: "senbon", title: "Senbon", subtitle: "A digital garden that refuses to be found on Google. On purpose." },
-  { slug: "punds", title: "Punds", subtitle: "A CRT terminal that boots up to tell you where everything else lives" },
+  { slug: "senbon", title: "Senbon", subtitle: "A journal that refuses to be found on Google. On purpose." },
+  { slug: "punds", title: "Punds", subtitle: "A list of my links, hidden inside a 3D world you fly through" },
   { slug: "flow", title: "Flow", subtitle: "Clicks faster than you can, and never needs a coffee break" },
-  { slug: "jester", title: "Jester", subtitle: "Notepad, but it grew up. Tabs, line numbers, find in files, PDF export." },
+  { slug: "jester", title: "Jester", subtitle: "Notepad, but it grew up. Tabs, line numbers, find-in-files, PDF export." },
   { slug: "remnants", title: "Remnants", subtitle: "VS Code, minus the parts that talk back" },
-  { slug: "portfolio", title: "Portfolio", subtitle: "The site you are looking at. Yes, it is in the portfolio." },
-  { slug: "oxidize", title: "Oxidize", subtitle: "Uninstall a program, then hunt down what it left behind" },
-  { slug: "inkling", title: "Inkling", subtitle: "Your notes quietly turn into tasks and flashcards" },
-  { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager that always gives the desktop back" },
-  { slug: "daifuku", title: "Daifuku", subtitle: "Six agents, one key, and a border that says who needs you" },
-  { slug: "psyche", title: "Psyche", subtitle: "Press Alt+P on a 2FA prompt and the code types itself" },
+  { slug: "portfolio", title: "Portfolio", subtitle: "The site you are reading right now. Yes, it is the portfolio piece." },
+  { slug: "oxidize", title: "Oxidize", subtitle: "Uninstalls the program, then hunts down everything it forgot to take with it" },
+  { slug: "inkling", title: "Inkling", subtitle: "Notes, to-dos and flashcards in one calm app" },
+  { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager for Windows that always gives the desktop back" },
+  { slug: "daifuku", title: "Daifuku", subtitle: "Fleets of AI agent terminals on Windows, each border saying what its agent is doing" },
+  { slug: "psyche", title: "Psyche", subtitle: "Two-factor codes on the Windows desktop. Alt+P on a 2FA prompt types the code." },
 ];
 
 const fontFiles = await ensureFonts();
