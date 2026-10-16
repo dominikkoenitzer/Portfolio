@@ -29,7 +29,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   jester: "Jester, a tabbed Windows notepad",
   flow: "Flow, a Windows macro and auto-clicker",
   punds: "Punds, a 3D Lain-style link hub",
-  senbon: "Senbon, a markdown digital garden",
+  senbon: "Senbon, a markdown journal",
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",
   mochi: "Mochi, a Windows tiling window manager",
