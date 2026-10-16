@@ -142,7 +142,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
     ],
   },
   fr: {
-    tagline: "Huit outils de couleur enfin sous le même toit, et aucun ne rappelle la maison.",
+    tagline: "Huit outils de couleur enfin sous le même toit, et aucun n'envoie quoi que ce soit ailleurs.",
     description:
       "Spectrum est une boîte à outils couleur côté client : prélever des couleurs exactes dans une image, composer des dégradés et des palettes, vérifier le contraste WCAG et simuler le daltonisme. Tout dans le navigateur, rien n'est envoyé.",
     overview:

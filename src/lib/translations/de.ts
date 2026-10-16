@@ -64,12 +64,12 @@ export const de = {
     intro1Highlight: "beruflich und zum Spass",
     intro1After: ", was praktisch ist, weil das für mich dasselbe ist.",
     intro2Before:
-      "Meistens findet man mich mit zu vielen offenen Tabs, einem kalt gewordenen Kaffee und einer festen Meinung zu einem Button, der zwei Pixel daneben sitzt. Ich bin 18 und mache das schon, seit lange bevor mich jemand dafür bezahlt hat. Ich mag Sachen, die schnell sind, gut aussehen und ",
+      "Meistens findet man mich mit zu vielen offenen Tabs, einem kalt gewordenen Kaffee und einer festen Meinung zu einem Button, der zwei Pixel daneben sitzt. Ich bin 18 und habe damit angefangen, lange bevor mich jemand dafür bezahlt hat. Ich mag Sachen, die schnell sind, gut aussehen und ",
     intro2Highlight: "einfach funktionieren",
-    intro2After: ". Die Art von Sachen, über die man nie nachdenken muss.",
+    intro2After: ". Sachen, über die man nie nachdenken muss.",
     intro3Before:
       "Ausserhalb der Arbeit baue ich meistens irgendetwas, das niemand bestellt hat, schaue Anime oder streite über Schriftarten. Wenn deine Website ein bisschen Liebe braucht oder du einfach Hallo sagen willst, ",
-    intro3Highlight: "ich bin leicht zu erreichen",
+    intro3Highlight: "bin ich leicht zu erreichen",
     intro3After: ".",
     exploreSkills: "Meine Skills ansehen",
     getInTouch: "Schreib mir",
@@ -85,7 +85,7 @@ export const de = {
   },
   skills: {
     eyebrow: "Stack & Tools",
-    heading: "Fähigkeiten",
+    heading: "Skills",
     subheading:
       "Womit ich täglich arbeite, und worin ich noch besser werde.",
     projectCountOne: "Ein Projekt nutzt {skill}",
@@ -244,7 +244,7 @@ export const de = {
           "Ein Server, der gleich beim ersten Mal richtig aufgesetzt ist, mit Sicherheit und Monitoring.",
         features: [
           "Installation",
-          "Security Hardening",
+          "Server-Härtung",
           "Performance-Tuning",
           "Monitoring",
         ],
@@ -255,7 +255,7 @@ export const de = {
           "Lücken finden, bevor jemand anderes sie findet. Du bekommst einen Bericht, mit dem du arbeiten kannst.",
         features: [
           "Security-Audit",
-          "Vulnerability-Scan",
+          "Schwachstellen-Scan",
           "Risikominderung",
           "Compliance",
         ],
@@ -491,7 +491,7 @@ export const de = {
     about: {
       title: "Über mich, Software Engineer in Zürich",
       description:
-        "Dominik Könitzer, Software Engineer aus Zürich, spezialisiert auf moderne Webentwicklung mit React und Full-Stack. Software-Studium an der WISS Zürich.",
+        "Dominik Könitzer, Software Engineer aus Zürich, spezialisiert auf moderne Webentwicklung mit React und Full-Stack. In Ausbildung zum Informatiker EFZ Applikationsentwicklung an der WISS Zürich.",
       keywords:
         "Über Dominik Könitzer, Software-Engineer-Biografie, WISS-Schüler, Software-Engineering-Student Schweiz, Webentwickler-Hintergrund, Software-Engineer-Ausbildung",
     },
@@ -505,7 +505,7 @@ export const de = {
     skills: {
       title: "Skills & Technologien",
       description:
-        "Dominik Könitzers technische Skills: React, TypeScript, JavaScript und Node.js. Full-Stack-Entwickler mit Expertise in Frontend- und Backend-Entwicklung.",
+        "Dominik Könitzers technische Skills: React, TypeScript, JavaScript und Node.js. Full-Stack-Entwickler für Frontend und Backend.",
       keywords:
         "Software-Engineer-Skills, React-Skills, TypeScript-Skills, JavaScript-Entwickler, Node.js-Entwickler, Full-Stack-Entwickler-Skills, Webentwicklungs-Technologien, Programmiersprachen, Software-Engineering-Expertise",
     },

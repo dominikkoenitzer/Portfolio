@@ -441,7 +441,7 @@ export const zh = {
     skills: {
       title: "技能与技术",
       description:
-        "Dominik Könitzer 的技术专长：精通 React、TypeScript、JavaScript 与 Node.js 的瑞士全栈软件工程师。",
+        "Dominik Könitzer 的技术栈：React、TypeScript、JavaScript 与 Node.js 的瑞士全栈软件工程师。",
       keywords:
         "软件工程师技能, React 技能, TypeScript 技能, JavaScript 开发者, Node.js 开发者, 全栈开发者技能, 网页开发技术, 编程语言, 软件工程专长",
     },
@@ -455,7 +455,7 @@ export const zh = {
     services: {
       title: "网页开发与软件服务",
       description:
-        "Dominik Könitzer 提供专业网页开发与软件工程服务：React、TypeScript 全栈解决方案。常驻瑞士苏黎世，服务全球客户。",
+        "Dominik Könitzer 提供网页开发与软件工程服务：React、TypeScript 全栈解决方案。常驻瑞士苏黎世，服务全球客户。",
       keywords:
         "软件工程服务, 网页开发服务, 前端开发服务, 后端开发服务, 全栈开发, React 开发服务, TypeScript 开发, 定制网页应用, 瑞士软件开发",
     },

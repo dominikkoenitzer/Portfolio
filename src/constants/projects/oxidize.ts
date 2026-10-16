@@ -132,7 +132,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Das Oxidize-Fenster: 61 Programme und 8.1 GB auf einen Blick mit einem Balken der grössten, die Liste durchsucht nach den Visual-C++-Laufzeiten von Microsoft. Ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
+      "Das Oxidize-Fenster: 61 Programme und 8,1 GB auf einen Blick mit einem Balken der grössten, die Liste durchsucht nach den Visual-C++-Laufzeiten von Microsoft. Ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
       "Das Oxidize-Zeichen: ein dickes O, auf der einen Seite Kupfer, auf der anderen der Grünspan, zu dem es oxidiert.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -178,7 +178,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
         heading: "Classer ce qu'il trouve avant d'y toucher",
         body: [
           "Chaque reste reçoit une confiance. Une correspondance exacte du nom est haute, une correspondance partielle moyenne, et un dossier qu'aucun programme installé ne réclame est bas. --remove ne prend que les hauts ; --medium et --all doivent être demandés.",
-          "Un dossier ou une clé d'éditeur peut contenir d'autres produits du même éditeur, alors le scanner y descend et ne le signale jamais en bloc. Il ne part qu'une fois la suppression l'ayant laissé vide. Les dossiers de Windows lui-même, les racines de lecteur et les racines du profil utilisateur sont refusés d'office.",
+          "Un dossier ou une clé d'éditeur peut contenir d'autres produits du même éditeur, alors le scanner y descend et ne le signale jamais en bloc. Il ne part qu'une fois que la suppression l'a laissé vide. Les dossiers de Windows lui-même, les racines de lecteur et les racines du profil utilisateur sont refusés d'office.",
           "Cette protection compare les chemins comme Windows les lira au moment de supprimer. C:/Windows, C:\\PROGRA~1 et C:\\Windows. désignent tous des dossiers protégés, donc le chemin est résolu vers son vrai nom et débarrassé des barres obliques, du préfixe de longueur étendue et des points et espaces finaux que Windows ignore, avant d'être comparé.",
         ],
       },
@@ -191,7 +191,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "La fenêtre d'Oxidize : 61 programmes et 8,1 Go d'un coup d'œil avec une barre des plus gros, et la liste filtrée sur les runtimes Visual C++ de Microsoft. Choisis un programme pour le désinstaller et voir ce qu'il a laissé derrière lui.",
+      "La fenêtre d'Oxidize : 61 programmes et 8,1 Go d'un coup d'œil avec une barre des plus gros, et la liste filtrée sur les runtimes Visual C++ de Microsoft. Choisissez un programme pour le désinstaller et voir ce qu'il a laissé derrière lui.",
       "Le logo d'Oxidize : un O épais, cuivre d'un côté, et de l'autre le vert-de-gris en lequel il s'oxyde.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
