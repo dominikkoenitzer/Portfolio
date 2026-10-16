@@ -467,7 +467,7 @@ export const zh = {
         "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 雇用软件工程师, 瑞士自由职业开发者, 软件工程咨询",
     },
     donate: {
-      title: "捐赠",
+      title: "打赏",
       description:
         "用一笔小额捐赠支持 Dominik Könitzer 的软件项目。这笔钱用于托管，以及构建和维护它们所花的时间。",
       keywords:

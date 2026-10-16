@@ -531,7 +531,7 @@ export const de = {
         "Dominik Könitzer kontaktieren, Software-Engineer-Kontakt, Webentwickler-Kontakt, Software-Engineer anstellen, Freelance-Entwickler Schweiz, Software-Engineering-Beratung",
     },
     donate: {
-      title: "Spenden",
+      title: "Trinkgeld",
       description:
         "Unterstütze Dominik Könitzers Software-Projekte mit einer kleinen Spende. Sie deckt Hosting und die Zeit, die im Bauen und Warten steckt.",
       keywords:

@@ -528,7 +528,7 @@ export const fr = {
         "contacter Dominik Könitzer, contact ingénieur logiciel, contact développeur web, engager un ingénieur logiciel, développeur freelance Suisse, conseil en ingénierie logicielle",
     },
     donate: {
-      title: "Faire un don",
+      title: "Pourboire",
       description:
         "Soutenez les projets logiciels de Dominik Könitzer par un petit don. Il couvre l'hébergement et le temps passé à les construire et à les maintenir.",
       keywords:
