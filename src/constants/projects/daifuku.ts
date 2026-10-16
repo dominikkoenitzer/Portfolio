@@ -70,7 +70,7 @@ const en: LocalizedContent = {
     { value: "5", label: "crates" },
     { value: "387", label: "tests" },
     { value: "4", label: "states" },
-    { value: "0.3 s", label: "for a border to follow" },
+    { value: "6", label: "terminals on one key" },
   ],
 };
 
@@ -127,7 +127,7 @@ const de: LocalizedContent = {
     { value: "5", label: "Crates" },
     { value: "387", label: "Tests" },
     { value: "4", label: "Zustände" },
-    { value: "0,3 s", label: "bis ein Rahmen folgt" },
+    { value: "6", label: "Terminals auf einer Taste" },
   ],
 };
 
@@ -184,7 +184,7 @@ const fr: LocalizedContent = {
     { value: "5", label: "crates" },
     { value: "387", label: "tests" },
     { value: "4", label: "états" },
-    { value: "0,3 s", label: "pour qu'une bordure suive" },
+    { value: "6", label: "terminaux sur une touche" },
   ],
 };
 
@@ -238,7 +238,7 @@ const zh: LocalizedContent = {
     { value: "5", label: "个 crate" },
     { value: "387", label: "个测试" },
     { value: "4", label: "种状态" },
-    { value: "0.3 秒", label: "边框跟上" },
+    { value: "6", label: "个终端，一个快捷键" },
   ],
 };
 
