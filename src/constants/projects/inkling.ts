@@ -68,7 +68,7 @@ const en: LocalizedContent = {
     {
       heading: "A redesign that mostly took things out",
       body: [
-        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with New note, Today, Study, the notes, Shortcuts and Settings, in a light and a dark theme.",
+        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with New note, Today, Flashcards, the notes, Shortcuts and Settings, in a light and a dark theme.",
         "An earlier pass, v0.6.0, had already taken the source from about 9.8k lines to 6.5k, and loading the editor only when a note opens took the startup bundle from 1881 kB to 819 kB.",
       ],
       figure: 3,
@@ -91,13 +91,13 @@ const en: LocalizedContent = {
   captions: [
     "The Today page: six open to-dos from four notes, and two decks with cards due.",
     "A note in the editor: Term :: Definition lines that become flashcards, and checkboxes that are to-dos.",
-    "A review in Study: the answer is showing, with the next interval under each of the four ratings.",
+    "A review on the Flashcards page: the answer is showing, with the next interval under each of the four ratings.",
     "The dark theme on a maths note with two open to-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
     { value: "10", label: "MCP tools" },
-    { value: "12", label: "end-to-end smoke checks" },
+    { value: "17", label: "end-to-end smoke checks" },
     { value: "26", label: "IPC handlers" },
     { value: "3", label: "platforms" },
   ],
@@ -136,7 +136,7 @@ const de: LocalizedContent = {
     {
       heading: "Eine Überarbeitung, die vor allem Dinge herausnahm",
       body: [
-        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Neue Notiz, Heute, Lernen, den Notizen, Tastenkürzeln und Einstellungen, in einem hellen und einem dunklen Theme.",
+        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Neue Notiz, Heute, Karteikarten, den Notizen, Tastenkürzeln und Einstellungen, in einem hellen und einem dunklen Theme.",
         "Schon v0.6.0 hatte den Quellcode von etwa 9.8k auf 6.5k Zeilen gebracht, und weil der Editor erst beim Öffnen einer Notiz geladen wird, fiel das Start-Bundle von 1881 kB auf 819 kB.",
       ],
       figure: 3,
@@ -159,13 +159,13 @@ const de: LocalizedContent = {
   captions: [
     "Die Heute-Seite: sechs offene To-dos aus vier Notizen und zwei Stapel mit fälligen Karten.",
     "Eine Notiz im Editor: Zeilen Begriff :: Definition, die zu Karteikarten werden, und Checkboxen, die To-dos sind.",
-    "Eine Wiederholung auf der Lernseite: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
+    "Eine Wiederholung auf der Seite Karteikarten: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
     "Das dunkle Theme auf einer Mathe-Notiz mit zwei offenen To-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
     { value: "10", label: "MCP-Werkzeuge" },
-    { value: "12", label: "End-to-End-Prüfungen" },
+    { value: "17", label: "End-to-End-Prüfungen" },
     { value: "26", label: "IPC-Handler" },
     { value: "3", label: "Plattformen" },
   ],
@@ -204,7 +204,7 @@ const fr: LocalizedContent = {
     {
       heading: "Une refonte qui a surtout retiré des choses",
       body: [
-        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Nouvelle note, Aujourd'hui, Étude, les notes, les raccourcis et les réglages, dans un thème clair et un thème sombre.",
+        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Nouvelle note, Aujourd'hui, Cartes, les notes, les raccourcis et les réglages, dans un thème clair et un thème sombre.",
         "Une passe plus ancienne, v0.6.0, avait déjà fait passer le code source d'environ 9,8k lignes à 6,5k, et charger l'éditeur seulement à l'ouverture d'une note avait fait passer le bundle de démarrage de 1881 kB à 819 kB.",
       ],
       figure: 3,
@@ -227,13 +227,13 @@ const fr: LocalizedContent = {
   captions: [
     "La page Aujourd'hui : six tâches ouvertes tirées de quatre notes, et deux paquets avec des cartes à réviser.",
     "Une note dans l'éditeur : des lignes Terme :: Définition qui deviennent des cartes, et des cases à cocher qui sont des tâches.",
-    "Une révision dans la page Étude : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
+    "Une révision dans la page Cartes : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
     "Le thème sombre sur une note de maths avec deux tâches ouvertes.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
     { value: "10", label: "outils MCP" },
-    { value: "12", label: "vérifications de bout en bout" },
+    { value: "17", label: "vérifications de bout en bout" },
     { value: "26", label: "gestionnaires IPC" },
     { value: "3", label: "plateformes" },
   ],
@@ -272,7 +272,7 @@ const zh: LocalizedContent = {
     {
       heading: "一次主要在做减法的改版",
       body: [
-        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“新建笔记”、“今天”、“学习”、所有笔记、“快捷键”和“设置”，配一套浅色和一套深色主题。",
+        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“新建笔记”、“今天”、“抽认卡”、所有笔记、“快捷键”和“设置”，配一套浅色和一套深色主题。",
         "更早的 v0.6.0 已经把源代码从大约 9.8k 行减到 6.5k 行，编辑器改成打开笔记时才加载，启动包从 1881 kB 降到 819 kB。",
       ],
       figure: 3,
@@ -295,13 +295,13 @@ const zh: LocalizedContent = {
   captions: [
     "“今天”页面：来自四篇笔记的六个未完成待办，以及两个有到期卡片的卡组。",
     "编辑器里的一篇笔记：术语 :: 定义 这样的行会变成抽认卡，复选框就是待办。",
-    "学习页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
+    "抽认卡页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
     "深色主题下的一篇数学笔记，里面有两个未完成的待办。",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
     { value: "10", label: "MCP 工具" },
-    { value: "12", label: "端到端冒烟检查" },
+    { value: "17", label: "端到端冒烟检查" },
     { value: "26", label: "IPC 处理函数" },
     { value: "3", label: "平台" },
   ],
