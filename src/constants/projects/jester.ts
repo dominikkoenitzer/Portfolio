@@ -25,11 +25,11 @@ finally
 
 export const jester: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "Notepad, but it grew up. Tabs, line numbers, find-in-files, PDF export.",
+    tagline: "A notepad that grew up. Tabs, line numbers, find-in-files, PDF export.",
     description:
       "Jester is a native Windows notepad with tabbed editing, a line-number gutter, find-in-files and PDF export, all in one portable Jester.exe with no installer.",
     overview:
-      "I wanted a notepad that opens before I let go of the mouse, but still does the few things Notepad refuses to. So I built one in C# and WPF on .NET 10: tabs, a line-number gutter, find across a whole folder, and clean A4 PDF export through QuestPDF. It also has the small things you only miss once they are gone, like session restore, Open Recent, and \"Open with Jester\" in the Explorer context menu. It ships as a single portable executable with the runtime baked in, so there is no installer and no \"please install .NET\" dialog.",
+      "I wanted a notepad that opens before I let go of the mouse, but still does the few things the built-in one refuses to. So I built one in C# and WPF on .NET 10: tabs, a line-number gutter, find across a whole folder, and clean A4 PDF export through QuestPDF. It also has the small things you only miss once they are gone, like session restore, Open Recent, and \"Open with Jester\" in the Explorer context menu. It ships as a single portable executable with the runtime baked in, so there is no installer and no \"please install .NET\" dialog.",
     roleSummary: "Just me: the WPF UI and the whole .NET 10 build.",
     sections: [
       {
@@ -82,11 +82,11 @@ export const jester: Record<Language, LocalizedContent> = {
     ],
   },
   de: {
-    tagline: "Notepad, aber erwachsen. Tabs, Zeilennummern, Suche im Ordner, PDF-Export.",
+    tagline: "Ein Notizblock, der erwachsen wurde. Tabs, Zeilennummern, Suche im Ordner, PDF-Export.",
     description:
       "Jester ist ein nativer Windows-Notizblock mit Tabs, Zeilennummern-Spalte, Suche über ganze Ordner und PDF-Export, alles in einer portablen Jester.exe ohne Installer.",
     overview:
-      "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die Notepad verweigert. Also habe ich einen in C# und WPF auf .NET 10 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
+      "Ich wollte einen Notizblock, der aufgeht, bevor ich die Maus loslasse, der aber die paar Dinge kann, die der eingebaute verweigert. Also habe ich einen in C# und WPF auf .NET 10 gebaut: Tabs, eine Zeilennummern-Spalte, Suche über einen ganzen Ordner und saubere A4-PDF-Ausgabe über QuestPDF. Dazu die kleinen Dinge, die man erst vermisst, wenn sie fehlen: Sitzungswiederherstellung, „Zuletzt verwendet“ und „Mit Jester öffnen“ im Explorer-Kontextmenü. Ausgeliefert wird eine einzige portable Datei mit eingebackener Runtime, also kein Installer und kein „bitte .NET installieren“-Dialog.",
     roleSummary: "Nur ich: die WPF-Oberfläche und der ganze .NET-10-Build.",
     sections: [
       {
@@ -139,11 +139,11 @@ export const jester: Record<Language, LocalizedContent> = {
     ],
   },
   fr: {
-    tagline: "Notepad, mais il a grandi. Onglets, numéros de ligne, recherche dans les fichiers, export PDF.",
+    tagline: "Un bloc-notes qui a grandi. Onglets, numéros de ligne, recherche dans les fichiers, export PDF.",
     description:
       "Jester est un bloc-notes Windows natif avec édition par onglets, une gouttière de numéros de ligne, la recherche dans un dossier et l'export PDF, le tout dans un seul Jester.exe portable, sans installateur.",
     overview:
-      "Je voulais un bloc-notes qui s'ouvre avant que je lâche la souris, mais qui fasse les quelques choses que Notepad refuse. J'en ai donc construit un en C# et WPF sur .NET 10 : onglets, gouttière de numéros de ligne, recherche dans un dossier entier, et export A4 propre via QuestPDF. Avec aussi les petites choses qui ne manquent qu'une fois disparues : la restauration de session, « Fichiers récents », et « Ouvrir avec Jester » dans le menu contextuel de l'Explorateur. Il se livre en un exécutable portable unique, runtime inclus, donc pas d'installateur et pas de boîte de dialogue « veuillez installer .NET ».",
+      "Je voulais un bloc-notes qui s'ouvre avant que je lâche la souris, mais qui fasse les quelques choses que celui de Windows refuse. J'en ai donc construit un en C# et WPF sur .NET 10 : onglets, gouttière de numéros de ligne, recherche dans un dossier entier, et export A4 propre via QuestPDF. Avec aussi les petites choses qui ne manquent qu'une fois disparues : la restauration de session, « Fichiers récents », et « Ouvrir avec Jester » dans le menu contextuel de l'Explorateur. Il se livre en un exécutable portable unique, runtime inclus, donc pas d'installateur et pas de boîte de dialogue « veuillez installer .NET ».",
     roleSummary: "Moi seul : l'interface WPF et tout le build .NET 10.",
     sections: [
       {
@@ -196,11 +196,11 @@ export const jester: Record<Language, LocalizedContent> = {
     ],
   },
   zh: {
-    tagline: "记事本，但长大了。标签页、行号、跨文件查找、PDF 导出。",
+    tagline: "一个长大了的记事本。标签页、行号、跨文件查找、PDF 导出。",
     description:
       "Jester 是一个原生 Windows 记事本，带标签页编辑、行号栏、跨文件夹查找和 PDF 导出，全部装在一个便携的 Jester.exe 里，不需要安装。",
     overview:
-      "我想要一个我松开鼠标之前就已经打开的记事本，同时还能做记事本拒绝做的那几件事。于是我用 C# 和 WPF、跑在 .NET 10 上做了一个：标签页、行号栏、跨整个文件夹查找，以及通过 QuestPDF 输出干净的 A4 PDF。还有那些丢了才会想起来的小事：会话恢复、最近打开，以及资源管理器右键菜单里的「用 Jester 打开」。它是一个便携可执行文件，运行时已经打包在内，所以没有安装程序，也没有那句「请先安装 .NET」。",
+      "我想要一个我松开鼠标之前就已经打开的记事本，同时还能做系统自带的那个不肯做的那几件事。于是我用 C# 和 WPF、跑在 .NET 10 上做了一个：标签页、行号栏、跨整个文件夹查找，以及通过 QuestPDF 输出干净的 A4 PDF。还有那些丢了才会想起来的小事：会话恢复、最近打开，以及资源管理器右键菜单里的「用 Jester 打开」。它是一个便携可执行文件，运行时已经打包在内，所以没有安装程序，也没有那句「请先安装 .NET」。",
     roleSummary: "只有我：WPF 界面和整套 .NET 10 构建。",
     sections: [
       {
