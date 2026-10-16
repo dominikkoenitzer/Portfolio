@@ -56,7 +56,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Nowhere for a password to go",
         body: [
           "The app has no API routes and stores nothing. A script downloads the dictionaries the analyzer needs and writes them into generated files that ship with the app, so looking up a word while you type costs no request. They sit in their own chunk that only loads when the Analyze tab opens, which keeps the generator light.",
-          "The analyzer has a suite of 49 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
+          "The analyzer has a suite of 59 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
         ],
       },
       {
@@ -69,7 +69,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "A health check that stays on the PC",
         body: [
-          "The Health page puts each saved password through the analyzer and sorts the problems into four groups: found in a leak, weak, reused and old. The leak check runs offline against about a million of the most common passwords from public leaks. A binary fuse filter of 2.26 MB keeps a 16-bit fingerprint of each one's SHA-256 and raises a false alarm for about 1 in 65,536 passwords that never leaked. I ported the website's generator and analyzer to C#, including randInt, the function that draws random numbers without modulo bias. A script runs the website's own TypeScript over 643 passwords and 672 generator settings and saves the results, and the C# tests have to reproduce every guess count, bit value, tier and crack time in that file. In all there are 828 xUnit test cases for the core library and 153 for the Windows layer.",
+          "The Health page puts each saved password through the analyzer and sorts the problems into four groups: found in a leak, weak, reused and old. The leak check runs offline against about a million of the most common passwords from public leaks. A binary fuse filter of 2.26 MB keeps a 16-bit fingerprint of each one's SHA-256 and raises a false alarm for about 1 in 65,536 passwords that never leaked. I ported the website's generator and analyzer to C#, including randInt, the function that draws random numbers without modulo bias. A script runs the website's own TypeScript over 704 passwords and 672 generator settings and saves the results, and the C# tests have to reproduce every guess count, bit value, tier and crack time in that file. In all there are 832 xUnit test cases for the core library and 156 for the Windows layer.",
         ],
         figure: 4,
       },
@@ -138,7 +138,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Kein Ort, an den ein Passwort gehen könnte",
         body: [
           "Die App hat keine API-Routen und speichert nichts. Die Wörterbücher für die Analyse lädt ein Skript herunter und schreibt sie in generierte Dateien, die mit der App ausgeliefert werden, darum kostet eine Wortsuche beim Tippen keinen Request. Sie liegen in einem eigenen Chunk, der erst lädt, wenn der Analysieren-Tab aufgeht, so bleibt der Generator leicht.",
-          "Die Analyse hat eine Suite von 49 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
+          "Die Analyse hat eine Suite von 59 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
         ],
       },
       {
@@ -151,7 +151,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Ein Gesundheitscheck, der auf dem PC bleibt",
         body: [
-          "Die Health-Seite schickt jedes gespeicherte Passwort durch die Analyse und ordnet die Probleme in vier Gruppen: in einem Leak gefunden, schwach, mehrfach verwendet und alt. Die Leak-Prüfung läuft offline gegen rund eine Million der häufigsten Passwörter aus öffentlichen Leaks. Ein Binary Fuse Filter von 2,26 MB hält vom SHA-256 jedes Passworts einen 16-Bit-Fingerabdruck und meldet etwa 1 von 65'536 nie geleakten Passwörtern fälschlich als gefunden. Generator und Analyse der Website habe ich nach C# portiert, samt randInt, der Funktion, die Zufallszahlen ohne Modulo-Verzerrung zieht. Ein Skript lässt das TypeScript der Website über 643 Passwörter und 672 Generator-Einstellungen laufen und speichert die Ergebnisse, und die C#-Tests müssen jede Anzahl Versuche, jeden Bitwert, jede Stufe und jede Knackzeit in dieser Datei genau treffen. Insgesamt gibt es für die Kernbibliothek 828 xUnit-Testfälle und für die Windows-Schicht 153.",
+          "Die Health-Seite schickt jedes gespeicherte Passwort durch die Analyse und ordnet die Probleme in vier Gruppen: in einem Leak gefunden, schwach, mehrfach verwendet und alt. Die Leak-Prüfung läuft offline gegen rund eine Million der häufigsten Passwörter aus öffentlichen Leaks. Ein Binary Fuse Filter von 2,26 MB hält vom SHA-256 jedes Passworts einen 16-Bit-Fingerabdruck und meldet etwa 1 von 65'536 nie geleakten Passwörtern fälschlich als gefunden. Generator und Analyse der Website habe ich nach C# portiert, samt randInt, der Funktion, die Zufallszahlen ohne Modulo-Verzerrung zieht. Ein Skript lässt das TypeScript der Website über 704 Passwörter und 672 Generator-Einstellungen laufen und speichert die Ergebnisse, und die C#-Tests müssen jede Anzahl Versuche, jeden Bitwert, jede Stufe und jede Knackzeit in dieser Datei genau treffen. Insgesamt gibt es für die Kernbibliothek 832 xUnit-Testfälle und für die Windows-Schicht 156.",
         ],
         figure: 4,
       },
@@ -220,7 +220,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Nulle part où un mot de passe pourrait aller",
         body: [
           "L'app n'a aucune route d'API et ne stocke rien. Un script télécharge les dictionnaires de l'analyseur et les écrit dans des fichiers générés livrés avec l'app, si bien que chercher un mot pendant la frappe ne coûte aucune requête. Ils sont dans un chunk à part qui ne se charge qu'à l'ouverture de l'onglet Analyser, ce qui garde le générateur léger.",
-          "L'analyseur a une suite de 49 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
+          "L'analyseur a une suite de 59 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
         ],
       },
       {
@@ -233,7 +233,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Un bilan de santé qui reste sur le PC",
         body: [
-          "La page Health passe chaque mot de passe enregistré dans l'analyseur et range les problèmes en quatre groupes : trouvé dans une fuite, faible, réutilisé et ancien. La vérification des fuites se fait hors ligne, contre environ un million des mots de passe les plus courants issus de fuites publiques. Un filtre binary fuse de 2,26 Mo garde une empreinte de 16 bits du SHA-256 de chacun, et signale à tort environ 1 mot de passe sur 65 536 qui n'a jamais fuité. J'ai porté en C# le générateur et l'analyseur du site, y compris randInt, la fonction qui tire des nombres aléatoires sans biais de modulo. Un script fait tourner le TypeScript du site sur 643 mots de passe et 672 réglages du générateur et enregistre les résultats, et les tests C# doivent retrouver chaque nombre d'essais, chaque valeur en bits, chaque palier et chaque temps de cassage de ce fichier. Au total, la bibliothèque centrale a 828 cas de test xUnit, la couche Windows 153.",
+          "La page Health passe chaque mot de passe enregistré dans l'analyseur et range les problèmes en quatre groupes : trouvé dans une fuite, faible, réutilisé et ancien. La vérification des fuites se fait hors ligne, contre environ un million des mots de passe les plus courants issus de fuites publiques. Un filtre binary fuse de 2,26 Mo garde une empreinte de 16 bits du SHA-256 de chacun, et signale à tort environ 1 mot de passe sur 65 536 qui n'a jamais fuité. J'ai porté en C# le générateur et l'analyseur du site, y compris randInt, la fonction qui tire des nombres aléatoires sans biais de modulo. Un script fait tourner le TypeScript du site sur 704 mots de passe et 672 réglages du générateur et enregistre les résultats, et les tests C# doivent retrouver chaque nombre d'essais, chaque valeur en bits, chaque palier et chaque temps de cassage de ce fichier. Au total, la bibliothèque centrale a 832 cas de test xUnit, la couche Windows 156.",
         ],
         figure: 4,
       },
@@ -302,7 +302,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "密码无处可去",
         body: [
           "应用没有 API 路由，也不存储任何东西。分析所需的词表由一个脚本下载，写进随应用一起发布的生成文件里，所以打字时查词不产生任何请求。词表放在单独的代码块里，只有打开分析页时才加载，生成器因此保持轻量。",
-          "分析器有一套 49 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
+          "分析器有一套 59 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
         ],
       },
       {
@@ -315,7 +315,7 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "留在本机上的健康检查",
         body: [
-          "Health 页面把每个已保存的密码交给分析器，把问题分成四组：出现在泄露中、弱、重复使用和过旧。泄露检查完全离线，对照的是公开泄露中最常见的约一百万个密码。一个 2.26 MB 的 binary fuse 过滤器为每个密码的 SHA-256 保存一个 16 位指纹，对从未泄露的密码，大约每 65,536 个会误报一个。我把网站的生成器和分析器移植到了 C#，包括不带取模偏差地抽取随机数的 randInt 函数。一个脚本用网站自己的 TypeScript 跑 643 个密码和 672 种生成器设置，把结果存成文件，C# 测试必须逐一还原其中每个尝试次数、比特值、等级和破解时间。核心库共有 828 个 xUnit 测试用例，Windows 层有 153 个。",
+          "Health 页面把每个已保存的密码交给分析器，把问题分成四组：出现在泄露中、弱、重复使用和过旧。泄露检查完全离线，对照的是公开泄露中最常见的约一百万个密码。一个 2.26 MB 的 binary fuse 过滤器为每个密码的 SHA-256 保存一个 16 位指纹，对从未泄露的密码，大约每 65,536 个会误报一个。我把网站的生成器和分析器移植到了 C#，包括不带取模偏差地抽取随机数的 randInt 函数。一个脚本用网站自己的 TypeScript 跑 704 个密码和 672 种生成器设置，把结果存成文件，C# 测试必须逐一还原其中每个尝试次数、比特值、等级和破解时间。核心库共有 832 个 xUnit 测试用例，Windows 层有 156 个。",
         ],
         figure: 4,
       },
