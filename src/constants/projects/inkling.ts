@@ -68,7 +68,7 @@ const en: LocalizedContent = {
     {
       heading: "A redesign that mostly took things out",
       body: [
-        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with Today, Study, Settings and the notes, in a light and a dark theme.",
+        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with New note, Today, Study, the notes, Shortcuts and Settings, in a light and a dark theme.",
         "An earlier pass, v0.6.0, had already taken the source from about 9.8k lines to 6.5k, and loading the editor only when a note opens took the startup bundle from 1881 kB to 819 kB.",
       ],
       figure: 3,
@@ -136,7 +136,7 @@ const de: LocalizedContent = {
     {
       heading: "Eine Überarbeitung, die vor allem Dinge herausnahm",
       body: [
-        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Heute, Lernen, Einstellungen und den Notizen, in einem hellen und einem dunklen Theme.",
+        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Neue Notiz, Heute, Lernen, den Notizen, Tastenkürzeln und Einstellungen, in einem hellen und einem dunklen Theme.",
         "Schon v0.6.0 hatte den Quellcode von etwa 9.8k auf 6.5k Zeilen gebracht, und weil der Editor erst beim Öffnen einer Notiz geladen wird, fiel das Start-Bundle von 1881 kB auf 819 kB.",
       ],
       figure: 3,
@@ -204,7 +204,7 @@ const fr: LocalizedContent = {
     {
       heading: "Une refonte qui a surtout retiré des choses",
       body: [
-        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Aujourd'hui, Étude, Réglages et les notes, dans un thème clair et un thème sombre.",
+        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Nouvelle note, Aujourd'hui, Étude, les notes, les raccourcis et les réglages, dans un thème clair et un thème sombre.",
         "Une passe plus ancienne, v0.6.0, avait déjà fait passer le code source d'environ 9,8k lignes à 6,5k, et charger l'éditeur seulement à l'ouverture d'une note avait fait passer le bundle de démarrage de 1881 kB à 819 kB.",
       ],
       figure: 3,
@@ -272,7 +272,7 @@ const zh: LocalizedContent = {
     {
       heading: "一次主要在做减法的改版",
       body: [
-        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“今天”、“学习”、“设置”和所有笔记，配一套浅色和一套深色主题。",
+        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“新建笔记”、“今天”、“学习”、所有笔记、“快捷键”和“设置”，配一套浅色和一套深色主题。",
         "更早的 v0.6.0 已经把源代码从大约 9.8k 行减到 6.5k 行，编辑器改成打开笔记时才加载，启动包从 1881 kB 降到 819 kB。",
       ],
       figure: 3,
