@@ -519,14 +519,14 @@ export const de = {
     services: {
       title: "Webentwicklung & Software",
       description:
-        "Dominik Könitzer bietet Webentwicklung und Software-Engineering aus Zürich: Frontend, Backend und Full-Stack mit React und TypeScript, weltweit verfügbar.",
+        "Dominik Könitzer bietet Webentwicklung und Software-Engineering aus Zürich: Frontend, Backend und Full-Stack mit React und TypeScript, für Kunden weltweit.",
       keywords:
         "Software-Engineering-Leistungen, Webentwicklungs-Leistungen, Frontend-Entwicklungs-Leistungen, Backend-Entwicklungs-Leistungen, Full-Stack-Entwicklung, React-Entwicklungs-Leistungen, TypeScript-Entwicklung, individuelle Webanwendungen, Software-Entwicklung Schweiz",
     },
     contact: {
       title: "Software Engineer kontaktieren",
       description:
-        "Kontaktiere Dominik Könitzer, Software Engineer aus Zürich, für Web- und Software-Projekte. Verfügbar für Freelance, Kollaborationen und Beratung.",
+        "Kontaktiere Dominik Könitzer, Software Engineer aus Zürich, für Web- und Software-Projekte, Freelance-Aufträge, Kollaborationen und Beratung.",
       keywords:
         "Dominik Könitzer kontaktieren, Software-Engineer-Kontakt, Webentwickler-Kontakt, Software-Engineer anstellen, Freelance-Entwickler Schweiz, Software-Engineering-Beratung",
     },
