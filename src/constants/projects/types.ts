@@ -52,6 +52,12 @@ export interface PortfolioProject {
   repoUrl: string;
   /** Absent for a project that only runs locally. */
   liveUrl?: string;
+  /**
+   * Where the app runs: in a browser, or installed on a computer. Set on every
+   * project, because a desktop app without a public download (Psyche) is still
+   * a desktop app.
+   */
+  platform: Platform;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   /** The app's own download page, linked beside the direct download on the detail page. */
@@ -84,6 +90,8 @@ export interface PortfolioProject {
   stats?: ProjectStat[];
 }
 
+export type Platform = "web" | "desktop";
+
 export type LocalizedContent = {
   /** Replaces the generic first-launch note under a download, when this binary needs more (Flow asks for admin rights). */
   downloadNote?: string;
@@ -109,6 +117,12 @@ export type ProjectBase = {
   repoUrl: string;
   /** Absent for a project that only runs locally: its card then offers no Live link. */
   liveUrl?: string;
+  /**
+   * Where the app runs: in a browser, or installed on a computer. Set on every
+   * project, because a desktop app without a public download (Psyche) is still
+   * a desktop app.
+   */
+  platform: Platform;
   /** When set, the card/detail page show a Download button (e.g. a desktop app binary) instead of the Live link. */
   downloadUrl?: string;
   /** The app's own download page, linked beside the direct download on the detail page. */
