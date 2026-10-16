@@ -83,7 +83,7 @@ const en: LocalizedContent = {
     {
       heading: "An assistant can work with your notes",
       body: [
-        "Started with --mcp, Inkling serves its data to an AI assistant over MCP on stdin and stdout, with nine tools: list and read notes, create a note or add to one, list the open to-dos and tick them off or reopen them, list the decks and add flashcards.",
+        "Started with --mcp, Inkling serves its data to an AI assistant over MCP on stdin and stdout, with ten tools: search everything, list and read notes, create a note or add to one, list the open to-dos and tick them off or reopen them, list the decks and add flashcards.",
         "This mode takes no lock and never opens a window, so it runs next to the app while you use it.",
       ],
     },
@@ -96,7 +96,7 @@ const en: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "9", label: "MCP tools" },
+    { value: "10", label: "MCP tools" },
     { value: "12", label: "end-to-end smoke checks" },
     { value: "26", label: "IPC handlers" },
     { value: "3", label: "platforms" },
@@ -151,7 +151,7 @@ const de: LocalizedContent = {
     {
       heading: "Ein Assistent kann mit den Notizen arbeiten",
       body: [
-        "Mit --mcp gestartet, stellt Inkling seine Daten einem KI-Assistenten über MCP auf stdin und stdout bereit, mit neun Werkzeugen: Notizen auflisten und lesen, eine Notiz anlegen oder ergänzen, die offenen To-dos auflisten und abhaken oder wieder öffnen, die Stapel auflisten und Karteikarten hinzufügen.",
+        "Mit --mcp gestartet, stellt Inkling seine Daten einem KI-Assistenten über MCP auf stdin und stdout bereit, mit zehn Werkzeugen: alles durchsuchen, Notizen auflisten und lesen, eine Notiz anlegen oder ergänzen, die offenen To-dos auflisten und abhaken oder wieder öffnen, die Stapel auflisten und Karteikarten hinzufügen.",
         "Dieser Modus nimmt keine Sperre und öffnet nie ein Fenster, er läuft also neben der App, während man sie benutzt.",
       ],
     },
@@ -164,7 +164,7 @@ const de: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "9", label: "MCP-Werkzeuge" },
+    { value: "10", label: "MCP-Werkzeuge" },
     { value: "12", label: "End-to-End-Prüfungen" },
     { value: "26", label: "IPC-Handler" },
     { value: "3", label: "Plattformen" },
@@ -219,7 +219,7 @@ const fr: LocalizedContent = {
     {
       heading: "Un assistant peut travailler avec vos notes",
       body: [
-        "Lancée avec --mcp, Inkling sert ses données à un assistant IA par MCP sur stdin et stdout, avec neuf outils : lister et lire les notes, créer une note ou la compléter, lister les tâches ouvertes et les cocher ou les rouvrir, lister les paquets et ajouter des cartes.",
+        "Lancée avec --mcp, Inkling sert ses données à un assistant IA par MCP sur stdin et stdout, avec dix outils : tout chercher, lister et lire les notes, créer une note ou la compléter, lister les tâches ouvertes et les cocher ou les rouvrir, lister les paquets et ajouter des cartes.",
         "Ce mode ne prend aucun verrou et n'ouvre jamais de fenêtre, il tourne donc à côté de l'app pendant qu'on s'en sert.",
       ],
     },
@@ -232,7 +232,7 @@ const fr: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "9", label: "outils MCP" },
+    { value: "10", label: "outils MCP" },
     { value: "12", label: "vérifications de bout en bout" },
     { value: "26", label: "gestionnaires IPC" },
     { value: "3", label: "plateformes" },
@@ -287,7 +287,7 @@ const zh: LocalizedContent = {
     {
       heading: "AI 助手可以帮你处理笔记",
       body: [
-        "用 --mcp 启动时，Inkling 通过 MCP 在 stdin 和 stdout 上把数据提供给 AI 助手，共有九个工具：列出和读取笔记、新建笔记或往笔记里追加内容、列出未完成的待办并勾掉或重新打开、列出卡组并添加抽认卡。",
+        "用 --mcp 启动时，Inkling 通过 MCP 在 stdin 和 stdout 上把数据提供给 AI 助手，共有十个工具：搜索全部内容、列出和读取笔记、新建笔记或往笔记里追加内容、列出未完成的待办并勾掉或重新打开、列出卡组并添加抽认卡。",
         "这个模式不占用锁，也从不打开窗口，所以你在用应用的时候，它可以在旁边同时运行。",
       ],
     },
@@ -300,7 +300,7 @@ const zh: LocalizedContent = {
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "9", label: "MCP 工具" },
+    { value: "10", label: "MCP 工具" },
     { value: "12", label: "端到端冒烟检查" },
     { value: "26", label: "IPC 处理函数" },
     { value: "3", label: "平台" },
