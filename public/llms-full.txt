@@ -187,7 +187,7 @@ Download page: https://get-jester.vercel.app/
 Source: https://github.com/dominikkoenitzer/Jester
 Stack: C#, WPF, .NET 10, Windows
 
-A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch." Numbers: 1 portable exe, 0 installers, .NET 10 bundled, A4 PDF export.
+A native Windows notepad that does the few things the built-in one refuses to: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: the built-in notepad is too bare to live in, and a full editor takes a coffee break to launch. Numbers: 1 portable exe, 0 installers, .NET 10 bundled, A4 PDF export.
 
 ### Flow, June 2026
 Case study: https://dk.punds.ch/projects/flow

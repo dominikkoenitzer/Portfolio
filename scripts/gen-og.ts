@@ -184,7 +184,7 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
   { slug: "senbon", title: "Senbon", subtitle: "A digital garden that refuses to be found on Google. On purpose." },
   { slug: "punds", title: "Punds", subtitle: "A CRT terminal that boots up to tell you where everything else lives" },
   { slug: "flow", title: "Flow", subtitle: "Clicks faster than you can, and never needs a coffee break" },
-  { slug: "jester", title: "Jester", subtitle: "Notepad, but it grew up. Tabs, line numbers, find in files, PDF export." },
+  { slug: "jester", title: "Jester", subtitle: "A notepad that grew up. Tabs, line numbers, find in files, PDF export." },
   { slug: "remnants", title: "Remnants", subtitle: "VS Code, minus the parts that talk back" },
   { slug: "portfolio", title: "Portfolio", subtitle: "The site you are looking at. Yes, it is in the portfolio." },
   { slug: "oxidize", title: "Oxidize", subtitle: "Uninstall a program, then hunt down what it left behind" },
