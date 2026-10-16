@@ -39,11 +39,11 @@ const PARAM_DEFAULTS: Record<string, string> = {
 };
 
 /**
- * A desktop app is one you download and install; everything else runs in a
- * browser, hosted or local. Keyed on the download rather than the OS, because
- * a cross-platform app names three systems.
+ * A desktop app is one installed on a computer; everything else runs in a
+ * browser, hosted or local. Each project names its platform, because a desktop
+ * app can have no public download.
  */
-const isDesktopApp = (project: PortfolioProject) => Boolean(project.downloadUrl);
+const isDesktopApp = (project: PortfolioProject) => project.platform === "desktop";
 
 /** One card surface for the whole page: opaque cream, hairline, no shadow. */
 const CARD =
