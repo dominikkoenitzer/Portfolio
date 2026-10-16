@@ -69,7 +69,7 @@ export const time: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1/100s", label: "sync accuracy" },
       { value: "1", label: "screen, no scroll" },
-      { value: "0", label: "external time APIs" },
+      { value: "5", label: "round trips per sync" },
       { value: "0", label: "controls to press" },
     ],
   },
@@ -128,7 +128,7 @@ export const time: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1/100s", label: "Sync-Genauigkeit" },
       { value: "1", label: "Bildschirm ohne Scrollen" },
-      { value: "0", label: "externe Zeit-APIs" },
+      { value: "5", label: "Messungen pro Sync" },
       { value: "0", label: "Bedienelemente" },
     ],
   },
@@ -187,7 +187,7 @@ export const time: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1/100s", label: "précision de sync" },
       { value: "1", label: "écran, sans défilement" },
-      { value: "0", label: "API de temps externes" },
+      { value: "5", label: "allers-retours par sync" },
       { value: "0", label: "commandes à presser" },
     ],
   },
@@ -246,7 +246,7 @@ export const time: Record<Language, LocalizedContent> = {
     stats: [
       { value: "1/100s", label: "同步精度" },
       { value: "1", label: "屏幕（无滚动）" },
-      { value: "0", label: "外部时间 API" },
+      { value: "5", label: "次往返（每次同步）" },
       { value: "0", label: "可按的控件" },
     ],
   },
