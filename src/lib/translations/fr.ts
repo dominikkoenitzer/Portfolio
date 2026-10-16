@@ -523,7 +523,7 @@ export const fr = {
     contact: {
       title: "Contacter un ingénieur logiciel",
       description:
-        "Contactez Dominik Könitzer, ingénieur logiciel en Suisse, pour vos projets web. Disponible pour freelance, collaborations et missions de conseil.",
+        "Contactez Dominik Könitzer, ingénieur logiciel en Suisse, pour vos projets web, missions freelance, collaborations et conseil.",
       keywords:
         "contacter Dominik Könitzer, contact ingénieur logiciel, contact développeur web, engager un ingénieur logiciel, développeur freelance Suisse, conseil en ingénierie logicielle",
     },
