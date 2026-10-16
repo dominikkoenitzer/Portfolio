@@ -516,7 +516,6 @@ export function ProjectsSection() {
                               project.title,
                             )}
                             className={`${ACTION_BASE} col-span-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 sm:col-span-1`}
-                            download
                             href={project.downloadUrl}
                             rel="noopener noreferrer"
                             target="_blank"

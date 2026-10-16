@@ -306,9 +306,8 @@ export const createSoftwareApplicationSchema = (project: {
   "@type": "SoftwareApplication",
   name: project.title,
   description: project.description,
-  // `url` is where the application lives, `downloadUrl` is the binary. These
-  // used to be the same .exe for the desktop projects, which pointed the
-  // entity's canonical URL at a file download.
+  // `url` is where the application lives; `downloadUrl` is where it is
+  // downloaded, the app's own download page.
   url: projectHome(project),
   ...(project.downloadUrl && { downloadUrl: project.downloadUrl }),
   applicationCategory: project.applicationCategory ?? "WebApplication",

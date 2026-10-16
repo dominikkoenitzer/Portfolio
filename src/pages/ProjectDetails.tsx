@@ -347,7 +347,6 @@ const ProjectDetails = () => {
                 {project.downloadUrl ? (
                   <Button asChild className="rounded-lg px-6" variant="cta">
                     <a
-                      download
                       href={project.downloadUrl}
                       rel="noopener noreferrer"
                       target="_blank"
@@ -368,7 +367,7 @@ const ProjectDetails = () => {
                     </a>
                   </Button>
                 ) : null}
-                {project.downloadPage ? (
+                {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
                   <Button asChild className="rounded-lg px-5" variant="soft">
                     <a
                       href={project.downloadPage}
@@ -557,7 +556,6 @@ const ProjectDetails = () => {
                       variant="cta"
                     >
                       <a
-                        download
                         href={project.downloadUrl}
                         rel="noopener noreferrer"
                         target="_blank"
@@ -583,7 +581,7 @@ const ProjectDetails = () => {
                       </a>
                     </Button>
                   ) : null}
-                  {project.downloadPage ? (
+                  {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
                     <Button
                       asChild
                       className="w-full justify-start rounded-lg"

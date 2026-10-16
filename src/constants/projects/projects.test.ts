@@ -92,9 +92,9 @@ describe("the project list", () => {
     }
   });
 
-  // The direct download stays the main button; the app's own page sits
-  // beside it, so a page without a binary has nothing to sit beside.
-  it("gives every download its app's own page", () => {
+  // Every download goes through the app's own download page; only that page
+  // links the file itself.
+  it("sends every download to its app's own page", () => {
     for (const project of projects) {
       expect(Boolean(project.downloadPage), project.slug).toBe(
         Boolean(project.downloadUrl),
@@ -103,6 +103,7 @@ describe("the project list", () => {
         expect(project.downloadPage, project.slug).toMatch(
           /^https:\/\/get-[a-z-]+\.vercel\.app\/$/,
         );
+        expect(project.downloadUrl, project.slug).toBe(project.downloadPage);
       }
     }
   });
