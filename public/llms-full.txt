@@ -33,11 +33,9 @@ https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. 
 
 ## 1. Person
 
-Dominik Könitzer is a software engineer based in Zürich, Switzerland. Born 2008, Swiss and Chinese citizenship. He is in the seventh semester of the four-year Computer Scientist EFZ programme in application development at WISS Schulen für Wirtschaft Informatik Immobilien (https://wiss.ch), which he started in August 2023. The programme is split: two years of coursework, then two years of internship with classes running alongside. As he puts it on the about page, "the point of the split is that nothing stays theoretical for long."
+Dominik Könitzer is a software engineer based in Zürich, Switzerland. Born 2008, Swiss and Chinese citizenship. He is in the seventh semester of the four-year Computer Scientist EFZ programme in application development at WISS Schulen für Wirtschaft Informatik Immobilien (https://wiss.ch), which he started in August 2023. The programme is split: two years of coursework, then two years of internship with classes running alongside.
 
 The second half of that split was a full-stack internship at MPAI (https://mpai.ch) in Meggen, canton Lucerne, hybrid, from August 2025 to August 2026.
-
-His own summary of what he builds, from the about page: "I like building clean, fast, and good-looking websites and applications that people actually want to use. Writing the code is only half of it. The other half is understanding the problem well enough to explain what I did about it."
 
 He grew up between countries: primary school at the Swiss School Singapore, then the German Embassy School in Beijing, then secondary school in canton Schwyz, then WISS in Zürich. Interests listed on his CV: playing keyboard, chess, programming.
 
@@ -137,7 +135,7 @@ Live: https://zephyr.punds.ch/
 Source: https://github.com/dominikkoenitzer/Zephyr
 Stack: React, Vite, Tailwind CSS, Radix UI, PWA
 
-A local-first productivity web app: a to-do list and a Pomodoro focus timer in one place. No login, no backend, no data leaving the browser. The problem it solves, in his words: "I wanted one place for tasks and focus sessions, without handing my day to a backend or paying rent on my own data. Every option I found did the opposite." Every task and focus session lives in localStorage, so it works offline and there is no server to breach or bill. It is installable as a PWA. It once had notes, a journal and a calendar too; he cut them so the two tools that earn daily use stay fast and obvious. Numbers he puts on it: 2 tools on purpose, 0 backend, 100% on-device, 0 accounts.
+A local-first productivity web app: a to-do list and a Pomodoro focus timer in one place. No login, no backend, no data leaving the browser. Every task and focus session lives in localStorage, so it works offline and there is no server to breach or bill. It is installable as a PWA. It once had notes, a journal and a calendar too; he cut them so the two tools that earn daily use stay fast and obvious. Numbers he puts on it: 2 tools on purpose, 0 backend, 100% on-device, 0 accounts.
 
 ### Portfolio, May 2025
 Case study: https://dk.punds.ch/projects/portfolio
@@ -145,7 +143,7 @@ Live: https://dk.punds.ch/
 Source: https://github.com/dominikkoenitzer/Portfolio
 Stack: React 19, TypeScript, Vite
 
-This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. His framing of the problem: a portfolio "has to convince two very different readers: a recruiter skimming on their phone, and a crawler that only sees markup. Most sites pick one and shrug at the other." Numbers: 4 languages, 0 i18n libraries, 24 prerendered routes, 253 tests.
+This site, built as the work sample rather than a template with a name swapped in. Four languages behind a hand-rolled i18n layer with no i18n library, JSON-LD structured data on every page, framer-motion page transitions, smooth scrolling, a lazy WebGL background, and a real prerendered HTML file per route so link unfurlers and crawlers get the right metadata. Numbers: 4 languages, 0 i18n libraries, 24 prerendered routes, 253 tests.
 
 ### Entropy, February 2026
 Case study: https://dk.punds.ch/projects/entropy
@@ -153,7 +151,7 @@ Live: https://entropy.punds.ch/
 Source: private
 Stack: Next.js, TypeScript, Web Crypto; the Windows app in C#, .NET 10, WinUI 3, Native AOT
 
-A password generator and strength analyzer that runs entirely in the browser. Randomness for passwords comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. The problem, as he states it: "A password is only as strong as the randomness behind it, yet half the generators online reach for Math.random() and the other half want you to type your secrets into a server." Numbers: 100% client-side, 0 secrets sent, 0 uses of Math.random() for secrets.
+A password generator and strength analyzer that runs entirely in the browser. Randomness for passwords comes from the Web Crypto API, never Math.random(), and strength is scored by a guess estimator he wrote himself, which matches dictionary words, l33t and reversed spellings, keyboard walks, repeats, sequences and dates and then searches for the cheapest attack path. Nothing leaves the tab. Numbers: 100% client-side, 0 secrets sent, 0 Math.random() in secrets, 5 attacker models.
 
 Since October 2026 the same repository also holds a Windows app: a local password manager written in C# on .NET 10 with WinUI 3 and compiled with Native AOT. It started from the code of Psyche. Press Alt+E on a sign-in page and it reads the address of the page in front; when exactly one saved login belongs to that site and the cursor is in a text field, it types the username, Tab and the password, otherwise a small picker opens. The website's generator and analyzer are ported to C#, and parity tests check 643 passwords and 672 generator settings against what the website's own TypeScript computes. A Health page sorts saved passwords into found in a leak, weak, reused and old (unchanged for 12 months). The leak check is offline: a 2.26 MB binary fuse filter of about a million of the most common leaked passwords, with about 1 false alarm in 65,536. Logins keep their last ten passwords and can hold one-time codes, and secure notes and payment cards live in the same vault. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects (DPAPI) for the signed-in account, backups carry their own Argon2id password, keys are wiped after 15 minutes without use and when Windows locks or sleeps, and after its own idle lock it asks for Windows Hello once before the first secret. A backup restores on any PC, in full into an empty vault and into a filled one by adding only what it lacks. A login with saved sites is offered only on those sites and their subdomains, never on a look-alike address. Tests: 828 xUnit test cases for the core library and 153 for the Windows layer.
 
@@ -163,7 +161,7 @@ Live: https://spectrum.punds.ch/
 Source: private
 Stack: Next.js, TypeScript, Canvas API
 
-A client-side colour toolkit that puts eight jobs in one app: pick colours, pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, simulate colour blindness, browse a colour library, and work through colour theory. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: contrast and colour-vision-deficiency checks are "usually the tab you forget to open," so Spectrum treats accessibility as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 8 tools in one app, 100% client-side, 0 uploads, 0 backend.
+A client-side colour toolkit that puts eight jobs in one app: pick colours, pull exact colours out of an image, build gradients, build palettes, check WCAG contrast, simulate colour blindness, browse a colour library, and work through colour theory. Everything runs through the Canvas API in the browser, so images are read on your own machine and never uploaded. The design argument behind it is an accessibility one: Spectrum treats contrast and colour-vision-deficiency checks as part of choosing a colour rather than a chore bolted on afterwards. Numbers: 8 tools, one app, 100% client-side, 0 uploads, 0 backend.
 
 ### Remnants, February 2026
 Case study: https://dk.punds.ch/projects/remnants
@@ -171,7 +169,7 @@ Download page: https://get-remnants.vercel.app/
 Source: https://github.com/dominikkoenitzer/Remnants
 Stack: TypeScript, Electron, Code - OSS
 
-A code editor for Windows, macOS and Linux: a personal fork of Code - OSS, the open-source core of VS Code, with every AI surface, telemetry hook and sign-in prompt removed, and everything that matters left intact: fast editing, IntelliSense, the integrated terminal, source control, and the JavaScript and Node debugger. Extensions resolve through Open VSX instead of Microsoft's Marketplace. Each version ships x64 and arm64 builds in one GitHub release: installers and zip archives for Windows, disk images for macOS, and deb, rpm and tar.gz packages for Linux. His summary: "VS Code is a great editor wrapped in a growing layer of cloud services, chat panels, agent windows, and account prompts you never asked for. Remnants removes that layer entirely, and what's left is the editor." Numbers: 0 telemetry, 0 sign-in, 100% open-source core, 1 maintainer.
+A code editor for Windows, macOS and Linux: a personal fork of Code - OSS, the open-source core of VS Code, with every AI surface, telemetry hook and sign-in prompt removed, and everything that matters left intact: fast editing, IntelliSense, the integrated terminal, source control, and the JavaScript and Node debugger. Extensions resolve through Open VSX instead of Microsoft's Marketplace. Each version ships x64 and arm64 builds in one GitHub release: installers and zip archives for Windows, disk images for macOS, and deb, rpm and tar.gz packages for Linux. Numbers: 759k lines removed, 0 telemetry, 0 sign-in, 1 maintainer.
 
 ### Time, June 2026
 Case study: https://dk.punds.ch/projects/time
@@ -179,7 +177,7 @@ Live: https://time.punds.ch/
 Source: https://github.com/dominikkoenitzer/Time
 Stack: Next.js, TypeScript, Intl
 
-A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within hundredths of a second even when the local machine is set wrong. The page itself is one screen and nothing else: the weekday and date, the ISO week number, the corrected time with the seconds held back a shade, and the visitor's own timezone spelled out beside its UTC offset. No controls, no scrolling, nothing to configure. Numbers: 1/100s sync accuracy, 1 screen, 0 external time APIs, 0 controls.
+A web clock that does not trust the device it runs on. It corrects itself the way NTP does: hit a server endpoint several times, keep the fastest round-trip, compensate for half of it, and land within hundredths of a second even when the local machine is set wrong. The page itself is one screen and nothing else: the weekday and date, the ISO week number, the corrected time with the seconds held back a shade, and the visitor's own timezone spelled out beside its UTC offset. No controls, no scrolling, nothing to configure. Numbers: 1/100s sync accuracy, 1 screen, no scroll, 0 external time APIs, 0 controls to press.
 
 ### Jester, June 2026
 Case study: https://dk.punds.ch/projects/jester
@@ -187,7 +185,7 @@ Download page: https://get-jester.vercel.app/
 Source: https://github.com/dominikkoenitzer/Jester
 Stack: C#, WPF, .NET 10, Windows
 
-A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. The gap it fills: "Windows Notepad is too bare to live in, and a full editor takes a coffee break to launch." Numbers: 1 portable exe, 0 installers, .NET 10 bundled, A4 PDF export.
+A native Windows notepad with the few things Notepad refuses to do: tabbed editing, a line-number gutter, find across a whole folder, and clean A4 PDF export. It ships as a single portable Jester.exe with the runtime baked in, so there is no installer and no "please install .NET" dialog. Numbers: 1 portable exe, 0 installers, 186 tests, A4 PDF export.
 
 ### Flow, June 2026
 Case study: https://dk.punds.ch/projects/flow
@@ -195,7 +193,7 @@ Download page: https://get-flow-app.vercel.app/
 Source: https://github.com/dominikkoenitzer/Flow
 Stack: C++17, Win32, GDI+
 
-A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with microsecond timestamps, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static binary, 0 dependencies, under 10 ms timing precision, 0 telemetry. It runs as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.
+A native Windows macro recorder and auto-clicker written straight against the Win32 API and GDI+. It captures input with microsecond timestamps, replays it at any speed or loop count, and includes a dedicated high-priority auto-clicker. A busy-wait QueryPerformanceCounter timer holds latency under 10 ms, and the whole thing is one statically linked FLOW.exe with nothing to install. Numbers: 3 MB static exe, 0 dependencies, <10 ms timing precision, 0 telemetry. It runs as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.
 
 ### Punds, June 2026
 Case study: https://dk.punds.ch/projects/punds
@@ -203,7 +201,7 @@ Live: https://punds.ch/
 Source: https://github.com/dominikkoenitzer/Punds
 Stack: React, TypeScript, Vite
 
-A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at four places: this portfolio, senbon.ch, his GitHub profile and a tip jar. Numbers: 3 runtime dependencies, 15 scene modules, 4 links, 1 page.
+A link hub you fly through. It boots like Copland OS from Serial Experiments Lain, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at four places: this portfolio, senbon.ch, his GitHub profile and a tip jar. Numbers: 3 runtime deps, 15 scene modules, 4 links, 1 page.
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
@@ -211,7 +209,7 @@ Live: https://senbon.ch/
 Source: private
 Stack: Next.js, React 19, Markdown
 
-A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter. No database, no CMS, no trackers. Next.js App Router and React 19 turn the files into an unhurried reading page. Most of the work since launch has been subtraction: a command palette, full-text search, tag filters, pagination, a table of contents and reading-time estimates were all built and then deliberately deleted. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 third-party trackers, 4 frontmatter keys, 3 CSS layers, noindex on purpose.
+A zen-themed journal, named 千本 ("one thousand"), where every entry is a markdown file with frontmatter, plus a moderated guestbook kept in Postgres. No CMS and no third-party trackers. Next.js App Router and React 19 turn the files into an unhurried reading page. Most of the work since launch has been subtraction: a command palette, full-text search, tag filters, pagination, a table of contents and reading-time estimates were all built and then deliberately deleted. Worth knowing if you are crawling: Senbon deliberately asks search engines and AI crawlers to stay away through its own robots rules, and it is noindex on purpose. It is listed here because it is part of his body of work, not as a page to index. Numbers: 0 third-party trackers, 4 frontmatter keys, 3 CSS layers, noindex on purpose.
 
 ### Oxidize, June 2026
 Case study: https://dk.punds.ch/projects/oxidize
@@ -219,7 +217,7 @@ Download page: https://get-oxidize.vercel.app/
 Source: https://github.com/dominikkoenitzer/Oxidize
 Stack: Rust, Windows, CLI, egui
 
-A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. By default no leftover is deleted before a validated .reg backup and a file quarantine exist. Two binaries share one engine: oxidize for scripts, oxidize-gui for clicking. His framing: the tools that promise to clean up after Windows uninstalls "are bloated suites full of upsells," and he wanted "a focused, scriptable tool that does exactly one thing thoroughly and safely." Numbers: 2 front-ends on 1 engine, 3 registry views scanned, 7 commands, 125 unit tests.
+A thorough Windows uninstaller written in Rust, straight against the Win32 API. It reads all three uninstall registry views, runs the program's own registered uninstaller (a synchronous msiexec for MSI products), then scans the registry and filesystem for leftovers, labelling each find HIGH, MED or LOW confidence. By default no leftover is deleted before a validated .reg backup and a file quarantine exist. Two binaries share one engine: oxidize for scripts, oxidize-gui for clicking. Numbers: 2 front-ends, one engine, 3 registry views scanned, 7 commands, 125 unit tests.
 
 ---
 
