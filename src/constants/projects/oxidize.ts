@@ -73,7 +73,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "The Oxidize window with the list filtered to Microsoft's runtimes and SDKs. Pick a program on the left to uninstall it and see what it left behind.",
+      "The Oxidize window: 61 programs and 8.1 GB at a glance, a bar of the biggest, and the list sorted by size. Pick a program to uninstall it and see what it left behind.",
       "The Oxidize mark: a thick O, copper on one side and the verdigris it oxidises into on the other.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -132,7 +132,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Das Oxidize-Fenster, die Liste gefiltert auf die Laufzeiten und SDKs von Microsoft. Links ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
+      "Das Oxidize-Fenster: 61 Programme und 8.1 GB auf einen Blick, ein Balken mit den grössten und die Liste nach Grösse sortiert. Ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
       "Das Oxidize-Zeichen: ein dickes O, auf der einen Seite Kupfer, auf der anderen der Grünspan, zu dem es oxidiert.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -191,7 +191,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "La fenêtre d'Oxidize, la liste filtrée sur les runtimes et SDK de Microsoft. Choisis un programme à gauche pour le désinstaller et voir ce qu'il a laissé derrière lui.",
+      "La fenêtre d'Oxidize : 61 programmes et 8,1 Go d'un coup d'œil, une barre des plus gros, et la liste triée par taille. Choisis un programme pour le désinstaller et voir ce qu'il a laissé derrière lui.",
       "Le logo d'Oxidize : un O épais, cuivre d'un côté, et de l'autre le vert-de-gris en lequel il s'oxyde.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -248,7 +248,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Oxidize 窗口，列表筛选为微软的运行库和 SDK。在左边选一个程序，就能卸载它并查看它留下了什么。",
+      "Oxidize 窗口：一眼看到 61 个程序、共 8.1 GB，一条横条标出最大的几个，列表按大小排序。选一个程序，就能卸载它并查看它留下了什么。",
       "Oxidize 的标志：一个粗粗的 O，一半是铜，另一半是它氧化后的铜绿。",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],

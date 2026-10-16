@@ -103,10 +103,10 @@ const en: LocalizedContent = {
     },
   ],
   captions: [
-    "The Today page: a greeting with the streak, four items for the day, and the tasks due this week in the sidebar.",
-    "The editor on the welcome page, with a checkbox that becomes a task and two Term :: Definition lines above the Flashcards button's hint.",
-    "The Study page with a deck of three due cards on the left and the focus timer set to 25 minutes on the right.",
-    "Grades for one subject: two assessments on the Swiss scale with their percentages and a weight, and the overall average in the sidebar.",
+    "The Today page: six open to-dos from four notes, and two decks with cards due.",
+    "A note in the editor: Term :: Definition lines that become flashcards, and checkboxes that are to-dos.",
+    "A review in Study: the answer is showing, with the next interval under each of the four ratings.",
+    "The dark theme on a note with a bullet list and two to-dos, one of them ticked.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
@@ -171,10 +171,10 @@ const de: LocalizedContent = {
     },
   ],
   captions: [
-    "Die Heute-Seite: eine Begrüssung mit der Serie, vier Punkte für den Tag und die Aufgaben dieser Woche in der Seitenleiste.",
-    "Der Editor auf der Willkommensseite, mit einer Checkbox, die zur Aufgabe wird, und zwei Zeilen Begriff :: Definition über dem Hinweis zum Karteikarten-Knopf.",
-    "Die Lernseite mit einem Stapel von drei fälligen Karten links und dem Fokus-Timer auf 25 Minuten rechts.",
-    "Die Noten eines Fachs: zwei Prüfungen auf der Schweizer Skala mit ihren Prozentwerten und einer Gewichtung, und der Gesamtschnitt in der Seitenleiste.",
+    "Die Heute-Seite: sechs offene To-dos aus vier Notizen und zwei Stapel mit fälligen Karten.",
+    "Eine Notiz im Editor: Zeilen Begriff :: Definition, die zu Karteikarten werden, und Checkboxen, die To-dos sind.",
+    "Eine Wiederholung auf der Lernseite: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
+    "Das dunkle Theme auf einer Notiz mit einer Aufzählung und zwei To-dos, eines davon abgehakt.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
@@ -239,10 +239,10 @@ const fr: LocalizedContent = {
     },
   ],
   captions: [
-    "La page Aujourd'hui : un bonjour avec la série, quatre éléments pour la journée, et les tâches de la semaine dans la barre latérale.",
-    "L'éditeur sur la page de bienvenue, avec une case qui devient une tâche et deux lignes Terme :: Définition au-dessus de l'indication du bouton Cartes.",
-    "La page Étude avec un paquet de trois cartes à réviser à gauche et le minuteur de concentration réglé sur 25 minutes à droite.",
-    "Les notes d'une matière : deux évaluations sur l'échelle suisse avec leur pourcentage et une pondération, et la moyenne générale dans la barre latérale.",
+    "La page Aujourd'hui : six tâches ouvertes tirées de quatre notes, et deux paquets avec des cartes à réviser.",
+    "Une note dans l'éditeur : des lignes Terme :: Définition qui deviennent des cartes, et des cases à cocher qui sont des tâches.",
+    "Une révision dans la page Étude : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
+    "Le thème sombre sur une note avec une liste à puces et deux tâches, dont une cochée.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
@@ -307,10 +307,10 @@ const zh: LocalizedContent = {
     },
   ],
   captions: [
-    "“今天”页面：带连续天数的问候、当天的四项内容，以及侧栏里本周到期的任务。",
-    "欢迎页里的编辑器：一个会变成任务的复选框，还有两行 术语 :: 定义，下面是关于抽认卡按钮的提示。",
-    "学习页面：左边是一个有三张到期卡片的卡组，右边是设为 25 分钟的专注计时器。",
-    "一个科目的成绩：两次瑞士分制的考核及其百分比和权重，侧栏里是总平均分。",
+    "“今天”页面：来自四篇笔记的六个未完成待办，以及两个有到期卡片的卡组。",
+    "编辑器里的一篇笔记：术语 :: 定义 这样的行会变成抽认卡，复选框就是待办。",
+    "学习页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
+    "深色主题下的一篇笔记：一个项目列表和两个待办，其中一个已勾选。",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
