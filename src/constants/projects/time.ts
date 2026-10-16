@@ -62,7 +62,7 @@ export const time: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "The clock in Central European Summer Time: the long date and ISO week above, the zone name and UTC offset below, the seconds in grey and the colons in red.",
+      "The clock in Central European Standard Time: the long date and ISO week above, the zone name and UTC offset below, the seconds in grey and the colons in red.",
       "The same moment three seconds later in Japan Standard Time, where it is already Thursday.",
     ],
     tags: ["Next.js", "TypeScript", "NTP", "Intl"],
@@ -121,7 +121,7 @@ export const time: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Die Uhr in mitteleuropäischer Sommerzeit: oben das lange Datum und die ISO-Kalenderwoche, unten Zonenname und UTC-Offset, die Sekunden grau und die Doppelpunkte rot.",
+      "Die Uhr in mitteleuropäischer Normalzeit: oben das lange Datum und die ISO-Kalenderwoche, unten Zonenname und UTC-Offset, die Sekunden grau und die Doppelpunkte rot.",
       "Derselbe Moment drei Sekunden später in japanischer Normalzeit, wo es schon Donnerstag ist.",
     ],
     tags: ["Next.js", "TypeScript", "NTP", "Intl"],
@@ -180,7 +180,7 @@ export const time: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "L'horloge à l'heure d'été d'Europe centrale : la date longue et la semaine ISO en haut, le nom du fuseau et le décalage UTC en bas, les secondes en gris et les deux-points en rouge.",
+      "L'horloge à l'heure normale d'Europe centrale : la date longue et la semaine ISO en haut, le nom du fuseau et le décalage UTC en bas, les secondes en gris et les deux-points en rouge.",
       "Le même instant trois secondes plus tard à l'heure normale du Japon, où l'on est déjà jeudi.",
     ],
     tags: ["Next.js", "TypeScript", "NTP", "Intl"],
@@ -239,7 +239,7 @@ export const time: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "处于中欧夏令时的时钟：上方是长日期和 ISO 周数，下方是时区名和 UTC 偏移，秒是灰色，冒号是红色。",
+      "处于中欧标准时间的时钟：上方是长日期和 ISO 周数，下方是时区名和 UTC 偏移，秒是灰色，冒号是红色。",
       "三秒之后的同一时刻，换成日本标准时间，那边已经是星期四。",
     ],
     tags: ["Next.js", "TypeScript", "NTP", "Intl"],
