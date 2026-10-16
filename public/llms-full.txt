@@ -229,7 +229,7 @@ Download page: https://get-inkling.vercel.app/
 Source: https://github.com/dominikkoenitzer/Inkling
 Stack: Electron, React, TypeScript, SQLite
 
-A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox line in a note becomes a real task linked both ways, and a line with :: becomes a flashcard. It ships for Windows, macOS and Linux from one release workflow.
+A desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your own machine. A checkbox line in a note is a to-do on Today, linked both ways, and a line with :: becomes a flashcard. Started with --mcp it serves notes, to-dos and decks to an AI assistant. It ships for Windows, macOS and Linux from one release workflow.
 
 ---
 

@@ -1,7 +1,7 @@
 import type { Language } from "@/config/languages";
 import type { LocalizedContent } from "./types";
 
-const CHECKBOX_CODE = `function editNoteItem(noteId: number, taskId: number, edit: (item: DocNode) => boolean | 'remove'): void {
+const CHECKBOX_CODE = `function checkNoteItem(noteId: number, taskId: number, checked: boolean): void {
   const note = getNote(noteId)
   if (!note) return
   let doc: DocNode
@@ -11,94 +11,80 @@ const CHECKBOX_CODE = `function editNoteItem(noteId: number, taskId: number, edi
     return // malformed content, skip
   }
   let changed = false
-  const walk = (n: DocNode): void => {
-    if (!Array.isArray(n.content)) return
-    const next: DocNode[] = []
-    let removed = false
+  let found = false
+  const walk = (n: DocNode | null): void => {
+    if (!n || typeof n !== 'object' || !Array.isArray(n.content)) return
     for (const child of n.content) {
-      const result = child.type === 'taskItem' && Number(child.attrs?.taskId) === taskId ? edit(child) : false
-      if (result === 'remove') {
-        // Its sub-items are tasks of their own, so they move up into its place.
-        for (const c of child.content ?? []) if (c.type === 'taskList') next.push(...(c.content ?? []))
-        changed = removed = true
-        continue
+      if (found) return
+      if (child && child.type === 'taskItem' && Number(child.attrs?.taskId) === taskId && child.attrs) {
+        // Only the first line with this id: a pasted copy gets its own task on the next sync.
+        found = true
+        if (child.attrs.checked !== checked) {
+          child.attrs.checked = checked
+          changed = true
+        }
+        return
       }
-      if (result) changed = true
       walk(child)
-      // A taskList must hold at least one item; one left empty goes too.
-      if (child.type === 'taskList' && (child.content ?? []).length === 0) {
-        removed = true
-        continue
-      }
-      next.push(child)
     }
-    if (!removed) return
-    // Any other block must hold something: a doc left without its only list gets a paragraph.
-    n.content = next.length > 0 || n.type === 'taskList' ? next : [{ type: 'paragraph' }]
   }
   walk(doc)
   if (!changed) return
   const content = JSON.stringify(doc)
   getDb().prepare(\`UPDATE notes SET content = ?, updated_at = ? WHERE id = ?\`).run(content, now(), noteId)
   if (note.deleted_at === null) ftsUpsert('note', noteId, note.title ?? 'Untitled', tiptapToText(content))
-}
-
-function setChecked(item: DocNode, checked: boolean): boolean {
-  if (!item.attrs || item.attrs.checked === checked) return false
-  item.attrs.checked = checked
-  return true
 }`;
 
 const en: LocalizedContent = {
-  tagline: "A study app that opens on what to do today.",
+  tagline: "Notes, to-dos and flashcards in one calm app.",
   description:
-    "A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your own machine. A checkbox in a note becomes a real task, and a line with :: becomes a flashcard.",
+    "A desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your own machine. A checkbox in a note shows up on Today, and a line with :: becomes a flashcard.",
   overview:
-    "Inkling is an Electron app I built for studying. It has notes, tasks, flashcards with a focus timer, and grades, and it opens on a Today page that puts together a short plan from what is already in there: the decks that are due, the tasks due today, the subject with the lowest average and one focus block. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.7.0, ships for Windows, macOS and Linux and updates itself from GitHub Releases.",
+    "Inkling is an Electron app I built for studying. Everything starts as a note: a checkbox in a note is a to-do, and a Term :: Definition line becomes a flashcard. It opens on a Today page that lists the to-dos still open and the decks with cards due, and nothing else. Everything lives in a single SQLite file on the machine, so it works offline and nothing leaves the computer. The latest release, v0.8.2, ships for Windows, macOS and Linux and updates itself from GitHub Releases.",
   roleSummary: "Just me: the data model, the Electron shell, the interface and the release pipeline.",
   sections: [
     {
       heading: "One page of notes feeds the rest of the app",
       body: [
-        "The point of Inkling is that you write things down once. Type [] at the start of a line in a note and the checkbox becomes a real task in the Tasks tab. Write Term :: Definition on a line and the Flashcards button in the editor turns those lines into a deck.",
-        "The task link runs both ways. When a note is saved, every checkbox is matched to its task row by an id stamped into the document, new ones are inserted and deleted ones are removed, all in one transaction. When you tick the task off somewhere else, the main process walks the note's document and ticks the checkbox there as well.",
+        "The point of Inkling is that you write things down once. Type [] at the start of a line and the checkbox shows up on Today with the name of its note beside it. Write Term :: Definition on a line, or {{c1::word}} for a fill-in-the-blank card, and the Flashcards button in the editor turns those lines into a deck.",
+        "The to-do link runs both ways. When a note is saved, every checkbox is matched to its task row by an id stamped into the document, new ones are inserted and deleted ones are removed, all in one transaction. Tick a to-do on Today and the main process finds the checkbox in the note and ticks it there as well. Since v0.8.2 a task id is never handed to another task, so cutting a line and pasting it back can no longer swap two to-dos.",
       ],
       figure: 1,
       code: {
         language: "ts",
         text: CHECKBOX_CODE,
         caption:
-          "From src/main/repos/tasks.ts. The way back from task to note: find the checkbox that carries this task's id and write the note only if something actually changed.",
+          "From src/main/repos/tasks.ts. The way back from Today to the note: find the first checkbox that carries this to-do's id, tick it, and write the note only if something actually changed.",
       },
     },
     {
       heading: "Flashcards that schedule themselves",
       body: [
         "Reviews run on FSRS-6, which keeps two numbers per card, stability and difficulty, and schedules each card for a 90 percent chance that you still remember it. Every button shows the interval it would buy before you press it, and keys 1 to 4 answer without the mouse.",
-        "Every answer goes into a permanent review log, and the Progress page reads that log back for retention, reviews and the streak, so those numbers are counted from what you did. Next to the decks sits a focus timer that can be linked to a task or a deck, and its minutes count towards the streak too.",
+        "Cards made from a note stay linked to the line they came from. Rewording the line updates the card and keeps its schedule, a new cloze number makes a new card, and every answer is kept in a review log.",
       ],
       figure: 2,
     },
     {
-      heading: "Grades kept in the scale they were written in",
+      heading: "A redesign that mostly took things out",
       body: [
-        "Grades are logged per subject, either on the Swiss 1 to 6 scale, where 4 is a pass, or as percentages. The scale is stored on every row, so switching the view later never reinterprets an old grade. A Swiss grade maps linearly onto percent, which is how a 4.5 shows up as 70 percent next to its weight.",
-        "Each subject gets a weighted average and the sidebar shows one figure across all of them. The subject with the lowest average is the one the Today page suggests you spend time on.",
+        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with Today, Study, Settings and the notes, in a light and a dark theme.",
+        "An earlier pass, v0.6.0, had already taken the source from about 9.8k lines to 6.5k, and loading the editor only when a note opens took the startup bundle from 1881 kB to 819 kB.",
       ],
       figure: 3,
     },
     {
       heading: "Local-first, one file on disk",
       body: [
-        "All data sits in one SQLite database in WAL mode. On start it is checkpointed and copied into a backups folder that keeps the last five. Search across notes, tasks and decks runs on SQLite's FTS5 behind Ctrl K.",
-        "The renderer never touches the database. It runs with context isolation on and Node integration off, and everything goes through 49 IPC handlers in the preload bridge.",
+        "All data sits in one SQLite database in WAL mode. On start it is checkpointed and copied into a backups folder that keeps the last five, and an update backs it up before it changes anything. Search across notes, to-dos and decks runs on SQLite's FTS5 behind Ctrl K.",
+        "The renderer never touches the database. It runs sandboxed, with context isolation on and Node integration off, and everything goes through 26 IPC handlers in the preload bridge. A new database is created directly in its current shape, and on every push CI launches the built app against a throwaway profile and runs twelve checks through the real bridge.",
       ],
     },
     {
-      heading: "A release that mostly took things out",
+      heading: "An assistant can work with your notes",
       body: [
-        "Inkling had grown a second way to do most things, so v0.6.0 kept one of each. The kanban board, hashtags, the journal, wiki links, PDF export and a handful of settings went, and none of the notes, tasks, decks, grades or review history were touched. The source went from about 9.8k lines to 6.5k, and loading the editor only when a page is opened took the startup bundle from 1881 kB to 819 kB.",
-        "The same release fixed a bug that the unit tests could never have seen: a fresh install could not open its own database, because a new file was walked through every old migration and those touched columns that no longer exist. A new database is now created in its current shape, and a smoke test launches the built app against a throwaway profile and runs twelve checks through the real IPC bridge. CI runs it on every push.",
+        "Started with --mcp, Inkling serves its data to an AI assistant over MCP on stdin and stdout, with nine tools: list and read notes, create a note or add to one, list the open to-dos and tick them off or reopen them, list the decks and add flashcards.",
+        "This mode takes no lock and never opens a window, so it runs next to the app while you use it.",
       ],
     },
   ],
@@ -106,67 +92,67 @@ const en: LocalizedContent = {
     "The Today page: six open to-dos from four notes, and two decks with cards due.",
     "A note in the editor: Term :: Definition lines that become flashcards, and checkboxes that are to-dos.",
     "A review in Study: the answer is showing, with the next interval under each of the four ratings.",
-    "The dark theme on a note with a bullet list and two to-dos, one of them ticked.",
+    "The dark theme on a maths note with two open to-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "284", label: "unit tests" },
+    { value: "9", label: "MCP tools" },
     { value: "12", label: "end-to-end smoke checks" },
-    { value: "49", label: "IPC handlers" },
+    { value: "26", label: "IPC handlers" },
     { value: "3", label: "platforms" },
   ],
 };
 
 const de: LocalizedContent = {
-  tagline: "Eine Lern-App, die mit dem aufgeht, was heute zu tun ist.",
+  tagline: "Notizen, To-dos und Karteikarten in einer ruhigen App.",
   description:
-    "Ein Lernbegleiter für den Desktop mit Notizen, Aufgaben, Karteikarten und Noten, gespeichert in einer SQLite-Datei auf dem eigenen Rechner. Eine Checkbox in einer Notiz wird zur echten Aufgabe, eine Zeile mit :: zur Karteikarte.",
+    "Eine Lern-App für den Desktop mit Notizen, To-dos und Karteikarten, gespeichert in einer SQLite-Datei auf dem eigenen Rechner. Eine Checkbox in einer Notiz erscheint auf der Heute-Seite, eine Zeile mit :: wird zur Karteikarte.",
   overview:
-    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Sie hat Notizen, Aufgaben, Karteikarten mit einem Fokus-Timer und Noten, und sie öffnet auf einer Heute-Seite, die aus dem, was schon drin ist, einen kurzen Plan zusammenstellt: die fälligen Stapel, die heute fälligen Aufgaben, das Fach mit dem tiefsten Schnitt und einen Fokusblock. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.7.0, erscheint für Windows, macOS und Linux und aktualisiert sich selbst über GitHub Releases.",
+    "Inkling ist eine Electron-App, die ich zum Lernen gebaut habe. Alles beginnt als Notiz: Eine Checkbox in einer Notiz ist ein To-do, und eine Zeile Begriff :: Definition wird zur Karteikarte. Die App öffnet auf einer Heute-Seite, die die offenen To-dos und die Stapel mit fälligen Karten zeigt, und sonst nichts. Alles liegt in einer einzigen SQLite-Datei auf dem Rechner, sie funktioniert also offline, und nichts verlässt den Computer. Das neueste Release, v0.8.2, erscheint für Windows, macOS und Linux und aktualisiert sich selbst über GitHub Releases.",
   roleSummary: "Nur ich: das Datenmodell, die Electron-Schale, die Oberfläche und die Release-Pipeline.",
   sections: [
     {
       heading: "Eine Seite Notizen speist den Rest der App",
       body: [
-        "Die Idee von Inkling ist, dass man Dinge nur einmal aufschreibt. Wer am Zeilenanfang einer Notiz [] tippt, bekommt eine Checkbox, die im Tab Aufgaben als echte Aufgabe erscheint. Wer Begriff :: Definition auf eine Zeile schreibt, kann diese Zeilen mit dem Karteikarten-Knopf im Editor zu einem Stapel machen.",
-        "Die Verknüpfung mit den Aufgaben geht in beide Richtungen. Beim Speichern einer Notiz wird jede Checkbox über eine im Dokument hinterlegte ID ihrer Aufgabenzeile zugeordnet, neue werden eingefügt und gelöschte entfernt, alles in einer Transaktion. Hakt man die Aufgabe anderswo ab, geht der Hauptprozess durch das Dokument der Notiz und setzt dort den Haken ebenfalls.",
+        "Die Idee von Inkling ist, dass man Dinge nur einmal aufschreibt. Wer am Zeilenanfang [] tippt, bekommt eine Checkbox, die auf der Heute-Seite mit dem Namen ihrer Notiz daneben erscheint. Wer Begriff :: Definition auf eine Zeile schreibt, oder {{c1::Wort}} für eine Lückenkarte, macht diese Zeilen mit dem Karteikarten-Knopf im Editor zu einem Stapel.",
+        "Die Verknüpfung mit den To-dos geht in beide Richtungen. Beim Speichern einer Notiz wird jede Checkbox über eine im Dokument hinterlegte ID ihrer Aufgabenzeile zugeordnet, neue werden eingefügt und gelöschte entfernt, alles in einer Transaktion. Hakt man ein To-do auf der Heute-Seite ab, sucht der Hauptprozess die Checkbox in der Notiz und setzt dort den Haken ebenfalls. Seit v0.8.2 bekommt keine Aufgabe die ID einer anderen, also kann das Ausschneiden und Wiedereinfügen einer Zeile keine zwei To-dos mehr vertauschen.",
       ],
       figure: 1,
       code: {
         language: "ts",
         text: CHECKBOX_CODE,
         caption:
-          "Aus src/main/repos/tasks.ts. Der Weg zurück von der Aufgabe zur Notiz: die Checkbox mit der ID dieser Aufgabe suchen und die Notiz nur schreiben, wenn sich wirklich etwas geändert hat.",
+          "Aus src/main/repos/tasks.ts. Der Weg zurück von der Heute-Seite zur Notiz: die erste Checkbox mit der ID dieses To-dos suchen, abhaken und die Notiz nur schreiben, wenn sich wirklich etwas geändert hat.",
       },
     },
     {
       heading: "Karteikarten, die sich selbst einplanen",
       body: [
         "Wiederholungen laufen über FSRS-6. Das Verfahren führt pro Karte zwei Werte, Stabilität und Schwierigkeit, und plant jede Karte so, dass man sie mit 90 Prozent Wahrscheinlichkeit noch weiss. Jeder Knopf zeigt vor dem Drücken, welches Intervall er bringen würde, und die Tasten 1 bis 4 antworten ohne Maus.",
-        "Jede Antwort landet in einem dauerhaften Wiederholungsprotokoll, und die Fortschrittsseite liest daraus Behaltensquote, Wiederholungen und die Serie. Diese Zahlen sind also gezählt und nicht geschätzt. Neben den Stapeln sitzt ein Fokus-Timer, der sich mit einer Aufgabe oder einem Stapel verknüpfen lässt, und seine Minuten zählen ebenfalls zur Serie.",
+        "Karten aus einer Notiz bleiben mit ihrer Zeile verknüpft. Wer die Zeile umformuliert, ändert die Karte und behält ihren Plan, eine neue Lückennummer gibt eine neue Karte, und jede Antwort landet in einem Wiederholungsprotokoll.",
       ],
       figure: 2,
     },
     {
-      heading: "Noten in der Skala, in der sie eingetragen wurden",
+      heading: "Eine Überarbeitung, die vor allem Dinge herausnahm",
       body: [
-        "Noten werden pro Fach erfasst, entweder auf der Schweizer Skala von 1 bis 6, bei der eine 4 genügend ist, oder in Prozent. Die Skala steht auf jeder Zeile, ein späterer Wechsel der Ansicht deutet also keine alte Note um. Eine Schweizer Note wird linear in Prozent umgerechnet, deshalb erscheint eine 4.5 als 70 Prozent neben ihrer Gewichtung.",
-        "Jedes Fach bekommt einen gewichteten Schnitt, und die Seitenleiste zeigt eine Zahl über alle Fächer. Das Fach mit dem tiefsten Schnitt schlägt die Heute-Seite als dasjenige vor, dem man Zeit geben sollte.",
+        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Heute, Lernen, Einstellungen und den Notizen, in einem hellen und einem dunklen Theme.",
+        "Schon v0.6.0 hatte den Quellcode von etwa 9.8k auf 6.5k Zeilen gebracht, und weil der Editor erst beim Öffnen einer Notiz geladen wird, fiel das Start-Bundle von 1881 kB auf 819 kB.",
       ],
       figure: 3,
     },
     {
       heading: "Lokal zuerst, eine Datei auf der Platte",
       body: [
-        "Alle Daten liegen in einer SQLite-Datenbank im WAL-Modus. Beim Start wird sie mit einem Checkpoint abgeschlossen und in einen Backup-Ordner kopiert, der die letzten fünf behält. Die Suche über Notizen, Aufgaben und Stapel läuft über SQLites FTS5 hinter Ctrl K.",
-        "Der Renderer fasst die Datenbank nie an. Er läuft mit Context Isolation und ohne Node-Integration, und alles geht über 49 IPC-Handler in der Preload-Brücke.",
+        "Alle Daten liegen in einer SQLite-Datenbank im WAL-Modus. Beim Start wird sie mit einem Checkpoint abgeschlossen und in einen Backup-Ordner kopiert, der die letzten fünf behält, und ein Update sichert sie, bevor es etwas ändert. Die Suche über Notizen, To-dos und Stapel läuft über SQLites FTS5 hinter Ctrl K.",
+        "Der Renderer fasst die Datenbank nie an. Er läuft in der Sandbox, mit Context Isolation und ohne Node-Integration, und alles geht über 26 IPC-Handler in der Preload-Brücke. Eine neue Datenbank wird direkt in ihrer aktuellen Form angelegt, und bei jedem Push startet die CI die gebaute App gegen ein Wegwerfprofil und führt zwölf Prüfungen über die echte Brücke aus.",
       ],
     },
     {
-      heading: "Ein Release, das vor allem Dinge herausnahm",
+      heading: "Ein Assistent kann mit den Notizen arbeiten",
       body: [
-        "Inkling hatte für fast alles einen zweiten Weg bekommen, also behielt v0.6.0 von jedem einen. Das Kanban-Board, Hashtags, das Journal, Wiki-Links, der PDF-Export und eine Handvoll Einstellungen fielen weg, und keine Notiz, Aufgabe, kein Stapel, keine Note und kein Wiederholungsverlauf wurde angefasst. Der Quellcode schrumpfte von etwa 9.8k auf 6.5k Zeilen, und weil der Editor erst beim Öffnen einer Seite geladen wird, fiel das Start-Bundle von 1881 kB auf 819 kB.",
-        "Dasselbe Release behob einen Fehler, den die Unit-Tests nie hätten sehen können: Eine frische Installation konnte ihre eigene Datenbank nicht öffnen, weil eine neue Datei durch jede alte Migration geschickt wurde und diese Spalten anfassten, die es nicht mehr gibt. Eine neue Datenbank wird jetzt direkt in ihrer aktuellen Form angelegt, und ein Smoke-Test startet die gebaute App gegen ein Wegwerfprofil und führt zwölf Prüfungen über die echte IPC-Brücke aus. Die CI lässt ihn bei jedem Push laufen.",
+        "Mit --mcp gestartet, stellt Inkling seine Daten einem KI-Assistenten über MCP auf stdin und stdout bereit, mit neun Werkzeugen: Notizen auflisten und lesen, eine Notiz anlegen oder ergänzen, die offenen To-dos auflisten und abhaken oder wieder öffnen, die Stapel auflisten und Karteikarten hinzufügen.",
+        "Dieser Modus nimmt keine Sperre und öffnet nie ein Fenster, er läuft also neben der App, während man sie benutzt.",
       ],
     },
   ],
@@ -174,67 +160,67 @@ const de: LocalizedContent = {
     "Die Heute-Seite: sechs offene To-dos aus vier Notizen und zwei Stapel mit fälligen Karten.",
     "Eine Notiz im Editor: Zeilen Begriff :: Definition, die zu Karteikarten werden, und Checkboxen, die To-dos sind.",
     "Eine Wiederholung auf der Lernseite: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
-    "Das dunkle Theme auf einer Notiz mit einer Aufzählung und zwei To-dos, eines davon abgehakt.",
+    "Das dunkle Theme auf einer Mathe-Notiz mit zwei offenen To-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "284", label: "Unit-Tests" },
+    { value: "9", label: "MCP-Werkzeuge" },
     { value: "12", label: "End-to-End-Prüfungen" },
-    { value: "49", label: "IPC-Handler" },
+    { value: "26", label: "IPC-Handler" },
     { value: "3", label: "Plattformen" },
   ],
 };
 
 const fr: LocalizedContent = {
-  tagline: "Une app d'étude qui s'ouvre sur ce qu'il y a à faire aujourd'hui.",
+  tagline: "Notes, tâches et cartes mémoire dans une app calme.",
   description:
-    "Un compagnon d'étude pour le bureau, avec notes, tâches, cartes mémoire et notes scolaires, conservés dans un seul fichier SQLite sur votre machine. Une case à cocher dans une note devient une vraie tâche, et une ligne avec :: devient une carte.",
+    "Une app d'étude pour le bureau, avec notes, tâches et cartes mémoire, conservées dans un seul fichier SQLite sur votre machine. Une case à cocher dans une note apparaît sur la page Aujourd'hui, et une ligne avec :: devient une carte.",
   overview:
-    "Inkling est une application Electron que j'ai construite pour étudier. Elle réunit des notes, des tâches, des cartes mémoire avec un minuteur de concentration, et les notes scolaires, et elle s'ouvre sur une page Aujourd'hui qui compose un court plan à partir de ce qui s'y trouve déjà : les paquets à réviser, les tâches du jour, la matière à la moyenne la plus basse et un bloc de concentration. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.7.0, sort pour Windows, macOS et Linux et se met à jour elle-même depuis GitHub Releases.",
+    "Inkling est une application Electron que j'ai construite pour étudier. Tout commence par une note : une case à cocher dans une note est une tâche, et une ligne Terme :: Définition devient une carte mémoire. Elle s'ouvre sur une page Aujourd'hui qui affiche les tâches encore ouvertes et les paquets avec des cartes à réviser, et rien d'autre. Tout vit dans un seul fichier SQLite sur la machine, donc elle marche hors ligne et rien ne quitte l'ordinateur. La dernière version, v0.8.2, sort pour Windows, macOS et Linux et se met à jour elle-même depuis GitHub Releases.",
   roleSummary: "Moi seul : le modèle de données, la coque Electron, l'interface et la chaîne de publication.",
   sections: [
     {
       heading: "Une page de notes alimente le reste de l'app",
       body: [
-        "L'idée d'Inkling, c'est de n'écrire les choses qu'une fois. Tapez [] en début de ligne dans une note, et la case à cocher devient une vraie tâche dans l'onglet Tâches. Écrivez Terme :: Définition sur une ligne, et le bouton Cartes de l'éditeur transforme ces lignes en paquet.",
-        "Le lien avec les tâches marche dans les deux sens. À l'enregistrement d'une note, chaque case est rattachée à sa ligne de tâche par un identifiant inscrit dans le document, les nouvelles sont insérées et les supprimées retirées, le tout dans une seule transaction. Quand vous cochez la tâche ailleurs, le processus principal parcourt le document de la note et coche la case là aussi.",
+        "L'idée d'Inkling, c'est de n'écrire les choses qu'une fois. Tapez [] en début de ligne, et la case à cocher apparaît sur la page Aujourd'hui avec le nom de sa note à côté. Écrivez Terme :: Définition sur une ligne, ou {{c1::mot}} pour une carte à trou, et le bouton Cartes de l'éditeur transforme ces lignes en paquet.",
+        "Le lien avec les tâches marche dans les deux sens. À l'enregistrement d'une note, chaque case est rattachée à sa ligne de tâche par un identifiant inscrit dans le document, les nouvelles sont insérées et les supprimées retirées, le tout dans une seule transaction. Quand vous cochez une tâche sur la page Aujourd'hui, le processus principal retrouve la case dans la note et la coche là aussi. Depuis v0.8.2, l'identifiant d'une tâche n'est jamais donné à une autre, donc couper une ligne puis la recoller ne peut plus intervertir deux tâches.",
       ],
       figure: 1,
       code: {
         language: "ts",
         text: CHECKBOX_CODE,
         caption:
-          "Tiré de src/main/repos/tasks.ts. Le chemin retour, de la tâche vers la note : trouver la case qui porte l'identifiant de cette tâche et n'écrire la note que si quelque chose a vraiment changé.",
+          "Tiré de src/main/repos/tasks.ts. Le chemin retour, de la page Aujourd'hui vers la note : trouver la première case qui porte l'identifiant de cette tâche, la cocher, et n'écrire la note que si quelque chose a vraiment changé.",
       },
     },
     {
       heading: "Des cartes qui se planifient toutes seules",
       body: [
         "Les révisions tournent sur FSRS-6, qui garde deux valeurs par carte, la stabilité et la difficulté, et planifie chaque carte pour 90 % de chances de s'en souvenir encore. Chaque bouton affiche l'intervalle qu'il donnerait avant qu'on le presse, et les touches 1 à 4 répondent sans la souris.",
-        "Chaque réponse est écrite dans un journal de révisions permanent, et la page Progrès relit ce journal pour la rétention, les révisions et la série. Ces chiffres sont donc comptés, pas estimés. À côté des paquets se trouve un minuteur de concentration qu'on peut lier à une tâche ou à un paquet, et ses minutes comptent aussi pour la série.",
+        "Les cartes tirées d'une note restent liées à la ligne d'où elles viennent. Reformuler la ligne met la carte à jour sans toucher à son planning, un nouveau numéro de trou donne une nouvelle carte, et chaque réponse est gardée dans un journal de révisions.",
       ],
       figure: 2,
     },
     {
-      heading: "Des notes gardées dans l'échelle où elles ont été saisies",
+      heading: "Une refonte qui a surtout retiré des choses",
       body: [
-        "Les notes se saisissent par matière, soit sur l'échelle suisse de 1 à 6, où 4 est suffisant, soit en pourcentage. L'échelle est enregistrée sur chaque ligne, si bien que changer d'affichage plus tard ne réinterprète jamais une ancienne note. Une note suisse se convertit linéairement en pourcentage, c'est pourquoi un 4,5 apparaît comme 70 % à côté de sa pondération.",
-        "Chaque matière a sa moyenne pondérée, et la barre latérale affiche un chiffre pour l'ensemble. La matière à la moyenne la plus basse est celle que la page Aujourd'hui propose de travailler.",
+        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Aujourd'hui, Étude, Réglages et les notes, dans un thème clair et un thème sombre.",
+        "Une passe plus ancienne, v0.6.0, avait déjà fait passer le code source d'environ 9,8k lignes à 6,5k, et charger l'éditeur seulement à l'ouverture d'une note avait fait passer le bundle de démarrage de 1881 kB à 819 kB.",
       ],
       figure: 3,
     },
     {
       heading: "Local d'abord, un seul fichier sur le disque",
       body: [
-        "Toutes les données tiennent dans une base SQLite en mode WAL. Au démarrage, elle passe par un checkpoint puis est copiée dans un dossier de sauvegardes qui garde les cinq dernières. La recherche dans les notes, les tâches et les paquets passe par FTS5 de SQLite, derrière Ctrl K.",
-        "Le rendu ne touche jamais la base. Il tourne avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 49 gestionnaires IPC dans le pont de preload.",
+        "Toutes les données tiennent dans une base SQLite en mode WAL. Au démarrage, elle passe par un checkpoint puis est copiée dans un dossier de sauvegardes qui garde les cinq dernières, et une mise à jour la sauvegarde avant de changer quoi que ce soit. La recherche dans les notes, les tâches et les paquets passe par FTS5 de SQLite, derrière Ctrl K.",
+        "Le rendu ne touche jamais la base. Il tourne en sandbox, avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 26 gestionnaires IPC dans le pont de preload. Une nouvelle base est créée directement dans sa forme actuelle, et à chaque push la CI lance l'app construite sur un profil jetable et exécute douze vérifications à travers le vrai pont.",
       ],
     },
     {
-      heading: "Une version qui a surtout retiré des choses",
+      heading: "Un assistant peut travailler avec vos notes",
       body: [
-        "Inkling avait fini par offrir une deuxième façon de faire presque tout, alors v0.6.0 n'en a gardé qu'une. Le tableau kanban, les hashtags, le journal, les liens wiki, l'export PDF et une poignée de réglages sont partis, et aucune note, tâche, carte, note scolaire ni aucun historique de révision n'a été touché. Le code source est passé d'environ 9,8k lignes à 6,5k, et charger l'éditeur seulement à l'ouverture d'une page a fait passer le bundle de démarrage de 1881 kB à 819 kB.",
-        "La même version a corrigé un bug que les tests unitaires n'auraient jamais pu voir : une installation neuve ne pouvait pas ouvrir sa propre base, parce qu'un nouveau fichier passait par toutes les anciennes migrations et que celles-ci touchaient des colonnes qui n'existent plus. Une nouvelle base est désormais créée directement dans sa forme actuelle, et un test de fumée lance l'app construite sur un profil jetable et exécute douze vérifications à travers le vrai pont IPC. La CI le lance à chaque push.",
+        "Lancée avec --mcp, Inkling sert ses données à un assistant IA par MCP sur stdin et stdout, avec neuf outils : lister et lire les notes, créer une note ou la compléter, lister les tâches ouvertes et les cocher ou les rouvrir, lister les paquets et ajouter des cartes.",
+        "Ce mode ne prend aucun verrou et n'ouvre jamais de fenêtre, il tourne donc à côté de l'app pendant qu'on s'en sert.",
       ],
     },
   ],
@@ -242,67 +228,67 @@ const fr: LocalizedContent = {
     "La page Aujourd'hui : six tâches ouvertes tirées de quatre notes, et deux paquets avec des cartes à réviser.",
     "Une note dans l'éditeur : des lignes Terme :: Définition qui deviennent des cartes, et des cases à cocher qui sont des tâches.",
     "Une révision dans la page Étude : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
-    "Le thème sombre sur une note avec une liste à puces et deux tâches, dont une cochée.",
+    "Le thème sombre sur une note de maths avec deux tâches ouvertes.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "284", label: "tests unitaires" },
+    { value: "9", label: "outils MCP" },
     { value: "12", label: "vérifications de bout en bout" },
-    { value: "49", label: "gestionnaires IPC" },
+    { value: "26", label: "gestionnaires IPC" },
     { value: "3", label: "plateformes" },
   ],
 };
 
 const zh: LocalizedContent = {
-  tagline: "一个打开就告诉你今天该做什么的学习应用。",
+  tagline: "把笔记、待办和抽认卡放进一个安静的应用。",
   description:
-    "一个桌面学习助手，包含笔记、任务、抽认卡和成绩，全部保存在你自己电脑上的一个 SQLite 文件里。笔记里的复选框会变成真正的任务，带 :: 的一行会变成一张抽认卡。",
+    "一个桌面学习应用，包含笔记、待办和抽认卡，全部保存在你自己电脑上的一个 SQLite 文件里。笔记里的复选框会出现在“今天”页面上，带 :: 的一行会变成一张抽认卡。",
   overview:
-    "Inkling 是我为学习做的一个 Electron 应用。它有笔记、任务、带专注计时器的抽认卡，还有成绩，打开时是一个“今天”页面，从已有的内容里拼出一份简短的计划：到期的卡组、今天到期的任务、平均分最低的科目，以及一个专注时段。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.7.0 支持 Windows、macOS 和 Linux，并通过 GitHub Releases 自动更新。",
+    "Inkling 是我为学习做的一个 Electron 应用。一切都从笔记开始：笔记里的复选框就是待办，术语 :: 定义 这样的一行会变成抽认卡。打开时是一个“今天”页面，只列出还没完成的待办和有到期卡片的卡组，别的什么都没有。所有数据都在机器上的一个 SQLite 文件里，所以它可以离线使用，什么都不会离开这台电脑。最新版本 v0.8.2 支持 Windows、macOS 和 Linux，并通过 GitHub Releases 自动更新。",
   roleSummary: "只有我：数据模型、Electron 外壳、界面和发布流程。",
   sections: [
     {
       heading: "一页笔记喂给整个应用",
       body: [
-        "Inkling 的出发点是：一件事只写一次。在笔记的行首输入 []，这个复选框就会作为真正的任务出现在“任务”标签里。在一行里写下 术语 :: 定义，编辑器里的抽认卡按钮就能把这些行变成一个卡组。",
-        "任务和笔记是双向关联的。保存笔记时，每个复选框都通过写进文档里的 id 对应到它的任务行，新的插入，删掉的移除，全部在一个事务里完成。如果你在别处把任务勾掉，主进程会遍历这条笔记的文档，把那里的复选框也勾上。",
+        "Inkling 的出发点是：一件事只写一次。在行首输入 []，这个复选框就会出现在“今天”页面上，旁边写着它所在笔记的名字。在一行里写下 术语 :: 定义，或者用 {{c1::词}} 做一张填空卡，编辑器里的抽认卡按钮就能把这些行变成一个卡组。",
+        "待办和笔记是双向关联的。保存笔记时，每个复选框都通过写进文档里的 id 对应到它的任务行，新的插入，删掉的移除，全部在一个事务里完成。在“今天”页面上勾掉一个待办，主进程会在笔记里找到那个复选框，把它也勾上。从 v0.8.2 起，一个任务的 id 不会再交给别的任务，所以剪切一行再粘贴回去，不会再把两个待办对调。",
       ],
       figure: 1,
       code: {
         language: "ts",
         text: CHECKBOX_CODE,
         caption:
-          "摘自 src/main/repos/tasks.ts。从任务回到笔记的那条路：找到带着这个任务 id 的复选框，只有真的有变化时才写回笔记。",
+          "摘自 src/main/repos/tasks.ts。从“今天”页面回到笔记的那条路：找到第一个带着这个待办 id 的复选框，把它勾上，只有真的有变化时才写回笔记。",
       },
     },
     {
       heading: "自己安排复习时间的抽认卡",
       body: [
         "复习基于 FSRS-6。它为每张卡记录两个值，稳定度和难度，并按照你仍有 90% 概率记得来安排每张卡。每个按钮在按下之前就显示它会带来的间隔，数字键 1 到 4 不用鼠标就能作答。",
-        "每一次作答都写进一份永久的复习日志，“进度”页面从这份日志里读出保持率、复习次数和连续天数，所以这些数字是数出来的，不是估出来的。卡组旁边是一个专注计时器，可以关联到某个任务或卡组，它的分钟数也计入连续天数。",
+        "从笔记生成的卡片会一直关联着它来自的那一行。改写这一行会更新卡片，但保留它的复习安排；新的填空编号会生成一张新卡；每一次作答都记在复习日志里。",
       ],
       figure: 2,
     },
     {
-      heading: "成绩按录入时的评分制保存",
+      heading: "一次主要在做减法的改版",
       body: [
-        "成绩按科目记录，可以用瑞士的 1 到 6 分制（4 分及格），也可以用百分比。评分制存在每一行上，所以之后切换显示方式，旧成绩也不会被重新解读。瑞士分数线性换算成百分比，所以 4.5 分会在它的权重旁边显示为 70%。",
-        "每个科目都有加权平均分，侧栏里显示所有科目的总平均。平均分最低的科目，就是“今天”页面建议你多花时间的那一科。",
+        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“今天”、“学习”、“设置”和所有笔记，配一套浅色和一套深色主题。",
+        "更早的 v0.6.0 已经把源代码从大约 9.8k 行减到 6.5k 行，编辑器改成打开笔记时才加载，启动包从 1881 kB 降到 819 kB。",
       ],
       figure: 3,
     },
     {
       heading: "本地优先，磁盘上的一个文件",
       body: [
-        "所有数据都在一个 WAL 模式的 SQLite 数据库里。启动时先做一次检查点，再复制到备份文件夹，那里保留最近的五份。笔记、任务和卡组的搜索用的是 SQLite 的 FTS5，入口在 Ctrl K。",
-        "渲染进程从不直接碰数据库。它开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 49 个 IPC 处理函数。",
+        "所有数据都在一个 WAL 模式的 SQLite 数据库里。启动时先做一次检查点，再复制到备份文件夹，那里保留最近的五份；更新在改动任何东西之前也会先备份。笔记、待办和卡组的搜索用的是 SQLite 的 FTS5，入口在 Ctrl K。",
+        "渲染进程从不直接碰数据库。它运行在沙箱里，开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 26 个 IPC 处理函数。新数据库直接按当前结构创建；每次推送，CI 都会在一次性的配置目录上启动构建好的应用，通过真实的桥跑十二项检查。",
       ],
     },
     {
-      heading: "一个主要在做减法的版本",
+      heading: "AI 助手可以帮你处理笔记",
       body: [
-        "Inkling 几乎每件事都长出了第二种做法，所以 v0.6.0 每样只留一种。看板、话题标签、日记、wiki 链接、PDF 导出和一些设置都拿掉了，而笔记、任务、卡组、成绩和复习记录一样都没动。源代码从大约 9.8k 行减到 6.5k 行，编辑器改成打开页面时才加载，启动包从 1881 kB 降到 819 kB。",
-        "同一个版本还修了一个单元测试永远看不到的 bug：全新安装打不开自己的数据库，因为新文件会被拿去跑一遍所有旧迁移，而那些迁移会碰到已经不存在的列。现在新数据库直接按当前结构创建，另外有一个冒烟测试，在一次性的配置目录上启动构建好的应用，通过真实的 IPC 桥跑十二项检查。CI 每次推送都会跑它。",
+        "用 --mcp 启动时，Inkling 通过 MCP 在 stdin 和 stdout 上把数据提供给 AI 助手，共有九个工具：列出和读取笔记、新建笔记或往笔记里追加内容、列出未完成的待办并勾掉或重新打开、列出卡组并添加抽认卡。",
+        "这个模式不占用锁，也从不打开窗口，所以你在用应用的时候，它可以在旁边同时运行。",
       ],
     },
   ],
@@ -310,13 +296,13 @@ const zh: LocalizedContent = {
     "“今天”页面：来自四篇笔记的六个未完成待办，以及两个有到期卡片的卡组。",
     "编辑器里的一篇笔记：术语 :: 定义 这样的行会变成抽认卡，复选框就是待办。",
     "学习页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
-    "深色主题下的一篇笔记：一个项目列表和两个待办，其中一个已勾选。",
+    "深色主题下的一篇数学笔记，里面有两个未完成的待办。",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "284", label: "单元测试" },
+    { value: "9", label: "MCP 工具" },
     { value: "12", label: "端到端冒烟检查" },
-    { value: "49", label: "IPC 处理函数" },
+    { value: "26", label: "IPC 处理函数" },
     { value: "3", label: "平台" },
   ],
 };

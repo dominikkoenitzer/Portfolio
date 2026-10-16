@@ -75,7 +75,7 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
   oxidize:
     "A Windows uninstaller in Rust: it runs the program's own uninstaller, then removes leftover registry keys, files, services and tasks, backing each up.",
   inkling:
-    "A desktop study companion for notes, tasks, flashcards and grades, kept in one SQLite file on your machine. A checkbox in a note becomes a task.",
+    "A desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your machine. A checkbox in a note shows up on Today.",
   mochi:
     "A tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it.",
   daifuku:
