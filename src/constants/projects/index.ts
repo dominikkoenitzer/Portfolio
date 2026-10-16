@@ -94,11 +94,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://github.com/dominikkoenitzer/Remnants",
-    // The Windows user installer keeps a fixed name on every release, so
-    // latest/download always serves the newest one. Other platforms are on the
-    // release page.
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-x64.exe",
+    downloadUrl: "https://get-remnants.vercel.app/",
     downloadPage: "https://get-remnants.vercel.app/",
     priority: 5,
     image: "/projects/remnants.jpg",
@@ -124,8 +120,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Jester",
     liveUrl: "https://github.com/dominikkoenitzer/Jester",
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Jester/releases/latest/download/Jester.exe",
+    downloadUrl: "https://get-jester.vercel.app/",
     downloadPage: "https://get-jester.vercel.app/",
     priority: 7,
     image: "/projects/jester.jpg",
@@ -139,8 +134,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Flow",
     liveUrl: "https://github.com/dominikkoenitzer/Flow",
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Flow/releases/latest/download/FLOW.exe",
+    downloadUrl: "https://get-flow-app.vercel.app/",
     downloadPage: "https://get-flow-app.vercel.app/",
     priority: 8,
     image: "/projects/flow.jpg",
@@ -177,10 +171,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
     liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
-    // The GUI ships as one exe under a fixed name, so latest/download always
-    // serves the newest build.
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Oxidize/releases/latest/download/oxidize-gui.exe",
+    downloadUrl: "https://get-oxidize.vercel.app/",
     downloadPage: "https://get-oxidize.vercel.app/",
     priority: 11,
     image: "/projects/oxidize.jpg",
@@ -194,10 +185,7 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Inkling",
     date: "2026-07",
     repoUrl: "https://github.com/dominikkoenitzer/Inkling",
-    // The Windows installer keeps a fixed name on every release. Other
-    // platforms are on the release page.
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-Setup.exe",
+    downloadUrl: "https://get-inkling.vercel.app/",
     downloadPage: "https://get-inkling.vercel.app/",
     priority: 12,
     image: "/projects/inkling.jpg",
@@ -215,10 +203,7 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Mochi",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Mochi",
-    // The installer keeps a fixed name on every release, so latest/download
-    // always serves the newest one.
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/Mochi-Setup.exe",
+    downloadUrl: "https://get-mochi.vercel.app/",
     downloadPage: "https://get-mochi.vercel.app/",
     image: "/projects/mochi.jpg",
     gallery: ["/projects/mochi-mark.jpg"],
@@ -232,8 +217,7 @@ const PROJECT_BASE: ProjectBase[] = [
     title: "Daifuku",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
-    downloadUrl:
-      "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku.exe",
+    downloadUrl: "https://get-daifuku.vercel.app/",
     downloadPage: "https://get-daifuku.vercel.app/",
     image: "/projects/daifuku.jpg",
     priority: 14,
