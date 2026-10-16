@@ -50,7 +50,7 @@ export const de = {
     roles: ["Dominik", "Punds"] as string[],
     tagline:
       "Softwareentwickler in Zürich. Ich baue schnelle, barrierefreie Websites und die Tools dahinter.",
-    hireMe: "Anstellen",
+    hireMe: "Schreib mir",
     viewWork: "Arbeiten ansehen",
     emailLabel: "E-Mail",
   },
