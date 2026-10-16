@@ -71,7 +71,7 @@ export const jester: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Jester in its purple and gold theme with two tabs open, its own README and CONTRIBUTING, with line numbers and the status bar counting 7,762 characters in 154 lines.",
+      "Jester in its dark theme with two tabs open, its own README and CONTRIBUTING, with line numbers and the status bar counting 8,221 characters in 158 lines.",
     ],
     tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
@@ -128,7 +128,7 @@ export const jester: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Jester im Violett-Gold-Theme mit zwei offenen Tabs, dem eigenen README und CONTRIBUTING, mit Zeilennummern und einer Statusleiste, die 7'762 Zeichen in 154 Zeilen zählt.",
+      "Jester im dunklen Theme mit zwei offenen Tabs, dem eigenen README und CONTRIBUTING, mit Zeilennummern und einer Statusleiste, die 8'221 Zeichen in 158 Zeilen zählt.",
     ],
     tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
@@ -185,7 +185,7 @@ export const jester: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Jester dans son thème violet et or avec deux onglets ouverts, son propre README et CONTRIBUTING, les numéros de ligne et la barre d'état qui compte 7 762 caractères sur 154 lignes.",
+      "Jester dans son thème sombre avec deux onglets ouverts, son propre README et CONTRIBUTING, les numéros de ligne et la barre d'état qui compte 8 221 caractères sur 158 lignes.",
     ],
     tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
@@ -242,7 +242,7 @@ export const jester: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "紫金配色的 Jester 打开着两个标签页，是它自己的 README 和 CONTRIBUTING，带行号，状态栏显示 154 行共 7,762 个字符。",
+      "深色主题的 Jester 打开着两个标签页，是它自己的 README 和 CONTRIBUTING，带行号，状态栏显示 158 行共 8,221 个字符。",
     ],
     tags: ["C#", "WPF", ".NET 10", "Windows"],
     stats: [
