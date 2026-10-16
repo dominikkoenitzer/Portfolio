@@ -30,6 +30,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "zephyr",
     title: "Zephyr",
+    platform: "web",
     date: "2024-12",
     repoUrl: "https://github.com/dominikkoenitzer/Zephyr",
     liveUrl: "https://zephyr.punds.ch/",
@@ -44,6 +45,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "portfolio",
     title: "Portfolio",
+    platform: "web",
     date: "2025-05",
     repoUrl: "https://github.com/dominikkoenitzer/Portfolio",
     liveUrl: `${SITE_CONFIG.url}/`,
@@ -57,6 +59,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "entropy",
     title: "Entropy",
+    platform: "web",
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Entropy",
     sourcePrivate: true,
@@ -76,6 +79,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "spectrum",
     title: "Spectrum",
+    platform: "web",
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Spectrum",
     sourcePrivate: true,
@@ -91,6 +95,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "remnants",
     title: "Remnants",
+    platform: "desktop",
     date: "2026-02",
     repoUrl: "https://github.com/dominikkoenitzer/Remnants",
     liveUrl: "https://github.com/dominikkoenitzer/Remnants",
@@ -106,6 +111,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "time",
     title: "Time",
+    platform: "web",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Time",
     liveUrl: "https://time.punds.ch/",
@@ -117,6 +123,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "jester",
     title: "Jester",
+    platform: "desktop",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Jester",
     liveUrl: "https://github.com/dominikkoenitzer/Jester",
@@ -131,6 +138,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "flow",
     title: "Flow",
+    platform: "desktop",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Flow",
     liveUrl: "https://github.com/dominikkoenitzer/Flow",
@@ -146,6 +154,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "punds",
     title: "Punds",
+    platform: "web",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Punds",
     liveUrl: "https://punds.ch/",
@@ -155,6 +164,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "senbon",
     title: "Senbon",
+    platform: "web",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Senbon",
     sourcePrivate: true,
@@ -168,6 +178,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "oxidize",
     title: "Oxidize",
+    platform: "desktop",
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Oxidize",
     liveUrl: "https://github.com/dominikkoenitzer/Oxidize",
@@ -183,6 +194,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "inkling",
     title: "Inkling",
+    platform: "desktop",
     date: "2026-07",
     repoUrl: "https://github.com/dominikkoenitzer/Inkling",
     downloadUrl: "https://get-inkling.vercel.app/",
@@ -201,6 +213,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "mochi",
     title: "Mochi",
+    platform: "desktop",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Mochi",
     downloadUrl: "https://get-mochi.vercel.app/",
@@ -215,6 +228,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "daifuku",
     title: "Daifuku",
+    platform: "desktop",
     date: "2026-09",
     repoUrl: "https://github.com/dominikkoenitzer/Daifuku",
     downloadUrl: "https://get-daifuku.vercel.app/",
@@ -228,6 +242,7 @@ const PROJECT_BASE: ProjectBase[] = [
   {
     slug: "psyche",
     title: "Psyche",
+    platform: "desktop",
     date: "2026-10",
     repoUrl: "https://github.com/dominikkoenitzer/Psyche",
     sourcePrivate: true,

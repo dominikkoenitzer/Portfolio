@@ -92,6 +92,15 @@ describe("the project list", () => {
     }
   });
 
+  // The Web/Desktop label and filter read the platform, never the download.
+  it("names a platform for every project, and a download is a desktop app", () => {
+    for (const project of projects) {
+      expect(["web", "desktop"], project.slug).toContain(project.platform);
+      if (project.downloadUrl) expect(project.platform, project.slug).toBe("desktop");
+    }
+    expect(projects.find((p) => p.slug === "psyche")?.platform).toBe("desktop");
+  });
+
   // Every download goes through the app's own download page; only that page
   // links the file itself.
   it("sends every download to its app's own page", () => {
