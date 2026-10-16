@@ -1,6 +1,6 @@
 # Dominik Könitzer
 
-> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He is open to software engineering roles, internships, freelance projects and collaborations, in Switzerland or fully remote, and reads email at dominik.koenitzer@gmail.com.
+> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He reads email at dominik.koenitzer@gmail.com.
 
 This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-10-08.
 
@@ -19,9 +19,9 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 - GitHub: https://github.com/dominikkoenitzer
 - Email: dominik.koenitzer@gmail.com
 
-## Availability
+## Contact
 
-Open to software engineering roles, internships, freelance and contract projects, and collaborations. Based in Switzerland, happy to work fully remote. Email is the fastest route and he usually replies within a day. The contact page has a short form: you pick what the message is about, write it, and it reaches him directly. A prefilled mailto link sits underneath for anyone who would rather use their own mail client.
+Email is the fastest route and he usually replies within a day. The contact page has a short form: you pick what the message is about, write it, and it reaches him directly. A prefilled mailto link sits underneath for anyone who would rather use their own mail client.
 
 ## Pages
 
