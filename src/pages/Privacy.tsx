@@ -13,7 +13,7 @@ import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 // Bump this when the policy text actually changes (rendered in the active locale).
-const PRIVACY_REVISED = "2026-06-26";
+const PRIVACY_REVISED = "2026-10-01";
 
 const EMAIL = "dominik.koenitzer@gmail.com";
 
