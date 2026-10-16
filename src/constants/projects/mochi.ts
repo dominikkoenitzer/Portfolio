@@ -137,7 +137,7 @@ const de: LocalizedContent = {
 const fr: LocalizedContent = {
   tagline: "Un gestionnaire de fenêtres en mosaïque pour Windows qui rend toujours le bureau.",
   description:
-    "Un gestionnaire de fenêtres en mosaïque pour Windows, écrit en Rust. Il dispose de vraies fenêtres en mosaïque, gère ses propres raccourcis et remet le bureau exactement comme il l'a trouvé, même après un plantage.",
+    "Un gestionnaire de fenêtres en mosaïque pour Windows, écrit en Rust. Il range de vraies fenêtres en mosaïque, gère ses propres raccourcis et remet le bureau exactement comme il l'a trouvé, même après un plantage.",
   overview:
     "Mochi range chaque fenêtre de l'écran en tuiles et permet de passer de l'une à l'autre au clavier. Je l'ai écrit de zéro en Rust : huit crates, un cœur pur sans la moindre trace de Win32, et un démon où un seul thread détient tout l'état et parle à Windows. Il gère les dispositions, les espaces de travail, plusieurs écrans, les règles, les bordures, la transparence et les déplacements animés, et chaque réglage visuel peut être changé par une commande qui prend effet dès qu'elle arrive.",
   roleSummary: "Moi seul : la conception, la couche Win32 et le banc de test.",

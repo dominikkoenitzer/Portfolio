@@ -134,9 +134,9 @@ const de: LocalizedContent = {
 const fr: LocalizedContent = {
   tagline: "Des flottes de terminaux d'agents IA sous Windows, chaque bordure dit ce que fait son agent.",
   description:
-    "Un outil Windows, écrit en Rust, pour faire tourner beaucoup d'agents de code IA à la fois. Une touche ouvre une flotte de terminaux en grille, et la bordure de chaque terminal montre si son agent travaille, t'attend, a fini ou a échoué.",
+    "Un outil Windows, écrit en Rust, pour faire tourner beaucoup d'agents de code IA à la fois. Une touche ouvre une flotte de terminaux en grille, et la bordure de chaque terminal montre si son agent travaille, vous attend, a fini ou a échoué.",
   overview:
-    "Quand six agents tournent en même temps, le plus dur est de remarquer lequel t'attend. Daifuku les ouvre d'une seule touche en grille sur l'écran de ton choix, et colore la bordure de chaque terminal selon ce que fait son agent : bleu tant qu'il travaille, jaune quand il a besoin d'une réponse, vert quand il a fini, rouge quand il a échoué. Une autre touche saute à l'agent qui attend depuis le plus longtemps. Il fonctionne avec Claude Code et Codex dans Windows Terminal, et tourne à côté de Mochi sans que l'un gêne l'autre.",
+    "Quand six agents tournent en même temps, le plus dur est de remarquer lequel vous attend. Daifuku les ouvre d'une seule touche en grille sur l'écran de votre choix, et colore la bordure de chaque terminal selon ce que fait son agent : bleu tant qu'il travaille, jaune quand il a besoin d'une réponse, vert quand il a fini, rouge quand il a échoué. Une autre touche saute à l'agent qui attend depuis le plus longtemps. Il fonctionne avec Claude Code et Codex dans Windows Terminal, et tourne à côté de Mochi sans que l'un gêne l'autre.",
   roleSummary: "Moi seul : l'idée, la couche Win32, le démon et les tests.",
   sections: [
     {
@@ -165,7 +165,7 @@ const fr: LocalizedContent = {
       heading: "La couleur n'est jamais le seul signal",
       body: [
         "Quatre états en quatre couleurs, c'est un design qui échoue devant la première personne daltonienne rouge-vert. Chaque état a donc aussi sa propre épaisseur de bordure : terminé est fin, en cours normal, échoué plus épais et en attente le plus épais, avec une respiration lente. Les états se lisent même en niveaux de gris.",
-        "Une palette pour daltoniens est à un réglage près, un thème à contraste élevé donne aux bordures les couleurs du thème, la respiration s'arrête quand Windows ne doit pas montrer d'animations, et un son peut retentir quand un agent se met à attendre, pour les moments où tu ne regardes pas.",
+        "Une palette pour daltoniens ne demande qu'un réglage, un thème à contraste élevé donne aux bordures les couleurs du thème, la respiration s'arrête quand Windows ne doit pas montrer d'animations, et un son peut retentir quand un agent se met à attendre, pour les moments où vous ne regardez pas.",
       ],
     },
     {
