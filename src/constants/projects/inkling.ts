@@ -68,7 +68,7 @@ const en: LocalizedContent = {
     {
       heading: "A redesign that mostly took things out",
       body: [
-        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with Today, Study, Settings and the notes, in a light and a dark theme.",
+        "With v0.8.0 Inkling became a calmer app built around notes. The Tasks tab, Grades, Progress, the focus timer, the streak, the deck import and every setting except the theme went. To-dos from the old Tasks tab moved into a note of their own, and no note, card or review was lost. What is left is one sidebar with New note, Today, Flashcards, the notes, Shortcuts and Settings, in a light and a dark theme.",
         "An earlier pass, v0.6.0, had already taken the source from about 9.8k lines to 6.5k, and loading the editor only when a note opens took the startup bundle from 1881 kB to 819 kB.",
       ],
       figure: 3,
@@ -77,13 +77,13 @@ const en: LocalizedContent = {
       heading: "Local-first, one file on disk",
       body: [
         "All data sits in one SQLite database in WAL mode. On start it is checkpointed and copied into a backups folder that keeps the last five, and an update backs it up before it changes anything. Search across notes, to-dos and decks runs on SQLite's FTS5 behind Ctrl K.",
-        "The renderer never touches the database. It runs sandboxed, with context isolation on and Node integration off, and everything goes through 26 IPC handlers in the preload bridge. A new database is created directly in its current shape, and on every push CI launches the built app against a throwaway profile and runs twelve checks through the real bridge.",
+        "The renderer never touches the database. It runs sandboxed, with context isolation on and Node integration off, and everything goes through 31 IPC handlers in the preload bridge. A new database is created directly in its current shape, and on every push CI launches the built app against a throwaway profile and runs seventeen checks through the real bridge.",
       ],
     },
     {
       heading: "An assistant can work with your notes",
       body: [
-        "Started with --mcp, Inkling serves its data to an AI assistant over MCP on stdin and stdout, with ten tools: search everything, list and read notes, create a note or add to one, list the open to-dos and tick them off or reopen them, list the decks and add flashcards.",
+        "Started with --mcp, Inkling serves its data to an AI assistant over MCP on stdin and stdout, with twenty tools: it can search, read and write notes down to a single section, undo its own edits, rename notes and use the trash, see Today, tick off to-dos and quiz you on the flashcards that are due. Settings connects the assistants it finds on the computer in one click, and the data is backed up before an assistant's first change.",
         "This mode takes no lock and never opens a window, so it runs next to the app while you use it.",
       ],
     },
@@ -91,14 +91,14 @@ const en: LocalizedContent = {
   captions: [
     "The Today page: six open to-dos from four notes, and two decks with cards due.",
     "A note in the editor: Term :: Definition lines that become flashcards, and checkboxes that are to-dos.",
-    "A review in Study: the answer is showing, with the next interval under each of the four ratings.",
+    "A review on the Flashcards page: the answer is showing, with the next interval under each of the four ratings.",
     "The dark theme on a maths note with two open to-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "10", label: "MCP tools" },
-    { value: "12", label: "end-to-end smoke checks" },
-    { value: "26", label: "IPC handlers" },
+    { value: "20", label: "MCP tools" },
+    { value: "17", label: "end-to-end smoke checks" },
+    { value: "31", label: "IPC handlers" },
     { value: "3", label: "platforms" },
   ],
 };
@@ -136,7 +136,7 @@ const de: LocalizedContent = {
     {
       heading: "Eine Überarbeitung, die vor allem Dinge herausnahm",
       body: [
-        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Heute, Lernen, Einstellungen und den Notizen, in einem hellen und einem dunklen Theme.",
+        "Mit v0.8.0 wurde Inkling zu einer ruhigeren App rund um Notizen. Der Tab Aufgaben, Noten, Fortschritt, der Fokus-Timer, die Serie, der Stapel-Import und jede Einstellung ausser dem Theme fielen weg. To-dos aus dem alten Tab Aufgaben zogen in eine eigene Notiz um, und keine Notiz, Karte oder Wiederholung ging verloren. Geblieben ist eine Seitenleiste mit Neue Notiz, Heute, Karteikarten, den Notizen, Tastenkürzeln und Einstellungen, in einem hellen und einem dunklen Theme.",
         "Schon v0.6.0 hatte den Quellcode von etwa 9.8k auf 6.5k Zeilen gebracht, und weil der Editor erst beim Öffnen einer Notiz geladen wird, fiel das Start-Bundle von 1881 kB auf 819 kB.",
       ],
       figure: 3,
@@ -145,13 +145,13 @@ const de: LocalizedContent = {
       heading: "Lokal zuerst, eine Datei auf der Platte",
       body: [
         "Alle Daten liegen in einer SQLite-Datenbank im WAL-Modus. Beim Start wird sie mit einem Checkpoint abgeschlossen und in einen Backup-Ordner kopiert, der die letzten fünf behält, und ein Update sichert sie, bevor es etwas ändert. Die Suche über Notizen, To-dos und Stapel läuft über SQLites FTS5 hinter Ctrl K.",
-        "Der Renderer fasst die Datenbank nie an. Er läuft in der Sandbox, mit Context Isolation und ohne Node-Integration, und alles geht über 26 IPC-Handler in der Preload-Brücke. Eine neue Datenbank wird direkt in ihrer aktuellen Form angelegt, und bei jedem Push startet die CI die gebaute App gegen ein Wegwerfprofil und führt zwölf Prüfungen über die echte Brücke aus.",
+        "Der Renderer fasst die Datenbank nie an. Er läuft in der Sandbox, mit Context Isolation und ohne Node-Integration, und alles geht über 31 IPC-Handler in der Preload-Brücke. Eine neue Datenbank wird direkt in ihrer aktuellen Form angelegt, und bei jedem Push startet die CI die gebaute App gegen ein Wegwerfprofil und führt siebzehn Prüfungen über die echte Brücke aus.",
       ],
     },
     {
       heading: "Ein Assistent kann mit den Notizen arbeiten",
       body: [
-        "Mit --mcp gestartet, stellt Inkling seine Daten einem KI-Assistenten über MCP auf stdin und stdout bereit, mit zehn Werkzeugen: alles durchsuchen, Notizen auflisten und lesen, eine Notiz anlegen oder ergänzen, die offenen To-dos auflisten und abhaken oder wieder öffnen, die Stapel auflisten und Karteikarten hinzufügen.",
+        "Mit --mcp gestartet, stellt Inkling seine Daten einem KI-Assistenten über MCP auf stdin und stdout bereit, mit zwanzig Werkzeugen: Er kann suchen, Notizen bis auf einen einzelnen Abschnitt lesen und schreiben, die eigenen Änderungen rückgängig machen, Notizen umbenennen und den Papierkorb nutzen, die Heute-Seite sehen, To-dos abhaken und die fälligen Karteikarten abfragen. In den Einstellungen verbindet ein Klick die Assistenten, die Inkling auf dem Computer findet, und vor der ersten Änderung eines Assistenten werden die Daten gesichert.",
         "Dieser Modus nimmt keine Sperre und öffnet nie ein Fenster, er läuft also neben der App, während man sie benutzt.",
       ],
     },
@@ -159,14 +159,14 @@ const de: LocalizedContent = {
   captions: [
     "Die Heute-Seite: sechs offene To-dos aus vier Notizen und zwei Stapel mit fälligen Karten.",
     "Eine Notiz im Editor: Zeilen Begriff :: Definition, die zu Karteikarten werden, und Checkboxen, die To-dos sind.",
-    "Eine Wiederholung auf der Lernseite: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
+    "Eine Wiederholung auf der Seite Karteikarten: Die Antwort ist aufgedeckt, unter jeder der vier Bewertungen steht das nächste Intervall.",
     "Das dunkle Theme auf einer Mathe-Notiz mit zwei offenen To-dos.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "10", label: "MCP-Werkzeuge" },
-    { value: "12", label: "End-to-End-Prüfungen" },
-    { value: "26", label: "IPC-Handler" },
+    { value: "20", label: "MCP-Werkzeuge" },
+    { value: "17", label: "End-to-End-Prüfungen" },
+    { value: "31", label: "IPC-Handler" },
     { value: "3", label: "Plattformen" },
   ],
 };
@@ -204,7 +204,7 @@ const fr: LocalizedContent = {
     {
       heading: "Une refonte qui a surtout retiré des choses",
       body: [
-        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Aujourd'hui, Étude, Réglages et les notes, dans un thème clair et un thème sombre.",
+        "Avec v0.8.0, Inkling est devenue une app plus calme, construite autour des notes. L'onglet Tâches, les notes scolaires, la page Progrès, le minuteur de concentration, la série, l'import de paquets et tous les réglages sauf le thème sont partis. Les tâches de l'ancien onglet ont rejoint une note à part, et aucune note, carte ni révision n'a été perdue. Il reste une barre latérale avec Nouvelle note, Aujourd'hui, Cartes, les notes, les raccourcis et les réglages, dans un thème clair et un thème sombre.",
         "Une passe plus ancienne, v0.6.0, avait déjà fait passer le code source d'environ 9,8k lignes à 6,5k, et charger l'éditeur seulement à l'ouverture d'une note avait fait passer le bundle de démarrage de 1881 kB à 819 kB.",
       ],
       figure: 3,
@@ -213,13 +213,13 @@ const fr: LocalizedContent = {
       heading: "Local d'abord, un seul fichier sur le disque",
       body: [
         "Toutes les données tiennent dans une base SQLite en mode WAL. Au démarrage, elle passe par un checkpoint puis est copiée dans un dossier de sauvegardes qui garde les cinq dernières, et une mise à jour la sauvegarde avant de changer quoi que ce soit. La recherche dans les notes, les tâches et les paquets passe par FTS5 de SQLite, derrière Ctrl K.",
-        "Le rendu ne touche jamais la base. Il tourne en sandbox, avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 26 gestionnaires IPC dans le pont de preload. Une nouvelle base est créée directement dans sa forme actuelle, et à chaque push la CI lance l'app construite sur un profil jetable et exécute douze vérifications à travers le vrai pont.",
+        "Le rendu ne touche jamais la base. Il tourne en sandbox, avec l'isolation de contexte activée et l'intégration Node désactivée, et tout passe par 31 gestionnaires IPC dans le pont de preload. Une nouvelle base est créée directement dans sa forme actuelle, et à chaque push la CI lance l'app construite sur un profil jetable et exécute dix-sept vérifications à travers le vrai pont.",
       ],
     },
     {
       heading: "Un assistant peut travailler avec vos notes",
       body: [
-        "Lancée avec --mcp, Inkling sert ses données à un assistant IA par MCP sur stdin et stdout, avec dix outils : tout chercher, lister et lire les notes, créer une note ou la compléter, lister les tâches ouvertes et les cocher ou les rouvrir, lister les paquets et ajouter des cartes.",
+        "Lancée avec --mcp, Inkling sert ses données à un assistant IA par MCP sur stdin et stdout, avec vingt outils : il peut chercher, lire et écrire les notes jusqu'à une seule section, annuler ses propres modifications, renommer les notes et utiliser la corbeille, voir la page Aujourd'hui, cocher les tâches et vous interroger sur les cartes à réviser. Les réglages connectent en un clic les assistants trouvés sur l'ordinateur, et les données sont sauvegardées avant la première modification d'un assistant.",
         "Ce mode ne prend aucun verrou et n'ouvre jamais de fenêtre, il tourne donc à côté de l'app pendant qu'on s'en sert.",
       ],
     },
@@ -227,14 +227,14 @@ const fr: LocalizedContent = {
   captions: [
     "La page Aujourd'hui : six tâches ouvertes tirées de quatre notes, et deux paquets avec des cartes à réviser.",
     "Une note dans l'éditeur : des lignes Terme :: Définition qui deviennent des cartes, et des cases à cocher qui sont des tâches.",
-    "Une révision dans la page Étude : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
+    "Une révision dans la page Cartes : la réponse est affichée, avec le prochain intervalle sous chacun des quatre choix.",
     "Le thème sombre sur une note de maths avec deux tâches ouvertes.",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "10", label: "outils MCP" },
-    { value: "12", label: "vérifications de bout en bout" },
-    { value: "26", label: "gestionnaires IPC" },
+    { value: "20", label: "outils MCP" },
+    { value: "17", label: "vérifications de bout en bout" },
+    { value: "31", label: "gestionnaires IPC" },
     { value: "3", label: "plateformes" },
   ],
 };
@@ -272,7 +272,7 @@ const zh: LocalizedContent = {
     {
       heading: "一次主要在做减法的改版",
       body: [
-        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“今天”、“学习”、“设置”和所有笔记，配一套浅色和一套深色主题。",
+        "从 v0.8.0 起，Inkling 变成了一个围绕笔记的、更安静的应用。“任务”标签、成绩、进度、专注计时器、连续天数、卡组导入，以及除主题以外的所有设置都拿掉了。旧“任务”标签里的待办搬进了一篇单独的笔记，没有丢掉任何笔记、卡片或复习记录。留下来的是一个侧栏，里面有“新建笔记”、“今天”、“抽认卡”、所有笔记、“快捷键”和“设置”，配一套浅色和一套深色主题。",
         "更早的 v0.6.0 已经把源代码从大约 9.8k 行减到 6.5k 行，编辑器改成打开笔记时才加载，启动包从 1881 kB 降到 819 kB。",
       ],
       figure: 3,
@@ -281,13 +281,13 @@ const zh: LocalizedContent = {
       heading: "本地优先，磁盘上的一个文件",
       body: [
         "所有数据都在一个 WAL 模式的 SQLite 数据库里。启动时先做一次检查点，再复制到备份文件夹，那里保留最近的五份；更新在改动任何东西之前也会先备份。笔记、待办和卡组的搜索用的是 SQLite 的 FTS5，入口在 Ctrl K。",
-        "渲染进程从不直接碰数据库。它运行在沙箱里，开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 26 个 IPC 处理函数。新数据库直接按当前结构创建；每次推送，CI 都会在一次性的配置目录上启动构建好的应用，通过真实的桥跑十二项检查。",
+        "渲染进程从不直接碰数据库。它运行在沙箱里，开启了上下文隔离，关闭了 Node 集成，一切都经过 preload 桥里的 31 个 IPC 处理函数。新数据库直接按当前结构创建；每次推送，CI 都会在一次性的配置目录上启动构建好的应用，通过真实的桥跑十七项检查。",
       ],
     },
     {
       heading: "AI 助手可以帮你处理笔记",
       body: [
-        "用 --mcp 启动时，Inkling 通过 MCP 在 stdin 和 stdout 上把数据提供给 AI 助手，共有十个工具：搜索全部内容、列出和读取笔记、新建笔记或往笔记里追加内容、列出未完成的待办并勾掉或重新打开、列出卡组并添加抽认卡。",
+        "用 --mcp 启动时，Inkling 通过 MCP 在 stdin 和 stdout 上把数据提供给 AI 助手，共有二十个工具：它可以搜索，读写笔记（细到单独一节），撤销自己的修改，重命名笔记、使用回收站，查看“今天”页面，勾掉待办，并就到期的抽认卡考你。在设置里点一下，就能连接在电脑上找到的助手；助手第一次修改之前，数据会先备份。",
         "这个模式不占用锁，也从不打开窗口，所以你在用应用的时候，它可以在旁边同时运行。",
       ],
     },
@@ -295,14 +295,14 @@ const zh: LocalizedContent = {
   captions: [
     "“今天”页面：来自四篇笔记的六个未完成待办，以及两个有到期卡片的卡组。",
     "编辑器里的一篇笔记：术语 :: 定义 这样的行会变成抽认卡，复选框就是待办。",
-    "学习页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
+    "抽认卡页面里的一次复习：答案已经翻开，四个评分按钮下各标着下一次复习的间隔。",
     "深色主题下的一篇数学笔记，里面有两个未完成的待办。",
   ],
   tags: ["Electron", "React", "TypeScript", "SQLite", "FSRS"],
   stats: [
-    { value: "10", label: "MCP 工具" },
-    { value: "12", label: "端到端冒烟检查" },
-    { value: "26", label: "IPC 处理函数" },
+    { value: "20", label: "MCP 工具" },
+    { value: "17", label: "端到端冒烟检查" },
+    { value: "31", label: "IPC 处理函数" },
     { value: "3", label: "平台" },
   ],
 };
