@@ -8,6 +8,7 @@ import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { DUR, EASE_OUT, SPRING_FLUID, VIEWPORT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { TiltSurface } from "./tilt-surface";
 
 /* ------------------------------------------------------------------ */
 /* ProjectFigure: a framed screenshot, optionally opening a lightbox   */
@@ -31,6 +32,7 @@ export function ProjectFigure({
   onOpen,
   openLabel,
   priority = false,
+  lean = false,
   ratio = SHOT_RATIO,
   srcSet,
   sizes,
@@ -62,6 +64,8 @@ export function ProjectFigure({
   /** Accessible name for that button (required for it to render). */
   openLabel?: string;
   priority?: boolean;
+  /** Lean towards the pointer like a card (the page's main picture). */
+  lean?: boolean;
   /**
    * Width over height of the picture, used to reserve its box before the file
    * arrives. Pass the real one for anything that is not a landscape screenshot
@@ -109,6 +113,36 @@ export function ProjectFigure({
     </div>
   );
 
+  // The focus ring is drawn on the frame: the button fills it, and the
+  // frame's `overflow-hidden` clipped the button's own outline away, so
+  // a focused screenshot looked exactly like an unfocused one. Same ring
+  // as the global `:focus-visible` rule.
+  const frame = (
+    <div className="memory-photo relative overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-black/5 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px] dark:ring-white/5">
+      {onOpen && openLabel ? (
+        <button
+          aria-label={openLabel}
+          className="block w-full cursor-zoom-in focus-visible:outline-none"
+          onClick={onOpen}
+          type="button"
+        >
+          {picture}
+          {/* Affordance, not decoration: the frame is clickable, so say so.
+              Opacity only, and it is always painted for touch, where there
+              is no hover to reveal it; keyboard focus shows it like hover. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-card/90 text-foreground/80 shadow-sm transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100 md:group-has-[button:focus-visible]/shot:opacity-100"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </span>
+        </button>
+      ) : (
+        picture
+      )}
+    </div>
+  );
+
   return (
     <motion.figure
       className={`group/shot m-0 ${className ?? ""}`}
@@ -117,33 +151,13 @@ export function ProjectFigure({
       viewport={VIEWPORT}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {/* The focus ring is drawn on the frame: the button fills it, and the
-          frame's `overflow-hidden` clipped the button's own outline away, so
-          a focused screenshot looked exactly like an unfocused one. Same ring
-          as the global `:focus-visible` rule. */}
-      <div className="memory-photo relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out hover:border-primary/30 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px]">
-        {onOpen && openLabel ? (
-          <button
-            aria-label={openLabel}
-            className="block w-full cursor-zoom-in focus-visible:outline-none"
-            onClick={onOpen}
-            type="button"
-          >
-            {picture}
-            {/* Affordance, not decoration: the frame is clickable, so say so.
-                Opacity only, and it is always painted for touch, where there
-                is no hover to reveal it; keyboard focus shows it like hover. */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100 md:group-has-[button:focus-visible]/shot:opacity-100"
-            >
-              <Maximize2 className="h-4 w-4" />
-            </span>
-          </button>
-        ) : (
-          picture
-        )}
-      </div>
+      {lean ? (
+        <TiltSurface grow={0.012} lift={4} radius="rounded-2xl" tilt={2}>
+          {frame}
+        </TiltSurface>
+      ) : (
+        frame
+      )}
       {caption ? (
         <figcaption className="mt-3 max-w-prose text-muted-foreground text-sm leading-relaxed">
           {caption}
@@ -212,7 +226,7 @@ function LiveTestCount({
 export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
   if (!stats?.length) return null;
   return (
-    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14">
+    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 sm:flex sm:flex-wrap sm:gap-x-14">
       {stats.map((stat) => (
         <div key={stat.label}>
           {/* The label reads under the number, so the term is voiced from a
