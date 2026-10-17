@@ -3,8 +3,7 @@ import type { LocalizedContent } from "./types";
 
 export const portfolio: Record<Language, LocalizedContent> = {
   en: {
-    tagline:
-      "The site you are reading right now. Yes, it is the portfolio piece.",
+    tagline: "The site you are reading, in four languages and quick on every page.",
     description:
       "My personal portfolio: a fast React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a real prerendered HTML file per route, and a WebGL background that stays off the critical path.",
     overview:
@@ -15,7 +14,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       {
         heading: "A real file behind every URL",
         body: [
-          "The site is a single-page app, so at first every URL served the same index.html, with the home page's title, description and preview image. Google runs JavaScript and coped. Link previews do not: a project page shared on LinkedIn, Slack or WhatsApp showed up as the home page.",
+          "The site is a single-page app, so at first every URL served the same index.html, with the home page's title, description and preview image. Google runs JavaScript and coped. Link previews do not: a project page shared in a chat or on a social network showed up as the home page.",
           "After the Vite build, a prerender script now writes one HTML file per route, each with its own title, description, canonical, preview image and JSON-LD in the head. The app markup in the body is left as Vite emitted it, so React mounts as usual and there is no hydration to reason about. That is 24 files today, nine pages and one per project, plus a 404.html.",
           "With a file behind every route I could drop the catch-all rewrite in vercel.json. A rewrite can only answer 200, so every junk URL had been a soft 404. Now anything without a file gets 404.html with a real 404 status, and the build fails if the router has a route the prerender step does not cover.",
         ],
@@ -60,13 +59,13 @@ export const portfolio: Record<Language, LocalizedContent> = {
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "languages" },
-      { value: "0", label: "i18n libraries" },
+      { value: "3", label: "languages loaded on demand" },
       { value: "24", label: "prerendered routes" },
       { value: "255", label: "tests" },
     ],
   },
   de: {
-    tagline: "Die Seite, die du gerade liest. Ja, sie ist das Arbeitsbeispiel.",
+    tagline: "Die Website, die du gerade liest: vier Sprachen, jede Seite schnell geladen.",
     description:
       "Mein persönliches Portfolio: eine schnelle React-Single-Page-App mit selbst geschriebener i18n in vier Sprachen, JSON-LD auf jeder Seite, einer echten vorgerenderten HTML-Datei pro Route und einem WebGL-Hintergrund, der vom kritischen Pfad wegbleibt.",
     overview:
@@ -77,7 +76,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       {
         heading: "Hinter jeder URL eine echte Datei",
         body: [
-          "Die Seite ist eine Single-Page-App, also lieferte anfangs jede URL dieselbe index.html aus, mit Titel, Beschreibung und Vorschaubild der Startseite. Google führt JavaScript aus und kam damit zurecht. Link-Vorschauen tun das nicht: Eine Projektseite, auf LinkedIn, Slack oder WhatsApp geteilt, erschien als Startseite.",
+          "Die Seite ist eine Single-Page-App, also lieferte anfangs jede URL dieselbe index.html aus, mit Titel, Beschreibung und Vorschaubild der Startseite. Google führt JavaScript aus und kam damit zurecht. Link-Vorschauen tun das nicht: Eine Projektseite, in einem Chat oder einem sozialen Netzwerk geteilt, erschien als Startseite.",
           "Nach dem Vite-Build schreibt jetzt ein Prerender-Skript eine HTML-Datei pro Route, jede mit eigenem Titel, eigener Beschreibung, Canonical, Vorschaubild und JSON-LD im Head. Das App-Markup im Body bleibt so, wie Vite es ausgegeben hat, React startet also wie gewohnt, und es gibt keine Hydration, über die man nachdenken müsste. Heute sind das 24 Dateien, neun Seiten und eine pro Projekt, dazu eine 404.html.",
           "Mit einer Datei hinter jeder Route konnte der Catch-all-Rewrite in der vercel.json weg. Ein Rewrite kann nur mit 200 antworten, also war jede Müll-URL ein Soft-404. Jetzt bekommt alles ohne Datei die 404.html mit echtem 404-Status, und der Build bricht ab, wenn der Router eine Route kennt, die der Prerender-Schritt nicht abdeckt.",
         ],
@@ -122,13 +121,13 @@ export const portfolio: Record<Language, LocalizedContent> = {
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "Sprachen" },
-      { value: "0", label: "i18n-Libraries" },
+      { value: "3", label: "Sprachen auf Abruf geladen" },
       { value: "24", label: "vorgerenderte Routen" },
       { value: "255", label: "Tests" },
     ],
   },
   fr: {
-    tagline: "Le site que vous lisez en ce moment. Oui, c'est lui, l'échantillon.",
+    tagline: "Le site que vous lisez, en quatre langues et rapide sur chaque page.",
     description:
       "Mon portfolio personnel : une application React monopage rapide avec une i18n écrite à la main en quatre langues, des données structurées JSON-LD sur chaque page, un vrai fichier HTML prérendu par route, et un fond WebGL qui reste hors du chemin critique.",
     overview:
@@ -139,7 +138,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       {
         heading: "Un vrai fichier derrière chaque URL",
         body: [
-          "Le site est une application monopage, donc au début chaque URL servait le même index.html, avec le titre, la description et l'image d'aperçu de l'accueil. Google exécute le JavaScript et s'en sortait. Les aperçus de liens, non : une page de projet partagée sur LinkedIn, Slack ou WhatsApp s'affichait comme la page d'accueil.",
+          "Le site est une application monopage, donc au début chaque URL servait le même index.html, avec le titre, la description et l'image d'aperçu de l'accueil. Google exécute le JavaScript et s'en sortait. Les aperçus de liens, non : une page de projet partagée dans une messagerie ou sur un réseau social s'affichait comme la page d'accueil.",
           "Après le build Vite, un script de prérendu écrit maintenant un fichier HTML par route, chacun avec son propre titre, sa description, son canonique, son image d'aperçu et son JSON-LD dans le head. Le balisage de l'app dans le body reste tel que Vite l'a produit, React démarre donc normalement et il n'y a pas d'hydratation à surveiller. Cela fait 24 fichiers aujourd'hui, neuf pages et un par projet, plus un 404.html.",
           "Avec un fichier derrière chaque route, j'ai pu retirer la réécriture attrape-tout de vercel.json. Une réécriture ne peut répondre que 200, donc chaque URL parasite était une 404 douce. Désormais, tout ce qui n'a pas de fichier reçoit 404.html avec un vrai statut 404, et le build échoue si le routeur connaît une route que l'étape de prérendu ne couvre pas.",
         ],
@@ -184,13 +183,13 @@ export const portfolio: Record<Language, LocalizedContent> = {
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "langues" },
-      { value: "0", label: "bibliothèques i18n" },
+      { value: "3", label: "langues chargées à la demande" },
       { value: "24", label: "routes prérendues" },
       { value: "255", label: "tests" },
     ],
   },
   zh: {
-    tagline: "你此刻正在读的这个站。是的，它本身就是作品。",
+    tagline: "你正在读的这个网站，四种语言，每一页都打开得很快。",
     description:
       "我的个人作品集：一个快速的 React 单页应用，四种语言的 i18n 由我自己写，每页都有 JSON-LD 结构化数据，每条路由都对应一个真实的预渲染 HTML 文件，还有一层不占关键路径的 WebGL 背景。",
     overview:
@@ -200,7 +199,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
       {
         heading: "每个 URL 背后都有一个真实文件",
         body: [
-          "这个站是单页应用，所以起初每个 URL 返回的都是同一个 index.html，带着首页的标题、描述和预览图。Google 会执行 JavaScript，还能应付。链接预览不会：把一个项目页分享到 LinkedIn、Slack 或 WhatsApp，显示出来的却是首页。",
+          "这个站是单页应用，所以起初每个 URL 返回的都是同一个 index.html，带着首页的标题、描述和预览图。Google 会执行 JavaScript，还能应付。链接预览不会：把一个项目页分享到聊天软件或社交网络上，显示出来的却是首页。",
           "现在 Vite 构建完成后，一个预渲染脚本会为每条路由写一个 HTML 文件，head 里各有自己的标题、描述、canonical、预览图和 JSON-LD。body 里的应用标记保持 Vite 输出的原样，React 照常挂载，不存在需要操心的 hydration。目前一共 24 个文件：九个页面，每个项目一个，另外还有一个 404.html。",
           "每条路由都有了文件，我就能去掉 vercel.json 里的通配重写。重写只能回 200，所以每个垃圾 URL 都曾是软 404。现在凡是没有文件的路径都会以真正的 404 状态拿到 404.html；如果路由器里有预渲染步骤没覆盖的路由，构建会直接失败。",
         ],
@@ -245,7 +244,7 @@ export const portfolio: Record<Language, LocalizedContent> = {
     tags: ["React", "TypeScript", "Vite", "SEO"],
     stats: [
       { value: "4", label: "语言" },
-      { value: "0", label: "i18n 库" },
+      { value: "3", label: "种语言按需加载" },
       { value: "24", label: "预渲染路由" },
       { value: "255", label: "测试" },
     ],
