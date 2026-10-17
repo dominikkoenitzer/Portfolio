@@ -1,6 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowUpRight,
   Download,
   ExternalLink,
@@ -50,9 +49,13 @@ import {
 /** One card surface for the whole page: opaque cream, hairline, no shadow. */
 const CARD = "rounded-2xl border border-border/60 bg-card";
 
-/** How wide the hero screenshot renders, measured at each breakpoint. */
+/**
+ * How wide the main screenshot renders: the page column, which stops at
+ * 1152px (max-w-7xl less the lg gutters) and otherwise is the viewport less
+ * the gutter ladder (24, 32, 48, 64px a side).
+ */
 const HERO_SIZES =
-  "(min-width: 1280px) 455px, (min-width: 1024px) 36vw, (min-width: 640px) 574px, 90vw";
+  "(min-width: 1280px) 1152px, (min-width: 1024px) calc(100vw - 128px), (min-width: 768px) calc(100vw - 96px), (min-width: 640px) calc(100vw - 64px), calc(100vw - 48px)";
 
 /* ------------------------------------------------------------------ */
 /* Numbered section: a flat marker, a hairline and a reading body      */
@@ -286,56 +289,45 @@ const ProjectDetails = () => {
 
       <div className="min-h-screen">
         {/* ============================================================ */}
-        {/* HERO: title, tagline, actions, meta                          */}
+        {/* HERO: title, tagline, actions and the facts beside them,     */}
+        {/* then the main picture across the full column                 */}
         {/* ============================================================ */}
         <section className="mx-auto max-w-7xl px-6 pt-4 pb-12 sm:px-8 sm:pb-16 md:px-12 lg:px-16">
-          {/* Breadcrumb + back */}
-          <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
-            <nav
-              aria-label={t.breadcrumb}
-              className="flex items-center gap-2 text-muted-foreground text-sm"
-            >
-              {/* `inline-flex` is not cosmetic here: it is what the touch
-                  tap-target rule in index.css matches, so a breadcrumb is a
-                  44px target under a thumb and unchanged under a mouse. */}
-              <Link
-                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
-                to="/"
-              >
-                {t.home}
-              </Link>
-              <span aria-hidden className="text-border">
-                /
-              </span>
-              <Link
-                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
-                to="/projects"
-                {...warmOnIntent("/projects")}
-              >
-                {t.projects}
-              </Link>
-              <span aria-hidden className="text-border">
-                /
-              </span>
-              <span className="text-foreground/80">{project.title}</span>
-            </nav>
-
+          {/* `inline-flex` on the links is not cosmetic: it is what the touch
+              tap-target rule in index.css matches, so a breadcrumb is a 44px
+              target under a thumb and unchanged under a mouse. The Projects
+              crumb is the way back, so there is no separate Back link. */}
+          <nav
+            aria-label={t.breadcrumb}
+            className="mb-10 flex items-center gap-2 text-muted-foreground text-sm sm:mb-12"
+          >
             <Link
-              className="inline-flex min-h-6 items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
+              className="inline-flex items-center transition-colors hover:text-foreground"
+              to="/"
+            >
+              {t.home}
+            </Link>
+            <span aria-hidden className="text-border">
+              /
+            </span>
+            <Link
+              className="inline-flex items-center transition-colors hover:text-foreground"
               to="/projects"
               {...warmOnIntent("/projects")}
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              {t.back}
+              {t.projects}
             </Link>
-          </div>
+            <span aria-hidden className="text-border">
+              /
+            </span>
+            <span className="text-foreground/80">{project.title}</span>
+          </nav>
 
-          {/* Title and tagline left, the picture right. */}
-          <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+          {/* Title, tagline and actions on the left; the facts in a narrow
+              column on the right from `lg`, under the actions below it. */}
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-end lg:gap-16">
             <motion.div {...revealOnScroll(reduceMotion)}>
-              <p className="font-medium text-sage-deep text-sm">{projectTimeline}</p>
-
-              <h1 className="title-serif mt-5 font-bold text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
+              <h1 className="title-serif font-bold text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
                 {project.title}
               </h1>
 
@@ -405,75 +397,68 @@ const ProjectDetails = () => {
                   {project.downloadNote ?? t.downloadNote}
                 </p>
               ) : null}
-
             </motion.div>
 
-            {/* A square app icon gets the same frame as a screenshot, so both
-                modes read as one component. */}
-            {project.image ? (
-              <div className="flex justify-center lg:justify-end">
-                {project.imageIcon ? (
-                  <motion.div
-                    className={`${CARD} flex items-center justify-center p-10`}
-                    {...revealOnScroll(reduceMotion)}
-                  >
-                    <img
-                      alt={`${project.title} logo`}
-                      className="h-36 w-36 object-contain sm:h-44 sm:w-44"
-                      decoding="async"
-                      fetchPriority="high"
-                      loading="eager"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                      src={project.image}
-                    />
-                  </motion.div>
-                ) : (
-                  <ProjectFigure
-                    alt={captionFor(0) ?? shotAlt(0)}
-                    caption={captionFor(0)}
-                    className="w-full max-w-xl"
-                    layoutId="project-shot-0"
-                    onOpen={() => openLightbox(0)}
-                    openLabel={shotLabel(0)}
-                    priority
-                    /* Measured in a browser at every breakpoint, not estimated:
-                       270px at 320 through 574px where the column caps, 348px
-                       once the two-column layout arrives at 1024, and 455px
-                       from 1280 up. A 1x display now takes the 800px card file
-                       the catalogue already ships and a retina one still takes
-                       the full shot, so nobody gets a soft screenshot. */
-                    sizes={HERO_SIZES}
-                    src={project.image}
-                    srcSet={projectCardSrcSet(project.image, project.imageWidth)}
-                  />
-                )}
-              </div>
-            ) : null}
+            {/* The facts, once. Two columns under a hairline on a phone, one
+                column beside the title from `lg`, where the hairline turns
+                to stand on its left. */}
+            <motion.dl
+              className="grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 lg:grid-cols-1 lg:gap-y-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
+              {...revealOnScroll(reduceMotion)}
+            >
+              {specRows.map((row) => (
+                <div key={row.label}>
+                  <dt className="font-medium text-muted-foreground text-sm">
+                    {row.label}
+                  </dt>
+                  <dd className="mt-1.5 text-foreground/90 text-sm leading-relaxed">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </motion.dl>
           </div>
 
-          {/* Spec rail. It has to live here rather than only in the desktop
-              aside, or a phone gets the title and the buttons and none of the
-              facts. */}
-          <motion.dl
-            className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14"
-            {...revealOnScroll(reduceMotion)}
-          >
-            {specRows.map((row) => (
-              <div className="max-w-xs" key={row.label}>
-                <dt className="font-medium text-muted-foreground text-sm">
-                  {row.label}
-                </dt>
-                <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
-                  {row.value}
-                </dd>
-              </div>
-            ))}
-          </motion.dl>
+          {/* The main picture at the width of the page column: it is what
+              the project looks like, so it gets the room. A square app icon
+              keeps its small frame. */}
+          {project.image ? (
+            <div className="mt-12 sm:mt-14">
+              {project.imageIcon ? (
+                <motion.div
+                  className={`${CARD} flex items-center justify-center p-10`}
+                  {...revealOnScroll(reduceMotion)}
+                >
+                  <img
+                    alt={`${project.title} logo`}
+                    className="h-36 w-36 object-contain sm:h-44 sm:w-44"
+                    decoding="async"
+                    fetchPriority="high"
+                    loading="eager"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                    src={project.image}
+                  />
+                </motion.div>
+              ) : (
+                <ProjectFigure
+                  alt={`${project.title} screenshot`}
+                  caption={captionFor(0)}
+                  layoutId="project-shot-0"
+                  onOpen={() => openLightbox(0)}
+                  openLabel={shotLabel(0)}
+                  priority
+                  sizes={HERO_SIZES}
+                  src={project.image}
+                  srcSet={projectCardSrcSet(project.image, project.imageWidth)}
+                />
+              )}
+            </div>
+          ) : null}
 
           {project.stats?.length ? (
-            <div className="mt-10">
+            <div className="mt-12 sm:mt-14">
               <StatStrip stats={project.stats} />
             </div>
           ) : null}
