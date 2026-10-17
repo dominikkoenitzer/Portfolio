@@ -118,7 +118,7 @@ export const en = {
     subheading: "Things I've built, most of them with the source.",
     disclosureEyebrow: "Before you scroll",
     disclosureBody:
-      "This page is only the public-facing sliver of what I've built. A few other projects sit behind NDAs, in private repos, or on client infrastructure I'd rather not put on display, so they don't appear here. Everything you see below is personal: small things I tinker on in the evenings and on weekends, made out of curiosity and the quiet hope of making someone's day a fraction lighter. If one of them happens to do that for you, mission accomplished.",
+      "Everything below is personal: small things I build in the evenings and on weekends, out of curiosity and the hope of making someone's day a little lighter. Client work and projects under NDA stay private.",
     source: "Source",
     sourcePrivate: "The source code for this project is private.",
     live: "Live",
