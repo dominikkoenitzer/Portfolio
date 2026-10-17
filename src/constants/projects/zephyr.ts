@@ -14,7 +14,7 @@ const streakCode = `export function activeStreak(streak, today = new Date()) {
 
 export const zephyr: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "A to-do list and a focus timer, all yours and all offline.",
+    tagline: "A to-do list and a focus timer that work offline, no account needed.",
     description:
       "Zephyr is a local-first productivity PWA: a to-do list and a Pomodoro focus timer in one place. There is no login and no backend, and nothing you enter ever leaves your browser.",
     overview:
@@ -83,13 +83,13 @@ export const zephyr: Record<Language, LocalizedContent> = {
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
       { value: "2", label: "tools, on purpose" },
-      { value: "0", label: "backend" },
+      { value: "PWA", label: "installs and works offline" },
       { value: "100%", label: "on-device" },
       { value: "207", label: "tests", liveTests: "zephyr" },
     ],
   },
   de: {
-    tagline: "Eine To-do-Liste und ein Fokus-Timer, alles deins und alles offline.",
+    tagline: "Eine To-do-Liste und ein Fokus-Timer, die offline laufen, ganz ohne Konto.",
     description:
       "Zephyr ist eine local-first Produktivitäts-PWA: eine To-do-Liste und ein Pomodoro-Timer an einem Ort. Es gibt kein Login und kein Backend, und nichts, was du eingibst, verlässt je deinen Browser.",
     overview:
@@ -158,13 +158,13 @@ export const zephyr: Record<Language, LocalizedContent> = {
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
       { value: "2", label: "Tools, mit Absicht" },
-      { value: "0", label: "Backend" },
+      { value: "PWA", label: "installierbar, läuft offline" },
       { value: "100%", label: "auf dem Gerät" },
       { value: "207", label: "Tests", liveTests: "zephyr" },
     ],
   },
   fr: {
-    tagline: "Une liste de tâches et un minuteur de focus, tout à vous et tout hors ligne.",
+    tagline: "Une liste de tâches et un minuteur de focus qui marchent hors ligne, sans compte.",
     description:
       "Zephyr est une PWA de productivité local-first : une liste de tâches et un minuteur Pomodoro au même endroit. Il n'y a ni connexion ni backend, et rien de ce que vous saisissez ne quitte votre navigateur.",
     overview:
@@ -233,13 +233,13 @@ export const zephyr: Record<Language, LocalizedContent> = {
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
       { value: "2", label: "outils, à dessein" },
-      { value: "0", label: "backend" },
+      { value: "PWA", label: "s'installe et marche hors ligne" },
       { value: "100%", label: "sur l'appareil" },
       { value: "207", label: "tests", liveTests: "zephyr" },
     ],
   },
   zh: {
-    tagline: "一份待办清单，一个专注计时器，全归你，也全离线。",
+    tagline: "待办清单加专注计时器，离线可用，不用注册账号。",
     description:
       "Zephyr 是一款本地优先的生产力 PWA：待办清单和番茄钟计时器集于一处。它不用登录，也没有后端，你输入的任何内容都不会离开你的浏览器。",
     overview:
@@ -308,7 +308,7 @@ export const zephyr: Record<Language, LocalizedContent> = {
     tags: ["React", "Vite", "Tailwind CSS", "Radix UI", "PWA"],
     stats: [
       { value: "2", label: "工具，有意为之" },
-      { value: "0", label: "后端" },
+      { value: "PWA", label: "可安装，离线可用" },
       { value: "100%", label: "本地存储" },
       { value: "207", label: "测试", liveTests: "zephyr" },
     ],
