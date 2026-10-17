@@ -26,7 +26,6 @@ import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
-import { TiltDepth, TiltSurface } from "../effects/tilt-surface";
 import { PrivateSource } from "./PrivateSource";
 
 type TypeKey = "all" | "web" | "desktop";
@@ -421,10 +420,7 @@ export function ProjectsSection() {
                   key={project.slug}
                   variants={REVEAL}
                 >
-                  {/* Wide cards lean only a little: the same angle reads
-                      three times as strong across the full column. */}
-                  <TiltSurface className="md:h-full" grow={0.012} lift={4} tilt={1.6}>
-                  <div className={`${CARD} memory-photo grid overflow-hidden md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
+                  <div className={`${CARD} grid overflow-hidden transition-shadow duration-200 ease-out hover:ring-primary/30 md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
                     {/* Visual panel: the whole capture, inset on the panel
                         like a print on a table. Equal rows make the panel
                         taller than 16:10 from `md` up, and a cover crop there
@@ -447,10 +443,9 @@ export function ProjectsSection() {
                            browser will not start a lazy image until layout has
                            told it the box is on screen. The rest stay lazy. */
                         <div className="w-full overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 dark:ring-white/5">
-                        <TiltDepth depth={6}>
                         <img
                           alt={`${project.title} screenshot`}
-                          className="aspect-16/10 w-full scale-[1.03] object-cover object-top"
+                          className="aspect-16/10 w-full object-cover object-top"
                           decoding="async"
                           fetchPriority={cardIndex === 0 ? "high" : "auto"}
                           loading={cardIndex === 0 ? "eager" : "lazy"}
@@ -464,7 +459,6 @@ export function ProjectsSection() {
                             project.imageWidth,
                           )}
                         />
-                        </TiltDepth>
                         </div>
                       ) : null}
 
@@ -486,7 +480,7 @@ export function ProjectsSection() {
 
                     {/* Content panel: title, date, tagline, description, tags,
                         actions, in that order and nowhere else. */}
-                    <div className="flex flex-col p-5 sm:p-6">
+                    <div className="flex flex-col justify-center p-5 sm:p-6">
                       <h2 className="title-serif font-semibold text-xl leading-tight sm:text-2xl">
                         {project.title}
                       </h2>
@@ -511,7 +505,7 @@ export function ProjectsSection() {
                       {/* Three actions, or two when the project runs only
                           locally and has nothing to open or install. */}
                       <div
-                        className={`mt-auto grid grid-cols-2 gap-2 pt-2 ${
+                        className={`grid grid-cols-2 gap-2 ${
                           project.liveUrl || project.downloadUrl
                             ? "sm:grid-cols-3"
                             : ""
@@ -586,7 +580,6 @@ export function ProjectsSection() {
                       </div>
                     </div>
                   </div>
-                  </TiltSurface>
                 </motion.article>
               ))}
             </motion.div>
