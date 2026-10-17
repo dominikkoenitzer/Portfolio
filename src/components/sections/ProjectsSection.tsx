@@ -26,6 +26,7 @@ import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
+import { TiltDepth, TiltSurface } from "../effects/tilt-surface";
 import { PrivateSource } from "./PrivateSource";
 
 type TypeKey = "all" | "web" | "desktop";
@@ -45,9 +46,11 @@ const PARAM_DEFAULTS: Record<string, string> = {
  */
 const isDesktopApp = (project: PortfolioProject) => project.platform === "desktop";
 
-/** One card surface for the whole page: opaque cream, hairline, no shadow. */
-const CARD =
-  "rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out";
+/**
+ * One card surface for the whole page: opaque cream, a hairline ring instead
+ * of a border, so the edge reads without drawing a box around everything.
+ */
+const CARD = "rounded-3xl bg-card ring-1 ring-border/50";
 
 /**
  * Every action in a card's footer row is a link, not a button, so they cannot
@@ -55,10 +58,13 @@ const CARD =
  * radius and focus behaviour; the variant only supplies the surface.
  */
 const ACTION_BASE =
-  "press inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border px-3 font-medium text-sm";
+  "press inline-flex h-11 items-center justify-center gap-1.5 rounded-full px-4 font-medium text-sm transition-colors duration-200 ease-out";
 
-const TOOLBAR =
-  "flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-2 lg:flex-row lg:items-center";
+/** Quiet fill for the secondary actions; the primary one is tinted violet. */
+const ACTION_QUIET = "bg-secondary/70 text-foreground/85 hover:bg-secondary";
+const ACTION_MAIN = "bg-primary/10 text-primary hover:bg-primary/15";
+
+const TOOLBAR = "flex flex-col gap-3 lg:flex-row lg:items-center";
 
 /** The house keyboard-focus ring (same one the buttons and Contact use). */
 const FOCUS_RING =
@@ -114,7 +120,7 @@ function SegmentedControl<Key extends string>({
       // width from `sm` up where it sits beside the search field. The track is
       // a shade darker than the toolbar panel so the selected option reads as
       // sitting on top of it rather than floating on the page.
-      className="flex w-full rounded-xl border border-border/60 bg-secondary/60 p-1 sm:w-auto"
+      className="flex w-full rounded-full bg-secondary/60 p-1 sm:w-auto"
       onKeyDown={onKeyDown}
       role="radiogroup"
     >
@@ -123,7 +129,7 @@ function SegmentedControl<Key extends string>({
         return (
           <button
             aria-checked={active}
-            className={`press relative h-9 flex-1 rounded-lg px-3.5 font-medium text-sm sm:flex-none ${FOCUS_RING} ${
+            className={`press relative h-9 flex-1 rounded-full px-4 font-medium text-sm sm:flex-none ${FOCUS_RING} ${
               active
                 ? "text-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -140,7 +146,7 @@ function SegmentedControl<Key extends string>({
             {active ? (
               <motion.span
                 aria-hidden
-                className="absolute inset-0 rounded-lg bg-primary/10"
+                className="absolute inset-0 rounded-full bg-card shadow-sm"
                 layoutId={reduceMotion ? undefined : pillId}
                 transition={SPRING_FLUID}
               />
@@ -273,7 +279,7 @@ export function ProjectsSection() {
               four independent reveals racing each other. */}
           <motion.div {...revealOnScroll(reduceMotion, stagger())}>
             <motion.div
-              className="mb-10 max-w-3xl border-l-2 border-primary/35 pl-5 sm:pl-6"
+              className="mb-10 max-w-2xl"
               variants={REVEAL}
             >
               <p className="mb-2 font-semibold text-foreground text-sm">{t.disclosureEyebrow}</p>
@@ -299,7 +305,7 @@ export function ProjectsSection() {
                       and keep the placeholder at full text contrast. */}
                   <input
                     aria-label={t.searchPlaceholder}
-                    className={`h-11 w-full rounded-xl border border-border/60 bg-background pr-11 pl-10 text-sm transition-colors duration-200 ease-out placeholder:text-muted-foreground focus:border-primary/40 ${FOCUS_RING}`}
+                    className={`h-11 w-full rounded-full bg-card pr-11 pl-10 text-sm ring-1 ring-border/50 transition-shadow duration-200 ease-out placeholder:text-muted-foreground focus:ring-primary/40 ${FOCUS_RING}`}
                     onChange={(event) => updateParams({ q: event.target.value })}
                     placeholder={t.searchPlaceholder}
                     type="text"
@@ -316,11 +322,6 @@ export function ProjectsSection() {
                     </button>
                   ) : null}
                 </div>
-
-                <span
-                  aria-hidden
-                  className="hidden h-7 w-px shrink-0 bg-border lg:block"
-                />
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                   <SegmentedControl
@@ -416,18 +417,21 @@ export function ProjectsSection() {
             >
               {visible.map((project, cardIndex) => (
                 <motion.article
-                  className={`${CARD} memory-photo group overflow-hidden hover:border-primary/30`}
+                  className="md:h-full"
                   key={project.slug}
                   variants={REVEAL}
                 >
-                  <div className="grid md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+                  {/* Wide cards lean only a little: the same angle reads
+                      three times as strong across the full column. */}
+                  <TiltSurface className="md:h-full" grow={0.012} lift={4} tilt={1.6}>
+                  <div className={`${CARD} memory-photo grid overflow-hidden md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]`}>
                     {/* Visual panel: the whole capture, inset on the panel
                         like a print on a table. Equal rows make the panel
                         taller than 16:10 from `md` up, and a cover crop there
                         cut the sides off every wide screenshot; the picture
                         keeps its own ratio and the panel takes the rest.
                         Naming happens once, in the content column. */}
-                    <figure className="m-0 flex items-center justify-center border-border/60 border-b bg-secondary/40 p-4 sm:p-5 md:border-r md:border-b-0 lg:p-6">
+                    <figure className="m-0 flex items-center justify-center bg-secondary/40 p-4 sm:p-5 lg:p-6">
                       {project.image && !project.imageIcon ? (
                         /* Two candidates, not one. The box is 534px wide past
                            1280 and never grows, so a 1x display was decoding a
@@ -442,9 +446,11 @@ export function ProjectsSection() {
                            `loading="lazy"` costs it a round trip, because the
                            browser will not start a lazy image until layout has
                            told it the box is on screen. The rest stay lazy. */
+                        <div className="w-full overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 dark:ring-white/5">
+                        <TiltDepth depth={6}>
                         <img
                           alt={`${project.title} screenshot`}
-                          className="aspect-16/10 w-full rounded-lg border border-border/60 object-cover object-top"
+                          className="aspect-16/10 w-full scale-[1.03] object-cover object-top"
                           decoding="async"
                           fetchPriority={cardIndex === 0 ? "high" : "auto"}
                           loading={cardIndex === 0 ? "eager" : "lazy"}
@@ -458,6 +464,8 @@ export function ProjectsSection() {
                             project.imageWidth,
                           )}
                         />
+                        </TiltDepth>
+                        </div>
                       ) : null}
 
                       {project.imageIcon && project.image ? (
@@ -490,14 +498,11 @@ export function ProjectsSection() {
                         {isDesktopApp(project) ? t.filterDesktop : t.filterWeb}
                       </p>
 
-                      <p className="mt-4 font-medium text-base text-foreground/90 leading-snug">
+                      <p className="mt-4 text-base text-foreground/85 leading-snug">
                         {project.tagline}
                       </p>
-                      <p className="mt-2.5 text-muted-foreground text-sm leading-relaxed">
-                        {project.description}
-                      </p>
 
-                      <div className="mt-5 mb-6 flex flex-wrap gap-1.5">
+                      <div className="mt-4 mb-6 flex flex-wrap gap-1.5">
                         {project.tags.map((tag) => (
                           <TechBadge key={tag} name={tag} />
                         ))}
@@ -506,7 +511,7 @@ export function ProjectsSection() {
                       {/* Three actions, or two when the project runs only
                           locally and has nothing to open or install. */}
                       <div
-                        className={`mt-auto grid grid-cols-2 gap-2 border-border/60 border-t pt-4 ${
+                        className={`mt-auto grid grid-cols-2 gap-2 pt-2 ${
                           project.liveUrl || project.downloadUrl
                             ? "sm:grid-cols-3"
                             : ""
@@ -518,7 +523,7 @@ export function ProjectsSection() {
                               "{name}",
                               project.title,
                             )}
-                            className={`${ACTION_BASE} col-span-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 sm:col-span-1`}
+                            className={`${ACTION_BASE} ${ACTION_MAIN} col-span-2 sm:col-span-1`}
                             href={project.downloadUrl}
                             rel="noopener noreferrer"
                             target="_blank"
@@ -532,7 +537,7 @@ export function ProjectsSection() {
                               "{name}",
                               project.title,
                             )}
-                            className={`${ACTION_BASE} col-span-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 sm:col-span-1`}
+                            className={`${ACTION_BASE} ${ACTION_MAIN} col-span-2 sm:col-span-1`}
                             href={project.liveUrl}
                             rel="noopener noreferrer"
                             target="_blank"
@@ -544,7 +549,7 @@ export function ProjectsSection() {
                         {project.sourcePrivate ? (
                           <PrivateSource>
                             <button
-                              className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
+                              className={`${ACTION_BASE} ${ACTION_QUIET}`}
                               type="button"
                             >
                               <Lock className="h-3.5 w-3.5" />
@@ -557,7 +562,7 @@ export function ProjectsSection() {
                               "{name}",
                               project.title,
                             )}
-                            className={`${ACTION_BASE} border-border/60 hover:bg-secondary/60`}
+                            className={`${ACTION_BASE} ${ACTION_QUIET}`}
                             href={project.repoUrl}
                             rel="noopener noreferrer"
                             target="_blank"
@@ -571,7 +576,7 @@ export function ProjectsSection() {
                             "{name}",
                             project.title,
                           )}
-                          className={`${ACTION_BASE} border-border/60 text-primary hover:border-primary/30`}
+                          className={`${ACTION_BASE} ${ACTION_QUIET}`}
                           to={`/projects/${project.slug}`}
                           {...warmOnIntent(`/projects/${project.slug}`)}
                         >
@@ -581,6 +586,7 @@ export function ProjectsSection() {
                       </div>
                     </div>
                   </div>
+                  </TiltSurface>
                 </motion.article>
               ))}
             </motion.div>
