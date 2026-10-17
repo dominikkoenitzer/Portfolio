@@ -73,6 +73,7 @@ function FeatureSection({
   children: ReactNode;
 }) {
   const reduceMotion = useReducedMotion();
+  const { language } = useLanguage();
   return (
     <motion.section
       id={id}
@@ -93,7 +94,15 @@ function FeatureSection({
         >
           {String(index).padStart(2, "0")}
         </span>
-        <h2 className="title-serif font-bold text-2xl leading-tight sm:text-3xl">
+        {/* English headings break between words. The site-wide
+            `hyphens: auto` is there for long German and French compounds,
+            and in English it split headings such as "sen-tence" on a
+            phone. */}
+        <h2
+          className={`title-serif text-balance font-bold text-2xl leading-tight sm:text-3xl ${
+            language === "en" ? "hyphens-manual" : ""
+          }`}
+        >
           {title}
         </h2>
       </div>
