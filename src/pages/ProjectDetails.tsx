@@ -8,7 +8,9 @@ import {
 import { Github } from "@/components/ui/github-icon";
 import { useLenis } from "lenis/react";
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
+import { readVariant } from "@/lib/project-variant";
+import { ProjectVariantView } from "./project-variants";
 import { SEO } from "@/components/seo";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
@@ -269,6 +271,9 @@ const ProjectDetails = () => {
   const t = translations[language].projectDetails;
   const seoSuffix = translations[language].seo.projectDetailsKeywordsSuffix;
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
+  // `?v=a|b|c` shows one of three layouts under consideration.
+  const [searchParams] = useSearchParams();
+  const variant = readVariant(searchParams.get("v"));
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   // Which picture the viewer was opened from, for the grow-from-thumbnail
@@ -416,6 +421,20 @@ const ProjectDetails = () => {
         url={projectUrl}
       />
 
+      {variant ? (
+        <ProjectVariantView
+          actions={<ProjectActions project={project} />}
+          altFor={shotAlt}
+          captionFor={captionFor}
+          facts={specRows}
+          next={otherProjects}
+          open={openLightbox}
+          openLabelFor={shotLabel}
+          pictures={galleryImages}
+          project={project}
+          variant={variant}
+        />
+      ) : (
       <div className="min-h-screen">
         {/* ============================================================ */}
         {/* HERO: title, tagline, actions and the facts beside them,     */}
@@ -798,6 +817,7 @@ const ProjectDetails = () => {
           </motion.section>
         </div>
       </div>
+      )}
 
       <AnimatePresence>
         {lightboxIndex !== null && galleryImages.length > 0 ? (
