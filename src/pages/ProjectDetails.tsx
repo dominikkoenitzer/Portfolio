@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Github } from "@/components/ui/github-icon";
 import { useLenis } from "lenis/react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { TechBadge } from "@/components/ui/tech-badge";
@@ -102,6 +102,48 @@ function FeatureSection({
   );
 }
 
+/** A quiet text link in the rail; the hero carries the full buttons. */
+const RAIL_LINK =
+  "inline-flex items-center gap-2 py-1 text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground";
+
+/**
+ * Which numbered section the reader is in: the last one whose top has passed
+ * a line a third of the way down the viewport. Measured on scroll, at most
+ * once a frame; the page glides on Lenis, which still moves the window, so
+ * the native scroll event fires as it goes.
+ */
+function useActiveSection(count: number) {
+  const [active, setActive] = useState("section-1");
+  useEffect(() => {
+    if (count < 2) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const line = window.innerHeight / 3;
+      let current = "section-1";
+      for (let index = 1; index <= count; index += 1) {
+        const section = document.getElementById(`section-${index}`);
+        if (section && section.getBoundingClientRect().top <= line) {
+          current = `section-${index}`;
+        }
+      }
+      setActive(current);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(measure);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [count]);
+  return active;
+}
+
 /* A label above a group in the links rail: plain words at reading size, set
    apart by weight, not by capitals and letter-spacing. */
 function RailLabel({ children }: { children: ReactNode }) {
@@ -177,6 +219,10 @@ const ProjectDetails = () => {
     window.setTimeout(once, 350);
   };
   const lenis = useLenis();
+  // Overview plus one per case-study section, numbered from 1 like the page.
+  const activeSection = useActiveSection(
+    project ? project.sections.length + 1 : 0,
+  );
 
   if (!project) {
     return <Navigate replace to="/projects" />;
@@ -527,120 +573,111 @@ const ProjectDetails = () => {
               ))}
             </article>
 
-            {/* -------- Sticky links rail. The facts are in the hero spec
-                    rail; repeating them here only doubled the page. -------- */}
+            {/* -------- Sticky rail: where the reader is, then the links.
+                    The hero has the full buttons; here they are quiet text
+                    links, so the first screen does not show them twice. -------- */}
             <aside className="hidden lg:block">
               <div className={`sticky top-28 w-64 ${CARD} p-6`}>
-                <RailLabel>{t.links}</RailLabel>
-                <div className="mt-4 flex flex-col gap-2">
-                  {project.downloadUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="cta"
-                    >
-                      <a
-                        href={project.downloadUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <Download className="h-4 w-4" />
-                        {t.download}
-                      </a>
-                    </Button>
-                  ) : project.liveUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="cta"
-                    >
-                      <a
-                        href={project.liveUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        {t.visitSite}
-                      </a>
-                    </Button>
-                  ) : null}
-                  {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="soft"
-                    >
-                      <a
-                        href={project.downloadPage}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        {t.downloadPage}
-                      </a>
-                    </Button>
-                  ) : null}
-                  {project.sourcePrivate ? (
-                    <PrivateSource>
-                      <Button
-                        className="w-full justify-start rounded-lg"
-                        size="sm"
-                        type="button"
-                        variant="soft"
-                      >
-                        <Lock className="h-4 w-4" />
-                        {t.sourceCode}
-                      </Button>
-                    </PrivateSource>
-                  ) : (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="soft"
-                    >
-                      <a
-                        href={project.repoUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <Github className="h-4 w-4" />
-                        {t.sourceCode}
-                      </a>
-                    </Button>
-                  )}
-                </div>
-
                 {outline.length > 1 ? (
-                  <nav
-                    aria-label={t.onThisPage}
-                    className="mt-6 border-border/60 border-t pt-5"
-                  >
+                  <nav aria-label={t.onThisPage}>
                     <RailLabel>{t.onThisPage}</RailLabel>
                     <ol className="mt-3 space-y-1">
-                      {outline.map((entry, index) => (
-                        <li key={entry.id}>
-                          <button
-                            className="flex w-full gap-2.5 rounded-md py-1 text-left text-muted-foreground text-sm leading-snug transition-colors duration-200 ease-out hover:text-foreground"
-                            onClick={() => jumpTo(entry.id)}
-                            type="button"
-                          >
-                            <span
-                              aria-hidden
-                              className="accent-jp w-6 shrink-0 tabular-nums"
+                      {outline.map((entry, index) => {
+                        const current = entry.id === activeSection;
+                        return (
+                          <li key={entry.id}>
+                            <button
+                              aria-current={current ? "location" : undefined}
+                              className={`flex w-full gap-2.5 rounded-md py-1 text-left text-sm leading-snug transition-colors duration-200 ease-out hover:text-foreground ${
+                                current ? "text-foreground" : "text-muted-foreground"
+                              }`}
+                              onClick={() => jumpTo(entry.id)}
+                              type="button"
                             >
-                              {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <span>{entry.heading}</span>
-                          </button>
-                        </li>
-                      ))}
+                              <span
+                                aria-hidden
+                                className={`accent-jp w-6 shrink-0 tabular-nums transition-colors duration-200 ease-out ${
+                                  current ? "text-primary" : ""
+                                }`}
+                              >
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
+                              <span>{entry.heading}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ol>
                   </nav>
                 ) : null}
+
+                <div
+                  className={
+                    outline.length > 1 ? "mt-6 border-border/60 border-t pt-5" : ""
+                  }
+                >
+                  <RailLabel>{t.links}</RailLabel>
+                  <ul className="mt-3 space-y-1 text-sm">
+                    {project.downloadUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.downloadUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {t.download}
+                        </a>
+                      </li>
+                    ) : project.liveUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.liveUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          {t.visitSite}
+                        </a>
+                      </li>
+                    ) : null}
+                    {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.downloadPage}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          {t.downloadPage}
+                        </a>
+                      </li>
+                    ) : null}
+                    <li>
+                      {project.sourcePrivate ? (
+                        <PrivateSource>
+                          <button className={RAIL_LINK} type="button">
+                            <Lock className="h-3.5 w-3.5" />
+                            {t.sourceCode}
+                          </button>
+                        </PrivateSource>
+                      ) : (
+                        <a
+                          className={RAIL_LINK}
+                          href={project.repoUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <Github className="h-3.5 w-3.5" />
+                          {t.sourceCode}
+                        </a>
+                      )}
+                    </li>
+                  </ul>
+                </div>
               </div>
             </aside>
           </div>
