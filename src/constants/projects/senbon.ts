@@ -16,7 +16,7 @@ const ADDRESS_CODE = `const visitorAddress = async (): Promise<string> => {
 
 export const senbon: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "A journal that refuses to be found on Google. On purpose.",
+    tagline: "My markdown journal, kept out of search engines on purpose.",
     description:
       "Senbon is my markdown journal: plain files with four frontmatter keys, rendered into an unhurried reading page. It runs without a CMS or third-party trackers, and every response carries noindex.",
     overview:
@@ -51,7 +51,7 @@ export const senbon: Record<Language, LocalizedContent> = {
       {
         heading: "The rate limit counts in the database, per hashed visitor",
         body: [
-          "One signature per visitor every 30 seconds, counted against the entries table itself, so the limit survives serverless instances starting and stopping. The visitor address is stored only as an HMAC keyed by a server secret, so the table holds nothing that leads back to an address.",
+          "One signature per visitor every 30 seconds, counted against the entries table itself, so the limit survives serverless instances starting and stopping. The check and the insert run in one database function under a lock per visitor, so a burst of parallel submissions cannot all slip past it. The visitor address is stored only as an HMAC keyed by a server secret, so the table holds nothing that leads back to an address.",
           "The address comes from the platform's x-real-ip header, or the right-most hop of x-forwarded-for. The left-most entries are whatever the client sent, and keying on them would let a script send a new value per request. A request with no usable address shares one bucket with every other such request. That rule exists because the limiter once failed open when the address was missing.",
           "Moderation is a password-gated admin page with a signed session cookie. Whether new signatures go straight onto the wall or wait for approval is a switch stored in the database, read at the moment of writing, and the confirmation says which of the two actually happened.",
         ],
@@ -76,14 +76,14 @@ export const senbon: Record<Language, LocalizedContent> = {
     ],
     tags: ["Next.js", "React 19", "Markdown", "Journal"],
     stats: [
-      { value: "0", label: "third-party trackers" },
+      { value: "21", label: "AI crawlers turned away" },
       { value: "4", label: "frontmatter keys" },
       { value: "3", label: "CSS layers" },
       { value: "noindex", label: "on purpose" },
     ],
   },
   de: {
-    tagline: "Ein Journal, das sich weigert, bei Google zu landen. Mit Absicht.",
+    tagline: "Mein Markdown-Journal, mit Absicht aus allen Suchmaschinen herausgehalten.",
     description:
       "Senbon ist mein Markdown-Journal: einfache Dateien mit vier Frontmatter-Feldern, gerendert zu einer Leseseite ohne Eile. Es läuft ohne CMS und ohne Fremdtracker, und jede Antwort trägt noindex.",
     overview:
@@ -118,7 +118,7 @@ export const senbon: Record<Language, LocalizedContent> = {
       {
         heading: "Das Rate-Limit zählt in der Datenbank, pro gehashtem Besucher",
         body: [
-          "Ein Eintrag pro Besucher alle 30 Sekunden, gezählt direkt in der Tabelle mit den Einträgen, damit die Grenze auch hält, wenn Serverless-Instanzen starten und verschwinden. Die Adresse des Besuchers wird nur als HMAC mit einem Server-Secret gespeichert, in der Tabelle steht also nichts, das zu einer Adresse zurückführt.",
+          "Ein Eintrag pro Besucher alle 30 Sekunden, gezählt direkt in der Tabelle mit den Einträgen, damit die Grenze auch hält, wenn Serverless-Instanzen starten und verschwinden. Prüfung und Eintrag laufen in einer einzigen Datenbankfunktion unter einer Sperre pro Besucher, damit eine Reihe paralleler Einträge nicht gemeinsam durchrutscht. Die Adresse des Besuchers wird nur als HMAC mit einem Server-Secret gespeichert, in der Tabelle steht also nichts, das zu einer Adresse zurückführt.",
           "Die Adresse kommt aus dem x-real-ip-Header der Plattform oder aus dem letzten Eintrag von x-forwarded-for. Die vorderen Einträge schickt der Client selbst, und wer darauf schlüsselt, lässt ein Skript bei jeder Anfrage einen neuen Wert mitschicken. Anfragen ohne brauchbare Adresse teilen sich alle einen gemeinsamen Topf. Diese Regel gibt es, weil das Limit einmal ganz offen stand, als die Adresse fehlte.",
           "Moderiert wird auf einer passwortgeschützten Admin-Seite mit signiertem Session-Cookie. Ob neue Einträge direkt an die Wand gehen oder auf Freigabe warten, ist ein Schalter in der Datenbank, der im Moment des Schreibens gelesen wird, und die Bestätigung sagt, welcher der beiden Fälle wirklich eingetreten ist.",
         ],
@@ -143,14 +143,14 @@ export const senbon: Record<Language, LocalizedContent> = {
     ],
     tags: ["Next.js", "React 19", "Markdown", "Journal"],
     stats: [
-      { value: "0", label: "Fremdtracker" },
+      { value: "21", label: "KI-Crawler abgewiesen" },
       { value: "4", label: "Frontmatter-Felder" },
       { value: "3", label: "CSS-Schichten" },
       { value: "noindex", label: "mit Absicht" },
     ],
   },
   fr: {
-    tagline: "Un journal qui refuse d'être trouvé sur Google. Exprès.",
+    tagline: "Mon journal en markdown, tenu exprès à l'écart des moteurs de recherche.",
     description:
       "Senbon est mon journal en markdown : de simples fichiers avec quatre clés de frontmatter, rendus en une page de lecture sans hâte. Il tourne sans CMS ni traqueur tiers, et chaque réponse porte noindex.",
     overview:
@@ -185,7 +185,7 @@ export const senbon: Record<Language, LocalizedContent> = {
       {
         heading: "La limite de débit compte dans la base, par visiteur haché",
         body: [
-          "Une signature par visiteur toutes les 30 secondes, comptée directement dans la table des entrées, pour que la limite tienne quand des instances serverless démarrent et s'arrêtent. L'adresse du visiteur n'est stockée que sous forme de HMAC avec un secret serveur, et la table ne contient rien qui ramène à une adresse.",
+          "Une signature par visiteur toutes les 30 secondes, comptée directement dans la table des entrées, pour que la limite tienne quand des instances serverless démarrent et s'arrêtent. La vérification et l'insertion tournent dans une seule fonction de la base, sous un verrou par visiteur, pour qu'une rafale de signatures parallèles ne puisse pas passer en bloc. L'adresse du visiteur n'est stockée que sous forme de HMAC avec un secret serveur, et la table ne contient rien qui ramène à une adresse.",
           "L'adresse vient de l'en-tête x-real-ip de la plateforme, ou du saut le plus à droite de x-forwarded-for. Les entrées de gauche sont ce que le client a envoyé, et s'appuyer dessus laisserait un script envoyer une nouvelle valeur à chaque requête. Une requête sans adresse exploitable partage un seul compteur avec toutes les autres dans le même cas. Cette règle existe parce que la limite s'est déjà ouverte en grand quand l'adresse manquait.",
           "La modération se fait sur une page d'administration protégée par mot de passe, avec un cookie de session signé. Que les nouvelles signatures aillent directement sur le mur ou attendent une validation, c'est un interrupteur stocké dans la base, lu au moment de l'écriture, et la confirmation dit lequel des deux cas s'est réellement produit.",
         ],
@@ -210,14 +210,14 @@ export const senbon: Record<Language, LocalizedContent> = {
     ],
     tags: ["Next.js", "React 19", "Markdown", "Journal"],
     stats: [
-      { value: "0", label: "traqueurs tiers" },
+      { value: "21", label: "crawlers d'IA refoulés" },
       { value: "4", label: "clés de frontmatter" },
       { value: "3", label: "couches CSS" },
       { value: "noindex", label: "exprès" },
     ],
   },
   zh: {
-    tagline: "一本拒绝被谷歌搜到的日志。有意为之。",
+    tagline: "我的 markdown 日志，故意不让任何搜索引擎收录。",
     description:
       "Senbon 是我的 markdown 日志：普通文件，四个 frontmatter 字段，渲染成一页不催人的阅读页。它不用 CMS，也没有第三方追踪，每个响应都带着 noindex。",
     overview:
@@ -252,7 +252,7 @@ export const senbon: Record<Language, LocalizedContent> = {
       {
         heading: "频率限制记在数据库里，按哈希后的访客计算",
         body: [
-          "每位访客每 30 秒只能签一次，直接按留言表本身来计数，这样 serverless 实例起起停停，限制依然有效。访客地址只以 HMAC 的形式保存，密钥在服务端，所以表里没有任何能追回地址的东西。",
+          "每位访客每 30 秒只能签一次，直接按留言表本身来计数，这样 serverless 实例起起停停，限制依然有效。检查和写入在同一个数据库函数里完成，每位访客一把锁，所以一连串并行提交没法一起混过去。访客地址只以 HMAC 的形式保存，密钥在服务端，所以表里没有任何能追回地址的东西。",
           "地址取自平台设置的 x-real-ip 头，或者 x-forwarded-for 最右边的那一跳。左边那些是客户端自己填的，拿它们当依据，脚本就可以每次请求换一个新值。拿不到可用地址的请求，全都共用同一个计数。有这条规则，是因为限制曾经在缺少地址时完全失效过。",
           "审核在一个有密码保护的管理页面上进行，会话用签名的 cookie。新签名是直接上墙还是等待审核，是存在数据库里的一个开关，在写入那一刻读取，提示信息说的是实际发生的那一种。",
         ],
@@ -277,7 +277,7 @@ export const senbon: Record<Language, LocalizedContent> = {
     ],
     tags: ["Next.js", "React 19", "Markdown", "Journal"],
     stats: [
-      { value: "0", label: "第三方追踪器" },
+      { value: "21", label: "个 AI 爬虫被拒" },
       { value: "4", label: "frontmatter 字段" },
       { value: "3", label: "CSS 层" },
       { value: "noindex", label: "有意为之" },
