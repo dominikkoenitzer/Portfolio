@@ -421,10 +421,13 @@ export function ProjectsSection() {
                   variants={REVEAL}
                 >
                   <div className="grid md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-                    {/* Visual panel: the picture and nothing else, at one
-                        aspect ratio across every card. Naming happens once, in
-                        the content column. */}
-                    <figure className="relative m-0 aspect-16/10 overflow-hidden border-border/60 border-b bg-secondary/40 md:aspect-auto md:border-r md:border-b-0">
+                    {/* Visual panel: the whole capture, inset on the panel
+                        like a print on a table. Equal rows make the panel
+                        taller than 16:10 from `md` up, and a cover crop there
+                        cut the sides off every wide screenshot; the picture
+                        keeps its own ratio and the panel takes the rest.
+                        Naming happens once, in the content column. */}
+                    <figure className="m-0 flex items-center justify-center border-border/60 border-b bg-secondary/40 p-4 sm:p-5 md:border-r md:border-b-0 lg:p-6">
                       {project.image && !project.imageIcon ? (
                         /* Two candidates, not one. The box is 534px wide past
                            1280 and never grows, so a 1x display was decoding a
@@ -441,7 +444,7 @@ export function ProjectsSection() {
                            told it the box is on screen. The rest stay lazy. */
                         <img
                           alt={`${project.title} screenshot`}
-                          className="absolute inset-0 h-full w-full object-cover object-top"
+                          className="aspect-16/10 w-full rounded-lg border border-border/60 object-cover object-top"
                           decoding="async"
                           fetchPriority={cardIndex === 0 ? "high" : "auto"}
                           loading={cardIndex === 0 ? "eager" : "lazy"}
