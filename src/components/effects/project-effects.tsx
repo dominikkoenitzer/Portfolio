@@ -8,7 +8,6 @@ import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { DUR, EASE_OUT, SPRING_FLUID, VIEWPORT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
-import { TiltSurface } from "./tilt-surface";
 
 /* ------------------------------------------------------------------ */
 /* ProjectFigure: a framed screenshot, optionally opening a lightbox   */
@@ -32,7 +31,6 @@ export function ProjectFigure({
   onOpen,
   openLabel,
   priority = false,
-  lean = false,
   ratio = SHOT_RATIO,
   srcSet,
   sizes,
@@ -64,8 +62,6 @@ export function ProjectFigure({
   /** Accessible name for that button (required for it to render). */
   openLabel?: string;
   priority?: boolean;
-  /** Lean towards the pointer like a card (the page's main picture). */
-  lean?: boolean;
   /**
    * Width over height of the picture, used to reserve its box before the file
    * arrives. Pass the real one for anything that is not a landscape screenshot
@@ -118,11 +114,15 @@ export function ProjectFigure({
   // a focused screenshot looked exactly like an unfocused one. Same ring
   // as the global `:focus-visible` rule.
   const frame = (
-    <div className="memory-photo relative overflow-hidden rounded-2xl bg-card shadow-sm ring-1 ring-black/5 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px] dark:ring-white/5">
+    <div className="relative overflow-hidden rounded-2xl bg-card ring-1 ring-black/5 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px] dark:ring-white/5">
       {onOpen && openLabel ? (
         <button
           aria-label={openLabel}
           className="block w-full cursor-zoom-in focus-visible:outline-none"
+          // The custom cursor would morph onto the whole picture and lay its
+          // tinted box over the screenshot and the caption below it. A
+          // picture is not a label to snap to: the pointer stays a dot here.
+          data-cursor-ignore
           onClick={onOpen}
           type="button"
         >
@@ -151,15 +151,9 @@ export function ProjectFigure({
       viewport={VIEWPORT}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {lean ? (
-        <TiltSurface grow={0.012} lift={4} radius="rounded-2xl" tilt={2}>
-          {frame}
-        </TiltSurface>
-      ) : (
-        frame
-      )}
+      {frame}
       {caption ? (
-        <figcaption className="mt-3 max-w-prose text-muted-foreground text-sm leading-relaxed">
+        <figcaption className="mt-3 max-w-prose text-foreground/90 text-sm leading-relaxed">
           {caption}
         </figcaption>
       ) : label ? (
