@@ -24,7 +24,7 @@ private static async Task<OtpCode?> FreshCodeAsync(Account account, bool next)
 }`;
 
 const en: LocalizedContent = {
-  tagline: "Two-factor codes on the Windows desktop. Alt+P on a 2FA prompt types the code.",
+  tagline: "Two-factor codes on Windows: Alt+P types the right one for the site.",
   description:
     "Psyche is a Windows app for two-factor codes. Press Alt+P on any 2FA prompt and it types the code for the site in front of you, from a vault that opens only for your Windows account.",
   overview:
@@ -34,7 +34,7 @@ const en: LocalizedContent = {
     {
       heading: "The right account for the page in front",
       body: [
-        "Psyche notes the foreground window inside the hotkey message itself, before the picker or anything else can take focus. If that window is Brave, Chrome, Edge, Vivaldi, Opera, Arc or Firefox, it reads the address bar through UI Automation on a thread of its own and gives the browser 300 ms to answer. While you are editing the address bar it reads nothing, because what is in there is not the page you are on.",
+        "Psyche notes the foreground window inside the hotkey message itself, before the picker or anything else can take focus. If that window is Brave, Chrome, Edge, Vivaldi, Opera, Arc, Firefox or a browser built on one of them, it reads the address bar through UI Automation on a thread of its own and gives the browser 300 ms to answer. While you are editing the address bar it reads nothing, because what is in there is not the page you are on.",
         "An address matches an account at one of three levels. Exact means the host is a domain the account was used on, or a subdomain of one. Known means the issuer is one of 151 services whose sign-in domains ship with the app. Probable means the first label of the site's registrable domain is the issuer's name. The registrable domain comes from the Public Suffix List, embedded in the app, so an account saved for github.io never matches a stranger's site at name.github.io.",
         "Only an exact or known match is typed without asking, and only when there is exactly one. A probable match always opens the picker. Once I pick an account on a site, Psyche saves that domain on the account, inside the encrypted vault, and the next match is exact. When the site does not look like that account's own, it asks first.",
       ],
@@ -44,7 +44,7 @@ const en: LocalizedContent = {
       body: [
         "Psyche types with SendInput and Unicode key events, one key down and up per digit, 12 ms apart, so the keyboard layout does not matter. Before the first digit it waits up to 1.5 seconds for the Alt key to come up, or the digits would arrive as Alt shortcuts, and it stops if the foreground window changes halfway through.",
         "A code typed in its last second often expires before the server checks it. When less than two seconds are left, Psyche waits for the next one and types that instead.",
-        "Windows lets no normal process send input to a window that runs as administrator. Psyche compares the target's integrity level with its own, and counts the window as elevated when it cannot tell. Then the code goes to the clipboard, marked so that clipboard history, the cloud clipboard and clipboard monitors skip it. After 30 seconds it is zeroed and removed, but only if the clipboard still holds it.",
+        "Windows lets no normal process send input to a window that runs as administrator. Psyche compares the target's integrity level with its own, and counts the window as elevated when it cannot tell. Then the code goes to the clipboard, marked so that clipboard history, the cloud clipboard and clipboard monitors skip it. After 30 seconds by default it is zeroed and removed, but only if the clipboard still holds it.",
       ],
       code: {
         language: "csharp",
@@ -67,7 +67,7 @@ const en: LocalizedContent = {
       body: [
         "Google Authenticator exports its accounts as a series of QR codes. Psyche reads them through the webcam. Auto exposure meters the whole room and blows out a phone screen held close, so Psyche steps through a few shorter exposures, and each frame goes to zxing-cpp first and to ZXing.Net with mirrored and inverted retries after that. The codes can be shown in any order, a code seen twice is ignored, and every account is saved the moment its code is read. The export packs the accounts as protobuf, which Psyche decodes by hand without a protobuf library.",
         "Encrypted exports from Aegis, 2FAS, Proton Authenticator and Ente Auth open with their own key derivation, scrypt, PBKDF2 or Argon2id, followed by AES-GCM or libsodium's secretstream. Bitwarden's plain JSON and CSV exports work too. A new site's setup QR code can be read straight off the screen, or added from a pasted image, an otpauth:// link or the typed secret.",
-        "There are 633 xUnit test cases for the core library and 152 for the Windows layer. The camera path is tested against simulated webcam frames, and the domain parser against the Public Suffix List's official test file. CI on Windows checks the formatting, runs both suites and publishes the AOT build on every push to main.",
+        "There are 633 xUnit test cases for the core library and 152 for the Windows layer. The camera path is tested against simulated webcam frames, and the domain parser against the Public Suffix List's official test file. On every push to main and every pull request, CI on Windows checks the formatting, runs both suites and builds the Native AOT release.",
       ],
     },
   ],
@@ -85,7 +85,7 @@ const en: LocalizedContent = {
 };
 
 const de: LocalizedContent = {
-  tagline: "Zwei-Faktor-Codes auf dem Windows-Desktop. Alt+P bei einer 2FA-Abfrage tippt den Code ein.",
+  tagline: "Zwei-Faktor-Codes unter Windows: Alt+P tippt den richtigen für die Seite ein.",
   description:
     "Psyche ist eine Windows-App für Zwei-Faktor-Codes. Ein Druck auf Alt+P bei jeder 2FA-Abfrage, und Psyche tippt den Code für die Seite vor dir ein, aus einem Tresor, der sich nur für dein Windows-Konto öffnet.",
   overview:
@@ -95,7 +95,7 @@ const de: LocalizedContent = {
     {
       heading: "Das richtige Konto für die Seite im Vordergrund",
       body: [
-        "Psyche hält das Vordergrundfenster schon beim Verarbeiten der Hotkey-Nachricht fest, bevor das Auswahlfenster oder sonst etwas den Fokus übernehmen kann. Ist dieses Fenster Brave, Chrome, Edge, Vivaldi, Opera, Arc oder Firefox, liest Psyche die Adressleiste über UI Automation in einem eigenen Thread und gibt dem Browser 300 ms Zeit für die Antwort. Während du die Adressleiste bearbeitest, wird nichts gelesen, denn was dort steht, ist nicht die Seite, auf der du bist.",
+        "Psyche hält das Vordergrundfenster schon beim Verarbeiten der Hotkey-Nachricht fest, bevor das Auswahlfenster oder sonst etwas den Fokus übernehmen kann. Ist dieses Fenster Brave, Chrome, Edge, Vivaldi, Opera, Arc, Firefox oder ein darauf aufbauender Browser, liest Psyche die Adressleiste über UI Automation in einem eigenen Thread und gibt dem Browser 300 ms Zeit für die Antwort. Während du die Adressleiste bearbeitest, wird nichts gelesen, denn was dort steht, ist nicht die Seite, auf der du bist.",
         "Eine Adresse passt auf einer von drei Stufen zu einem Konto. Exakt heisst, der Host ist eine Domain, auf der das Konto benutzt wurde, oder eine Subdomain davon. Bekannt heisst, der Aussteller ist einer von 151 Diensten, deren Anmelde-Domains mit der App mitkommen. Wahrscheinlich heisst, der erste Teil der registrierbaren Domain der Seite ist der Name des Ausstellers. Die registrierbare Domain kommt aus der Public Suffix List, die in die App eingebaut ist, deshalb passt ein für github.io gespeichertes Konto nie auf die Seite eines Fremden unter name.github.io.",
         "Ohne Nachfrage getippt wird nur bei einem exakten oder bekannten Treffer, und nur, wenn es genau einen gibt. Ein wahrscheinlicher Treffer öffnet immer das Auswahlfenster. Sobald ich auf einer Seite ein Konto auswähle, speichert Psyche diese Domain beim Konto, im verschlüsselten Tresor, und der nächste Treffer ist exakt. Sieht die Seite nicht nach der des Kontos aus, fragt Psyche zuerst nach.",
       ],
@@ -105,7 +105,7 @@ const de: LocalizedContent = {
       body: [
         "Psyche tippt mit SendInput und Unicode-Tastenereignissen, pro Ziffer ein Drücken und ein Loslassen, im Abstand von 12 ms, und so spielt das Tastaturlayout keine Rolle. Vor der ersten Ziffer wartet Psyche bis zu 1,5 Sekunden, bis die Alt-Taste losgelassen ist, sonst kämen die Ziffern als Alt-Tastenkürzel an, und hört auf, wenn das Vordergrundfenster mittendrin wechselt.",
         "Ein Code, der in seiner letzten Sekunde getippt wird, läuft oft ab, bevor der Server ihn prüft. Bleiben weniger als zwei Sekunden, wartet Psyche auf den nächsten und tippt stattdessen diesen.",
-        "Windows lässt keinen normalen Prozess Eingaben an ein Fenster schicken, das als Administrator läuft. Psyche vergleicht die Integritätsstufe des Ziels mit der eigenen und behandelt das Fenster als eines mit erhöhten Rechten, wenn sich das nicht feststellen lässt. Dann geht der Code in die Zwischenablage, so markiert, dass der Zwischenablageverlauf, die Cloud-Zwischenablage und Zwischenablage-Monitore ihn überspringen. Nach 30 Sekunden wird er mit Nullen überschrieben und entfernt, aber nur, wenn die Zwischenablage ihn noch enthält.",
+        "Windows lässt keinen normalen Prozess Eingaben an ein Fenster schicken, das als Administrator läuft. Psyche vergleicht die Integritätsstufe des Ziels mit der eigenen und behandelt das Fenster als eines mit erhöhten Rechten, wenn sich das nicht feststellen lässt. Dann geht der Code in die Zwischenablage, so markiert, dass der Zwischenablageverlauf, die Cloud-Zwischenablage und Zwischenablage-Monitore ihn überspringen. Standardmässig wird er nach 30 Sekunden mit Nullen überschrieben und entfernt, aber nur, wenn die Zwischenablage ihn noch enthält.",
       ],
       code: {
         language: "csharp",
@@ -128,7 +128,7 @@ const de: LocalizedContent = {
       body: [
         "Google Authenticator exportiert seine Konten als Folge von QR-Codes. Psyche liest sie über die Webcam. Die automatische Belichtung misst den ganzen Raum und überbelichtet einen nah gehaltenen Handybildschirm, deshalb probiert Psyche nacheinander ein paar kürzere Belichtungen durch, und jedes Bild geht zuerst an zxing-cpp und danach an ZXing.Net, das es gespiegelt und invertiert erneut versucht. Die Codes können in beliebiger Reihenfolge gezeigt werden, ein doppelt gesehener Code wird ignoriert, und jedes Konto wird gespeichert, sobald sein Code gelesen ist. Der Export packt die Konten als Protobuf, das Psyche von Hand dekodiert, ohne Protobuf-Bibliothek.",
         "Verschlüsselte Exporte aus Aegis, 2FAS, Proton Authenticator und Ente Auth öffnen sich mit ihrer jeweils eigenen Schlüsselableitung (scrypt, PBKDF2 oder Argon2id), gefolgt von AES-GCM oder dem secretstream von libsodium. Die unverschlüsselten JSON- und CSV-Exporte von Bitwarden funktionieren ebenfalls. Der Einrichtungs-QR-Code einer neuen Seite lässt sich direkt vom Bildschirm lesen oder aus einem eingefügten Bild, einem otpauth://-Link oder dem eingetippten Geheimnis hinzufügen.",
-        "Für die Kernbibliothek gibt es 633 xUnit-Testfälle und für die Windows-Schicht 152. Der Kamerapfad wird gegen simulierte Webcam-Bilder getestet, der Domain-Parser gegen die offizielle Testdatei der Public Suffix List. Die CI auf Windows prüft bei jedem Push auf main die Formatierung, lässt beide Suiten laufen und veröffentlicht den AOT-Build.",
+        "Für die Kernbibliothek gibt es 633 xUnit-Testfälle und für die Windows-Schicht 152. Der Kamerapfad wird gegen simulierte Webcam-Bilder getestet, der Domain-Parser gegen die offizielle Testdatei der Public Suffix List. Die CI auf Windows prüft bei jedem Push auf main und jedem Pull Request die Formatierung, lässt beide Suiten laufen und baut das Native-AOT-Release.",
       ],
     },
   ],
@@ -146,7 +146,7 @@ const de: LocalizedContent = {
 };
 
 const fr: LocalizedContent = {
-  tagline: "Des codes à deux facteurs sur le bureau Windows. Alt+P sur une demande 2FA tape le code.",
+  tagline: "Les codes à deux facteurs sous Windows : Alt+P tape le bon pour le site.",
   description:
     "Psyche est une application Windows pour les codes à deux facteurs. Appuyez sur Alt+P sur n'importe quelle demande 2FA, et elle tape le code du site que vous avez devant vous, depuis un coffre qui ne s'ouvre que pour votre compte Windows.",
   overview:
@@ -156,7 +156,7 @@ const fr: LocalizedContent = {
     {
       heading: "Le bon compte pour la page au premier plan",
       body: [
-        "Psyche note la fenêtre au premier plan dans le message du raccourci lui-même, avant que le sélecteur ou quoi que ce soit d'autre ne puisse prendre le focus. Si cette fenêtre est Brave, Chrome, Edge, Vivaldi, Opera, Arc ou Firefox, Psyche lit la barre d'adresse via UI Automation sur un thread à part et laisse 300 ms au navigateur pour répondre. Pendant que vous modifiez la barre d'adresse, Psyche ne lit rien, parce que ce qui s'y trouve n'est pas la page où vous êtes.",
+        "Psyche note la fenêtre au premier plan dans le message du raccourci lui-même, avant que le sélecteur ou quoi que ce soit d'autre ne puisse prendre le focus. Si cette fenêtre est Brave, Chrome, Edge, Vivaldi, Opera, Arc, Firefox ou un navigateur bâti sur l'un d'eux, Psyche lit la barre d'adresse via UI Automation sur un thread à part et laisse 300 ms au navigateur pour répondre. Pendant que vous modifiez la barre d'adresse, Psyche ne lit rien, parce que ce qui s'y trouve n'est pas la page où vous êtes.",
         "Une adresse correspond à un compte à l'un de trois niveaux. Exact veut dire que l'hôte est un domaine sur lequel le compte a servi, ou un sous-domaine de l'un d'eux. Connu veut dire que l'émetteur est l'un des 151 services dont les domaines de connexion sont livrés avec l'application. Probable veut dire que le premier label du domaine enregistrable du site est le nom de l'émetteur. Le domaine enregistrable vient de la Public Suffix List, intégrée à l'application, si bien qu'un compte enregistré pour github.io ne correspond jamais au site d'un inconnu sous nom.github.io.",
         "Psyche ne tape sans demander que sur une correspondance exacte ou connue, et seulement s'il y en a exactement une. Une correspondance probable ouvre toujours le sélecteur. Dès que je choisis un compte sur un site, Psyche enregistre ce domaine sur le compte, dans le coffre chiffré, et la correspondance suivante est exacte. Quand le site ne ressemble pas à celui du compte, elle demande d'abord.",
       ],
@@ -166,7 +166,7 @@ const fr: LocalizedContent = {
       body: [
         "La saisie passe par SendInput et des événements clavier Unicode, une pression et un relâchement par chiffre, à 12 ms d'intervalle, si bien que la disposition du clavier n'a pas d'importance. Avant le premier chiffre, Psyche attend jusqu'à 1,5 seconde que la touche Alt soit relâchée, sinon les chiffres arriveraient comme des raccourcis Alt, et elle s'arrête si la fenêtre au premier plan change en cours de route.",
         "Un code tapé dans sa dernière seconde expire souvent avant que le serveur ne le vérifie. Quand il reste moins de deux secondes, Psyche attend le suivant et tape celui-là à la place.",
-        "Windows ne laisse aucun processus normal envoyer des saisies à une fenêtre qui tourne en administrateur. Psyche compare le niveau d'intégrité de la cible au sien et, dans le doute, considère la fenêtre comme élevée. Dans ce cas, le code part dans le presse-papiers, marqué pour que l'historique du presse-papiers, le presse-papiers cloud et les moniteurs de presse-papiers l'ignorent. Après 30 secondes, il est mis à zéro et retiré, mais seulement si le presse-papiers le contient encore.",
+        "Windows ne laisse aucun processus normal envoyer des saisies à une fenêtre qui tourne en administrateur. Psyche compare le niveau d'intégrité de la cible au sien et, dans le doute, considère la fenêtre comme élevée. Dans ce cas, le code part dans le presse-papiers, marqué pour que l'historique du presse-papiers, le presse-papiers cloud et les moniteurs de presse-papiers l'ignorent. Après 30 secondes par défaut, il est mis à zéro et retiré, mais seulement si le presse-papiers le contient encore.",
       ],
       code: {
         language: "csharp",
@@ -189,7 +189,7 @@ const fr: LocalizedContent = {
       body: [
         "Google Authenticator exporte ses comptes sous forme d'une série de codes QR. Psyche les lit par la webcam. L'exposition automatique mesure toute la pièce et surexpose l'écran d'un téléphone tenu de près, alors Psyche passe par quelques expositions plus courtes, et chaque image va d'abord à zxing-cpp, puis à ZXing.Net avec de nouveaux essais en miroir et en négatif. Les codes peuvent être montrés dans n'importe quel ordre, un code vu deux fois est ignoré, et chaque compte est enregistré dès que son code est lu. L'export encode les comptes en protobuf, que Psyche décode à la main, sans bibliothèque protobuf.",
         "Les exports chiffrés d'Aegis, 2FAS, Proton Authenticator et Ente Auth s'ouvrent avec leur propre dérivation de clé, scrypt, PBKDF2 ou Argon2id, suivie d'AES-GCM ou du secretstream de libsodium. Les exports JSON et CSV en clair de Bitwarden marchent aussi. Le code QR de configuration d'un nouveau site peut se lire directement sur l'écran, ou s'ajouter depuis une image collée, un lien otpauth:// ou le secret saisi au clavier.",
-        "Il y a 633 cas de test xUnit pour la bibliothèque centrale et 152 pour la couche Windows. Le chemin de la caméra est testé sur des images de webcam simulées, et l'analyseur de domaines sur le fichier de test officiel de la Public Suffix List. La CI sous Windows vérifie le formatage, lance les deux suites et publie le build AOT à chaque push sur main.",
+        "Il y a 633 cas de test xUnit pour la bibliothèque centrale et 152 pour la couche Windows. Le chemin de la caméra est testé sur des images de webcam simulées, et l'analyseur de domaines sur le fichier de test officiel de la Public Suffix List. À chaque push sur main et à chaque pull request, la CI sous Windows vérifie le formatage, lance les deux suites et compile la version Native AOT.",
       ],
     },
   ],
@@ -207,7 +207,7 @@ const fr: LocalizedContent = {
 };
 
 const zh: LocalizedContent = {
-  tagline: "Windows 桌面上的两步验证码。在 2FA 提示处按 Alt+P，它就会输入验证码。",
+  tagline: "Windows 上的两步验证码：按 Alt+P，就为当前网站输入对应的那一个。",
   description:
     "Psyche 是一个管理两步验证码的 Windows 应用。在任意 2FA 提示处按 Alt+P，它就会从一个只为你的 Windows 账户打开的保险库里，取出眼前这个网站的验证码并输入。",
   overview:
@@ -217,7 +217,7 @@ const zh: LocalizedContent = {
     {
       heading: "为眼前的页面选对账户",
       body: [
-        "Psyche 在处理快捷键消息时就当场记下前台窗口，赶在选择框或别的任何东西拿走焦点之前。如果这个窗口是 Brave、Chrome、Edge、Vivaldi、Opera、Arc 或 Firefox，它会在一个单独的线程上通过 UI Automation 读取地址栏，并给浏览器 300 毫秒的时间作答。你正在编辑地址栏时，它什么也不读，因为那里面的内容并不是你所在的页面。",
+        "Psyche 在处理快捷键消息时就当场记下前台窗口，赶在选择框或别的任何东西拿走焦点之前。如果这个窗口是 Brave、Chrome、Edge、Vivaldi、Opera、Arc、Firefox 或基于它们的浏览器，它会在一个单独的线程上通过 UI Automation 读取地址栏，并给浏览器 300 毫秒的时间作答。你正在编辑地址栏时，它什么也不读，因为那里面的内容并不是你所在的页面。",
         "地址与账户的匹配分三个等级。「精确」指主机名是这个账户用过的域名，或是其中某个域名的子域名。「已知」指发行方属于 151 个服务之一，这些服务的登录域名随应用一起提供。「可能」指网站可注册域名的第一段就是发行方的名字。可注册域名来自内置在应用里的 Public Suffix List，所以为 github.io 保存的账户，永远不会匹配到别人放在 name.github.io 上的网站。",
         "只有精确或已知的匹配才会不经询问直接输入，而且前提是正好只有一个。可能的匹配总是会打开选择框。我在某个网站上选过一次账户之后，Psyche 会把这个域名存到该账户上，存在加密的保险库里，下一次的匹配就是精确的了。如果这个网站看起来不像该账户自己的网站，它会先问一句。",
       ],
@@ -227,7 +227,7 @@ const zh: LocalizedContent = {
       body: [
         "Psyche 用 SendInput 和 Unicode 按键事件来输入，每个数字一次按下、一次抬起，间隔 12 毫秒，所以键盘布局无关紧要。输入第一个数字之前，它最多会等 1.5 秒让 Alt 键松开，否则这些数字会被当成 Alt 快捷键；如果前台窗口在输入途中变了，它就停下。",
         "在最后一秒输入的验证码，常常还没等服务器检查就过期了。剩余时间不到两秒时，Psyche 会等下一个验证码，改为输入那一个。",
-        "Windows 不允许任何普通进程向以管理员身份运行的窗口发送输入。Psyche 会拿目标窗口的完整性级别和自己的比较，无法判断时就把窗口当作已提权。这时验证码会进入剪贴板，并带上标记，让剪贴板历史记录、云剪贴板和剪贴板监视程序都跳过它。30 秒后它会被清零并移除，但前提是剪贴板里放的仍是它。",
+        "Windows 不允许任何普通进程向以管理员身份运行的窗口发送输入。Psyche 会拿目标窗口的完整性级别和自己的比较，无法判断时就把窗口当作已提权。这时验证码会进入剪贴板，并带上标记，让剪贴板历史记录、云剪贴板和剪贴板监视程序都跳过它。默认 30 秒后它会被清零并移除，但前提是剪贴板里放的仍是它。",
       ],
       code: {
         language: "csharp",
@@ -250,7 +250,7 @@ const zh: LocalizedContent = {
       body: [
         "Google Authenticator 会把账户导出成一组二维码。Psyche 通过网络摄像头读取它们。自动曝光按整个房间测光，凑近的手机屏幕就会过曝，所以 Psyche 会依次试几档更短的曝光，每一帧先交给 zxing-cpp，然后再交给 ZXing.Net，并做镜像和反色重试。这些二维码可以按任意顺序展示，看到两次的码会被忽略，每个账户在它的码被读出的那一刻就会保存。导出数据用 protobuf 打包账户，Psyche 不用 protobuf 库，自己手写解码。",
         "Aegis、2FAS、Proton Authenticator 和 Ente Auth 的加密导出，用各自的密钥派生方式打开（scrypt、PBKDF2 或 Argon2id），之后是 AES-GCM 或 libsodium 的 secretstream。Bitwarden 的明文 JSON 和 CSV 导出也能用。新网站的设置二维码可以直接从屏幕上读取，也可以从粘贴的图片、otpauth:// 链接或手动输入的密钥添加。",
-        "核心库有 633 个 xUnit 测试用例，Windows 层有 152 个。摄像头这条路径用模拟的网络摄像头画面来测试，域名解析器则用 Public Suffix List 官方的测试文件来测试。每次推送到 main，Windows 上的 CI 都会检查代码格式、运行两套测试，并发布 AOT 构建。",
+        "核心库有 633 个 xUnit 测试用例，Windows 层有 152 个。摄像头这条路径用模拟的网络摄像头画面来测试，域名解析器则用 Public Suffix List 官方的测试文件来测试。每次推送到 main 或提交 pull request，Windows 上的 CI 都会检查代码格式、运行两套测试，并构建 Native AOT 发布版。",
       ],
     },
   ],
