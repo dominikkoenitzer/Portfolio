@@ -31,7 +31,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "A thorough Windows uninstaller written in Rust: it closes what still runs from a program's folders, runs its uninstaller where one is needed, then finds and removes the registry keys, files, services, tasks, firewall rules and PATH entries it left behind, backing each one up first. Ships as a scriptable CLI and a native egui GUI sharing one engine.",
     overview:
-      "Windows' built-in uninstall leaves junk behind constantly: orphaned registry keys, leftover files, and empty folders under AppData, ProgramData and Program Files. So I built Oxidize in Rust, straight against the Win32 API. It reads all three uninstall registry views and closes whatever still runs from the program's folders. A program installed for one user alone, with no service, firewall rule or machine-wide file or key, it removes by itself; any other program runs its registered uninstaller first (a synchronous msiexec for MSI products). Then it scans the registry and filesystem for leftovers, labelling each find with a high, medium or low confidence. By default no leftover is deleted without a validated .reg backup and file quarantine, and one command puts a removal back. Two binaries, one engine: oxidize for scripts, oxidize-gui if you would rather click. Junk cleaners, browser-trace cleaning and a startup manager are deliberately out of scope, because that is how these tools turn into suites.",
+      "Windows' built-in uninstall leaves junk behind constantly: orphaned registry keys, leftover files, and empty folders under AppData, ProgramData and Program Files. So I built Oxidize in Rust, straight against the Win32 API. It reads all three uninstall registry views and closes whatever still runs from the program's folders. A program installed for one user alone, with no service, firewall rule or machine-wide file or key, it removes by itself; any other program runs its registered uninstaller first (a synchronous msiexec for MSI products). Then it scans the registry and filesystem for leftovers, labelling each find with a high, medium or low confidence. By default no leftover is deleted without a validated .reg backup and file quarantine, and one command puts a removal back. Two binaries, one engine: oxidize for scripts, oxidize-gui if you would rather click. The Clean up tab also clears temporary files, crash dumps, the Recycle Bin, browser caches and what Windows' own tools can reclaim, and leaves recent files, running browsers and protected folders alone. Browser history, cookies and a startup manager stay out of scope, because that is how these tools turn into suites.",
     roleSummary:
       "Just me: the engine, the CLI, the GUI, and the safety net that came before all three.",
     sections: [
@@ -73,7 +73,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "The Oxidize window: 61 programs and 8.1 GB at a glance with a bar of the biggest, and the list searched for Microsoft's Visual C++ redistributables. Pick a program to uninstall it and see what it left behind.",
+      "The Oxidize window with a set of example programs, sorted by size: 20 programs, 30.2 GB in total. Pick a program to uninstall it and see what it left behind.",
       "The Oxidize mark: a thick O, copper on one side and the verdigris it oxidises into on the other.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -81,7 +81,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "front-ends, one engine" },
       { value: "3", label: "registry views scanned" },
       { value: "8", label: "commands" },
-      { value: "247", label: "unit tests" },
+      { value: "310", label: "unit tests" },
     ],
   },
   de: {
@@ -90,7 +90,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "Ein gründlicher Windows-Deinstallierer in Rust: Er schliesst, was noch aus den Ordnern eines Programms läuft, führt dessen Uninstaller aus, wo einer nötig ist, und entfernt danach die Registry-Schlüssel, Dateien, Dienste, Aufgaben, Firewall-Regeln und PATH-Einträge, die es hinterlassen hat, jeweils mit Backup zuerst. Kommt als skriptbare CLI und als native egui-GUI auf einer Engine.",
     overview:
-      "Die eingebaute Deinstallation von Windows lässt ständig Müll zurück: verwaiste Registry-Schlüssel, übrige Dateien und leere Ordner unter AppData, ProgramData und Program Files. Also habe ich Oxidize in Rust gebaut, direkt gegen die Win32-API. Es liest alle drei Uninstall-Registry-Ansichten und schliesst, was noch aus den Ordnern des Programms läuft. Ein Programm, das nur für einen Benutzer installiert ist und weder Dienst noch Firewall-Regel noch maschinenweite Datei oder Schlüssel hat, entfernt es selbst; jedes andere führt zuerst seinen registrierten Uninstaller aus (bei MSI-Produkten ein synchrones msiexec). Danach durchsucht es Registry und Dateisystem nach Resten, wobei jeder Fund eine hohe, mittlere oder tiefe Sicherheit bekommt. Standardmässig wird kein Rest gelöscht ohne validiertes .reg-Backup und Datei-Quarantäne, und ein Befehl macht eine Entfernung wieder rückgängig. Zwei Binaries, eine Engine: oxidize für Skripte, oxidize-gui, wenn man lieber klickt. Junk-Cleaner, Browser-Spuren und ein Autostart-Manager sind bewusst ausserhalb des Umfangs, denn genau so werden solche Werkzeuge zu Suiten.",
+      "Die eingebaute Deinstallation von Windows lässt ständig Müll zurück: verwaiste Registry-Schlüssel, übrige Dateien und leere Ordner unter AppData, ProgramData und Program Files. Also habe ich Oxidize in Rust gebaut, direkt gegen die Win32-API. Es liest alle drei Uninstall-Registry-Ansichten und schliesst, was noch aus den Ordnern des Programms läuft. Ein Programm, das nur für einen Benutzer installiert ist und weder Dienst noch Firewall-Regel noch maschinenweite Datei oder Schlüssel hat, entfernt es selbst; jedes andere führt zuerst seinen registrierten Uninstaller aus (bei MSI-Produkten ein synchrones msiexec). Danach durchsucht es Registry und Dateisystem nach Resten, wobei jeder Fund eine hohe, mittlere oder tiefe Sicherheit bekommt. Standardmässig wird kein Rest gelöscht ohne validiertes .reg-Backup und Datei-Quarantäne, und ein Befehl macht eine Entfernung wieder rückgängig. Zwei Binaries, eine Engine: oxidize für Skripte, oxidize-gui, wenn man lieber klickt. Der Tab Clean up leert ausserdem temporäre Dateien, Absturzabbilder, den Papierkorb, Browser-Caches und das, was die Windows-eigenen Werkzeuge freigeben können, und lässt neue Dateien, laufende Browser und geschützte Ordner in Ruhe. Browserverlauf, Cookies und ein Autostart-Manager bleiben bewusst ausserhalb des Umfangs, denn genau so werden solche Werkzeuge zu Suiten.",
     roleSummary:
       "Nur ich: die Engine, die CLI, die GUI und das Sicherheitsnetz, das vor allen dreien kam.",
     sections: [
@@ -132,7 +132,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Das Oxidize-Fenster: 61 Programme und 8,1 GB auf einen Blick mit einem Balken der grössten, die Liste durchsucht nach den Visual-C++-Laufzeiten von Microsoft. Ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
+      "Das Oxidize-Fenster mit einer Reihe von Beispielprogrammen, nach Grösse sortiert: 20 Programme, 30,2 GB insgesamt. Ein Programm wählen, um es zu deinstallieren und zu sehen, was es zurückgelassen hat.",
       "Das Oxidize-Zeichen: ein dickes O, auf der einen Seite Kupfer, auf der anderen der Grünspan, zu dem es oxidiert.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -140,7 +140,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "Front-Ends, eine Engine" },
       { value: "3", label: "Registry-Ansichten" },
       { value: "8", label: "Befehle" },
-      { value: "247", label: "Unit-Tests" },
+      { value: "310", label: "Unit-Tests" },
     ],
   },
   fr: {
@@ -149,7 +149,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "Un désinstalleur Windows minutieux écrit en Rust : il ferme ce qui tourne encore depuis les dossiers du programme, lance son désinstalleur quand il en faut un, puis trouve et retire les clés de registre, fichiers, services, tâches, règles de pare-feu et entrées PATH laissés derrière, en sauvegardant chacun d'abord. Livré en CLI scriptable et en GUI egui native, partageant un seul moteur.",
     overview:
-      "La désinstallation intégrée de Windows laisse constamment des restes : clés de registre orphelines, fichiers résiduels, dossiers vides sous AppData, ProgramData et Program Files. J'ai donc construit Oxidize en Rust, directement contre l'API Win32. Il lit les trois vues de registre de désinstallation et ferme ce qui tourne encore depuis les dossiers du programme. Un programme installé pour un seul utilisateur, sans service, règle de pare-feu ni fichier ou clé à l'échelle de la machine, il le retire lui-même ; tout autre programme lance d'abord son désinstalleur enregistré (un msiexec synchrone pour les produits MSI). Ensuite il parcourt registre et système de fichiers à la recherche des restes, en attribuant à chaque trouvaille une confiance haute, moyenne ou basse. Par défaut, aucun reste n'est supprimé sans une sauvegarde .reg validée et une mise en quarantaine des fichiers, et une seule commande annule une suppression. Deux binaires, un moteur : oxidize pour les scripts, oxidize-gui si vous préférez cliquer. Les nettoyeurs de fichiers temporaires, l'effacement des traces de navigation et un gestionnaire de démarrage sont délibérément hors périmètre, parce que c'est ainsi que ce genre d'outil devient une suite.",
+      "La désinstallation intégrée de Windows laisse constamment des restes : clés de registre orphelines, fichiers résiduels, dossiers vides sous AppData, ProgramData et Program Files. J'ai donc construit Oxidize en Rust, directement contre l'API Win32. Il lit les trois vues de registre de désinstallation et ferme ce qui tourne encore depuis les dossiers du programme. Un programme installé pour un seul utilisateur, sans service, règle de pare-feu ni fichier ou clé à l'échelle de la machine, il le retire lui-même ; tout autre programme lance d'abord son désinstalleur enregistré (un msiexec synchrone pour les produits MSI). Ensuite il parcourt registre et système de fichiers à la recherche des restes, en attribuant à chaque trouvaille une confiance haute, moyenne ou basse. Par défaut, aucun reste n'est supprimé sans une sauvegarde .reg validée et une mise en quarantaine des fichiers, et une seule commande annule une suppression. Deux binaires, un moteur : oxidize pour les scripts, oxidize-gui si vous préférez cliquer. L'onglet Clean up vide aussi les fichiers temporaires, les vidages de plantage, la Corbeille, les caches des navigateurs et ce que les outils de Windows peuvent libérer, en laissant de côté les fichiers récents, les navigateurs ouverts et les dossiers protégés. L'historique de navigation, les cookies et un gestionnaire de démarrage restent délibérément hors périmètre, parce que c'est ainsi que ce genre d'outil devient une suite.",
     roleSummary:
       "Moi seul : le moteur, la CLI, la GUI, et le filet de sécurité qui est venu avant les trois.",
     sections: [
@@ -191,7 +191,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "La fenêtre d'Oxidize : 61 programmes et 8,1 Go d'un coup d'œil avec une barre des plus gros, et la liste filtrée sur les runtimes Visual C++ de Microsoft. Choisissez un programme pour le désinstaller et voir ce qu'il a laissé derrière lui.",
+      "La fenêtre d'Oxidize avec une série de programmes d'exemple, triés par taille : 20 programmes, 30,2 Go au total. Choisissez un programme pour le désinstaller et voir ce qu'il a laissé derrière lui.",
       "Le logo d'Oxidize : un O épais, cuivre d'un côté, et de l'autre le vert-de-gris en lequel il s'oxyde.",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -199,7 +199,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "front-ends, un moteur" },
       { value: "3", label: "vues de registre" },
       { value: "8", label: "commandes" },
-      { value: "247", label: "tests unitaires" },
+      { value: "310", label: "tests unitaires" },
     ],
   },
   zh: {
@@ -207,7 +207,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     description:
       "一个用 Rust 写的彻底的 Windows 卸载工具：先关掉还在从程序文件夹里运行的进程，需要时再跑程序自带的卸载器，然后找出并清掉它留下的注册表项、文件、服务、计划任务、防火墙规则和 PATH 条目，每一项都先备份。同时提供可脚本化的 CLI 和原生 egui 图形界面，共用同一个引擎。",
     overview:
-      "Windows 自带的卸载总在留下垃圾：孤立的注册表项、残余文件，以及 AppData、ProgramData 和 Program Files 下的空文件夹。于是我用 Rust 写了 Oxidize，直接对着 Win32 API。它会读全部三个卸载注册表视图，并关掉还在从程序文件夹里运行的进程。只为一个用户安装、没有服务、防火墙规则，也没有全机范围文件或注册表项的程序，由它自己直接移除；其他程序则先运行注册的卸载器（MSI 产品走同步的 msiexec）。然后扫描注册表和文件系统里的残留，并给每一处标上高、中或低的置信度。默认情况下，没有经过校验的 .reg 备份和文件隔离，任何残留都不会被删，而且一条命令就能把一次删除还原回去。两个可执行文件，一个引擎：oxidize 给脚本用，oxidize-gui 给想点鼠标的人用。垃圾清理、浏览器痕迹清理和启动项管理都刻意不在范围内，因为这类工具正是这样变成「全家桶」的。",
+      "Windows 自带的卸载总在留下垃圾：孤立的注册表项、残余文件，以及 AppData、ProgramData 和 Program Files 下的空文件夹。于是我用 Rust 写了 Oxidize，直接对着 Win32 API。它会读全部三个卸载注册表视图，并关掉还在从程序文件夹里运行的进程。只为一个用户安装、没有服务、防火墙规则，也没有全机范围文件或注册表项的程序，由它自己直接移除；其他程序则先运行注册的卸载器（MSI 产品走同步的 msiexec）。然后扫描注册表和文件系统里的残留，并给每一处标上高、中或低的置信度。默认情况下，没有经过校验的 .reg 备份和文件隔离，任何残留都不会被删，而且一条命令就能把一次删除还原回去。两个可执行文件，一个引擎：oxidize 给脚本用，oxidize-gui 给想点鼠标的人用。“Clean up”标签页还会清理临时文件、崩溃转储、回收站、浏览器缓存，以及 Windows 自带工具能腾出的空间，同时不碰最近的文件、正在运行的浏览器和受保护的文件夹。浏览历史、Cookie 和启动项管理仍然刻意不在范围内，因为这类工具正是这样变成「全家桶」的。",
     roleSummary: "只有我：引擎、CLI、图形界面，以及比这三样都更早写好的那道保险。",
     sections: [
       {
@@ -248,7 +248,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       },
     ],
     captions: [
-      "Oxidize 窗口：一眼看到 61 个程序、共 8.1 GB，一条横条标出最大的几个，列表筛选为微软的 Visual C++ 运行库。选一个程序，就能卸载它并查看它留下了什么。",
+      "Oxidize 窗口，列出一组示例程序并按大小排序：20 个程序，共 30.2 GB。选一个程序，就能卸载它并查看它留下了什么。",
       "Oxidize 的标志：一个粗粗的 O，一半是铜，另一半是它氧化后的铜绿。",
     ],
     tags: ["Rust", "Windows", "CLI", "egui", "Systems"],
@@ -256,7 +256,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
       { value: "2", label: "前端，一个引擎" },
       { value: "3", label: "注册表视图" },
       { value: "8", label: "条命令" },
-      { value: "247", label: "单元测试" },
+      { value: "310", label: "单元测试" },
     ],
   },
 };
