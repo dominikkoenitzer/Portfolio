@@ -12,9 +12,9 @@ export const punds: Record<Language, LocalizedContent> = {
   en: {
     tagline: "My link hub as a 3D world you boot into and fly through.",
     description:
-      "Punds is my one-page link hub, built as a navigable Three.js world in the style of Copland OS from Serial Experiments Lain. Drag to look around, scroll to fly, click a floating panel to open the link.",
+      "Punds is my one-page link hub, built as a navigable Three.js world that boots like an old operating system. Drag to look around, scroll to fly, click a floating panel to open the link.",
     overview:
-      "I got tired of pasting five links every time someone asked what I had built, so I made one page that points at all of them. Then I refused to make it a list. Punds boots like Copland OS, the operating system from Serial Experiments Lain: a logo splash, a streaming boot log, a low voice saying \"present day, present time\", and then you drop into a Three.js world. Holographic panels orbit a glowing logo in the fog, you drag to look and scroll to fly, and clicking a panel dives the camera into it before the link opens. The runtime dependency list is react, react-dom and three. That is all of it.",
+      "I got tired of pasting five links every time someone asked what I had built, so I made one page that points at all of them. Then I refused to make it a list. Punds boots like an old, imaginary operating system: a logo splash, a streaming boot log, a low voice, and then you drop into a Three.js world. Holographic panels orbit a glowing logo in the fog, you drag to look and scroll to fly, and clicking a panel dives the camera into it before the link opens. The runtime dependency list is react, react-dom and three. That is all of it.",
     roleSummary:
       "Just me, including the parts nobody asked for: the boot log, the voice, the koi.",
     sections: [
@@ -69,9 +69,9 @@ export const punds: Record<Language, LocalizedContent> = {
   de: {
     tagline: "Mein Link-Hub als 3D-Welt, die man hochfährt und durchfliegt.",
     description:
-      "Punds ist mein einseitiger Link-Hub, gebaut als begehbare Three.js-Welt im Stil von Copland OS aus Serial Experiments Lain. Ziehen zum Umsehen, scrollen zum Fliegen, ein schwebendes Panel anklicken, um den Link zu öffnen.",
+      "Punds ist mein einseitiger Link-Hub, gebaut als begehbare Three.js-Welt, die wie ein altes Betriebssystem hochfährt. Ziehen zum Umsehen, scrollen zum Fliegen, ein schwebendes Panel anklicken, um den Link zu öffnen.",
     overview:
-      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt. Dann weigerte ich mich, eine Liste daraus zu machen. Punds fährt hoch wie Copland OS, das Betriebssystem aus Serial Experiments Lain: ein Logo-Splash, ein durchlaufendes Boot-Log, eine tiefe Stimme, die „present day, present time“ sagt, und dann fällt man in eine Three.js-Welt. Holografische Panels kreisen im Nebel um ein leuchtendes Logo, man zieht, um sich umzusehen, und scrollt, um zu fliegen, und ein Klick lässt die Kamera in das Panel tauchen, bevor der Link aufgeht. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
+      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt. Dann weigerte ich mich, eine Liste daraus zu machen. Punds fährt hoch wie ein altes, erfundenes Betriebssystem: ein Logo-Splash, ein durchlaufendes Boot-Log, eine tiefe Stimme, und dann fällt man in eine Three.js-Welt. Holografische Panels kreisen im Nebel um ein leuchtendes Logo, man zieht, um sich umzusehen, und scrollt, um zu fliegen, und ein Klick lässt die Kamera in das Panel tauchen, bevor der Link aufgeht. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
     roleSummary:
       "Nur ich, samt der Teile, nach denen niemand gefragt hat: das Boot-Log, die Stimme, die Kois.",
     sections: [
@@ -126,9 +126,9 @@ export const punds: Record<Language, LocalizedContent> = {
   fr: {
     tagline: "Mon hub de liens, un monde 3D que l'on démarre puis traverse en vol.",
     description:
-      "Punds est mon hub de liens en une page, construit comme un monde Three.js navigable dans le style de Copland OS, dans Serial Experiments Lain. Glissez pour regarder, scrollez pour voler, cliquez un panneau flottant pour ouvrir le lien.",
+      "Punds est mon hub de liens en une page, construit comme un monde Three.js navigable qui démarre comme un vieux système d'exploitation. Glissez pour regarder, scrollez pour voler, cliquez un panneau flottant pour ouvrir le lien.",
     overview:
-      "J'en avais assez de copier cinq liens chaque fois qu'on me demandait ce que j'avais construit, alors j'ai fait une page qui pointe vers tous. Puis j'ai refusé d'en faire une liste. Punds démarre comme Copland OS, le système d'exploitation de Serial Experiments Lain : un logo, un journal de démarrage qui défile, une voix grave qui dit « present day, present time », et on tombe dans un monde Three.js. Des panneaux holographiques tournent autour d'un logo lumineux dans la brume, on glisse pour regarder et on scrolle pour voler, et un clic fait plonger la caméra dedans avant que le lien s'ouvre. Les dépendances d'exécution sont react, react-dom et three. C'est tout.",
+      "J'en avais assez de copier cinq liens chaque fois qu'on me demandait ce que j'avais construit, alors j'ai fait une page qui pointe vers tous. Puis j'ai refusé d'en faire une liste. Punds démarre comme un vieux système d'exploitation imaginaire : un logo, un journal de démarrage qui défile, une voix grave, et on tombe dans un monde Three.js. Des panneaux holographiques tournent autour d'un logo lumineux dans la brume, on glisse pour regarder et on scrolle pour voler, et un clic fait plonger la caméra dedans avant que le lien s'ouvre. Les dépendances d'exécution sont react, react-dom et three. C'est tout.",
     roleSummary:
       "Moi seul, y compris les parties que personne n'avait demandées : le journal de démarrage, la voix, les carpes.",
     sections: [
@@ -183,9 +183,9 @@ export const punds: Record<Language, LocalizedContent> = {
   zh: {
     tagline: "我的链接中枢，做成一个开机进入、自由飞行的 3D 世界。",
     description:
-      "Punds 是我的单页链接中枢，做成了一个可漫游的 Three.js 世界，取《玲音》里 Copland OS 的样子。拖动环顾，滚动飞行，点一块悬浮面板就能打开链接。",
+      "Punds 是我的单页链接中枢，做成了一个可漫游的 Three.js 世界，开机时像一套老式操作系统。拖动环顾，滚动飞行，点一块悬浮面板就能打开链接。",
     overview:
-      "每次有人问我做过什么，我都得复制五个链接，实在受够了，于是做了一个指向全部的页面。然后我拒绝把它做成一份清单。Punds 的开机像 Copland OS，也就是《玲音》里那套系统：先是 logo，接着一段滚动的启动日志，一个低沉的声音说「present day, present time」，然后你就落进一个 Three.js 世界。全息面板在雾里绕着一枚发光的标志转，拖动可以环顾，滚动可以飞行，点一下面板，镜头会先俯冲进去，链接才打开。运行时依赖是 react、react-dom 和 three，就这三个。",
+      "每次有人问我做过什么，我都得复制五个链接，实在受够了，于是做了一个指向全部的页面。然后我拒绝把它做成一份清单。Punds 的开机像一套虚构的老式操作系统：先是 logo，接着一段滚动的启动日志，一个低沉的声音，然后你就落进一个 Three.js 世界。全息面板在雾里绕着一枚发光的标志转，拖动可以环顾，滚动可以飞行，点一下面板，镜头会先俯冲进去，链接才打开。运行时依赖是 react、react-dom 和 three，就这三个。",
     roleSummary: "只有我，包括没人要求的那些部分：启动日志、那个声音、那几条锦鲤。",
     sections: [
       {
