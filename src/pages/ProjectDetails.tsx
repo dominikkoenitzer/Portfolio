@@ -231,9 +231,14 @@ const ProjectDetails = () => {
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
   const projectTimeline = `${project.dateLabel} – ${project.endLabel ?? t.present}`;
-  const otherProjects = getProjects(language).filter(
-    (item) => item.slug !== project.slug,
-  );
+  /* The three projects after this one in creation order, wrapping round at
+     the newest, so the page ends on a next step rather than the whole
+     catalogue again; "All projects" beside the heading is the rest. */
+  const catalogue = getProjects(language);
+  const position = catalogue.findIndex((item) => item.slug === project.slug);
+  const otherProjects = [1, 2, 3]
+    .map((step) => catalogue[(position + step) % catalogue.length])
+    .filter((item) => item.slug !== project.slug);
   const captionFor = (position: number) => project.captions[position];
 
   /* The case study's sections, for the list in the links rail.
