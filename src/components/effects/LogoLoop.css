@@ -42,6 +42,14 @@
   align-items: center;
 }
 
+/* The phone rule in index.css caps every element at 100% wide; the loop's
+   track and lists are wider than the screen by design, and capped they
+   squeeze their logos on top of each other. */
+.logoloop__track,
+.logoloop__list {
+  max-width: none;
+}
+
 .logoloop--vertical .logoloop__list {
   flex-direction: column;
 }

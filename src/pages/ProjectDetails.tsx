@@ -299,7 +299,7 @@ const ProjectDetails = () => {
                   tap-target rule in index.css matches, so a breadcrumb is a
                   44px target under a thumb and unchanged under a mouse. */}
               <Link
-                className="inline-flex items-center transition-colors hover:text-foreground"
+                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
                 to="/"
               >
                 {t.home}
@@ -308,7 +308,7 @@ const ProjectDetails = () => {
                 /
               </span>
               <Link
-                className="inline-flex items-center transition-colors hover:text-foreground"
+                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
                 to="/projects"
                 {...warmOnIntent("/projects")}
               >
@@ -321,7 +321,7 @@ const ProjectDetails = () => {
             </nav>
 
             <Link
-              className="inline-flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
+              className="inline-flex min-h-6 items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
               to="/projects"
               {...warmOnIntent("/projects")}
             >
@@ -431,7 +431,7 @@ const ProjectDetails = () => {
                   </motion.div>
                 ) : (
                   <ProjectFigure
-                    alt={`${project.title} screenshot`}
+                    alt={captionFor(0) ?? shotAlt(0)}
                     caption={captionFor(0)}
                     className="w-full max-w-xl"
                     layoutId="project-shot-0"
@@ -670,7 +670,7 @@ const ProjectDetails = () => {
                 {t.moreProjects}
               </h2>
               <Link
-                className="inline-flex items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
+                className="inline-flex min-h-6 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
                 to="/projects"
                 {...warmOnIntent("/projects")}
               >
@@ -742,7 +742,7 @@ const ProjectDetails = () => {
       <AnimatePresence>
         {lightboxIndex !== null && galleryImages.length > 0 ? (
         <Lightbox
-          alt={`${project.title} screenshot`}
+          alt={captionFor(lightboxIndex) ?? shotAlt(lightboxIndex)}
           images={galleryImages}
           index={lightboxIndex}
           labels={{
