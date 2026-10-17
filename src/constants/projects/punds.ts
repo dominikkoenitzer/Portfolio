@@ -10,7 +10,7 @@ export const COOLDOWN_WINDOWS = 4`;
 
 export const punds: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "A list of my links, hidden inside a 3D world you fly through.",
+    tagline: "My link hub as a 3D world you boot into and fly through.",
     description:
       "Punds is my one-page link hub, built as a navigable Three.js world in the style of Copland OS from Serial Experiments Lain. Drag to look around, scroll to fly, click a floating panel to open the link.",
     overview:
@@ -21,7 +21,7 @@ export const punds: Record<Language, LocalizedContent> = {
       {
         heading: "The boot log plays while the 3D loads",
         body: [
-          "The page opens on a logo, then a boot log that prints a line every 250 ms, then a voice saying \"present day, present time\". It is set dressing, and it also covers for the heavy part. Three.js is imported lazily after the first render, so the CRT shell and the log paint straight away while the scene is still downloading. When the scene arrives, it jumps to whatever phase the boot has reached by then.",
+          "The page opens on a logo, then a boot log that prints a line every 250 ms, then a voice saying \"present day, present time\". It is set dressing, and it also covers for the heavy part. Three.js is imported lazily after the first render, so the CRT shell and the log paint straight away while the scene is still downloading. The scene builds itself in steps and yields to the browser between them, then compiles its shaders before the first frame, so the log keeps printing and the opening frames do not stall. When the scene arrives, it jumps to whatever phase the boot has reached by then.",
           "Tapping during the boot skips straight into the world. If the browser has no WebGL, the chunk never arrives or the scene throws while starting, the page drops the canvas and shows the links as plain text in its place, so nobody is left looking at a black screen.",
         ],
       },
@@ -67,18 +67,18 @@ export const punds: Record<Language, LocalizedContent> = {
     ],
   },
   de: {
-    tagline: "Eine Liste meiner Links, versteckt in einer 3D-Welt, durch die man fliegt.",
+    tagline: "Mein Link-Hub als 3D-Welt, die man hochfährt und durchfliegt.",
     description:
       "Punds ist mein einseitiger Link-Hub, gebaut als begehbare Three.js-Welt im Stil von Copland OS aus Serial Experiments Lain. Ziehen zum Umsehen, scrollen zum Fliegen, ein schwebendes Panel anklicken, um den Link zu öffnen.",
     overview:
-      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt. Und weigerte mich dann, eine Liste daraus zu machen. Punds fährt hoch wie Copland OS, das Betriebssystem aus Serial Experiments Lain: ein Logo-Splash, ein durchlaufendes Boot-Log, eine tiefe Stimme, die „present day, present time“ sagt, und dann fällt man in eine Three.js-Welt. Holografische Panels kreisen im Nebel um ein leuchtendes Logo, man zieht, um sich umzusehen, und scrollt, um zu fliegen, und ein Klick lässt die Kamera in das Panel tauchen, bevor der Link aufgeht. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
+      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt. Dann weigerte ich mich, eine Liste daraus zu machen. Punds fährt hoch wie Copland OS, das Betriebssystem aus Serial Experiments Lain: ein Logo-Splash, ein durchlaufendes Boot-Log, eine tiefe Stimme, die „present day, present time“ sagt, und dann fällt man in eine Three.js-Welt. Holografische Panels kreisen im Nebel um ein leuchtendes Logo, man zieht, um sich umzusehen, und scrollt, um zu fliegen, und ein Klick lässt die Kamera in das Panel tauchen, bevor der Link aufgeht. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
     roleSummary:
       "Nur ich, samt der Teile, nach denen niemand gefragt hat: das Boot-Log, die Stimme, die Kois.",
     sections: [
       {
         heading: "Das Boot-Log läuft, während das 3D lädt",
         body: [
-          "Die Seite beginnt mit einem Logo, dann folgt ein Boot-Log, das alle 250 ms eine Zeile schreibt, dann eine Stimme, die „present day, present time“ sagt. Das ist Kulisse, und es überbrückt nebenbei den schweren Teil. Three.js wird erst nach dem ersten Rendern nachgeladen, also stehen die Röhren-Hülle und das Log sofort da, während die Szene noch herunterlädt. Kommt die Szene an, springt sie in die Phase, die der Boot bis dahin erreicht hat.",
+          "Die Seite beginnt mit einem Logo, dann folgt ein Boot-Log, das alle 250 ms eine Zeile schreibt, dann eine Stimme, die „present day, present time“ sagt. Das ist Kulisse, und es überbrückt nebenbei den schweren Teil. Three.js wird erst nach dem ersten Rendern nachgeladen, also stehen die Röhren-Hülle und das Log sofort da, während die Szene noch herunterlädt. Die Szene baut sich in Schritten auf, lässt dem Browser dazwischen Luft und kompiliert ihre Shader vor dem ersten Frame, damit das Log weiterläuft und die ersten Frames nicht hängen. Kommt die Szene an, springt sie in die Phase, die der Boot bis dahin erreicht hat.",
           "Ein Tippen während des Boots springt direkt in die Welt. Hat der Browser kein WebGL, kommt der Chunk nie an oder wirft die Szene beim Start einen Fehler, lässt die Seite das Canvas weg und zeigt an seiner Stelle die Links als einfachen Text. So schaut niemand auf einen schwarzen Bildschirm.",
         ],
       },
@@ -124,7 +124,7 @@ export const punds: Record<Language, LocalizedContent> = {
     ],
   },
   fr: {
-    tagline: "La liste de mes liens, cachée dans un monde 3D que l'on traverse en vol.",
+    tagline: "Mon hub de liens, un monde 3D que l'on démarre puis traverse en vol.",
     description:
       "Punds est mon hub de liens en une page, construit comme un monde Three.js navigable dans le style de Copland OS, dans Serial Experiments Lain. Glissez pour regarder, scrollez pour voler, cliquez un panneau flottant pour ouvrir le lien.",
     overview:
@@ -135,7 +135,7 @@ export const punds: Record<Language, LocalizedContent> = {
       {
         heading: "Le journal de démarrage défile pendant que la 3D charge",
         body: [
-          "La page s'ouvre sur un logo, puis un journal de démarrage qui écrit une ligne toutes les 250 ms, puis une voix qui dit « present day, present time ». C'est du décor, et ça couvre aussi la partie lourde. Three.js n'est importé qu'après le premier rendu, donc l'habillage cathodique et le journal s'affichent tout de suite pendant que la scène se télécharge encore. Quand la scène arrive, elle saute à la phase que le démarrage a atteinte entre-temps.",
+          "La page s'ouvre sur un logo, puis un journal de démarrage qui écrit une ligne toutes les 250 ms, puis une voix qui dit « present day, present time ». C'est du décor, et ça couvre aussi la partie lourde. Three.js n'est importé qu'après le premier rendu, donc l'habillage cathodique et le journal s'affichent tout de suite pendant que la scène se télécharge encore. La scène se construit par étapes en rendant la main au navigateur entre elles, puis compile ses shaders avant la première image, pour que le journal continue de défiler et que les premières images ne calent pas. Quand la scène arrive, elle saute à la phase que le démarrage a atteinte entre-temps.",
           "Un appui pendant le démarrage mène directement dans le monde. Si le navigateur n'a pas de WebGL, si le chunk n'arrive jamais ou si la scène plante au lancement, la page abandonne le canvas et affiche les liens en texte simple à sa place. Personne ne reste devant un écran noir.",
         ],
       },
@@ -181,7 +181,7 @@ export const punds: Record<Language, LocalizedContent> = {
     ],
   },
   zh: {
-    tagline: "我的链接清单，藏在一个可以飞进去的 3D 世界里。",
+    tagline: "我的链接中枢，做成一个开机进入、自由飞行的 3D 世界。",
     description:
       "Punds 是我的单页链接中枢，做成了一个可漫游的 Three.js 世界，取《玲音》里 Copland OS 的样子。拖动环顾，滚动飞行，点一块悬浮面板就能打开链接。",
     overview:
@@ -191,7 +191,7 @@ export const punds: Record<Language, LocalizedContent> = {
       {
         heading: "3D 加载的时候，启动日志在滚",
         body: [
-          "页面先出一个 logo，然后是每 250 毫秒打出一行的启动日志，再是一个声音说「present day, present time」。这是布景，同时也替最重的那部分打了掩护。Three.js 在首次渲染之后才懒加载，所以 CRT 外壳和日志立刻就能画出来，场景则还在下载。场景到了以后，会直接跳到开机流程当时走到的那个阶段。",
+          "页面先出一个 logo，然后是每 250 毫秒打出一行的启动日志，再是一个声音说「present day, present time」。这是布景，同时也替最重的那部分打了掩护。Three.js 在首次渲染之后才懒加载，所以 CRT 外壳和日志立刻就能画出来，场景则还在下载。场景分步搭建，每步之间把控制权交还给浏览器，并在第一帧之前编译好着色器，所以日志一直在滚，开头几帧也不会卡住。场景到了以后，会直接跳到开机流程当时走到的那个阶段。",
           "开机途中点一下，就直接进入世界。如果浏览器没有 WebGL、代码块一直没到，或者场景启动时报错，页面就不要 canvas 了，改在原处用纯文本列出链接，谁也不会对着一块黑屏发呆。",
         ],
       },
