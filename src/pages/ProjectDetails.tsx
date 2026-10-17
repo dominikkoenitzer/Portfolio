@@ -12,6 +12,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
+import { TiltDepth, TiltSurface } from "@/components/effects/tilt-surface";
 import { Button } from "@/components/ui/button";
 // Module path, not the seo-data barrel: that barrel also re-exports
 // services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
@@ -29,7 +30,7 @@ import {
   pictureSrcSet,
   projectCardSrcSet,
 } from "@/constants/projects";
-import type { ProjectSection } from "@/constants/projects/types";
+import type { PortfolioProject, ProjectSection } from "@/constants/projects/types";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -46,8 +47,8 @@ import {
   StatStrip,
 } from "@/components/effects/project-effects";
 
-/** One card surface for the whole page: opaque cream, hairline, no shadow. */
-const CARD = "rounded-2xl border border-border/60 bg-card";
+/** One card surface for the whole page: opaque cream and a hairline ring. */
+const CARD = "rounded-3xl bg-card ring-1 ring-border/50";
 
 /**
  * How wide the main screenshot renders: the page column, which stops at
@@ -77,7 +78,7 @@ function FeatureSection({
   return (
     <motion.section
       id={id}
-      className="scroll-mt-28 border-border/60 border-t pt-12 first:border-t-0 first:pt-0"
+      className="scroll-mt-28"
       {...revealOnScroll(reduceMotion)}
     >
       <div className="flex items-baseline gap-4">
@@ -176,7 +177,7 @@ function CodeExcerpt({
           user cannot reach the end of a long line. The site-wide
           :focus-visible ring shows where focus is. */}
       <pre
-        className={`${CARD} code-excerpt overflow-x-auto p-5 text-[13px] leading-relaxed sm:p-6`}
+        className="code-excerpt overflow-x-auto rounded-2xl bg-secondary/50 p-5 text-[13px] leading-relaxed sm:p-6"
         tabIndex={0}
       >
         <code>{code.text}</code>
@@ -185,6 +186,75 @@ function CodeExcerpt({
         {code.caption}
       </figcaption>
     </motion.figure>
+  );
+}
+
+/** The project's buttons: open or install it, its download page, its source. */
+function ProjectActions({
+  project,
+  className,
+}: {
+  project: PortfolioProject;
+  className?: string;
+}) {
+  const t = translations[useLanguage().language].projectDetails;
+  return (
+    <div className={`flex flex-wrap items-center gap-3 ${className ?? ""}`}>
+      {project.downloadUrl ? (
+        <Button asChild className="rounded-full px-6" variant="cta">
+          <a
+            href={project.downloadUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Download className="h-4 w-4" />
+            {t.download}
+          </a>
+        </Button>
+      ) : project.liveUrl ? (
+        <Button asChild className="rounded-full px-6" variant="cta">
+          <a
+            href={project.liveUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLink className="h-4 w-4" />
+            {t.visitSite}
+          </a>
+        </Button>
+      ) : null}
+      {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
+        <Button asChild className="rounded-full px-5" variant="soft">
+          <a
+            href={project.downloadPage}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLink className="h-4 w-4" />
+            {t.downloadPage}
+          </a>
+        </Button>
+      ) : null}
+      {project.sourcePrivate ? (
+        <PrivateSource>
+          <Button className="rounded-full px-5" type="button" variant="soft">
+            <Lock className="h-4 w-4" />
+            {t.sourceCode}
+          </Button>
+        </PrivateSource>
+      ) : (
+        <Button asChild className="rounded-full px-5" variant="soft">
+          <a
+            href={project.repoUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Github className="h-4 w-4" />
+            {t.sourceCode}
+          </a>
+        </Button>
+      )}
+    </div>
   );
 }
 
@@ -395,62 +465,7 @@ const ProjectDetails = () => {
                 {project.tagline}
               </p>
 
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                {project.downloadUrl ? (
-                  <Button asChild className="rounded-lg px-6" variant="cta">
-                    <a
-                      href={project.downloadUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Download className="h-4 w-4" />
-                      {t.download}
-                    </a>
-                  </Button>
-                ) : project.liveUrl ? (
-                  <Button asChild className="rounded-lg px-6" variant="cta">
-                    <a
-                      href={project.liveUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      {t.visitSite}
-                    </a>
-                  </Button>
-                ) : null}
-                {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
-                  <Button asChild className="rounded-lg px-5" variant="soft">
-                    <a
-                      href={project.downloadPage}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      {t.downloadPage}
-                    </a>
-                  </Button>
-                ) : null}
-                {project.sourcePrivate ? (
-                  <PrivateSource>
-                    <Button className="rounded-lg px-5" type="button" variant="soft">
-                      <Lock className="h-4 w-4" />
-                      {t.sourceCode}
-                    </Button>
-                  </PrivateSource>
-                ) : (
-                  <Button asChild className="rounded-lg px-5" variant="soft">
-                    <a
-                      href={project.repoUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Github className="h-4 w-4" />
-                      {t.sourceCode}
-                    </a>
-                  </Button>
-                )}
-              </div>
+              <ProjectActions className="mt-9" project={project} />
 
               {project.downloadUrl ? (
                 <p className="mt-4 max-w-prose text-muted-foreground text-sm leading-relaxed">
@@ -463,7 +478,7 @@ const ProjectDetails = () => {
                 column beside the title from `lg`, where the hairline turns
                 to stand on its left. */}
             <motion.dl
-              className="grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 lg:grid-cols-1 lg:gap-y-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
+              className="grid grid-cols-2 gap-x-8 gap-y-6 lg:grid-cols-1 lg:gap-y-5"
               {...revealOnScroll(reduceMotion)}
             >
               {specRows.map((row) => (
@@ -505,6 +520,7 @@ const ProjectDetails = () => {
                 <ProjectFigure
                   alt={`${project.title} screenshot`}
                   caption={captionFor(0)}
+                  lean
                   layoutId="project-shot-0"
                   onOpen={() => openLightbox(0)}
                   openLabel={shotLabel(0)}
@@ -534,7 +550,7 @@ const ProjectDetails = () => {
         <div className="mx-auto max-w-7xl px-6 pb-24 sm:px-8 sm:pb-28 md:px-12 lg:px-16">
           <div className="grid gap-12 pt-8 lg:grid-cols-[1fr_auto] lg:gap-16">
             {/* -------- Reading column -------- */}
-            <article className="min-w-0 max-w-3xl space-y-12">
+            <article className="min-w-0 max-w-3xl space-y-16 sm:space-y-20">
               <FeatureSection
                 id="section-1"
                 index={1}
@@ -591,7 +607,7 @@ const ProjectDetails = () => {
                     The hero has the full buttons; here they are quiet text
                     links, so the first screen does not show them twice. -------- */}
             <aside className="hidden lg:block">
-              <div className={`sticky top-28 w-64 ${CARD} p-6`}>
+              <div className="sticky top-28 w-60">
                 {outline.length > 1 ? (
                   <nav aria-label={t.onThisPage}>
                     <RailLabel>{t.onThisPage}</RailLabel>
@@ -627,7 +643,7 @@ const ProjectDetails = () => {
 
                 <div
                   className={
-                    outline.length > 1 ? "mt-6 border-border/60 border-t pt-5" : ""
+                    outline.length > 1 ? "mt-8" : ""
                   }
                 >
                   <RailLabel>{t.links}</RailLabel>
@@ -696,9 +712,19 @@ const ProjectDetails = () => {
             </aside>
           </div>
 
+          {/* A phone has no rail, so the buttons come back once the case
+              study is read. */}
+          <motion.div
+            className="mt-16 lg:hidden"
+            {...revealOnScroll(reduceMotion)}
+          >
+            <p className="title-serif font-bold text-2xl">{project.title}</p>
+            <ProjectActions className="mt-5" project={project} />
+          </motion.div>
+
           {/* -------- More projects -------- */}
           <motion.section
-            className="mt-24 border-border/60 border-t pt-14"
+            className="mt-24 sm:mt-28"
             {...revealOnScroll(reduceMotion)}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -729,9 +755,12 @@ const ProjectDetails = () => {
                 stopped 56px short of the right. */}
             <div className="-mx-6 mt-8 flex max-w-none snap-x snap-mandatory scroll-pl-6 gap-4 overflow-x-auto px-6 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {otherProjects.map((item) => (
-                <Link
-                  className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col p-5 transition-colors duration-200 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
+                <TiltSurface
+                  className="w-[78vw] max-w-sm shrink-0 snap-start sm:w-auto sm:max-w-none"
                   key={item.slug}
+                >
+                <Link
+                  className={`group flex h-full flex-col overflow-hidden p-5 ${CARD}`}
                   to={`/projects/${item.slug}`}
                   {...warmOnIntent(`/projects/${item.slug}`)}
                 >
@@ -739,14 +768,16 @@ const ProjectDetails = () => {
                       costs what it costs on /projects. Decorative: the title
                       right below names it. */}
                   {item.image && !item.imageIcon ? (
-                    <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden rounded-t-2xl border-border/60 border-b bg-secondary/40">
-                      <img
-                        alt=""
-                        className="h-full w-full object-cover object-top"
-                        decoding="async"
-                        loading="lazy"
-                        src={cardImageSrc(item.image)}
-                      />
+                    <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden bg-secondary/40">
+                      <TiltDepth className="h-full w-full" depth={6}>
+                        <img
+                          alt=""
+                          className="h-full w-full scale-[1.04] object-cover object-top"
+                          decoding="async"
+                          loading="lazy"
+                          src={cardImageSrc(item.image)}
+                        />
+                      </TiltDepth>
                     </div>
                   ) : null}
                   <div className="flex items-start justify-between gap-3">
@@ -760,8 +791,8 @@ const ProjectDetails = () => {
                     </div>
                     <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-primary" />
                   </div>
-                  <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
-                    {item.description}
+                  <p className="mt-3 text-foreground/80 text-sm leading-relaxed">
+                    {item.tagline}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
@@ -769,6 +800,7 @@ const ProjectDetails = () => {
                     ))}
                   </div>
                 </Link>
+                </TiltSurface>
               ))}
             </div>
           </motion.section>
