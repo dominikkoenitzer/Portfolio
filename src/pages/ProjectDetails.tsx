@@ -12,7 +12,6 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
-import { TiltDepth, TiltSurface } from "@/components/effects/tilt-surface";
 import { Button } from "@/components/ui/button";
 // Module path, not the seo-data barrel: that barrel also re-exports
 // services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
@@ -520,7 +519,6 @@ const ProjectDetails = () => {
                 <ProjectFigure
                   alt={`${project.title} screenshot`}
                   caption={captionFor(0)}
-                  lean
                   layoutId="project-shot-0"
                   onOpen={() => openLightbox(0)}
                   openLabel={shotLabel(0)}
@@ -755,12 +753,9 @@ const ProjectDetails = () => {
                 stopped 56px short of the right. */}
             <div className="-mx-6 mt-8 flex max-w-none snap-x snap-mandatory scroll-pl-6 gap-4 overflow-x-auto px-6 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {otherProjects.map((item) => (
-                <TiltSurface
-                  className="w-[78vw] max-w-sm shrink-0 snap-start sm:w-auto sm:max-w-none"
-                  key={item.slug}
-                >
                 <Link
-                  className={`group flex h-full flex-col overflow-hidden p-5 ${CARD}`}
+                  className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col overflow-hidden p-5 transition-shadow duration-200 ease-out hover:ring-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
+                  key={item.slug}
                   to={`/projects/${item.slug}`}
                   {...warmOnIntent(`/projects/${item.slug}`)}
                 >
@@ -769,15 +764,13 @@ const ProjectDetails = () => {
                       right below names it. */}
                   {item.image && !item.imageIcon ? (
                     <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden bg-secondary/40">
-                      <TiltDepth className="h-full w-full" depth={6}>
-                        <img
-                          alt=""
-                          className="h-full w-full scale-[1.04] object-cover object-top"
-                          decoding="async"
-                          loading="lazy"
-                          src={cardImageSrc(item.image)}
-                        />
-                      </TiltDepth>
+                      <img
+                        alt=""
+                        className="h-full w-full object-cover object-top"
+                        decoding="async"
+                        loading="lazy"
+                        src={cardImageSrc(item.image)}
+                      />
                     </div>
                   ) : null}
                   <div className="flex items-start justify-between gap-3">
@@ -800,7 +793,6 @@ const ProjectDetails = () => {
                     ))}
                   </div>
                 </Link>
-                </TiltSurface>
               ))}
             </div>
           </motion.section>
