@@ -28,7 +28,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   time: "Time, an NTP-synced web clock",
   jester: "Jester, a tabbed Windows notepad",
   flow: "Flow, a Windows macro and auto-clicker",
-  punds: "Punds, a 3D Lain-style link hub",
+  punds: "Punds, a 3D link hub you fly through",
   senbon: "Senbon, a markdown journal",
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",
@@ -67,9 +67,9 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
   time: "An NTP-synced web clock, accurate to hundredths of a second: the time, date, ISO week and timezone on one bare screen, with nothing to press.",
   jester:
     "A native Windows notepad with tabs, line numbers, find-in-files and PDF export, all in one portable Jester.exe with no installer.",
-  flow: "A C++17 Windows app that records mouse and keyboard macros, replays them with sub-10 ms timing and runs a fast auto-clicker. One exe, no install.",
+  flow: "A C++17 Windows app that records mouse and keyboard macros, replays them on a high-resolution timer and runs a fast auto-clicker. One exe, no install.",
   punds:
-    "My one-page link hub, built as a navigable Three.js world in the style of Copland OS from Serial Experiments Lain. Drag to look, scroll to fly.",
+    "My one-page link hub, built as a navigable Three.js world that boots like an old operating system. Drag to look, scroll to fly.",
   senbon:
     "My markdown journal: plain files with four frontmatter keys, rendered into an unhurried reading page, with no CMS and no third-party trackers.",
   oxidize:
