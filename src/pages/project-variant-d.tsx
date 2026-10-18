@@ -1,14 +1,20 @@
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { LiveTestCount } from "@/components/effects/project-effects";
 import {
-  cardImageSrc,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { type CSSProperties, type MouseEvent, type ReactNode, useRef } from "react";
+import { Link } from "react-router-dom";
+import { LiveTestCount, type LightboxOrigin } from "@/components/effects/project-effects";
+import {
   pictureSrcSet,
   pictureWidth,
   type PortfolioProject,
 } from "@/constants/projects";
+import type { ProjectStat } from "@/constants/projects/types";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { EASE_OUT, VIEWPORT } from "@/lib/motion";
@@ -16,351 +22,525 @@ import { translations } from "@/lib/translations";
 import type { VariantProps } from "./project-variants";
 
 /**
- * Layout d of the project page. Everything visual sits in one kind of card
- * (one radius, one tone per theme, never any text inside), and the app is
- * staged in every section: cropped so it runs off the card edge, or floated
- * whole when the capture is small. Each section repeats one unit: label,
- * headline, a short lead, the card, a caption. The longer write-up follows
- * once the pictures are told.
+ * Layout d of the project page, built to `SPEC.md` of 18.10.: the project as
+ * a short story (promise, the moment worth remembering, proof) told almost
+ * entirely in pictures. A hero with the app at about its own size, a bento of
+ * one-feature tiles, the facts in one row, then the next project. Each
+ * project brings its own accent, tuned for the light and the night theme.
  */
 
 const PAGE = "mx-auto w-full max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16";
+const FILE_ASPECT = 16 / 10;
 
-/** The one card: radius, tone and clipping, used for every visual on the page. */
-const CARD = "relative isolate overflow-hidden rounded-[28px]";
-const TONE = "bg-secondary";
+/** One card: radius, the project's tone, clipping. Text never sits inside. */
+const CARD = "relative isolate overflow-hidden rounded-[28px] bg-[color:var(--pt)]";
 
-/** Card shape: square on a phone, 16:9 from `sm`. */
-const CARD_SHAPE = "aspect-square sm:aspect-video";
+/** Focus ring in the project accent, following the card radius. */
+const RING =
+  "outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:[outline-color:var(--pa)]";
 
-/** Entry: a small scale and fade on a soft spring, once, as the card arrives. */
-const CARD_SPRING = { type: "spring", stiffness: 210, damping: 26, mass: 0.9 } as const;
-
-/* ------------------------------------------------------------------ */
-/* Where the app sits inside a picture                                 */
-/* ------------------------------------------------------------------ */
-
-type Rect = { x0: number; y0: number; x1: number; y1: number };
-
-const WHOLE: Rect = { x0: 0, y0: 0, x1: 1, y1: 1 };
-
-/**
- * The app's own window inside the pictures that were shot on the plain
- * backdrop, as fractions of the file (measured from the pixels). The stage
- * shows the window alone, so the backdrop never paints a pale box on the
- * night theme. The catalogue copies share the composition.
- */
-const WINDOWS: Record<string, Rect> = {
-  "/projects/entropy-3.jpg": { x0: 0.095, y0: 0.072, x1: 0.905, y1: 0.929 },
-  "/projects/entropy-4.jpg": { x0: 0.25875, y0: 0.204, x1: 0.74125, y1: 0.796 },
-  "/projects/entropy-5.jpg": { x0: 0.095, y0: 0.072, x1: 0.905, y1: 0.929 },
-  "/projects/flow.jpg": { x0: 0.338125, y0: 0.06, x1: 0.66125, y1: 0.949 },
-  "/projects/psyche.jpg": { x0: 0.26, y0: 0.206, x1: 0.739375, y1: 0.793 },
-  "/projects/psyche-2.jpg": { x0: 0.145, y0: 0.102, x1: 0.854375, y1: 0.898 },
-};
-
-/**
- * Close-ups worth showing, per picture: points in the window's own fractions
- * that land on something to read. A picture with none gets one at its middle.
- */
-const CLOSE_UPS: Record<string, Array<[number, number]>> = {
-  "/projects/oxidize.jpg": [[0.2, 0.2], [0.58, 0.3], [0.24, 0.72]],
-  "/projects/inkling.jpg": [[0.66, 0.32], [0.16, 0.2]],
-  "/projects/inkling-2.jpg": [[0.3, 0.26]],
-  "/projects/inkling-3.jpg": [[0.5, 0.5]],
-  "/projects/inkling-4.jpg": [[0.4, 0.25]],
-  "/projects/jester.jpg": [[0.24, 0.16], [0.3, 0.5], [0.3, 0.84]],
-  "/projects/daifuku.jpg": [[0.17, 0.2], [0.5, 0.66], [0.84, 0.2]],
-  "/projects/remnants.jpg": [[0.4, 0.3], [0.45, 0.74], [0.1, 0.3]],
-  "/projects/mochi.jpg": [[0.25, 0.3], [0.75, 0.24], [0.75, 0.76]],
-  "/projects/punds.jpg": [[0.5, 0.5], [0.8, 0.3], [0.2, 0.42]],
-  "/projects/time.jpg": [[0.5, 0.5], [0.3, 0.52]],
-  "/projects/time-2.jpg": [[0.5, 0.5], [0.7, 0.5]],
-  "/projects/senbon.jpg": [[0.5, 0.32], [0.5, 0.56]],
-  "/projects/senbon-2.jpg": [[0.36, 0.2], [0.46, 0.55]],
-  "/projects/portfolio.jpg": [[0.3, 0.46], [0.55, 0.1]],
-  "/projects/portfolio-2.jpg": [[0.3, 0.4], [0.5, 0.84]],
-  "/projects/portfolio-3.jpg": [[0.5, 0.55], [0.5, 0.3]],
-  "/projects/zephyr.jpg": [[0.3, 0.25], [0.6, 0.55], [0.3, 0.85]],
-  "/projects/zephyr-2.jpg": [[0.45, 0.42], [0.8, 0.25]],
-  "/projects/zephyr-3.jpg": [[0.4, 0.35], [0.85, 0.35]],
-  "/projects/zephyr-4.jpg": [[0.5, 0.52]],
-  "/projects/spectrum.jpg": [[0.25, 0.25], [0.68, 0.3]],
-  "/projects/spectrum-2.jpg": [[0.3, 0.25], [0.5, 0.6]],
-  "/projects/spectrum-3.jpg": [[0.25, 0.25], [0.65, 0.45]],
-  "/projects/spectrum-4.jpg": [[0.45, 0.2], [0.6, 0.65]],
-  "/projects/entropy.jpg": [[0.5, 0.45], [0.35, 0.3]],
-  "/projects/entropy-2.jpg": [[0.5, 0.3], [0.25, 0.25]],
-  "/projects/entropy-3.jpg": [[0.3, 0.2], [0.6, 0.5]],
-  "/projects/entropy-5.jpg": [[0.3, 0.2], [0.55, 0.6]],
-};
-
-/** A logo picture, not a screenshot: it stays in the viewer and never gets a stage. */
-const isMark = (src: string) => /-mark\.(jpe?g|png)$/i.test(src);
-
-type Window = {
-  rect: Rect;
-  /** Width over height of the window. */
-  aspect: number;
-  /** The window's width in the file's own pixels. */
-  native: number;
-};
-
-const windowOf = (src: string): Window => {
-  const rect = WINDOWS[src] ?? WHOLE;
-  const width = pictureWidth(src);
-  const fileAspect = 16 / 10;
-  return {
-    rect,
-    aspect: ((rect.x1 - rect.x0) * fileAspect) / (rect.y1 - rect.y0),
-    native: width * (rect.x1 - rect.x0),
-  };
-};
+const SPRING = { type: "spring", stiffness: 210, damping: 26, mass: 0.9 } as const;
 
 /* ------------------------------------------------------------------ */
-/* Stage geometry                                                      */
+/* Art direction                                                       */
 /* ------------------------------------------------------------------ */
 
-/**
- * hero: centred, inset at the top, cut off by the bottom edge.
- * plate: centred and whole where it fits, for small captures.
- * left / right: pinned to one side, running off the far side where it is wide enough.
- * detail: a close-up that fills the card.
- */
-type Mode = "hero" | "plate" | "left" | "right" | "detail";
+/** A region of a picture: left, top, right, bottom as fractions of the file. */
+type Rect = [number, number, number, number];
+
+type Shot = { pic: string; rect: Rect };
+
+type Tile =
+  | { kind: "crop"; pic: string; rect: Rect; title: string }
+  | { kind: "pair"; a: Shot; b: Shot; title: string; stack?: boolean }
+  | { kind: "mark"; pic: string; rect: Rect; title: string }
+  | { kind: "stat"; stat: number };
 
 /**
- * How a stage is set: its mode, the point a close-up centres on, and for a
- * capture taller than the card, which part of it shows (its top, middle or
- * bottom).
+ * How the hero places the app window in its card. `width` is in card widths;
+ * left/right pin a top corner and run off the far edge, plate centres the
+ * window, detail fills the card around a focus point.
  */
 type View = {
-  mode: Mode;
+  mode: "left" | "right" | "plate" | "detail";
+  width?: number;
   focus?: [number, number];
-  y?: "top" | "middle" | "bottom";
-  /**
-   * A close-up's width in card widths, for a picture whose subject must stay
-   * whole (a clock face, a name). The square phone card shows that picture
-   * whole and centred instead.
-   */
-  zoom?: number;
 };
 
-/** A picture whose subject only reads whole: the phone shows even its head card uncropped. */
-const keepWhole = (src: string) => OWN_VIEWS[src]?.every((view) => view.zoom) ?? false;
+type Art = {
+  /** Accent for the light theme and for the night theme. */
+  accent: [string, string];
+  hero: { pic: string; wide: View; phone: View };
+  tiles: Tile[];
+  /** One more full-width picture, where the project has a second screen worth it. */
+  wide?: Shot & { title: string };
+};
+
+const P = (name: string) => `/projects/${name}`;
+
+/* Tile titles are English in this preview (see SPEC.md, section 10). */
+const ART: Record<string, Art> = {
+  zephyr: {
+    accent: ["#a8502a", "#f2a679"],
+    hero: { pic: P("zephyr.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.1 } },
+    tiles: [
+      { kind: "crop", pic: P("zephyr-4.jpg"), rect: [0.28, 0.14, 0.72, 0.8], title: "The timer is a sunset" },
+      { kind: "stat", stat: 1 },
+      { kind: "crop", pic: P("zephyr.jpg"), rect: [0.185, 0.19, 0.375, 0.38], title: "Today at a glance" },
+      { kind: "crop", pic: P("zephyr-3.jpg"), rect: [0.17, 0.28, 0.72, 0.66], title: "Tasks by due date" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  portfolio: {
+    accent: ["#5f4b8b", "#c7aef0"],
+    hero: { pic: P("portfolio.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    tiles: [
+      { kind: "crop", pic: P("portfolio-3.jpg"), rect: [0.3, 0.3, 0.7, 0.97], title: "Tools on a 3D sphere" },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 3 },
+      { kind: "crop", pic: P("portfolio-2.jpg"), rect: [0.13, 0.55, 0.9, 0.68], title: "Search, filter, sort" },
+      { kind: "stat", stat: 2 },
+    ],
+  },
+  entropy: {
+    accent: ["#566300", "#d6f04a"],
+    hero: { pic: P("entropy.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    tiles: [
+      { kind: "crop", pic: P("entropy-2.jpg"), rect: [0.34, 0.1, 0.95, 0.6], title: "Five attacker scenarios" },
+      { kind: "stat", stat: 1 },
+      { kind: "crop", pic: P("entropy-4.jpg"), rect: [0.26, 0.2, 0.74, 0.8], title: "Alt+E on a sign-in page" },
+      { kind: "crop", pic: P("entropy-5.jpg"), rect: [0.16, 0.17, 0.88, 0.42], title: "A health check, all local" },
+      { kind: "stat", stat: 0 },
+    ],
+    wide: { pic: P("entropy-3.jpg"), rect: [0.12, 0.08, 0.9, 0.62], title: "Logins and codes, one vault" },
+  },
+  spectrum: {
+    accent: ["#1d6a88", "#74c6e6"],
+    hero: { pic: P("spectrum.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.1 } },
+    tiles: [
+      { kind: "crop", pic: P("spectrum-4.jpg"), rect: [0.08, 0.12, 0.94, 0.9], title: "Gradients, ready to copy" },
+      { kind: "crop", pic: P("spectrum-3.jpg"), rect: [0.17, 0.45, 0.82, 0.6], title: "Contrast at 21:1" },
+      { kind: "stat", stat: 2 },
+      { kind: "crop", pic: P("spectrum-2.jpg"), rect: [0.1, 0.33, 0.9, 0.47], title: "One color, five formats" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  remnants: {
+    accent: ["#2c58b0", "#93b3ff"],
+    hero: { pic: P("remnants.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    tiles: [
+      { kind: "mark", pic: P("remnants-mark.jpg"), rect: [0.3375, 0.247, 0.6625, 0.767], title: "A faceted shard" },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 1 },
+      { kind: "stat", stat: 2 },
+    ],
+  },
+  time: {
+    accent: ["#ad3128", "#f2867a"],
+    hero: { pic: P("time.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "plate", width: 0.9 } },
+    tiles: [
+      {
+        kind: "pair",
+        a: { pic: P("time.jpg"), rect: [0.1, 0.3, 0.9, 0.7] },
+        b: { pic: P("time-2.jpg"), rect: [0.06, 0.3, 0.86, 0.7] },
+        title: "Zurich and Tokyo, one moment",
+        stack: true,
+      },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 2 },
+      { kind: "crop", pic: P("time.jpg"), rect: [0.47, 0.34, 0.93, 0.66], title: "Only the colons move" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  jester: {
+    accent: ["#7a5c10", "#e6c65e"],
+    hero: { pic: P("jester.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.3 } },
+    tiles: [
+      { kind: "stat", stat: 2 },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 3 },
+      { kind: "crop", pic: P("jester.jpg"), rect: [0.52, 0.935, 1, 1], title: "Encoding and line endings kept" },
+    ],
+  },
+  flow: {
+    accent: ["#ab2f2a", "#f2908a"],
+    hero: { pic: P("flow.jpg"), wide: { mode: "plate" }, phone: { mode: "plate", width: 0.84 } },
+    tiles: [
+      { kind: "crop", pic: P("flow.jpg"), rect: [0.34, 0.03, 0.66, 0.32], title: "F8 records, F9 plays" },
+      { kind: "mark", pic: P("flow-mark.jpg"), rect: [0.35625, 0.27, 0.64375, 0.73], title: "Input as soft bars" },
+      { kind: "stat", stat: 0 },
+      { kind: "crop", pic: P("flow.jpg"), rect: [0.34, 0.6, 0.66, 0.86], title: "About 100 clicks a second" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  punds: {
+    accent: ["#1d5c91", "#78b8f0"],
+    hero: { pic: P("punds.jpg"), wide: { mode: "left" }, phone: { mode: "detail", focus: [0.5, 0.45] } },
+    tiles: [
+      { kind: "crop", pic: P("punds.jpg"), rect: [0.3, 0.2, 0.7, 0.8], title: "A city you fly through" },
+      { kind: "crop", pic: P("punds.jpg"), rect: [0.68, 0.28, 0.9, 0.5], title: "Links as floating panels" },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 2 },
+      { kind: "stat", stat: 1 },
+    ],
+  },
+  senbon: {
+    accent: ["#865234", "#eab48c"],
+    hero: { pic: P("senbon.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "detail", focus: [0.5, 0.48] } },
+    tiles: [
+      { kind: "crop", pic: P("senbon-2.jpg"), rect: [0.27, 0.08, 0.73, 0.56], title: "Newest entry first" },
+      { kind: "stat", stat: 0 },
+      { kind: "stat", stat: 3 },
+      { kind: "crop", pic: P("senbon.jpg"), rect: [0.3, 0.38, 0.72, 0.66], title: "A journal and a guestbook" },
+      { kind: "stat", stat: 1 },
+    ],
+  },
+  oxidize: {
+    accent: ["#9e4f28", "#e9a070"],
+    hero: { pic: P("oxidize.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.4 } },
+    tiles: [
+      { kind: "mark", pic: P("oxidize-mark.jpg"), rect: [0.3219, 0.215, 0.6781, 0.785], title: "Copper and verdigris" },
+      { kind: "stat", stat: 3 },
+      { kind: "crop", pic: P("oxidize.jpg"), rect: [0.44, 0.11, 0.74, 0.36], title: "Biggest first" },
+      { kind: "crop", pic: P("oxidize.jpg"), rect: [0.67, 0, 0.99, 0.065], title: "Backups on by default" },
+      { kind: "stat", stat: 1 },
+    ],
+  },
+  inkling: {
+    accent: ["#3a52a8", "#a3b5f7"],
+    hero: { pic: P("inkling.jpg"), wide: { mode: "left" }, phone: { mode: "detail", width: 2, focus: [0.58, 0.3] } },
+    tiles: [
+      { kind: "crop", pic: P("inkling-3.jpg"), rect: [0.5, 0.4, 0.78, 0.73], title: "Flashcards that schedule themselves" },
+      { kind: "crop", pic: P("inkling-2.jpg"), rect: [0.36, 0.12, 0.74, 0.34], title: "Notes become cards" },
+      { kind: "stat", stat: 0 },
+      {
+        kind: "pair",
+        a: { pic: P("inkling.jpg"), rect: [0.34, 0.08, 0.82, 0.38] },
+        b: { pic: P("inkling-4.jpg"), rect: [0.34, 0.08, 0.84, 0.38] },
+        title: "Light and dark",
+      },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  mochi: {
+    accent: ["#9d426b", "#f3a6ca"],
+    hero: { pic: P("mochi.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "left", width: 1.9 } },
+    tiles: [
+      { kind: "crop", pic: P("mochi.jpg"), rect: [0.5, 0.53, 1, 0.96], title: "Scriptable from the terminal" },
+      { kind: "mark", pic: P("mochi-mark.jpg"), rect: [0.35625, 0.27, 0.64375, 0.73], title: "Three windows, tiled" },
+      { kind: "stat", stat: 1 },
+      { kind: "crop", pic: P("mochi.jpg"), rect: [0.49, 0, 1, 0.24], title: "Focus in pink" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+  daifuku: {
+    accent: ["#964b6e", "#f2a9c9"],
+    hero: { pic: P("daifuku.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "left", width: 1.9 } },
+    tiles: [
+      { kind: "crop", pic: P("daifuku.jpg"), rect: [0, 0.49, 0.34, 1], title: "Yellow means it waits" },
+      { kind: "crop", pic: P("daifuku.jpg"), rect: [0.66, 0.05, 1, 0.45], title: "Red means it failed" },
+      { kind: "stat", stat: 3 },
+      { kind: "crop", pic: P("daifuku.jpg"), rect: [0.33, 0.05, 0.67, 0.3], title: "Green means done" },
+      { kind: "stat", stat: 1 },
+    ],
+  },
+  psyche: {
+    accent: ["#2d5ca2", "#86b9f6"],
+    hero: { pic: P("psyche.jpg"), wide: { mode: "plate" }, phone: { mode: "plate", width: 0.9 } },
+    tiles: [
+      { kind: "crop", pic: P("psyche-2.jpg"), rect: [0.145, 0.102, 0.855, 0.898], title: "Every code in one window" },
+      { kind: "stat", stat: 0 },
+      { kind: "crop", pic: P("psyche.jpg"), rect: [0.6, 0.3, 0.74, 0.48], title: "A ring counts down" },
+      { kind: "crop", pic: P("psyche.jpg"), rect: [0.26, 0.2, 0.74, 0.38], title: "This site, listed first" },
+      { kind: "stat", stat: 3 },
+    ],
+  },
+};
+
+/** A project without its own art direction: the main shot and its numbers. */
+const fallbackArt = (project: PortfolioProject, pictures: string[]): Art => ({
+  accent: ["#5f4b8b", "#c7aef0"],
+  hero: { pic: pictures[0] ?? "", wide: { mode: "left" }, phone: { mode: "left", width: 2 } },
+  tiles: (project.stats ?? []).slice(0, 3).map((_, stat): Tile => ({ kind: "stat", stat })),
+});
+
+/* ------------------------------------------------------------------ */
+/* Geometry                                                            */
+/* ------------------------------------------------------------------ */
 
 /**
- * Pictures whose subject a corner crop would cut in half: they get their own
- * list of views instead of the usual corners and close-ups.
+ * The app's own window inside pictures shot on the plain backdrop, measured
+ * from the pixels, so the hero shows the window alone in either theme.
  */
-const OWN_VIEWS: Record<string, View[]> = {
-  "/projects/time.jpg": [
-    { mode: "detail", focus: [0.5, 0.5], zoom: 1.25 },
-    { mode: "detail", focus: [0.5, 0.5], zoom: 1 },
-  ],
-  "/projects/time-2.jpg": [
-    { mode: "detail", focus: [0.5, 0.5], zoom: 1 },
-    { mode: "detail", focus: [0.5, 0.5], zoom: 1.1 },
-  ],
-  "/projects/portfolio.jpg": [
-    { mode: "left" },
-    { mode: "detail", focus: [0.34, 0.47] },
-    { mode: "detail", focus: [0.5, 0.5], zoom: 1 },
-  ],
-  "/projects/portfolio-2.jpg": [
-    { mode: "left" },
-    { mode: "detail", focus: [0.35, 0.42] },
-    { mode: "detail", focus: [0.5, 0.85] },
-  ],
+const WINDOWS: Record<string, Rect> = {
+  [P("flow.jpg")]: [0.338125, 0.06, 0.66125, 0.949],
+  [P("psyche.jpg")]: [0.26, 0.206, 0.739375, 0.793],
+  [P("psyche-2.jpg")]: [0.145, 0.102, 0.854375, 0.898],
+  [P("entropy-3.jpg")]: [0.095, 0.072, 0.905, 0.929],
+  [P("entropy-4.jpg")]: [0.25875, 0.204, 0.74125, 0.796],
+  [P("entropy-5.jpg")]: [0.095, 0.072, 0.905, 0.929],
 };
 
-type Frame = {
-  /** Card width over height. */
-  ratio: number;
-  /** Inset of the window from the card edge, in card widths. */
-  pad: number;
-  /** Window width for left/right, in card widths. */
-  bleed: number;
-  /** Window width for a close-up, in card widths. */
-  zoom: number;
-  /**
-   * The card's width in CSS px where the file's own pixels set a limit (the
-   * wide layout tops out at 1152px); 0 where a dense screen makes it moot.
-   */
-  reference: number;
-};
-
-const PHONE: Frame = { ratio: 1, pad: 0.07, bleed: 2, zoom: 2.4, reference: 0 };
-const WIDE: Frame = { ratio: 16 / 9, pad: 0.065, bleed: 1.3, zoom: 1.7, reference: 1152 };
-const TILE: Frame = { ratio: 16 / 9, pad: 0.08, bleed: 1.45, zoom: 1.8, reference: 0 };
-
-/** Captures narrower than this are floated whole rather than cropped. */
-const LARGE_CAPTURE = 1100;
+/** Card shape for the hero: tall on a phone, 16:10 from `sm`. */
+const HERO_PHONE_RATIO = 4 / 5;
+const HERO_WIDE_RATIO = 16 / 10;
+/** The widest the hero card gets, for keeping a capture near its own pixels. */
+const HERO_WIDE_PX = 1152;
 
 type Box = { left: number; top: number; width: number };
 
 const clamp = (value: number, low: number, high: number) =>
   Math.min(high, Math.max(low, value));
 
-/** Left, top and width of the window, as percentages of the card. */
-function placeWindow(view: View, win: Window, frame: Frame): Box {
-  const { mode } = view;
-  const focus = view.focus ?? [0.5, 0.4];
-  const large = win.native >= LARGE_CAPTURE;
-  // A small capture is never blown up past a quarter over its own size.
-  const cap = frame.reference ? (win.native * 1.25) / frame.reference : Number.POSITIVE_INFINITY;
-  const height = 1 / frame.ratio;
-  let resolved = mode;
-  if (!large && mode === "detail") resolved = "plate";
-  if (mode === "hero" && !frame.reference) resolved = large && !view.zoom ? "left" : "plate";
-
+/** Left, top and width of the window in the hero card, as percentages. */
+function placeHero(view: View, src: string, ratio: number, reference: number): Box {
+  const [x0, y0, x1, y1] = WINDOWS[src] ?? [0, 0, 1, 1];
+  const aspect = ((x1 - x0) * FILE_ASPECT) / (y1 - y0);
+  const native = pictureWidth(src) * (x1 - x0);
+  // Near its own pixels on a wide screen: legible, never blown up.
+  const cap = reference ? (native * 1.15) / reference : Number.POSITIVE_INFINITY;
+  const height = 1 / ratio;
+  const pad = reference ? 0.065 : 0.07;
   let width: number;
   let left: number;
-  let top = frame.pad;
-  if (resolved !== "detail") {
-    if (resolved === "left" || resolved === "right") {
-      width = Math.min(large ? frame.bleed : Math.min(frame.bleed, 1.3), cap);
-      left = resolved === "left" ? frame.pad : 1 - frame.pad - width;
-    } else {
-      width = Math.min(resolved === "hero" ? 0.88 : frame.reference ? 0.8 : 0.84, cap);
-      left = (1 - width) / 2;
-    }
-    const windowHeight = width / win.aspect;
-    if (view.zoom && !frame.reference) top = Math.max(frame.pad, (height - windowHeight) / 2);
-    if (view.y === "bottom") top = Math.min(frame.pad, height - frame.pad - windowHeight);
-    if (view.y === "middle" && windowHeight + 2 * frame.pad > height) {
-      top = (height - windowHeight) / 2;
-    }
-  } else if (view.zoom && !frame.reference) {
-    // The square card shows the picture whole, centred.
-    width = 1 - 2 * frame.pad;
-    left = frame.pad;
-    top = Math.max(frame.pad, (height - width / win.aspect) / 2);
+  let top = pad;
+  if (view.mode === "detail") {
+    width = Math.max(view.width ?? 2.4, aspect * height, 1);
+    const focus = view.focus ?? [0.5, 0.4];
+    const windowHeight = width / aspect;
+    left = clamp(0.5 - focus[0] * width, 1 - width, 0);
+    top = clamp(height / 2 - focus[1] * windowHeight, height - windowHeight, 0);
+  } else if (view.mode === "plate") {
+    width = Math.min(view.width ?? 0.88, cap);
+    left = (1 - width) / 2;
+    const windowHeight = width / aspect;
+    // Centred when it fits; otherwise inset at the top and cut by the bottom edge.
+    if (windowHeight + 2 * pad <= height) top = (height - windowHeight) / 2;
   } else {
-    // Close in, but not past a third over the file's own pixels.
-    const zoom =
-      view.zoom ??
-      (frame.reference ? Math.min(frame.zoom, (win.native * 1.3) / frame.reference) : frame.zoom);
-    width = Math.max(zoom, win.aspect * height, 1);
-    const windowHeight = width / win.aspect;
-    // Stay a little inside the window, so its own border never lines the card.
-    const mx = 0.015 * width;
-    const my = 0.015 * windowHeight;
-    left = clamp(0.5 - focus[0] * width, 1 - width + mx, -mx);
-    top = clamp(height / 2 - focus[1] * windowHeight, height - windowHeight + my, -my);
+    width = Math.min(view.width ?? 1.3, cap);
+    left = view.mode === "left" ? pad : 1 - pad - width;
   }
   return { left: left * 100, top: (top / height) * 100, width: width * 100 };
 }
 
 const pct = (value: number) => `${value.toFixed(3)}%`;
 
-/** Whether a small capture, floated at its size, runs past the bottom of the wide card. */
-const isTall = (win: Window) =>
-  WIDE.pad + Math.min(0.8, (win.native * 1.25) / WIDE.reference) / win.aspect > 1 / WIDE.ratio;
-
-/** The distinct ways one picture can be staged, in the order they are used. */
-function viewsOf(src: string): View[] {
-  const own = OWN_VIEWS[src];
-  if (own) return own;
-  const win = windowOf(src);
-  if (win.native < LARGE_CAPTURE) {
-    const views: View[] = [{ mode: "left" }, { mode: "right" }];
-    if (!isTall(win)) return views;
-    // A tall capture shows a different part of itself from each anchor.
-    return [
-      ...views,
-      { mode: "plate", y: "bottom" },
-      { mode: "left", y: "middle" },
-      { mode: "right", y: "bottom" },
-      { mode: "plate", y: "middle" },
-    ];
-  }
-  const points = CLOSE_UPS[src] ?? [[0.5, 0.4]];
-  return [
-    { mode: "left" },
-    { mode: "right" },
-    ...points.map((focus): View => ({ mode: "detail", focus })),
-  ];
+/**
+ * Style that crops a picture to `rect` inside any box: the region is shown
+ * whole with a little air, the box is always covered by the app's own window
+ * (never the backdrop around it), and it adapts to the box's shape at every
+ * width (container units), so a phone gets its own crop.
+ */
+function cropStyle(rect: Rect, bounds: Rect = [0, 0, 1, 1]): CSSProperties {
+  const [x0, y0, x1, y1] = rect;
+  const [bx0, by0, bx1, by1] = bounds;
+  const air = 1.06;
+  const rw = (x1 - x0) * air;
+  const rh = (y1 - y0) * air;
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  const f = (n: number) => n.toFixed(4);
+  const w = `max(min(${f(100 / rw)}cqw, ${f((100 * FILE_ASPECT) / rh)}cqh), ${f(100 / (bx1 - bx0))}cqw, ${f((100 * FILE_ASPECT) / (by1 - by0))}cqh)`;
+  const h = `(${w} / ${FILE_ASPECT})`;
+  return {
+    width: w,
+    left: `clamp(calc(100cqw - ${f(bx1)} * ${w}), calc(50cqw - ${f(cx)} * ${w}), calc(-${f(bx0)} * ${w}))`,
+    top: `clamp(calc(100cqh - ${f(by1)} * ${h}), calc(50cqh - ${f(cy)} * ${h}), calc(-${f(by0)} * ${h}))`,
+  };
 }
 
-/** True when the stage covers the whole card, edge to edge. */
-const fillsCard = (src: string, view: View) =>
-  view.mode === "detail" && !view.zoom && windowOf(src).native >= LARGE_CAPTURE;
+/** Where a clicked picture sits, for the viewer to open out of it. */
+function originOf(clip: HTMLElement, img: HTMLImageElement, radius: number): LightboxOrigin {
+  const c = clip.getBoundingClientRect();
+  const i = img.getBoundingClientRect();
+  const left = Math.max(c.left, i.left);
+  const top = Math.max(c.top, i.top);
+  const right = Math.min(c.right, i.right);
+  const bottom = Math.min(c.bottom, i.bottom);
+  return {
+    rect: { left, top, width: right - left, height: bottom - top },
+    crop: [
+      (left - i.left) / i.width,
+      (top - i.top) / i.height,
+      (right - i.left) / i.width,
+      (bottom - i.top) / i.height,
+    ],
+    radius,
+  };
+}
 
 /* ------------------------------------------------------------------ */
-/* Text helpers                                                        */
+/* Pieces                                                              */
 /* ------------------------------------------------------------------ */
 
-/** Sentences of a paragraph, ending at `.`, `!` or `?` before a capital, or at a CJK stop. */
-function sentences(text: string): string[] {
-  const out: string[] = [];
-  const end = /[.!?](?=\s+["“‘(]?[\p{Lu}\d])|[。！？]/gu;
-  let start = 0;
-  for (let match = end.exec(text); match; match = end.exec(text)) {
-    const stop = match.index + match[0].length;
-    out.push(text.slice(start, stop).trim());
-    start = stop;
-  }
-  const rest = text.slice(start).trim();
-  if (rest) out.push(rest);
-  return out;
-}
-
-/** The first sentence or two as a lead, and what is left of the paragraph. */
-function splitLead(text: string, limit = 190): { lead: string; rest: string } {
-  const parts = sentences(text);
-  let lead = parts[0] ?? "";
-  let used = 1;
-  while (used < parts.length && lead.length + parts[used].length + 1 <= limit) {
-    lead = `${lead} ${parts[used]}`;
-    used += 1;
-  }
-  return { lead, rest: parts.slice(used).join(" ") };
-}
-
-/** A caption in two tones: the first sentence (or the words before a colon) in ink, the rest muted. */
-function TwoTone({ text }: { text: string }) {
-  const parts = sentences(text);
-  let head = parts[0] ?? text;
-  let tail = parts.slice(1).join(" ");
-  if (!tail) {
-    const colon = text.search(/[:：]\s?/);
-    if (colon > 0 && colon < text.length - 2) {
-      head = text.slice(0, colon + 1);
-      tail = text.slice(colon + 1).trim();
-    }
-  }
+/** A picture cropped to a region, filling its box. */
+function Crop({ src, rect, alt, sizes }: { src: string; rect: Rect; alt: string; sizes: string }) {
   return (
-    <>
-      <span className="font-medium text-foreground">{head}</span>
-      {tail ? <span className="text-muted-foreground"> {tail}</span> : null}
-    </>
+    <div className="absolute inset-0 [container-type:size]">
+      <img
+        alt={alt}
+        className="absolute max-w-none select-none"
+        data-crop
+        decoding="async"
+        draggable={false}
+        loading="lazy"
+        sizes={sizes}
+        src={src}
+        srcSet={pictureSrcSet(src)}
+        style={cropStyle(rect, WINDOWS[src])}
+      />
+    </div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* The card and its stage                                              */
-/* ------------------------------------------------------------------ */
+/** The picture inside a card eases closer on hover; the card itself stays still. */
+const HOVER = { rest: { scale: 1 }, hover: { scale: 1.03 } };
 
-type StageProps = {
-  src: string;
-  /** The file actually loaded (the catalogue copy on small tiles). */
-  file?: string;
-  alt: string;
-  view: View;
-  layoutId?: string;
-  priority?: boolean;
-  tile?: boolean;
+function StatFigure({ stat }: { stat: ProjectStat }) {
+  return (
+    <div className="absolute inset-0 flex items-end p-6 [container-type:size] sm:p-7">
+      <span className="title-serif block font-bold text-[color:var(--pa)] text-[length:min(26cqw,52cqh,6rem)] leading-none tracking-[-0.03em] tabular-nums">
+        {stat.liveTests ? <LiveTestCount fallback={stat.value} project={stat.liveTests} /> : stat.value}
+      </span>
+    </div>
+  );
+}
+
+const SIZE_CLASS = {
+  L: "col-span-2 row-span-2",
+  M: "col-span-2",
+  S: "col-span-1",
+  W: "col-span-2 sm:col-span-3",
+} as const;
+
+/** Bento patterns by tile count: the large tile first, never an empty cell. */
+const PATTERNS: Record<number, Array<keyof typeof SIZE_CLASS>> = {
+  1: ["W"],
+  2: ["M", "S"],
+  3: ["L", "S", "S"],
+  4: ["L", "S", "S", "W"],
+  5: ["L", "S", "S", "M", "S"],
 };
 
-/** The app's window placed in the card for the phone and the wide layout. */
-function Stage({ src, file, alt, view, layoutId, priority, tile }: StageProps) {
-  const win = windowOf(src);
-  const phone = placeWindow(view, win, tile ? TILE : PHONE);
-  const wide = placeWindow(view, win, tile ? TILE : WIDE);
-  const { rect } = win;
-  const spanX = rect.x1 - rect.x0;
-  const spanY = rect.y1 - rect.y0;
+function BentoTile({
+  tile,
+  size,
+  order,
+  orphan,
+  props,
+}: {
+  tile: Tile;
+  size: keyof typeof SIZE_CLASS;
+  order: number;
+  /** The last small tile on a phone, which would otherwise sit alone in its row. */
+  orphan: boolean;
+  props: VariantProps;
+}) {
+  const reduceMotion = useReducedMotion();
+  const { project, pictures } = props;
+  const stat = tile.kind === "stat" ? project.stats?.[tile.stat] : undefined;
+  const title = tile.kind === "stat" ? stat?.label : tile.title;
+  const pic = tile.kind === "crop" || tile.kind === "mark" ? tile.pic : tile.kind === "pair" ? tile.a.pic : null;
+  const position = pic ? pictures.indexOf(pic) : -1;
+  const large = size === "L" || size === "W";
+  const sizes = large ? "(min-width: 1024px) 1600px, 100vw" : "(min-width: 1024px) 900px, 60vw";
+
+  let visual: ReactNode = null;
+  if (tile.kind === "crop") {
+    visual = <Crop alt={props.altFor(position)} rect={tile.rect} sizes={sizes} src={tile.pic} />;
+  } else if (tile.kind === "pair") {
+    visual = (
+      <div className={`absolute inset-0 grid gap-1.5 p-1.5 ${tile.stack ? "grid-rows-2" : "grid-cols-2"}`}>
+        {[tile.a, tile.b].map((shot) => (
+          <div className="relative overflow-hidden rounded-[22px]" data-clip key={shot.pic}>
+            <Crop alt={props.altFor(pictures.indexOf(shot.pic))} rect={shot.rect} sizes={sizes} src={shot.pic} />
+          </div>
+        ))}
+      </div>
+    );
+  } else if (tile.kind === "mark") {
+    visual = (
+      <div className="absolute inset-0 flex items-center justify-center [container-type:size]">
+        <div
+          className="relative aspect-square w-[min(52cqh,46cqw)] overflow-hidden rounded-[23%] shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)]"
+          data-clip
+        >
+          <Crop alt={props.altFor(position)} rect={tile.rect} sizes="320px" src={tile.pic} />
+        </div>
+      </div>
+    );
+  } else if (stat) {
+    visual = <StatFigure stat={stat} />;
+  }
+
+  const open = (event: MouseEvent<HTMLElement>) => {
+    if (position < 0) return;
+    const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
+    const clip = img?.closest<HTMLElement>("[data-clip]") ?? event.currentTarget;
+    const radius = tile.kind === "mark" ? clip.getBoundingClientRect().width * 0.23 : tile.kind === "pair" ? 22 : 28;
+    props.open(position, img ? originOf(clip, img, radius) : true);
+  };
+
+  const cardClass = `${CARD} ${RING} group block h-full w-full text-left transition-shadow duration-300 ease-bloom hover:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--pa)_45%,transparent)]`;
+  const inner = (
+    <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
+      {visual}
+    </motion.div>
+  );
+
+  return (
+    <motion.div
+      className={`flex min-h-0 flex-col ${SIZE_CLASS[size]} ${orphan ? "max-sm:col-span-2" : ""}`}
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+      transition={{
+        scale: { ...SPRING, delay: order * 0.06 },
+        opacity: { duration: 0.6, ease: EASE_OUT, delay: order * 0.06 },
+      }}
+      viewport={VIEWPORT}
+      whileInView={{ opacity: 1, scale: 1 }}
+    >
+      {position >= 0 ? (
+        <motion.button
+          aria-label={props.openLabelFor(position)}
+          className={`${cardClass} min-h-0 flex-1 cursor-zoom-in`}
+          data-cursor-ignore
+          data-clip
+          initial="rest"
+          onClick={open}
+          type="button"
+          whileHover="hover"
+          whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+        >
+          {inner}
+        </motion.button>
+      ) : (
+        <div className={`${CARD} min-h-0 flex-1`}>{visual}</div>
+      )}
+      <p className="mt-3 line-clamp-2 max-w-[26ch] font-semibold text-[0.9375rem] leading-snug tracking-[-0.01em] sm:text-[1.0625rem]">
+        {title}
+      </p>
+    </motion.div>
+  );
+}
+
+/** The app window in the hero card, with its own depth. */
+function HeroWindow({
+  src,
+  art,
+  alt,
+  layoutId,
+  priority,
+}: {
+  src: string;
+  art: Art["hero"];
+  alt: string;
+  layoutId?: string;
+  priority?: boolean;
+}) {
+  const [x0, y0, x1, y1] = WINDOWS[src] ?? [0, 0, 1, 1];
+  const phone = placeHero(art.phone, src, HERO_PHONE_RATIO, 0);
+  const wide = placeHero(art.wide, src, HERO_WIDE_RATIO, HERO_WIDE_PX);
+  const aspect = ((x1 - x0) * FILE_ASPECT) / (y1 - y0);
   const style = {
     "--l": pct(phone.left),
     "--t": pct(phone.top),
@@ -368,222 +548,45 @@ function Stage({ src, file, alt, view, layoutId, priority, tile }: StageProps) {
     "--l2": pct(wide.left),
     "--t2": pct(wide.top),
     "--w2": pct(wide.width),
-    aspectRatio: win.aspect,
+    aspectRatio: aspect,
   } as CSSProperties;
-  // Rendered width of the whole file, for the browser's pick from `srcset`.
-  const wideFile = Math.round(((wide.width / 100) * 1152) / spanX);
-  const phoneFile = Math.round(phone.width / spanX);
-  // A close-up fills the card and shows no window edge, so it needs no
-  // corner or shadow of its own.
-  const floating = !fillsCard(src, view);
+  const full = art.phone.mode === "detail";
+  const spanX = x1 - x0;
   return (
     <div
-      className={`absolute top-[var(--t)] left-[var(--l)] w-[var(--w)] max-w-none overflow-hidden sm:top-[var(--t2)] sm:left-[var(--l2)] sm:w-[var(--w2)] ${
-        floating
-          ? "rounded-xl shadow-[0_24px_60px_-28px_rgb(0_0_0/0.45)] ring-1 ring-black/5 dark:ring-white/5"
-          : ""
+      className={`absolute top-[var(--t)] left-[var(--l)] w-[var(--w)] max-w-none overflow-hidden sm:top-[var(--t2)] sm:left-[var(--l2)] sm:w-[var(--w2)] sm:rounded-xl sm:shadow-[0_1px_2px_rgb(0_0_0/0.08),0_40px_80px_-40px_rgb(0_0_0/0.5)] dark:sm:shadow-[0_1px_2px_rgb(0_0_0/0.4),0_40px_90px_-30px_rgb(0_0_0/0.8)] ${
+        full ? "" : "rounded-xl shadow-[0_1px_2px_rgb(0_0_0/0.08),0_30px_60px_-30px_rgb(0_0_0/0.5)]"
       }`}
+      data-clip
       style={style}
     >
       <motion.img
         alt={alt}
         className="absolute max-w-none"
+        data-crop
         decoding="async"
         draggable={false}
         fetchPriority={priority ? "high" : "auto"}
         layoutId={layoutId}
         loading={priority ? "eager" : "lazy"}
-        sizes={tile ? "(min-width: 1024px) 380px, 80vw" : `(min-width: 640px) ${wideFile}px, ${phoneFile}vw`}
-        src={file ?? src}
-        srcSet={file ? undefined : pictureSrcSet(src)}
+        sizes={`(min-width: 640px) ${Math.round(((wide.width / 100) * HERO_WIDE_PX) / spanX)}px, ${Math.round(phone.width / spanX)}vw`}
+        src={src}
+        srcSet={pictureSrcSet(src)}
         style={{
           width: pct(100 / spanX),
-          left: pct((-rect.x0 / spanX) * 100),
-          top: pct((-rect.y0 / spanY) * 100),
+          left: pct((-x0 / spanX) * 100),
+          top: pct((-y0 / (y1 - y0)) * 100),
         }}
+      />
+      {/* The window's edge: a hairline, and a top highlight at night. */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute inset-0 ring-1 ring-black/[0.06] ring-inset dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.1)] dark:ring-white/10 ${
+          full ? "max-sm:hidden" : ""
+        } rounded-[inherit]`}
       />
     </div>
   );
-}
-
-/** The card: enters with a small spring scale, presses in under a tap. */
-function Card({
-  children,
-  label,
-  onOpen,
-  className = "",
-  shape = CARD_SHAPE,
-  covered = false,
-}: {
-  children: ReactNode;
-  label?: string;
-  onOpen?: () => void;
-  className?: string;
-  /** Aspect classes; the code card sizes to its text instead. */
-  shape?: string;
-  /**
-   * The picture covers the card edge to edge. The tone is left off then: under
-   * the clipped corners it showed through the antialiased edge as a hairline.
-   */
-  covered?: boolean;
-}) {
-  const reduceMotion = useReducedMotion();
-  const motionProps = {
-    initial: reduceMotion ? false : { opacity: 0, scale: 0.98 },
-    whileInView: { opacity: 1, scale: 1 },
-    viewport: VIEWPORT,
-    transition: {
-      scale: CARD_SPRING,
-      opacity: { duration: 0.6, ease: EASE_OUT },
-    },
-  } as const;
-  if (onOpen && label) {
-    return (
-      <motion.button
-        aria-label={label}
-        className={`${CARD} ${covered ? "" : TONE} ${shape} block w-full cursor-zoom-in ${className}`}
-        // A picture is not a label for the custom cursor to snap to.
-        data-cursor-ignore
-        onClick={onOpen}
-        type="button"
-        whileTap={reduceMotion ? undefined : { scale: 0.985 }}
-        {...motionProps}
-      >
-        {children}
-      </motion.button>
-    );
-  }
-  return (
-    <motion.div className={`${CARD} ${covered ? "" : TONE} ${shape} ${className}`} {...motionProps}>
-      {children}
-    </motion.div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* The repeating unit                                                  */
-/* ------------------------------------------------------------------ */
-
-function UnitHead({
-  label,
-  heading,
-  lead,
-  level = 2,
-  accentLabel,
-}: {
-  label: ReactNode;
-  heading: ReactNode;
-  lead?: ReactNode;
-  level?: 1 | 2;
-  accentLabel?: boolean;
-}) {
-  const reduceMotion = useReducedMotion();
-  const { language } = useLanguage();
-  const Heading = level === 1 ? "h1" : "h2";
-  return (
-    <motion.div {...revealOnScroll(reduceMotion)}>
-      <p
-        className={`text-primary ${
-          accentLabel ? "accent-jp text-base tabular-nums" : "font-medium text-sm"
-        }`}
-      >
-        {label}
-      </p>
-      <Heading
-        className={`title-serif mt-3 max-w-4xl text-balance font-bold ${
-          level === 1
-            ? "text-6xl leading-[0.95] sm:text-7xl lg:text-8xl"
-            : "text-3xl leading-tight sm:text-4xl lg:text-[2.75rem]"
-        } ${language === "en" ? "hyphens-manual" : ""}`}
-      >
-        {heading}
-      </Heading>
-      {lead ? (
-        <p
-          className={`max-w-2xl text-balance text-muted-foreground leading-relaxed ${
-            level === 1 ? "mt-6 text-xl sm:text-2xl" : "mt-5 text-lg sm:text-xl"
-          }`}
-        >
-          {lead}
-        </p>
-      ) : null}
-    </motion.div>
-  );
-}
-
-function Caption({ text }: { text?: string }) {
-  const reduceMotion = useReducedMotion();
-  if (!text) return null;
-  return (
-    <motion.p
-      className="mt-5 max-w-2xl text-sm leading-relaxed sm:text-base"
-      {...revealOnScroll(reduceMotion)}
-    >
-      <TwoTone text={text} />
-    </motion.p>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Which picture each section stages                                   */
-/* ------------------------------------------------------------------ */
-
-type Scene = {
-  picture: number;
-  view: View;
-  /** First time on the page: it carries the caption and the shared layout id. */
-  first: boolean;
-};
-
-const viewKey = (view: View) =>
-  `${view.mode}:${view.y ?? "top"}:${view.focus?.join(",") ?? ""}:${view.zoom ?? ""}`;
-
-/**
- * One scene per section, overview first. A section names its picture through
- * `figure`; the rest take the screenshots no section claims, in order. Once
- * those run out, a section gets another view of the picture shown least so
- * far: the other corner, then the close-ups, so no two cards match.
- */
-function planScenes(project: PortfolioProject, pictures: string[]): Scene[] {
-  const screens = pictures.map((_, index) => index).filter((index) => !isMark(pictures[index]));
-  const usable = (index: number | undefined): index is number =>
-    index !== undefined && pictures[index] !== undefined && !isMark(pictures[index]);
-  const claimed = new Set(project.sections.map((s) => s.figure).filter(usable));
-  const free = screens.filter((index) => index !== 0 && !claimed.has(index));
-  const uses = new Map<number, number>([[0, 1]]);
-  const seen = new Map<number, Set<string>>();
-  const slots: Array<number | undefined> = [undefined, ...project.sections.map((s) => s.figure)];
-
-  const viewFor = (picture: number, prefer: Mode | null): View => {
-    const views = viewsOf(pictures[picture]);
-    const used = seen.get(picture) ?? new Set<string>();
-    seen.set(picture, used);
-    let pool = views.filter((view) => !used.has(viewKey(view)));
-    if (!pool.length) {
-      used.clear();
-      pool = views;
-    }
-    const pick = (prefer ? pool.find((view) => view.mode === prefer) : undefined) ?? pool[0];
-    used.add(viewKey(pick));
-    return pick;
-  };
-
-  return slots.map((figure, slot) => {
-    let picture: number;
-    if (usable(figure)) picture = figure;
-    else if (free.length) picture = free.shift() as number;
-    else {
-      // Least shown first; a picture a later section claims waits for it.
-      const ready = screens.filter((index) => uses.has(index) || !claimed.has(index));
-      const pool = ready.length ? ready : screens;
-      picture = pool.reduce((best, index) =>
-        (uses.get(index) ?? 0) < (uses.get(best) ?? 0) ? index : best,
-      );
-    }
-    const first = !uses.has(picture);
-    uses.set(picture, (uses.get(picture) ?? 0) + 1);
-    return { picture, view: viewFor(picture, first ? (slot % 2 ? "right" : "left") : null), first };
-  });
 }
 
 /* ------------------------------------------------------------------ */
@@ -595,30 +598,31 @@ export function VariantD(props: VariantProps) {
   const { language } = useLanguage();
   const t = translations[language].projectDetails;
   const reduceMotion = useReducedMotion();
-
+  const art = ART[project.slug] ?? fallbackArt(project, pictures);
+  const heroIndex = Math.max(0, pictures.indexOf(art.hero.pic));
   const host = project.liveUrl && !project.downloadUrl ? new URL(project.liveUrl).host : null;
   const kind = project.operatingSystem ?? host ?? project.title;
-  const scenes = planScenes(project, pictures);
-  const units = [
-    { heading: t.overview, ...splitLead(project.overview), more: [] as string[], code: undefined },
-    ...project.sections.map((section) => ({
-      heading: section.heading,
-      ...splitLead(section.body[0] ?? ""),
-      more: section.body.slice(1),
-      code: section.code,
-    })),
-  ];
-  const facts: Array<{ label: string; value: ReactNode; wide?: boolean }> = [
-    { label: t.role, value: project.roleSummary, wide: true },
-    { label: t.timeline, value: props.facts[0]?.value },
-  ];
-  if (project.operatingSystem) {
-    facts.push({ label: t.platform, value: project.operatingSystem });
-  }
-  const hero = pictures[0];
+
+  // The hero card eases back a touch as it scrolls away. Transform only.
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroScale = useSpring(useTransform(scrollYProgress, [0, 1], [1, 0.96]), {
+    stiffness: 200,
+    damping: 30,
+  });
+
+  const tiles = art.tiles.slice(0, 5);
+  const pattern = PATTERNS[tiles.length] ?? PATTERNS[5];
+  const next = props.next[0];
+  const nextArt = next ? ART[next.slug] : undefined;
+
+  const style = { "--pa-l": art.accent[0], "--pa-d": art.accent[1] } as CSSProperties;
 
   return (
-    <div className={`${PAGE} pt-4 pb-28`}>
+    <div
+      className={`${PAGE} pt-4 pb-28 [--pa:var(--pa-l)] [--pt:color-mix(in_oklab,hsl(var(--secondary))_90%,var(--pa)_10%)] dark:[--pa:var(--pa-d)] dark:[--pt:color-mix(in_oklab,hsl(var(--secondary))_86%,var(--pa)_14%)]`}
+      style={style}
+    >
       <nav aria-label={t.breadcrumb} className="flex items-center gap-2 text-muted-foreground text-sm">
         <Link className="inline-flex items-center transition-colors hover:text-foreground" to="/">
           {t.home}
@@ -631,181 +635,169 @@ export function VariantD(props: VariantProps) {
         <span className="text-foreground/80">{project.title}</span>
       </nav>
 
-      {/* The head unit: the project itself. */}
+      {/* Promise: the name, one line, the buttons, then the app itself. */}
       <section className="mt-12 sm:mt-16">
-        <UnitHead heading={project.title} label={kind} lead={project.tagline} level={1} />
-        <motion.div className="mt-8" {...revealOnScroll(reduceMotion)}>
-          {props.actions}
+        <motion.div {...revealOnScroll(reduceMotion)}>
+          <p className="font-medium text-[0.8125rem] text-[color:var(--pa)]">{kind}</p>
+          <h1 className="title-serif mt-3 ml-[-0.04em] font-bold text-[length:clamp(3.5rem,9vw,7.5rem)] leading-[0.92] tracking-[-0.02em]">
+            {project.title}
+          </h1>
+          <p className="mt-5 max-w-[30ch] text-balance text-muted-foreground text-xl leading-[1.45] sm:text-2xl">
+            {project.tagline}
+          </p>
+          <div className="mt-8">{props.actions}</div>
         </motion.div>
-        {hero ? (
-          <>
-            <Card
-              className="mt-12 sm:mt-14"
-              label={props.openLabelFor(0)}
-              onOpen={() => props.open(0)}
-            >
-              <Stage
-                alt={props.altFor(0)}
-                layoutId="project-shot-0"
-                priority
-                src={hero}
-                view={keepWhole(hero) ? { mode: "hero", zoom: 1 } : { mode: "hero" }}
-              />
-            </Card>
-            <Caption text={props.captionFor(0)} />
-          </>
-        ) : null}
 
-        {/* The facts, in the page's own text: no box, no rule. */}
-        <motion.dl
-          className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 sm:mt-16 sm:grid-cols-4"
-          {...revealOnScroll(reduceMotion)}
-        >
-          {facts.map((fact) => (
-            <div className={fact.wide ? "col-span-2" : ""} key={fact.label}>
-              <dt className="text-muted-foreground text-sm">{fact.label}</dt>
-              <dd className="mt-1.5 max-w-xl text-foreground/90 leading-relaxed">{fact.value}</dd>
-            </div>
-          ))}
-          {(project.stats ?? []).map((stat) => (
-            <div className="flex flex-col-reverse" key={stat.label}>
-              <dt className="mt-1 text-muted-foreground text-sm">{stat.label}</dt>
-              <dd className="title-serif text-3xl tabular-nums sm:text-4xl">
-                {stat.liveTests ? (
-                  <LiveTestCount fallback={stat.value} project={stat.liveTests} />
-                ) : (
-                  stat.value
-                )}
-              </dd>
-            </div>
-          ))}
-        </motion.dl>
-      </section>
-
-      {/* One unit per section: label, headline, lead, the app, a caption. */}
-      {units.map((unit, index) => {
-        const scene = scenes[index];
-        const src = scene ? pictures[scene.picture] : undefined;
-        return (
-          <section className="mt-28 sm:mt-40" key={unit.heading}>
-            <UnitHead
-              accentLabel
-              heading={unit.heading}
-              label={String(index + 1).padStart(2, "0")}
-              lead={unit.lead}
-            />
-            {scene && src ? (
-              <>
-                <Card
-                  className="mt-10 sm:mt-12"
-                  covered={fillsCard(src, scene.view)}
-                  label={props.openLabelFor(scene.picture)}
-                  onOpen={() => props.open(scene.picture, scene.first)}
-                >
-                  <Stage
-                    alt={props.altFor(scene.picture)}
-                    layoutId={scene.first ? `project-shot-${scene.picture}` : undefined}
-                    src={src}
-                    view={scene.view}
-                  />
-                </Card>
-                <Caption text={scene.first ? props.captionFor(scene.picture) : undefined} />
-              </>
-            ) : null}
-          </section>
-        );
-      })}
-
-      {/* The write-up, once the pictures are told: the rest of each section. */}
-      <section className="mt-32 sm:mt-44">
-        <UnitHead heading={t.inDepth} label={project.title} />
-        <div className="mt-4">
-          {units.map((unit) => {
-            const paragraphs = [unit.rest, ...unit.more].filter(Boolean);
-            if (!paragraphs.length && !unit.code) return null;
-            return (
-              <motion.article
-                className="mt-14 sm:mt-16"
-                key={unit.heading}
-                {...revealOnScroll(reduceMotion)}
-              >
-                <h3
-                  className={`max-w-2xl text-balance font-semibold text-lg leading-snug sm:text-xl ${
-                    language === "en" ? "hyphens-manual" : ""
-                  }`}
-                >
-                  {unit.heading}
-                </h3>
-                <div className="mt-4 max-w-2xl space-y-5">
-                  {paragraphs.map((paragraph) => (
-                    <p className="text-foreground/90 leading-relaxed" key={paragraph}>
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-                {unit.code ? (
-                  <figure className="m-0 mt-10">
-                    <Card shape="">
-                      {/* Focusable because it scrolls sideways. */}
-                      <pre
-                        className="code-excerpt overflow-x-auto p-6 text-[13px] leading-relaxed sm:p-10"
-                        tabIndex={0}
-                      >
-                        <code>{unit.code.text}</code>
-                      </pre>
-                    </Card>
-                    <figcaption className="mt-5 max-w-2xl text-sm leading-relaxed sm:text-base">
-                      <TwoTone text={unit.code.caption} />
-                    </figcaption>
-                  </figure>
-                ) : null}
-              </motion.article>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* The way out: the actions again, then three more projects. */}
-      <section className="mt-32 sm:mt-44">
-        <UnitHead heading={project.title} label={kind} />
-        <motion.div className="mt-8" {...revealOnScroll(reduceMotion)}>
-          {props.actions}
-        </motion.div>
-      </section>
-
-      <section className="mt-28 sm:mt-36">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <h2 className="title-serif font-bold text-3xl sm:text-4xl">{t.moreProjects}</h2>
-          <Link
-            className="inline-flex min-h-6 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
-            to="/projects"
+        {art.hero.pic ? (
+          <motion.div
+            className="mt-14"
+            ref={heroRef}
+            style={reduceMotion ? undefined : { scale: heroScale }}
           >
-            {t.allProjects}
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-        {/* A swipe row on a phone and a tablet, three across from `lg`. The
-            row bleeds to the screen edge by exactly the page gutter. */}
-        <div className="-mx-6 sm:-mx-8 md:-mx-12 mt-8 flex max-w-none snap-x snap-mandatory scroll-pl-6 gap-5 overflow-x-auto px-6 pb-2 sm:scroll-pl-8 sm:px-8 md:scroll-pl-12 md:px-12 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:px-0 lg:pb-0">
-          {props.next.map((item) => (
-            <Link
-              className="group block w-[78vw] max-w-sm shrink-0 snap-start sm:w-[46vw] lg:w-auto lg:max-w-none"
-              key={item.slug}
-              to={`/projects/${item.slug}?v=d`}
+            <motion.button
+              aria-label={props.openLabelFor(heroIndex)}
+              className={`${CARD} ${RING} block aspect-[4/5] w-full cursor-zoom-in sm:aspect-[16/10]`}
+              data-cursor-ignore
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+              onClick={(event) => {
+                const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
+                const clip = img?.closest<HTMLElement>("[data-clip]");
+                if (!img || !clip) return props.open(heroIndex);
+                // The visible part is where the window and the card overlap.
+                const card = event.currentTarget.getBoundingClientRect();
+                const o = originOf(clip, img, 12);
+                const left = Math.max(o.rect.left, card.left);
+                const top = Math.max(o.rect.top, card.top);
+                const right = Math.min(o.rect.left + o.rect.width, card.right);
+                const bottom = Math.min(o.rect.top + o.rect.height, card.bottom);
+                const i = img.getBoundingClientRect();
+                props.open(heroIndex, {
+                  rect: { left, top, width: right - left, height: bottom - top },
+                  crop: [(left - i.left) / i.width, (top - i.top) / i.height, (right - i.left) / i.width, (bottom - i.top) / i.height],
+                  radius: 12,
+                });
+              }}
+              transition={{ scale: SPRING, opacity: { duration: 0.7, ease: EASE_OUT } }}
+              type="button"
+              viewport={VIEWPORT}
+              whileInView={{ opacity: 1, scale: 1 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.99 }}
             >
-              {item.image ? (
-                <Card shape="aspect-video">
-                  <Stage alt="" file={cardImageSrc(item.image)} src={item.image} tile view={{ mode: "left" }} />
-                </Card>
-              ) : null}
-              <p className="title-serif mt-4 text-xl transition-colors duration-200 ease-out group-hover:text-primary">
-                {item.title}
-              </p>
-              <p className="mt-1.5 text-muted-foreground text-sm leading-relaxed">{item.tagline}</p>
-            </Link>
-          ))}
-        </div>
+              <HeroWindow alt={props.altFor(heroIndex)} art={art.hero} priority src={art.hero.pic} />
+            </motion.button>
+          </motion.div>
+        ) : null}
       </section>
+
+      {/* The moment worth remembering, then the proof: one feature per tile. */}
+      {tiles.length ? (
+        <section className="mt-24 grid auto-rows-[13.5rem] grid-cols-2 gap-x-3 gap-y-5 sm:mt-32 sm:auto-rows-[17rem] sm:grid-cols-3 sm:gap-x-4 sm:gap-y-6 lg:auto-rows-[20rem]">
+          {tiles.map((tile, order) => (
+            <BentoTile
+              key={`${tile.kind}-${order}`}
+              order={order}
+              orphan={pattern[order] === "S" && order === tiles.length - 1 && tiles.length === 5}
+              props={props}
+              size={pattern[order]}
+              tile={tile}
+            />
+          ))}
+        </section>
+      ) : null}
+
+      {art.wide ? (
+        <section className="mt-6 sm:mt-8">
+          <WideMoment props={props} wide={art.wide} />
+        </section>
+      ) : null}
+
+      {/* The facts in one row, then the buttons. */}
+      <motion.div className="mt-24 sm:mt-32" {...revealOnScroll(reduceMotion)}>
+        <dl className="flex flex-wrap gap-x-12 gap-y-4">
+          {props.facts
+            .filter((fact) => fact.label !== t.role)
+            .map((fact) => (
+              <div key={fact.label}>
+                <dt className="font-medium text-[0.8125rem] text-muted-foreground">{fact.label}</dt>
+                <dd className="mt-1 text-foreground/90">{fact.value}</dd>
+              </div>
+            ))}
+        </dl>
+        <div className="mt-8">{props.actions}</div>
+      </motion.div>
+
+      {/* The handoff: the next project as one full card. */}
+      {next ? (
+        <section className="mt-28 sm:mt-36">
+          <div className="flex items-baseline justify-between gap-3">
+            <p className="font-medium text-[0.8125rem] text-muted-foreground">{t.nextProject}</p>
+            <Link
+              className="inline-flex min-h-6 items-center gap-1.5 text-muted-foreground text-sm transition-colors hover:text-foreground"
+              to="/projects"
+            >
+              {t.allProjects}
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <Link className={`group mt-4 block rounded-[28px] ${RING}`} to={`/projects/${next.slug}?v=d`}>
+            <motion.div
+              className={`${CARD} aspect-[4/3] sm:aspect-[21/9]`}
+              initial="rest"
+              whileHover="hover"
+              whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+            >
+              {next.image ? (
+                <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
+                  <HeroWindow
+                    alt=""
+                    art={nextArt?.hero ?? { pic: next.image, wide: { mode: "left" }, phone: { mode: "left", width: 2 } }}
+                    src={nextArt?.hero.pic ?? next.image}
+                  />
+                </motion.div>
+              ) : null}
+            </motion.div>
+            <span className="title-serif mt-5 flex items-center gap-3 font-bold text-4xl leading-tight tracking-[-0.01em] transition-colors duration-200 ease-out group-hover:text-[color:var(--pa)] sm:text-5xl">
+              {next.title}
+              <ArrowUpRight className="h-7 w-7 transition-transform duration-300 ease-bloom group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
+          </Link>
+        </section>
+      ) : null}
     </div>
+  );
+}
+
+function WideMoment({ wide, props }: { wide: NonNullable<Art["wide"]>; props: VariantProps }) {
+  const reduceMotion = useReducedMotion();
+  const position = props.pictures.indexOf(wide.pic);
+  return (
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
+      transition={{ scale: SPRING, opacity: { duration: 0.6, ease: EASE_OUT } }}
+      viewport={VIEWPORT}
+      whileInView={{ opacity: 1, scale: 1 }}
+    >
+      <motion.button
+        aria-label={props.openLabelFor(position)}
+        className={`${CARD} ${RING} block aspect-[4/3] w-full cursor-zoom-in sm:aspect-[21/9]`}
+        data-clip
+        data-cursor-ignore
+        initial="rest"
+        onClick={(event) => {
+          const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
+          props.open(position, img ? originOf(event.currentTarget, img, 28) : true);
+        }}
+        type="button"
+        whileHover="hover"
+        whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      >
+        <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
+          <Crop alt={props.altFor(position)} rect={wide.rect} sizes="(min-width: 1024px) 1600px, 100vw" src={wide.pic} />
+        </motion.div>
+      </motion.button>
+      <p className="mt-3 font-semibold text-[0.9375rem] leading-snug tracking-[-0.01em] sm:text-[1.0625rem]">
+        {wide.title}
+      </p>
+    </motion.div>
   );
 }
