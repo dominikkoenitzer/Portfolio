@@ -14,6 +14,8 @@ export type Still = {
   height: number;
   alt: string;
   caption: string;
+  /** The part shown on the page, as fractions of the capture [left, top, right, bottom]; the whole of it opens on click. */
+  crop?: [number, number, number, number];
 };
 
 /** One piece of a story: a paragraph, a live demo, or a still. */

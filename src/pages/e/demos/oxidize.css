@@ -1,0 +1,10 @@
+/* The face Oxidize's window draws its text in (egui's default), cut to Latin.
+   Licence: public/fonts/oxidize-ui-font-licence.txt. Loaded only when a demo
+   uses it. */
+@font-face {
+  font-family: "Oxidize UI";
+  src: url("/fonts/oxidize-ui-latin.woff2") format("woff2");
+  font-weight: 300 400;
+  font-style: normal;
+  font-display: swap;
+}

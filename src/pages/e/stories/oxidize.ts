@@ -5,7 +5,7 @@ import type { Story } from "../types";
 export const story: Story = {
   opening: [
     "Uninstalling a program on Windows removes the program. What it wrote around itself usually stays: registry keys, folders under AppData and ProgramData, scheduled tasks, firewall rules, PATH entries, and a long tail of small records Windows keeps about every program it has met. None of it is large. All of it piles up, and some of it keeps acting, like a scheduled task that still points at an exe that is gone.",
-    "Tools that clean this up exist, and most of them make me nervous. Finding junk is easy. Being sure it is junk, and being able to take it back when you were wrong, is the actual job. So the safety net came before anything else: Oxidize may not delete what it cannot put back.",
+    "Tools that clean this up exist, and most of them make me nervous. Finding junk is easy. Being sure it is junk, and being able to take it back when you were wrong, is the actual job. So the safety net came before anything else: an uninstall may not delete what it cannot put back.",
     { Demo: UninstallDemo },
     "The program's own uninstaller runs first. Then Oxidize goes looking, and every find comes with a confidence. A folder or key named exactly like the program is High, one that only shares part of the name is Medium, and a folder no installed program claims is Low. Only High goes unless you ask for more.",
     {
@@ -14,8 +14,9 @@ export const story: Story = {
         dark: "oxidize-overview-dark",
         width: 2880,
         height: 1800,
-        alt: "The Oxidize window listing twenty made-up programs by name, with Quillmark selected and what makes it up listed beside the list",
-        caption: "Twenty made-up programs, and everything that makes up the selected one. The window follows the Windows theme, light or dark.",
+        crop: [0.5, 0.055, 1, 0.57],
+        alt: "The Oxidize window with the made-up program Quillmark selected: its version, size and location, the buttons to remove it, and the start of its footprint",
+        caption: "The real window, with Quillmark selected. Open it for all twenty made-up programs; it follows the Windows theme, light or dark.",
       },
     },
   ],
@@ -25,7 +26,7 @@ export const story: Story = {
       heading: "Knowing what belongs to whom",
       blocks: [
         "Most of the work went into the scanner, and most of that work was taking matches away. To check it, I listed every High match for every program on a machine, not only the ones I expected, and read the whole list.",
-        "It was humbling. A runtime with a long name boiled down to a single word and claimed another product's services. A program installed through a package manager picked up a vendor's name from the folder above it, and suddenly every folder of that vendor was a Medium hit.",
+        "A runtime with a long name boiled down to a single word and claimed another product's services. A program installed through a package manager picked up a vendor's name from the folder above it, and suddenly every folder of that vendor was a Medium hit.",
         "Each of those became a rule. One word counts as a program's name only when the name really is that one word and at least four letters long. A folder with another program installed inside it is shared and left alone. A vendor's folder is searched, never removed whole.",
       ],
     },
@@ -51,6 +52,7 @@ export const story: Story = {
             dark: "oxidize-confirm-dark",
             width: 2880,
             height: 1800,
+            crop: [0.31, 0.38, 0.69, 0.62],
             alt: "Oxidize asking whether to remove Quillmark completely, saying that running copies are closed and a backup is kept",
             caption: "Before anything happens, Oxidize says what it will do, and that a backup is kept.",
           },
@@ -71,7 +73,7 @@ export const story: Story = {
       heading: "Where it stands",
       blocks: [
         "Oxidize is two programs over one engine: a command line for scripts and a window for everyone else. A small server lets an AI assistant plan a removal and carry it out only after you have seen the plan, always with the backup. Every command has a dry run, and a dry run leaves the machine unchanged, bit for bit.",
-        "Since 0.2.6 it also cleans up after Windows itself: temp files, crash dumps, browser caches and, if you ask, the Recycle Bin, around a list of folders it never touches. Version 0.2.7 fixed exactly the kind of mistake this project exists to prevent, because Clean up could have taken Oxidize's own backups for an unclaimed folder.",
+        "Since 0.2.6 it also cleans up after Windows itself: temp files, crash dumps, browser caches and, if you ask, the Recycle Bin, around a list of folders it never touches. That is the one place Oxidize deletes for good, and the window says so before anything runs. Version 0.2.7 fixed exactly the kind of mistake this project exists to prevent, because Clean up could have taken Oxidize's own backups for an unclaimed folder.",
         {
           still: {
             name: "oxidize-cleanup",

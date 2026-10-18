@@ -1,20 +1,28 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { Action, BarText, Demo, Frame, Keycap, Pills } from "../kit";
+import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, useSeenOnce, wait } from "../motion";
+import { RING } from "../style";
 
 /*
  * Daifuku, told through its key moments. The grid is Daifuku's own planner,
- * ported line for line, on a 1366 by 768 monitor; the states and their
- * colours are the ones it draws, and their widths keep its proportions.
+ * ported line for line, on a 1366 by 768 monitor. Each terminal is drawn the
+ * way it really looks: a terminal window per agent, its tab titled
+ * "Administrator: demo N", running one of Daifuku's scripted demo agents,
+ * with the border Daifuku draws for its state.
  */
 
 const TERM = {
-  desk: "#0f0f17",
-  bg: "#1c1c28",
-  tab: "#2a2a3c",
+  desk: "#0d0d14",
+  bg: "#1e1e2b",
+  bar: "#181824",
   text: "#cdd6f4",
   sub: "#a6adc8",
+  dim: "#8f95ad",
+  tab: "#f5c2e7",
+  /** The tab of a window without the focus: the same pink, darker. */
+  tabDim: "#a98aa5",
+  tabText: "#1e1e2e",
 };
 
 type State = "working" | "waiting" | "done" | "failed";
@@ -24,11 +32,11 @@ type State = "working" | "waiting" | "done" | "failed";
  * default width of 4; the demo's monitor is small, so these are the same
  * steps at three quarters, which keeps each state readable without colour.
  */
-const STATE: Record<State, { color: string; width: number; label: string; line: string }> = {
-  done: { color: "#a6e3a1", width: 1.5, label: "done", line: "Done." },
-  working: { color: "#89b4fa", width: 3, label: "working", line: "Working" },
-  failed: { color: "#f38ba8", width: 4.5, label: "failed", line: "API error: rate limited" },
-  waiting: { color: "#f9e2af", width: 6, label: "waiting for you", line: "Allow the edit? Press Enter" },
+const STATE: Record<State, { color: string; width: number; label: string }> = {
+  done: { color: "#a6e3a1", width: 1.5, label: "done" },
+  working: { color: "#89b4fa", width: 3, label: "working" },
+  failed: { color: "#f38ba8", width: 4.5, label: "failed" },
+  waiting: { color: "#f9e2af", width: 6, label: "waiting for you" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -93,47 +101,64 @@ function plan(count: number, width: number, height: number) {
 /* Drawing                                                             */
 /* ------------------------------------------------------------------ */
 
-const AGENTS = [
-  { tab: "theme", task: "Add a dark mode toggle" },
-  { tab: "login-test", task: "Fix the flaky login test" },
-  { tab: "docs", task: "Document the config file" },
-  { tab: "images", task: "Speed up image loading" },
-  { tab: "planner", task: "Refactor the grid planner" },
-  { tab: "deps", task: "Update the dependencies" },
-  { tab: "errors", task: "Tidy the error messages" },
-  { tab: "cli", task: "Add a --json flag" },
-  { tab: "release", task: "Write the release notes" },
+/** Daifuku's scripted demo agents: what each is asked, and the steps it prints. */
+const AGENTS: Array<{ task: string; steps: string[]; end: Partial<Record<State, string>> }> = [
+  { task: "Add a dark mode toggle", steps: ["Reading src/theme.rs", "Planning 3 edits", "Running tests"], end: {} },
+  { task: "Fix the flaky login test", steps: ["Found a race on the session cookie", "20 of 20 passed"], end: { done: "Done." } },
+  { task: "Document the config file", steps: ["Listing 14 keys", "Checking every example parses"], end: { failed: "API error: rate limited.| Retrying in a few seconds." } },
+  { task: "Speed up the image loader", steps: ["Moving it to a worker", "Benchmark: 180 ms to 40 ms"], end: { waiting: "Allow the edit?| Press Enter to approve." } },
+  { task: "Refactor the grid planner", steps: ["Splitting shape and placement", "Running tests"], end: {} },
+  { task: "Update the dependencies", steps: ["4 have new versions", "Updating Cargo.lock"], end: { waiting: "Allow the edit?| Press Enter to approve." } },
+  { task: "Tidy the error messages", steps: ["Rewording 9 messages"], end: {} },
+  { task: "Add a --json flag", steps: ["Adding the flag"], end: {} },
+  { task: "Write the release notes", steps: ["Drafting 0.4.0"], end: {} },
 ];
 
 /**
- * A terminal with its agent's task, its state and its cursor: solid in the
- * window that has the focus, hollow in the others, as terminals draw it. The
- * border is drawn inside the cell, so two thick ones never meet across the gap.
- * What does not fit a small cell is left out, never shrunk below 11px.
+ * One agent's terminal. The tab is bright in the window that has the focus
+ * and dimmed in the others, as the terminal draws it; the border is drawn
+ * inside the cell, so two thick ones never meet across the gap. A small cell
+ * leaves lines out rather than shrinking them below 11px: the step goes
+ * first, then the tab's "Administrator:".
  */
-function Terminal({ index, state, focused }: { index: number; state: State; focused: boolean }) {
+function Terminal({ index, state, focused, flash = 0 }: { index: number; state: State; focused: boolean; flash?: number }) {
   const { reduced } = useMotionSafe();
   const s = STATE[state];
   const agent = AGENTS[index % AGENTS.length];
+  const last = state === "working" ? agent.steps[agent.steps.length - 1] : (agent.end[state] ?? agent.steps[agent.steps.length - 1]);
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[4px] [container-type:inline-size]" style={{ background: TERM.bg }}>
-      <div className="flex h-5 shrink-0 items-end px-1.5">
-        {/* The tab's name where it fits whole; an empty tab where it would be cut. */}
-        <span className="h-[18px] min-w-6 rounded-t-[3px] px-1.5 font-mono text-[0.6875rem] leading-[18px]" style={{ background: TERM.tab, color: TERM.text }}>
-          <span className="hidden @min-[100px]:inline">{agent.tab}</span>
+      <div className="flex h-[22px] shrink-0 items-end gap-1 px-1.5" style={{ background: TERM.bar }}>
+        <span
+          className="flex h-[18px] min-w-0 items-center rounded-t-[4px] px-1.5 font-sans text-[0.6875rem] leading-none transition-colors duration-200"
+          style={{ background: focused ? TERM.tab : TERM.tabDim, color: TERM.tabText }}
+        >
+          <span className="hidden whitespace-nowrap @min-[150px]:inline">Administrator:&nbsp;</span>
+          <span className="whitespace-nowrap">demo {index + 1}</span>
+        </span>
+        <span className="mb-[3px] ml-auto hidden gap-2 text-[0.6875rem] leading-none @min-[210px]:flex" style={{ color: focused ? TERM.text : TERM.dim }}>
+          <span>–</span>
+          <span>□</span>
+          <span>×</span>
         </span>
       </div>
-      <div className="min-h-0 flex-1 overflow-hidden px-2 py-1.5 font-mono text-[0.6875rem] leading-[1.4]">
-        <p className="m-0 hidden @min-[150px]:block" style={{ color: TERM.text }}>
-          {agent.task}
+      {/* What does not fit runs on below the window's edge, as in a small terminal, and fades there. */}
+      <div className="min-h-0 flex-1 overflow-hidden px-2 py-1.5 font-mono text-[0.6875rem] leading-[1.35] [mask-image:linear-gradient(to_bottom,black_calc(100%-12px),transparent)]">
+        {/* In a narrow cell a state's own line matters more than the task. */}
+        <p className={`m-0 ${agent.end[state] ? "hidden @min-[140px]:block" : ""}`} style={{ color: TERM.text }}>
+          &gt; {agent.task}
         </p>
-        <p className="m-0 hidden @min-[84px]:block @min-[150px]:mt-1" style={{ color: state === "working" ? TERM.sub : s.color }}>
-          {s.line}
+        {state === "working" || last === agent.steps[agent.steps.length - 1] ? null : (
+          <p className="m-0 hidden pl-[1ch] @min-[150px]:block" style={{ color: TERM.sub }}>
+            {agent.steps[agent.steps.length - 1]}
+          </p>
+        )}
+        {/* A state's line in full where it fits; in a narrow cell, its first sentence. */}
+        <p className="m-0 pl-[1ch]" style={{ color: state === "working" ? TERM.sub : s.color }}>
+          {last.split("|")[0]}
+          {last.includes("|") ? <span className="hidden @min-[130px]:inline">{last.split("|")[1]}</span> : null}
         </p>
-        <p className="m-0 mt-1 flex items-center gap-1" style={{ color: TERM.sub }}>
-          &gt;
-          <span className="inline-block h-[1.05em] w-[0.6em]" style={focused ? { background: TERM.text } : { boxShadow: `inset 0 0 0 1px ${TERM.sub}` }} />
-        </p>
+        <span className="mt-0.5 ml-[1ch] block h-[1.1em] w-[2px]" style={{ background: focused ? TERM.text : "transparent" }} />
       </div>
       <motion.span
         animate={state === "waiting" && !reduced ? { opacity: [1, 0.7, 1] } : { opacity: 1 }}
@@ -142,6 +167,17 @@ function Terminal({ index, state, focused }: { index: number; state: State; focu
         style={{ boxShadow: `inset 0 0 0 ${s.width}px ${s.color}` }}
         transition={state === "waiting" && !reduced ? { duration: 2.4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" } : { duration: 0.2 }}
       />
+      {/* Where Jump landed: a white ring that flashes and fades. The demo's mark, not Daifuku's. */}
+      {flash && !reduced ? (
+        <motion.span
+          animate={{ opacity: [0, 1, 1, 0] }}
+          aria-hidden
+          className="pointer-events-none absolute -inset-[3px] rounded-[6px]"
+          key={flash}
+          style={{ boxShadow: "0 0 0 2px #ffffff" }}
+          transition={{ duration: 1.1, times: [0, 0.12, 0.55, 1] }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -153,7 +189,7 @@ function Monitor({ portrait, children, grey = false }: { portrait: boolean; chil
   return (
     <div aria-hidden className="absolute inset-0 flex items-center justify-center [container-type:size]">
       <motion.div
-        className="relative overflow-hidden rounded-lg ring-1 ring-black/40 transition-[filter] duration-300 ease-bloom dark:ring-white/[0.14]"
+        className="relative rounded-lg ring-1 ring-black/40 transition-[filter] duration-300 ease-bloom dark:ring-white/25"
         layout
         style={{
           background: TERM.desk,
@@ -183,26 +219,22 @@ export function FleetDemo() {
   const [opened, setOpened] = useState(0);
   const { shape, cells } = useMemo(() => plan(count, portrait ? SCREEN.h : SCREEN.w, portrait ? SCREEN.w : SCREEN.h), [count, portrait]);
   const grid = `${shape.columns} by ${Math.ceil(count / shape.columns)}`;
-  const status = opened ? `${count} ${count === 1 ? "terminal" : "terminals"}, ${grid}.` : `Ctrl+Alt+Enter opens the fleet: ${count} ${count === 1 ? "terminal" : "terminals"}, ${grid}.`;
+  const terminals = `${count} ${count === 1 ? "terminal" : "terminals"}`;
+  const status = opened ? `${terminals}, ${grid}.` : `Ctrl+Alt+Enter opens ${terminals}, ${grid}, in the dashed cells.`;
 
   return (
     <Demo
-      caption="Open the fleet, then change the count or turn the monitor. The grid takes the shape Daifuku itself would choose."
+      caption="Open the fleet, then change the count or turn the monitor."
       height={440}
       label="Daifuku opening a fleet of terminals in a grid"
       live={opened ? status : ""}
-      phoneHeight={500}
+      phoneHeight={420}
     >
       <Frame
         bottom={
           <>
             <BarText>{status}</BarText>
-            <span className="hidden items-center gap-1 sm:inline-flex">
-              <Keycap>Ctrl</Keycap>
-              <Keycap>Alt</Keycap>
-              <Keycap>Enter</Keycap>
-            </span>
-            <Action onClick={() => setOpened((o) => o + 1)} primary>
+            <Action onClick={() => setOpened((o) => o + 1)} primary width="min-w-[7.5rem]">
               {opened ? "Open again" : "Open"}
             </Action>
           </>
@@ -210,12 +242,10 @@ export function FleetDemo() {
         top={
           <>
             <label className="flex min-w-[12rem] flex-1 items-center gap-3 text-[0.8125rem]">
-              <span className="w-[6.5rem] shrink-0 font-medium tabular-nums">
-                {count} {count === 1 ? "terminal" : "terminals"}
-              </span>
+              <span className="w-[6.5rem] shrink-0 font-medium tabular-nums">{terminals}</span>
               <input
-                aria-valuetext={`${count} terminals`}
-                className="h-11 min-w-0 flex-1 accent-foreground sm:h-8"
+                aria-valuetext={terminals}
+                className={`h-11 min-w-0 flex-1 rounded-full accent-foreground sm:h-8 ${RING}`}
                 max={9}
                 min={1}
                 onChange={(e) => setCount(Number(e.target.value))}
@@ -236,6 +266,16 @@ export function FleetDemo() {
         }
       >
         <Monitor portrait={portrait}>
+          {/* Before the fleet opens: the cells the planner has chosen, following the controls. */}
+          {cells.map((rect, i) => (
+            <motion.div
+              className="absolute rounded-[4px] border border-white/25 border-dashed"
+              key={`c${i}`}
+              layout
+              style={{ ...box(rect), opacity: opened ? 0 : 1 }}
+              transition={{ layout: spring }}
+            />
+          ))}
           <AnimatePresence>
             {opened
               ? cells.map((rect, i) => (
@@ -277,6 +317,7 @@ export function JumpDemo() {
   const [since, setSince] = useState<number[]>(reduced ? [0, 0, 0, 1, 0, 2] : Array(6).fill(0));
   const [focus, setFocus] = useState(0);
   const [visit, setVisit] = useState(0);
+  const [miss, setMiss] = useState(false);
   const [grey, setGrey] = useState(false);
   const run = useRef(0);
   const { cells } = useMemo(() => plan(6, SCREEN.w, SCREEN.h), []);
@@ -311,40 +352,40 @@ export function JumpDemo() {
   ];
 
   const jump = () => {
+    if (!order.length) {
+      setMiss(true);
+      return;
+    }
+    setMiss(false);
     setFocus(order[visit % order.length]);
     setVisit((v) => v + 1);
   };
 
   const waiting = states.filter((s) => s === "waiting").length;
-  const status = visit
-    ? `On ${AGENTS[focus].tab}: ${STATE[states[focus]].label}.`
-    : waiting
-      ? `${waiting} waiting for you.`
-      : "Six agents at work.";
+  const status = miss
+    ? "Nobody needs you yet, so the focus stays where it is."
+    : visit
+      ? `On demo ${focus + 1}: ${STATE[states[focus]].label}.`
+      : waiting
+        ? `${waiting} waiting. Ctrl+Alt+N goes to the one that has waited longest.`
+        : "Six agents at work. Ctrl+Alt+N waits for one to need you.";
 
   return (
     <Demo
       caption="When borders turn yellow, press Jump until it comes back around. Then take the colour away."
       height={440}
       label="Six agents whose borders show their state, and a key that jumps to the one that needs you"
-      live={visit ? status : ""}
-      phoneHeight={500}
+      live={visit || miss ? status : ""}
+      phoneHeight={420}
     >
       <div className="absolute inset-0" ref={ref}>
         <Frame
           bottom={
             <>
               <BarText>{status}</BarText>
-              <span className="hidden items-center gap-1 sm:inline-flex">
-                <Keycap>Ctrl</Keycap>
-                <Keycap>Alt</Keycap>
-                <Keycap>N</Keycap>
-              </span>
-              {order.length ? (
-                <Action onClick={jump} primary>
-                  Jump
-                </Action>
-              ) : null}
+              <Action onClick={jump} primary width="min-w-[5.5rem]">
+                Jump
+              </Action>
             </>
           }
           top={
@@ -362,7 +403,7 @@ export function JumpDemo() {
           <Monitor grey={grey} portrait={false}>
             {cells.map((rect, i) => (
               <div className="absolute" key={`j${i}`} style={box(rect)}>
-                <Terminal focused={focus === i} index={i} state={states[i]} />
+                <Terminal flash={focus === i ? visit : 0} focused={focus === i} index={i} state={states[i]} />
               </div>
             ))}
           </Monitor>

@@ -21,8 +21,8 @@ export const story: Story = {
             name: "daifuku-fleet",
             width: 1600,
             height: 1000,
-            alt: "Six terminals in a three by two grid on a 4K monitor, their borders blue, yellow, green and red",
-            caption: "Daifuku's six scripted demo agents on a 4K monitor, each border set by its agent.",
+            alt: "Six terminals in a three by two grid, tabs named Administrator: demo 1 to demo 6, their borders blue, green, red and yellow",
+            caption: "Daifuku's six scripted demo agents, each border set by its agent. Open it to read what each one is doing.",
           },
         },
       ],
@@ -40,6 +40,16 @@ export const story: Story = {
       heading: "Colour is never the only signal",
       blocks: [
         "With colour alone, anyone with red-green colour blindness would be left guessing between done and failed. So every state is also drawn at a width of its own, each thicker than the one before: done, working, failed, waiting. Take the colour away in the demo above and the four still read.",
+        {
+          still: {
+            name: "daifuku-fleet",
+            width: 1600,
+            height: 1000,
+            crop: [0, 0.38, 0.34, 0.7],
+            alt: "Two of Daifuku's terminals: one working with a blue border above, one waiting for an answer below with a yellow border twice as thick",
+            caption: "Working above, waiting below: the waiting border is twice as thick, so the two read apart without their colours.",
+          },
+        },
         "A colour-blind palette is one setting away, a high contrast theme hands the borders the theme's own colours, and a chime can play when an agent starts waiting, for when I am not looking at all.",
       ],
     },
@@ -56,7 +66,7 @@ export const story: Story = {
       heading: "Measured on a real desktop",
       blocks: [
         "The logic is unit tested like any library, but the bugs that mattered only showed on a real screen. A border lagged two seconds behind a moved window, because Windows delivers window events inside the message wait without ever ending it. Focus switches reported success and quietly did nothing. A window placed by its rectangle came out off by its invisible resize border.",
-        "Each of those is fixed and pinned by a check, and CI runs the whole path on a real Windows desktop on every push. Daifuku is five crates and 387 tests, it runs beside Mochi without either getting in the other's way, and it is how I work every day.",
+        "Each of those is fixed and pinned by a check, and CI runs the whole path on a real Windows desktop on every push. Daifuku is five crates and 458 tests, it runs beside Mochi without either getting in the other's way, and it is how I work every day.",
       ],
     },
   ],

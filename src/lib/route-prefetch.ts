@@ -1,3 +1,4 @@
+import { prefetchStoryFor } from "@/pages/e/story-loader";
 import {
   chunkPathFor,
   ROUTE_CHUNKS,
@@ -59,8 +60,11 @@ export function createPrefetchRegistry(
     prefetch: (href: string) => {
       if (!armed) return;
       const path = chunkPathFor(href);
-      if (!path || warmed.has(path)) return;
+      if (!path) return;
       if (!allowsPrefetch(connection())) return;
+      // Every project has its own story, so it is warmed per link, not per route.
+      if (path === "/projects/:projectSlug") prefetchStoryFor(href);
+      if (warmed.has(path)) return;
       warmed.add(path);
       void Promise.resolve()
         .then(() => load(path))
