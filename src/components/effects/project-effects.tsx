@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { animate, motion, type TargetAndTransition, useMotionValue } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { ProjectStat } from "@/constants/projects/types";
@@ -272,6 +272,17 @@ const FOCUSABLE = 'a[href],button:not([disabled]):not([tabindex="-1"])';
  * Escape and the arrow keys bound, Tab cycling inside) and it animates opacity
  * and transform only, so nothing repaints per frame.
  */
+/**
+ * Where a picture sat on the page when the viewer was opened from a crop of
+ * it: the visible box on screen, which part of the picture that box showed
+ * (fractions of the file), and the corner radius it had.
+ */
+export type LightboxOrigin = {
+  rect: { left: number; top: number; width: number; height: number };
+  crop: [number, number, number, number];
+  radius: number;
+};
+
 export function Lightbox({
   alt,
   images,
@@ -279,6 +290,7 @@ export function Lightbox({
   labels,
   onClose,
   onSelect,
+  origin,
   originIndex,
 }: {
   alt: string;
@@ -290,6 +302,12 @@ export function Lightbox({
    * returns there on close; any other picture simply fades.
    */
   originIndex?: number;
+  /**
+   * When set, the picture opens out of a crop instead of a whole frame: it
+   * starts clipped to what the crop showed, at the crop's place, and unclips
+   * as it grows into the viewer. It returns the same way on close.
+   */
+  origin?: LightboxOrigin | null;
   labels: LightboxLabels;
   onClose: () => void;
   onSelect: (next: number) => void;
@@ -415,8 +433,49 @@ export function Lightbox({
   const control =
     "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-colors duration-200 ease-out hover:text-foreground";
 
+  const morph = !reduced && origin && originIndex === index ? origin : null;
   const sharedId =
-    !reduced && originIndex === index ? `project-shot-${index}` : undefined;
+    !reduced && !morph && originIndex === index ? `project-shot-${index}` : undefined;
+
+  // The crop morph: measured once the picture has its place in the viewer,
+  // then set to the crop's place and released. Transform and one clip-path.
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [returnTo, setReturnTo] = useState<TargetAndTransition | null>(null);
+  // Motion values, not writes to the element: the image owns its transform
+  // (it drags on x), so anything set from outside would be painted over.
+  const morphX = useMotionValue(0);
+  const morphY = useMotionValue(0);
+  const morphScale = useMotionValue(1);
+  const morphClip = useMotionValue("inset(0% 0% 0% 0% round 16px)");
+  // Once per picture: `index` is the key the image remounts on.
+  useLayoutEffect(() => {
+    const el = imageRef.current;
+    if (!morph || !el) return;
+    const box = el.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const [x0, y0, x1, y1] = morph.crop;
+    const width = morph.rect.width / (x1 - x0);
+    const height = morph.rect.height / (y1 - y0);
+    const left = morph.rect.left - x0 * width;
+    const top = morph.rect.top - y0 * height;
+    const scale = width / box.width;
+    const from = {
+      x: left + width / 2 - (box.left + box.width / 2),
+      y: top + height / 2 - (box.top + box.height / 2),
+      scale,
+      clipPath: `inset(${(y0 * 100).toFixed(3)}% ${((1 - x1) * 100).toFixed(3)}% ${((1 - y1) * 100).toFixed(3)}% ${(x0 * 100).toFixed(3)}% round ${(morph.radius / scale).toFixed(2)}px)`,
+    };
+    morphX.set(from.x);
+    morphY.set(from.y);
+    morphScale.set(scale);
+    morphClip.set(from.clipPath);
+    animate(morphX, 0, SPRING_FLUID);
+    animate(morphY, 0, SPRING_FLUID);
+    animate(morphScale, 1, SPRING_FLUID);
+    animate(morphClip, "inset(0% 0% 0% 0% round 16px)", { duration: 0.45, ease: EASE_OUT });
+    setReturnTo({ ...from, transition: { ...SPRING_FLUID, clipPath: { duration: 0.35, ease: EASE_OUT } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
 
   return createPortal(
     <motion.div
@@ -482,9 +541,11 @@ export function Lightbox({
           drag={reduced || total < 2 ? false : "x"}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.16}
-          initial={{ opacity: reduced || sharedId ? 1 : 0 }}
+          initial={{ opacity: reduced || sharedId || morph ? 1 : 0 }}
+          exit={returnTo ?? undefined}
           key={images[index]}
           layoutId={sharedId}
+          ref={imageRef}
           onDragEnd={(_, info) => {
             // Either a deliberate drag or a flick: a fast swipe on a phone
             // covers barely 40px before the finger leaves the glass, and
@@ -498,7 +559,11 @@ export function Lightbox({
           // The radius lives in `style` rather than a class so the shared
           // layout animation can correct it while the box scales; a class
           // radius stretches into an oval mid-flight.
-          style={{ borderRadius: 16 }}
+          style={
+            morph
+              ? { borderRadius: 16, x: morphX, y: morphY, scale: morphScale, clipPath: morphClip }
+              : { borderRadius: 16 }
+          }
           transition={{
             layout: SPRING_FLUID,
             opacity: { duration: DUR.fast, ease: EASE_OUT },

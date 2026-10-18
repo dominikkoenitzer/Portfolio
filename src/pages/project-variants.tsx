@@ -2,7 +2,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ProjectFigure, StatStrip } from "@/components/effects/project-effects";
+import {
+  type LightboxOrigin,
+  ProjectFigure,
+  StatStrip,
+} from "@/components/effects/project-effects";
 import { TechBadge } from "@/components/ui/tech-badge";
 import {
   cardImageSrc,
@@ -31,7 +35,7 @@ export type VariantProps = {
   captionFor: (position: number) => string | undefined;
   altFor: (position: number) => string;
   openLabelFor: (position: number) => string;
-  open: (position: number, grow?: boolean) => void;
+  open: (position: number, from?: boolean | LightboxOrigin) => void;
   next: PortfolioProject[];
 };
 
