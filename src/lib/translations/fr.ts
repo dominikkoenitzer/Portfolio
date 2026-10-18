@@ -181,6 +181,7 @@ export const fr = {
     showImage: "Afficher l’image {index}",
     breadcrumb: "Fil d’Ariane",
     platform: "Plateforme",
+    inDepth: "En détail",
   },
   services: {
     eyebrow: "Ce que je propose",
