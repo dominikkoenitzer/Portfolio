@@ -79,7 +79,7 @@ function Sections({
     <div className="space-y-16">
       {all.map((section, index) => (
         <motion.section
-          className={note ? "grid gap-4 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-12" : ""}
+          className={note ? "grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-12" : ""}
           key={section.heading}
           {...revealOnScroll(reduceMotion)}
         >
