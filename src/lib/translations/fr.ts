@@ -182,6 +182,7 @@ export const fr = {
     breadcrumb: "Fil d’Ariane",
     platform: "Plateforme",
     nextProject: "Projet suivant",
+    previousProject: "Projet précédent",
   },
   services: {
     eyebrow: "Ce que je propose",

@@ -181,6 +181,7 @@ export const en = {
     breadcrumb: "Breadcrumb",
     platform: "Platform",
     nextProject: "Next project",
+    previousProject: "Previous project",
   },
   services: {
     eyebrow: "What I offer",

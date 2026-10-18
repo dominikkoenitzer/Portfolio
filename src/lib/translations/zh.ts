@@ -179,6 +179,7 @@ export const zh = {
     breadcrumb: "面包屑导航",
     platform: "平台",
     nextProject: "下一个项目",
+    previousProject: "上一个项目",
   },
   services: {
     eyebrow: "我提供",
