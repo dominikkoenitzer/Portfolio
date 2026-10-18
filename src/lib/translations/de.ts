@@ -182,6 +182,7 @@ export const de = {
     breadcrumb: "Brotkrümelnavigation",
     platform: "Plattform",
     nextProject: "Nächstes Projekt",
+    previousProject: "Vorheriges Projekt",
   },
   services: {
     eyebrow: "Was ich anbiete",
