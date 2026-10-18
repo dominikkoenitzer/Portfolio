@@ -44,6 +44,7 @@ import {
 import { translations } from "@/lib/translations";
 import {
   Lightbox,
+  type LightboxOrigin,
   ProjectFigure,
   StatStrip,
 } from "@/components/effects/project-effects";
@@ -283,11 +284,13 @@ const ProjectDetails = () => {
   // latest. The shared-layout flight measures the enlarged image when it
   // mounts, and an image still loading measures as an empty box: the first
   // frames then scaled the picture from nothing into a squashed rectangle.
-  // `grow: false` opens it with a plain fade: a second crop of a picture has
-  // no frame of its own for the image to fly out of.
-  const openLightbox = (at: number, grow = true) => {
+  // `from: false` opens it with a plain fade; an origin box opens it out of
+  // the crop that was clicked (layout d); nothing grows it from its frame.
+  const [lightboxFrom, setLightboxFrom] = useState<LightboxOrigin | null>(null);
+  const openLightbox = (at: number, from: boolean | LightboxOrigin = true) => {
     const open = () => {
-      setLightboxOrigin(grow ? at : -1);
+      setLightboxFrom(typeof from === "object" ? from : null);
+      setLightboxOrigin(from === false ? -1 : at);
       setLightboxIndex(at);
     };
     const src = galleryImages[at];
@@ -837,6 +840,7 @@ const ProjectDetails = () => {
           }}
           onClose={() => setLightboxIndex(null)}
           onSelect={setLightboxIndex}
+          origin={lightboxFrom}
           originIndex={lightboxOrigin}
         />
         ) : null}
