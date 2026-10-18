@@ -1,6 +1,6 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { type KeyboardEvent, type ReactNode, useState } from "react";
-import { Action, BarText, Demo, Frame, Keycap, Pills } from "../kit";
+import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe } from "../motion";
 
 /*
@@ -104,7 +104,7 @@ const APPS = [
 ] as const;
 type App = (typeof APPS)[number];
 
-const C = { kw: "#cba6f7", fn: "#89b4fa", str: "#a6e3a1", num: "#fab387", dim: "#7f849c", text: "#cdd6f4", ok: "#a6e3a1" };
+const C = { kw: "#cba6f7", fn: "#89b4fa", str: "#a6e3a1", num: "#fab387", dim: "#9399b2", text: "#cdd6f4", ok: "#a6e3a1" };
 
 /**
  * What each window shows: a little real content, so a tile is recognisable at
@@ -208,18 +208,18 @@ function Window({ app, focused }: { app: App; focused: boolean }) {
       data-texture
       style={{ background: DESK.window, boxShadow: focused ? `0 0 0 2px ${DESK.pink}` : `0 0 0 1px ${DESK.line}` }}
     >
-      <div className="flex h-5 shrink-0 items-center gap-1 pr-1 pl-2" style={{ background: DESK.bar }}>
-        <span className="min-w-0 overflow-hidden whitespace-nowrap text-[0.625rem]" style={{ color: focused ? DESK.text : DESK.muted }}>
+      <div className="flex h-[22px] shrink-0 items-center gap-1 pr-1.5 pl-2" style={{ background: DESK.bar }}>
+        <span className="min-w-0 overflow-hidden whitespace-nowrap text-[0.6875rem]" style={{ color: focused ? DESK.text : C.dim }}>
           {app.name}
         </span>
         {/* The caption buttons only where the title still fits beside them. */}
-        <span className="ml-auto hidden shrink-0 gap-1.5 text-[0.5625rem] leading-none @min-[120px]:flex" style={{ color: DESK.muted }}>
+        <span className="ml-auto hidden shrink-0 gap-1.5 text-[0.6875rem] leading-none @min-[120px]:flex" style={{ color: DESK.muted }}>
           <span>–</span>
           <span>□</span>
           <span>×</span>
         </span>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col flex-wrap content-start gap-x-4 gap-y-[3px] overflow-hidden px-2 py-1.5 text-[0.625rem] leading-[1.35]">
+      <div className="flex min-h-0 flex-1 flex-col flex-wrap content-start gap-x-4 gap-y-[3px] overflow-hidden px-2 py-1.5 text-[0.6875rem] leading-[1.35]">
         <Content kind={app.kind} />
       </div>
     </div>
@@ -301,7 +301,7 @@ export function TilingDemo() {
     setFocus((f) => neighbour(rects, f, key));
   };
 
-  const status = tiled ? `${count} windows tiled. ${APPS[focus]?.name} has the focus.` : "Three windows, floating where they opened.";
+  const status = tiled ? `${count} tiled. ${APPS[focus]?.name} has the focus.` : "Three windows, floating where they opened.";
   return (
     <Demo
       caption="Press Start, then move the pink focus with the arrow keys or by tapping a window. Mochi binds it to Alt with H, J, K and L."
@@ -316,16 +316,21 @@ export function TilingDemo() {
             <BarText>{status}</BarText>
             {tiled ? (
               <>
-                {count < APPS.length ? (
-                  <Action
-                    onClick={() => {
+                {/* One place for both: it opens windows up to five, then closes the newest. */}
+                <Action
+                  onClick={() => {
+                    if (count < APPS.length) {
                       setFocus(count);
-                      setCount((c) => c + 1);
-                    }}
-                  >
-                    Open a window
-                  </Action>
-                ) : null}
+                      setCount(count + 1);
+                    } else {
+                      setFocus(Math.min(focus, count - 2));
+                      setCount(count - 1);
+                    }
+                  }}
+                  width="min-w-[8.5rem]"
+                >
+                  {count < APPS.length ? "Open a window" : "Close a window"}
+                </Action>
                 <Action
                   onClick={() => {
                     setTiled(false);
@@ -337,7 +342,7 @@ export function TilingDemo() {
                 </Action>
               </>
             ) : (
-              <Action onClick={() => setTiled(true)} primary>
+              <Action onClick={() => setTiled(true)} primary width="min-w-[5.5rem]">
                 Start
               </Action>
             )}
@@ -412,7 +417,7 @@ export function StopDemo() {
   const { spring, reduced } = useMotionSafe();
   const [stopped, setStopped] = useState(false);
   const shown = tile("bsp", 2);
-  const status = stopped ? "Four windows on screen, none of them tiled." : "Two windows tiled, two off screen on another workspace.";
+  const status = stopped ? "Four windows on screen, none of them tiled." : "Two tiled, two hidden. Alt+Shift+E stops Mochi.";
 
   return (
     <Demo
@@ -426,12 +431,7 @@ export function StopDemo() {
         bottom={
           <>
             <BarText>{status}</BarText>
-            <span className="hidden items-center gap-1 sm:inline-flex">
-              <Keycap>Alt</Keycap>
-              <Keycap>Shift</Keycap>
-              <Keycap>E</Keycap>
-            </span>
-            <Action onClick={() => setStopped((s) => !s)} primary={!stopped}>
+            <Action onClick={() => setStopped((s) => !s)} primary={!stopped} width="min-w-[7.5rem]">
               {stopped ? "Start Mochi" : "Stop Mochi"}
             </Action>
           </>

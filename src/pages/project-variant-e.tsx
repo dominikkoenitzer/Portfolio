@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Lock } from "lucide-react";
 import { useLenis } from "lenis/react";
-import { type ReactNode, useEffect, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PrivateSource } from "@/components/sections/PrivateSource";
 import { getProjects } from "@/constants/projects";
@@ -9,6 +9,7 @@ import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { Demo, StillFigure } from "./e/kit";
+import { FIRST_VISUAL, hasStory, loadStory, storyNow } from "./e/story-loader";
 import type { Block, Story } from "./e/types";
 import type { VariantProps } from "./project-variants";
 
@@ -18,25 +19,19 @@ import type { VariantProps } from "./project-variants";
  * kind of box, and a quiet sticky index on wide screens.
  */
 
-/** Each project's story is its own chunk: only the visited one downloads. */
-const STORIES = import.meta.glob<{ story: Story }>("./e/stories/*.ts");
-
-/** The project's story once loaded; undefined while it loads, null if it has none. */
+/** The project's story: at once if it has arrived, undefined while it loads, null if it has none. */
 function useStory(slug: string): Story | null | undefined {
-  const load = STORIES[`./e/stories/${slug}.ts`];
   const [loaded, setLoaded] = useState<{ slug: string; story: Story | null } | null>(null);
+  const now = hasStory(slug) ? storyNow(slug) : null;
   useEffect(() => {
-    if (!load) return;
+    if (now !== undefined) return;
     let live = true;
-    load().then(
-      (module) => live && setLoaded({ slug, story: module.story }),
-      () => live && setLoaded({ slug, story: null }),
-    );
+    void loadStory(slug).then((story) => live && setLoaded({ slug, story }));
     return () => {
       live = false;
     };
-  }, [load, slug]);
-  if (!load) return null;
+  }, [slug, now]);
+  if (now !== undefined) return now;
   return loaded?.slug === slug ? loaded.story : undefined;
 }
 
@@ -138,6 +133,27 @@ function Prose({ paragraphs }: { paragraphs: string[] }) {
  * A story's blocks in reading order. Paragraphs sit 16px apart; a demo or a
  * still gets 32px of air on both sides, so the column breathes around it.
  */
+/** The shape of a story's opening: two paragraphs of text, then the first demo's box. */
+function Placeholder({ slug }: { slug: string }) {
+  const [desk, phone] = FIRST_VISUAL[slug] ?? [360, 440];
+  const line = "h-[0.9rem] rounded-full bg-foreground/[0.06]";
+  return (
+    <div aria-hidden>
+      {[0, 1].map((p) => (
+        <div className={`${p ? "mt-4" : ""} flex flex-col gap-[0.85rem] py-[0.45rem]`} key={p}>
+          {[100, 97, 99, 62].map((w, i) => (
+            <span className={line} key={i} style={{ width: `${w}%` }} />
+          ))}
+        </div>
+      ))}
+      <div
+        className="mt-8 h-[var(--ph)] rounded-2xl bg-card ring-1 ring-black/[0.06] sm:h-[var(--dh)] dark:ring-white/[0.08]"
+        style={{ "--dh": `${desk}px`, "--ph": `${phone}px` } as CSSProperties}
+      />
+    </div>
+  );
+}
+
 function Blocks({ blocks, first = false }: { blocks: Block[]; first?: boolean }) {
   // Only the opening's first picture or demo loads eagerly.
   const eagerAt = first ? blocks.findIndex((b) => typeof b !== "string") : -1;
@@ -245,7 +261,7 @@ export function VariantE(props: VariantProps) {
                     ) : null}
                     <button
                       aria-current={current ? "location" : undefined}
-                      className={`text-left text-[0.8125rem] leading-snug transition-colors duration-200 ease-bloom hover:text-foreground ${
+                      className={`text-balance text-left text-[0.8125rem] leading-snug transition-colors duration-200 ease-bloom hover:text-foreground ${
                         current ? "text-foreground" : "text-muted-foreground"
                       }`}
                       onClick={() => jump(entry.id)}
@@ -285,10 +301,10 @@ export function VariantE(props: VariantProps) {
 
         <div className="mt-8">
           {story === undefined ? (
-            // Nothing visible while the story's chunk loads, and tall enough that
-            // everything after it starts below the fold: what arrives is new
-            // content, so nothing already on screen moves.
-            <div aria-hidden className="min-h-[100svh]" />
+            // Rarely seen: the story downloads beside the page's own code. If it
+            // is still on its way, this holds the shape of what comes first, two
+            // paragraphs and the first demo, so it arrives in place.
+            <Placeholder slug={project.slug} />
           ) : story ? (
             <Blocks blocks={story.opening} first />
           ) : (

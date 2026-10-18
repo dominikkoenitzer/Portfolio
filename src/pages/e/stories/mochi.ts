@@ -7,7 +7,7 @@ export const story: Story = {
     "Mochi is a tiling window manager for Windows. Every window gets a tile, the tiles always fill the screen, and you move between them from the keyboard instead of dragging them around.",
     "It is also the only window manager I use. There is no fallback installed and nothing to switch back to on a bad day, so if Mochi ever loses a window, that window is gone until I find it. That one fact shaped more of the design than any feature did.",
     { Demo: TilingDemo },
-    "What you just saw is BSP, the default layout. Each new window takes half of what the one before it left, cut across the longer side. On a screen turned on its side, Mochi starts with rows instead.",
+    "Start tiles them in BSP, the default layout. The first window takes half the screen with a cut from top to bottom, the next takes half of what is left with a cut across, and the cuts keep alternating, so every new window halves the space the one before it left.",
   ],
   sections: [
     {
@@ -24,7 +24,7 @@ export const story: Story = {
       id: "layouts",
       heading: "Seven layouts",
       blocks: [
-        "BSP is one of seven layouts, and Alt+V steps through them: columns and rows, a main window beside a stack of the rest, a grid, and a version for ultrawide screens that keeps the main window in the middle.",
+        "BSP is one of seven layouts, and Alt+Shift+V steps through them: columns and rows, a main window beside a stack of the rest, a grid, and a version for ultrawide screens that keeps the main window in the middle.",
         { Demo: LayoutsDemo },
         "The layouts live in a crate with no Windows code in it at all. A layout is a function from an area and a number of windows to rectangles, so it is tested like any library: for every layout and one to six windows, the rectangles cover the area exactly, with no overlap and nothing left over. The gaps between windows are added afterwards, when the rectangles are placed.",
         "Real windows have opinions, though. Some refuse to get narrower than they like. Mochi asks each window for its minimum size and lays the others out around it, and a window that cannot fit anywhere keeps its own size rather than being squeezed into a tile it would overflow.",
@@ -44,15 +44,6 @@ export const story: Story = {
       blocks: [
         "Unit tests prove the arithmetic. They cannot prove that a real window ended up where the arithmetic said. So the end-to-end suite opens throwaway windows, presses real keys and checks where the windows actually went, on a real Windows desktop, on every push. If those tests skip, the job fails, because a test that returns early still reports as passed.",
         "The suite also holds a budget. From opening a window to seeing it tiled takes a median of 27 milliseconds. An idle Mochi uses no measurable CPU. A hundred windows cost 44 KiB and not one extra handle.",
-        {
-          still: {
-            name: "mochi-desktop",
-            width: 1600,
-            height: 1000,
-            alt: "Three windows tiled by Mochi on a dark desktop, one tall on the left and two stacked on the right, the focused one with a pink border",
-            caption: "Three of my own programs in the default layout, on a real desktop. The pink border marks the focused one.",
-          },
-        },
         "Then I ran it on my own desktop, and the first supervised day found what no test had: a window Mochi was hiding could be forgotten without ever being shown again. It is fixed and covered now, which is the whole argument for running software and not only testing it.",
       ],
     },
@@ -61,6 +52,15 @@ export const story: Story = {
       heading: "Borders, and nothing else",
       blocks: [
         "Mochi draws a border around the focused window and nothing more. No bar, no tab strip, no workspace number in a corner, and none is planned. When a window is not being tiled and it is not obvious why, mochic why says what Mochi makes of it, in words rather than log lines.",
+        {
+          still: {
+            name: "mochi-desktop",
+            width: 1600,
+            height: 1000,
+            alt: "Mochi tiling three windows on a dark desktop: Remnants with source code on the left, Jester and a PowerShell terminal stacked on the right, the terminal with a pink border",
+            caption: "Remnants, Jester and a PowerShell terminal, tiled by Mochi on my own desktop. The terminal has the focus.",
+          },
+        },
         "It runs as a normal user and asks for no admin rights. Windows does not let it move a window that belongs to an elevated program, so Mochi notices, says so once in its log and leaves that window alone instead of tiling around a hole it cannot fill. It is eight crates and more than a thousand tests, and it has arranged every window on my screen since September.",
       ],
     },

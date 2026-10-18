@@ -1,72 +1,91 @@
 import { AnimatePresence, LayoutGroup, animate, motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { Check } from "lucide-react";
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, wait } from "../motion";
+import "./oxidize.css";
 
 /*
- * Oxidize, told through its key moments. The window is the app's own dark
- * theme with its copper accent; every control a reader presses sits outside
- * it, on the demo's bar. The programs and publishers are made up, as in the
- * app's own screenshots.
+ * Oxidize, told through its key moments, in its own window: the colours of
+ * its light and dark theme (Tint in oxidize-gui.rs), following the page's
+ * theme the way the app follows Windows', its typeface, its layout and its
+ * own words. The programs and the footprint are the made-up ones its
+ * screenshots use. The reader's controls sit on the demo's bar, outside the
+ * window; the window's own button lights up when the bar presses it.
  */
 
-const APP = {
-  bg: "#1f1d1b",
-  bar: "#191716",
-  line: "#34302d",
-  text: "#ece6df",
-  muted: "#a8a097",
-  copper: "#e2803f",
-  copperText: "#f0a274",
-  teal: "#5fb3a5",
-};
+/** Oxidize's Tint, light and dark, as variables that follow the page. */
+const OX =
+  "[--ox-chrome:#f2efeb] [--ox-base:#faf9f7] [--ox-side:#ffffff] [--ox-text:#1f1c19] [--ox-weak:#6e6860] [--ox-line:#e4ded6] [--ox-strong:#cfc6bb] [--ox-button:#ffffff] [--ox-active:#ede7e0] [--ox-selected:#eae4dd] [--ox-copper:#b5521d] [--ox-on-copper:#ffffff] [--ox-verdigris:#217a6e] [--ox-amber:#946300] [--ox-red:#bd3a2a] dark:[--ox-chrome:#151312] dark:[--ox-base:#1b1918] dark:[--ox-side:#221f1d] dark:[--ox-text:#ebe6e1] dark:[--ox-weak:#9d968f] dark:[--ox-line:#332f2c] dark:[--ox-strong:#4a443e] dark:[--ox-button:#292624] dark:[--ox-active:#3b3632] dark:[--ox-selected:#2f2b28] dark:[--ox-copper:#e2793d] dark:[--ox-on-copper:#1b120c] dark:[--ox-verdigris:#5ec3b3] dark:[--ox-amber:#dba543] dark:[--ox-red:#ec7262]";
+const v = (name: string) => `var(--ox-${name})`;
 
-type Grade = "High" | "Medium" | "Low";
+type Program = { name: string; by: string; size: string; tint: string };
 
-/** What a scan of a removed program typically turns up, with its confidence. */
-const LEFTOVERS: Array<{ path: string; kind: string; grade: Grade; why: string }> = [
-  { path: "HKCU\\Software\\Example Labs\\Quillmark", kind: "Registry key", grade: "High", why: "exact name" },
-  { path: "%AppData%\\Quillmark", kind: "Folder, 18 MB", grade: "High", why: "exact name" },
-  { path: "%LocalAppData%\\Quillmark-Updater", kind: "Folder, 4 MB", grade: "Medium", why: "part of the name" },
-  { path: "C:\\ProgramData\\QMCache", kind: "Folder, 120 KB", grade: "Low", why: "claimed by no program" },
+/** The made-up programs, in the window's order, around the one the demos use. */
+const PROGRAMS: Program[] = [
+  { name: "Marrowby Browser", by: "Marrowby", size: "512.0 MB", tint: "#3f7fd6" },
+  { name: "Oriel Backup", by: "Oriel Software GmbH", size: "2.3 GB", tint: "#5b5fc7" },
+  { name: "Otterbrook Drive", by: "Otterbrook Cloud", size: "160.0 MB", tint: "#2f9e9a" },
+  { name: "Pinegate Mail", by: "Pinegate", size: "410.0 MB", tint: "#d0477e" },
+  { name: "Quillmark", by: "Example Labs", size: "312.0 MB", tint: "#1f5fd1" },
+  { name: "Reedmoor Player", by: "Reedmoor Media", size: "186.0 MB", tint: "#d94040" },
+  { name: "Sablewick Calendar", by: "Sablewick", size: "74.0 MB", tint: "#9a58c8" },
+  { name: "Saltmarsh Launcher", by: "Saltmarsh Games", size: "2.3 GB", tint: "#c77a2b" },
+  { name: "Tessel Terminal", by: "Tessel", size: "96.0 MB", tint: "#3a3a46" },
+  { name: "Wrenfield Chat", by: "Wrenfield", size: "340.0 MB", tint: "#3aa357" },
 ];
 
-const GRADE_STYLE: Record<Grade, string> = {
-  High: "bg-[#e2803f]/15 text-[#f0a274]",
-  Medium: "bg-[#d9b25f]/12 text-[#e2c37e]",
-  Low: "bg-white/[0.07] text-[#b3aca4]",
-};
+type Grade = "high" | "medium" | "low";
+type Item = { path: string; reason: string; grade: Grade; size?: string; leaf: string };
+type Section = { title: string; meta: string; items: Item[] };
 
-const PROGRAMS = [
-  { name: "Corvid Notes", by: "Corvid Labs", size: "640 MB", tint: "#7b8fd6" },
-  { name: "Quillmark", by: "Example Labs", size: "312 MB", tint: APP.copper },
-  { name: "Fernhollow Photo", by: "Fernhollow", size: "3.1 GB", tint: "#6cb38f" },
-  { name: "Larkspur Audio", by: "Larkspur Media", size: "1.2 GB", tint: "#c98ad6" },
-  { name: "Tidewater Sync", by: "Tidewater", size: "88 MB", tint: "#5fa8c9" },
+/** What a scan finds after Quillmark's own uninstaller has run. */
+const LEFTOVERS: Section[] = [
+  {
+    title: "Files and folders",
+    meta: "3 · 22.1 MB",
+    items: [
+      { path: "C:\\Users\\you\\AppData\\Roaming\\Quillmark", reason: "exact name, 18.0 MB", grade: "high", leaf: "" },
+      { path: "C:\\Users\\you\\AppData\\Local\\Quillmark-Updater", reason: "part of the name, 4.0 MB", grade: "medium", leaf: "" },
+      { path: "C:\\ProgramData\\QMCache", reason: "claimed by no program, 120.0 KB", grade: "low", leaf: "" },
+    ],
+  },
+  {
+    title: "Registry",
+    meta: "1",
+    items: [{ path: "HKCU\\Software\\Example Labs\\Quillmark", reason: "exact name, in vendor key Example Labs", grade: "high", leaf: "" }],
+  },
 ];
 
-/** The Oxidize window. Its title says which view is open; it holds no demo controls. */
-function Window({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 flex flex-col overflow-hidden rounded-xl shadow-[0_1px_2px_rgb(0_0_0/0.2),0_20px_40px_-24px_rgb(0_0_0/0.5)] ring-1 ring-black/30 dark:ring-white/[0.12]"
-      style={{ background: APP.bg, color: APP.text }}
-    >
-      <div className="flex h-9 shrink-0 items-center gap-2 px-3.5 text-[0.75rem]" style={{ background: APP.bar }}>
-        <span className="font-semibold">Oxidize</span>
-        <span style={{ color: APP.muted }}>/</span>
-        <AnimatePresence initial={false} mode="wait">
-          <motion.span animate={{ opacity: 1 }} exit={{ opacity: 0 }} initial={{ opacity: 0 }} key={title} style={{ color: APP.muted }} transition={{ duration: 0.18 }}>
-            {title}
-          </motion.span>
-        </AnimatePresence>
-      </div>
-      <div className="relative min-h-0 flex-1 overflow-hidden">{children}</div>
-    </div>
-  );
-}
+/** Everything that makes up Quillmark while it is installed, as the scan lists it. */
+const FOOTPRINT: Section[] = [
+  {
+    title: "Files and folders",
+    meta: "2 · 8.1 MB",
+    items: [
+      { path: "C:\\Program Files\\Quillmark", reason: "install folder, in the vendor's folder, 6.1 MB", grade: "high", leaf: "Program Files\\Quillmark" },
+      { path: "C:\\ProgramData\\Example Labs\\Quillmark", reason: "exact name, in vendor folder Example Labs, 2.0 MB", grade: "high", leaf: "ProgramData\\…\\Quillmark" },
+    ],
+  },
+  {
+    title: "Shortcuts",
+    meta: "1 · 1008 B",
+    items: [{ path: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Quillmark.lnk", reason: "exact name", grade: "high", leaf: "Quillmark.lnk" }],
+  },
+  {
+    title: "Registry",
+    meta: "4",
+    items: [
+      { path: "HKLM\\SOFTWARE\\Example Labs\\Quillmark", reason: "exact name, in vendor key Example Labs", grade: "high", leaf: "HKLM …\\Example Labs\\Quillmark" },
+      { path: "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\quillmark.exe", reason: "App Paths entry for quillmark.exe", grade: "high", leaf: "App Paths\\quillmark.exe" },
+      { path: "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run : Quillmark", reason: "autostart, exact name", grade: "high", leaf: "Run : Quillmark" },
+      { path: "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Quillmark", reason: "the program's uninstall entry", grade: "high", leaf: "Uninstall\\Quillmark" },
+    ],
+  },
+];
+/** A complete removal also takes the settings in the user's own hive. */
+const USER_SETTINGS: Item = { path: "HKCU\\Software\\Example Labs\\Quillmark", reason: "exact name, in vendor key Example Labs", grade: "high", leaf: "HKCU …\\Example Labs\\Quillmark" };
+const BACKUP = "2026-10-16 171306 Quillmark";
 
 /** A path that may wrap only after a separator, never inside a name. */
 function PathText({ path }: { path: string }) {
@@ -83,289 +102,500 @@ function PathText({ path }: { path: string }) {
   );
 }
 
-function Badge({ grade }: { grade: Grade }) {
-  return <span className={`inline-flex h-5 shrink-0 items-center rounded px-1.5 font-medium text-[0.6875rem] ${GRADE_STYLE[grade]}`}>{grade}</span>;
-}
-
-/** Ticked means selected for removal; Oxidize ticks only the High finds. */
-function Tick({ on }: { on: boolean }) {
+function ProgramIcon({ program, size }: { program: Program; size: number }) {
   return (
-    <span
-      className="mt-0.5 inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-[3px] border"
-      style={{ borderColor: on ? APP.copper : "#6a635c", background: on ? APP.copper : "transparent" }}
-    >
-      {on ? <Check className="h-2.5 w-2.5 text-[#1f1d1b]" strokeWidth={3} /> : null}
+    <span className="flex shrink-0 items-center justify-center rounded-[4px]" style={{ width: size, height: size, background: program.tint }}>
+      {program.name === "Quillmark" ? (
+        <svg aria-hidden fill="none" viewBox="0 0 16 16" width={size * 0.7}>
+          <path d="M3.5 12.5 11.5 4.5M10 3l3 3" stroke="#fff" strokeLinecap="round" strokeWidth="1.6" />
+        </svg>
+      ) : null}
     </span>
   );
 }
 
-function LeftoverBody({ item }: { item: (typeof LEFTOVERS)[number] }) {
+/** A button as the window draws it: copper for the main action, outlined for the rest. */
+function AppButton({ children, kind = "plain", lit = false, wide = false }: { children: ReactNode; kind?: "copper" | "plain" | "danger"; lit?: boolean; wide?: boolean }) {
+  const style =
+    kind === "copper"
+      ? { background: v("copper"), color: v("on-copper") }
+      : kind === "danger"
+        ? { background: v("button"), color: v("red"), boxShadow: `inset 0 0 0 1px ${v("red")}` }
+        : { background: lit ? v("active") : v("button"), color: v("text"), boxShadow: `inset 0 0 0 1px ${v("line")}` };
   return (
-    <>
-      <Tick on={item.grade === "High"} />
-      <span className="min-w-0 flex-1">
-        <span className="block font-mono text-[0.71875rem] leading-snug">
+    <span
+      className={`flex h-7 items-center rounded-[4px] px-2.5 text-[0.75rem] transition-[filter,background-color] duration-150 ${wide ? "w-full" : "justify-center"}`}
+      style={{ ...style, filter: lit && kind !== "plain" ? "brightness(0.9)" : undefined }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function Grade({ grade }: { grade: Grade }) {
+  const color = grade === "high" ? v("verdigris") : grade === "medium" ? v("amber") : v("weak");
+  return <span style={{ color }}>{grade}</span>;
+}
+
+/** One found item: its tick, its confidence, its path and why it was matched. */
+function ItemRow({ item, ticked, layoutId }: { item: Item; ticked: boolean; layoutId?: string }) {
+  const { spring } = useMotionSafe();
+  return (
+    <motion.div className="grid grid-cols-[0.875rem_3.25rem_minmax(0,1fr)] gap-x-2 py-1" layout={layoutId ? "position" : undefined} layoutId={layoutId} transition={spring}>
+      <span className="mt-[3px] flex h-3.5 w-3.5 items-center justify-center rounded-[3px]" style={{ boxShadow: `inset 0 0 0 1px ${v("strong")}`, background: v("side") }}>
+        {ticked ? <Check className="h-2.5 w-2.5" strokeWidth={3} style={{ color: v("text") }} /> : null}
+      </span>
+      <Grade grade={item.grade} />
+      <span className="min-w-0">
+        <span className="block leading-snug" style={{ color: v("text") }}>
           <PathText path={item.path} />
         </span>
-        <span className="block text-[0.6875rem] leading-snug" style={{ color: APP.muted }}>
-          {item.kind}, {item.why}
+        <span className="block text-[0.6875rem] leading-snug" style={{ color: v("weak") }}>
+          {item.reason}
         </span>
       </span>
-      <Badge grade={item.grade} />
+    </motion.div>
+  );
+}
+
+function SectionHead({ section }: { section: Section }) {
+  return (
+    <p className="m-0 mt-2 flex items-baseline gap-2" style={{ color: v("text") }}>
+      <span aria-hidden className="text-[0.6875rem]">
+        ▼
+      </span>
+      {section.title}
+      <span style={{ color: v("weak") }}>{section.meta}</span>
+    </p>
+  );
+}
+
+/**
+ * The Oxidize window: its title bar with the two tabs, the program list (left,
+ * from `sm`), the details pane, and the status line at the foot.
+ */
+function OxWindow({ list, count, pane, status, overlay }: { list: Program[]; count: string; pane: ReactNode; status: string; overlay?: ReactNode }) {
+  const { spring } = useMotionSafe();
+  return (
+    <div
+      aria-hidden
+      className={`absolute inset-0 flex flex-col overflow-hidden rounded-lg text-[0.75rem] shadow-[0_1px_2px_rgb(0_0_0/0.08),0_18px_36px_-24px_rgb(0_0_0/0.35)] ${OX}`}
+      style={{ background: v("base"), color: v("text"), fontFamily: '"Oxidize UI", system-ui, sans-serif', boxShadow: `0 0 0 1px ${v("line")}` }}
+    >
+      <div className="flex h-9 shrink-0 items-center gap-4 border-b px-3.5" style={{ background: v("chrome"), borderColor: v("line") }}>
+        <span className="text-[0.875rem]">Oxidize</span>
+        <span className="relative py-1">
+          Programs
+          <span className="absolute inset-x-0 -bottom-[3px] h-[2px] rounded-full" style={{ background: v("text") }} />
+        </span>
+        <span style={{ color: v("weak") }}>Clean up</span>
+        <span className="ml-auto hidden sm:inline" style={{ color: v("weak") }}>
+          Administrator
+        </span>
+      </div>
+      <div className="relative flex min-h-0 flex-1">
+        <div className="hidden w-[42%] shrink-0 flex-col border-r sm:flex" style={{ borderColor: v("line") }}>
+          <p className="m-0 px-3 pt-2.5 pb-1.5 text-right text-[0.6875rem] tabular-nums" style={{ color: v("weak") }}>
+            {count}
+          </p>
+          <p className="m-0 flex justify-between border-b px-3 pb-1 text-[0.6875rem]" style={{ color: v("weak"), borderColor: v("line") }}>
+            <span>Name</span>
+            <span>Size</span>
+          </p>
+          <ul className="m-0 min-h-0 flex-1 list-none overflow-hidden p-0 pt-1">
+            <AnimatePresence initial={false}>
+              {list.map((p) => (
+                <motion.li
+                  animate={{ opacity: 1, height: 28 }}
+                  className="mx-1 flex items-center gap-2 overflow-hidden rounded-[4px] px-2"
+                  exit={{ opacity: 0, height: 0 }}
+                  initial={{ opacity: 0, height: 0 }}
+                  key={p.name}
+                  style={{ background: p.name === "Quillmark" ? v("selected") : "transparent" }}
+                  transition={{ ...spring, opacity: { duration: 0.2 } }}
+                >
+                  <ProgramIcon program={p} size={14} />
+                  <span className="min-w-0 flex-1 whitespace-nowrap">{p.name}</span>
+                  <span className="tabular-nums" style={{ color: p.name === "Quillmark" ? v("text") : v("weak") }}>
+                    {p.size}
+                  </span>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </div>
+        <div className="relative min-w-0 flex-1" style={{ background: v("side") }}>
+          {pane}
+        </div>
+        {overlay}
+      </div>
+      <div className="flex h-7 shrink-0 items-center justify-between gap-3 border-t px-3.5 text-[0.6875rem]" style={{ color: v("weak"), borderColor: v("line") }}>
+        <span className="min-w-0 truncate">{status}</span>
+        <span>Log</span>
+      </div>
+    </div>
+  );
+}
+
+/** The top of the details pane: who is selected, and the three ways to remove it. */
+function PaneHead({ lit }: { lit?: "remove" | "uninstall" | "scan" }) {
+  const quill = PROGRAMS[4];
+  return (
+    <>
+      <div className="flex items-center gap-2.5">
+        <ProgramIcon program={quill} size={28} />
+        <span className="min-w-0">
+          <span className="block text-[1rem] leading-tight">Quillmark</span>
+          <span className="block leading-tight" style={{ color: v("weak") }}>
+            Version 2.3.0 · Example Labs
+          </span>
+        </span>
+      </div>
+      <div className="mt-3 flex flex-col gap-1.5">
+        <AppButton kind="copper" lit={lit === "remove"} wide>
+          Remove completely
+        </AppButton>
+        <div className="grid grid-cols-2 gap-1.5">
+          <AppButton lit={lit === "uninstall"}>Run uninstaller</AppButton>
+          <AppButton lit={lit === "scan"}>Scan for leftovers</AppButton>
+        </div>
+      </div>
     </>
   );
 }
 
-function ProgramIcon({ row }: { row: (typeof PROGRAMS)[number] }) {
+function Facts() {
   return (
-    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md font-semibold text-[0.6875rem]" style={{ background: row.tint, color: "#1f1d1b" }}>
-      {row.name[0]}
-    </span>
+    <dl className="m-0 mt-3 grid grid-cols-[5.5rem_minmax(0,1fr)] gap-y-1">
+      {[
+        ["Size", "312.0 MB"],
+        ["Installed", "2026-10-01"],
+        ["Location", "C:\\Program Files\\Quillmark"],
+      ].map(([k, value]) => (
+        <div className="contents" key={k}>
+          <dt style={{ color: v("weak") }}>{k}</dt>
+          <dd className="m-0">{value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
-function ProgramRow({ row, picked, right }: { row: (typeof PROGRAMS)[number]; picked: boolean; right?: ReactNode }) {
-  const { spring, reduced } = useMotionSafe();
+/** The pane's own scroll area, which moves to what just appeared. */
+function Pane({ children, scrollTo, settle = 0 }: { children: ReactNode; scrollTo: string | null; settle?: number }) {
+  const box = useRef<HTMLDivElement>(null);
+  const { reduced } = useMotionSafe();
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const target = scrollTo ? el.querySelector<HTMLElement>(`[data-anchor="${scrollTo}"]`) : null;
+    el.scrollTo({ top: target ? target.offsetTop - 12 : 0, behavior: reduced ? "auto" : "smooth" });
+  }, [scrollTo, reduced, settle]);
   return (
-    <motion.li
-      className="relative mx-2 flex items-center gap-2.5 overflow-hidden rounded-lg px-2"
-      exit={reduced ? { opacity: 0 } : { opacity: 0, height: 0 }}
-      initial={false}
-      layout
-      style={{ background: picked ? "rgb(255 255 255 / 0.07)" : "transparent", height: 42 }}
-      transition={{ layout: spring, duration: reduced ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <ProgramIcon row={row} />
-      <span className="min-w-0 flex-1">
-        <span className="block text-[0.75rem] leading-tight">{row.name}</span>
-        <span className="block text-[0.6875rem] leading-tight" style={{ color: APP.muted }}>
-          {row.by}
-        </span>
-      </span>
-      {right ?? (
-        <span className="text-[0.6875rem] tabular-nums" style={{ color: APP.muted }}>
-          {row.size}
-        </span>
-      )}
-    </motion.li>
+    <div className="absolute inset-0 overflow-y-auto p-3.5 [scrollbar-width:thin]" ref={box}>
+      {children}
+    </div>
   );
 }
 
+const without = (name: string) => PROGRAMS.filter((p) => p.name !== name);
+
 /* ------------------------------------------------------------------ */
-/* Uninstall, then the leftovers                                       */
+/* Run the uninstaller, then scan                                      */
 /* ------------------------------------------------------------------ */
 
-type UninstallPhase = "idle" | "running" | "scanning" | "found" | "done";
+type UninstallPhase = "idle" | "running" | "gone" | "scanning" | "found";
 
-/** The key moment: uninstall, then the leftovers come in, graded. */
+/** The key moment: the program's own uninstaller, then what it left, graded. */
 export function UninstallDemo() {
-  const { reduced, spring, fade } = useMotionSafe();
+  const { reduced } = useMotionSafe();
   const [phase, setPhase] = useState<UninstallPhase>("idle");
   const [shown, setShown] = useState(0);
   const run = useRef(0);
   useEffect(() => () => void run.current++, []);
+  const all = LEFTOVERS.flatMap((s) => s.items);
 
-  const start = useCallback(async () => {
+  const uninstall = async () => {
     const id = ++run.current;
-    const alive = () => run.current === id;
+    setShown(0);
     if (reduced) {
-      setShown(LEFTOVERS.length);
-      setPhase("done");
+      setPhase("gone");
       return;
     }
-    setShown(0);
     setPhase("running");
-    await wait(1200);
-    if (!alive()) return;
+    await wait(1400);
+    if (run.current === id) setPhase("gone");
+  };
+  const scan = async () => {
+    const id = ++run.current;
+    if (reduced) {
+      setShown(all.length);
+      setPhase("found");
+      return;
+    }
     setPhase("scanning");
-    await wait(1100);
-    if (!alive()) return;
+    await wait(1000);
+    if (run.current !== id) return;
     setPhase("found");
-    for (let i = 1; i <= LEFTOVERS.length; i += 1) {
-      await wait(i === 1 ? 120 : 260);
-      if (!alive()) return;
+    for (let i = 1; i <= all.length; i += 1) {
+      await wait(i === 1 ? 150 : 240);
+      if (run.current !== id) return;
       setShown(i);
     }
-    await wait(450);
-    if (alive()) setPhase("done");
-  }, [reduced]);
+  };
 
   const status = {
-    idle: "Quillmark is selected.",
-    running: "Quillmark's own uninstaller is running.",
-    scanning: "Quillmark is gone. Searching the registry and the disk for what it left.",
-    found: `Found ${shown}.`,
-    done: "Four leftovers. Only the two High ones are ticked.",
+    idle: "20 programs installed.",
+    running: "Running the uninstaller for Quillmark...",
+    gone: "Program removed from the installed list.",
+    scanning: "Scanning for leftovers of Quillmark...",
+    found: "4 leftovers of Quillmark.",
   }[phase];
-  const leftovers = phase === "found" || phase === "done";
+  const told = {
+    idle: "Quillmark is installed and selected.",
+    running: "Its own uninstaller is running.",
+    gone: "Gone from the list. Its leftovers are not.",
+    scanning: "Searching the registry and the disk.",
+    found: "Only the two High finds are ticked.",
+  }[phase];
+  const found = phase === "found";
+  let index = 0;
 
   return (
     <Demo
-      caption="Press Uninstall. Its uninstaller goes first; what Oxidize finds afterwards is graded by how sure it is."
-      height={360}
-      label="Oxidize uninstalling a program and finding its leftovers"
-      live={phase === "done" ? "Four leftovers found: two High, one Medium, one Low. The two High ones are ticked." : ""}
-      phoneHeight={400}
+      caption="Press both buttons in turn: Quillmark leaves the list first, and only then do its leftovers show up."
+      height={440}
+      label="Oxidize running a program's uninstaller and then scanning for its leftovers"
+      live={found && shown === all.length ? "Four leftovers found: two high, one medium, one low. The two high ones are ticked." : ""}
+      phoneHeight={420}
     >
       <Frame
         bottom={
           <>
-            <BarText>{status}</BarText>
-            {phase === "idle" || phase === "done" ? (
-              <Action onClick={() => void start()} primary>
-                {phase === "idle" ? "Uninstall" : "Uninstall again"}
-              </Action>
-            ) : null}
+            <BarText>{told}</BarText>
+            <Action
+              onClick={() => void (phase === "gone" ? scan() : uninstall())}
+              primary={phase === "idle" || phase === "gone"}
+              width="min-w-[10rem]"
+            >
+              {phase === "idle" ? "Run uninstaller" : phase === "gone" ? "Scan for leftovers" : "Run again"}
+            </Action>
           </>
         }
       >
-        <Window title={leftovers ? "Leftovers of Quillmark" : "Programs"}>
-          <AnimatePresence initial={false}>
-            {leftovers ? (
-              <motion.ul animate={{ opacity: 1 }} className="absolute inset-x-0 top-0 m-0 list-none p-0 pt-1" initial={{ opacity: 0 }} key="found" transition={fade}>
-                {LEFTOVERS.slice(0, shown).map((item) => (
-                  <motion.li
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-start gap-2.5 border-b px-3.5 py-2"
-                    initial={reduced ? false : { opacity: 0, y: 8 }}
-                    key={item.path}
-                    style={{ borderColor: APP.line }}
-                    transition={spring}
-                  >
-                    <LeftoverBody item={item} />
-                  </motion.li>
-                ))}
-              </motion.ul>
-            ) : (
-              <motion.div animate={{ opacity: 1 }} className="absolute inset-0" exit={{ opacity: 0 }} initial={{ opacity: 0 }} key="programs" transition={fade}>
-                <ul className="m-0 list-none p-0 pt-1.5">
-                  <AnimatePresence initial={false}>
-                    {PROGRAMS.map((row) =>
-                      row.name === "Quillmark" && phase === "scanning" ? null : (
-                        <ProgramRow
-                          key={row.name}
-                          picked={row.name === "Quillmark"}
-                          right={
-                            row.name === "Quillmark" && phase === "running" ? (
-                              <span className="text-[0.6875rem]" style={{ color: APP.copperText }}>
-                                Uninstalling
-                              </span>
-                            ) : undefined
-                          }
-                          row={row}
-                        />
-                      ),
-                    )}
-                  </AnimatePresence>
-                </ul>
-                {phase === "scanning" && !reduced ? (
-                  // The scan: one sweep down the window while the search runs.
-                  <motion.span
-                    animate={{ top: "100%" }}
-                    className="absolute inset-x-0 h-px"
-                    initial={{ top: "0%" }}
-                    style={{ background: `linear-gradient(90deg, transparent, ${APP.copper}, transparent)` }}
-                    transition={{ duration: 1.1, ease: "linear" }}
-                  />
-                ) : null}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Window>
+        <OxWindow
+          count={phase === "idle" || phase === "running" ? "20 programs · 30.2 GB in total" : "19 programs · 29.9 GB in total"}
+          list={phase === "idle" || phase === "running" ? PROGRAMS : without("Quillmark")}
+          pane={
+            <Pane scrollTo={found ? "results" : null} settle={shown}>
+              <PaneHead lit={phase === "running" ? "uninstall" : phase === "scanning" ? "scan" : undefined} />
+              <Facts />
+              <div className="mt-3 border-t pt-3" data-anchor="results" style={{ borderColor: v("line") }}>
+                {found ? (
+                  <>
+                    <p className="m-0 text-[0.875rem]">4 items, 22.1 MB in files</p>
+                    <div className="mt-1.5 flex gap-1.5">
+                      {["Check High", "Check all", "Uncheck all"].map((b) => (
+                        <span className="rounded-[4px] px-1.5 text-[0.6875rem] leading-5" key={b} style={{ boxShadow: `inset 0 0 0 1px ${v("line")}`, background: v("button") }}>
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="mt-1.5">
+                      <AppButton kind="danger" wide>
+                        Remove 2 checked items
+                      </AppButton>
+                    </div>
+                    {LEFTOVERS.map((section) => (
+                      <div key={section.title}>
+                        <SectionHead section={section} />
+                        {section.items.map((item) => {
+                          const n = index++;
+                          return n < shown ? (
+                            <motion.div animate={{ opacity: 1, y: 0 }} initial={reduced ? false : { opacity: 0, y: 6 }} key={item.path}>
+                              <ItemRow item={item} ticked={item.grade === "high"} />
+                            </motion.div>
+                          ) : null;
+                        })}
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <p className="m-0" style={{ color: v("weak") }}>
+                    {phase === "scanning" ? "Scanning..." : "Scan for leftovers to list what it keeps in its folders."}
+                  </p>
+                )}
+              </div>
+            </Pane>
+          }
+          status={status}
+        />
       </Frame>
     </Demo>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* Remove into a backup, and Undo                                      */
+/* Remove completely, and Undo                                         */
 /* ------------------------------------------------------------------ */
 
-/** Remove, then Undo: the backup puts every removed leftover back. */
+type RemovePhase = "footprint" | "confirm" | "removing" | "done" | "restoring";
+
+/** Remove completely, then Undo: the backup puts all eight items back. */
 export function BackupDemo() {
   const { reduced, spring } = useMotionSafe();
-  const [removed, setRemoved] = useState(false);
-  const [moves, setMoves] = useState(0);
-  const high = LEFTOVERS.filter((l) => l.grade === "High");
-  const status = removed ? "Both moved into the backup, with their original paths." : moves ? "Both back in place, from the backup." : "Two ticked. Neither is deleted before it is backed up.";
-  const flip = () => {
-    setRemoved((r) => !r);
-    setMoves((m) => m + 1);
+  const [phase, setPhase] = useState<RemovePhase>("footprint");
+  const [restored, setRestored] = useState(false);
+  const run = useRef(0);
+  useEffect(() => () => void run.current++, []);
+  const items = [...FOOTPRINT.flatMap((s) => s.items), USER_SETTINGS];
+  const away = phase === "done" || phase === "restoring";
+
+  const remove = async () => {
+    const id = ++run.current;
+    setRestored(false);
+    setPhase("removing");
+    await wait(reduced ? 0 : 600);
+    if (run.current === id) setPhase("done");
   };
-  const stagger = (i: number) => ({ ...spring, delay: reduced ? 0 : i * 0.05 });
+  const undo = async () => {
+    const id = ++run.current;
+    setPhase("restoring");
+    await wait(reduced ? 0 : 500);
+    if (run.current !== id) return;
+    setRestored(true);
+    setPhase("footprint");
+  };
+
+  const status = {
+    footprint: restored ? `Restored 8 items from ${BACKUP}` : "7 items make up Quillmark. It is still installed.",
+    confirm: "7 items make up Quillmark. It is still installed.",
+    removing: "Removing Quillmark completely...",
+    done: "Quillmark: nothing left.",
+    restoring: `Restoring ${BACKUP}...`,
+  }[phase];
+  const told = {
+    footprint: restored ? "All eight back, and Quillmark with them." : "Quillmark is installed.",
+    confirm: "Oxidize asks first.",
+    removing: "Each item is backed up, then deleted.",
+    done: "Nothing left, eight items in the backup.",
+    restoring: "Every item goes back to its place.",
+  }[phase];
+  let index = 0;
 
   return (
     <Demo
-      caption="Remove the two ticked finds, then Undo. Each one travels into the backup and back to its own row."
-      height={360}
-      label="Oxidize removing two leftovers into a backup and restoring them"
-      live={moves ? status : ""}
-      phoneHeight={440}
+      caption="Remove Quillmark completely, then Undo. Watch the eight items travel into the backup and back."
+      height={480}
+      label="Oxidize removing a program completely into a backup, and Undo restoring it"
+      live={phase === "done" ? "Quillmark removed, eight items in the backup." : restored && phase === "footprint" ? "Eight items restored." : ""}
+      phoneHeight={600}
     >
       <Frame
         bottom={
           <>
-            <BarText>{status}</BarText>
-            <Action onClick={flip} primary>
-              {removed ? "Undo" : "Remove 2"}
+            <BarText>{told}</BarText>
+            {phase === "confirm" ? (
+              <Action onClick={() => setPhase("footprint")} width="min-w-[5.5rem]">
+                Cancel
+              </Action>
+            ) : null}
+            <Action
+              onClick={() => (phase === "footprint" ? setPhase("confirm") : phase === "confirm" ? void remove() : phase === "done" ? void undo() : undefined)}
+              primary
+              width="min-w-[10rem]"
+            >
+              {phase === "done" || phase === "restoring" ? "Undo" : "Remove completely"}
             </Action>
           </>
         }
       >
-        <Window title="Leftovers of Quillmark">
-          <LayoutGroup>
-            {/* Each removed find travels into the backup and back to its own row. */}
-            <ul className="m-0 list-none p-0 pt-1">
-              {LEFTOVERS.map((item, i) =>
-                removed && item.grade === "High" ? null : (
-                  <motion.li
-                    className="flex items-start gap-2.5 border-b px-3.5 py-2"
-                    key={item.path}
-                    layout="position"
-                    layoutId={`ox-item-${i}`}
-                    style={{ borderColor: APP.line }}
-                    transition={stagger(i)}
-                  >
-                    <LeftoverBody item={item} />
-                  </motion.li>
-                ),
-              )}
-            </ul>
-            <AnimatePresence>
-              {removed ? (
-                <motion.div
-                  animate={{ opacity: 1 }}
-                  className="mx-3.5 mt-3 rounded-lg px-3 py-2.5"
-                  exit={{ opacity: 0, transition: { duration: reduced ? 0 : 0.18, delay: reduced ? 0 : 0.12 } }}
-                  initial={{ opacity: 0 }}
-                  key="backup"
-                  layout
-                  style={{ background: "rgb(95 179 165 / 0.1)", boxShadow: "inset 0 0 0 1px rgb(95 179 165 / 0.25)" }}
-                  transition={{ duration: reduced ? 0 : 0.2 }}
-                >
-                  <p className="m-0 flex items-baseline justify-between gap-3 text-[0.6875rem]">
-                    <span className="font-mono" style={{ color: "#bfe3dc" }}>
-                      Backup 2026-10-16 171306 Quillmark
-                    </span>
-                    <span className="shrink-0 tabular-nums" style={{ color: APP.muted }}>
-                      2 items
-                    </span>
-                  </p>
-                  <ul className="m-0 mt-1.5 flex list-none flex-col gap-1 p-0">
-                    {high.map((item) => {
-                      const i = LEFTOVERS.indexOf(item);
-                      return (
-                        <motion.li className="font-mono text-[0.6875rem] leading-snug" key={item.path} layout="position" layoutId={`ox-item-${i}`} style={{ color: APP.text }} transition={stagger(i)}>
-                          <PathText path={item.path} />
-                        </motion.li>
-                      );
-                    })}
-                  </ul>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </LayoutGroup>
-        </Window>
+        <LayoutGroup>
+          <div className="absolute inset-0 flex flex-col gap-3">
+            <div className="relative min-h-0 flex-1">
+              <OxWindow
+                count={away ? "19 programs · 29.9 GB in total" : "20 programs · 30.2 GB in total"}
+                list={away ? without("Quillmark") : PROGRAMS}
+                overlay={
+                  phase === "confirm" ? (
+                    <motion.div animate={{ opacity: 1 }} className="absolute inset-0 flex items-center justify-center p-4" initial={{ opacity: 0 }} style={{ background: "rgb(0 0 0 / 0.28)" }}>
+                      <div className="max-w-[22rem] rounded-[10px] p-4" style={{ background: v("side"), boxShadow: `0 0 0 1px ${v("line")}` }}>
+                        <p className="m-0 leading-snug">
+                          Remove Quillmark completely? Running copies are closed, everything found at high confidence is removed, a backup is kept.
+                        </p>
+                        <div className="mt-3 flex gap-2">
+                          <AppButton kind="copper">Remove completely</AppButton>
+                          <AppButton>Cancel</AppButton>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : null
+                }
+                pane={
+                  <Pane scrollTo={null}>
+                    <PaneHead lit={phase === "removing" ? "remove" : undefined} />
+                    <div className="mt-3 border-t pt-3" data-anchor="footprint" style={{ borderColor: v("line") }}>
+                      {away ? (
+                        <>
+                          <p className="m-0 text-[1.125rem]" style={{ color: v("verdigris") }}>
+                            Nothing left.
+                          </p>
+                          <p className="m-0 mt-0.5" style={{ color: v("weak") }}>
+                            Removed 8 items in 0.6 s
+                          </p>
+                          <div className="mt-2.5 w-24">
+                            <AppButton lit={phase === "restoring"}>Undo</AppButton>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <p className="m-0 leading-snug" style={{ color: v("amber") }}>
+                            Still installed. These items are its current footprint, not leftovers.
+                          </p>
+                          <p className="m-0 mt-1 text-[0.875rem]">7 items, 8.1 MB in files</p>
+                          {FOOTPRINT.map((section) => (
+                            <div key={section.title}>
+                              <SectionHead section={section} />
+                              {section.items.map((item) => {
+                                const n = index++;
+                                return <ItemRow item={item} key={item.path} layoutId={`ox-fp-${n}`} ticked={false} />;
+                              })}
+                            </div>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  </Pane>
+                }
+                status={status}
+              />
+            </div>
+            {/* The backup on disk: not part of the window, drawn to show where the items go. */}
+            <div className="flex min-h-[4rem] shrink-0 flex-col justify-center gap-1.5 rounded-xl border border-border/80 border-dashed px-3 py-2">
+              <p className="m-0 flex justify-between gap-3 text-[0.75rem] text-muted-foreground">
+                <span>Backup {BACKUP}</span>
+                <span className="tabular-nums">{away ? "8 items" : "empty"}</span>
+              </p>
+              <div className="flex min-h-5 flex-wrap gap-1">
+                {away
+                  ? items.map((item, n) => (
+                      <motion.span
+                        className="rounded-[4px] bg-foreground/[0.06] px-1.5 font-mono text-[0.6875rem] text-foreground/80 leading-5"
+                        key={item.path}
+                        layout="position"
+                        layoutId={n < items.length - 1 ? `ox-fp-${n}` : undefined}
+                        initial={n < items.length - 1 ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ ...spring, delay: reduced ? 0 : n * 0.04 }}
+                      >
+                        {item.leaf}
+                      </motion.span>
+                    ))
+                  : null}
+              </div>
+            </div>
+          </div>
+        </LayoutGroup>
       </Frame>
     </Demo>
   );
@@ -387,9 +617,11 @@ const LANES: Array<{ name: string; from: number; to: number; result: string; oxi
   { name: "Started process", from: 0, to: 0.4, result: "exited with 0 at 0.4 s" },
   { name: "Its copy in Temp", from: 0.3, to: 2.6, result: "finished at 2.6 s" },
   { name: "Uninstall entry", from: 0, to: 2.5, result: "removed at 2.5 s" },
-  { name: "Oxidize", from: 0, to: 2.5, result: "moves on at 2.5 s", oxidize: true },
+  { name: "Oxidize", from: 0, to: 2.5, result: "moves on at 2.5 s, the entry is gone", oxidize: true },
 ];
-const TICKS = [0, 1, 2, 2.6];
+const TICKS = [0, 1, 2];
+/** Where the picture rests before it plays: the first process has just said done. */
+const REST = 0.4;
 const pct = (t: number) => `${(t / END) * 100}%`;
 
 function Lane({ lane, t }: { lane: (typeof LANES)[number]; t: number }) {
@@ -434,8 +666,8 @@ function Lane({ lane, t }: { lane: (typeof LANES)[number]; t: number }) {
 /** The exit code says done at 0.4 s; Oxidize waits for the evidence until 2.5 s. */
 export function WaitDemo() {
   const { reduced } = useMotionSafe();
-  const time = useMotionValue(0);
-  const [t, setT] = useState(0);
+  const time = useMotionValue(REST);
+  const [t, setT] = useState(REST);
   const [state, setState] = useState<"idle" | "running" | "done">("idle");
   const clock = useRef<ReturnType<typeof animate> | null>(null);
   useMotionValueEvent(time, "change", setT);
@@ -455,7 +687,7 @@ export function WaitDemo() {
 
   const status =
     state === "idle"
-      ? "Nothing has started."
+      ? "0.4 s in, the first process has already said done."
       : state === "done"
         ? "The exit code came 2.1 seconds before the uninstall was over."
         : t < 0.4
@@ -466,21 +698,19 @@ export function WaitDemo() {
 
   return (
     <Demo
-      caption="Press Uninstall and watch which lane Oxidize follows."
+      caption="Play the uninstall in real time and watch which lane Oxidize follows."
       height={360}
       label="A timeline of one uninstall: the started process, its copy, the uninstall entry and Oxidize"
       live={state === "done" ? "The started process exited with 0 at 0.4 seconds. Its copy finished at 2.6 seconds and removed the entry at 2.5. Oxidize moved on at 2.5 seconds." : ""}
-      phoneHeight={440}
+      phoneHeight={400}
     >
       <Frame
         bottom={
           <>
             <BarText>{status}</BarText>
-            {state === "running" ? null : (
-              <Action onClick={start} primary>
-                {state === "idle" ? "Uninstall" : "Run again"}
-              </Action>
-            )}
+            <Action onClick={start} primary={state !== "running"} width="min-w-[8rem]">
+              {state === "idle" ? "Play" : "Play again"}
+            </Action>
           </>
         }
       >
@@ -488,7 +718,7 @@ export function WaitDemo() {
           {/* The clock, riding the playhead along the track column. Labels shift by
               their own share of the axis, so 0 starts at the line and 2.6 s ends on it. */}
           <div className="relative h-4 sm:ml-[8.25rem] sm:mr-[10.25rem]">
-            <span className="absolute whitespace-nowrap text-[0.75rem] text-foreground tabular-nums" style={{ left: pct(t), transform: `translateX(-${pct(t)})`, opacity: state === "idle" ? 0 : 1 }}>
+            <span className="absolute whitespace-nowrap text-[0.75rem] text-foreground tabular-nums" style={{ left: pct(t), transform: `translateX(-${pct(t)})` }}>
               {t.toFixed(1)} s
             </span>
           </div>
@@ -497,14 +727,12 @@ export function WaitDemo() {
               <Lane key={lane.name} lane={lane} t={t} />
             ))}
             {/* The playhead crosses the tracks only, never the names or the results */}
-            {state === "idle" ? null : (
-              <span className="pointer-events-none absolute inset-y-0 hidden w-px bg-foreground/50 sm:block" style={{ left: `calc(8.25rem + (100% - 18.5rem) * ${t / END})` }} />
-            )}
+            <span className="pointer-events-none absolute inset-y-0 hidden w-px bg-foreground/50 sm:block" style={{ left: `calc(8.25rem + (100% - 18.5rem) * ${t / END})` }} />
           </div>
           <div className="relative h-4 sm:ml-[8.25rem] sm:mr-[10.25rem]">
             {TICKS.map((tick) => (
               <span className="absolute whitespace-nowrap text-[0.75rem] text-muted-foreground tabular-nums" key={tick} style={{ left: pct(tick), transform: `translateX(-${pct(tick)})` }}>
-                {tick === 0 ? "0" : `${tick} s`}
+                {tick} s
               </span>
             ))}
           </div>
@@ -551,10 +779,10 @@ export function PathDemo() {
   return (
     <Demo
       caption="Three spellings of protected folders and one real leftover. Only the leftover gets through."
-      height={280}
+      height={240}
       label="Paths resolved to their real names, and protected folders refused"
       live={`${s.typed} resolves to ${s.resolved}. ${s.verdict}.`}
-      phoneHeight={380}
+      phoneHeight={340}
     >
       <Frame
         top={
