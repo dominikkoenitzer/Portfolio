@@ -283,9 +283,11 @@ const ProjectDetails = () => {
   // latest. The shared-layout flight measures the enlarged image when it
   // mounts, and an image still loading measures as an empty box: the first
   // frames then scaled the picture from nothing into a squashed rectangle.
-  const openLightbox = (at: number) => {
+  // `grow: false` opens it with a plain fade: a second crop of a picture has
+  // no frame of its own for the image to fly out of.
+  const openLightbox = (at: number, grow = true) => {
     const open = () => {
-      setLightboxOrigin(at);
+      setLightboxOrigin(grow ? at : -1);
       setLightboxIndex(at);
     };
     const src = galleryImages[at];
