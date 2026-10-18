@@ -9,12 +9,7 @@ import { ArrowUpRight } from "lucide-react";
 import { type CSSProperties, type MouseEvent, type ReactNode, useRef } from "react";
 import { Link } from "react-router-dom";
 import { LiveTestCount, type LightboxOrigin } from "@/components/effects/project-effects";
-import {
-  pictureSrcSet,
-  pictureWidth,
-  type PortfolioProject,
-} from "@/constants/projects";
-import type { ProjectStat } from "@/constants/projects/types";
+import { pictureSrcSet, pictureWidth, type PortfolioProject } from "@/constants/projects";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { EASE_OUT, VIEWPORT } from "@/lib/motion";
@@ -24,9 +19,12 @@ import type { VariantProps } from "./project-variants";
 /**
  * Layout d of the project page, built to `SPEC.md` of 18.10.: the project as
  * a short story (promise, the moment worth remembering, proof) told almost
- * entirely in pictures. A hero with the app at about its own size, a bento of
- * one-feature tiles, the facts in one row, then the next project. Each
- * project brings its own accent, tuned for the light and the night theme.
+ * entirely in pictures. The whole app in the hero, a bento of one-feature
+ * tiles, the facts in one row, then the next project. Each project brings its
+ * own accent, tuned for the light and the night theme.
+ *
+ * Every picture in a tile is one clean piece of the interface, framed whole
+ * and scaled up: a crop never runs through a word.
  */
 
 const PAGE = "mx-auto w-full max-w-7xl px-6 sm:px-8 md:px-12 lg:px-16";
@@ -41,6 +39,10 @@ const RING =
 
 const SPRING = { type: "spring", stiffness: 210, damping: 26, mass: 0.9 } as const;
 
+/** A piece of interface on a card: hairline edge, contact and ambient shadow. */
+const DEPTH =
+  "ring-1 ring-black/[0.06] shadow-[0_1px_2px_rgb(0_0_0/0.08),0_24px_50px_-28px_rgb(0_0_0/0.45)] dark:ring-white/10 dark:shadow-[0_1px_2px_rgb(0_0_0/0.4),0_28px_60px_-28px_rgb(0_0_0/0.8)]";
+
 /* ------------------------------------------------------------------ */
 /* Art direction                                                       */
 /* ------------------------------------------------------------------ */
@@ -50,29 +52,24 @@ type Rect = [number, number, number, number];
 
 type Shot = { pic: string; rect: Rect };
 
-type Tile =
-  | { kind: "crop"; pic: string; rect: Rect; title: string }
-  | { kind: "pair"; a: Shot; b: Shot; title: string; stack?: boolean }
-  | { kind: "mark"; pic: string; rect: Rect; title: string }
-  | { kind: "stat"; stat: number };
-
 /**
- * How the hero places the app window in its card. `width` is in card widths;
- * left/right pin a top corner and run off the far edge, plate centres the
- * window, detail fills the card around a focus point.
+ * One feature per tile. A shot is one clean region of the interface (its
+ * edges fall between rows and columns, never through text); a number is a
+ * fact from the case study, with what it means for the person using it.
  */
-type View = {
-  mode: "left" | "right" | "plate" | "detail";
-  width?: number;
-  focus?: [number, number];
-};
+type Tile =
+  | (Shot & { kind: "shot"; title: string })
+  | { kind: "pair"; a: Shot; b: Shot; title: string; stack?: boolean }
+  | { kind: "stat"; stat: number; title?: string }
+  | { kind: "number"; value: string; title: string };
 
 type Art = {
   /** Accent for the light theme and for the night theme. */
   accent: [string, string];
-  hero: { pic: string; wide: View; phone: View };
+  /** The screen the hero shows whole. */
+  hero: string;
   tiles: Tile[];
-  /** One more full-width picture, where the project has a second screen worth it. */
+  /** One more full-width picture, where the project has one worth it. */
   wide?: Shot & { title: string };
 };
 
@@ -82,176 +79,167 @@ const P = (name: string) => `/projects/${name}`;
 const ART: Record<string, Art> = {
   zephyr: {
     accent: ["#a8502a", "#f2a679"],
-    hero: { pic: P("zephyr.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.1 } },
+    hero: P("zephyr.jpg"),
     tiles: [
-      { kind: "crop", pic: P("zephyr-4.jpg"), rect: [0.28, 0.14, 0.72, 0.8], title: "The timer is a sunset" },
-      { kind: "stat", stat: 1 },
-      { kind: "crop", pic: P("zephyr.jpg"), rect: [0.185, 0.19, 0.375, 0.38], title: "Today at a glance" },
-      { kind: "crop", pic: P("zephyr-3.jpg"), rect: [0.17, 0.28, 0.72, 0.66], title: "Tasks by due date" },
-      { kind: "stat", stat: 3 },
+      { kind: "shot", pic: P("zephyr-4.jpg"), rect: [0.26, 0.17, 0.7403, 0.845], title: "Focus, as a sunset" },
+      { kind: "number", value: "0", title: "accounts to sign up for" },
+      { kind: "shot", pic: P("zephyr.jpg"), rect: [0.1831, 0.188, 0.3753, 0.3845], title: "Today at a glance" },
+      { kind: "shot", pic: P("zephyr-3.jpg"), rect: [0.18, 0.3, 0.71, 0.548], title: "Tasks sorted by due date" },
+      { kind: "number", value: "100%", title: "stays on your device" },
     ],
   },
   portfolio: {
     accent: ["#5f4b8b", "#c7aef0"],
-    hero: { pic: P("portfolio.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    hero: P("portfolio.jpg"),
     tiles: [
-      { kind: "crop", pic: P("portfolio-3.jpg"), rect: [0.3, 0.3, 0.7, 0.97], title: "Tools on a 3D sphere" },
+      { kind: "shot", pic: P("portfolio-3.jpg"), rect: [0.3, 0.37, 0.7, 0.97], title: "Tools on a 3D sphere" },
       { kind: "stat", stat: 0 },
+      { kind: "number", value: "2", title: "themes, light and night" },
+      { kind: "shot", pic: P("portfolio-2.jpg"), rect: [0.125, 0.56, 0.895, 1], title: "Every project, searchable" },
       { kind: "stat", stat: 3 },
-      { kind: "crop", pic: P("portfolio-2.jpg"), rect: [0.13, 0.55, 0.9, 0.68], title: "Search, filter, sort" },
-      { kind: "stat", stat: 2 },
     ],
   },
   entropy: {
     accent: ["#566300", "#d6f04a"],
-    hero: { pic: P("entropy.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    hero: P("entropy.jpg"),
     tiles: [
-      { kind: "crop", pic: P("entropy-2.jpg"), rect: [0.34, 0.1, 0.95, 0.6], title: "Five attacker scenarios" },
-      { kind: "stat", stat: 1 },
-      { kind: "crop", pic: P("entropy-4.jpg"), rect: [0.26, 0.2, 0.74, 0.8], title: "Alt+E on a sign-in page" },
-      { kind: "crop", pic: P("entropy-5.jpg"), rect: [0.16, 0.17, 0.88, 0.42], title: "A health check, all local" },
-      { kind: "stat", stat: 0 },
+      { kind: "shot", pic: P("entropy-2.jpg"), rect: [0.33, 0.104, 0.9553, 0.592], title: "Crack times for five attackers" },
+      { kind: "number", value: "100%", title: "stays in your browser" },
+      { kind: "shot", pic: P("entropy-4.jpg"), rect: [0.2587, 0.204, 0.7419, 0.797], title: "Alt+E types your login" },
+      { kind: "shot", pic: P("entropy-5.jpg"), rect: [0.1144, 0.112, 0.8806, 0.425], title: "Weak and reused, flagged" },
+      { kind: "number", value: "7,776", title: "words for passphrases" },
     ],
-    wide: { pic: P("entropy-3.jpg"), rect: [0.12, 0.08, 0.9, 0.62], title: "Logins and codes, one vault" },
+    wide: { pic: P("entropy-3.jpg"), rect: [0.095, 0.072, 0.9056, 0.501], title: "Logins and codes, one vault" },
   },
   spectrum: {
     accent: ["#1d6a88", "#74c6e6"],
-    hero: { pic: P("spectrum.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.1 } },
+    hero: P("spectrum.jpg"),
     tiles: [
-      { kind: "crop", pic: P("spectrum-4.jpg"), rect: [0.08, 0.12, 0.94, 0.9], title: "Gradients, ready to copy" },
-      { kind: "crop", pic: P("spectrum-3.jpg"), rect: [0.17, 0.45, 0.82, 0.6], title: "Contrast at 21:1" },
-      { kind: "stat", stat: 2 },
-      { kind: "crop", pic: P("spectrum-2.jpg"), rect: [0.1, 0.33, 0.9, 0.47], title: "One color, five formats" },
-      { kind: "stat", stat: 3 },
+      { kind: "shot", pic: P("spectrum-4.jpg"), rect: [0.5, 0.605, 0.855, 0.993], title: "Gradients, ready to copy" },
+      { kind: "shot", pic: P("spectrum-3.jpg"), rect: [0.395, 0.405, 0.8253, 0.6075], title: "Contrast checked for WCAG" },
+      { kind: "number", value: "8", title: "kinds of color blindness" },
+      { kind: "shot", pic: P("spectrum-2.jpg"), rect: [0.08, 0.08, 0.9003, 0.4865], title: "Every format of a color" },
+      { kind: "number", value: "100%", title: "your images stay local" },
     ],
   },
   remnants: {
     accent: ["#2c58b0", "#93b3ff"],
-    hero: { pic: P("remnants.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.2 } },
+    hero: P("remnants.jpg"),
     tiles: [
-      { kind: "mark", pic: P("remnants-mark.jpg"), rect: [0.3375, 0.247, 0.6625, 0.767], title: "A faceted shard" },
-      { kind: "stat", stat: 0 },
-      { kind: "stat", stat: 1 },
-      { kind: "stat", stat: 2 },
+      { kind: "number", value: "759k", title: "lines of code removed" },
+      { kind: "number", value: "Off", title: "telemetry and crash reports" },
+      { kind: "number", value: "3", title: "systems, x64 and arm64" },
     ],
   },
   time: {
     accent: ["#ad3128", "#f2867a"],
-    hero: { pic: P("time.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "plate", width: 0.9 } },
+    hero: P("time.jpg"),
     tiles: [
       {
         kind: "pair",
-        a: { pic: P("time.jpg"), rect: [0.1, 0.3, 0.9, 0.7] },
-        b: { pic: P("time-2.jpg"), rect: [0.06, 0.3, 0.86, 0.7] },
-        title: "Zurich and Tokyo, one moment",
+        a: { pic: P("time.jpg"), rect: [0.04, 0.3, 0.96, 0.7] },
+        b: { pic: P("time-2.jpg"), rect: [0.04, 0.3, 0.96, 0.7] },
+        title: "Zurich and Tokyo, same second",
         stack: true,
       },
       { kind: "stat", stat: 0 },
-      { kind: "stat", stat: 2 },
-      { kind: "crop", pic: P("time.jpg"), rect: [0.47, 0.34, 0.93, 0.66], title: "Only the colons move" },
-      { kind: "stat", stat: 3 },
+      { kind: "number", value: "3", title: "time servers compared" },
     ],
   },
   jester: {
     accent: ["#7a5c10", "#e6c65e"],
-    hero: { pic: P("jester.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.3 } },
+    hero: P("jester.jpg"),
     tiles: [
+      { kind: "number", value: "1", title: "exe, nothing to install" },
+      { kind: "number", value: "A4", title: "PDF export built in" },
       { kind: "stat", stat: 2 },
-      { kind: "stat", stat: 0 },
-      { kind: "stat", stat: 3 },
-      { kind: "crop", pic: P("jester.jpg"), rect: [0.52, 0.935, 1, 1], title: "Encoding and line endings kept" },
     ],
   },
   flow: {
     accent: ["#ab2f2a", "#f2908a"],
-    hero: { pic: P("flow.jpg"), wide: { mode: "plate" }, phone: { mode: "plate", width: 0.84 } },
+    hero: P("flow.jpg"),
     tiles: [
-      { kind: "crop", pic: P("flow.jpg"), rect: [0.34, 0.03, 0.66, 0.32], title: "F8 records, F9 plays" },
-      { kind: "mark", pic: P("flow-mark.jpg"), rect: [0.35625, 0.27, 0.64375, 0.73], title: "Input as soft bars" },
-      { kind: "stat", stat: 0 },
-      { kind: "crop", pic: P("flow.jpg"), rect: [0.34, 0.6, 0.66, 0.86], title: "About 100 clicks a second" },
+      { kind: "shot", pic: P("flow.jpg"), rect: [0.3381, 0.05, 0.6619, 0.392], title: "F8 records, F9 replays" },
+      { kind: "number", value: "3 MB", title: "the whole app" },
       { kind: "stat", stat: 3 },
+      { kind: "shot", pic: P("flow.jpg"), rect: [0.3381, 0.582, 0.6619, 0.862], title: "Clicks every 10 ms" },
+      { kind: "stat", stat: 1 },
     ],
   },
   punds: {
     accent: ["#1d5c91", "#78b8f0"],
-    hero: { pic: P("punds.jpg"), wide: { mode: "left" }, phone: { mode: "detail", focus: [0.5, 0.45] } },
+    hero: P("punds.jpg"),
     tiles: [
-      { kind: "crop", pic: P("punds.jpg"), rect: [0.3, 0.2, 0.7, 0.8], title: "A city you fly through" },
-      { kind: "crop", pic: P("punds.jpg"), rect: [0.68, 0.28, 0.9, 0.5], title: "Links as floating panels" },
-      { kind: "stat", stat: 0 },
-      { kind: "stat", stat: 2 },
-      { kind: "stat", stat: 1 },
+      { kind: "number", value: "3", title: "runtime dependencies" },
+      { kind: "number", value: "4", title: "links, also in plain HTML" },
     ],
   },
   senbon: {
     accent: ["#865234", "#eab48c"],
-    hero: { pic: P("senbon.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "detail", focus: [0.5, 0.48] } },
+    hero: P("senbon.jpg"),
     tiles: [
-      { kind: "crop", pic: P("senbon-2.jpg"), rect: [0.27, 0.08, 0.73, 0.56], title: "Newest entry first" },
+      { kind: "shot", pic: P("senbon-2.jpg"), rect: [0.3, 0.075, 0.7, 0.763], title: "Entries, newest first" },
       { kind: "stat", stat: 0 },
-      { kind: "stat", stat: 3 },
-      { kind: "crop", pic: P("senbon.jpg"), rect: [0.3, 0.38, 0.72, 0.66], title: "A journal and a guestbook" },
-      { kind: "stat", stat: 1 },
+      { kind: "number", value: "noindex", title: "hidden from search, on purpose" },
     ],
+    wide: { pic: P("senbon.jpg"), rect: [0.3, 0.37, 0.7203, 0.67], title: "A journal and a guestbook" },
   },
   oxidize: {
     accent: ["#9e4f28", "#e9a070"],
-    hero: { pic: P("oxidize.jpg"), wide: { mode: "left" }, phone: { mode: "left", width: 2.4 } },
+    hero: P("oxidize.jpg"),
     tiles: [
-      { kind: "mark", pic: P("oxidize-mark.jpg"), rect: [0.3219, 0.215, 0.6781, 0.785], title: "Copper and verdigris" },
+      { kind: "shot", pic: P("oxidize.jpg"), rect: [0, 0.06, 0.7137, 0.941], title: "Every program, biggest first" },
+      { kind: "number", value: "0", title: "leftovers deleted without a backup" },
+      { kind: "number", value: "1", title: "command undoes a removal" },
+      { kind: "shot", pic: P("oxidize.jpg"), rect: [0.63, 0, 0.9956, 0.048], title: "Backups on by default" },
       { kind: "stat", stat: 3 },
-      { kind: "crop", pic: P("oxidize.jpg"), rect: [0.44, 0.11, 0.74, 0.36], title: "Biggest first" },
-      { kind: "crop", pic: P("oxidize.jpg"), rect: [0.67, 0, 0.99, 0.065], title: "Backups on by default" },
-      { kind: "stat", stat: 1 },
     ],
   },
   inkling: {
     accent: ["#3a52a8", "#a3b5f7"],
-    hero: { pic: P("inkling.jpg"), wide: { mode: "left" }, phone: { mode: "detail", width: 2, focus: [0.58, 0.3] } },
+    hero: P("inkling.jpg"),
     tiles: [
-      { kind: "crop", pic: P("inkling-3.jpg"), rect: [0.5, 0.4, 0.78, 0.73], title: "Flashcards that schedule themselves" },
-      { kind: "crop", pic: P("inkling-2.jpg"), rect: [0.36, 0.12, 0.74, 0.34], title: "Notes become cards" },
-      { kind: "stat", stat: 0 },
+      { kind: "shot", pic: P("inkling-3.jpg"), rect: [0.39, 0.39, 0.765, 0.727], title: "Flashcards that schedule themselves" },
+      { kind: "shot", pic: P("inkling-2.jpg"), rect: [0.37, 0.144, 0.7306, 0.34], title: "Write once, get flashcards" },
+      { kind: "number", value: "20", title: "tools for AI assistants" },
       {
         kind: "pair",
-        a: { pic: P("inkling.jpg"), rect: [0.34, 0.08, 0.82, 0.38] },
-        b: { pic: P("inkling-4.jpg"), rect: [0.34, 0.08, 0.84, 0.38] },
-        title: "Light and dark",
+        a: { pic: P("inkling.jpg"), rect: [0.38, 0.08, 0.8, 0.372] },
+        b: { pic: P("inkling-4.jpg"), rect: [0.36, 0.09, 0.78, 0.372] },
+        title: "Light and dark themes",
       },
-      { kind: "stat", stat: 3 },
+      { kind: "number", value: "3", title: "Windows, macOS and Linux" },
     ],
   },
   mochi: {
     accent: ["#9d426b", "#f3a6ca"],
-    hero: { pic: P("mochi.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "left", width: 1.9 } },
+    hero: P("mochi.jpg"),
     tiles: [
-      { kind: "crop", pic: P("mochi.jpg"), rect: [0.5, 0.53, 1, 0.96], title: "Scriptable from the terminal" },
-      { kind: "mark", pic: P("mochi-mark.jpg"), rect: [0.35625, 0.27, 0.64375, 0.73], title: "Three windows, tiled" },
-      { kind: "stat", stat: 1 },
-      { kind: "crop", pic: P("mochi.jpg"), rect: [0.49, 0, 1, 0.24], title: "Focus in pink" },
-      { kind: "stat", stat: 3 },
+      { kind: "shot", pic: P("mochi.jpg"), rect: [0.5012, 0.503, 0.9956, 0.961], title: "Scriptable from any terminal" },
+      { kind: "shot", pic: P("mochi.jpg"), rect: [0.5012, 0, 0.9956, 0.504], title: "The focused window, in pink" },
+      { kind: "number", value: "1", title: "key gives windows back" },
     ],
   },
   daifuku: {
     accent: ["#964b6e", "#f2a9c9"],
-    hero: { pic: P("daifuku.jpg"), wide: { mode: "plate", width: 0.9 }, phone: { mode: "left", width: 1.9 } },
+    hero: P("daifuku.jpg"),
     tiles: [
-      { kind: "crop", pic: P("daifuku.jpg"), rect: [0, 0.49, 0.34, 1], title: "Yellow means it waits" },
-      { kind: "crop", pic: P("daifuku.jpg"), rect: [0.66, 0.05, 1, 0.45], title: "Red means it failed" },
-      { kind: "stat", stat: 3 },
-      { kind: "crop", pic: P("daifuku.jpg"), rect: [0.33, 0.05, 0.67, 0.3], title: "Green means done" },
+      { kind: "shot", pic: P("daifuku.jpg"), rect: [0.0031, 0.501, 0.3344, 0.931], title: "Yellow: it needs your answer" },
+      { kind: "shot", pic: P("daifuku.jpg"), rect: [0.6644, 0.069, 0.9975, 0.5], title: "Red: it failed" },
+      { kind: "number", value: "6", title: "agents on one key" },
+      { kind: "shot", pic: P("daifuku.jpg"), rect: [0.3344, 0.071, 0.665, 0.5], title: "Green: it is done" },
+      { kind: "shot", pic: P("daifuku.jpg"), rect: [0.0031, 0.071, 0.335, 0.5], title: "Blue: it is working" },
       { kind: "stat", stat: 1 },
     ],
   },
   psyche: {
     accent: ["#2d5ca2", "#86b9f6"],
-    hero: { pic: P("psyche.jpg"), wide: { mode: "plate" }, phone: { mode: "plate", width: 0.9 } },
+    hero: P("psyche.jpg"),
     tiles: [
-      { kind: "crop", pic: P("psyche-2.jpg"), rect: [0.145, 0.102, 0.855, 0.898], title: "Every code in one window" },
-      { kind: "stat", stat: 0 },
-      { kind: "crop", pic: P("psyche.jpg"), rect: [0.6, 0.3, 0.74, 0.48], title: "A ring counts down" },
-      { kind: "crop", pic: P("psyche.jpg"), rect: [0.26, 0.2, 0.74, 0.38], title: "This site, listed first" },
+      { kind: "shot", pic: P("psyche-2.jpg"), rect: [0.145, 0.102, 0.8556, 0.834], title: "All your codes, one window" },
+      { kind: "number", value: "151", title: "services it knows" },
+      { kind: "number", value: "6", title: "apps you can import from" },
+      { kind: "shot", pic: P("psyche.jpg"), rect: [0.2594, 0.206, 0.7406, 0.384], title: "The right account, listed first" },
       { kind: "stat", stat: 3 },
     ],
   },
@@ -260,7 +248,7 @@ const ART: Record<string, Art> = {
 /** A project without its own art direction: the main shot and its numbers. */
 const fallbackArt = (project: PortfolioProject, pictures: string[]): Art => ({
   accent: ["#5f4b8b", "#c7aef0"],
-  hero: { pic: pictures[0] ?? "", wide: { mode: "left" }, phone: { mode: "left", width: 2 } },
+  hero: pictures[0] ?? "",
   tiles: (project.stats ?? []).slice(0, 3).map((_, stat): Tile => ({ kind: "stat", stat })),
 });
 
@@ -275,79 +263,17 @@ const fallbackArt = (project: PortfolioProject, pictures: string[]): Art => ({
 const WINDOWS: Record<string, Rect> = {
   [P("flow.jpg")]: [0.338125, 0.06, 0.66125, 0.949],
   [P("psyche.jpg")]: [0.26, 0.206, 0.739375, 0.793],
-  [P("psyche-2.jpg")]: [0.145, 0.102, 0.854375, 0.898],
-  [P("entropy-3.jpg")]: [0.095, 0.072, 0.905, 0.929],
-  [P("entropy-4.jpg")]: [0.25875, 0.204, 0.74125, 0.796],
-  [P("entropy-5.jpg")]: [0.095, 0.072, 0.905, 0.929],
 };
 
-/** Card shape for the hero: tall on a phone, 16:10 from `sm`. */
-const HERO_PHONE_RATIO = 4 / 5;
-const HERO_WIDE_RATIO = 16 / 10;
-/** The widest the hero card gets, for keeping a capture near its own pixels. */
-const HERO_WIDE_PX = 1152;
-
-type Box = { left: number; top: number; width: number };
-
-const clamp = (value: number, low: number, high: number) =>
-  Math.min(high, Math.max(low, value));
-
-/** Left, top and width of the window in the hero card, as percentages. */
-function placeHero(view: View, src: string, ratio: number, reference: number): Box {
-  const [x0, y0, x1, y1] = WINDOWS[src] ?? [0, 0, 1, 1];
-  const aspect = ((x1 - x0) * FILE_ASPECT) / (y1 - y0);
-  const native = pictureWidth(src) * (x1 - x0);
-  // Near its own pixels on a wide screen: legible, never blown up.
-  const cap = reference ? (native * 1.15) / reference : Number.POSITIVE_INFINITY;
-  const height = 1 / ratio;
-  const pad = reference ? 0.065 : 0.07;
-  let width: number;
-  let left: number;
-  let top = pad;
-  if (view.mode === "detail") {
-    width = Math.max(view.width ?? 2.4, aspect * height, 1);
-    const focus = view.focus ?? [0.5, 0.4];
-    const windowHeight = width / aspect;
-    left = clamp(0.5 - focus[0] * width, 1 - width, 0);
-    top = clamp(height / 2 - focus[1] * windowHeight, height - windowHeight, 0);
-  } else if (view.mode === "plate") {
-    width = Math.min(view.width ?? 0.88, cap);
-    left = (1 - width) / 2;
-    const windowHeight = width / aspect;
-    // Centred when it fits; otherwise inset at the top and cut by the bottom edge.
-    if (windowHeight + 2 * pad <= height) top = (height - windowHeight) / 2;
-  } else {
-    width = Math.min(view.width ?? 1.3, cap);
-    left = view.mode === "left" ? pad : 1 - pad - width;
-  }
-  return { left: left * 100, top: (top / height) * 100, width: width * 100 };
-}
-
 const pct = (value: number) => `${value.toFixed(3)}%`;
+const aspectOf = ([x0, y0, x1, y1]: Rect) => ((x1 - x0) * FILE_ASPECT) / (y1 - y0);
 
-/**
- * Style that crops a picture to `rect` inside any box: the region is shown
- * whole with a little air, the box is always covered by the app's own window
- * (never the backdrop around it), and it adapts to the box's shape at every
- * width (container units), so a phone gets its own crop.
- */
-function cropStyle(rect: Rect, bounds: Rect = [0, 0, 1, 1]): CSSProperties {
-  const [x0, y0, x1, y1] = rect;
-  const [bx0, by0, bx1, by1] = bounds;
-  const air = 1.06;
-  const rw = (x1 - x0) * air;
-  const rh = (y1 - y0) * air;
-  const cx = (x0 + x1) / 2;
-  const cy = (y0 + y1) / 2;
-  const f = (n: number) => n.toFixed(4);
-  const w = `max(min(${f(100 / rw)}cqw, ${f((100 * FILE_ASPECT) / rh)}cqh), ${f(100 / (bx1 - bx0))}cqw, ${f((100 * FILE_ASPECT) / (by1 - by0))}cqh)`;
-  const h = `(${w} / ${FILE_ASPECT})`;
-  return {
-    width: w,
-    left: `clamp(calc(100cqw - ${f(bx1)} * ${w}), calc(50cqw - ${f(cx)} * ${w}), calc(-${f(bx0)} * ${w}))`,
-    top: `clamp(calc(100cqh - ${f(by1)} * ${h}), calc(50cqh - ${f(cy)} * ${h}), calc(-${f(by0)} * ${h}))`,
-  };
-}
+/** The image inside a region's box: the whole file, offset so the region fills the box. */
+const regionImageStyle = ([x0, y0, x1, y1]: Rect): CSSProperties => ({
+  width: pct(100 / (x1 - x0)),
+  left: pct((-x0 / (x1 - x0)) * 100),
+  top: pct((-y0 / (y1 - y0)) * 100),
+});
 
 /** Where a clicked picture sits, for the viewer to open out of it. */
 function originOf(clip: HTMLElement, img: HTMLImageElement, radius: number): LightboxOrigin {
@@ -373,34 +299,91 @@ function originOf(clip: HTMLElement, img: HTMLImageElement, radius: number): Lig
 /* Pieces                                                              */
 /* ------------------------------------------------------------------ */
 
-/** A picture cropped to a region, filling its box. */
-function Crop({ src, rect, alt, sizes }: { src: string; rect: Rect; alt: string; sizes: string }) {
+/**
+ * One region of the interface, whole, as large as the box allows with 14px
+ * of the card around it (so its radius is the card's 28 less 14).
+ */
+function Region({ src, rect, alt, sizes }: { src: string; rect: Rect; alt: string; sizes: string }) {
+  const aspect = aspectOf(rect);
   return (
-    <div className="absolute inset-0 [container-type:size]">
-      <img
-        alt={alt}
-        className="absolute max-w-none select-none"
-        data-crop
-        decoding="async"
-        draggable={false}
-        loading="lazy"
-        sizes={sizes}
-        src={src}
-        srcSet={pictureSrcSet(src)}
-        style={cropStyle(rect, WINDOWS[src])}
-      />
+    <div className="absolute inset-0 flex items-center justify-center [container-type:size]">
+      <div
+        className={`relative max-w-none overflow-hidden rounded-[14px] ${DEPTH}`}
+        data-clip
+        style={{
+          aspectRatio: aspect,
+          width: `min(calc(100cqw - 28px), calc((100cqh - 28px) * ${aspect.toFixed(4)}))`,
+        }}
+      >
+        <img
+          alt={alt}
+          className="absolute max-w-none select-none"
+          data-crop
+          decoding="async"
+          draggable={false}
+          loading="lazy"
+          sizes={sizes}
+          src={src}
+          srcSet={pictureSrcSet(src)}
+          style={regionImageStyle(rect)}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The whole app window, centred in its card and as large as it fits, never
+ * blown past a quarter over its own pixels.
+ */
+function WholeWindow({ src, alt, priority }: { src: string; alt: string; priority?: boolean }) {
+  const rect = WINDOWS[src] ?? ([0, 0, 1, 1] as Rect);
+  const aspect = aspectOf(rect);
+  const native = pictureWidth(src) * (rect[2] - rect[0]);
+  return (
+    <div className="absolute inset-0 flex items-center justify-center [container-type:size]">
+      <div
+        className={`relative max-w-none overflow-hidden rounded-xl ${DEPTH}`}
+        data-clip
+        style={{
+          aspectRatio: aspect,
+          width: `min(88cqw, calc((100cqh - 12cqw) * ${aspect.toFixed(4)}), ${Math.round(native * 1.25)}px)`,
+        }}
+      >
+        <img
+          alt={alt}
+          className="absolute max-w-none select-none"
+          data-crop
+          decoding="async"
+          draggable={false}
+          fetchPriority={priority ? "high" : "auto"}
+          loading={priority ? "eager" : "lazy"}
+          sizes="(min-width: 1280px) 1100px, 88vw"
+          src={src}
+          srcSet={pictureSrcSet(src)}
+          style={regionImageStyle(rect)}
+        />
+      </div>
     </div>
   );
 }
 
 /** The picture inside a card eases closer on hover; the card itself stays still. */
-const HOVER = { rest: { scale: 1 }, hover: { scale: 1.03 } };
+const HOVER = { rest: { scale: 1 }, hover: { scale: 1.025 } };
 
-function StatFigure({ stat }: { stat: ProjectStat }) {
+/**
+ * A number set as large as its tile allows. Long values ("noindex") get a
+ * smaller size from their length, so no numeral ever runs off its card.
+ */
+function Numeral({ value, chars }: { value: ReactNode; chars: number }) {
+  const width = Math.min(30, 150 / Math.max(chars, 1));
   return (
     <div className="absolute inset-0 flex items-end p-6 [container-type:size] sm:p-7">
-      <span className="title-serif block font-bold text-[color:var(--pa)] text-[length:min(26cqw,52cqh,6rem)] leading-none tracking-[-0.03em] tabular-nums">
-        {stat.liveTests ? <LiveTestCount fallback={stat.value} project={stat.liveTests} /> : stat.value}
+      <span
+        className="title-serif block whitespace-nowrap font-bold text-[color:var(--pa)] leading-[0.9] tracking-[-0.03em] tabular-nums"
+        style={{ fontSize: `min(${width.toFixed(2)}cqw, 52cqh, 9rem)` }}
+      >
+        {value}
       </span>
     </div>
   );
@@ -413,13 +396,14 @@ const SIZE_CLASS = {
   W: "col-span-2 sm:col-span-3",
 } as const;
 
-/** Bento patterns by tile count: the large tile first, never an empty cell. */
+/** Bento patterns by tile count: no empty cell at any width. */
 const PATTERNS: Record<number, Array<keyof typeof SIZE_CLASS>> = {
   1: ["W"],
   2: ["M", "S"],
   3: ["L", "S", "S"],
   4: ["L", "S", "S", "W"],
   5: ["L", "S", "S", "M", "S"],
+  6: ["L", "S", "S", "S", "S", "S"],
 };
 
 function BentoTile({
@@ -432,56 +416,49 @@ function BentoTile({
   tile: Tile;
   size: keyof typeof SIZE_CLASS;
   order: number;
-  /** The last small tile on a phone, which would otherwise sit alone in its row. */
+  /** A small tile that would sit alone in its row on a phone. */
   orphan: boolean;
   props: VariantProps;
 }) {
   const reduceMotion = useReducedMotion();
   const { project, pictures } = props;
   const stat = tile.kind === "stat" ? project.stats?.[tile.stat] : undefined;
-  const title = tile.kind === "stat" ? stat?.label : tile.title;
-  const pic = tile.kind === "crop" || tile.kind === "mark" ? tile.pic : tile.kind === "pair" ? tile.a.pic : null;
+  const title = tile.kind === "stat" ? (tile.title ?? stat?.label) : tile.title;
+  const pic = tile.kind === "shot" ? tile.pic : tile.kind === "pair" ? tile.a.pic : null;
   const position = pic ? pictures.indexOf(pic) : -1;
-  const large = size === "L" || size === "W";
-  const sizes = large ? "(min-width: 1024px) 1600px, 100vw" : "(min-width: 1024px) 900px, 60vw";
+  const sizes = size === "L" || size === "W" ? "(min-width: 1024px) 1600px, 100vw" : "(min-width: 1024px) 900px, 70vw";
 
   let visual: ReactNode = null;
-  if (tile.kind === "crop") {
-    visual = <Crop alt={props.altFor(position)} rect={tile.rect} sizes={sizes} src={tile.pic} />;
+  if (tile.kind === "shot") {
+    visual = <Region alt={props.altFor(position)} rect={tile.rect} sizes={sizes} src={tile.pic} />;
   } else if (tile.kind === "pair") {
     visual = (
-      <div className={`absolute inset-0 grid gap-1.5 p-1.5 ${tile.stack ? "grid-rows-2" : "grid-cols-2"}`}>
+      <div className={`absolute inset-0 grid ${tile.stack ? "grid-rows-2" : "grid-cols-2"}`}>
         {[tile.a, tile.b].map((shot) => (
-          <div className="relative overflow-hidden rounded-[22px]" data-clip key={shot.pic}>
-            <Crop alt={props.altFor(pictures.indexOf(shot.pic))} rect={shot.rect} sizes={sizes} src={shot.pic} />
+          <div className={`relative ${tile.stack ? "-my-[7px] first:mt-0 last:mb-0" : "-mx-[7px] first:ml-0 last:mr-0"}`} key={shot.pic}>
+            <Region alt={props.altFor(pictures.indexOf(shot.pic))} rect={shot.rect} sizes={sizes} src={shot.pic} />
           </div>
         ))}
       </div>
     );
-  } else if (tile.kind === "mark") {
-    visual = (
-      <div className="absolute inset-0 flex items-center justify-center [container-type:size]">
-        <div
-          className="relative aspect-square w-[min(52cqh,46cqw)] overflow-hidden rounded-[23%] shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)]"
-          data-clip
-        >
-          <Crop alt={props.altFor(position)} rect={tile.rect} sizes="320px" src={tile.pic} />
-        </div>
-      </div>
-    );
+  } else if (tile.kind === "number") {
+    visual = <Numeral chars={tile.value.length} value={tile.value} />;
   } else if (stat) {
-    visual = <StatFigure stat={stat} />;
+    visual = (
+      <Numeral
+        chars={stat.value.length}
+        value={stat.liveTests ? <LiveTestCount fallback={stat.value} project={stat.liveTests} /> : stat.value}
+      />
+    );
   }
 
   const open = (event: MouseEvent<HTMLElement>) => {
     if (position < 0) return;
     const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
-    const clip = img?.closest<HTMLElement>("[data-clip]") ?? event.currentTarget;
-    const radius = tile.kind === "mark" ? clip.getBoundingClientRect().width * 0.23 : tile.kind === "pair" ? 22 : 28;
-    props.open(position, img ? originOf(clip, img, radius) : true);
+    const clip = img?.closest<HTMLElement>("[data-clip]");
+    props.open(position, img && clip ? originOf(clip, img, 14) : true);
   };
 
-  const cardClass = `${CARD} ${RING} group block h-full w-full text-left transition-shadow duration-300 ease-bloom hover:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--pa)_45%,transparent)]`;
   const inner = (
     <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
       {visual}
@@ -502,9 +479,8 @@ function BentoTile({
       {position >= 0 ? (
         <motion.button
           aria-label={props.openLabelFor(position)}
-          className={`${cardClass} min-h-0 flex-1 cursor-zoom-in`}
+          className={`${CARD} ${RING} group block min-h-0 w-full flex-1 cursor-zoom-in text-left transition-shadow duration-300 ease-bloom hover:[box-shadow:inset_0_0_0_1px_color-mix(in_oklab,var(--pa)_45%,transparent)]`}
           data-cursor-ignore
-          data-clip
           initial="rest"
           onClick={open}
           type="button"
@@ -516,76 +492,10 @@ function BentoTile({
       ) : (
         <div className={`${CARD} min-h-0 flex-1`}>{visual}</div>
       )}
-      <p className="mt-3 line-clamp-2 max-w-[26ch] font-semibold text-[0.9375rem] leading-snug tracking-[-0.01em] sm:text-[1.0625rem]">
+      <p className="mt-3 line-clamp-2 max-w-[28ch] font-semibold text-[0.9375rem] leading-snug tracking-[-0.01em] sm:text-[1.0625rem]">
         {title}
       </p>
     </motion.div>
-  );
-}
-
-/** The app window in the hero card, with its own depth. */
-function HeroWindow({
-  src,
-  art,
-  alt,
-  layoutId,
-  priority,
-}: {
-  src: string;
-  art: Art["hero"];
-  alt: string;
-  layoutId?: string;
-  priority?: boolean;
-}) {
-  const [x0, y0, x1, y1] = WINDOWS[src] ?? [0, 0, 1, 1];
-  const phone = placeHero(art.phone, src, HERO_PHONE_RATIO, 0);
-  const wide = placeHero(art.wide, src, HERO_WIDE_RATIO, HERO_WIDE_PX);
-  const aspect = ((x1 - x0) * FILE_ASPECT) / (y1 - y0);
-  const style = {
-    "--l": pct(phone.left),
-    "--t": pct(phone.top),
-    "--w": pct(phone.width),
-    "--l2": pct(wide.left),
-    "--t2": pct(wide.top),
-    "--w2": pct(wide.width),
-    aspectRatio: aspect,
-  } as CSSProperties;
-  const full = art.phone.mode === "detail";
-  const spanX = x1 - x0;
-  return (
-    <div
-      className={`absolute top-[var(--t)] left-[var(--l)] w-[var(--w)] max-w-none overflow-hidden sm:top-[var(--t2)] sm:left-[var(--l2)] sm:w-[var(--w2)] sm:rounded-xl sm:shadow-[0_1px_2px_rgb(0_0_0/0.08),0_40px_80px_-40px_rgb(0_0_0/0.5)] dark:sm:shadow-[0_1px_2px_rgb(0_0_0/0.4),0_40px_90px_-30px_rgb(0_0_0/0.8)] ${
-        full ? "" : "rounded-xl shadow-[0_1px_2px_rgb(0_0_0/0.08),0_30px_60px_-30px_rgb(0_0_0/0.5)]"
-      }`}
-      data-clip
-      style={style}
-    >
-      <motion.img
-        alt={alt}
-        className="absolute max-w-none"
-        data-crop
-        decoding="async"
-        draggable={false}
-        fetchPriority={priority ? "high" : "auto"}
-        layoutId={layoutId}
-        loading={priority ? "eager" : "lazy"}
-        sizes={`(min-width: 640px) ${Math.round(((wide.width / 100) * HERO_WIDE_PX) / spanX)}px, ${Math.round(phone.width / spanX)}vw`}
-        src={src}
-        srcSet={pictureSrcSet(src)}
-        style={{
-          width: pct(100 / spanX),
-          left: pct((-x0 / spanX) * 100),
-          top: pct((-y0 / (y1 - y0)) * 100),
-        }}
-      />
-      {/* The window's edge: a hairline, and a top highlight at night. */}
-      <span
-        aria-hidden
-        className={`pointer-events-none absolute inset-0 ring-1 ring-black/[0.06] ring-inset dark:shadow-[inset_0_1px_0_rgb(255_255_255/0.1)] dark:ring-white/10 ${
-          full ? "max-sm:hidden" : ""
-        } rounded-[inherit]`}
-      />
-    </div>
   );
 }
 
@@ -599,7 +509,7 @@ export function VariantD(props: VariantProps) {
   const t = translations[language].projectDetails;
   const reduceMotion = useReducedMotion();
   const art = ART[project.slug] ?? fallbackArt(project, pictures);
-  const heroIndex = Math.max(0, pictures.indexOf(art.hero.pic));
+  const heroIndex = Math.max(0, pictures.indexOf(art.hero));
   const host = project.liveUrl && !project.downloadUrl ? new URL(project.liveUrl).host : null;
   const kind = project.operatingSystem ?? host ?? project.title;
 
@@ -611,12 +521,24 @@ export function VariantD(props: VariantProps) {
     damping: 30,
   });
 
-  const tiles = art.tiles.slice(0, 5);
-  const pattern = PATTERNS[tiles.length] ?? PATTERNS[5];
+  const tiles = art.tiles.slice(0, 6);
+  const numbersOnly = tiles.every((tile) => tile.kind === "number" || tile.kind === "stat");
+  const pattern = numbersOnly
+    ? tiles.length === 2
+      ? PATTERNS[2]
+      : tiles.map((): keyof typeof SIZE_CLASS => "S")
+    : (PATTERNS[tiles.length] ?? PATTERNS[5]);
   const next = props.next[0];
-  const nextArt = next ? ART[next.slug] : undefined;
+  const nextHero = next ? (ART[next.slug]?.hero ?? next.image) : undefined;
 
   const style = { "--pa-l": art.accent[0], "--pa-d": art.accent[1] } as CSSProperties;
+
+  /** The viewer opens out of the clicked picture's visible box. */
+  const openFrom = (position: number, radius: number) => (event: MouseEvent<HTMLElement>) => {
+    const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
+    const clip = img?.closest<HTMLElement>("[data-clip]");
+    props.open(position, img && clip ? originOf(clip, img, radius) : true);
+  };
 
   return (
     <div
@@ -635,7 +557,7 @@ export function VariantD(props: VariantProps) {
         <span className="text-foreground/80">{project.title}</span>
       </nav>
 
-      {/* Promise: the name, one line, the buttons, then the app itself. */}
+      {/* Promise: the name, one line, the buttons, then the whole app. */}
       <section className="mt-12 sm:mt-16">
         <motion.div {...revealOnScroll(reduceMotion)}>
           <p className="font-medium text-[0.8125rem] text-[color:var(--pa)]">{kind}</p>
@@ -648,42 +570,21 @@ export function VariantD(props: VariantProps) {
           <div className="mt-8">{props.actions}</div>
         </motion.div>
 
-        {art.hero.pic ? (
-          <motion.div
-            className="mt-14"
-            ref={heroRef}
-            style={reduceMotion ? undefined : { scale: heroScale }}
-          >
+        {art.hero ? (
+          <motion.div className="mt-14" ref={heroRef} style={reduceMotion ? undefined : { scale: heroScale }}>
             <motion.button
               aria-label={props.openLabelFor(heroIndex)}
-              className={`${CARD} ${RING} block aspect-[4/5] w-full cursor-zoom-in sm:aspect-[16/10]`}
+              className={`${CARD} ${RING} block aspect-[16/10] w-full cursor-zoom-in`}
               data-cursor-ignore
               initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
-              onClick={(event) => {
-                const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
-                const clip = img?.closest<HTMLElement>("[data-clip]");
-                if (!img || !clip) return props.open(heroIndex);
-                // The visible part is where the window and the card overlap.
-                const card = event.currentTarget.getBoundingClientRect();
-                const o = originOf(clip, img, 12);
-                const left = Math.max(o.rect.left, card.left);
-                const top = Math.max(o.rect.top, card.top);
-                const right = Math.min(o.rect.left + o.rect.width, card.right);
-                const bottom = Math.min(o.rect.top + o.rect.height, card.bottom);
-                const i = img.getBoundingClientRect();
-                props.open(heroIndex, {
-                  rect: { left, top, width: right - left, height: bottom - top },
-                  crop: [(left - i.left) / i.width, (top - i.top) / i.height, (right - i.left) / i.width, (bottom - i.top) / i.height],
-                  radius: 12,
-                });
-              }}
+              onClick={openFrom(heroIndex, 12)}
               transition={{ scale: SPRING, opacity: { duration: 0.7, ease: EASE_OUT } }}
               type="button"
               viewport={VIEWPORT}
               whileInView={{ opacity: 1, scale: 1 }}
               whileTap={reduceMotion ? undefined : { scale: 0.99 }}
             >
-              <HeroWindow alt={props.altFor(heroIndex)} art={art.hero} priority src={art.hero.pic} />
+              <WholeWindow alt={props.altFor(heroIndex)} priority src={art.hero} />
             </motion.button>
           </motion.div>
         ) : null}
@@ -696,7 +597,11 @@ export function VariantD(props: VariantProps) {
             <BentoTile
               key={`${tile.kind}-${order}`}
               order={order}
-              orphan={pattern[order] === "S" && order === tiles.length - 1 && tiles.length === 5}
+              orphan={
+                pattern[order] === "S" &&
+                order === tiles.length - 1 &&
+                (numbersOnly ? tiles.length % 2 === 1 : tiles.length >= 5)
+              }
               props={props}
               size={pattern[order]}
               tile={tile}
@@ -705,11 +610,7 @@ export function VariantD(props: VariantProps) {
         </section>
       ) : null}
 
-      {art.wide ? (
-        <section className="mt-6 sm:mt-8">
-          <WideMoment props={props} wide={art.wide} />
-        </section>
-      ) : null}
+      {art.wide ? <WideMoment props={props} wide={art.wide} /> : null}
 
       {/* The facts in one row, then the buttons. */}
       <motion.div className="mt-24 sm:mt-32" {...revealOnScroll(reduceMotion)}>
@@ -741,18 +642,14 @@ export function VariantD(props: VariantProps) {
           </div>
           <Link className={`group mt-4 block rounded-[28px] ${RING}`} to={`/projects/${next.slug}?v=d`}>
             <motion.div
-              className={`${CARD} aspect-[4/3] sm:aspect-[21/9]`}
+              className={`${CARD} aspect-[16/10] sm:aspect-[21/9]`}
               initial="rest"
               whileHover="hover"
               whileTap={reduceMotion ? undefined : { scale: 0.99 }}
             >
-              {next.image ? (
+              {nextHero ? (
                 <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
-                  <HeroWindow
-                    alt=""
-                    art={nextArt?.hero ?? { pic: next.image, wide: { mode: "left" }, phone: { mode: "left", width: 2 } }}
-                    src={nextArt?.hero.pic ?? next.image}
-                  />
+                  <WholeWindow alt="" src={nextHero} />
                 </motion.div>
               ) : null}
             </motion.div>
@@ -771,7 +668,8 @@ function WideMoment({ wide, props }: { wide: NonNullable<Art["wide"]>; props: Va
   const reduceMotion = useReducedMotion();
   const position = props.pictures.indexOf(wide.pic);
   return (
-    <motion.div
+    <motion.section
+      className="mt-6 sm:mt-8"
       initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
       transition={{ scale: SPRING, opacity: { duration: 0.6, ease: EASE_OUT } }}
       viewport={VIEWPORT}
@@ -779,25 +677,25 @@ function WideMoment({ wide, props }: { wide: NonNullable<Art["wide"]>; props: Va
     >
       <motion.button
         aria-label={props.openLabelFor(position)}
-        className={`${CARD} ${RING} block aspect-[4/3] w-full cursor-zoom-in sm:aspect-[21/9]`}
-        data-clip
+        className={`${CARD} ${RING} block aspect-[16/10] w-full cursor-zoom-in sm:aspect-[21/9]`}
         data-cursor-ignore
         initial="rest"
         onClick={(event) => {
           const img = event.currentTarget.querySelector<HTMLImageElement>("img[data-crop]");
-          props.open(position, img ? originOf(event.currentTarget, img, 28) : true);
+          const clip = img?.closest<HTMLElement>("[data-clip]");
+          props.open(position, img && clip ? originOf(clip, img, 14) : true);
         }}
         type="button"
         whileHover="hover"
         whileTap={reduceMotion ? undefined : { scale: 0.99 }}
       >
         <motion.div className="absolute inset-0" transition={SPRING} variants={reduceMotion ? undefined : HOVER}>
-          <Crop alt={props.altFor(position)} rect={wide.rect} sizes="(min-width: 1024px) 1600px, 100vw" src={wide.pic} />
+          <Region alt={props.altFor(position)} rect={wide.rect} sizes="(min-width: 1024px) 1600px, 100vw" src={wide.pic} />
         </motion.div>
       </motion.button>
       <p className="mt-3 font-semibold text-[0.9375rem] leading-snug tracking-[-0.01em] sm:text-[1.0625rem]">
         {wide.title}
       </p>
-    </motion.div>
+    </motion.section>
   );
 }
