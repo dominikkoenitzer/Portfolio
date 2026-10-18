@@ -8,8 +8,8 @@ import { getProjects } from "@/constants/projects";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
-import { Demo } from "./e/kit";
-import type { Story } from "./e/types";
+import { Demo, StillFigure } from "./e/kit";
+import type { Block, Story } from "./e/types";
 import type { VariantProps } from "./project-variants";
 
 /**
@@ -134,6 +134,43 @@ function Prose({ paragraphs }: { paragraphs: string[] }) {
   );
 }
 
+/**
+ * A story's blocks in reading order. Paragraphs sit 16px apart; a demo or a
+ * still gets 32px of air on both sides, so the column breathes around it.
+ */
+function Blocks({ blocks, first = false }: { blocks: Block[]; first?: boolean }) {
+  // Only the opening's first picture or demo loads eagerly.
+  const eagerAt = first ? blocks.findIndex((b) => typeof b !== "string") : -1;
+  return (
+    <div className="mt-4">
+      {blocks.map((block, i) => {
+        const prev = blocks[i - 1];
+        const gap = i === 0 ? "" : typeof block === "string" && typeof prev === "string" ? "mt-4" : "mt-8";
+        if (typeof block === "string") {
+          return (
+            <p className={`m-0 text-[1rem] text-foreground/85 leading-[1.625] ${gap}`} key={block}>
+              {block}
+            </p>
+          );
+        }
+        const eager = i === eagerAt;
+        if ("Demo" in block) {
+          return (
+            <div className={gap} key={`demo-${i}`}>
+              <block.Demo />
+            </div>
+          );
+        }
+        return (
+          <div className={gap} key={block.still.name}>
+            <StillFigure eager={eager} still={block.still} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 /** For a project without a story yet: its real screenshot, whole, in the demo box. */
 function Screenshot({ props }: { props: VariantProps }) {
   const src = props.pictures[0];
@@ -180,8 +217,6 @@ export function VariantE(props: VariantProps) {
     else window.scrollTo({ top });
   };
 
-  const intro = story?.intro ?? [project.tagline];
-  const Hero = story?.Hero;
 
   return (
     <div className="mx-auto w-full max-w-[1100px] px-6 pt-4 pb-32 sm:px-8 xl:grid xl:grid-cols-[168px_640px] xl:justify-center xl:gap-x-28 xl:px-0">
@@ -196,7 +231,7 @@ export function VariantE(props: VariantProps) {
           </Link>
           {sections.length ? (
             <ol className="mt-8 list-none space-y-2.5 p-0">
-              {[{ id: "e-top", label: t.overview }, ...sections.map((s) => ({ id: `e-${s.id}`, label: s.index ?? s.heading }))].map((entry) => {
+              {[{ id: "e-top", label: t.overview }, ...sections.map((s) => ({ id: `e-${s.id}`, label: s.heading }))].map((entry) => {
                 const current = entry.id === active;
                 return (
                   <li className="relative" key={entry.id}>
@@ -243,19 +278,26 @@ export function VariantE(props: VariantProps) {
           {meta.length ? (
             <p className="m-0 mt-2 text-[0.875rem] text-muted-foreground">{meta.join(" · ")}</p>
           ) : null}
-          <Prose paragraphs={intro} />
           <div className="mt-5">
             <Links project={project} />
           </div>
         </header>
 
-        <div className="mt-10">
+        <div className="mt-8">
           {story === undefined ? (
-            <div aria-hidden className="h-[340px] rounded-2xl bg-card ring-1 ring-black/[0.06] dark:ring-white/[0.08]" />
-          ) : Hero ? (
-            <Hero />
+            // Nothing visible while the story's chunk loads, and tall enough that
+            // everything after it starts below the fold: what arrives is new
+            // content, so nothing already on screen moves.
+            <div aria-hidden className="min-h-[100svh]" />
+          ) : story ? (
+            <Blocks blocks={story.opening} first />
           ) : (
-            <Screenshot props={props} />
+            <>
+              <Prose paragraphs={[project.tagline]} />
+              <div className="mt-8">
+                <Screenshot props={props} />
+              </div>
+            </>
           )}
         </div>
 
@@ -267,20 +309,15 @@ export function VariantE(props: VariantProps) {
             {...revealOnScroll(reduceMotion)}
           >
             <Heading>{section.heading}</Heading>
-            <Prose paragraphs={section.body} />
-            <div className="mt-6">
-              <section.Demo />
-            </div>
+            <Blocks blocks={section.blocks} />
           </motion.section>
         ))}
 
-        {/* The end: the links once more, then the neighbours. */}
+        {/* The end: the neighbours, once the story is in. */}
+        {story === undefined ? null : (
         <footer className="mt-24 sm:mt-28">
           <div className="h-px bg-border/80" />
-          <div className="mt-6">
-            <Links project={project} />
-          </div>
-          <div className="mt-12 grid grid-cols-2 gap-6">
+          <div className="mt-8 grid grid-cols-2 gap-6">
             {previous ? (
               <Link className="group block" to={`/projects/${previous.slug}?v=e`}>
                 <span className="block text-[0.8125rem] text-muted-foreground">{t.previousProject}</span>
@@ -301,6 +338,7 @@ export function VariantE(props: VariantProps) {
             ) : null}
           </div>
         </footer>
+        )}
       </article>
     </div>
   );

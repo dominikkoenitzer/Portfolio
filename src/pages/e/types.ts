@@ -1,22 +1,36 @@
 import type { ComponentType } from "react";
 
-/** One section of a layout-e story: a claim, a few sentences, and a demo of it. */
+/**
+ * A real capture of the app, shown whole in the demo box. The files live in
+ * `public/projects/e/` as `<name>-<width>.avif|webp|jpg`, written by
+ * `scripts/gen-story-stills.ts` from the original capture.
+ */
+export type Still = {
+  name: string;
+  /** The night-theme capture, where the app has one. */
+  dark?: string;
+  /** The original capture's pixel size, which reserves the space. */
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+};
+
+/** One piece of a story: a paragraph, a live demo, or a still. */
+export type Block = string | { Demo: ComponentType } | { still: Still };
+
+/** One section of a story: a heading and whatever the text needs below it. */
 export type StorySection = {
   /** Stable anchor for the index. */
   id: string;
+  /** Also the section's entry in the index, word for word. */
   heading: string;
-  /** A short label for the index, when the heading is too long for it. */
-  index?: string;
-  /** At most three short sentences, as one or two paragraphs. */
-  body: string[];
-  Demo: ComponentType;
+  blocks: Block[];
 };
 
-/** A project told as a short essay with live demos (English in this preview). */
+/** A project told as an essay with live demos and stills (English in this preview). */
 export type Story = {
-  /** One or two sentences: what it is. */
-  intro: string[];
-  /** The app's key moment, right under the intro. */
-  Hero: ComponentType;
+  /** Before the first heading: what it is and why it matters. */
+  opening: Block[];
   sections: StorySection[];
 };

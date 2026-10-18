@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { type KeyboardEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { Action, Demo, Pills } from "../kit";
-import { useMotionSafe, useSeenOnce, wait } from "../motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { type KeyboardEvent, type ReactNode, useState } from "react";
+import { Action, BarText, Demo, Frame, Keycap, Pills } from "../kit";
+import { useMotionSafe } from "../motion";
 
 /*
  * Mochi, told through its key moments. The desktop uses the dark palette of
@@ -94,46 +94,133 @@ function tile(layout: Layout, n: number): Rect[] {
   }
 }
 
-/** The windows on the demo desktop: a few of his own apps and a terminal. */
+/** The windows on the demo desktop: a few of my own programs and a terminal. */
 const APPS = [
   { name: "Remnants", kind: "code" },
-  { name: "Jester", kind: "text" },
+  { name: "Jester", kind: "list" },
   { name: "Terminal", kind: "term" },
-  { name: "Inkling", kind: "text" },
-  { name: "Terminal", kind: "term" },
+  { name: "Inkling", kind: "notes" },
+  { name: "Spectrum", kind: "swatch" },
 ] as const;
+type App = (typeof APPS)[number];
 
-const LINES: Record<(typeof APPS)[number]["kind"], Array<[number, string]>> = {
-  code: [[38, "#cba6f7"], [62, "#89b4fa"], [48, "#a6e3a1"], [70, "#7f849c"], [30, "#f9e2af"], [55, "#89b4fa"]],
-  text: [[70, "#bac2de"], [86, "#7f849c"], [64, "#7f849c"], [78, "#7f849c"], [40, "#7f849c"]],
-  term: [[24, "#a6e3a1"], [56, "#7f849c"], [44, "#7f849c"], [62, "#7f849c"], [20, "#f5c2e7"]],
-};
+const C = { kw: "#cba6f7", fn: "#89b4fa", str: "#a6e3a1", num: "#fab387", dim: "#7f849c", text: "#cdd6f4", ok: "#a6e3a1" };
 
-/** One window: a title bar and a few lines that hint at what it shows. */
-function Window({ app, focused, dim = false }: { app: (typeof APPS)[number]; focused: boolean; dim?: boolean }) {
+/**
+ * What each window shows: a little real content, so a tile is recognisable at
+ * a glance. Lines that do not fit a tile wrap into a column outside it and
+ * are never cut in half.
+ */
+function Content({ kind }: { kind: App["kind"] }) {
+  const line = "w-full whitespace-nowrap";
+  switch (kind) {
+    case "code":
+      return (
+        <>
+          {[
+            [["fn ", C.kw], ["tile", C.fn], ["(n: usize) {", C.text]],
+            [["  let ", C.kw], ["half", C.text], [" = n / ", C.text], ["2", C.num], [";", C.text]],
+            [["  split(", C.text], ["half", C.text], [")", C.text]],
+            [["}", C.text]],
+            [["// every new window halves the rest", C.dim]],
+          ].map((parts, i) => (
+            <span className={`${line} font-mono`} key={i}>
+              <span style={{ color: C.dim }}>{i + 1} </span>
+              {parts.map(([t, c], j) => (
+                <span key={j} style={{ color: c }}>
+                  {t}
+                </span>
+              ))}
+            </span>
+          ))}
+        </>
+      );
+    case "list":
+      return (
+        <>
+          <span className={`${line} font-semibold`} style={{ color: C.text }}>
+            Groceries
+          </span>
+          {["oat milk", "rice", "lemons", "coffee"].map((t) => (
+            <span className={line} key={t} style={{ color: C.dim }}>
+              {t}
+            </span>
+          ))}
+        </>
+      );
+    case "term":
+      return (
+        <>
+          <span className={`${line} font-mono`} style={{ color: C.text }}>
+            <span style={{ color: C.ok }}>❯ </span>cargo test
+          </span>
+          <span className={`${line} font-mono`} style={{ color: C.dim }}>
+            Compiling mochi-core
+          </span>
+          <span className={`${line} font-mono`} style={{ color: C.ok }}>
+            test result: ok
+          </span>
+          <span className={`${line} font-mono`} style={{ color: C.ok }}>
+            ❯
+          </span>
+        </>
+      );
+    case "notes":
+      return (
+        <>
+          <span className={`${line} font-semibold`} style={{ color: C.text }}>
+            Biology, week 6
+          </span>
+          <span className={line} style={{ color: C.dim }}>
+            ☐ Read chapter 6
+          </span>
+          <span className={line} style={{ color: C.dim }}>
+            ☑ Lab report
+          </span>
+        </>
+      );
+    case "swatch":
+      return (
+        <>
+          <span className={`${line} flex gap-1 py-0.5`}>
+            {["#2596be", "#e2803f", "#a6e3a1", "#f5c2e7", "#f9e2af"].map((c) => (
+              <span className="h-3 w-3 shrink-0 rounded-[2px]" key={c} style={{ background: c }} />
+            ))}
+          </span>
+          <span className={`${line} font-mono`} style={{ color: C.text }}>
+            #2596be
+          </span>
+          <span className={line} style={{ color: C.dim }}>
+            a cool blue
+          </span>
+        </>
+      );
+  }
+}
+
+/** One window: the program's title bar with its caption buttons, and its content. */
+function Window({ app, focused }: { app: App; focused: boolean }) {
   return (
+    // A picture of a window, not text to read: the audit's type floor skips it.
     <div
-      className="flex h-full w-full flex-col overflow-hidden rounded-[5px] transition-[box-shadow,opacity] duration-200 ease-bloom"
-      style={{
-        background: DESK.window,
-        boxShadow: focused ? `0 0 0 2px ${DESK.pink}` : `0 0 0 1px ${DESK.line}`,
-        opacity: dim ? 0.55 : 1,
-      }}
+      aria-hidden
+      className="flex h-full w-full flex-col overflow-hidden rounded-[5px] transition-[box-shadow] duration-200 ease-bloom [container-type:inline-size]"
+      data-texture
+      style={{ background: DESK.window, boxShadow: focused ? `0 0 0 2px ${DESK.pink}` : `0 0 0 1px ${DESK.line}` }}
     >
-      <div className="flex h-[14px] shrink-0 items-center gap-1 px-1.5 sm:h-[18px]" style={{ background: DESK.bar }}>
-        <span className="truncate text-[0.5625rem] sm:text-[0.625rem]" style={{ color: focused ? DESK.text : DESK.muted }}>
+      <div className="flex h-5 shrink-0 items-center gap-1 pr-1 pl-2" style={{ background: DESK.bar }}>
+        <span className="min-w-0 overflow-hidden whitespace-nowrap text-[0.625rem]" style={{ color: focused ? DESK.text : DESK.muted }}>
           {app.name}
         </span>
-        <span className="ml-auto flex gap-[3px]">
-          {[0, 1, 2].map((i) => (
-            <span className="h-[3px] w-[5px] rounded-full" key={i} style={{ background: DESK.line }} />
-          ))}
+        {/* The caption buttons only where the title still fits beside them. */}
+        <span className="ml-auto hidden shrink-0 gap-1.5 text-[0.5625rem] leading-none @min-[120px]:flex" style={{ color: DESK.muted }}>
+          <span>–</span>
+          <span>□</span>
+          <span>×</span>
         </span>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col gap-[5px] overflow-hidden p-1.5 sm:gap-1.5 sm:p-2">
-        {LINES[app.kind].map(([w, c], i) => (
-          <span className="h-[3px] shrink-0 rounded-full sm:h-1" key={i} style={{ width: `${w}%`, background: c, opacity: 0.55 }} />
-        ))}
+      <div className="flex min-h-0 flex-1 flex-col flex-wrap content-start gap-x-4 gap-y-[3px] overflow-hidden px-2 py-1.5 text-[0.625rem] leading-[1.35]">
+        <Content kind={app.kind} />
       </div>
     </div>
   );
@@ -141,41 +228,26 @@ function Window({ app, focused, dim = false }: { app: (typeof APPS)[number]; foc
 
 /** Where windows sit before Mochi starts: floating, overlapping, on top of each other. */
 const FLOATING: Rect[] = [
-  { x: 0.06, y: 0.08, w: 0.52, h: 0.56 },
-  { x: 0.34, y: 0.2, w: 0.5, h: 0.52 },
-  { x: 0.18, y: 0.38, w: 0.46, h: 0.5 },
-  { x: 0.48, y: 0.06, w: 0.44, h: 0.46 },
-  { x: 0.4, y: 0.44, w: 0.5, h: 0.48 },
+  { x: 0.04, y: 0.06, w: 0.5, h: 0.58 },
+  { x: 0.36, y: 0.18, w: 0.5, h: 0.56 },
+  { x: 0.16, y: 0.38, w: 0.46, h: 0.56 },
+  { x: 0.5, y: 0.04, w: 0.46, h: 0.5 },
+  { x: 0.42, y: 0.42, w: 0.52, h: 0.52 },
 ];
 
 /** A window placed at a rectangle of the desktop, with Mochi's gap around it. */
-function Placed({
-  rect,
-  children,
-  index,
-  onClick,
-}: {
-  rect: Rect;
-  children: ReactNode;
-  index: number;
-  onClick?: () => void;
-}) {
+function Placed({ rect, children, index, onClick, id }: { rect: Rect; children: ReactNode; index: number; onClick?: () => void; id?: string }) {
   const { spring, fade } = useMotionSafe();
   return (
     <motion.div
       animate={{ opacity: 1, scale: 1 }}
-      className="absolute p-[3px] sm:p-1"
+      className="absolute p-1"
       exit={{ opacity: 0, scale: 0.96 }}
       initial={{ opacity: 0, scale: 0.96 }}
       layout
+      layoutId={id}
       onClick={onClick}
-      style={{
-        left: `${rect.x * 100}%`,
-        top: `${rect.y * 100}%`,
-        width: `${rect.w * 100}%`,
-        height: `${rect.h * 100}%`,
-        zIndex: index,
-      }}
+      style={{ left: `${rect.x * 100}%`, top: `${rect.y * 100}%`, width: `${rect.w * 100}%`, height: `${rect.h * 100}%`, zIndex: index }}
       transition={{ layout: spring, ...fade }}
     >
       {children}
@@ -206,106 +278,77 @@ function neighbour(rects: Rect[], from: number, key: string): number {
   return best;
 }
 
-/** The desktop surface every Mochi demo draws on. */
-function Desk({ children, label }: { children: ReactNode; label?: ReactNode }) {
+/** The desktop every Mochi demo draws on. Mochi itself draws nothing but borders. */
+function Desk({ children, className = "absolute inset-0" }: { children: ReactNode; className?: string }) {
   return (
-    <div className="absolute inset-3 flex flex-col overflow-hidden rounded-xl sm:inset-5" style={{ background: DESK.bg }}>
-      <div className="relative min-h-0 flex-1 m-2 sm:m-3">{children}</div>
-      {label ? (
-        <div className="flex h-10 shrink-0 items-center gap-2 px-3 text-[0.6875rem] sm:px-4" style={{ color: DESK.muted }}>
-          {label}
-        </div>
-      ) : null}
+    <div className={`overflow-hidden rounded-xl ring-1 ring-black/30 dark:ring-white/[0.12] ${className}`} style={{ background: DESK.bg }}>
+      <div className="absolute inset-2 sm:inset-3">{children}</div>
     </div>
-  );
-}
-
-function Key({ children }: { children: ReactNode }) {
-  return (
-    <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded border px-1 font-sans text-[0.625rem]" style={{ borderColor: DESK.line, color: DESK.text }}>
-      {children}
-    </kbd>
   );
 }
 
 /** The key moment: floating windows snap into tiles, and focus follows the keys. */
 export function TilingDemo() {
-  const [ref, seen] = useSeenOnce<HTMLDivElement>();
-  const { reduced } = useMotionSafe();
   const [tiled, setTiled] = useState(false);
   const [count, setCount] = useState(3);
   const [focus, setFocus] = useState(0);
-  const run = useRef(0);
   const rects = tiled ? tile("bsp", count) : FLOATING.slice(0, count);
-
-  useEffect(() => {
-    if (!seen || reduced) return;
-    const id = ++run.current;
-    void (async () => {
-      await wait(600);
-      if (run.current !== id) return;
-      setTiled(true);
-      await wait(1100);
-      if (run.current !== id) return;
-      setFocus(1);
-    })();
-  }, [seen, reduced]);
 
   const onKey = (event: KeyboardEvent) => {
     const key = event.key.toLowerCase();
     if (!tiled || !["h", "j", "k", "l", "arrowleft", "arrowright", "arrowup", "arrowdown"].includes(key)) return;
     event.preventDefault();
-    run.current++;
     setFocus((f) => neighbour(rects, f, key));
   };
 
+  const status = tiled ? `${count} windows tiled. ${APPS[focus]?.name} has the focus.` : "Three windows, floating where they opened.";
   return (
     <Demo
-      caption="Press Start, then H, J, K and L to move the pink focus. In Mochi those are Alt with the same letters."
-      height={380}
+      caption="Press Start, then move the pink focus with the arrow keys or by tapping a window. Mochi binds it to Alt with H, J, K and L."
+      height={360}
       label="Mochi tiling floating windows and moving focus between them"
-      live={tiled ? `${count} windows tiled. ${APPS[focus]?.name ?? ""} has focus.` : ""}
-      phoneHeight={340}
+      live={tiled ? status : ""}
+      phoneHeight={440}
     >
-      <div className="absolute inset-0" ref={ref}>
-        <Desk
-          label={
-            <>
-              <span className="hidden items-center gap-1 sm:inline-flex">
-                Focus <Key>H</Key>
-                <Key>J</Key>
-                <Key>K</Key>
-                <Key>L</Key>
-              </span>
-              <span className="ml-auto flex gap-1.5">
-                <Action dark disabled={!tiled || count >= 5} onClick={() => setCount((c) => Math.min(5, c + 1))}>
-                  Add window
-                </Action>
-                {tiled ? (
+      <Frame
+        bottom={
+          <>
+            <BarText>{status}</BarText>
+            {tiled ? (
+              <>
+                {count < APPS.length ? (
                   <Action
-                    dark
                     onClick={() => {
-                      run.current++;
-                      setTiled(false);
-                      setCount(3);
-                      setFocus(0);
+                      setFocus(count);
+                      setCount((c) => c + 1);
                     }}
                   >
-                    Reset
+                    Open a window
                   </Action>
-                ) : (
-                  <Action dark onClick={() => setTiled(true)} primary>
-                    Start
-                  </Action>
-                )}
-              </span>
-            </>
-          }
-        >
+                ) : null}
+                <Action
+                  onClick={() => {
+                    setTiled(false);
+                    setCount(3);
+                    setFocus(0);
+                  }}
+                >
+                  Reset
+                </Action>
+              </>
+            ) : (
+              <Action onClick={() => setTiled(true)} primary>
+                Start
+              </Action>
+            )}
+          </>
+        }
+      >
+        <Desk>
           {/* The desktop takes the keys while it has focus, like Mochi does. */}
           <div
-            aria-label="Desktop. Use H, J, K and L to move focus once the windows are tiled."
-            className="absolute inset-0 rounded-md outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:[outline-color:#f5c2e7]"
+            aria-label="Desktop. Once the windows are tiled, the arrow keys or H, J, K and L move the focus."
+            className="absolute inset-0 rounded-md"
             onKeyDown={onKey}
             role="application"
             tabIndex={0}
@@ -319,7 +362,7 @@ export function TilingDemo() {
             </AnimatePresence>
           </div>
         </Desk>
-      </div>
+      </Frame>
     </Demo>
   );
 }
@@ -336,141 +379,102 @@ const LAYOUTS: Array<{ value: Layout; label: string }> = [
 
 /** Seven layouts, the same four windows. */
 export function LayoutsDemo() {
-  const [ref, seen] = useSeenOnce<HTMLDivElement>();
-  const { reduced } = useMotionSafe();
   const [layout, setLayout] = useState<Layout>("bsp");
-  const run = useRef(0);
-
-  useEffect(() => {
-    if (!seen || reduced) return;
-    const id = ++run.current;
-    void (async () => {
-      for (const next of ["columns", "grid", "vstack", "bsp"] as Layout[]) {
-        await wait(1000);
-        if (run.current !== id) return;
-        setLayout(next);
-      }
-    })();
-  }, [seen, reduced]);
-
-  const pick = useCallback((next: Layout) => {
-    run.current++;
-    setLayout(next);
-  }, []);
-
   return (
     <Demo
-      caption="Pick a layout and the same four windows re-tile. In Mochi, Alt+Shift+V cycles through them."
-      height={380}
+      caption="Pick a layout. The windows keep their order and the focus stays on Remnants through every change."
+      height={360}
       label="Mochi's seven layouts applied to four windows"
       live={`${LAYOUTS.find((l) => l.value === layout)?.label} layout.`}
-      phoneHeight={420}
+      phoneHeight={480}
     >
-      <div className="absolute inset-0 flex flex-col" ref={ref}>
-        <div className="px-4 pt-4 sm:px-5 sm:pt-4">
-          <Pills label="Layout" onChange={pick} options={LAYOUTS} value={layout} />
-        </div>
-        <div className="relative min-h-0 flex-1">
-          <div className="absolute inset-3 rounded-xl sm:inset-x-5 sm:top-3 sm:bottom-5" style={{ background: DESK.bg }}>
-            <div className="absolute inset-2 sm:inset-3">
-              {tile(layout, 4).map((rect, i) => (
-                <Placed index={1} key={`l${i}`} rect={rect}>
-                  <Window app={APPS[i]} focused={i === 0} />
-                </Placed>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Frame top={<Pills<Layout> label="Layout" onChange={setLayout} options={LAYOUTS} value={layout} />}>
+        <Desk>
+          {tile(layout, 4).map((rect, i) => (
+            <Placed index={1} key={`l${i}`} rect={rect}>
+              <Window app={APPS[i]} focused={i === 0} />
+            </Placed>
+          ))}
+        </Desk>
+      </Frame>
     </Demo>
   );
 }
 
+/** Where the two hidden windows land when Mochi lets them go: plain floating windows. */
+const RETURNED: Rect[] = [
+  { x: 0.3, y: 0.08, w: 0.44, h: 0.62 },
+  { x: 0.46, y: 0.3, w: 0.44, h: 0.62 },
+];
+
 /** Stop Mochi and every window it was hiding comes back. */
 export function StopDemo() {
-  const [ref, seen] = useSeenOnce<HTMLDivElement>();
-  const { reduced, fade } = useMotionSafe();
+  const { spring, reduced } = useMotionSafe();
   const [stopped, setStopped] = useState(false);
-  const played = useRef(false);
-
-  useEffect(() => {
-    if (!seen || played.current || reduced) return;
-    played.current = true;
-    const t = window.setTimeout(() => setStopped(true), 1200);
-    return () => window.clearTimeout(t);
-  }, [seen, reduced]);
-
   const shown = tile("bsp", 2);
-  const hidden: Rect[] = [
-    { x: 0.14, y: 0.12, w: 0.5, h: 0.6 },
-    { x: 0.4, y: 0.3, w: 0.5, h: 0.6 },
-  ];
+  const status = stopped ? "Four windows on screen, none of them tiled." : "Two windows tiled, two off screen on another workspace.";
 
   return (
     <Demo
-      caption="Workspace 2 holds two hidden windows. Stop Mochi and they come back, with the borders gone."
-      height={330}
+      caption="Press Stop Mochi and follow the two windows from off screen."
+      height={360}
       label="Mochi stopping and bringing back every window it was hiding"
-      live={stopped ? "Mochi stopped. All four windows are back." : "Mochi is tiling workspace 1. Two windows are hidden on workspace 2."}
-      phoneHeight={320}
+      live={stopped ? status : ""}
+      phoneHeight={440}
     >
-      <div className="absolute inset-0" ref={ref}>
-        <Desk
-          label={
-            <>
-              <span className="flex items-center gap-1">
-                {[1, 2].map((n) => (
-                  <span
-                    className="inline-flex h-5 w-5 items-center justify-center rounded text-[0.625rem] transition-colors duration-200"
-                    key={n}
-                    style={{
-                      background: !stopped && n === 1 ? "rgb(245 194 231 / 0.18)" : "transparent",
-                      color: stopped ? DESK.line : n === 1 ? DESK.pink : DESK.muted,
-                    }}
-                  >
-                    {n}
-                  </span>
-                ))}
-              </span>
-              <span className="hidden sm:inline">{stopped ? "Mochi stopped" : "Tiling workspace 1"}</span>
-              <span className="ml-auto">
-                {stopped ? (
-                  <Action dark onClick={() => setStopped(false)}>
-                    Start again
-                  </Action>
-                ) : (
-                  <Action dark onClick={() => setStopped(true)} primary>
-                    Stop Mochi
-                  </Action>
-                )}
-              </span>
-            </>
-          }
-        >
-          {shown.map((rect, i) => (
-            <Placed index={2} key={`s${i}`} rect={stopped ? { ...rect, x: rect.x + 0.02, y: rect.y + 0.03, w: rect.w - 0.04, h: rect.h - 0.06 } : rect}>
-              <Window app={APPS[i]} focused={!stopped && i === 0} />
-            </Placed>
-          ))}
-          <AnimatePresence>
-            {stopped
-              ? hidden.map((rect, i) => (
-                  <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute p-[3px] sm:p-1"
-                    exit={{ opacity: 0 }}
-                    initial={{ opacity: 0, y: 8 }}
-                    key={`h${i}`}
-                    style={{ left: `${rect.x * 100}%`, top: `${rect.y * 100}%`, width: `${rect.w * 100}%`, height: `${rect.h * 100}%`, zIndex: 3 + i }}
-                    transition={{ ...fade, delay: reduced ? 0 : 0.12 + i * 0.08 }}
-                  >
-                    <Window app={APPS[i + 2]} focused={false} />
+      <Frame
+        bottom={
+          <>
+            <BarText>{status}</BarText>
+            <span className="hidden items-center gap-1 sm:inline-flex">
+              <Keycap>Alt</Keycap>
+              <Keycap>Shift</Keycap>
+              <Keycap>E</Keycap>
+            </span>
+            <Action onClick={() => setStopped((s) => !s)} primary={!stopped}>
+              {stopped ? "Start Mochi" : "Stop Mochi"}
+            </Action>
+          </>
+        }
+      >
+        <LayoutGroup>
+          <div className="absolute inset-0 flex flex-col gap-3">
+            <Desk className="relative min-h-0 flex-1">
+              {shown.map((rect, i) => (
+                <Placed index={1} key={`s${i}`} rect={rect}>
+                  <Window app={APPS[i]} focused={!stopped && i === 0} />
+                </Placed>
+              ))}
+              {stopped
+                ? RETURNED.map((rect, i) => (
+                    <motion.div
+                      className="absolute p-1"
+                      key={`h${i}`}
+                      layoutId={`mochi-hidden-${i}`}
+                      style={{ left: `${rect.x * 100}%`, top: `${rect.y * 100}%`, width: `${rect.w * 100}%`, height: `${rect.h * 100}%`, zIndex: 2 + i }}
+                      transition={{ ...spring, delay: reduced ? 0 : i * 0.08 }}
+                    >
+                      <Window app={APPS[i + 2]} focused={false} />
+                    </motion.div>
+                  ))
+                : null}
+            </Desk>
+            {/* Off the screen: where Mochi keeps another workspace's windows. Not part of Mochi's look. */}
+            <div className="flex h-16 shrink-0 items-center gap-3 rounded-xl border border-border/80 border-dashed px-3">
+              <span className="shrink-0 text-[0.75rem] text-muted-foreground leading-snug sm:w-[5.5rem]">Off screen</span>
+              {stopped ? (
+                <span className="text-[0.75rem] text-muted-foreground">Nothing left here.</span>
+              ) : (
+                APPS.slice(2, 4).map((app, i) => (
+                  <motion.div className="h-12 w-24 shrink-0 sm:w-28" key={app.name} layoutId={`mochi-hidden-${i}`} transition={spring}>
+                    <Window app={app} focused={false} />
                   </motion.div>
                 ))
-              : null}
-          </AnimatePresence>
-        </Desk>
-      </div>
+              )}
+            </div>
+          </div>
+        </LayoutGroup>
+      </Frame>
     </Demo>
   );
 }
