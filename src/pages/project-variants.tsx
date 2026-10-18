@@ -18,6 +18,7 @@ import { revealOnScroll } from "@/lib/framer-animations";
 import type { ProjectVariant } from "@/lib/project-variant";
 import { useLanguage } from "@/lib/language-context";
 import { VariantD } from "./project-variant-d";
+import { VariantE } from "./project-variant-e";
 import { translations } from "@/lib/translations";
 
 /**
@@ -412,5 +413,6 @@ export function ProjectVariantView(props: VariantProps) {
   if (props.variant === "a") return <VariantA {...props} />;
   if (props.variant === "b") return <VariantB {...props} />;
   if (props.variant === "d") return <VariantD {...props} />;
+  if (props.variant === "e") return <VariantE {...props} />;
   return <VariantC {...props} />;
 }
