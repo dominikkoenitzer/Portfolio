@@ -197,7 +197,7 @@ const fetchTestCount = (project: string) => {
  * About page's widget, and pulling it into this chunk for one number would
  * be the wrong trade.
  */
-function LiveTestCount({
+export function LiveTestCount({
   project,
   fallback,
 }: {
