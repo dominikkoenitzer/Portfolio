@@ -13,6 +13,7 @@ import {
 import { revealOnScroll } from "@/lib/framer-animations";
 import type { ProjectVariant } from "@/lib/project-variant";
 import { useLanguage } from "@/lib/language-context";
+import { VariantD } from "./project-variant-d";
 import { translations } from "@/lib/translations";
 
 /**
@@ -30,7 +31,7 @@ export type VariantProps = {
   captionFor: (position: number) => string | undefined;
   altFor: (position: number) => string;
   openLabelFor: (position: number) => string;
-  open: (position: number) => void;
+  open: (position: number, grow?: boolean) => void;
   next: PortfolioProject[];
 };
 
@@ -406,5 +407,6 @@ function VariantC(props: VariantProps) {
 export function ProjectVariantView(props: VariantProps) {
   if (props.variant === "a") return <VariantA {...props} />;
   if (props.variant === "b") return <VariantB {...props} />;
+  if (props.variant === "d") return <VariantD {...props} />;
   return <VariantC {...props} />;
 }
