@@ -180,7 +180,7 @@ export const en = {
     showImage: "Show image {index}",
     breadcrumb: "Breadcrumb",
     platform: "Platform",
-    inDepth: "In depth",
+    nextProject: "Next project",
   },
   services: {
     eyebrow: "What I offer",
