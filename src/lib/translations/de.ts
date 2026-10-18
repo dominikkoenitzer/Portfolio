@@ -181,6 +181,7 @@ export const de = {
     showImage: "Bild {index} anzeigen",
     breadcrumb: "Brotkrümelnavigation",
     platform: "Plattform",
+    inDepth: "Im Detail",
   },
   services: {
     eyebrow: "Was ich anbiete",

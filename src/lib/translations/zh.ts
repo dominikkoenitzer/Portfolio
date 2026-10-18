@@ -178,6 +178,7 @@ export const zh = {
     showImage: "显示第 {index} 张",
     breadcrumb: "面包屑导航",
     platform: "平台",
+    inDepth: "深入细节",
   },
   services: {
     eyebrow: "我提供",
