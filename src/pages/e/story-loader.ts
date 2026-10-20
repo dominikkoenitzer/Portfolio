@@ -43,13 +43,3 @@ export function prefetchStoryFor(path: string): void {
   const slug = /^\/projects\/([^/?#]+)/.exec(path)?.[1];
   if (slug) void loadStory(slug);
 }
-
-/**
- * The height of each story's first demo box, from `sm` and on a phone, so the
- * placeholder holds exactly its place while the story is still on its way.
- */
-export const FIRST_VISUAL: Record<string, [number, number]> = {
-  oxidize: [440, 420],
-  mochi: [360, 440],
-  daifuku: [440, 420],
-};
