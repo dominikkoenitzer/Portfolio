@@ -50,6 +50,8 @@ import {
   notFoundHead,
   notFoundTitle,
   setMeta,
+  UNLISTED_ROUTES,
+  unlistedHead,
 } from "./head-meta";
 
 const DIST = join(process.cwd(), "dist");
@@ -205,7 +207,10 @@ const routerSrc = await readFile(
   join(process.cwd(), "src", "components", "AnimatedRoutes.tsx"),
   "utf8",
 );
-const covered = new Set(pages.map((p) => p.route));
+const covered = new Set([
+  ...pages.map((p) => p.route),
+  ...Object.keys(UNLISTED_ROUTES),
+]);
 const uncovered = [...routerSrc.matchAll(/path="([^"]+)"/g)]
   .map((m) => m[1])
   .filter((p) => p !== "*" && !p.includes(":") && !covered.has(p));
@@ -399,5 +404,18 @@ const notFound = withNoscript(
   NOT_FOUND_DESCRIPTION,
 );
 await writeFile(join(DIST, "404.html"), notFound);
+
+// The unlisted pages get a file of their own, so they answer 200 rather than
+// booting from 404.html, with the same noindex head the 404 page carries.
+for (const [route, page] of Object.entries(UNLISTED_ROUTES)) {
+  const title = `${page.title} | ${SITE_CONFIG.name}`;
+  const out = join(DIST, route.slice(1), "index.html");
+  await mkdir(dirname(out), { recursive: true });
+  await writeFile(
+    out,
+    withNoscript(unlistedHead(shell, title, page.description), title, page.description),
+  );
+  written++;
+}
 
 console.log(`prerender: wrote ${written} route documents and 404.html into dist/`);

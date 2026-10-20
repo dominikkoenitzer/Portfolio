@@ -9,9 +9,13 @@
  *   - STATIC_DOCS, the indexable public/ files that are not app routes
  * versus the <loc> entries actually present in public/sitemap.xml.
  *
+ * Routes in UNLISTED_ROUTES are kept out of search on purpose and are
+ * expected to be absent.
+ *
  * Pure file parsing (no app imports) so it runs under bun with no alias setup.
  */
 import { existsSync, readFileSync } from "node:fs";
+import { UNLISTED_ROUTES } from "./head-meta";
 
 const BASE = "https://dk.punds.ch";
 
@@ -41,7 +45,7 @@ const norm = (p: string): string => (p === "/" ? "/" : p.replace(/\/$/, ""));
 const routesSrc = readFileSync("src/components/AnimatedRoutes.tsx", "utf8");
 const staticRoutes = [...routesSrc.matchAll(/path="([^"]+)"/g)]
   .map((m) => m[1])
-  .filter((p) => p !== "*" && !p.includes(":"));
+  .filter((p) => p !== "*" && !p.includes(":") && !(p in UNLISTED_ROUTES));
 
 const projectsSrc = readFileSync("src/constants/projects/index.ts", "utf8");
 const slugs = [...projectsSrc.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);

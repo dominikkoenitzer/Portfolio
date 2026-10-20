@@ -20,6 +20,12 @@ import "@fontsource/klee-one/latin-600.css";
 import "@fontsource/m-plus-1-code/latin-400.css";
 import "./index.css";
 
+// The diagnostic page reports the errors a visit ran into, so on that one path
+// the recorder is armed before the app starts. Everywhere else nothing loads.
+if (location.pathname.replace(/\/+$/, "") === "/diag") {
+  void import("./vendor/diag/index.js").then((diag) => diag.installDiag());
+}
+
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <App />
