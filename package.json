@@ -26,6 +26,7 @@
     "test": "vitest run",
     "check:sitemap": "bun scripts/check-sitemap.ts",
     "check:jsonld": "bun scripts/validate-jsonld.ts",
+    "check:diag": "node scripts/sync-diag.mjs --check",
     "serve:dist": "node scripts/serve-dist.mjs",
     "test:e2e": "playwright test",
     "preview": "vite preview --port 1000"
