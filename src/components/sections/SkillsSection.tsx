@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { countProjectsBySkill } from "@/constants/projects/stacks";
 import {
   SKILL_CATEGORIES,
@@ -204,12 +205,17 @@ export function SkillsSection() {
           landed: 0.172 of layout shift on a throttled first visit, all of it
           after the page looked finished. Reserving the height first costs
           nothing and the shift goes to zero. */}
+      {/* The boundary wraps the box too: when the three.js chunk never
+          arrives, the reserved height goes with it instead of leaving an
+          empty 560px gap above the cards. */}
       {showSphere ? (
-        <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
-          <Suspense fallback={null}>
-            <SkillSphere />
-          </Suspense>
-        </div>
+        <ErrorBoundary fallback={null}>
+          <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
+            <Suspense fallback={null}>
+              <SkillSphere />
+            </Suspense>
+          </div>
+        </ErrorBoundary>
       ) : null}
 
       {/* No `items-start`: the row stretches, so two cards side by side share
