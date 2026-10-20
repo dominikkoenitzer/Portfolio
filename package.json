@@ -26,6 +26,7 @@
     "test": "vitest run",
     "check:sitemap": "bun scripts/check-sitemap.ts",
     "check:jsonld": "bun scripts/validate-jsonld.ts",
+    "serve:dist": "node scripts/serve-dist.mjs",
     "preview": "vite preview --port 1000"
   },
   "dependencies": {
