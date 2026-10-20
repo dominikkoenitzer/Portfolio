@@ -1,0 +1,19 @@
+/* The face Time draws its clock in, cut to the capitals, the digits and the
+   signs the face uses. Licence: public/projects/e/time-mono-licence.txt.
+   Loaded only with the Time demos. */
+@font-face {
+  font-family: "Time Mono";
+  src: url("/projects/e/time-mono.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The site sets its reading face on every text element with !important in the
+   base layer, so the clock face has to claim its own there, by class. */
+@layer base {
+  .time-face,
+  .time-face * {
+    font-family: "Time Mono", ui-monospace, monospace !important;
+  }
+}
