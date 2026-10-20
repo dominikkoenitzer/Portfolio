@@ -34,6 +34,7 @@ import {
   type OfferCategoryKey,
   ServiceOffers,
 } from "@/components/effects/service-offers";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
@@ -433,18 +434,23 @@ export function ServicesSection() {
             className="relative w-full"
             style={{ height: "clamp(560px, 70vh, 760px)" }}
           >
-            <Suspense fallback={null}>
-              <ServiceExplorer
-                activeCategory={active}
-                key={designTheme}
-                designTheme={designTheme}
-                nodes={explorerNodes}
-                onError={handleError}
-                onReady={handleReady}
-                onSelect={handleSelect}
-                selectedKey={selectedKey}
-              />
-            </Suspense>
+            {/* The tree reports its own WebGL failures through `onError`; the
+                boundary catches the rest (a chunk that never arrives, a throw
+                while rendering) and takes the same way out to the plain page. */}
+            <ErrorBoundary fallback={null} onError={handleError}>
+              <Suspense fallback={null}>
+                <ServiceExplorer
+                  activeCategory={active}
+                  key={designTheme}
+                  designTheme={designTheme}
+                  nodes={explorerNodes}
+                  onError={handleError}
+                  onReady={handleReady}
+                  onSelect={handleSelect}
+                  selectedKey={selectedKey}
+                />
+              </Suspense>
+            </ErrorBoundary>
 
             {/* Eyebrow, title and the category filter, overlaid top-centre.
                 Same eyebrow and title classes as SectionHeading, so this
