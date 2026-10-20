@@ -65,7 +65,11 @@ export function PageLayout({ children }: PageLayoutProps) {
           </Suspense>
         </ErrorBoundary>
       )}
-      <CustomCursor />
+      {/* The stylesheet hides the native cursor on every mouse device, so a
+          cursor that throws must give it back, not leave the page with none. */}
+      <ErrorBoundary fallback={<NativeCursor />}>
+        <CustomCursor />
+      </ErrorBoundary>
 
       <Navbar />
 
@@ -85,4 +89,9 @@ export function PageLayout({ children }: PageLayoutProps) {
       <ScrollToTopFab />
     </LanguageProvider>
   );
+}
+
+/** Undoes the stylesheet's `cursor: none` for the whole page. */
+function NativeCursor() {
+  return <style>{"*,*::before,*::after{cursor:auto!important}"}</style>;
 }
