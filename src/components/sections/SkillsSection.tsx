@@ -61,7 +61,8 @@ const CHIP_BODY =
 /**
  * A skill some project is built with links to those projects, and says how
  * many there are. The count sits on the same token surface as the category
- * count, so the page has one way of showing a number.
+ * count, so the page has one way of showing a number. The spoken name starts
+ * with the words on the chip, so a voice command that reads them finds it.
  */
 function ProjectChip({
   icon,
@@ -80,7 +81,7 @@ function ProjectChip({
   return (
     <motion.span className="inline-flex" variants={REVEAL}>
       <Link
-        aria-label={countLabel}
+        aria-label={`${label}: ${countLabel}`}
         className={`${CHIP_BODY} focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
         title={countLabel}
         to={`/projects?tech=${encodeURIComponent(name)}`}
@@ -91,7 +92,7 @@ function ProjectChip({
         >
           {icon}
         </span>
-        <span className="font-medium text-foreground/85">{label}</span>
+        <span className="font-medium text-foreground/85">{label}</span>{" "}
         <span
           aria-hidden="true"
           className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-border/60 px-1 text-[11px] text-muted-foreground tabular-nums"
