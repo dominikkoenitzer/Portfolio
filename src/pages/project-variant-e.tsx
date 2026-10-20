@@ -1,22 +1,24 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Lock } from "lucide-react";
 import { useLenis } from "lenis/react";
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ProjectTechLoop } from "@/components/effects/tech-stack";
 import { PrivateSource } from "@/components/sections/PrivateSource";
 import { getProjects } from "@/constants/projects";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
-import { Demo, StillFigure } from "./e/kit";
-import { FIRST_VISUAL, hasStory, loadStory, storyNow } from "./e/story-loader";
+import { CodePane, Figures, HeroPicture, PairFigure, Points, StillFigure } from "./e/kit";
+import { hasStory, loadStory, storyNow } from "./e/story-loader";
 import type { Block, Story } from "./e/types";
 import type { VariantProps } from "./project-variants";
 
 /**
- * Layout e of the project page (SPEC-e.md, 18.10.): a short, typography-led
- * essay in one 640px column, with live demos of the app's key moments in one
- * kind of box, and a quiet sticky index on wide screens.
+ * Layout e of the project page: a short, typography-led essay in one 640px
+ * column under a wide picture of the real app. Each section shows its point
+ * in the form that suits it (a live demo, a still, two stills, figures, code
+ * or a short list), and a quiet sticky index runs beside it on wide screens.
  */
 
 /** The project's story: at once if it has arrived, undefined while it loads, null if it has none. */
@@ -70,7 +72,7 @@ function useActive(ids: string[]) {
 const LINK =
   "inline-flex items-center gap-1 text-[0.875rem] text-foreground/80 underline decoration-border underline-offset-[5px] transition-colors duration-200 ease-bloom hover:text-foreground hover:decoration-foreground/40";
 
-/** The project's links, as quiet text: open or install it, its page, its source. */
+/** The project's links, as quiet text: open or install it, its source. */
 function Links({ project }: { project: VariantProps["project"] }) {
   const t = translations[useLanguage().language].projectDetails;
   const items: ReactNode[] = [];
@@ -111,34 +113,17 @@ function Links({ project }: { project: VariantProps["project"] }) {
 function Heading({ children }: { children: ReactNode }) {
   return (
     <h2 className="m-0 flex items-center gap-3 font-semibold text-[1rem] leading-[1.625] tracking-[-0.005em]">
-      <span className="shrink-0">{children}</span>
-      <span aria-hidden className="h-px flex-1 bg-border/80" />
+      <span className="shrink-0 text-balance">{children}</span>
+      <span aria-hidden className="h-px min-w-6 flex-1 bg-border/80" />
     </h2>
   );
 }
 
-function Prose({ paragraphs }: { paragraphs: string[] }) {
-  return (
-    <div className="mt-4 space-y-4">
-      {paragraphs.map((p) => (
-        <p className="m-0 text-[1rem] text-foreground/85 leading-[1.625]" key={p}>
-          {p}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-/**
- * A story's blocks in reading order. Paragraphs sit 16px apart; a demo or a
- * still gets 32px of air on both sides, so the column breathes around it.
- */
-/** The shape of a story's opening: two paragraphs of text, then the first demo's box. */
-function Placeholder({ slug }: { slug: string }) {
-  const [desk, phone] = FIRST_VISUAL[slug] ?? [360, 440];
+/** The shape of what comes first while the story is still on its way: a wide picture, then two paragraphs. */
+function Placeholder() {
   const line = "h-[0.9rem] rounded-full bg-foreground/[0.06]";
   return (
-    <div aria-hidden>
+    <div aria-hidden className="mx-auto max-w-[640px] xl:mx-0">
       {[0, 1].map((p) => (
         <div className={`${p ? "mt-4" : ""} flex flex-col gap-[0.85rem] py-[0.45rem]`} key={p}>
           {[100, 97, 99, 62].map((w, i) => (
@@ -146,22 +131,21 @@ function Placeholder({ slug }: { slug: string }) {
           ))}
         </div>
       ))}
-      <div
-        className="mt-8 h-[var(--ph)] rounded-2xl bg-card ring-1 ring-black/[0.06] sm:h-[var(--dh)] dark:ring-white/[0.08]"
-        style={{ "--dh": `${desk}px`, "--ph": `${phone}px` } as CSSProperties}
-      />
     </div>
   );
 }
 
-function Blocks({ blocks, first = false }: { blocks: Block[]; first?: boolean }) {
-  // Only the opening's first picture or demo loads eagerly.
-  const eagerAt = first ? blocks.findIndex((b) => typeof b !== "string") : -1;
+/** Air above a block: paragraphs sit 16px apart, everything else gets 32px on both sides. */
+function gapFor(block: Block, prev: Block | undefined): string {
+  if (prev === undefined) return "";
+  return typeof block === "string" && typeof prev === "string" ? "mt-4" : "mt-8";
+}
+
+function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <div className="mt-4">
       {blocks.map((block, i) => {
-        const prev = blocks[i - 1];
-        const gap = i === 0 ? "" : typeof block === "string" && typeof prev === "string" ? "mt-4" : "mt-8";
+        const gap = gapFor(block, blocks[i - 1]);
         if (typeof block === "string") {
           return (
             <p className={`m-0 text-[1rem] text-foreground/85 leading-[1.625] ${gap}`} key={block}>
@@ -169,17 +153,45 @@ function Blocks({ blocks, first = false }: { blocks: Block[]; first?: boolean })
             </p>
           );
         }
-        const eager = i === eagerAt;
+        const key = `block-${i}`;
         if ("Demo" in block) {
           return (
-            <div className={gap} key={`demo-${i}`}>
+            <div className={gap} key={key}>
               <block.Demo />
             </div>
           );
         }
+        if ("still" in block) {
+          return (
+            <div className={gap} key={key}>
+              <StillFigure still={block.still} />
+            </div>
+          );
+        }
+        if ("pair" in block) {
+          return (
+            <div className={gap} key={key}>
+              <PairFigure caption={block.caption} stills={block.pair} />
+            </div>
+          );
+        }
+        if ("figures" in block) {
+          return (
+            <div className={gap} key={key}>
+              <Figures items={block.figures} />
+            </div>
+          );
+        }
+        if ("code" in block) {
+          return (
+            <div className={gap} key={key}>
+              <CodePane code={block.code} />
+            </div>
+          );
+        }
         return (
-          <div className={gap} key={block.still.name}>
-            <StillFigure eager={eager} still={block.still} />
+          <div className={gap} key={key}>
+            <Points items={block.points} />
           </div>
         );
       })}
@@ -187,24 +199,8 @@ function Blocks({ blocks, first = false }: { blocks: Block[]; first?: boolean })
   );
 }
 
-/** For a project without a story yet: its real screenshot, whole, in the demo box. */
-function Screenshot({ props }: { props: VariantProps }) {
-  const src = props.pictures[0];
-  if (!src) return null;
-  return (
-    <Demo caption={props.captionFor(0) ?? ""} height={380} label={props.altFor(0)} phoneHeight={240}>
-      <div className="absolute inset-3 flex items-center justify-center sm:inset-5">
-        <img
-          alt={props.altFor(0)}
-          className="max-h-full max-w-full rounded-lg object-contain shadow-[0_1px_2px_rgb(0_0_0/0.08),0_20px_40px_-24px_rgb(0_0_0/0.4)]"
-          decoding="async"
-          fetchPriority="high"
-          src={src}
-        />
-      </div>
-    </Demo>
-  );
-}
+/** Two columns on wide screens: the index rail, then the text column. */
+const TWO_COLUMNS = "xl:grid xl:grid-cols-[168px_640px] xl:gap-x-28";
 
 export function VariantE(props: VariantProps) {
   const { project } = props;
@@ -233,52 +229,16 @@ export function VariantE(props: VariantProps) {
     else window.scrollTo({ top });
   };
 
+  // Without a story the page still stands: the tagline as its lead and the
+  // main screenshot as its picture.
+  const lead = story ? story.lead : story === null ? project.tagline : null;
+  const hero = story?.hero ?? null;
+  const fallbackHero = story === null && props.pictures[0] ? props.pictures[0] : null;
 
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-6 pt-4 pb-32 sm:px-8 xl:grid xl:grid-cols-[168px_640px] xl:justify-center xl:gap-x-28 xl:px-0">
-      {/* The index: quiet, sticky, only where there is room for it. */}
-      <aside className="hidden xl:block">
-        <nav aria-label={t.onThisPage} className="sticky top-28 pt-[4.25rem]">
-          <Link
-            className="inline-flex items-center gap-1.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-foreground"
-            to="/projects"
-          >
-            <span aria-hidden>&larr;</span> {t.projects}
-          </Link>
-          {sections.length ? (
-            <ol className="mt-8 list-none space-y-2.5 p-0">
-              {[{ id: "e-top", label: t.overview }, ...sections.map((s) => ({ id: `e-${s.id}`, label: s.heading }))].map((entry) => {
-                const current = entry.id === active;
-                return (
-                  <li className="relative" key={entry.id}>
-                    {current ? (
-                      <motion.span
-                        aria-hidden
-                        className="absolute top-[0.45em] -left-3.5 h-[0.8em] w-0.5 rounded-full bg-primary"
-                        layoutId="e-index-tick"
-                        transition={{ type: "spring", stiffness: 420, damping: 40 }}
-                      />
-                    ) : null}
-                    <button
-                      aria-current={current ? "location" : undefined}
-                      className={`text-balance text-left text-[0.8125rem] leading-snug transition-colors duration-200 ease-bloom hover:text-foreground ${
-                        current ? "text-foreground" : "text-muted-foreground"
-                      }`}
-                      onClick={() => jump(entry.id)}
-                      type="button"
-                    >
-                      {entry.label}
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          ) : null}
-        </nav>
-      </aside>
-
-      <article className="mx-auto w-full max-w-[640px] xl:mx-0">
-        <nav aria-label={t.breadcrumb} className="xl:hidden">
+    <div className="mx-auto w-full max-w-[968px] px-6 pt-4 pb-32 sm:px-8 xl:max-w-[920px] xl:px-0">
+      <div className={TWO_COLUMNS}>
+        <nav aria-label={t.breadcrumb} className="xl:pt-[0.7rem]">
           <Link
             className="inline-flex items-center gap-1.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-foreground"
             to="/projects"
@@ -287,75 +247,126 @@ export function VariantE(props: VariantProps) {
           </Link>
         </nav>
 
-        <header className="mt-10 scroll-mt-28 xl:mt-16" id="e-top">
-          <h1 className="title-serif m-0 ml-[-0.04em] font-bold text-[2.25rem] leading-[1.1] tracking-[-0.01em]">
+        <header className="mx-auto mt-10 w-full max-w-[640px] scroll-mt-28 xl:mx-0 xl:mt-0" id="e-top">
+          <h1 className="title-serif m-0 ml-[-0.04em] font-bold text-[2.25rem] leading-[1.1] tracking-[-0.01em] sm:text-[2.5rem]">
             {project.title}
           </h1>
-          {meta.length ? (
-            <p className="m-0 mt-2 text-[0.875rem] text-muted-foreground">{meta.join(" · ")}</p>
-          ) : null}
+          {meta.length ? <p className="m-0 mt-2 text-[0.875rem] text-muted-foreground">{meta.join(" · ")}</p> : null}
+          {lead ? (
+            <p className="m-0 mt-5 text-pretty text-[1.1875rem] text-foreground/90 leading-[1.5] tracking-[-0.008em]">
+              {lead}
+            </p>
+          ) : (
+            <span aria-hidden className="mt-5 block h-[1.1rem] w-4/5 rounded-full bg-foreground/[0.06]" />
+          )}
           <div className="mt-5">
             <Links project={project} />
           </div>
         </header>
+      </div>
 
-        <div className="mt-8">
-          {story === undefined ? (
-            // Rarely seen: the story downloads beside the page's own code. If it
-            // is still on its way, this holds the shape of what comes first, two
-            // paragraphs and the first demo, so it arrives in place.
-            <Placeholder slug={project.slug} />
-          ) : story ? (
-            <Blocks blocks={story.opening} first />
-          ) : (
-            <>
-              <Prose paragraphs={[project.tagline]} />
-              <div className="mt-8">
-                <Screenshot props={props} />
-              </div>
-            </>
-          )}
-        </div>
-
-        {sections.map((section) => (
-          <motion.section
-            className="mt-16 scroll-mt-28 sm:mt-24"
-            id={`e-${section.id}`}
-            key={section.id}
-            {...revealOnScroll(reduceMotion)}
-          >
-            <Heading>{section.heading}</Heading>
-            <Blocks blocks={section.blocks} />
-          </motion.section>
-        ))}
-
-        {/* The end: the neighbours, once the story is in. */}
-        {story === undefined ? null : (
-        <footer className="mt-24 sm:mt-28">
-          <div className="h-px bg-border/80" />
-          <div className="mt-8 grid grid-cols-2 gap-6">
-            {previous ? (
-              <Link className="group block" to={`/projects/${previous.slug}?v=e`}>
-                <span className="block text-[0.8125rem] text-muted-foreground">{t.previousProject}</span>
-                <span className="mt-0.5 block text-[0.9375rem] text-foreground/85 transition-colors group-hover:text-foreground">
-                  {previous.title}
-                </span>
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link className="group block text-right" to={`/projects/${next.slug}?v=e`}>
-                <span className="block text-[0.8125rem] text-muted-foreground">{t.nextProject}</span>
-                <span className="mt-0.5 block text-[0.9375rem] text-foreground/85 transition-colors group-hover:text-foreground">
-                  {next.title}
-                </span>
-              </Link>
-            ) : null}
-          </div>
-        </footer>
+      {/* The app as it looks, wider than the text so it is the first thing seen. */}
+      <motion.div className="mt-10 sm:mt-12 xl:mt-14" {...revealOnScroll(reduceMotion)}>
+        {hero ? (
+          <HeroPicture still={hero} />
+        ) : fallbackHero ? (
+          <img
+            alt={props.altFor(0)}
+            className="block h-auto w-full rounded-[18px] ring-1 ring-black/[0.06] dark:ring-white/[0.08]"
+            decoding="async"
+            fetchPriority="high"
+            src={fallbackHero}
+          />
+        ) : (
+          <div aria-hidden className="aspect-[8/5] w-full rounded-[18px] bg-card ring-1 ring-black/[0.06] dark:ring-white/[0.08]" />
         )}
-      </article>
+      </motion.div>
+
+      <div className={`mt-12 sm:mt-14 ${TWO_COLUMNS}`}>
+        {/* The index: quiet, sticky, only where there is room for it. */}
+        <aside className="hidden xl:block">
+          {sections.length ? (
+            <nav aria-label={t.onThisPage} className="sticky top-28">
+              <ol className="m-0 list-none space-y-2.5 p-0">
+                {[{ id: "e-top", label: t.overview }, ...sections.map((s) => ({ id: `e-${s.id}`, label: s.heading }))].map(
+                  (entry) => {
+                    const current = entry.id === active;
+                    return (
+                      <li className="relative" key={entry.id}>
+                        {current ? (
+                          <motion.span
+                            aria-hidden
+                            className="absolute top-[0.45em] -left-3.5 h-[0.8em] w-0.5 rounded-full bg-primary"
+                            layoutId="e-index-tick"
+                            transition={{ type: "spring", stiffness: 420, damping: 40 }}
+                          />
+                        ) : null}
+                        <button
+                          aria-current={current ? "location" : undefined}
+                          className={`text-balance text-left text-[0.8125rem] leading-snug transition-colors duration-200 ease-bloom hover:text-foreground ${
+                            current ? "text-foreground" : "text-muted-foreground"
+                          }`}
+                          onClick={() => jump(entry.id)}
+                          type="button"
+                        >
+                          {entry.label}
+                        </button>
+                      </li>
+                    );
+                  },
+                )}
+              </ol>
+            </nav>
+          ) : null}
+        </aside>
+
+        <article className="mx-auto w-full max-w-[640px] xl:mx-0">
+          {story === undefined ? <Placeholder /> : story ? <Blocks blocks={story.opening} /> : null}
+
+          {sections.map((section) => (
+            <motion.section
+              className="mt-16 scroll-mt-28 sm:mt-24"
+              id={`e-${section.id}`}
+              key={section.id}
+              {...revealOnScroll(reduceMotion)}
+            >
+              <Heading>{section.heading}</Heading>
+              <Blocks blocks={section.blocks} />
+            </motion.section>
+          ))}
+
+          {/* The end: what it is made with, where to get it, and the neighbours. */}
+          {story === undefined ? null : (
+            <footer className="mt-24 sm:mt-28">
+              <ProjectTechLoop project={project} />
+              <div className="mt-10 h-px bg-border/80" />
+              <div className="mt-6">
+                <Links project={project} />
+              </div>
+              <div className="mt-12 grid grid-cols-2 gap-6">
+                {previous ? (
+                  <Link className="group block" to={`/projects/${previous.slug}?v=e`}>
+                    <span className="block text-[0.8125rem] text-muted-foreground">{t.previousProject}</span>
+                    <span className="mt-0.5 block text-[0.9375rem] text-foreground/85 transition-colors group-hover:text-foreground">
+                      {previous.title}
+                    </span>
+                  </Link>
+                ) : (
+                  <span />
+                )}
+                {next ? (
+                  <Link className="group block text-right" to={`/projects/${next.slug}?v=e`}>
+                    <span className="block text-[0.8125rem] text-muted-foreground">{t.nextProject}</span>
+                    <span className="mt-0.5 block text-[0.9375rem] text-foreground/85 transition-colors group-hover:text-foreground">
+                      {next.title}
+                    </span>
+                  </Link>
+                ) : null}
+              </div>
+            </footer>
+          )}
+        </article>
+      </div>
     </div>
   );
 }
