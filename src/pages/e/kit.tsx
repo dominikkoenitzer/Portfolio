@@ -329,9 +329,12 @@ function Crop({
       style={{ aspectRatio: `${Math.round(still.width * cw)} / ${Math.round(still.height * ch)}` }}
       type="button"
     >
+      {/* Wider than the button on purpose: the site's phone rule caps every
+          element at its parent's width, which would shrink the crop back to
+          the whole capture, so this one is let out of it. */}
       <span
         className="absolute block"
-        style={{ width: `${100 / cw}%`, left: `${(-crop[0] / cw) * 100}%`, top: `${(-crop[1] / ch) * 100}%` }}
+        style={{ width: `${100 / cw}%`, maxWidth: "none", left: `${(-crop[0] / cw) * 100}%`, top: `${(-crop[1] / ch) * 100}%` }}
       >
         {still.dark ? (
           <>
