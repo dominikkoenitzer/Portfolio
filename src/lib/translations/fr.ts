@@ -88,7 +88,7 @@ export const fr = {
     heading: "Compétences",
     subheading:
       "Ce avec quoi je travaille au quotidien, et ce que je continue d'apprendre.",
-    projectCountOne: "Un projet utilise {skill}",
+    projectCountOne: "{count} projet utilise {skill}",
     projectCountMany: "{count} projets utilisent {skill}",
     categories: {
       frontend: "Frontend",

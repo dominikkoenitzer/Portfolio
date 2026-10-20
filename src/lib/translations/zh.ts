@@ -87,7 +87,7 @@ export const zh = {
     eyebrow: "技术栈与工具",
     heading: "技能",
     subheading: "我日常在用的东西，以及还在慢慢变熟的部分。",
-    projectCountOne: "1 个项目使用 {skill}",
+    projectCountOne: "{count} 个项目使用 {skill}",
     projectCountMany: "{count} 个项目使用 {skill}",
     categories: {
       frontend: "前端",
