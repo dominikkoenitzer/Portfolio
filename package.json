@@ -27,6 +27,7 @@
     "check:sitemap": "bun scripts/check-sitemap.ts",
     "check:jsonld": "bun scripts/validate-jsonld.ts",
     "serve:dist": "node scripts/serve-dist.mjs",
+    "test:e2e": "playwright test",
     "preview": "vite preview --port 1000"
   },
   "dependencies": {
@@ -60,7 +61,9 @@
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",

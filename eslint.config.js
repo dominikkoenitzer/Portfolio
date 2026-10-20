@@ -13,7 +13,7 @@ export default tseslint.config(
   {
     // `tmp` is the gitignored scratch tree (audit scripts, screenshots): not
     // product code, so it must not be able to fail the lint gate.
-    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules", "tmp"],
+    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules", "tmp", "test-results", "playwright-report"],
   },
   {
     files: ["**/*.{ts,tsx}"],
@@ -55,8 +55,9 @@ export default tseslint.config(
     },
   },
   {
-    // Build and prerender scripts and the Vercel function run on the server.
-    files: ["scripts/**/*.ts", "api/**/*.ts", "*.config.ts"],
+    // Build and prerender scripts, the Vercel function and the browser tests
+    // run under Node.
+    files: ["scripts/**/*.ts", "api/**/*.ts", "*.config.ts", "e2e/**/*.ts"],
     languageOptions: {
       globals: globals.node,
     },

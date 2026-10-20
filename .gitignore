@@ -8,6 +8,11 @@ lerna-debug.log*
 
 # Build outputs
 dist/
+
+# Browser test output
+test-results/
+playwright-report/
+blob-report/
 build/
 *.tsbuildinfo
 
