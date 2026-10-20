@@ -380,6 +380,14 @@ export const zh = {
       contact: "给我留言。",
     },
   },
+  diagnostics: {
+    eyebrow: "诊断",
+    title: "本站在你的设备上的运行情况",
+    body: "对这个浏览器及其图形的简短测量：帧时间、显示、图形芯片以及任何错误。只有在你按下发送后才会发送。",
+    noEndpoint: "本站没有设置接收报告的地址，因此无法发送。上面的详细信息只保留在你的设备上。",
+    reopen: "重新打开面板",
+    seoDescription: "本站的测量页面。未公开列出。",
+  },
   privacy: {
     title: "隐私政策",
     eyebrow: "法律信息",

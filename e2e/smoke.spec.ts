@@ -185,3 +185,47 @@ test.describe("keyboard", () => {
     await expect(page.locator("h1").first()).toBeVisible();
   });
 });
+
+test.describe("diagnostics", () => {
+  test("/diag measures, stays out of search and sends nothing without an endpoint", async ({
+    page,
+  }) => {
+    test.slow();
+    const errors = watchErrors(page);
+    const posts: string[] = [];
+    page.on("request", (request) => {
+      if (request.method() === "POST") posts.push(request.url());
+    });
+    const response = await page.goto("/diag");
+    expect(response?.status()).toBe(200);
+    expect(response?.headers()["x-robots-tag"]).toBe("noindex, nofollow");
+    // The prerendered document says noindex before any script runs, and so
+    // does every robots tag the app adds once it has.
+    expect(await response?.text()).toMatch(/name="robots"\s+content="noindex, nofollow"/);
+    await expectRendered(page);
+    const robots = await page
+      .locator('meta[name="robots"], meta[name="googlebot"]')
+      .evaluateAll((tags) => tags.map((tag) => tag.getAttribute("content") ?? ""));
+    expect(robots.length).toBeGreaterThan(0);
+    for (const content of robots) expect(content).toMatch(/^noindex, nofollow/);
+
+    // Locators reach into the panel's open shadow root.
+    const panel = page.locator("[data-diag-panel]");
+    await expect(panel).toBeAttached({ timeout: 10_000 });
+    const send = panel.locator("button.primary");
+    await expect(send).toBeVisible({ timeout: 40_000 });
+    await expect(send).toBeFocused();
+    expect(await seriousViolations(page), "axe, the panel's result").toEqual([]);
+    await send.click();
+    await expect(panel.locator('p[role="status"]')).toContainText(
+      "No address for reports is set up",
+    );
+    await expect(send).toBeEnabled();
+    expect(posts).toEqual([]);
+
+    await page.keyboard.press("Escape");
+    await expect(panel).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Open the panel again" })).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+});

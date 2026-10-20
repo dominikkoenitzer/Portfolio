@@ -441,6 +441,14 @@ export const fr = {
       contact: "Envoyez-moi un message.",
     },
   },
+  diagnostics: {
+    eyebrow: "Diagnostic",
+    title: "Comment ce site fonctionne sur votre appareil",
+    body: "Une courte mesure de ce navigateur et de son affichage graphique : temps d'image, écran, puce graphique et erreurs éventuelles. Rien n'est envoyé tant que vous n'appuyez pas sur Envoyer.",
+    noEndpoint: "Aucune adresse pour les rapports n'est configurée sur ce site, rien ne peut donc être envoyé. Les détails ci-dessus restent sur votre appareil.",
+    reopen: "Rouvrir le panneau",
+    seoDescription: "Une page de mesure pour ce site. Non référencée.",
+  },
   privacy: {
     title: "Politique de confidentialité",
     eyebrow: "Mentions légales",

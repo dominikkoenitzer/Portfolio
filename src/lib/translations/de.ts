@@ -443,6 +443,14 @@ export const de = {
       contact: "Schreib mir eine Nachricht.",
     },
   },
+  diagnostics: {
+    eyebrow: "Diagnose",
+    title: "So läuft diese Seite auf deinem Gerät",
+    body: "Eine kurze Messung dieses Browsers und seiner Grafik: Bildzeiten, Anzeige, Grafikchip und allfällige Fehler. Gesendet wird nur, wenn du auf Senden drückst.",
+    noEndpoint: "Für diese Seite ist keine Adresse für Berichte eingerichtet, darum kann nichts gesendet werden. Die Angaben oben bleiben auf deinem Gerät.",
+    reopen: "Panel wieder öffnen",
+    seoDescription: "Eine Messseite für diese Website. Nicht verlinkt.",
+  },
   privacy: {
     title: "Datenschutzerklärung",
     eyebrow: "Rechtliches",

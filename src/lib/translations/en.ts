@@ -438,6 +438,14 @@ export const en = {
       contact: "Send me a message.",
     },
   },
+  diagnostics: {
+    eyebrow: "Diagnostics",
+    title: "How this site runs on your device",
+    body: "A short measurement of this browser and its graphics: frame times, display, graphics chip and any errors. Nothing is sent unless you press Send.",
+    noEndpoint: "No address for reports is set up on this site, so nothing can be sent. The details above stay on your device.",
+    reopen: "Open the panel again",
+    seoDescription: "A measurement page for this site. Not listed.",
+  },
   privacy: {
     title: "Privacy Policy",
     eyebrow: "Legal",
