@@ -7,15 +7,20 @@
 //
 // node scripts/serve-dist.mjs [--port 4173] [--host 127.0.0.1] [--dir dist]
 //
+// Text responses are compressed as the host compresses them (brotli, or gzip
+// for a client without it), so Lighthouse's throttled load sees the bytes a
+// visitor downloads rather than the files on disk.
+//
 // The serverless functions are not run here. `/api/*` answers 204, so the
 // pages take their offline path (no live test count, no calendar) without a
 // console error, and `/_vercel/*` answers with an empty script or a 204, the
 // way the analytics endpoints do in production.
 
-import { createReadStream, readFileSync, statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const args = process.argv.slice(2);
@@ -93,17 +98,40 @@ function fileAt(path) {
   return null;
 }
 
+const COMPRESSIBLE = /^(text\/|application\/(json|xml|manifest\+json)|image\/svg)/;
+const compressed = new Map();
+
+function body(file, type, accept) {
+  const raw = readFileSync(file);
+  if (!COMPRESSIBLE.test(type) || raw.length < 1024) return { data: raw };
+  const encoding = /\bbr\b/.test(accept) ? "br" : /\bgzip\b/.test(accept) ? "gzip" : null;
+  if (!encoding) return { data: raw };
+  const key = `${encoding}:${file}`;
+  if (!compressed.has(key)) {
+    compressed.set(
+      key,
+      encoding === "br"
+        ? brotliCompressSync(raw, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } })
+        : gzipSync(raw, { level: 9 }),
+    );
+  }
+  return { data: compressed.get(key), encoding };
+}
+
 function send(req, res, status, file, pathname) {
   for (const rule of headerRules) {
     if (rule.match.test(pathname)) {
       for (const { key, value } of rule.headers) res.setHeader(key, value);
     }
   }
-  res.setHeader("Content-Type", TYPES[extname(file)] ?? "application/octet-stream");
-  res.setHeader("Content-Length", statSync(file).size);
+  const type = TYPES[extname(file)] ?? "application/octet-stream";
+  const { data, encoding } = body(file, type, String(req.headers["accept-encoding"] ?? ""));
+  res.setHeader("Content-Type", type);
+  res.setHeader("Vary", "Accept-Encoding");
+  if (encoding) res.setHeader("Content-Encoding", encoding);
+  res.setHeader("Content-Length", data.length);
   res.writeHead(status);
-  if (req.method === "HEAD") return res.end();
-  createReadStream(file).pipe(res);
+  res.end(req.method === "HEAD" ? undefined : data);
 }
 
 const server = createServer((req, res) => {
