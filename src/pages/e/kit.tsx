@@ -39,7 +39,7 @@ export function Demo({
     "--demo-h-phone": `${phoneHeight ?? height}px`,
   } as CSSProperties;
   return (
-    <figure aria-label={label} className="m-0" role="group">
+    <figure aria-label={label} className="m-0">
       <div
         className={`relative h-[var(--demo-h-phone)] overflow-hidden rounded-2xl bg-card shadow-[0_1px_2px_rgb(0_0_0/0.04)] ring-1 ring-black/[0.06] sm:h-[var(--demo-h)] dark:ring-white/[0.08] ${className}`}
         style={style}
