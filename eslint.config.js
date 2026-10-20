@@ -13,7 +13,7 @@ export default tseslint.config(
   {
     // `tmp` is the gitignored scratch tree (audit scripts, screenshots): not
     // product code, so it must not be able to fail the lint gate.
-    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules", "tmp", "test-results", "playwright-report"],
+    ignores: ["dist", "dist-spa", "coverage", "public", "node_modules", "tmp", "test-results", "playwright-report", "src/vendor"],
   },
   {
     files: ["**/*.{ts,tsx}"],
