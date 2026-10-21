@@ -79,8 +79,8 @@ const RUNNER_MAIN_THREAD = ["categories:performance", "total-blocking-time"];
  * over 2.0 s on every page, on main as on this branch, and it measures the
  * same on the runner as on the desktop within a few percent. Each page fails
  * above its median plus a tenth, so it cannot get worse unnoticed. Medians
- * from run 39521834045; experience, donate and privacy from the local run of
- * the same build, as the runner had not measured them yet.
+ * from run 39521834045; experience, donate and privacy from run 39526023870,
+ * the first to measure them on the runner.
  */
 const MOBILE_LCP_MS = {
   home: 4200,
@@ -90,9 +90,9 @@ const MOBILE_LCP_MS = {
   skills: 4913,
   services: 4504,
   contact: 4758,
-  experience: 4861,
-  donate: 4457,
-  privacy: 4455,
+  experience: 5338,
+  donate: 4474,
+  privacy: 4414,
 };
 
 const assertionsFor = (page) =>
