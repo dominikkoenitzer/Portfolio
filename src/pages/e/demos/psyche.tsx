@@ -493,7 +493,7 @@ export function FreshDemo() {
       height={300}
       label="Psyche waiting for a fresh code when the current one is about to expire"
       live={state === "idle" || state === "typing" ? "" : status}
-      phoneHeight={380}
+      phoneHeight={330}
     >
       <Frame
         bottom={
