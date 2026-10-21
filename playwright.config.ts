@@ -86,6 +86,17 @@ export default defineConfig({
       use: {
         ...devices["Desktop Firefox"],
         viewport: { width: 1440, height: 900 },
+        // The site sends Cross-Origin-Opener-Policy: same-origin, so a fresh
+        // page's first navigation (from about:blank) swaps the browsing
+        // context into a new process. Now and then the driver loses that
+        // navigation's commit event and page.goto waits until the test times
+        // out, although the page loaded. Without the swap the event always
+        // arrives; the opener policy itself has nothing to show in these tests.
+        launchOptions: {
+          firefoxUserPrefs: {
+            "browser.tabs.remote.useCrossOriginOpenerPolicy": false,
+          },
+        },
       },
     },
     {
