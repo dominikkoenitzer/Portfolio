@@ -1,8 +1,13 @@
 /**
  * Lighthouse budgets for the built site, run by CI once per form factor:
  *
- *   LHCI_PRESET=mobile  npx @lhci/cli autorun   (Lighthouse's default mobile run)
- *   LHCI_PRESET=desktop npx @lhci/cli autorun
+ *   LIGHTHOUSE_PRESET=mobile  lhci autorun   (Lighthouse's default mobile run)
+ *   LIGHTHOUSE_PRESET=desktop lhci autorun
+ *
+ * LIGHTHOUSE_PAGE=<name> measures one page of PAGES instead of all of them;
+ * CI runs one job per page and preset so the whole set stays inside its time.
+ * The variables do not start with LHCI_: the command reads those as its own
+ * flags.
  *
  * `dist` is served by scripts/serve-dist.mjs with the production headers and
  * compression. Every page is loaded three times and each number is the median
@@ -27,18 +32,24 @@
  * run, and the entry is removed once the page meets the budget.
  */
 
-const PRESET = process.env.LHCI_PRESET === "desktop" ? "desktop" : "mobile";
-const PORT = Number(process.env.LHCI_PORT ?? 4318);
+const PRESET = process.env.LIGHTHOUSE_PRESET === "desktop" ? "desktop" : "mobile";
+const PORT = Number(process.env.LIGHTHOUSE_PORT ?? 4318);
 
-const PATHS = [
-  "/",
-  "/about",
-  "/projects",
-  "/projects/entropy",
-  "/skills",
-  "/services",
-  "/contact",
-];
+const PAGES = {
+  home: "/",
+  about: "/about",
+  projects: "/projects",
+  entropy: "/projects/entropy",
+  skills: "/skills",
+  services: "/services",
+  contact: "/contact",
+};
+
+const ONLY = process.env.LIGHTHOUSE_PAGE;
+if (ONLY && !(ONLY in PAGES)) {
+  throw new Error(`LIGHTHOUSE_PAGE=${ONLY} is not one of ${Object.keys(PAGES).join(", ")}`);
+}
+const PATHS = ONLY ? [PAGES[ONLY]] : Object.values(PAGES);
 
 const BUDGETS = {
   "categories:performance": { minScore: PRESET === "desktop" ? 0.95 : 0.9 },
@@ -78,7 +89,7 @@ module.exports = {
     assert: { assertions },
     upload: {
       target: "filesystem",
-      outputDir: `.lighthouseci/${PRESET}`,
+      outputDir: `.lighthouseci/${PRESET}${ONLY ? `-${ONLY}` : ""}`,
     },
   },
 };

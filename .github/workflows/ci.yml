@@ -228,14 +228,18 @@ jobs:
             test-results
           retention-days: 7
 
+  # One job per page and form factor: a desktop run takes about a minute on
+  # the runner, so the pages one after another would not fit the time box.
+  # The page names are the keys of PAGES in lighthouserc.cjs.
   lighthouse:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
         preset: [mobile, desktop]
+        page: [home, about, projects, entropy, skills, services, contact]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -250,21 +254,22 @@ jobs:
         run: npm install --prefix "$RUNNER_TEMP/lhci" --no-audit --no-fund @lhci/cli@0.15.1
 
       # Reports stay in the run as an artifact; nothing is uploaded elsewhere.
-      - name: Lighthouse (${{ matrix.preset }})
+      - name: Lighthouse (${{ matrix.preset }}, ${{ matrix.page }})
         env:
-          LHCI_PRESET: ${{ matrix.preset }}
+          LIGHTHOUSE_PRESET: ${{ matrix.preset }}
+          LIGHTHOUSE_PAGE: ${{ matrix.page }}
         run: '"$RUNNER_TEMP/lhci/node_modules/.bin/lhci" autorun --config=lighthouserc.cjs'
 
       - name: Summary
         if: ${{ !cancelled() }}
         env:
-          LHCI_PRESET: ${{ matrix.preset }}
-        run: node scripts/lighthouse-summary.mjs ".lighthouseci/${{ matrix.preset }}" >> "$GITHUB_STEP_SUMMARY"
+          LIGHTHOUSE_PRESET: ${{ matrix.preset }}
+        run: node scripts/lighthouse-summary.mjs ".lighthouseci/${{ matrix.preset }}-${{ matrix.page }}" >> "$GITHUB_STEP_SUMMARY"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ !cancelled() }}
         with:
-          name: lighthouse-${{ matrix.preset }}
+          name: lighthouse-${{ matrix.preset }}-${{ matrix.page }}
           path: .lighthouseci
           retention-days: 7
 
