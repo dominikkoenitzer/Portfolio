@@ -51,6 +51,7 @@ import {
 } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import { canDrawWebGL2 } from "@/lib/webgl";
 
 // The Services page opens on a 3D skill-tree sapling on desktop: lazy
 // (three.js), desktop and full-motion only. Everything below it is plain cards.
@@ -331,18 +332,19 @@ export function ServicesSection() {
   // reduced motion get the card grid only (three.js never even loads there).
   // Seeded on first client render (no layout shift, no mobile cost) and kept
   // reactive so crossing the breakpoint swaps cleanly and tears down the WebGL
-  // panel on the way down.
+  // panel on the way down. A browser that refuses WebGL 2 gets the grid too.
   const [showExplorer, setShowExplorer] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia(DESKTOP_QUERY).matches &&
-      !window.matchMedia(REDUCED_MOTION_QUERY).matches,
+      !window.matchMedia(REDUCED_MOTION_QUERY).matches &&
+      canDrawWebGL2(),
   );
   useEffect(() => {
     const desktop = window.matchMedia(DESKTOP_QUERY);
     const motion = window.matchMedia(REDUCED_MOTION_QUERY);
     const update = () => {
-      const next = desktop.matches && !motion.matches;
+      const next = desktop.matches && !motion.matches && canDrawWebGL2();
       setShowExplorer(next);
       if (!next) setSelectedKey(null); // no card lingering once the tree is gone
     };

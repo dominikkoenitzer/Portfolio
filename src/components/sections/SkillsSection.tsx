@@ -20,6 +20,7 @@ import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+import { canDrawWebGL2 } from "@/lib/webgl";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";
 
@@ -182,13 +183,15 @@ export function SkillsSection() {
   const { language } = useLanguage();
   const t = translations[language].skills;
 
-  // The sphere is desktop-only and skipped for reduced-motion users. Seeded on
-  // the first client render so nothing shifts once the page is up.
+  // The sphere is desktop-only and skipped for reduced-motion users and for
+  // browsers that refuse WebGL 2. Seeded on the first client render so nothing
+  // shifts once the page is up.
   const [showSphere] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(min-width: 768px)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      canDrawWebGL2(),
   );
 
   return (

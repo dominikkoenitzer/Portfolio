@@ -7,6 +7,7 @@ import { SkipLink } from "@/components/layout/SkipLink";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { LanguageProvider } from "@/lib/language-provider";
+import { canDrawWebGL } from "@/lib/webgl";
 
 // Pulls in the ~70KB ogl lib, so it stays lazy and off the critical path.
 const AuroraBackground = lazy(
@@ -25,14 +26,15 @@ export function PageLayout({ children }: PageLayoutProps) {
   // Hold the WebGL background (GL context + shader compile) until the browser is
   // idle so it never competes with first paint / hydration, critical on phones,
   // where that work otherwise lands right in the middle of the initial render.
+  // A browser that refuses WebGL never fetches it at all.
   const [showVeil, setShowVeil] = useState(false);
   useEffect(() => {
     const idle = window.requestIdleCallback;
     if (idle) {
-      const id = idle(() => setShowVeil(true), { timeout: 2000 });
+      const id = idle(() => setShowVeil(canDrawWebGL()), { timeout: 2000 });
       return () => window.cancelIdleCallback?.(id);
     }
-    const t = setTimeout(() => setShowVeil(true), 200);
+    const t = setTimeout(() => setShowVeil(canDrawWebGL()), 200);
     return () => clearTimeout(t);
   }, []);
 
