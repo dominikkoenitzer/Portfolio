@@ -78,7 +78,10 @@ const RUNNER_MAIN_THREAD = ["categories:performance", "total-blocking-time"];
  * Exception "mobile-lcp". Largest Contentful Paint on the mobile preset is
  * over 2.0 s on every page, on main as on this branch, and it measures the
  * same on the runner as on the desktop within a few percent. Each page fails
- * above its median plus a tenth, so it cannot get worse unnoticed. Medians
+ * above its median plus a fifth, so it cannot get worse unnoticed: the same
+ * page's median moved by up to 14 percent between runs of the same build
+ * (home 4078 and 4630 ms in runs 39526023870 and 39528370335), so a tenth
+ * failed a build that had not changed. Medians
  * from run 39521834045; experience, donate and privacy from run 39526023870,
  * the first to measure them on the runner.
  */
@@ -101,7 +104,7 @@ const assertionsFor = (page) =>
       const options = { ...budget, aggregationMethod: "median" };
       if (RUNNER_MAIN_THREAD.includes(audit)) return [audit, ["warn", options]];
       if (audit === "largest-contentful-paint" && PRESET === "mobile") {
-        const ceiling = Math.round(MOBILE_LCP_MS[page] * 1.1);
+        const ceiling = Math.round(MOBILE_LCP_MS[page] * 1.2);
         return [audit, ["error", { ...options, maxNumericValue: ceiling }]];
       }
       return [audit, ["error", options]];
