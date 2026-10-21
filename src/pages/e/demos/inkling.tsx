@@ -379,7 +379,7 @@ export function ReviewDemo() {
       height={340}
       label="An Inkling flashcard scheduled by FSRS-6, review by review"
       live={status}
-      phoneHeight={500}
+      phoneHeight={420}
     >
       <Frame
         bottom={
