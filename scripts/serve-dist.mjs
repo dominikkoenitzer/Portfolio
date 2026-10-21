@@ -18,7 +18,7 @@
 
 import { readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
-import { extname, join, normalize, resolve } from "node:path";
+import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { brotliCompressSync, constants, gzipSync } from "node:zlib";
 
@@ -168,7 +168,7 @@ const server = createServer((req, res) => {
   }
 
   const target = normalize(join(dir, pathname));
-  const file = target.startsWith(dir) ? fileAt(target) : null;
+  const file = target === dir || target.startsWith(dir + sep) ? fileAt(target) : null;
   if (file) return send(req, res, 200, file, pathname);
   send(req, res, 404, join(dir, "404.html"), pathname);
 });
