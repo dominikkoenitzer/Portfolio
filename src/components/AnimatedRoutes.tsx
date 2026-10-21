@@ -23,6 +23,8 @@ const Contact = lazy(ROUTE_CHUNKS["/contact"]);
 const Donate = lazy(ROUTE_CHUNKS["/donate"]);
 const Privacy = lazy(ROUTE_CHUNKS["/privacy"]);
 const NotFound = lazy(() => import("@/pages/NotFound"));
+// Unlisted: no link points here, so there is nothing for the prefetcher to warm.
+const Diagnostics = lazy(() => import("@/pages/Diagnostics"));
 
 /**
  * Signals that the route's own subtree has committed. It sits inside the
@@ -117,6 +119,7 @@ export const AnimatedRoutes = () => {
                 <Route element={<Contact />} path="/contact" />
                 <Route element={<Donate />} path="/donate" />
                 <Route element={<Privacy />} path="/privacy" />
+                <Route element={<Diagnostics />} path="/diag" />
                 <Route element={<NotFound />} path="*" />
               </Routes>
               <RouteReady onReady={handleRouteReady} path={location.pathname} />

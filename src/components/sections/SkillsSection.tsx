@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { type JSX, lazy, type ReactNode, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { countProjectsBySkill } from "@/constants/projects/stacks";
 import {
   SKILL_CATEGORIES,
@@ -19,6 +20,7 @@ import { revealOnScroll, revealStagger } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+import { canDrawWebGL2 } from "@/lib/webgl";
 import { SectionHeading } from "../layout/SectionHeading";
 import { getSkillIcon } from "./skill-icons";
 
@@ -60,7 +62,8 @@ const CHIP_BODY =
 /**
  * A skill some project is built with links to those projects, and says how
  * many there are. The count sits on the same token surface as the category
- * count, so the page has one way of showing a number.
+ * count, so the page has one way of showing a number. The spoken name starts
+ * with the words on the chip, so a voice command that reads them finds it.
  */
 function ProjectChip({
   icon,
@@ -79,7 +82,7 @@ function ProjectChip({
   return (
     <motion.span className="inline-flex" variants={REVEAL}>
       <Link
-        aria-label={countLabel}
+        aria-label={`${label}: ${countLabel}`}
         className={`${CHIP_BODY} focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
         title={countLabel}
         to={`/projects?tech=${encodeURIComponent(name)}`}
@@ -90,7 +93,7 @@ function ProjectChip({
         >
           {icon}
         </span>
-        <span className="font-medium text-foreground/85">{label}</span>
+        <span className="font-medium text-foreground/85">{label}</span>{" "}
         <span
           aria-hidden="true"
           className="inline-flex h-5 min-w-5 items-center justify-center rounded-full border border-border/60 px-1 text-[11px] text-muted-foreground tabular-nums"
@@ -180,13 +183,15 @@ export function SkillsSection() {
   const { language } = useLanguage();
   const t = translations[language].skills;
 
-  // The sphere is desktop-only and skipped for reduced-motion users. Seeded on
-  // the first client render so nothing shifts once the page is up.
+  // The sphere is desktop-only and skipped for reduced-motion users and for
+  // browsers that refuse WebGL 2. Seeded on the first client render so nothing
+  // shifts once the page is up.
   const [showSphere] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(min-width: 768px)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      canDrawWebGL2(),
   );
 
   return (
@@ -204,12 +209,17 @@ export function SkillsSection() {
           landed: 0.172 of layout shift on a throttled first visit, all of it
           after the page looked finished. Reserving the height first costs
           nothing and the shift goes to zero. */}
+      {/* The boundary wraps the box too: when the three.js chunk never
+          arrives, the reserved height goes with it instead of leaving an
+          empty 560px gap above the cards. */}
       {showSphere ? (
-        <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
-          <Suspense fallback={null}>
-            <SkillSphere />
-          </Suspense>
-        </div>
+        <ErrorBoundary fallback={null}>
+          <div className="-mt-2 mx-auto mb-12 h-[360px] w-full max-w-4xl sm:mb-16 sm:h-[460px] lg:h-[560px]">
+            <Suspense fallback={null}>
+              <SkillSphere />
+            </Suspense>
+          </div>
+        </ErrorBoundary>
       ) : null}
 
       {/* No `items-start`: the row stretches, so two cards side by side share

@@ -88,7 +88,7 @@ export const en = {
     heading: "Skills",
     subheading:
       "What I work with day to day, and what I'm still getting better at.",
-    projectCountOne: "One project uses {skill}",
+    projectCountOne: "{count} project uses {skill}",
     projectCountMany: "{count} projects use {skill}",
     categories: {
       frontend: "Frontend",
@@ -439,6 +439,14 @@ export const en = {
       services: "What I take on, and how I work.",
       contact: "Send me a message.",
     },
+  },
+  diagnostics: {
+    eyebrow: "Diagnostics",
+    title: "How this site runs on your device",
+    body: "A short measurement of this browser and its graphics: frame times, display, graphics chip and any errors. Nothing is sent unless you press Send.",
+    noEndpoint: "No address for reports is set up on this site, so nothing can be sent. The details above stay on your device.",
+    reopen: "Open the panel again",
+    seoDescription: "A measurement page for this site. Not listed.",
   },
   privacy: {
     title: "Privacy Policy",

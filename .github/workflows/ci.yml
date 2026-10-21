@@ -11,6 +11,11 @@ on:
   schedule:
     - cron: '25 */6 * * *'
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: Render the visual baselines on Linux and upload them as an artifact
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -18,16 +23,31 @@ concurrency:
   # checked by anything. Only a superseded pull request push is safe to drop.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+permissions:
+  contents: read
+
+env:
+  BUN_VERSION: 1.4.2
+
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Pinned to match the `packageManager` field in package.json.
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
-          bun-version: 1.4.2
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -49,5 +69,247 @@ jobs:
       - name: Validate JSON-LD
         run: bun run check:jsonld
 
+      # The diagnostic panel is copied in from its own repository; a local
+      # edit to the copy would be lost on the next sync.
+      - name: Diagnostic panel matches its upstream copy
+        run: bun run check:diag
+
       - name: Build
         run: bun run build
+
+  # The build the browser and Lighthouse jobs test, made once and handed to
+  # them as an artifact. It runs beside verify rather than after it, so the
+  # slower jobs start a few minutes sooner.
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Entry JavaScript budget
+        run: bun run check:bundle --summary "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist
+          # dist/.well-known holds security.txt.
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: error
+
+  # The entry JavaScript of this build next to the base branch's, file by file.
+  bundle-diff:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('base/bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+
+      # Vite alone is enough: the entry files are what index.html loads.
+      - name: Build the base branch
+        working-directory: base
+        run: bun install --frozen-lockfile && bun run build:spa
+
+      - name: Compare
+        run: node scripts/bundle-size.mjs --dir dist --base base/dist --summary "$GITHUB_STEP_SUMMARY"
+
+  # Every route in each engine: rendered, no console error, axe, WebGL where
+  # expected, the keyboard path, the diagnostic page and the Linux snapshots.
+  # The screenshot sheet of every engine is uploaded with the run.
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+
+      # The browser build is keyed on the lockfile, which pins the Playwright
+      # version; the system libraries it needs come from apt on every run.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: browsers
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('bun.lock') }}
+
+      - name: Install ${{ matrix.browser }}
+        if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Install ${{ matrix.browser }}'s system libraries
+        if: steps.browsers.outputs.cache-hit == 'true'
+        run: npx playwright install-deps ${{ matrix.browser }}
+
+      - name: Browser tests
+        if: ${{ !inputs.update_snapshots }}
+        env:
+          SHEET_DIR: sheet
+        run: npx playwright test --project=${{ matrix.browser }}
+
+      - name: Render the visual baselines
+        if: ${{ inputs.update_snapshots }}
+        run: npx playwright test --project=${{ matrix.browser }} e2e/visual.spec.ts --update-snapshots=all
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ inputs.update_snapshots }}
+        with:
+          name: snapshots-${{ matrix.browser }}
+          path: e2e/__screenshots__/${{ matrix.browser }}
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() && !inputs.update_snapshots }}
+        with:
+          name: sheet-${{ matrix.browser }}
+          path: sheet
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ failure() }}
+        with:
+          name: report-${{ matrix.browser }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
+  # One job per page and form factor: a desktop run takes about a minute on
+  # the runner, so the pages one after another would not fit the time box.
+  # The page names are the keys of PAGES in lighthouserc.cjs.
+  lighthouse:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [mobile, desktop]
+        page: [home, about, projects, entropy, skills, services, contact, experience, donate, privacy]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+
+      # Installed outside the checkout: npm would otherwise read this
+      # project's overrides and refuse them against the CLI's own tree.
+      - name: Install the Lighthouse CI command
+        run: npm install --prefix "$RUNNER_TEMP/lhci" --no-audit --no-fund @lhci/cli@0.15.1
+
+      # Reports stay in the run as an artifact; nothing is uploaded elsewhere.
+      - name: Lighthouse (${{ matrix.preset }}, ${{ matrix.page }})
+        env:
+          LIGHTHOUSE_PRESET: ${{ matrix.preset }}
+          LIGHTHOUSE_PAGE: ${{ matrix.page }}
+        run: '"$RUNNER_TEMP/lhci/node_modules/.bin/lhci" autorun --config=lighthouserc.cjs'
+
+      - name: Summary
+        if: ${{ !cancelled() }}
+        env:
+          LIGHTHOUSE_PRESET: ${{ matrix.preset }}
+        run: node scripts/lighthouse-summary.mjs ".lighthouseci/${{ matrix.preset }}-${{ matrix.page }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: lighthouse-${{ matrix.preset }}-${{ matrix.page }}
+          path: .lighthouseci
+          include-hidden-files: true
+          retention-days: 7
+
+  # The one check to require before merging. It fails when any job above
+  # failed, was cancelled or was skipped when it should have run, so a job
+  # that never started cannot leave the pull request green.
+  gate:
+    if: ${{ always() }}
+    needs: [verify, build, bundle-diff, e2e, lighthouse]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Every job passed
+        env:
+          VERIFY: ${{ needs.verify.result }}
+          BUILD: ${{ needs.build.result }}
+          BUNDLE: ${{ needs['bundle-diff'].result }}
+          E2E: ${{ needs.e2e.result }}
+          LIGHTHOUSE: ${{ needs.lighthouse.result }}
+          IS_PR: ${{ github.event_name == 'pull_request' }}
+          SNAPSHOTS: ${{ inputs.update_snapshots == true }}
+        run: |
+          echo "verify $VERIFY, build $BUILD, bundle-diff $BUNDLE, e2e $E2E, lighthouse $LIGHTHOUSE"
+          test "$VERIFY" = success
+          test "$BUILD" = success
+          test "$E2E" = success
+          test "$LIGHTHOUSE" = success
+          if [ "$IS_PR" = true ]; then test "$BUNDLE" = success; else test "$BUNDLE" = skipped; fi
+          if [ "$SNAPSHOTS" = true ]; then echo "baselines rendered; this run does not test against them" && exit 1; fi

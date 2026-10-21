@@ -12,6 +12,8 @@ interface Props {
    * with an apology.
    */
   fallback?: ReactNode;
+  /** Told once when the boundary catches, so the owner can change its layout. */
+  onError?: (error: unknown) => void;
 }
 
 interface State {
@@ -36,6 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: unknown) {
     // Dev visibility today; the natural hook point for an error reporter later.
     console.error("Route error boundary caught:", error);
+    this.props.onError?.(error);
   }
 
   render() {

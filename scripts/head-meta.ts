@@ -37,25 +37,41 @@ export const notFoundTitle = (siteName: string): string =>
   `Page not found | ${siteName}`;
 
 /**
- * The head of 404.html: the shell is the home document, so everything in it
- * that describes the home page has to be rewritten or dropped. The page has no
- * URL of its own (it answers for every path that has no file), so the tags
- * that name one are removed rather than pointed at home.
+ * Pages that exist but are kept out of search: no sitemap entry, noindex in
+ * every bot tag. Read by the prerender step and the sitemap check, so a route
+ * listed here gets its own unlisted document and is not expected in the
+ * sitemap. The title and description match what the page's <SEO> writes in
+ * English.
  */
-export const notFoundHead = (shell: string, siteName: string): string => {
-  const title = notFoundTitle(siteName);
+export const UNLISTED_ROUTES = {
+  "/diag": {
+    title: "Diagnostics",
+    description: "A measurement page for this site. Not listed.",
+  },
+} as const;
+
+/**
+ * The head of a page kept out of search, from the home document's shell:
+ * everything in it that describes the home page is rewritten or dropped, and
+ * the tags that name a URL are removed rather than pointed at home.
+ */
+export const unlistedHead = (
+  shell: string,
+  title: string,
+  description: string,
+): string => {
   let html = shell.replace(
     /<title>[\s\S]*?<\/title>/i,
     `<title>${esc(title)}</title>`,
   );
   for (const [k, v] of [
-    ["description", NOT_FOUND_DESCRIPTION],
+    ["description", description],
     ["title", title],
     ["og:title", title],
-    ["og:description", NOT_FOUND_DESCRIPTION],
+    ["og:description", description],
     ["og:image:alt", title],
     ["twitter:title", title],
-    ["twitter:description", NOT_FOUND_DESCRIPTION],
+    ["twitter:description", description],
     ["twitter:image:alt", title],
     ["robots", "noindex, nofollow"],
     ["googlebot", "noindex, nofollow"],
@@ -68,3 +84,10 @@ export const notFoundHead = (shell: string, siteName: string): string => {
   }
   return html;
 };
+
+/**
+ * The head of 404.html. The page has no URL of its own (it answers for every
+ * path that has no file), so it is an unlisted head under the not-found title.
+ */
+export const notFoundHead = (shell: string, siteName: string): string =>
+  unlistedHead(shell, notFoundTitle(siteName), NOT_FOUND_DESCRIPTION);
