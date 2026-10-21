@@ -67,10 +67,20 @@ const BUDGETS = {
  * the pages as they are on main), and from one run to the next the same page
  * swings between passing and that. Total Blocking Time and the performance
  * score follow it, on both presets. On a 24-core desktop the same build
- * blocks for 0 to 170 ms (mobile preset, throttled), also with software
- * WebGL, so the cause is not settled; the background canvas drawing on a
- * runner without a GPU is the first suspect. Until it is, these two warn on
- * every page, and the medians stay in the job summary and the reports.
+ * blocks for a median of 90 to 190 ms (mobile preset, throttled) while it is
+ * otherwise idle, and for 2.1 to 3.2 s on /skills while it is busy, so
+ * the cost scales with how slow the CPU is.
+ *
+ * What it is: frames that keep coming after load. The runner's reports booked
+ * up to 8.8 s of it to the smooth-scroll chunk, because Lighthouse books an
+ * animation frame to the first callback in it, and that was the scroll's
+ * endless loop. The loop now runs only while a glide is under way, and the
+ * smooth-scroll chunk is at 0 ms; the same time moved to the animation
+ * library's frame loop and the sky (8.1 to 9.0 s on /skills on the busy
+ * desktop, before and after alike). So the scroll was not the cause: the
+ * decorative animations that run on every frame at rest are. These two warn
+ * on every page until those stop when nothing on screen moves; the medians
+ * stay in the job summary and the reports.
  */
 const RUNNER_MAIN_THREAD = ["categories:performance", "total-blocking-time"];
 
