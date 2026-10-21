@@ -313,7 +313,7 @@ export function RandomDemo() {
       ? "Each draw is a number from 0 to 7, standing in for one below 2³²."
       : running
         ? `${tally.draws} of ${DRAWS} draws`
-        : `After ${DRAWS} draws, c came up ${share(tally.modulo)}% of the time by modulo and ${share(tally.entropy)}% with Entropy's rule.`;
+        : `After ${DRAWS} draws: c ${share(tally.modulo)}% by modulo, ${share(tally.entropy)}% with the tail drawn again.`;
 
   return (
     <Demo
@@ -321,7 +321,7 @@ export function RandomDemo() {
       height={360}
       label="Random characters picked by modulo and by rejection sampling, side by side"
       live={running ? "" : status}
-      phoneHeight={468}
+      phoneHeight={350}
     >
       <Frame
         bottom={
