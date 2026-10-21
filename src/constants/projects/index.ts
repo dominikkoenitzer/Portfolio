@@ -197,8 +197,8 @@ const PROJECT_BASE: ProjectBase[] = [
     platform: "desktop",
     date: "2026-07",
     repoUrl: "https://github.com/dominikkoenitzer/Inkling",
-    downloadUrl: "https://get-inkling.vercel.app/",
-    downloadPage: "https://get-inkling.vercel.app/",
+    downloadUrl: "https://inkling.punds.ch/",
+    downloadPage: "https://inkling.punds.ch/",
     priority: 12,
     image: "/projects/inkling.jpg",
     gallery: [
