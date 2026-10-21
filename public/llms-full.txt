@@ -165,7 +165,7 @@ A client-side colour toolkit that puts eight jobs in one app: pick colours, pull
 
 ### Remnants, February 2026
 Case study: https://dk.punds.ch/projects/remnants
-Download page: https://get-remnants.vercel.app/
+Download page: https://remnants.punds.ch/
 Source: https://github.com/dominikkoenitzer/Remnants
 Stack: TypeScript, Electron, Code - OSS
 
@@ -181,7 +181,7 @@ A web clock that does not trust the device it runs on. It corrects itself the wa
 
 ### Jester, June 2026
 Case study: https://dk.punds.ch/projects/jester
-Download page: https://get-jester.vercel.app/
+Download page: https://jester.punds.ch/
 Source: https://github.com/dominikkoenitzer/Jester
 Stack: C#, WPF, .NET 10, Windows
 
@@ -189,7 +189,7 @@ A native Windows notepad that does the few things the built-in one refuses to: t
 
 ### Flow, June 2026
 Case study: https://dk.punds.ch/projects/flow
-Download page: https://get-flow-app.vercel.app/
+Download page: https://flow.punds.ch/
 Source: https://github.com/dominikkoenitzer/Flow
 Stack: C++17, Win32, GDI+
 
@@ -213,7 +213,7 @@ A zen-themed journal, named 千本 ("one thousand"), where every entry is a mark
 
 ### Oxidize, June 2026
 Case study: https://dk.punds.ch/projects/oxidize
-Download page: https://get-oxidize.vercel.app/
+Download page: https://oxidize.punds.ch/
 Source: https://github.com/dominikkoenitzer/Oxidize
 Stack: Rust, Windows, CLI, egui
 
@@ -223,7 +223,7 @@ A thorough Windows uninstaller written in Rust, straight against the Win32 API. 
 
 ### Inkling, July 2026
 Case study: https://dk.punds.ch/projects/inkling
-Download page: https://get-inkling.vercel.app/
+Download page: https://inkling.punds.ch/
 Source: https://github.com/dominikkoenitzer/Inkling
 Stack: Electron, React, TypeScript, SQLite
 
@@ -233,7 +233,7 @@ A desktop study app for notes, to-dos and flashcards, kept in one SQLite file on
 
 ### Mochi, September 2026
 Case study: https://dk.punds.ch/projects/mochi
-Download page: https://get-mochi.vercel.app/
+Download page: https://mochi.punds.ch/
 Source: https://github.com/dominikkoenitzer/Mochi
 Stack: Rust, Win32
 
@@ -243,7 +243,7 @@ A tiling window manager for Windows, written in Rust from scratch: a pure core w
 
 ### Daifuku, September 2026
 Case study: https://dk.punds.ch/projects/daifuku
-Download page: https://get-daifuku.vercel.app/
+Download page: https://daifuku.punds.ch/
 Source: https://github.com/dominikkoenitzer/Daifuku
 Stack: Rust, Win32
 
