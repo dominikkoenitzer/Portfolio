@@ -279,7 +279,7 @@ export function QuickAddDemo() {
                 </p>
               ) : null}
             </div>
-            <span className="flex shrink-0 flex-wrap justify-end gap-1.5 tabular-nums">
+            <span className="flex max-w-[44%] shrink-0 flex-wrap justify-end gap-1.5 tabular-nums sm:max-w-none">
               {priority ? (
                 <span className={chip} style={priority === "high" ? { background: Z.primaryTint, color: Z.primaryStrong } : { background: Z.accent, color: Z.muted }}>
                   {priority}
