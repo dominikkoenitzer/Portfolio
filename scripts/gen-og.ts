@@ -182,7 +182,7 @@ const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
   { slug: "entropy", title: "Entropy", subtitle: "A password generator that tells you honestly how long a password lasts" },
   { slug: "zephyr", title: "Zephyr", subtitle: "A to-do list and a focus timer that work offline, no account needed" },
   { slug: "senbon", title: "Senbon", subtitle: "My markdown journal, kept out of search engines on purpose" },
-  { slug: "punds", title: "Punds", subtitle: "My link hub as a 3D world you boot into and fly through" },
+  { slug: "punds", title: "Punds", subtitle: "My link hub as a shrine garden above the clouds" },
   { slug: "flow", title: "Flow", subtitle: "A macro recorder and auto-clicker for Windows, in one small exe" },
   { slug: "jester", title: "Jester", subtitle: "A fast Windows notepad with tabs, find in files and PDF export" },
   { slug: "remnants", title: "Remnants", subtitle: "A quiet build of the VS Code editor, with all AI and telemetry removed" },

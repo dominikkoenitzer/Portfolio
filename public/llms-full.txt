@@ -199,9 +199,9 @@ A native Windows macro recorder and auto-clicker written straight against the Wi
 Case study: https://dk.punds.ch/projects/punds
 Live: https://punds.ch/
 Source: https://github.com/dominikkoenitzer/Punds
-Stack: React, TypeScript, Vite
+Stack: React, TypeScript, Three.js
 
-A link hub you fly through. It boots like an old, imaginary operating system, with a logo splash, a streaming boot log and a low voice, then drops you into a Three.js world where holographic panels orbit a glowing logo in fog: drag to look, scroll to fly, click a panel and the camera dives into it before the link opens. There is an accessible HTML fallback for anything without WebGL. It points at four places: this portfolio, senbon.ch, his GitHub profile and a tip jar. Numbers: 3 runtime deps, 15 scene modules, 4 links, 1 page.
+A link hub built as a place: a small shrine garden on an island above a sea of clouds, rendered live in the browser with Three.js. You stand on the stone path in the late afternoon, look around with the pointer, walk up to the rack, the pond or the shrine with a click, and open one of three wooden plaques: this portfolio, his GitHub profile and Senbon. Grass, trees, the shrine, the lanterns and the wall are generated in code when the page loads; a still of the start view holds the screen until the garden is ready. A frame-time stepper moves between three quality tiers, and a device that cannot carry the scene gets the still with the same links, as does any browser without WebGL. The three links are also plain HTML under the canvas. Numbers: 3 runtime deps, 3 plaques, 3 quality tiers, 1 page.
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
