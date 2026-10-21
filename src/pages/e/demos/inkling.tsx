@@ -149,7 +149,7 @@ export function NoteDemo() {
         height={340}
         label="An Inkling note whose to-dos appear on Today and whose card lines become flashcards"
         live={status}
-        phoneHeight={600}
+        phoneHeight={500}
       >
         <Frame
           bottom={
@@ -379,7 +379,7 @@ export function ReviewDemo() {
       height={340}
       label="An Inkling flashcard scheduled by FSRS-6, review by review"
       live={status}
-      phoneHeight={420}
+      phoneHeight={340}
     >
       <Frame
         bottom={
