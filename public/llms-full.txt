@@ -205,7 +205,7 @@ A link hub you fly through. It boots like Copland OS from Serial Experiments Lai
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
-Live: https://senbon.ch/
+Live: https://senbon.vercel.app/
 Source: private
 Stack: Next.js, React 19, Markdown
 
