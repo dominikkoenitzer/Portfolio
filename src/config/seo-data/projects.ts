@@ -69,7 +69,7 @@ const PROJECT_SEO_DESCRIPTIONS: Record<string, string> = {
     "A native Windows notepad with tabs, line numbers, find-in-files and PDF export, all in one portable Jester.exe with no installer.",
   flow: "A C++17 Windows app that records mouse and keyboard macros, replays them on a high-resolution timer and runs a fast auto-clicker. One exe, no install.",
   punds:
-    "My one-page link hub, built as a shrine garden on an island above the clouds and rendered live in the browser. Look around, walk up to the rack, open a plaque.",
+    "My link hub, built as a shrine garden on an island above the clouds and rendered live in the browser. Look around, walk up to the rack, open a plaque.",
   senbon:
     "My markdown journal: plain files with four frontmatter keys, rendered into an unhurried reading page, with no CMS and no third-party trackers.",
   oxidize:
