@@ -129,6 +129,16 @@ test.describe("reduced motion", () => {
     expect(errors).toEqual([]);
   });
 
+  test("scrolling stays native", async ({ page }) => {
+    await page.goto("/about");
+    await expectRendered(page);
+    await settle(page);
+    await expect(page.locator("html")).not.toHaveClass(/\blenis\b/);
+    await page.locator("body").focus();
+    await page.keyboard.press("PageDown");
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  });
+
   test("the logo strip stands still", async ({ page }) => {
     await page.goto("/projects/entropy");
     await expectRendered(page);
@@ -138,6 +148,55 @@ test.describe("reduced motion", () => {
     await page.waitForTimeout(800);
     const after = await track.evaluate((el) => getComputedStyle(el).transform);
     expect(after).toBe(before);
+  });
+});
+
+/**
+ * The smooth scroll's frame loop runs only while a glide is under way, so the
+ * page is at rest between glides. Keyboard scrolling is native and must work
+ * in that rest, and a wheel glide afterwards must start from where the keys
+ * left the page rather than from where the last glide ended.
+ */
+test.describe("smooth scroll", () => {
+  const scrollY = (page: Page) => page.evaluate(() => Math.round(window.scrollY));
+  const atRest = async (page: Page) => {
+    await expect(page.locator("html")).not.toHaveClass(/lenis-smooth/);
+    let last = -1;
+    await expect
+      .poll(async () => {
+        const y = await scrollY(page);
+        const still = y === last;
+        last = y;
+        return still;
+      })
+      .toBe(true);
+  };
+
+  test("a wheel glide settles, the keys scroll at rest, the next glide starts there", async ({
+    page,
+  }) => {
+    const errors = watchErrors(page);
+    await page.goto("/about");
+    await expectRendered(page);
+    await settle(page);
+    await expect(page.locator("html")).toHaveClass(/\blenis\b/);
+    await page.mouse.move(400, 400);
+
+    await page.mouse.wheel(0, 300);
+    await expect(page.locator("html")).toHaveClass(/lenis-smooth/);
+    await atRest(page);
+    expect(await scrollY(page)).toBe(300);
+
+    await page.locator("body").focus();
+    await page.keyboard.press("PageDown");
+    await atRest(page);
+    const afterKeys = await scrollY(page);
+    expect(afterKeys).toBeGreaterThan(300);
+
+    await page.mouse.wheel(0, 200);
+    await atRest(page);
+    expect(await scrollY(page)).toBe(afterKeys + 200);
+    expect(errors).toEqual([]);
   });
 });
 
