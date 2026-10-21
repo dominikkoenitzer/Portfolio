@@ -110,7 +110,7 @@ describe("the project list", () => {
       );
       if (project.downloadPage) {
         expect(project.downloadPage, project.slug).toMatch(
-          /^https:\/\/get-[a-z-]+\.vercel\.app\/$/,
+          /^https:\/\/([a-z]+\.punds\.ch|get-[a-z-]+\.vercel\.app)\/$/,
         );
         expect(project.downloadUrl, project.slug).toBe(project.downloadPage);
       }
