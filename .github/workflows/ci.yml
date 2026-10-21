@@ -271,6 +271,7 @@ jobs:
         with:
           name: lighthouse-${{ matrix.preset }}-${{ matrix.page }}
           path: .lighthouseci
+          include-hidden-files: true
           retention-days: 7
 
   # The one check to require before merging. It fails when any job above
