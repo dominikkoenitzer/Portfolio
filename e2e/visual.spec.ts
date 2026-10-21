@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import { FIXED_TIME, settle } from "./helpers";
 import { SHOT_ROUTES, SIZES, slugOf } from "./routes";
@@ -17,6 +18,8 @@ import { SHOT_ROUTES, SIZES, slugOf } from "./routes";
 test.skip(process.platform !== "linux", "baselines are rendered on Linux");
 test.use({ contextOptions: { reducedMotion: "reduce" } });
 
+const HIDE_CANVAS = fileURLToPath(new URL("./hide-canvas.css", import.meta.url));
+
 for (const size of SIZES) {
   test.describe(`${size.width}px`, () => {
     test.use({ viewport: size });
@@ -27,7 +30,7 @@ for (const size of SIZES) {
         await expect(page.locator("h1").first()).toBeVisible();
         await settle(page);
         await expect(page).toHaveScreenshot(`${slugOf(path)}-${size.width}.png`, {
-          style: "canvas { visibility: hidden !important; }",
+          stylePath: HIDE_CANVAS,
         });
       });
     }
