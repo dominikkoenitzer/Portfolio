@@ -13,13 +13,13 @@ import { defineConfig, devices } from "@playwright/test";
 const PORT = Number(process.env.E2E_PORT ?? 4317);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
-// On the owner's Windows PC a plain headless Chromium walks into a Windows
-// credential prompt, so it starts from the installed build with these flags.
-// CI and every other machine use Playwright's own Chromium unchanged.
-const LOCAL_CHROME =
-  "C:/Users/domin/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe";
+// On a Windows PC where a plain headless Chromium walks into a Windows
+// credential prompt, E2E_CHROME points at an installed build that starts with
+// these flags instead. CI and every other machine use Playwright's own
+// Chromium.
+const LOCAL_CHROME = process.env.E2E_CHROME;
 const chromiumLaunch =
-  process.platform === "win32" && existsSync(LOCAL_CHROME)
+  process.platform === "win32" && LOCAL_CHROME && existsSync(LOCAL_CHROME)
     ? {
         executablePath: LOCAL_CHROME,
         args: [
@@ -50,11 +50,14 @@ export default defineConfig({
   timeout: 60_000,
   expect: {
     timeout: 10_000,
-    toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled" },
+    toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: "disabled" },
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
+  // A retry shows whether a failure repeats; a test that only passes on its
+  // retry still fails the run.
   retries: process.env.CI ? 1 : 0,
+  failOnFlakyTests: !!process.env.CI,
   workers: process.env.CI ? 2 : 3,
   reporter: process.env.CI
     ? [["list"], ["html", { open: "never" }], ["github"]]
