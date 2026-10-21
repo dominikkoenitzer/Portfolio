@@ -168,7 +168,7 @@ const PROJECT_BASE: ProjectBase[] = [
     date: "2026-06",
     repoUrl: "https://github.com/dominikkoenitzer/Senbon",
     sourcePrivate: true,
-    liveUrl: "https://senbon.vercel.app/",
+    liveUrl: "https://senbon.punds.ch/",
     priority: 10,
     image: "/projects/senbon.jpg",
     gallery: [
