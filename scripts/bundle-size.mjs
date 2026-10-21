@@ -37,6 +37,9 @@ function entryFiles(dir) {
     ...html.matchAll(/<script\b[^>]*type="module"[^>]*src="([^"]+)"/g),
     ...html.matchAll(/<link\b[^>]*rel="modulepreload"[^>]*href="([^"]+)"/g),
   ].map((m) => m[1]);
+  if (!srcs.some((src) => /\.js$/.test(src))) {
+    throw new Error(`no entry script found in ${join(dir, "index.html")}`);
+  }
   return [...new Set(srcs)].map((src) => {
     const raw = readFileSync(join(dir, src.replace(/^\//, "")));
     return {

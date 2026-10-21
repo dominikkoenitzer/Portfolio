@@ -32,7 +32,7 @@ export const ROUTES: RouteCase[] = [
   { path: "/no-such-page", status: 404 },
 ];
 
-if (staticPaths.length < 9 || projectPaths.length < 10) {
+if (staticPaths.length < 10 || projectPaths.length < 15) {
   throw new Error(
     `route discovery found ${staticPaths.length} pages and ${projectPaths.length} projects; the patterns no longer match the sources`,
   );
