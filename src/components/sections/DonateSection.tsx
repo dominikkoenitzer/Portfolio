@@ -110,7 +110,7 @@ export function DonateSection() {
                       aria-hidden
                       className={cn(TILE_ARROW, "text-muted-foreground/60")}
                     />
-                  </span>
+                  </span>{" "}
                   <span
                     className={cn(
                       TILE_GLYPH,
@@ -118,7 +118,7 @@ export function DonateSection() {
                     )}
                   >
                     {tier.amount}
-                  </span>
+                  </span>{" "}
                   <span className="mt-auto text-muted-foreground text-xs leading-snug">
                     {data.label}
                   </span>
@@ -144,14 +144,14 @@ export function DonateSection() {
                   aria-hidden
                   className={cn(TILE_ARROW, "text-primary/60")}
                 />
-              </span>
+              </span>{" "}
               <span className={TILE_GLYPH}>
                 <InfinityIcon
                   aria-hidden
                   className="h-8 w-8 text-primary sm:h-9 sm:w-9"
                   strokeWidth={1.75}
                 />
-              </span>
+              </span>{" "}
               <span className="mt-auto text-foreground/80 text-xs leading-snug">
                 {t.anyAmount.label}
               </span>

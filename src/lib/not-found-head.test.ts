@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import { SITE_CONFIG } from "@/constants";
+import { en } from "@/lib/translations/en";
 
 import {
   NOT_FOUND_DESCRIPTION,
   notFoundHead,
   notFoundTitle,
+  UNLISTED_ROUTES,
+  unlistedHead,
 } from "../../scripts/head-meta";
 import shell from "../../index.html?raw";
 
@@ -67,5 +70,26 @@ describe("notFoundHead", () => {
     expect(contentOf("og:image")).toEqual([`${SITE_CONFIG.url}/og-image.png`]);
     expect(html).toContain('<meta property="og:type" content="website">');
     expect(html).toContain('<div id="root"></div>');
+  });
+});
+
+describe("unlisted pages", () => {
+  it("prerender the title and description the diagnostics page sets", () => {
+    expect(UNLISTED_ROUTES["/diag"]).toEqual({
+      title: en.diagnostics.eyebrow,
+      description: en.diagnostics.seoDescription,
+    });
+  });
+
+  it("carry noindex in every bot tag and claim no URL", () => {
+    const { title, description } = UNLISTED_ROUTES["/diag"];
+    const head = unlistedHead(shell, title, description);
+    for (const key of ["robots", "googlebot", "bingbot"]) {
+      expect(head).toMatch(
+        new RegExp(`<meta\\b(?=[^>]*name="${key}")[^>]*content="noindex, nofollow"`),
+      );
+    }
+    expect(head).not.toMatch(/property="og:url"/);
+    expect(head).toContain(`<title>${title}</title>`);
   });
 });

@@ -88,7 +88,7 @@ export const de = {
     heading: "Skills",
     subheading:
       "Womit ich täglich arbeite, und worin ich noch besser werde.",
-    projectCountOne: "Ein Projekt nutzt {skill}",
+    projectCountOne: "{count} Projekt nutzt {skill}",
     projectCountMany: "{count} Projekte nutzen {skill}",
     categories: {
       frontend: "Frontend",
@@ -444,6 +444,14 @@ export const de = {
       services: "Was ich übernehme und wie ich arbeite.",
       contact: "Schreib mir eine Nachricht.",
     },
+  },
+  diagnostics: {
+    eyebrow: "Diagnose",
+    title: "So läuft diese Seite auf deinem Gerät",
+    body: "Eine kurze Messung dieses Browsers und seiner Grafik: Bildzeiten, Anzeige, Grafikchip und allfällige Fehler. Gesendet wird nur, wenn du auf Senden drückst.",
+    noEndpoint: "Für diese Seite ist keine Adresse für Berichte eingerichtet, darum kann nichts gesendet werden. Die Angaben oben bleiben auf deinem Gerät.",
+    reopen: "Panel wieder öffnen",
+    seoDescription: "Eine Messseite für diese Website. Nicht verlinkt.",
   },
   privacy: {
     title: "Datenschutzerklärung",

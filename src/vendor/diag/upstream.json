@@ -1,0 +1,13 @@
+{
+  "commit": "43e7a56076d4c825e8dab19a4ec26212d1ee7f1c",
+  "path": "src/client",
+  "files": {
+    "capture.js": "ebe294b502a7e1d62a32fcfca029524c7f5e8a133eed627d315f4eb7aa32eda5",
+    "facts.js": "109ff76cbf44e682f84d5fafa5efd09d7e614c1555435b78ab399d66078043a0",
+    "index.js": "0d97fdbc914e512becedc372226965c913e513869d01a8718c95a4e4e87531fd",
+    "measure.js": "b691c3fe6a1b08798a3449070eac2b33d9083928a6e25e7c865a95fe75cc0b6e",
+    "panel.js": "264ee7902e20e7f6a8802fd7c8f57b32b3db5311bc363e1d5109c40bc1d0b668",
+    "report.js": "896640bf2f541f340f37eed5bbcbecef3d575ca2d9f21c10fca284ac231354fd",
+    "shot.js": "0eb7d2fb9c20a910777a2471175d32a4914fb3fca0f441faf1fd1fc96b12df0d"
+  }
+}

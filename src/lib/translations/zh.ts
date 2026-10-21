@@ -87,7 +87,7 @@ export const zh = {
     eyebrow: "技术栈与工具",
     heading: "技能",
     subheading: "我日常在用的东西，以及还在慢慢变熟的部分。",
-    projectCountOne: "1 个项目使用 {skill}",
+    projectCountOne: "{count} 个项目使用 {skill}",
     projectCountMany: "{count} 个项目使用 {skill}",
     categories: {
       frontend: "前端",
@@ -381,6 +381,14 @@ export const zh = {
       services: "我承接什么，怎么做。",
       contact: "给我留言。",
     },
+  },
+  diagnostics: {
+    eyebrow: "诊断",
+    title: "本站在你的设备上的运行情况",
+    body: "对这个浏览器及其图形的简短测量：帧时间、显示、图形芯片以及任何错误。只有在你按下发送后才会发送。",
+    noEndpoint: "本站没有设置接收报告的地址，因此无法发送。上面的详细信息只保留在你的设备上。",
+    reopen: "重新打开面板",
+    seoDescription: "本站的测量页面。未公开列出。",
   },
   privacy: {
     title: "隐私政策",

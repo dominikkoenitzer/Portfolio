@@ -34,6 +34,7 @@ import {
   type OfferCategoryKey,
   ServiceOffers,
 } from "@/components/effects/service-offers";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
@@ -50,6 +51,7 @@ import {
 } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import { canDrawWebGL2 } from "@/lib/webgl";
 
 // The Services page opens on a 3D skill-tree sapling on desktop: lazy
 // (three.js), desktop and full-motion only. Everything below it is plain cards.
@@ -330,18 +332,19 @@ export function ServicesSection() {
   // reduced motion get the card grid only (three.js never even loads there).
   // Seeded on first client render (no layout shift, no mobile cost) and kept
   // reactive so crossing the breakpoint swaps cleanly and tears down the WebGL
-  // panel on the way down.
+  // panel on the way down. A browser that refuses WebGL 2 gets the grid too.
   const [showExplorer, setShowExplorer] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia(DESKTOP_QUERY).matches &&
-      !window.matchMedia(REDUCED_MOTION_QUERY).matches,
+      !window.matchMedia(REDUCED_MOTION_QUERY).matches &&
+      canDrawWebGL2(),
   );
   useEffect(() => {
     const desktop = window.matchMedia(DESKTOP_QUERY);
     const motion = window.matchMedia(REDUCED_MOTION_QUERY);
     const update = () => {
-      const next = desktop.matches && !motion.matches;
+      const next = desktop.matches && !motion.matches && canDrawWebGL2();
       setShowExplorer(next);
       if (!next) setSelectedKey(null); // no card lingering once the tree is gone
     };
@@ -433,18 +436,23 @@ export function ServicesSection() {
             className="relative w-full"
             style={{ height: "clamp(560px, 70vh, 760px)" }}
           >
-            <Suspense fallback={null}>
-              <ServiceExplorer
-                activeCategory={active}
-                key={designTheme}
-                designTheme={designTheme}
-                nodes={explorerNodes}
-                onError={handleError}
-                onReady={handleReady}
-                onSelect={handleSelect}
-                selectedKey={selectedKey}
-              />
-            </Suspense>
+            {/* The tree reports its own WebGL failures through `onError`; the
+                boundary catches the rest (a chunk that never arrives, a throw
+                while rendering) and takes the same way out to the plain page. */}
+            <ErrorBoundary fallback={null} onError={handleError}>
+              <Suspense fallback={null}>
+                <ServiceExplorer
+                  activeCategory={active}
+                  key={designTheme}
+                  designTheme={designTheme}
+                  nodes={explorerNodes}
+                  onError={handleError}
+                  onReady={handleReady}
+                  onSelect={handleSelect}
+                  selectedKey={selectedKey}
+                />
+              </Suspense>
+            </ErrorBoundary>
 
             {/* Eyebrow, title and the category filter, overlaid top-centre.
                 Same eyebrow and title classes as SectionHeading, so this

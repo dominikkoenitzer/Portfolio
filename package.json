@@ -17,7 +17,7 @@
   "packageManager": "bun@1.4.2",
   "scripts": {
     "dev": "vite --port 1000",
-    "build": "vite build && bun scripts/prerender.ts",
+    "build": "node scripts/diag-csp.mjs && vite build && bun scripts/prerender.ts",
     "build:spa": "vite build",
     "build:dev": "vite build --mode development",
     "typecheck": "tsc -b",
@@ -26,6 +26,11 @@
     "test": "vitest run",
     "check:sitemap": "bun scripts/check-sitemap.ts",
     "check:jsonld": "bun scripts/validate-jsonld.ts",
+    "check:diag": "node scripts/sync-diag.mjs --check",
+    "check:diag-csp": "node scripts/diag-csp.mjs",
+    "check:bundle": "node scripts/bundle-size.mjs",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "test:e2e": "playwright test",
     "preview": "vite preview --port 1000"
   },
   "dependencies": {
@@ -59,7 +64,9 @@
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
