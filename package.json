@@ -17,7 +17,7 @@
   "packageManager": "bun@1.4.2",
   "scripts": {
     "dev": "vite --port 1000",
-    "build": "vite build && bun scripts/prerender.ts",
+    "build": "node scripts/diag-csp.mjs && vite build && bun scripts/prerender.ts",
     "build:spa": "vite build",
     "build:dev": "vite build --mode development",
     "typecheck": "tsc -b",
@@ -27,6 +27,7 @@
     "check:sitemap": "bun scripts/check-sitemap.ts",
     "check:jsonld": "bun scripts/validate-jsonld.ts",
     "check:diag": "node scripts/sync-diag.mjs --check",
+    "check:diag-csp": "node scripts/diag-csp.mjs",
     "check:bundle": "node scripts/bundle-size.mjs",
     "serve:dist": "node scripts/serve-dist.mjs",
     "test:e2e": "playwright test",
