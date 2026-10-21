@@ -1,0 +1,28 @@
+/* Zephyr's own two palettes (its src/index.css), so the demos follow the
+   page into night the way the app follows the system. The timer's night
+   surface is dark in both. Loaded only with the Zephyr demos. */
+.zephyr-app {
+  --z-bg: 36 16% 93%;
+  --z-card: 0 0% 100%;
+  --z-ink: 246 22% 10%;
+  --z-muted: 246 6% 40%;
+  --z-accent: 36 14% 91%;
+  --z-primary: 16 82% 42%;
+  --z-primary-strong: 16 84% 38%;
+  --z-hero-from: 247 36% 25%;
+  --z-hero-to: 249 44% 10%;
+  --z-hero-text: 36 30% 97%;
+  --z-sun: 24 92% 72%;
+}
+
+.dark .zephyr-app {
+  --z-bg: 248 22% 5%;
+  --z-card: 248 16% 9%;
+  --z-ink: 36 22% 93%;
+  --z-muted: 246 8% 64%;
+  --z-accent: 248 12% 15%;
+  --z-primary: 20 90% 62%;
+  --z-primary-strong: 22 92% 68%;
+  --z-hero-from: 247 34% 22%;
+  --z-hero-to: 250 42% 8%;
+}
