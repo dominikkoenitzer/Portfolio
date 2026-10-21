@@ -61,13 +61,7 @@ export const story: Story = {
       id: "barrel",
       heading: "One convenient import undid the code splitting",
       blocks: [
-        "Every page except the home page is lazy loaded, so a visitor should only pay for the page they open. The pages imported their sections through a barrel file, and that made every section, the whole project catalogue in four languages with it, part of the entry chunk.",
-        {
-          figures: [
-            { value: "281 kB", label: "added to the entry chunk" },
-            { value: "113 kB", label: "of it after gzip" },
-          ],
-        },
+        "Every page except the home page is lazy loaded, so a visitor should only pay for the page they open. The pages imported their sections through a barrel file, and that made every section, the whole project catalogue in four languages with it, part of the entry chunk: 281 kB more, 113 kB of it after gzip.",
         "Sections are now imported by their module path. The reason is written into the barrel file itself, where the next person tempted by the shortcut will read it.",
       ],
     },

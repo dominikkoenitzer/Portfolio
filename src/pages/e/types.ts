@@ -19,9 +19,6 @@ export type Still = {
   crop?: [number, number, number, number];
 };
 
-/** A headline number: the value set large, what it counts in a few words below. */
-export type Figure = { value: string; label: string };
-
 /** A short excerpt from the real source, where it shows a decision better than prose. */
 export type Code = {
   /** The file it comes from, as the path inside the repository. */
@@ -36,15 +33,13 @@ export type Point = { term: string; text: string };
 /**
  * One piece of a story. Each form shows a different kind of thing: words, the
  * app working (a live demo), the app as it looks (a still, or two side by
- * side), what it adds up to (figures), how it is made (code), or what it
- * answers to (points).
+ * side), how it is made (code), or what it answers to (points).
  */
 export type Block =
   | string
   | { Demo: ComponentType }
   | { still: Still }
   | { pair: [Still, Still]; caption: string }
-  | { figures: Figure[] }
   | { code: Code }
   | { points: Point[] };
 
