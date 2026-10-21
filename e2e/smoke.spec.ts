@@ -161,15 +161,23 @@ test.describe("smooth scroll", () => {
   const scrollY = (page: Page) => page.evaluate(() => Math.round(window.scrollY));
   const atRest = async (page: Page) => {
     await expect(page.locator("html")).not.toHaveClass(/lenis-smooth/);
+    // Settled once the position has held for half a second: on a slow runner
+    // two frames can be more than one poll apart.
     let last = -1;
+    let since = 0;
     await expect
-      .poll(async () => {
-        const y = await scrollY(page);
-        const still = y === last;
-        last = y;
-        return still;
-      })
-      .toBe(true);
+      .poll(
+        async () => {
+          const y = await scrollY(page);
+          if (y !== last) {
+            last = y;
+            since = Date.now();
+          }
+          return Date.now() - since;
+        },
+        { intervals: [100] },
+      )
+      .toBeGreaterThanOrEqual(500);
   };
 
   test("a wheel glide settles, the keys scroll at rest, the next glide starts there", async ({
@@ -189,9 +197,11 @@ test.describe("smooth scroll", () => {
 
     await page.locator("body").focus();
     await page.keyboard.press("PageDown");
+    // A browser that animates key scrolling may start a frame or two late on
+    // a slow machine, so wait for the move before waiting for the rest.
+    await expect.poll(() => scrollY(page)).toBeGreaterThan(300);
     await atRest(page);
     const afterKeys = await scrollY(page);
-    expect(afterKeys).toBeGreaterThan(300);
 
     // Upwards, so the end of the page cannot clamp it: a glide that started
     // from the last glide's target would end at 100, not here.
