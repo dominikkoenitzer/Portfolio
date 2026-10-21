@@ -63,7 +63,7 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants with the Daifuku repository open: the Explorer on the left, grid.rs in the editor, and no AI panel, chat or sign-in anywhere.",
       "The Remnants icon, a faceted blue shard, on a pale lilac background.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "lines removed" },
       { value: "Off", label: "telemetry and crash reporting" },
@@ -121,7 +121,7 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants mit dem Daifuku-Repository: links der Explorer, im Editor grid.rs, und nirgends ein KI-Panel, ein Chat oder eine Anmeldung.",
       "Das Remnants-Icon, ein facettierter blauer Splitter, auf blassem Flieder.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "entfernte Zeilen" },
       { value: "Aus", label: "Telemetrie und Absturzberichte" },
@@ -179,7 +179,7 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants avec le dépôt Daifuku ouvert : l'explorateur à gauche, grid.rs dans l'éditeur, et nulle part de panneau IA, de chat ni de connexion.",
       "L'icône de Remnants, un éclat bleu à facettes, sur un fond lilas pâle.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "lignes retirées" },
       { value: "Coupée", label: "télémétrie et rapports de plantage" },
@@ -237,7 +237,7 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants 打开着 Daifuku 仓库：左边是资源管理器，编辑器里是 grid.rs，任何地方都没有 AI 面板、聊天或登录。",
       "Remnants 的图标：一块多面的蓝色碎片，背景是浅淡的丁香紫。",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "删除的行数" },
       { value: "关闭", label: "遥测和崩溃报告" },
