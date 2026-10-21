@@ -1,6 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowUpRight,
   Download,
   ExternalLink,
@@ -8,8 +7,10 @@ import {
 } from "lucide-react";
 import { Github } from "@/components/ui/github-icon";
 import { useLenis } from "lenis/react";
-import { type ReactNode, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { type ReactNode, useEffect, useState } from "react";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
+import { readVariant } from "@/lib/project-variant";
+import { ProjectVariantView } from "./project-variants";
 import { SEO } from "@/components/seo";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
@@ -30,7 +31,7 @@ import {
   pictureSrcSet,
   projectCardSrcSet,
 } from "@/constants/projects";
-import type { ProjectSection } from "@/constants/projects/types";
+import type { PortfolioProject, ProjectSection } from "@/constants/projects/types";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -43,16 +44,21 @@ import {
 import { translations } from "@/lib/translations";
 import {
   Lightbox,
+  type LightboxOrigin,
   ProjectFigure,
   StatStrip,
 } from "@/components/effects/project-effects";
 
-/** One card surface for the whole page: opaque cream, hairline, no shadow. */
-const CARD = "rounded-2xl border border-border/60 bg-card";
+/** One card surface for the whole page: opaque cream and a hairline ring. */
+const CARD = "rounded-3xl bg-card ring-1 ring-border/50";
 
-/** How wide the hero screenshot renders, measured at each breakpoint. */
+/**
+ * How wide the main screenshot renders: the page column, which stops at
+ * 1152px (max-w-7xl less the lg gutters) and otherwise is the viewport less
+ * the gutter ladder (24, 32, 48, 64px a side).
+ */
 const HERO_SIZES =
-  "(min-width: 1280px) 455px, (min-width: 1024px) 36vw, (min-width: 640px) 574px, 90vw";
+  "(min-width: 1280px) 1152px, (min-width: 1024px) calc(100vw - 128px), (min-width: 768px) calc(100vw - 96px), (min-width: 640px) calc(100vw - 64px), calc(100vw - 48px)";
 
 /* ------------------------------------------------------------------ */
 /* Numbered section: a flat marker, a hairline and a reading body      */
@@ -70,10 +76,11 @@ function FeatureSection({
   children: ReactNode;
 }) {
   const reduceMotion = useReducedMotion();
+  const { language } = useLanguage();
   return (
     <motion.section
       id={id}
-      className="scroll-mt-28 border-border/60 border-t pt-12 first:border-t-0 first:pt-0"
+      className="scroll-mt-28"
       {...revealOnScroll(reduceMotion)}
     >
       <div className="flex items-baseline gap-4">
@@ -90,13 +97,63 @@ function FeatureSection({
         >
           {String(index).padStart(2, "0")}
         </span>
-        <h2 className="title-serif font-bold text-2xl leading-tight sm:text-3xl">
+        {/* English headings break between words. The site-wide
+            `hyphens: auto` is there for long German and French compounds,
+            and in English it split headings such as "sen-tence" on a
+            phone. */}
+        <h2
+          className={`title-serif text-balance font-bold text-2xl leading-tight sm:text-3xl ${
+            language === "en" ? "hyphens-manual" : ""
+          }`}
+        >
           {title}
         </h2>
       </div>
       <div className="mt-6 sm:pl-10">{children}</div>
     </motion.section>
   );
+}
+
+/** A quiet text link in the rail; the hero carries the full buttons. */
+const RAIL_LINK =
+  "inline-flex items-center gap-2 py-1 text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground";
+
+/**
+ * Which numbered section the reader is in: the last one whose top has passed
+ * a line a third of the way down the viewport. Measured on scroll, at most
+ * once a frame; the page glides on Lenis, which still moves the window, so
+ * the native scroll event fires as it goes.
+ */
+function useActiveSection(count: number) {
+  const [active, setActive] = useState("section-1");
+  useEffect(() => {
+    if (count < 2) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const line = window.innerHeight / 3;
+      let current = "section-1";
+      for (let index = 1; index <= count; index += 1) {
+        const section = document.getElementById(`section-${index}`);
+        if (section && section.getBoundingClientRect().top <= line) {
+          current = `section-${index}`;
+        }
+      }
+      setActive(current);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(measure);
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [count]);
+  return active;
 }
 
 /* A label above a group in the links rail: plain words at reading size, set
@@ -122,7 +179,7 @@ function CodeExcerpt({
           user cannot reach the end of a long line. The site-wide
           :focus-visible ring shows where focus is. */}
       <pre
-        className={`${CARD} code-excerpt overflow-x-auto p-5 text-[13px] leading-relaxed sm:p-6`}
+        className="code-excerpt overflow-x-auto rounded-2xl bg-secondary/50 p-5 text-[13px] leading-relaxed sm:p-6"
         tabIndex={0}
       >
         <code>{code.text}</code>
@@ -131,6 +188,75 @@ function CodeExcerpt({
         {code.caption}
       </figcaption>
     </motion.figure>
+  );
+}
+
+/** The project's buttons: open or install it, its download page, its source. */
+function ProjectActions({
+  project,
+  className,
+}: {
+  project: PortfolioProject;
+  className?: string;
+}) {
+  const t = translations[useLanguage().language].projectDetails;
+  return (
+    <div className={`flex flex-wrap items-center gap-3 ${className ?? ""}`}>
+      {project.downloadUrl ? (
+        <Button asChild className="rounded-full px-6" variant="cta">
+          <a
+            href={project.downloadUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Download className="h-4 w-4" />
+            {t.download}
+          </a>
+        </Button>
+      ) : project.liveUrl ? (
+        <Button asChild className="rounded-full px-6" variant="cta">
+          <a
+            href={project.liveUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLink className="h-4 w-4" />
+            {t.visitSite}
+          </a>
+        </Button>
+      ) : null}
+      {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
+        <Button asChild className="rounded-full px-5" variant="soft">
+          <a
+            href={project.downloadPage}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLink className="h-4 w-4" />
+            {t.downloadPage}
+          </a>
+        </Button>
+      ) : null}
+      {project.sourcePrivate ? (
+        <PrivateSource>
+          <Button className="rounded-full px-5" type="button" variant="soft">
+            <Lock className="h-4 w-4" />
+            {t.sourceCode}
+          </Button>
+        </PrivateSource>
+      ) : (
+        <Button asChild className="rounded-full px-5" variant="soft">
+          <a
+            href={project.repoUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Github className="h-4 w-4" />
+            {t.sourceCode}
+          </a>
+        </Button>
+      )}
+    </div>
   );
 }
 
@@ -146,6 +272,9 @@ const ProjectDetails = () => {
   const t = translations[language].projectDetails;
   const seoSuffix = translations[language].seo.projectDetailsKeywordsSuffix;
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
+  // `?v=a|b|c` shows one of three layouts under consideration.
+  const [searchParams] = useSearchParams();
+  const variant = readVariant(searchParams.get("v"));
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   // Which picture the viewer was opened from, for the grow-from-thumbnail
@@ -155,9 +284,13 @@ const ProjectDetails = () => {
   // latest. The shared-layout flight measures the enlarged image when it
   // mounts, and an image still loading measures as an empty box: the first
   // frames then scaled the picture from nothing into a squashed rectangle.
-  const openLightbox = (at: number) => {
+  // `from: false` opens it with a plain fade; an origin box opens it out of
+  // the crop that was clicked (layout d); nothing grows it from its frame.
+  const [lightboxFrom, setLightboxFrom] = useState<LightboxOrigin | null>(null);
+  const openLightbox = (at: number, from: boolean | LightboxOrigin = true) => {
     const open = () => {
-      setLightboxOrigin(at);
+      setLightboxFrom(typeof from === "object" ? from : null);
+      setLightboxOrigin(from === false ? -1 : at);
       setLightboxIndex(at);
     };
     const src = galleryImages[at];
@@ -174,6 +307,10 @@ const ProjectDetails = () => {
     window.setTimeout(once, 350);
   };
   const lenis = useLenis();
+  // Overview plus one per case-study section, numbered from 1 like the page.
+  const activeSection = useActiveSection(
+    project ? project.sections.length + 1 : 0,
+  );
 
   if (!project) {
     return <Navigate replace to="/projects" />;
@@ -182,9 +319,14 @@ const ProjectDetails = () => {
   const projectPath = `/projects/${project.slug}`;
   const projectUrl = `${SITE_CONFIG.url}${projectPath}`;
   const projectTimeline = `${project.dateLabel} – ${project.endLabel ?? t.present}`;
-  const otherProjects = getProjects(language).filter(
-    (item) => item.slug !== project.slug,
-  );
+  /* The three projects after this one in creation order, wrapping round at
+     the newest, so the page ends on a next step rather than the whole
+     catalogue again; "All projects" beside the heading is the rest. */
+  const catalogue = getProjects(language);
+  const position = catalogue.findIndex((item) => item.slug === project.slug);
+  const otherProjects = [1, 2, 3]
+    .map((step) => catalogue[(position + step) % catalogue.length])
+    .filter((item) => item.slug !== project.slug);
   const captionFor = (position: number) => project.captions[position];
 
   /* The case study's sections, for the list in the links rail.
@@ -284,58 +426,61 @@ const ProjectDetails = () => {
         url={projectUrl}
       />
 
+      {variant ? (
+        <ProjectVariantView
+          actions={<ProjectActions project={project} />}
+          altFor={shotAlt}
+          captionFor={captionFor}
+          facts={specRows}
+          next={otherProjects}
+          open={openLightbox}
+          openLabelFor={shotLabel}
+          pictures={galleryImages}
+          project={project}
+          variant={variant}
+        />
+      ) : (
       <div className="min-h-screen">
         {/* ============================================================ */}
-        {/* HERO: title, tagline, actions, meta                          */}
+        {/* HERO: title, tagline, actions and the facts beside them,     */}
+        {/* then the main picture across the full column                 */}
         {/* ============================================================ */}
         <section className="mx-auto max-w-7xl px-6 pt-4 pb-12 sm:px-8 sm:pb-16 md:px-12 lg:px-16">
-          {/* Breadcrumb + back */}
-          <div className="mb-10 flex flex-wrap items-center justify-between gap-4 sm:mb-12">
-            <nav
-              aria-label={t.breadcrumb}
-              className="flex items-center gap-2 text-muted-foreground text-sm"
-            >
-              {/* `inline-flex` is not cosmetic here: it is what the touch
-                  tap-target rule in index.css matches, so a breadcrumb is a
-                  44px target under a thumb and unchanged under a mouse. */}
-              <Link
-                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
-                to="/"
-              >
-                {t.home}
-              </Link>
-              <span aria-hidden className="text-border">
-                /
-              </span>
-              <Link
-                className="inline-flex min-h-6 items-center transition-colors hover:text-foreground"
-                to="/projects"
-                {...warmOnIntent("/projects")}
-              >
-                {t.projects}
-              </Link>
-              <span aria-hidden className="text-border">
-                /
-              </span>
-              <span className="text-foreground/80">{project.title}</span>
-            </nav>
-
+          {/* `inline-flex` on the links is not cosmetic: it is what the touch
+              tap-target rule in index.css matches, so a breadcrumb is a 44px
+              target under a thumb and unchanged under a mouse. The Projects
+              crumb is the way back, so there is no separate Back link. */}
+          <nav
+            aria-label={t.breadcrumb}
+            className="mb-10 flex items-center gap-2 text-muted-foreground text-sm sm:mb-12"
+          >
             <Link
-              className="inline-flex min-h-6 items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
+              className="inline-flex items-center transition-colors hover:text-foreground"
+              to="/"
+            >
+              {t.home}
+            </Link>
+            <span aria-hidden className="text-border">
+              /
+            </span>
+            <Link
+              className="inline-flex items-center transition-colors hover:text-foreground"
               to="/projects"
               {...warmOnIntent("/projects")}
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              {t.back}
+              {t.projects}
             </Link>
-          </div>
+            <span aria-hidden className="text-border">
+              /
+            </span>
+            <span className="text-foreground/80">{project.title}</span>
+          </nav>
 
-          {/* Title and tagline left, the picture right. */}
-          <div className="grid items-end gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+          {/* Title, tagline and actions on the left; the facts in a narrow
+              column on the right from `lg`, under the actions below it. */}
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-end lg:gap-16">
             <motion.div {...revealOnScroll(reduceMotion)}>
-              <p className="font-medium text-sage-deep text-sm">{projectTimeline}</p>
-
-              <h1 className="title-serif mt-5 font-bold text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
+              <h1 className="title-serif font-bold text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
                 {project.title}
               </h1>
 
@@ -343,137 +488,75 @@ const ProjectDetails = () => {
                 {project.tagline}
               </p>
 
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                {project.downloadUrl ? (
-                  <Button asChild className="rounded-lg px-6" variant="cta">
-                    <a
-                      href={project.downloadUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Download className="h-4 w-4" />
-                      {t.download}
-                    </a>
-                  </Button>
-                ) : project.liveUrl ? (
-                  <Button asChild className="rounded-lg px-6" variant="cta">
-                    <a
-                      href={project.liveUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      {t.visitSite}
-                    </a>
-                  </Button>
-                ) : null}
-                {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
-                  <Button asChild className="rounded-lg px-5" variant="soft">
-                    <a
-                      href={project.downloadPage}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      {t.downloadPage}
-                    </a>
-                  </Button>
-                ) : null}
-                {project.sourcePrivate ? (
-                  <PrivateSource>
-                    <Button className="rounded-lg px-5" type="button" variant="soft">
-                      <Lock className="h-4 w-4" />
-                      {t.sourceCode}
-                    </Button>
-                  </PrivateSource>
-                ) : (
-                  <Button asChild className="rounded-lg px-5" variant="soft">
-                    <a
-                      href={project.repoUrl}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Github className="h-4 w-4" />
-                      {t.sourceCode}
-                    </a>
-                  </Button>
-                )}
-              </div>
+              <ProjectActions className="mt-9" project={project} />
 
               {project.downloadUrl ? (
                 <p className="mt-4 max-w-prose text-muted-foreground text-sm leading-relaxed">
                   {project.downloadNote ?? t.downloadNote}
                 </p>
               ) : null}
-
             </motion.div>
 
-            {/* A square app icon gets the same frame as a screenshot, so both
-                modes read as one component. */}
-            {project.image ? (
-              <div className="flex justify-center lg:justify-end">
-                {project.imageIcon ? (
-                  <motion.div
-                    className={`${CARD} flex items-center justify-center p-10`}
-                    {...revealOnScroll(reduceMotion)}
-                  >
-                    <img
-                      alt={`${project.title} logo`}
-                      className="h-36 w-36 object-contain sm:h-44 sm:w-44"
-                      decoding="async"
-                      fetchPriority="high"
-                      loading="eager"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                      src={project.image}
-                    />
-                  </motion.div>
-                ) : (
-                  <ProjectFigure
-                    alt={captionFor(0) ?? shotAlt(0)}
-                    caption={captionFor(0)}
-                    className="w-full max-w-xl"
-                    layoutId="project-shot-0"
-                    onOpen={() => openLightbox(0)}
-                    openLabel={shotLabel(0)}
-                    priority
-                    /* Measured in a browser at every breakpoint, not estimated:
-                       270px at 320 through 574px where the column caps, 348px
-                       once the two-column layout arrives at 1024, and 455px
-                       from 1280 up. A 1x display now takes the 800px card file
-                       the catalogue already ships and a retina one still takes
-                       the full shot, so nobody gets a soft screenshot. */
-                    sizes={HERO_SIZES}
-                    src={project.image}
-                    srcSet={projectCardSrcSet(project.image, project.imageWidth)}
-                  />
-                )}
-              </div>
-            ) : null}
+            {/* The facts, once. Two columns under a hairline on a phone, one
+                column beside the title from `lg`, where the hairline turns
+                to stand on its left. */}
+            <motion.dl
+              className="grid grid-cols-2 gap-x-8 gap-y-6 lg:grid-cols-1 lg:gap-y-5"
+              {...revealOnScroll(reduceMotion)}
+            >
+              {specRows.map((row) => (
+                <div key={row.label}>
+                  <dt className="font-medium text-muted-foreground text-sm">
+                    {row.label}
+                  </dt>
+                  <dd className="mt-1.5 text-foreground/90 text-sm leading-relaxed">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </motion.dl>
           </div>
 
-          {/* Spec rail. It has to live here rather than only in the desktop
-              aside, or a phone gets the title and the buttons and none of the
-              facts. */}
-          <motion.dl
-            className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14"
-            {...revealOnScroll(reduceMotion)}
-          >
-            {specRows.map((row) => (
-              <div className="max-w-xs" key={row.label}>
-                <dt className="font-medium text-muted-foreground text-sm">
-                  {row.label}
-                </dt>
-                <dd className="mt-2 text-foreground/90 text-sm leading-relaxed">
-                  {row.value}
-                </dd>
-              </div>
-            ))}
-          </motion.dl>
+          {/* The main picture at the width of the page column: it is what
+              the project looks like, so it gets the room. A square app icon
+              keeps its small frame. */}
+          {project.image ? (
+            <div className="mt-12 sm:mt-14">
+              {project.imageIcon ? (
+                <motion.div
+                  className={`${CARD} flex items-center justify-center p-10`}
+                  {...revealOnScroll(reduceMotion)}
+                >
+                  <img
+                    alt={`${project.title} logo`}
+                    className="h-36 w-36 object-contain sm:h-44 sm:w-44"
+                    decoding="async"
+                    fetchPriority="high"
+                    loading="eager"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                    src={project.image}
+                  />
+                </motion.div>
+              ) : (
+                <ProjectFigure
+                  alt={`${project.title} screenshot`}
+                  caption={captionFor(0)}
+                  layoutId="project-shot-0"
+                  onOpen={() => openLightbox(0)}
+                  openLabel={shotLabel(0)}
+                  priority
+                  sizes={HERO_SIZES}
+                  src={project.image}
+                  srcSet={projectCardSrcSet(project.image, project.imageWidth)}
+                />
+              )}
+            </div>
+          ) : null}
 
           {project.stats?.length ? (
-            <div className="mt-10">
+            <div className="mt-12 sm:mt-14">
               <StatStrip stats={project.stats} />
             </div>
           ) : null}
@@ -489,7 +572,7 @@ const ProjectDetails = () => {
         <div className="mx-auto max-w-7xl px-6 pb-24 sm:px-8 sm:pb-28 md:px-12 lg:px-16">
           <div className="grid gap-12 pt-8 lg:grid-cols-[1fr_auto] lg:gap-16">
             {/* -------- Reading column -------- */}
-            <article className="min-w-0 max-w-3xl space-y-12">
+            <article className="min-w-0 max-w-3xl space-y-16 sm:space-y-20">
               <FeatureSection
                 id="section-1"
                 index={1}
@@ -542,127 +625,128 @@ const ProjectDetails = () => {
               ))}
             </article>
 
-            {/* -------- Sticky links rail. The facts are in the hero spec
-                    rail; repeating them here only doubled the page. -------- */}
+            {/* -------- Sticky rail: where the reader is, then the links.
+                    The hero has the full buttons; here they are quiet text
+                    links, so the first screen does not show them twice. -------- */}
             <aside className="hidden lg:block">
-              <div className={`sticky top-28 w-64 ${CARD} p-6`}>
-                <RailLabel>{t.links}</RailLabel>
-                <div className="mt-4 flex flex-col gap-2">
-                  {project.downloadUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="cta"
-                    >
-                      <a
-                        href={project.downloadUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <Download className="h-4 w-4" />
-                        {t.download}
-                      </a>
-                    </Button>
-                  ) : project.liveUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="cta"
-                    >
-                      <a
-                        href={project.liveUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        {t.visitSite}
-                      </a>
-                    </Button>
-                  ) : null}
-                  {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="soft"
-                    >
-                      <a
-                        href={project.downloadPage}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        {t.downloadPage}
-                      </a>
-                    </Button>
-                  ) : null}
-                  {project.sourcePrivate ? (
-                    <PrivateSource>
-                      <Button
-                        className="w-full justify-start rounded-lg"
-                        size="sm"
-                        type="button"
-                        variant="soft"
-                      >
-                        <Lock className="h-4 w-4" />
-                        {t.sourceCode}
-                      </Button>
-                    </PrivateSource>
-                  ) : (
-                    <Button
-                      asChild
-                      className="w-full justify-start rounded-lg"
-                      size="sm"
-                      variant="soft"
-                    >
-                      <a
-                        href={project.repoUrl}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <Github className="h-4 w-4" />
-                        {t.sourceCode}
-                      </a>
-                    </Button>
-                  )}
-                </div>
-
+              <div className="sticky top-28 w-60">
                 {outline.length > 1 ? (
-                  <nav
-                    aria-label={t.onThisPage}
-                    className="mt-6 border-border/60 border-t pt-5"
-                  >
+                  <nav aria-label={t.onThisPage}>
                     <RailLabel>{t.onThisPage}</RailLabel>
                     <ol className="mt-3 space-y-1">
-                      {outline.map((entry, index) => (
-                        <li key={entry.id}>
-                          <button
-                            className="flex w-full gap-2.5 rounded-md py-1 text-left text-muted-foreground text-sm leading-snug transition-colors duration-200 ease-out hover:text-foreground"
-                            onClick={() => jumpTo(entry.id)}
-                            type="button"
-                          >
-                            <span
-                              aria-hidden
-                              className="accent-jp w-6 shrink-0 tabular-nums"
+                      {outline.map((entry, index) => {
+                        const current = entry.id === activeSection;
+                        return (
+                          <li key={entry.id}>
+                            <button
+                              aria-current={current ? "location" : undefined}
+                              className={`flex w-full gap-2.5 rounded-md py-1 text-left text-sm leading-snug transition-colors duration-200 ease-out hover:text-foreground ${
+                                current ? "text-foreground" : "text-muted-foreground"
+                              }`}
+                              onClick={() => jumpTo(entry.id)}
+                              type="button"
                             >
-                              {String(index + 1).padStart(2, "0")}
-                            </span>
-                            <span>{entry.heading}</span>
-                          </button>
-                        </li>
-                      ))}
+                              <span
+                                aria-hidden
+                                className={`accent-jp w-6 shrink-0 tabular-nums transition-colors duration-200 ease-out ${
+                                  current ? "text-primary" : ""
+                                }`}
+                              >
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
+                              <span>{entry.heading}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ol>
                   </nav>
                 ) : null}
+
+                <div
+                  className={
+                    outline.length > 1 ? "mt-8" : ""
+                  }
+                >
+                  <RailLabel>{t.links}</RailLabel>
+                  <ul className="mt-3 space-y-1 text-sm">
+                    {project.downloadUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.downloadUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {t.download}
+                        </a>
+                      </li>
+                    ) : project.liveUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.liveUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          {t.visitSite}
+                        </a>
+                      </li>
+                    ) : null}
+                    {project.downloadPage && project.downloadPage !== project.downloadUrl ? (
+                      <li>
+                        <a
+                          className={RAIL_LINK}
+                          href={project.downloadPage}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          {t.downloadPage}
+                        </a>
+                      </li>
+                    ) : null}
+                    <li>
+                      {project.sourcePrivate ? (
+                        <PrivateSource>
+                          <button className={RAIL_LINK} type="button">
+                            <Lock className="h-3.5 w-3.5" />
+                            {t.sourceCode}
+                          </button>
+                        </PrivateSource>
+                      ) : (
+                        <a
+                          className={RAIL_LINK}
+                          href={project.repoUrl}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          <Github className="h-3.5 w-3.5" />
+                          {t.sourceCode}
+                        </a>
+                      )}
+                    </li>
+                  </ul>
+                </div>
               </div>
             </aside>
           </div>
 
+          {/* A phone has no rail, so the buttons come back once the case
+              study is read. */}
+          <motion.div
+            className="mt-16 lg:hidden"
+            {...revealOnScroll(reduceMotion)}
+          >
+            <p className="title-serif font-bold text-2xl">{project.title}</p>
+            <ProjectActions className="mt-5" project={project} />
+          </motion.div>
+
           {/* -------- More projects -------- */}
           <motion.section
-            className="mt-24 border-border/60 border-t pt-14"
+            className="mt-24 sm:mt-28"
             {...revealOnScroll(reduceMotion)}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -694,7 +778,7 @@ const ProjectDetails = () => {
             <div className="-mx-6 mt-8 flex max-w-none snap-x snap-mandatory scroll-pl-6 gap-4 overflow-x-auto px-6 pb-4 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
               {otherProjects.map((item) => (
                 <Link
-                  className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col p-5 transition-colors duration-200 ease-out hover:border-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
+                  className={`group flex w-[78vw] max-w-sm shrink-0 snap-start flex-col overflow-hidden p-5 transition-shadow duration-200 ease-out hover:ring-primary/30 sm:w-auto sm:max-w-none ${CARD}`}
                   key={item.slug}
                   to={`/projects/${item.slug}`}
                   {...warmOnIntent(`/projects/${item.slug}`)}
@@ -703,7 +787,7 @@ const ProjectDetails = () => {
                       costs what it costs on /projects. Decorative: the title
                       right below names it. */}
                   {item.image && !item.imageIcon ? (
-                    <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden rounded-t-2xl border-border/60 border-b bg-secondary/40">
+                    <div className="-mx-5 -mt-5 mb-4 aspect-16/10 overflow-hidden bg-secondary/40">
                       <img
                         alt=""
                         className="h-full w-full object-cover object-top"
@@ -724,8 +808,8 @@ const ProjectDetails = () => {
                     </div>
                     <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-primary" />
                   </div>
-                  <p className="mt-3 line-clamp-3 text-foreground/80 text-sm leading-relaxed">
-                    {item.description}
+                  <p className="mt-3 text-foreground/80 text-sm leading-relaxed">
+                    {item.tagline}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
@@ -738,6 +822,7 @@ const ProjectDetails = () => {
           </motion.section>
         </div>
       </div>
+      )}
 
       <AnimatePresence>
         {lightboxIndex !== null && galleryImages.length > 0 ? (
@@ -755,6 +840,7 @@ const ProjectDetails = () => {
           }}
           onClose={() => setLightboxIndex(null)}
           onSelect={setLightboxIndex}
+          origin={lightboxFrom}
           originIndex={lightboxOrigin}
         />
         ) : null}

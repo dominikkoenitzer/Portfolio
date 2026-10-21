@@ -165,6 +165,14 @@ type AuroraCtx = {
 
 const ctxMap = new WeakMap<HTMLDivElement, AuroraCtx>();
 
+/**
+ * The most pixels the ribbon is drawn at, upscaled by the compositor. It is a
+ * soft gradient with no edges, so a sharper buffer shows nothing more: a 4K
+ * screen at 150% asked for 8.3 million pixels every frame, a full-screen
+ * shader pass the GPU had to share with everything else on the machine.
+ */
+const MAX_PIXELS = 1920 * 1080;
+
 const Aurora = ({
   colorStops = ["#5227FF", "#7cff67", "#5227FF"],
   amplitude = 1,
@@ -182,12 +190,15 @@ const Aurora = ({
       return;
     }
 
+    const density = Math.min(Math.max(dpr, 0.5), 2);
     const renderer = createRenderer({
       webgl: 2,
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true,
-      dpr: Math.min(Math.max(dpr, 0.5), 2),
+      // One full-screen triangle has no edge inside the viewport, so
+      // multisampling bought nothing and quadrupled the buffer.
+      antialias: false,
+      dpr: density,
     });
     if (!renderer) {
       return;
@@ -268,10 +279,10 @@ const Aurora = ({
 
     const setSize = () => {
       const rect = container.getBoundingClientRect();
-      renderer.setSize(
-        Math.max(1, Math.floor(rect.width)),
-        Math.max(1, Math.floor(rect.height)),
-      );
+      const width = Math.max(1, Math.floor(rect.width));
+      const height = Math.max(1, Math.floor(rect.height));
+      renderer.dpr = Math.min(density, Math.sqrt(MAX_PIXELS / (width * height)));
+      renderer.setSize(width, height);
       canvas.style.width = "100%";
       canvas.style.height = "100%";
       program.uniforms.uResolution.value = [

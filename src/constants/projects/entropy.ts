@@ -16,11 +16,11 @@ const RAND_INT = `function randInt(max: number): number {
 
 export const entropy: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "Real randomness, and an honest guess at how long your password would last.",
+    tagline: "A password generator that tells you honestly how long a password lasts.",
     description:
       "A password generator and analyzer that runs entirely in the browser: randomness from Web Crypto, a strength estimator I wrote myself, and crack times for five attacker models. Nothing is sent anywhere. Its Windows app, a local password manager on the same engine, types logins with Alt+E.",
     overview:
-      "I did not want to paste a password into a website to find out whether it was any good, and the generators that do not ask you to are usually the ones reaching for Math.random(). So I wrote my own in Next.js and TypeScript. Generation pulls its bytes from Web Crypto. The analyzer is mine too: it matches dictionary words (reversed and l33t spellings included), keyboard walks, repeats, sequences and dates, brute-forces whatever is left at the password's real cardinality, and runs a dynamic-programming search for the cheapest attack path. What comes out is a guess count, which becomes bits, which becomes crack times. There are no API routes, so nothing you type has anywhere to go. Since October 2026 the same engine also runs in a password manager for Windows.",
+      "I did not want to paste a password into a website to find out whether it was any good, and the generators that do not ask you to are usually the ones reaching for Math.random(). So I wrote my own in Next.js and TypeScript. Generation pulls its bytes from Web Crypto. The analyzer is mine too: it matches dictionary words (reversed, l33t and Russian typed on a QWERTY keyboard included), keyboard walks, repeats, sequences and dates, brute-forces whatever is left at the password's real cardinality, and runs a dynamic-programming search for the cheapest attack path. What comes out is a guess count, which becomes bits, which becomes crack times. There are no API routes, so nothing you type has anywhere to go. Since October 2026 the same engine also runs in a password manager for Windows.",
     roleSummary: "Just me, and the analyzer took longer than the rest of the app together.",
     sections: [
       {
@@ -55,8 +55,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Nowhere for a password to go",
         body: [
-          "The app has no API routes and stores nothing. A script downloads the dictionaries the analyzer needs and writes them into generated files that ship with the app, so looking up a word while you type costs no request. They sit in their own chunk that only loads when the Analyze tab opens, which keeps the generator light.",
-          "The analyzer has a suite of 59 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
+          "The app has no API routes and stores nothing. A script builds the analyzer's dictionaries from public-domain sources (books, the ENABLE word list and US Census name files) and writes them into generated files that ship with the app, so looking up a word while you type costs no request. They sit in their own chunk that only loads when the Analyze tab opens, which keeps the generator light.",
+          "The engine has a suite of 59 tests: one per pattern it recognises, the cheapest-path search, guesses rising with length and with a larger character set, and bits staying the base-2 log of the guess count.",
         ],
       },
       {
@@ -77,7 +77,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, imports and the vault",
         body: [
           "A login keeps its last ten passwords with the date each one was replaced, and can hold a one-time code that a second Alt+E types into the code field. Secure notes and payment cards live in the same vault. An import reads the password exports of browsers and other password apps and, once every entry is saved, overwrites the export file with zeros and deletes it.",
-          "The vault is encrypted with XChaCha20-Poly1305 under a key that Windows protects for the signed-in account, so it needs no master password and opens on no other account. Entropy wipes its keys when Windows locks or sleeps, and signing back in to Windows is enough to open the vault again. After 15 minutes without use it wipes them as well, and the first password, code or backup after that asks for Windows Hello once. A backup carries a password of its own, stretched with Argon2id, and restores on any PC: in full into an empty vault, and into a filled one by adding only what it lacks.",
+          "The vault is encrypted with XChaCha20-Poly1305 under a key that Windows protects for the signed-in account, so it needs no master password and opens on no other account. Entropy wipes its keys when Windows locks or sleeps, and signing back in to Windows is enough to open the vault again. After 15 minutes without use, the default, it wipes them as well, and the first password, code or backup after that asks for Windows Hello once. A backup carries a password of its own, stretched with Argon2id, and restores on any PC: in full into an empty vault, and into a filled one by adding only what it lacks.",
         ],
         figure: 2,
       },
@@ -92,17 +92,17 @@ export const entropy: Record<Language, LocalizedContent> = {
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "client-side" },
-      { value: "0", label: "secrets sent" },
-      { value: "0", label: "Math.random() in secrets" },
+      { value: "7,776", label: "words in the passphrase list" },
+      { value: "Alt+E", label: "types a login on Windows" },
       { value: "5", label: "attacker models" },
     ],
   },
   de: {
-    tagline: "Echte Zufälligkeit und eine ehrliche Schätzung, wie lange dein Passwort hält.",
+    tagline: "Ein Passwortgenerator, der dir ehrlich sagt, wie lange ein Passwort hält.",
     description:
       "Ein Passwortgenerator und -analysator, der komplett im Browser läuft: Zufall aus Web Crypto, eine selbst geschriebene Stärkeschätzung und Knackzeiten für fünf Angreifermodelle. Nichts wird irgendwohin gesendet. Die Windows-App, ein lokaler Passwortmanager auf derselben Engine, tippt Logins mit Alt+E ein.",
     overview:
-      "Ich wollte kein Passwort in eine Website tippen, nur um zu erfahren, ob es gut ist, und die Generatoren, die das nicht verlangen, greifen meist zu Math.random(). Also schrieb ich meinen eigenen in Next.js und TypeScript. Die Erzeugung holt ihre Bytes aus Web Crypto. Die Analyse ist ebenfalls meine: Sie erkennt Wörterbuchwörter (rückwärts und in Leetschreibweise inklusive), Tastaturwege, Wiederholungen, Sequenzen und Datumsangaben, brute-forced den Rest mit der echten Kardinalität des Passworts und sucht per dynamischer Programmierung den billigsten Angriffspfad. Heraus kommt eine Anzahl an Versuchen, daraus Bits, daraus Knackzeiten. Es gibt keine API-Routen, also hat das Getippte gar keinen Weg nach draussen. Seit Oktober 2026 läuft dieselbe Engine auch in einem Passwortmanager für Windows.",
+      "Ich wollte kein Passwort in eine Website tippen, nur um zu erfahren, ob es gut ist, und die Generatoren, die das nicht verlangen, greifen meist zu Math.random(). Also schrieb ich meinen eigenen in Next.js und TypeScript. Die Erzeugung holt ihre Bytes aus Web Crypto. Die Analyse ist ebenfalls meine: Sie erkennt Wörterbuchwörter, auch rückwärts, in Leetschreibweise und als Russisch, das auf einer QWERTY-Tastatur getippt wurde, dazu Tastaturwege, Wiederholungen, Sequenzen und Datumsangaben, brute-forced den Rest mit der echten Kardinalität des Passworts und sucht per dynamischer Programmierung den billigsten Angriffspfad. Heraus kommt eine Anzahl an Versuchen, daraus Bits, daraus Knackzeiten. Es gibt keine API-Routen, also hat das Getippte gar keinen Weg nach draussen. Seit Oktober 2026 läuft dieselbe Engine auch in einem Passwortmanager für Windows.",
     roleSummary: "Nur ich, und die Analyse dauerte länger als der ganze Rest der App.",
     sections: [
       {
@@ -137,8 +137,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Kein Ort, an den ein Passwort gehen könnte",
         body: [
-          "Die App hat keine API-Routen und speichert nichts. Die Wörterbücher für die Analyse lädt ein Skript herunter und schreibt sie in generierte Dateien, die mit der App ausgeliefert werden, darum kostet eine Wortsuche beim Tippen keinen Request. Sie liegen in einem eigenen Chunk, der erst lädt, wenn der Analysieren-Tab aufgeht, so bleibt der Generator leicht.",
-          "Die Analyse hat eine Suite von 59 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
+          "Die App hat keine API-Routen und speichert nichts. Die Wörterbücher für die Analyse baut ein Skript aus gemeinfreien Quellen (Bücher, die ENABLE-Wortliste und Namenslisten des US-Zensus) und schreibt sie in generierte Dateien, die mit der App ausgeliefert werden, darum kostet eine Wortsuche beim Tippen keinen Request. Sie liegen in einem eigenen Chunk, der erst lädt, wenn der Analysieren-Tab aufgeht, so bleibt der Generator leicht.",
+          "Die Engine hat eine Suite von 59 Tests: einen pro erkanntem Muster, die Suche nach dem billigsten Pfad, mehr Versuche bei mehr Länge und grösserem Zeichensatz und Bits, die immer der Zweierlogarithmus der Versuche bleiben.",
         ],
       },
       {
@@ -159,7 +159,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, Importe und der Tresor",
         body: [
           "Ein Login behält seine letzten zehn Passwörter mit dem Datum, an dem jedes ersetzt wurde, und kann einen Einmalcode enthalten, den ein zweites Alt+E ins Codefeld tippt. Sichere Notizen und Zahlungskarten liegen im selben Tresor. Ein Import liest die Passwort-Exporte von Browsern und anderen Passwort-Apps, und sobald jeder Eintrag gespeichert ist, überschreibt er die Exportdatei mit Nullen und löscht sie.",
-          "Der Tresor ist mit XChaCha20-Poly1305 verschlüsselt, unter einem Schlüssel, den Windows für das angemeldete Konto schützt, also braucht er kein Master-Passwort und öffnet sich auf keinem anderen Konto. Entropy verwirft seine Schlüssel, wenn Windows sperrt oder in den Energiesparmodus geht, und die nächste Anmeldung bei Windows genügt, um den Tresor wieder zu öffnen. Nach 15 Minuten ohne Benutzung verwirft es sie ebenfalls, und danach fragt das erste Passwort, der erste Code oder das erste Backup einmal nach Windows Hello. Ein Backup hat ein eigenes Passwort, mit Argon2id gestreckt, und lässt sich auf jedem PC wiederherstellen: in einen leeren Tresor vollständig, in einen gefüllten nur mit dem, was ihm fehlt.",
+          "Der Tresor ist mit XChaCha20-Poly1305 verschlüsselt, unter einem Schlüssel, den Windows für das angemeldete Konto schützt, also braucht er kein Master-Passwort und öffnet sich auf keinem anderen Konto. Entropy verwirft seine Schlüssel, wenn Windows sperrt oder in den Energiesparmodus geht, und die nächste Anmeldung bei Windows genügt, um den Tresor wieder zu öffnen. Nach 15 Minuten ohne Benutzung, so die Voreinstellung, verwirft es sie ebenfalls, und danach fragt das erste Passwort, der erste Code oder das erste Backup einmal nach Windows Hello. Ein Backup hat ein eigenes Passwort, mit Argon2id gestreckt, und lässt sich auf jedem PC wiederherstellen: in einen leeren Tresor vollständig, in einen gefüllten nur mit dem, was ihm fehlt.",
         ],
         figure: 2,
       },
@@ -174,17 +174,17 @@ export const entropy: Record<Language, LocalizedContent> = {
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "im Browser" },
-      { value: "0", label: "gesendete Secrets" },
-      { value: "0", label: "Math.random() in Secrets" },
+      { value: "7'776", label: "Wörter in der Passphrasen-Liste" },
+      { value: "Alt+E", label: "tippt ein Login unter Windows ein" },
       { value: "5", label: "Angreifermodelle" },
     ],
   },
   fr: {
-    tagline: "Du vrai aléa, et une estimation honnête du temps que tiendrait votre mot de passe.",
+    tagline: "Un générateur de mots de passe qui dit franchement combien de temps il tiendra.",
     description:
       "Un générateur et analyseur de mots de passe qui tourne entièrement dans le navigateur : aléa issu de Web Crypto, un estimateur de robustesse que j'ai écrit moi-même, et des temps de cassage pour cinq modèles d'attaquant. Rien n'est envoyé nulle part. Son app Windows, un gestionnaire de mots de passe local sur le même moteur, tape les identifiants avec Alt+E.",
     overview:
-      "Je ne voulais pas coller un mot de passe dans un site web pour savoir s'il valait quelque chose, et les générateurs qui ne le demandent pas sont en général ceux qui utilisent Math.random(). J'ai donc écrit le mien en Next.js et TypeScript. La génération tire ses octets de Web Crypto. L'analyseur est de moi aussi : il repère les mots du dictionnaire (à l'envers et en leet compris), les chemins de clavier, les répétitions, les suites et les dates, force le reste à la vraie cardinalité du mot de passe, et cherche le chemin d'attaque le moins coûteux par programmation dynamique. Il en sort un nombre d'essais, qui devient des bits, qui deviennent des temps de cassage. Il n'y a aucune route d'API, donc ce que vous tapez n'a nulle part où aller. Depuis octobre 2026, le même moteur tourne aussi dans un gestionnaire de mots de passe pour Windows.",
+      "Je ne voulais pas coller un mot de passe dans un site web pour savoir s'il valait quelque chose, et les générateurs qui ne le demandent pas sont en général ceux qui utilisent Math.random(). J'ai donc écrit le mien en Next.js et TypeScript. La génération tire ses octets de Web Crypto. L'analyseur est de moi aussi : il repère les mots du dictionnaire (à l'envers, en leet et en russe tapé sur un clavier QWERTY compris), les chemins de clavier, les répétitions, les suites et les dates, force le reste à la vraie cardinalité du mot de passe, et cherche le chemin d'attaque le moins coûteux par programmation dynamique. Il en sort un nombre d'essais, qui devient des bits, qui deviennent des temps de cassage. Il n'y a aucune route d'API, donc ce que vous tapez n'a nulle part où aller. Depuis octobre 2026, le même moteur tourne aussi dans un gestionnaire de mots de passe pour Windows.",
     roleSummary: "Moi seul, et l'analyseur m'a pris plus de temps que tout le reste de l'app.",
     sections: [
       {
@@ -219,8 +219,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "Nulle part où un mot de passe pourrait aller",
         body: [
-          "L'app n'a aucune route d'API et ne stocke rien. Un script télécharge les dictionnaires de l'analyseur et les écrit dans des fichiers générés livrés avec l'app, si bien que chercher un mot pendant la frappe ne coûte aucune requête. Ils sont dans un chunk à part qui ne se charge qu'à l'ouverture de l'onglet Analyser, ce qui garde le générateur léger.",
-          "L'analyseur a une suite de 59 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
+          "L'app n'a aucune route d'API et ne stocke rien. Un script construit les dictionnaires de l'analyseur à partir de sources du domaine public (des livres, la liste de mots ENABLE et les fichiers de noms du recensement américain) et les écrit dans des fichiers générés livrés avec l'app, si bien que chercher un mot pendant la frappe ne coûte aucune requête. Ils sont dans un chunk à part qui ne se charge qu'à l'ouverture de l'onglet Analyser, ce qui garde le générateur léger.",
+          "Le moteur a une suite de 59 tests : un par motif reconnu, la recherche du chemin le moins coûteux, des essais qui augmentent avec la longueur et avec un jeu de caractères plus grand, et des bits qui restent le logarithme binaire du nombre d'essais.",
         ],
       },
       {
@@ -241,7 +241,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "Codes, importations et coffre",
         body: [
           "Un identifiant garde ses dix derniers mots de passe avec la date où chacun a été remplacé, et peut contenir un code à usage unique qu'un second Alt+E tape dans le champ du code. Les notes sécurisées et les cartes de paiement sont dans le même coffre. Une importation lit les exports de mots de passe des navigateurs et d'autres apps de mots de passe, puis, une fois chaque entrée enregistrée, écrase le fichier d'export avec des zéros et le supprime.",
-          "Le coffre est chiffré avec XChaCha20-Poly1305 sous une clé que Windows protège pour le compte connecté : il n'a besoin d'aucun mot de passe maître et ne s'ouvre sur aucun autre compte. Entropy efface ses clés quand Windows se verrouille ou se met en veille, et se reconnecter à Windows suffit pour rouvrir le coffre. Il les efface aussi après 15 minutes d'inactivité, et ensuite, le premier mot de passe, code ou sauvegarde demande Windows Hello une fois. Une sauvegarde a son propre mot de passe, étiré avec Argon2id, et se restaure sur n'importe quel PC : en entier dans un coffre vide, et dans un coffre déjà rempli en n'ajoutant que ce qui lui manque.",
+          "Le coffre est chiffré avec XChaCha20-Poly1305 sous une clé que Windows protège pour le compte connecté : il n'a besoin d'aucun mot de passe maître et ne s'ouvre sur aucun autre compte. Entropy efface ses clés quand Windows se verrouille ou se met en veille, et se reconnecter à Windows suffit pour rouvrir le coffre. Il les efface aussi après 15 minutes d'inactivité, le réglage par défaut, et ensuite, le premier mot de passe, code ou sauvegarde demande Windows Hello une fois. Une sauvegarde a son propre mot de passe, étiré avec Argon2id, et se restaure sur n'importe quel PC : en entier dans un coffre vide, et dans un coffre déjà rempli en n'ajoutant que ce qui lui manque.",
         ],
         figure: 2,
       },
@@ -256,17 +256,17 @@ export const entropy: Record<Language, LocalizedContent> = {
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "côté client" },
-      { value: "0", label: "secrets envoyés" },
-      { value: "0", label: "Math.random() dans les secrets" },
+      { value: "7 776", label: "mots dans la liste des phrases de passe" },
+      { value: "Alt+E", label: "tape un identifiant sous Windows" },
       { value: "5", label: "modèles d'attaquant" },
     ],
   },
   zh: {
-    tagline: "真正的随机，加上一个诚实的估计：你的密码能撑多久。",
+    tagline: "一个密码生成器，老实告诉你一个密码能撑多久。",
     description:
       "一个完全在浏览器里跑的密码生成与分析工具：随机数来自 Web Crypto，强度估算由我自己写，破解时间按五种攻击者模型给出。什么都不会被发出去。它的 Windows 应用是基于同一引擎的本地密码管理器，按 Alt+E 就能输入登录信息。",
     overview:
-      "我不想为了确认一个密码好不好，就把它粘进某个网站；而那些不要求你这么做的生成器，往下一翻往往在用 Math.random()。于是我用 Next.js 和 TypeScript 写了自己的一个。生成部分的每个字节都取自 Web Crypto。分析部分也是我写的：它会匹配词表里的单词（含倒写和 leet 拼法）、键盘走位、重复、递增序列和日期，剩下的按密码真实的字符空间做暴力估算，再用动态规划搜出最省力的那条攻击路径。算出来的是尝试次数，再换成比特，再换成破解时间。项目没有任何 API 路由，所以你输入的东西根本无处可去。从 2026 年 10 月起，同一套引擎也跑在一个 Windows 密码管理器里。",
+      "我不想为了确认一个密码好不好，就把它粘进某个网站；而那些不要求你这么做的生成器，往下一翻往往在用 Math.random()。于是我用 Next.js 和 TypeScript 写了自己的一个。生成部分的每个字节都取自 Web Crypto。分析部分也是我写的：它会匹配词表里的单词（含倒写、leet 拼法，以及在 QWERTY 键盘上打出的俄语）、键盘走位、重复、递增序列和日期，剩下的按密码真实的字符空间做暴力估算，再用动态规划搜出最省力的那条攻击路径。算出来的是尝试次数，再换成比特，再换成破解时间。项目没有任何 API 路由，所以你输入的东西根本无处可去。从 2026 年 10 月起，同一套引擎也跑在一个 Windows 密码管理器里。",
     roleSummary: "只有我，而分析引擎花的时间比应用其余部分加起来还多。",
     sections: [
       {
@@ -301,8 +301,8 @@ export const entropy: Record<Language, LocalizedContent> = {
       {
         heading: "密码无处可去",
         body: [
-          "应用没有 API 路由，也不存储任何东西。分析所需的词表由一个脚本下载，写进随应用一起发布的生成文件里，所以打字时查词不产生任何请求。词表放在单独的代码块里，只有打开分析页时才加载，生成器因此保持轻量。",
-          "分析器有一套 59 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
+          "应用没有 API 路由，也不存储任何东西。分析所需的词表由一个脚本从公有领域的来源生成（书籍、ENABLE 词表和美国人口普查的姓名文件），写进随应用一起发布的生成文件里，所以打字时查词不产生任何请求。词表放在单独的代码块里，只有打开分析页时才加载，生成器因此保持轻量。",
+          "引擎有一套 59 个测试：每种识别模式一个用例，最省力路径的搜索，尝试次数随长度和更大的字符集增加，以及比特数始终等于尝试次数的二进制对数。",
         ],
       },
       {
@@ -323,7 +323,7 @@ export const entropy: Record<Language, LocalizedContent> = {
         heading: "验证码、导入与保险库",
         body: [
           "每条登录会保留最近十个旧密码和各自被替换的日期，也可以存一个一次性验证码，再按一次 Alt+E 就会把它输入验证码框。安全笔记和支付卡放在同一个保险库里。导入功能读取浏览器和其他密码应用导出的密码文件，等每一条都保存好后，用零覆盖导出文件再把它删除。",
-          "保险库用 XChaCha20-Poly1305 加密，密钥由 Windows 为当前登录的账户保护，所以不需要主密码，换一个账户也打不开。Windows 锁屏或睡眠时，Entropy 会清除密钥，重新登录 Windows 就能再次打开保险库。闲置 15 分钟后它也会清除密钥，之后第一次取用密码、验证码或备份时会要求一次 Windows Hello。备份有自己的密码，经 Argon2id 加强，可以在任何电脑上恢复：恢复到空保险库时全部导入，恢复到已有内容的保险库时只补上缺少的条目。",
+          "保险库用 XChaCha20-Poly1305 加密，密钥由 Windows 为当前登录的账户保护，所以不需要主密码，换一个账户也打不开。Windows 锁屏或睡眠时，Entropy 会清除密钥，重新登录 Windows 就能再次打开保险库。闲置 15 分钟后（默认设置）它也会清除密钥，之后第一次取用密码、验证码或备份时会要求一次 Windows Hello。备份有自己的密码，经 Argon2id 加强，可以在任何电脑上恢复：恢复到空保险库时全部导入，恢复到已有内容的保险库时只补上缺少的条目。",
         ],
         figure: 2,
       },
@@ -338,8 +338,8 @@ export const entropy: Record<Language, LocalizedContent> = {
     tags: ["Next.js", "TypeScript", "C#", "Web Crypto", "Security"],
     stats: [
       { value: "100%", label: "在浏览器内" },
-      { value: "0", label: "外发的密码" },
-      { value: "0", label: "密码中的 Math.random()" },
+      { value: "7,776", label: "个口令短语词" },
+      { value: "Alt+E", label: "在 Windows 上输入登录信息" },
       { value: "5", label: "攻击者模型" },
     ],
   },

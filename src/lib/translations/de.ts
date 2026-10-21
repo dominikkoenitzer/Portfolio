@@ -119,7 +119,7 @@ export const de = {
       "Sachen, die ich gebaut habe, die meisten mit Quellcode.",
     disclosureEyebrow: "Bevor du weiterscrollst",
     disclosureBody:
-      "Diese Seite ist nur der öffentlich sichtbare Ausschnitt dessen, was ich gebaut habe. Ein paar weitere Projekte liegen hinter NDAs, in privaten Repos oder auf Kunden-Infrastruktur, die ich lieber nicht zur Schau stelle, deshalb tauchen sie hier nicht auf. Alles, was du unten siehst, ist persönlich: kleine Dinge, an denen ich abends und am Wochenende bastle, aus Neugier und der leisen Hoffnung, jemandem den Tag ein winziges Stück leichter zu machen. Wenn eines davon genau das bei dir tut: Mission erfüllt.",
+      "Alles hier ist persönlich: kleine Dinge, die ich abends und am Wochenende baue, aus Neugier und in der Hoffnung, jemandem den Tag ein wenig leichter zu machen. Kundenarbeit und Projekte unter NDA bleiben privat.",
     source: "Quellcode",
     sourcePrivate: "Der Quellcode dieses Projekts ist privat.",
     live: "Live",
@@ -181,6 +181,8 @@ export const de = {
     showImage: "Bild {index} anzeigen",
     breadcrumb: "Brotkrümelnavigation",
     platform: "Plattform",
+    nextProject: "Nächstes Projekt",
+    previousProject: "Vorheriges Projekt",
   },
   services: {
     eyebrow: "Was ich anbiete",
