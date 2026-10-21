@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { animate, motion, type TargetAndTransition, useMotionValue } from "framer-motion";
 import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { ProjectStat } from "@/constants/projects/types";
@@ -109,6 +109,40 @@ export function ProjectFigure({
     </div>
   );
 
+  // The focus ring is drawn on the frame: the button fills it, and the
+  // frame's `overflow-hidden` clipped the button's own outline away, so
+  // a focused screenshot looked exactly like an unfocused one. Same ring
+  // as the global `:focus-visible` rule.
+  const frame = (
+    <div className="relative overflow-hidden rounded-2xl bg-card ring-1 ring-black/5 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px] dark:ring-white/5">
+      {onOpen && openLabel ? (
+        <button
+          aria-label={openLabel}
+          className="block w-full cursor-zoom-in focus-visible:outline-none"
+          // The custom cursor would morph onto the whole picture and lay its
+          // tinted box over the screenshot and the caption below it. A
+          // picture is not a label to snap to: the pointer stays a dot here.
+          data-cursor-ignore
+          onClick={onOpen}
+          type="button"
+        >
+          {picture}
+          {/* Affordance, not decoration: the frame is clickable, so say so.
+              Opacity only, and it is always painted for touch, where there
+              is no hover to reveal it; keyboard focus shows it like hover. */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-card/90 text-foreground/80 shadow-sm transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100 md:group-has-[button:focus-visible]/shot:opacity-100"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </span>
+        </button>
+      ) : (
+        picture
+      )}
+    </div>
+  );
+
   return (
     <motion.figure
       className={`group/shot m-0 ${className ?? ""}`}
@@ -117,35 +151,9 @@ export function ProjectFigure({
       viewport={VIEWPORT}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      {/* The focus ring is drawn on the frame: the button fills it, and the
-          frame's `overflow-hidden` clipped the button's own outline away, so
-          a focused screenshot looked exactly like an unfocused one. Same ring
-          as the global `:focus-visible` rule. */}
-      <div className="memory-photo relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-colors duration-200 ease-out hover:border-primary/30 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px]">
-        {onOpen && openLabel ? (
-          <button
-            aria-label={openLabel}
-            className="block w-full cursor-zoom-in focus-visible:outline-none"
-            onClick={onOpen}
-            type="button"
-          >
-            {picture}
-            {/* Affordance, not decoration: the frame is clickable, so say so.
-                Opacity only, and it is always painted for touch, where there
-                is no hover to reveal it; keyboard focus shows it like hover. */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100 md:group-has-[button:focus-visible]/shot:opacity-100"
-            >
-              <Maximize2 className="h-4 w-4" />
-            </span>
-          </button>
-        ) : (
-          picture
-        )}
-      </div>
+      {frame}
       {caption ? (
-        <figcaption className="mt-3 max-w-prose text-muted-foreground text-sm leading-relaxed">
+        <figcaption className="mt-3 max-w-prose text-foreground/90 text-sm leading-relaxed">
           {caption}
         </figcaption>
       ) : label ? (
@@ -189,7 +197,7 @@ const fetchTestCount = (project: string) => {
  * About page's widget, and pulling it into this chunk for one number would
  * be the wrong trade.
  */
-function LiveTestCount({
+export function LiveTestCount({
   project,
   fallback,
 }: {
@@ -212,7 +220,7 @@ function LiveTestCount({
 export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
   if (!stats?.length) return null;
   return (
-    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-border/60 border-t pt-7 sm:flex sm:flex-wrap sm:gap-x-14">
+    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 sm:flex sm:flex-wrap sm:gap-x-14">
       {stats.map((stat) => (
         <div key={stat.label}>
           {/* The label reads under the number, so the term is voiced from a
@@ -264,6 +272,17 @@ const FOCUSABLE = 'a[href],button:not([disabled]):not([tabindex="-1"])';
  * Escape and the arrow keys bound, Tab cycling inside) and it animates opacity
  * and transform only, so nothing repaints per frame.
  */
+/**
+ * Where a picture sat on the page when the viewer was opened from a crop of
+ * it: the visible box on screen, which part of the picture that box showed
+ * (fractions of the file), and the corner radius it had.
+ */
+export type LightboxOrigin = {
+  rect: { left: number; top: number; width: number; height: number };
+  crop: [number, number, number, number];
+  radius: number;
+};
+
 export function Lightbox({
   alt,
   images,
@@ -271,6 +290,7 @@ export function Lightbox({
   labels,
   onClose,
   onSelect,
+  origin,
   originIndex,
 }: {
   alt: string;
@@ -282,6 +302,12 @@ export function Lightbox({
    * returns there on close; any other picture simply fades.
    */
   originIndex?: number;
+  /**
+   * When set, the picture opens out of a crop instead of a whole frame: it
+   * starts clipped to what the crop showed, at the crop's place, and unclips
+   * as it grows into the viewer. It returns the same way on close.
+   */
+  origin?: LightboxOrigin | null;
   labels: LightboxLabels;
   onClose: () => void;
   onSelect: (next: number) => void;
@@ -407,8 +433,49 @@ export function Lightbox({
   const control =
     "inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-card text-foreground/80 transition-colors duration-200 ease-out hover:text-foreground";
 
+  const morph = !reduced && origin && originIndex === index ? origin : null;
   const sharedId =
-    !reduced && originIndex === index ? `project-shot-${index}` : undefined;
+    !reduced && !morph && originIndex === index ? `project-shot-${index}` : undefined;
+
+  // The crop morph: measured once the picture has its place in the viewer,
+  // then set to the crop's place and released. Transform and one clip-path.
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [returnTo, setReturnTo] = useState<TargetAndTransition | null>(null);
+  // Motion values, not writes to the element: the image owns its transform
+  // (it drags on x), so anything set from outside would be painted over.
+  const morphX = useMotionValue(0);
+  const morphY = useMotionValue(0);
+  const morphScale = useMotionValue(1);
+  const morphClip = useMotionValue("inset(0% 0% 0% 0% round 16px)");
+  // Once per picture: `index` is the key the image remounts on.
+  useLayoutEffect(() => {
+    const el = imageRef.current;
+    if (!morph || !el) return;
+    const box = el.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const [x0, y0, x1, y1] = morph.crop;
+    const width = morph.rect.width / (x1 - x0);
+    const height = morph.rect.height / (y1 - y0);
+    const left = morph.rect.left - x0 * width;
+    const top = morph.rect.top - y0 * height;
+    const scale = width / box.width;
+    const from = {
+      x: left + width / 2 - (box.left + box.width / 2),
+      y: top + height / 2 - (box.top + box.height / 2),
+      scale,
+      clipPath: `inset(${(y0 * 100).toFixed(3)}% ${((1 - x1) * 100).toFixed(3)}% ${((1 - y1) * 100).toFixed(3)}% ${(x0 * 100).toFixed(3)}% round ${(morph.radius / scale).toFixed(2)}px)`,
+    };
+    morphX.set(from.x);
+    morphY.set(from.y);
+    morphScale.set(scale);
+    morphClip.set(from.clipPath);
+    animate(morphX, 0, SPRING_FLUID);
+    animate(morphY, 0, SPRING_FLUID);
+    animate(morphScale, 1, SPRING_FLUID);
+    animate(morphClip, "inset(0% 0% 0% 0% round 16px)", { duration: 0.45, ease: EASE_OUT });
+    setReturnTo({ ...from, transition: { ...SPRING_FLUID, clipPath: { duration: 0.35, ease: EASE_OUT } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
 
   return createPortal(
     <motion.div
@@ -474,9 +541,11 @@ export function Lightbox({
           drag={reduced || total < 2 ? false : "x"}
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.16}
-          initial={{ opacity: reduced || sharedId ? 1 : 0 }}
+          initial={{ opacity: reduced || sharedId || morph ? 1 : 0 }}
+          exit={returnTo ?? undefined}
           key={images[index]}
           layoutId={sharedId}
+          ref={imageRef}
           onDragEnd={(_, info) => {
             // Either a deliberate drag or a flick: a fast swipe on a phone
             // covers barely 40px before the finger leaves the glass, and
@@ -490,7 +559,11 @@ export function Lightbox({
           // The radius lives in `style` rather than a class so the shared
           // layout animation can correct it while the box scales; a class
           // radius stretches into an oval mid-flight.
-          style={{ borderRadius: 16 }}
+          style={
+            morph
+              ? { borderRadius: 16, x: morphX, y: morphY, scale: morphScale, clipPath: morphClip }
+              : { borderRadius: 16 }
+          }
           transition={{
             layout: SPRING_FLUID,
             opacity: { duration: DUR.fast, ease: EASE_OUT },

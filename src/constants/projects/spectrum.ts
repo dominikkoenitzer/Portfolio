@@ -18,7 +18,7 @@ const CONTRAST_TESTS = `  it('puts #767676 on white just over the AA boundary', 
 
 export const spectrum: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "Eight color tools that finally live under one roof, and none of them phone home.",
+    tagline: "Eight color tools in one browser app, and your images never leave it.",
     description:
       "Spectrum is a client-side color toolkit: pull exact colors out of an image, build gradients and palettes, check WCAG contrast, and simulate color blindness. All in the browser, nothing uploaded.",
     overview:
@@ -45,7 +45,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         heading: "A contrast checker that passes its own check",
         body: [
           "The contrast checker is the first thing anyone will point at a color tool's own interface. So the three greys used for text, and the green and red that mark pass and fail, are tuned to clear 4.5:1 on every surface they sit on, and the green and red also clear it on their own pale tint.",
-          "The ratio itself comes from colord's a11y plugin. The thresholds are mine to get right: 4.5 and 3 for AA, 7 and 4.5 for AAA. The tests pin them to WCAG reference pairs, check that swapping foreground and background never changes the ratio, and check that no level is reported that its ratio did not earn.",
+          "The ratio itself comes from colord's a11y plugin; the APCA Lc shown beside it is my own port of the reference formula, checked against its published test pairs. The thresholds are mine to get right: 4.5 and 3 for AA, 7 and 4.5 for AAA. The tests pin them to WCAG reference pairs, check that swapping foreground and background never changes the ratio, and check that no level is reported that its ratio did not earn.",
         ],
         figure: 2,
         code: {
@@ -75,12 +75,12 @@ export const spectrum: Record<Language, LocalizedContent> = {
     stats: [
       { value: "8", label: "tools, one app" },
       { value: "100%", label: "client-side" },
-      { value: "0", label: "uploads" },
-      { value: "0", label: "backend" },
+      { value: "8", label: "kinds of color blindness simulated" },
+      { value: "OKLCH", label: "color space for palettes" },
     ],
   },
   de: {
-    tagline: "Acht Farbwerkzeuge, endlich unter einem Dach, und keines telefoniert nach Hause.",
+    tagline: "Acht Farbwerkzeuge in einer Browser-App, und deine Bilder bleiben darin.",
     description:
       "Spectrum ist ein clientseitiges Farb-Toolkit: exakte Farben aus einem Bild ziehen, Gradienten und Paletten bauen, WCAG-Kontrast prüfen und Farbenblindheit simulieren. Alles im Browser, nichts wird hochgeladen.",
     overview:
@@ -107,7 +107,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         heading: "Ein Kontrast-Checker, der seine eigene Prüfung besteht",
         body: [
           "Bei einem Farbwerkzeug richtet man den Kontrast-Checker zuerst auf dessen eigene Oberfläche. Deshalb sind die drei Grautöne für Text und das Grün und Rot für bestanden und durchgefallen so abgestimmt, dass sie auf jeder Fläche, auf der sie stehen, 4,5:1 schaffen. Grün und Rot schaffen es auch auf ihrer eigenen blassen Tönung.",
-          "Das Verhältnis selbst liefert das a11y-Plugin von colord. Die Schwellen muss ich richtig setzen: 4,5 und 3 für AA, 7 und 4,5 für AAA. Die Tests nageln sie an WCAG-Referenzpaaren fest, prüfen, dass das Vertauschen von Vorder- und Hintergrund das Verhältnis nie ändert, und dass keine Stufe gemeldet wird, die das Verhältnis nicht hergibt.",
+          "Das Verhältnis selbst liefert das a11y-Plugin von colord; den APCA-Wert Lc daneben rechnet meine eigene Umsetzung der Referenzformel, geprüft an deren veröffentlichten Testpaaren. Die Schwellen muss ich richtig setzen: 4,5 und 3 für AA, 7 und 4,5 für AAA. Die Tests nageln sie an WCAG-Referenzpaaren fest, prüfen, dass das Vertauschen von Vorder- und Hintergrund das Verhältnis nie ändert, und dass keine Stufe gemeldet wird, die das Verhältnis nicht hergibt.",
         ],
         figure: 2,
         code: {
@@ -137,12 +137,12 @@ export const spectrum: Record<Language, LocalizedContent> = {
     stats: [
       { value: "8", label: "Tools, eine App" },
       { value: "100%", label: "im Browser" },
-      { value: "0", label: "Uploads" },
-      { value: "0", label: "Backend" },
+      { value: "8", label: "Arten von Farbenblindheit simuliert" },
+      { value: "OKLCH", label: "Farbraum der Paletten" },
     ],
   },
   fr: {
-    tagline: "Huit outils de couleur enfin sous le même toit, et aucun n'envoie quoi que ce soit ailleurs.",
+    tagline: "Huit outils de couleur dans une seule app web, et vos images n'en sortent pas.",
     description:
       "Spectrum est une boîte à outils couleur côté client : prélever des couleurs exactes dans une image, composer des dégradés et des palettes, vérifier le contraste WCAG et simuler le daltonisme. Tout dans le navigateur, rien n'est envoyé.",
     overview:
@@ -169,7 +169,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         heading: "Un vérificateur de contraste qui passe son propre test",
         body: [
           "Face à un outil de couleur, la première chose qu'on fait est de pointer le vérificateur de contraste sur sa propre interface. Les trois gris du texte, ainsi que le vert et le rouge qui marquent réussite et échec, sont donc réglés pour dépasser 4,5:1 sur chaque surface où ils apparaissent, et le vert et le rouge le dépassent aussi sur leur propre teinte pâle.",
-          "Le ratio lui-même vient du plugin a11y de colord. Les seuils, c'est à moi de les poser juste : 4,5 et 3 pour AA, 7 et 4,5 pour AAA. Les tests les fixent sur des paires de référence du WCAG, vérifient qu'inverser premier plan et arrière-plan ne change jamais le ratio, et qu'aucun niveau n'est annoncé sans que le ratio le justifie.",
+          "Le ratio lui-même vient du plugin a11y de colord ; le Lc APCA affiché à côté vient de ma propre transcription de la formule de référence, vérifiée sur ses paires de test publiées. Les seuils, c'est à moi de les poser juste : 4,5 et 3 pour AA, 7 et 4,5 pour AAA. Les tests les fixent sur des paires de référence du WCAG, vérifient qu'inverser premier plan et arrière-plan ne change jamais le ratio, et qu'aucun niveau n'est annoncé sans que le ratio le justifie.",
         ],
         figure: 2,
         code: {
@@ -199,12 +199,12 @@ export const spectrum: Record<Language, LocalizedContent> = {
     stats: [
       { value: "8", label: "outils, une app" },
       { value: "100%", label: "côté client" },
-      { value: "0", label: "envois" },
-      { value: "0", label: "backend" },
+      { value: "8", label: "formes de daltonisme simulées" },
+      { value: "OKLCH", label: "espace couleur des palettes" },
     ],
   },
   zh: {
-    tagline: "八个颜色工具终于住到了一个屋檐下，而且没有一个会往外发数据。",
+    tagline: "八个颜色工具放在同一个网页应用里，你的图片从不离开它。",
     description:
       "Spectrum 是一套纯客户端的颜色工具：从图片里取准确的颜色、做渐变与配色、检查 WCAG 对比度、模拟色盲。全在浏览器里跑，什么都不上传。",
     overview:
@@ -231,7 +231,7 @@ export const spectrum: Record<Language, LocalizedContent> = {
         heading: "对比度检查器得先通过自己的检查",
         body: [
           "拿到一个颜色工具，人们往往第一件事就是用它的对比度检查器去测它自己的界面。所以正文用的三种灰，以及表示通过和失败的绿与红，都调到在它们出现的每一种底色上超过 4.5:1，绿和红在自己的浅色底上也一样。",
-          "比值本身由 colord 的 a11y 插件算出，阈值则要我自己设对：AA 是 4.5 和 3，AAA 是 7 和 4.5。测试把它们钉在 WCAG 的参考色对上，检查前景和背景互换后比值不变，也检查不会报出比值够不上的等级。",
+          "比值本身由 colord 的 a11y 插件算出，旁边显示的 APCA Lc 值则来自我自己移植的参考公式，并用它公开的测试色对校验过。阈值要我自己设对：AA 是 4.5 和 3，AAA 是 7 和 4.5。测试把它们钉在 WCAG 的参考色对上，检查前景和背景互换后比值不变，也检查不会报出比值够不上的等级。",
         ],
         figure: 2,
         code: {
@@ -261,8 +261,8 @@ export const spectrum: Record<Language, LocalizedContent> = {
     stats: [
       { value: "8", label: "工具，一个应用" },
       { value: "100%", label: "客户端" },
-      { value: "0", label: "上传" },
-      { value: "0", label: "后端" },
+      { value: "8", label: "种色盲模拟" },
+      { value: "OKLCH", label: "配色所用的色彩空间" },
     ],
   },
 };

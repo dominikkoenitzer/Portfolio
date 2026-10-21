@@ -119,7 +119,7 @@ export const fr = {
       "Des choses que j'ai construites, la plupart avec le code source.",
     disclosureEyebrow: "Avant de faire défiler",
     disclosureBody:
-      "Cette page ne montre que la part publique de ce que j'ai construit. Quelques autres projets se trouvent derrière des NDA, dans des dépôts privés ou sur des infrastructures clients que je préfère ne pas exposer, ils n'apparaissent donc pas ici. Tout ce que vous voyez ci-dessous est personnel : de petites choses que je bricole le soir et le week-end, par curiosité et avec l'espoir discret de rendre la journée de quelqu'un un tout petit peu plus légère. Si l'un d'eux y parvient pour vous, mission accomplie.",
+      "Tout ce qui suit est personnel : de petites choses que je construis le soir et le week-end, par curiosité et dans l'espoir de rendre la journée de quelqu'un un peu plus légère. Les travaux pour des clients et les projets sous NDA restent privés.",
     source: "Source",
     sourcePrivate: "Le code source de ce projet est privé.",
     live: "Live",
@@ -181,6 +181,8 @@ export const fr = {
     showImage: "Afficher l’image {index}",
     breadcrumb: "Fil d’Ariane",
     platform: "Plateforme",
+    nextProject: "Projet suivant",
+    previousProject: "Projet précédent",
   },
   services: {
     eyebrow: "Ce que je propose",

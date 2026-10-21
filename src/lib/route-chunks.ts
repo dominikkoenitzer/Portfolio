@@ -7,12 +7,19 @@
  * Home is absent on purpose. It ships in the entry chunk, so there is nothing
  * to warm.
  */
+import { prefetchStoryFor } from "@/pages/e/story-loader";
+
 export const ROUTE_CHUNKS = {
   "/about": () => import("@/pages/About"),
   "/experience": () => import("@/pages/Experience"),
   "/skills": () => import("@/pages/Skills"),
   "/projects": () => import("@/pages/Projects"),
-  "/projects/:projectSlug": () => import("@/pages/ProjectDetails"),
+  // The project's story starts downloading together with the page's code,
+  // rather than after the page has rendered and asked for it.
+  "/projects/:projectSlug": () => {
+    prefetchStoryFor(window.location.pathname);
+    return import("@/pages/ProjectDetails");
+  },
   "/services": () => import("@/pages/Services"),
   "/contact": () => import("@/pages/Contact"),
   "/donate": () => import("@/pages/Donate"),

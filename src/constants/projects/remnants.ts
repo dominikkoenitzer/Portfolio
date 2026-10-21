@@ -14,9 +14,9 @@ const PRODUCT_JSON = `\t"enableTelemetry": false,
 
 export const remnants: Record<Language, LocalizedContent> = {
   en: {
-    tagline: "VS Code, minus the parts that talk back.",
+    tagline: "A quiet build of the VS Code editor, with all AI and telemetry removed.",
     description:
-      "Remnants is a code editor for Windows, macOS and Linux: my personal build of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact.",
+      "Remnants is a code editor for Windows, macOS and Linux: my personal build of Code - OSS with Copilot, chat, agents, telemetry and the sign-in prompts cut out, and the editor, terminal, Git and debugger left fully intact.",
     overview:
       "I love VS Code. I do not love the chat panel, the agent window, the account prompt, or the telemetry quietly sending usage data back upstream. So I took Code - OSS, the open-source core, and removed every AI surface, telemetry hook and sign-in nag, without touching what actually matters: fast editing, IntelliSense, the integrated terminal, source control and the JavaScript/Node debugger. Extensions resolve through Open VSX. It ships for Windows, macOS and Linux. The whole change is roughly 759,000 lines removed and 2,800 added on top of upstream 1.125.0, since brought up to 1.139.1, and CHANGES.md lists all of it, because almost all the code here is Microsoft's and that should be easy to check.",
     roleSummary: "Just me: the cuts, the build, the installer, and the CHANGES file.",
@@ -55,7 +55,7 @@ export const remnants: Record<Language, LocalizedContent> = {
         body: [
           "The release workflow builds Remnants for Windows, macOS and Linux, on x64 and arm64, and publishes every file in one GitHub release, with a checksum file and a signed provenance attestation per asset. Each asset is installed and run by the workflow that builds it, including the arm64 Windows installer on real ARM hardware and the deb and rpm packages inside Debian and Fedora containers.",
           "Getting there meant fixing upstream build scripts that were already broken and only failed once a newer dependency exposed them, such as gulp-rename callbacks that implicitly returned the path they had just assigned.",
-          "Remnants is not code-signed on any platform, so each one asks you to confirm the first launch once. It does not update itself and phones nowhere by default. Turning on the remnants.checkForUpdates setting makes it ask GitHub once a day whether a newer release exists, and it only shows a link. Otherwise new versions appear on the releases page.",
+          "Remnants is not code-signed, so Windows and macOS ask you to confirm the first launch once. It does not update itself and phones nowhere by default. Turning on the remnants.checkForUpdates setting makes it ask its download site, which forwards to GitHub, once a day whether a newer release exists, and it only shows a notification with a link. Otherwise new versions appear on the releases page.",
         ],
       },
     ],
@@ -63,18 +63,18 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants with the Daifuku repository open: the Explorer on the left, grid.rs in the editor, and no AI panel, chat or sign-in anywhere.",
       "The Remnants icon, a faceted blue shard, on a pale lilac background.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "lines removed" },
-      { value: "0", label: "telemetry" },
-      { value: "0", label: "sign-in" },
+      { value: "Off", label: "telemetry and crash reporting" },
+      { value: "3", label: "systems, on x64 and arm64" },
       { value: "1", label: "maintainer" },
     ],
   },
   de: {
-    tagline: "VS Code, ohne die Teile, die zurückreden.",
+    tagline: "Ein ruhiger Build des Editors VS Code, ohne jede KI und ohne Telemetrie.",
     description:
-      "Remnants ist ein Code-Editor für Windows, macOS und Linux: mein persönlicher Build von Code - OSS, aus dem Copilot, Chat, Agenten, Telemetrie und Sign-in herausgeschnitten sind, während Editor, Terminal, Git und Debugger vollständig erhalten bleiben.",
+      "Remnants ist ein Code-Editor für Windows, macOS und Linux: mein persönlicher Build von Code - OSS, aus dem Copilot, Chat, Agenten, Telemetrie und die Sign-in-Aufforderungen herausgeschnitten sind, während Editor, Terminal, Git und Debugger vollständig erhalten bleiben.",
     overview:
       "Ich liebe VS Code. Ich liebe nicht das Chat-Panel, das Agenten-Fenster, die Kontoaufforderung oder die Telemetrie, die still Nutzungsdaten nach oben schickt. Also nahm ich Code - OSS, den Open-Source-Kern, und entfernte jede KI-Oberfläche, jeden Telemetrie-Hook und jedes Sign-in-Genöle, ohne das anzufassen, worauf es ankommt: schnelles Editieren, IntelliSense, das integrierte Terminal, die Versionskontrolle und den JavaScript/Node-Debugger. Erweiterungen kommen über Open VSX. Ausgeliefert wird für Windows, macOS und Linux. Die ganze Änderung sind rund 759'000 entfernte und 2'800 hinzugefügte Zeilen auf Upstream 1.125.0, inzwischen auf 1.139.1 nachgezogen, und CHANGES.md listet alles davon auf, weil fast der ganze Code hier von Microsoft ist und das leicht nachprüfbar sein soll.",
     roleSummary: "Nur ich: die Schnitte, der Build, der Installer und die CHANGES-Datei.",
@@ -113,7 +113,7 @@ export const remnants: Record<Language, LocalizedContent> = {
         body: [
           "Der Release-Workflow baut Remnants für Windows, macOS und Linux, jeweils für x64 und arm64, und veröffentlicht alle Dateien in einem GitHub-Release, mit einer Prüfsummendatei und einer signierten Provenance-Attestierung pro Asset. Jedes Asset wird vom Workflow, der es baut, auch installiert und gestartet, der arm64-Installer für Windows auf echter ARM-Hardware und die deb- und rpm-Pakete in Debian- und Fedora-Containern.",
           "Dafür musste ich Build-Skripte von Upstream reparieren, die schon kaputt waren und erst mit einer neueren Abhängigkeit aufflogen, etwa gulp-rename-Callbacks, die den eben zugewiesenen Pfad implizit zurückgaben.",
-          "Remnants ist auf keiner Plattform code-signiert, deshalb muss man den ersten Start überall einmal bestätigen. Es aktualisiert sich nicht selbst und meldet sich standardmässig nirgends. Wer die Einstellung remnants.checkForUpdates einschaltet, lässt es einmal am Tag bei GitHub nachfragen, ob es ein neueres Release gibt, und es zeigt dann nur einen Link. Sonst erscheinen neue Versionen auf der Release-Seite.",
+          "Remnants ist nicht code-signiert, deshalb muss man den ersten Start unter Windows und macOS einmal bestätigen. Es aktualisiert sich nicht selbst und meldet sich standardmässig nirgends. Wer die Einstellung remnants.checkForUpdates einschaltet, lässt es einmal am Tag bei seiner Download-Seite nachfragen, die an GitHub weiterleitet, ob es ein neueres Release gibt, und es zeigt dann nur eine Meldung mit einem Link. Sonst erscheinen neue Versionen auf der Release-Seite.",
         ],
       },
     ],
@@ -121,18 +121,18 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants mit dem Daifuku-Repository: links der Explorer, im Editor grid.rs, und nirgends ein KI-Panel, ein Chat oder eine Anmeldung.",
       "Das Remnants-Icon, ein facettierter blauer Splitter, auf blassem Flieder.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "entfernte Zeilen" },
-      { value: "0", label: "Telemetrie" },
-      { value: "0", label: "Sign-in" },
+      { value: "Aus", label: "Telemetrie und Absturzberichte" },
+      { value: "3", label: "Systeme, je x64 und arm64" },
       { value: "1", label: "Maintainer" },
     ],
   },
   fr: {
-    tagline: "VS Code, moins les parties qui répondent.",
+    tagline: "Un build calme de l'éditeur VS Code, sans IA ni télémétrie.",
     description:
-      "Remnants est un éditeur de code pour Windows, macOS et Linux : mon build personnel de Code - OSS, avec Copilot, le chat, les agents, la télémétrie et la connexion retirés, et l'éditeur, le terminal, Git et le débogueur laissés entièrement intacts.",
+      "Remnants est un éditeur de code pour Windows, macOS et Linux : mon build personnel de Code - OSS, avec Copilot, le chat, les agents, la télémétrie et les invites de connexion retirés, et l'éditeur, le terminal, Git et le débogueur laissés entièrement intacts.",
     overview:
       "J'aime VS Code. Je n'aime pas le panneau de chat, la fenêtre d'agent, l'invite de compte, ni la télémétrie qui renvoie discrètement des données d'usage. J'ai donc pris Code - OSS, le cœur open source, et retiré chaque surface d'IA, chaque hook de télémétrie et chaque relance de connexion, sans toucher à ce qui compte vraiment : l'édition rapide, IntelliSense, le terminal intégré, le contrôle de version et le débogueur JavaScript/Node. Les extensions passent par Open VSX. Il est livré pour Windows, macOS et Linux. Le changement complet fait environ 759 000 lignes retirées et 2 800 ajoutées au-dessus de la version amont 1.125.0, depuis portée à 1.139.1, et CHANGES.md les liste toutes, parce que presque tout le code ici est celui de Microsoft et que ça doit être facile à vérifier.",
     roleSummary: "Moi seul : les coupes, le build, l'installateur et le fichier CHANGES.",
@@ -171,7 +171,7 @@ export const remnants: Record<Language, LocalizedContent> = {
         body: [
           "Le workflow de release construit Remnants pour Windows, macOS et Linux, en x64 et en arm64, et publie tous les fichiers dans une seule release GitHub, avec un fichier de sommes de contrôle et une attestation de provenance signée par fichier. Chaque fichier est installé et lancé par le workflow qui le construit, y compris l'installateur Windows arm64 sur du vrai matériel ARM et les paquets deb et rpm dans des conteneurs Debian et Fedora.",
           "Pour en arriver là, il a fallu corriger des scripts de build amont déjà cassés, qui n'échouaient qu'une fois exposés par une dépendance plus récente, comme des callbacks gulp-rename qui renvoyaient implicitement le chemin qu'ils venaient d'assigner.",
-          "Remnants n'est signé sur aucune plateforme, donc chacune demande de confirmer le premier lancement une fois. Il ne se met pas à jour tout seul et ne contacte rien par défaut. Le réglage remnants.checkForUpdates, une fois activé, lui fait demander à GitHub une fois par jour s'il existe une release plus récente, et il n'affiche alors qu'un lien. Sinon, les nouvelles versions paraissent sur la page des releases.",
+          "Remnants n'a pas de signature de code, donc Windows et macOS demandent de confirmer le premier lancement une fois. Il ne se met pas à jour tout seul et ne contacte rien par défaut. Le réglage remnants.checkForUpdates, une fois activé, lui fait demander une fois par jour à son site de téléchargement, qui relaie vers GitHub, s'il existe une release plus récente, et il n'affiche alors qu'une notification avec un lien. Sinon, les nouvelles versions paraissent sur la page des releases.",
         ],
       },
     ],
@@ -179,18 +179,18 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants avec le dépôt Daifuku ouvert : l'explorateur à gauche, grid.rs dans l'éditeur, et nulle part de panneau IA, de chat ni de connexion.",
       "L'icône de Remnants, un éclat bleu à facettes, sur un fond lilas pâle.",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "lignes retirées" },
-      { value: "0", label: "télémétrie" },
-      { value: "0", label: "connexion" },
+      { value: "Coupée", label: "télémétrie et rapports de plantage" },
+      { value: "3", label: "systèmes, en x64 et arm64" },
       { value: "1", label: "mainteneur" },
     ],
   },
   zh: {
-    tagline: "VS Code，减去会跟你搭话的那些部分。",
+    tagline: "一个安静的 VS Code 编辑器构建版，去掉了所有 AI 和遥测。",
     description:
-      "Remnants 是一个适用于 Windows、macOS 和 Linux 的代码编辑器：我自己的 Code - OSS 构建版本，剔掉了 Copilot、聊天面板、智能体、遥测和登录，而编辑器、终端、Git 和调试器完整保留。",
+      "Remnants 是一个适用于 Windows、macOS 和 Linux 的代码编辑器：我自己的 Code - OSS 构建版本，剔掉了 Copilot、聊天面板、智能体、遥测和登录提示，而编辑器、终端、Git 和调试器完整保留。",
     overview:
       "我喜欢 VS Code。我不喜欢聊天面板、智能体窗口、账号提示，也不喜欢悄悄往上报使用数据的遥测。于是我拿开源内核 Code - OSS，把每一处 AI 界面、每个遥测钩子和每一次登录催促都拆掉，同时不动那些真正要紧的部分：快速编辑、IntelliSense、集成终端、版本控制，以及 JavaScript/Node 调试器。扩展改走 Open VSX。它发布 Windows、macOS 和 Linux 三个平台的版本。整个改动在上游 1.125.0 之上（之后又跟进到了 1.139.1）大约是删掉 759,000 行、加上 2,800 行，CHANGES.md 把它们全列了出来，因为这里几乎所有代码都是微软的，这一点应该很容易核对。",
     roleSummary: "只有我：那些删减、构建、安装包，以及那份 CHANGES 文件。",
@@ -229,7 +229,7 @@ export const remnants: Record<Language, LocalizedContent> = {
         body: [
           "发布工作流为 Windows、macOS 和 Linux 构建 Remnants，x64 和 arm64 都有，所有文件发布在同一个 GitHub release 里，附一个校验和文件，每个文件还有一份签名的来源证明。每个文件都由构建它的工作流实际安装并运行一遍，包括在真实 ARM 硬件上跑 arm64 的 Windows 安装包，以及在 Debian 和 Fedora 容器里装 deb 和 rpm 包。",
           "为此我修了几处上游构建脚本，它们本来就有问题，只是换上更新的依赖后才暴露出来，比如 gulp-rename 的回调会隐式返回刚赋值的路径。",
-          "Remnants 在任何平台上都没有代码签名，所以每个平台首次启动时都要确认一次。它不会自动更新，默认也不会联网。打开 remnants.checkForUpdates 设置后，它每天向 GitHub 询问一次是否有更新的 release，并且只显示一个链接。否则新版本只在 releases 页面发布。",
+          "Remnants 没有代码签名，所以在 Windows 和 macOS 上首次启动时要确认一次。它不会自动更新，默认也不会联网。打开 remnants.checkForUpdates 设置后，它每天向自己的下载站询问一次是否有更新的 release，下载站再转问 GitHub，它也只弹出一条带链接的通知。否则新版本只在 releases 页面发布。",
         ],
       },
     ],
@@ -237,11 +237,11 @@ export const remnants: Record<Language, LocalizedContent> = {
       "Remnants 打开着 Daifuku 仓库：左边是资源管理器，编辑器里是 grid.rs，任何地方都没有 AI 面板、聊天或登录。",
       "Remnants 的图标：一块多面的蓝色碎片，背景是浅淡的丁香紫。",
     ],
-    tags: ["TypeScript", "Electron", "VS Code", "Privacy"],
+    tags: ["TypeScript", "Electron", "Privacy"],
     stats: [
       { value: "759k", label: "删除的行数" },
-      { value: "0", label: "遥测" },
-      { value: "0", label: "登录" },
+      { value: "关闭", label: "遥测和崩溃报告" },
+      { value: "3", label: "个系统，x64 和 arm64" },
       { value: "1", label: "维护者" },
     ],
   },

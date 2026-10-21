@@ -30,18 +30,18 @@ export const flow: Record<Language, LocalizedContent> = {
   en: {
     downloadNote:
       "First launch: Windows SmartScreen may appear. Choose “More info” → “Run anyway”, then approve the UAC prompt: Flow runs as administrator so it can also record and click into programs that do.",
-    tagline: "Clicks faster than you can, and never needs a coffee break.",
+    tagline: "A macro recorder and auto-clicker for Windows, in one small exe.",
     description:
-      "A Windows desktop app in C++17 that records mouse and keyboard macros, replays them with sub-10 ms timing, and runs a high-speed auto-clicker. One statically linked exe, nothing to install.",
+      "A Windows desktop app in C++17 that records mouse and keyboard macros, replays them on a high-resolution timer, and runs a high-speed auto-clicker. One statically linked exe, nothing to install.",
     overview:
-      "Every auto-clicker I could find online was either spyware or a forum download from 2009, so I wrote my own in C++17, straight against the Win32 API and GDI+. It records mouse moves, clicks and keystrokes with microsecond timestamps, replays them at any speed and any loop count, and carries a separate high-priority auto-clicker. The timing sleeps through most of each delay and busy-waits the last two milliseconds on QueryPerformanceCounter, which holds precision under 10 ms where Sleep alone does not come close. The UI is drawn by hand with no framework, and everything links statically into one 3 MB FLOW.exe. It does run as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.",
+      "Every auto-clicker I could find online was either spyware or a forum download from 2009, so I wrote my own in C++17, straight against the Win32 API and GDI+. It records mouse moves, clicks and keystrokes with microsecond timestamps, replays them at any speed and any loop count, and carries a separate high-priority auto-clicker. The timing sleeps through most of each delay and busy-waits the last few milliseconds on QueryPerformanceCounter, because Sleep alone is far too coarse for the gaps in a macro. The UI is drawn by hand with no framework, and everything links statically into one 3 MB FLOW.exe. It does run as Administrator, because Windows keeps a normal process from recording or clicking into programs that run elevated.",
     roleSummary: "Just me: the engine, the hand-drawn UI, the build scripts.",
     sections: [
       {
-        heading: "Sleep for most of the wait, spin for the last two milliseconds",
+        heading: "Sleep for most of the wait, spin for the last few milliseconds",
         body: [
           "A macro is only as good as the gaps between its events. Sleep alone is far too coarse for that, and a pure busy-wait holds the precision but keeps a whole CPU core at full load for as long as a recording pauses.",
-          "So every delay is measured against an absolute target on QueryPerformanceCounter. Flow sleeps away everything except the last two milliseconds and busy-waits only that tail. The sleep runs in slices of at most 50 ms, so pressing Stop during a long pause in a recording takes effect within 50 ms rather than when the pause is over.",
+          "So every delay is measured against an absolute target on QueryPerformanceCounter. The auto-clicker sleeps away everything except the last two milliseconds of each interval and busy-waits only that tail. Playback does the same with a tail of about three milliseconds, and it places every event at its own point on one clock for the whole loop, the sum of the gaps before it, so the time spent sending input cannot add up over a long macro. The sleep runs in slices of at most 50 ms, so pressing Stop during a long pause takes effect within 50 ms rather than when the pause is over.",
         ],
         code: {
           language: "cpp",
@@ -61,8 +61,8 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "A .rec file is checked before it is believed",
         body: [
           "Macros are saved as a four-byte FLOW header, a version marker and format version, an event count and the raw event structs. That is quick and small, but it also means a broken download or a damaged file can declare any count it likes.",
-          "LoadMacro measures the file first and rejects a count the remaining bytes cannot hold, so a bad header cannot trigger an allocation big enough to crash the program. It also rejects a truncated payload and a file whose timestamps run backwards: playback subtracts consecutive timestamps, and one step back would underflow into a pause of several weeks.",
-          "The tests save and reload a macro byte for byte, and hand LoadMacro a file that is not a macro, a count the payload cannot hold and a truncated payload.",
+          "LoadMacro measures the file first and rejects a count the remaining bytes cannot hold, so a bad header cannot trigger an allocation big enough to crash the program. It also rejects a truncated payload and a file whose timestamps run backwards: playback subtracts consecutive timestamps, and one step back would underflow into a pause of centuries.",
+          "The tests save and reload a macro byte for byte, hand LoadMacro a file that is not a macro, a count the payload cannot hold and a truncated payload, and check that a failed load leaves the macro already loaded in place.",
         ],
       },
       {
@@ -87,26 +87,26 @@ export const flow: Record<Language, LocalizedContent> = {
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "static exe" },
-      { value: "0", label: "dependencies" },
-      { value: "<10 ms", label: "timing precision" },
-      { value: "0", label: "telemetry" },
+      { value: "86", label: "tests" },
+      { value: "C++17", label: "straight on Win32 and GDI+" },
+      { value: "Offline", label: "never touches the network" },
     ],
   },
   de: {
     downloadNote:
       "Erster Start: Windows SmartScreen kann warnen. Wähle „Weitere Informationen“ → „Trotzdem ausführen“ und bestätige dann die UAC-Abfrage: Flow läuft als Administrator, damit es auch Programme aufnehmen und bedienen kann, die mit Administratorrechten laufen.",
-    tagline: "Klickt schneller als du und braucht nie eine Kaffeepause.",
+    tagline: "Makrorekorder und Autoklicker für Windows, in einer kleinen Exe.",
     description:
-      "Eine Windows-Desktop-App in C++17, die Maus- und Tastaturmakros aufnimmt, sie mit unter 10 ms Genauigkeit abspielt und einen Hochgeschwindigkeits-Autoklicker mitbringt. Eine statisch gelinkte Exe, nichts zu installieren.",
+      "Eine Windows-Desktop-App in C++17, die Maus- und Tastaturmakros aufnimmt, sie mit einem hochauflösenden Timer abspielt und einen Hochgeschwindigkeits-Autoklicker mitbringt. Eine statisch gelinkte Exe, nichts zu installieren.",
     overview:
-      "Jeder Autoklicker, den ich online fand, war entweder Spyware oder ein Forum-Download von 2009, also schrieb ich meinen eigenen in C++17, direkt gegen die Win32-API und GDI+. Er nimmt Mausbewegungen, Klicks und Tastenanschläge mit Mikrosekunden-Zeitstempeln auf, spielt sie in jeder Geschwindigkeit und Wiederholungszahl ab und bringt einen eigenen Autoklicker mit hoher Priorität mit. Das Timing schläft den grössten Teil jeder Pause und wartet die letzten zwei Millisekunden aktiv auf QueryPerformanceCounter, das hält die Genauigkeit unter 10 ms, wo Sleep allein nicht annähernd hinkommt. Die UI ist von Hand gezeichnet, ohne Framework, und alles linkt statisch in eine 3 MB grosse FLOW.exe. Sie läuft als Administrator, weil Windows einem normalen Prozess nicht erlaubt, Programme mit erhöhten Rechten aufzunehmen oder in sie zu klicken.",
+      "Jeder Autoklicker, den ich online fand, war entweder Spyware oder ein Forum-Download von 2009, also schrieb ich meinen eigenen in C++17, direkt gegen die Win32-API und GDI+. Er nimmt Mausbewegungen, Klicks und Tastenanschläge mit Mikrosekunden-Zeitstempeln auf, spielt sie in jeder Geschwindigkeit und Wiederholungszahl ab und bringt einen eigenen Autoklicker mit hoher Priorität mit. Das Timing schläft den grössten Teil jeder Pause und wartet die letzten paar Millisekunden aktiv auf QueryPerformanceCounter, weil Sleep allein für die Pausen in einem Makro viel zu grob ist. Die UI ist von Hand gezeichnet, ohne Framework, und alles linkt statisch in eine 3 MB grosse FLOW.exe. Sie läuft als Administrator, weil Windows einem normalen Prozess nicht erlaubt, Programme mit erhöhten Rechten aufzunehmen oder in sie zu klicken.",
     roleSummary: "Nur ich: die Engine, die handgezeichnete UI, die Build-Skripte.",
     sections: [
       {
-        heading: "Den grössten Teil verschlafen, die letzten zwei Millisekunden aktiv warten",
+        heading: "Den grössten Teil verschlafen, die letzten paar Millisekunden aktiv warten",
         body: [
           "Ein Makro ist nur so gut wie die Abstände zwischen seinen Ereignissen. Sleep allein ist dafür viel zu grob, und reines Busy-Waiting hält zwar die Genauigkeit, lastet aber einen ganzen CPU-Kern voll aus, solange eine Aufnahme pausiert.",
-          "Deshalb wird jede Verzögerung gegen ein absolutes Ziel auf QueryPerformanceCounter gemessen. Flow verschläft alles bis auf die letzten zwei Millisekunden und wartet nur diesen Rest aktiv ab. Geschlafen wird in Stücken von höchstens 50 ms, damit ein Stop während einer langen Pause in der Aufnahme innert 50 ms greift und nicht erst, wenn die Pause vorbei ist.",
+          "Deshalb wird jede Verzögerung gegen ein absolutes Ziel auf QueryPerformanceCounter gemessen. Der Autoklicker verschläft jedes Intervall bis auf die letzten zwei Millisekunden und wartet nur diesen Rest aktiv ab. Die Wiedergabe macht es ebenso mit einem Rest von etwa drei Millisekunden und setzt jedes Ereignis auf einen eigenen Punkt einer Uhr, die für die ganze Schleife gilt, die Summe der Abstände davor. So kann sich die Zeit, die das Senden der Eingaben kostet, über ein langes Makro nicht aufsummieren. Geschlafen wird in Stücken von höchstens 50 ms, damit ein Stop während einer langen Pause innert 50 ms greift und nicht erst, wenn die Pause vorbei ist.",
         ],
         code: {
           language: "cpp",
@@ -126,8 +126,8 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "Eine .rec-Datei wird geprüft, bevor man ihr glaubt",
         body: [
           "Makros werden als vier Byte langer FLOW-Header, eine Versionsmarke mit Formatversion, eine Ereigniszahl und die rohen Event-Structs gespeichert. Das ist schnell und klein, heisst aber auch, dass ein abgebrochener Download oder eine beschädigte Datei jede beliebige Zahl behaupten kann.",
-          "LoadMacro misst zuerst die Datei und lehnt eine Zahl ab, für die die restlichen Bytes nicht reichen, damit ein kaputter Header keine Allokation auslösen kann, die das Programm abstürzen lässt. Abgelehnt werden auch ein abgeschnittener Inhalt und eine Datei, deren Zeitstempel rückwärts laufen: Die Wiedergabe subtrahiert aufeinanderfolgende Zeitstempel, und ein Schritt zurück würde zu einer Pause von mehreren Wochen überlaufen.",
-          "Die Tests speichern ein Makro und laden es Byte für Byte wieder, und sie geben LoadMacro eine Datei, die kein Makro ist, eine Zahl, die der Inhalt nicht fassen kann, und einen abgeschnittenen Inhalt.",
+          "LoadMacro misst zuerst die Datei und lehnt eine Zahl ab, für die die restlichen Bytes nicht reichen, damit ein kaputter Header keine Allokation auslösen kann, die das Programm abstürzen lässt. Abgelehnt werden auch ein abgeschnittener Inhalt und eine Datei, deren Zeitstempel rückwärts laufen: Die Wiedergabe subtrahiert aufeinanderfolgende Zeitstempel, und ein Schritt zurück würde zu einer Pause von Jahrhunderten überlaufen.",
+          "Die Tests speichern ein Makro und laden es Byte für Byte wieder, sie geben LoadMacro eine Datei, die kein Makro ist, eine Zahl, die der Inhalt nicht fassen kann, und einen abgeschnittenen Inhalt, und sie prüfen, dass ein gescheitertes Laden das schon geladene Makro stehen lässt.",
         ],
       },
       {
@@ -152,26 +152,26 @@ export const flow: Record<Language, LocalizedContent> = {
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "statische Exe" },
-      { value: "0", label: "Abhängigkeiten" },
-      { value: "<10 ms", label: "Timing-Genauigkeit" },
-      { value: "0", label: "Telemetrie" },
+      { value: "86", label: "Tests" },
+      { value: "C++17", label: "direkt auf Win32 und GDI+" },
+      { value: "Offline", label: "nie im Netzwerk" },
     ],
   },
   fr: {
     downloadNote:
       "Premier lancement : Windows SmartScreen peut s’afficher. Choisissez « Informations complémentaires » → « Exécuter quand même », puis approuvez l’invite UAC : Flow tourne en administrateur pour pouvoir aussi enregistrer et cliquer dans les programmes lancés en administrateur.",
-    tagline: "Clique plus vite que vous, et ne prend jamais de pause café.",
+    tagline: "Un enregistreur de macros et un auto-clicker pour Windows, en un petit exe.",
     description:
-      "Une application Windows en C++17 qui enregistre des macros souris et clavier, les rejoue avec une précision sous les 10 ms, et embarque un auto-clicker à haute vitesse. Un exe lié statiquement, rien à installer.",
+      "Une application Windows en C++17 qui enregistre des macros souris et clavier, les rejoue sur un minuteur haute résolution, et embarque un auto-clicker à haute vitesse. Un exe lié statiquement, rien à installer.",
     overview:
-      "Tous les auto-clickers que j'ai trouvés en ligne étaient soit des spywares, soit un téléchargement de forum de 2009, alors j'ai écrit le mien en C++17, directement contre l'API Win32 et GDI+. Il enregistre les mouvements de souris, les clics et les frappes avec des horodatages à la microseconde, les rejoue à n'importe quelle vitesse et n'importe quel nombre de boucles, et embarque un auto-clicker distinct à haute priorité. Le timing dort pendant l'essentiel de chaque délai et attend activement les deux dernières millisecondes sur QueryPerformanceCounter, ce qui tient la précision sous les 10 ms là où Sleep seul n'en approche pas. L'interface est dessinée à la main, sans framework, et tout se lie statiquement en un seul FLOW.exe de 3 Mo. Il tourne en administrateur, parce que Windows empêche un processus normal d'enregistrer ou de cliquer dans les programmes lancés avec des droits élevés.",
+      "Tous les auto-clickers que j'ai trouvés en ligne étaient soit des spywares, soit un téléchargement de forum de 2009, alors j'ai écrit le mien en C++17, directement contre l'API Win32 et GDI+. Il enregistre les mouvements de souris, les clics et les frappes avec des horodatages à la microseconde, les rejoue à n'importe quelle vitesse et n'importe quel nombre de boucles, et embarque un auto-clicker distinct à haute priorité. Le timing dort pendant l'essentiel de chaque délai et attend activement les dernières millisecondes sur QueryPerformanceCounter, parce que Sleep seul est bien trop grossier pour les pauses d'une macro. L'interface est dessinée à la main, sans framework, et tout se lie statiquement en un seul FLOW.exe de 3 Mo. Il tourne en administrateur, parce que Windows empêche un processus normal d'enregistrer ou de cliquer dans les programmes lancés avec des droits élevés.",
     roleSummary: "Moi seul : le moteur, l'interface dessinée à la main, les scripts de build.",
     sections: [
       {
-        heading: "Dormir pendant l'essentiel de l'attente, boucler sur les deux dernières millisecondes",
+        heading: "Dormir pendant l'essentiel de l'attente, boucler sur les dernières millisecondes",
         body: [
           "Une macro ne vaut que par les écarts entre ses événements. Sleep seul est bien trop grossier pour ça, et une attente active pure tient la précision mais occupe un cœur de processeur à plein tant qu'un enregistrement marque une pause.",
-          "Chaque délai est donc mesuré contre une cible absolue sur QueryPerformanceCounter. Flow dort tout sauf les deux dernières millisecondes et n'attend activement que cette fin. Le sommeil est découpé en tranches de 50 ms au plus, pour qu'un Stop pendant une longue pause d'un enregistrement prenne effet en moins de 50 ms, et non à la fin de la pause.",
+          "Chaque délai est donc mesuré contre une cible absolue sur QueryPerformanceCounter. L'auto-clicker dort tout sauf les deux dernières millisecondes de chaque intervalle et n'attend activement que cette fin. La lecture fait de même avec une fin d'environ trois millisecondes, et place chaque événement à son propre point sur une seule horloge valable pour toute la boucle, la somme des écarts qui le précèdent, si bien que le temps passé à envoyer les entrées ne peut pas s'accumuler sur une longue macro. Le sommeil est découpé en tranches de 50 ms au plus, pour qu'un Stop pendant une longue pause prenne effet en moins de 50 ms, et non à la fin de la pause.",
         ],
         code: {
           language: "cpp",
@@ -191,8 +191,8 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: "Un fichier .rec est vérifié avant d'être cru",
         body: [
           "Les macros sont enregistrées sous forme d'un en-tête FLOW de quatre octets, d'un marqueur et d'un numéro de version du format, d'un nombre d'événements et des structures brutes. C'est rapide et compact, mais un téléchargement interrompu ou un fichier abîmé peut annoncer n'importe quel nombre.",
-          "LoadMacro mesure d'abord le fichier et refuse un nombre que les octets restants ne peuvent pas contenir, pour qu'un en-tête corrompu ne déclenche pas une allocation assez grosse pour faire planter le programme. Il refuse aussi un contenu tronqué et un fichier dont les horodatages reculent : la lecture soustrait des horodatages consécutifs, et un pas en arrière déborderait en une pause de plusieurs semaines.",
-          "Les tests enregistrent puis rechargent une macro octet pour octet, et soumettent à LoadMacro un fichier qui n'est pas une macro, un nombre que le contenu ne peut pas tenir et un contenu tronqué.",
+          "LoadMacro mesure d'abord le fichier et refuse un nombre que les octets restants ne peuvent pas contenir, pour qu'un en-tête corrompu ne déclenche pas une allocation assez grosse pour faire planter le programme. Il refuse aussi un contenu tronqué et un fichier dont les horodatages reculent : la lecture soustrait des horodatages consécutifs, et un pas en arrière déborderait en une pause de plusieurs siècles.",
+          "Les tests enregistrent puis rechargent une macro octet pour octet, soumettent à LoadMacro un fichier qui n'est pas une macro, un nombre que le contenu ne peut pas tenir et un contenu tronqué, et vérifient qu'un chargement raté laisse en place la macro déjà chargée.",
         ],
       },
       {
@@ -217,26 +217,26 @@ export const flow: Record<Language, LocalizedContent> = {
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 Mo", label: "exe statique" },
-      { value: "0", label: "dépendances" },
-      { value: "<10 ms", label: "précision du timing" },
-      { value: "0", label: "télémétrie" },
+      { value: "86", label: "tests" },
+      { value: "C++17", label: "directement sur Win32 et GDI+" },
+      { value: "Hors ligne", label: "jamais sur le réseau" },
     ],
   },
   zh: {
     downloadNote:
       "首次启动：Windows SmartScreen 可能会提示，选择“更多信息”→“仍要运行”，然后允许 UAC 提示：Flow 以管理员身份运行，这样也能录制和点击同样以管理员身份运行的程序。",
-    tagline: "点得比你快，而且从不需要歇一杯咖啡。",
+    tagline: "Windows 上的宏录制器和连点器，装在一个小巧的 exe 里。",
     description:
-      "一个用 C++17 写的 Windows 桌面程序：录制鼠标与键盘宏，以低于 10 毫秒的精度回放，另带一个高速连点器。静态链接的单个 exe，无需安装。",
+      "一个用 C++17 写的 Windows 桌面程序：录制鼠标与键盘宏，用高精度计时器回放，另带一个高速连点器。静态链接的单个 exe，无需安装。",
     overview:
-      "网上能找到的连点器，要么是间谍软件，要么是 2009 年的论坛附件，于是我用 C++17 自己写了一个，直接对着 Win32 API 和 GDI+ 写。它以微秒级时间戳录制鼠标移动、点击和按键，可以按任意速度、任意循环次数回放，另外还带一个独立的高优先级连点器。计时在每段延迟的大部分时间里休眠，只在最后两毫秒基于 QueryPerformanceCounter 忙等，把精度压在 10 毫秒以内，Sleep 差得远。界面全部手绘，没有框架，全部静态链接成一个 3 MB 的 FLOW.exe。它以管理员身份运行，因为 Windows 不允许普通进程录制或点击以提升权限运行的程序。",
+      "网上能找到的连点器，要么是间谍软件，要么是 2009 年的论坛附件，于是我用 C++17 自己写了一个，直接对着 Win32 API 和 GDI+ 写。它以微秒级时间戳录制鼠标移动、点击和按键，可以按任意速度、任意循环次数回放，另外还带一个独立的高优先级连点器。计时在每段延迟的大部分时间里休眠，只在最后几毫秒基于 QueryPerformanceCounter 忙等，因为单靠 Sleep 对宏里的停顿来说太粗了。界面全部手绘，没有框架，全部静态链接成一个 3 MB 的 FLOW.exe。它以管理员身份运行，因为 Windows 不允许普通进程录制或点击以提升权限运行的程序。",
     roleSummary: "只有我：引擎、手绘界面、构建脚本。",
     sections: [
       {
-        heading: "大部分时间睡眠，最后两毫秒忙等",
+        heading: "大部分时间睡眠，最后几毫秒忙等",
         body: [
           "宏好不好用，取决于事件之间的间隔。单靠 Sleep 太粗；纯忙等虽然精度够，但只要录制里有停顿，就会把一整个 CPU 核心占满。",
-          "所以每个延迟都对照 QueryPerformanceCounter 上的一个绝对目标时间来计算。Flow 先睡掉除最后两毫秒之外的全部时间，只在这段尾巴上忙等。睡眠被切成每段最多 50 毫秒，这样在录制中的长停顿里按下停止，50 毫秒内就会生效，不用等到停顿结束。",
+          "所以每个延迟都对照 QueryPerformanceCounter 上的一个绝对目标时间来计算。连点器在每个间隔里先睡掉除最后两毫秒之外的全部时间，只在这段尾巴上忙等。回放也是这样，尾巴约三毫秒，而且每个事件都落在整轮循环共用的同一个时钟上，时刻是它之前所有间隔之和，所以发送输入花掉的时间不会在长宏里越积越多。睡眠被切成每段最多 50 毫秒，这样在长停顿里按下停止，50 毫秒内就会生效，不用等到停顿结束。",
         ],
         code: {
           language: "cpp",
@@ -256,8 +256,8 @@ export const flow: Record<Language, LocalizedContent> = {
         heading: ".rec 文件先检查，再相信",
         body: [
           "宏文件的格式是四字节的 FLOW 文件头、一个版本标记和格式版本号、一个事件数量，然后是原始的事件结构体。这样又快又小，但也意味着下载中断或文件损坏时，文件头可以声明任意数量。",
-          "LoadMacro 会先测量文件大小，剩余字节装不下的数量直接拒绝，免得坏掉的文件头触发一次大到让程序崩溃的内存分配。被截断的内容也会被拒绝，时间戳倒退的文件同样如此：回放时要把相邻时间戳相减，倒退一步就会下溢成长达数周的停顿。",
-          "测试会把宏逐字节地保存再读回，并把不是宏的文件、内容装不下的数量和被截断的内容分别交给 LoadMacro。",
+          "LoadMacro 会先测量文件大小，剩余字节装不下的数量直接拒绝，免得坏掉的文件头触发一次大到让程序崩溃的内存分配。被截断的内容也会被拒绝，时间戳倒退的文件同样如此：回放时要把相邻时间戳相减，倒退一步就会下溢成长达几个世纪的停顿。",
+          "测试会把宏逐字节地保存再读回，把不是宏的文件、内容装不下的数量和被截断的内容分别交给 LoadMacro，并确认读取失败时，原先已载入的宏保持不变。",
         ],
       },
       {
@@ -282,9 +282,9 @@ export const flow: Record<Language, LocalizedContent> = {
     tags: ["C++", "Win32", "GDI+", "Automation", "Low-latency"],
     stats: [
       { value: "3 MB", label: "静态 exe" },
-      { value: "0", label: "依赖" },
-      { value: "<10 ms", label: "计时精度" },
-      { value: "0", label: "遥测" },
+      { value: "86", label: "个测试" },
+      { value: "C++17", label: "直接基于 Win32 和 GDI+" },
+      { value: "离线", label: "从不联网" },
     ],
   },
 };

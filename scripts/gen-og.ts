@@ -177,21 +177,21 @@ const CARDS: { out: string; title: string; subtitle: string; path: string }[] = 
 // Per-project share cards (wired through ProjectDetails' <SEO image=...>, which
 // points at /og/projects/<slug>.png). Subtitles follow each project's tagline.
 const PROJECT_CARDS: { slug: string; title: string; subtitle: string }[] = [
-  { slug: "time", title: "Time", subtitle: "Your device's clock is probably wrong. This one isn't." },
-  { slug: "spectrum", title: "Spectrum", subtitle: "Eight color tools that finally live under one roof, and none of them phone home" },
-  { slug: "entropy", title: "Entropy", subtitle: "Real randomness, and an honest guess at how long your password would last" },
-  { slug: "zephyr", title: "Zephyr", subtitle: "A to-do list and a focus timer, all yours and all offline" },
-  { slug: "senbon", title: "Senbon", subtitle: "A journal that refuses to be found on Google. On purpose." },
-  { slug: "punds", title: "Punds", subtitle: "A list of my links, hidden inside a 3D world you fly through" },
-  { slug: "flow", title: "Flow", subtitle: "Clicks faster than you can, and never needs a coffee break" },
-  { slug: "jester", title: "Jester", subtitle: "A notepad that grew up. Tabs, line numbers, find-in-files, PDF export." },
-  { slug: "remnants", title: "Remnants", subtitle: "VS Code, minus the parts that talk back" },
-  { slug: "portfolio", title: "Portfolio", subtitle: "The site you are reading right now. Yes, it is the portfolio piece." },
-  { slug: "oxidize", title: "Oxidize", subtitle: "Uninstalls the program, then hunts down everything it forgot to take with it" },
-  { slug: "inkling", title: "Inkling", subtitle: "Notes, to-dos and flashcards in one calm app" },
-  { slug: "mochi", title: "Mochi", subtitle: "A tiling window manager for Windows that always gives the desktop back" },
-  { slug: "daifuku", title: "Daifuku", subtitle: "Fleets of AI agent terminals on Windows, each border saying what its agent is doing" },
-  { slug: "psyche", title: "Psyche", subtitle: "Two-factor codes on the Windows desktop. Alt+P on a 2FA prompt types the code." },
+  { slug: "time", title: "Time", subtitle: "A web clock synced over NTP that stays right when your device is not" },
+  { slug: "spectrum", title: "Spectrum", subtitle: "Eight color tools in one browser app, and your images never leave it" },
+  { slug: "entropy", title: "Entropy", subtitle: "A password generator that tells you honestly how long a password lasts" },
+  { slug: "zephyr", title: "Zephyr", subtitle: "A to-do list and a focus timer that work offline, no account needed" },
+  { slug: "senbon", title: "Senbon", subtitle: "My markdown journal, kept out of search engines on purpose" },
+  { slug: "punds", title: "Punds", subtitle: "My link hub as a shrine garden above the clouds" },
+  { slug: "flow", title: "Flow", subtitle: "A macro recorder and auto-clicker for Windows, in one small exe" },
+  { slug: "jester", title: "Jester", subtitle: "A fast Windows notepad with tabs, find in files and PDF export" },
+  { slug: "remnants", title: "Remnants", subtitle: "A quiet build of the VS Code editor, with all AI and telemetry removed" },
+  { slug: "portfolio", title: "Portfolio", subtitle: "The site you are reading, in four languages and quick on every page" },
+  { slug: "oxidize", title: "Oxidize", subtitle: "A Windows uninstaller that also removes the leftovers, with an undo" },
+  { slug: "inkling", title: "Inkling", subtitle: "Study notes whose to-dos and flashcards gather on one Today page" },
+  { slug: "mochi", title: "Mochi", subtitle: "Tiles your Windows desktop from the keyboard, and always gives it back" },
+  { slug: "daifuku", title: "Daifuku", subtitle: "A grid of AI coding agents whose borders show which one needs you" },
+  { slug: "psyche", title: "Psyche", subtitle: "Two-factor codes on Windows: Alt+P types the right one for the site" },
 ];
 
 const fontFiles = await ensureFonts();

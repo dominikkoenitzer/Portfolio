@@ -27,7 +27,7 @@ const VALIDATE_CODE = `fn validate_reg_file(path: &Path, hive: Hive, subpath: &s
 export const oxidize: Record<Language, LocalizedContent> = {
   en: {
     tagline:
-      "Uninstalls the program, then hunts down everything it forgot to take with it.",
+      "A Windows uninstaller that also removes the leftovers, with an undo.",
     description:
       "A thorough Windows uninstaller written in Rust: it closes what still runs from a program's folders, runs its uninstaller where one is needed, then finds and removes the registry keys, files, services, tasks, firewall rules and PATH entries it left behind, backing each one up first. Ships as a scriptable CLI and a native egui GUI sharing one engine.",
     overview:
@@ -86,7 +86,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
   },
   de: {
     tagline:
-      "Deinstalliert das Programm und jagt dann alles, was es zurückgelassen hat.",
+      "Ein Windows-Deinstallierer, der auch die Reste entfernt und alles zurückholen kann.",
     description:
       "Ein gründlicher Windows-Deinstallierer in Rust: Er schliesst, was noch aus den Ordnern eines Programms läuft, führt dessen Uninstaller aus, wo einer nötig ist, und entfernt danach die Registry-Schlüssel, Dateien, Dienste, Aufgaben, Firewall-Regeln und PATH-Einträge, die es hinterlassen hat, jeweils mit Backup zuerst. Kommt als skriptbare CLI und als native egui-GUI auf einer Engine.",
     overview:
@@ -145,7 +145,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
   },
   fr: {
     tagline:
-      "Désinstalle le programme, puis traque tout ce qu'il a oublié d'emporter.",
+      "Un désinstalleur Windows qui retire aussi les restes, et sait tout annuler.",
     description:
       "Un désinstalleur Windows minutieux écrit en Rust : il ferme ce qui tourne encore depuis les dossiers du programme, lance son désinstalleur quand il en faut un, puis trouve et retire les clés de registre, fichiers, services, tâches, règles de pare-feu et entrées PATH laissés derrière, en sauvegardant chacun d'abord. Livré en CLI scriptable et en GUI egui native, partageant un seul moteur.",
     overview:
@@ -203,7 +203,7 @@ export const oxidize: Record<Language, LocalizedContent> = {
     ],
   },
   zh: {
-    tagline: "先把程序卸掉，再去追它忘了带走的一切。",
+    tagline: "一个连残留也一并清掉的 Windows 卸载工具，而且随时可以撤销。",
     description:
       "一个用 Rust 写的彻底的 Windows 卸载工具：先关掉还在从程序文件夹里运行的进程，需要时再跑程序自带的卸载器，然后找出并清掉它留下的注册表项、文件、服务、计划任务、防火墙规则和 PATH 条目，每一项都先备份。同时提供可脚本化的 CLI 和原生 egui 图形界面，共用同一个引擎。",
     overview:

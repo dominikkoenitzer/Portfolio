@@ -18,11 +18,11 @@ let c = raw(console);
     .then_some(c)`;
 
 const en: LocalizedContent = {
-  tagline: "Fleets of AI agent terminals on Windows, each border saying what its agent is doing.",
+  tagline: "A grid of AI coding agents whose borders show which one needs you.",
   description:
     "A Windows tool, written in Rust, for running many AI coding agents at once. One key opens a fleet of terminals in a grid, and each terminal's border shows whether its agent is working, waiting for you, done or failed.",
   overview:
-    "When six agents run at the same time, the hard part is noticing which one is waiting for you. Daifuku opens them in a grid on the monitor you choose, with one key, and colours every terminal's border by what its agent is doing: blue while it works, yellow when it needs an answer, green when it is done, red when it failed. Another key jumps to the agent that has waited longest. It works with Claude Code and Codex in Windows Terminal, and runs beside Mochi without either getting in the other's way.",
+    "When six agents run at the same time, the hard part is noticing which one is waiting for you. Daifuku opens them in a grid on the monitor you choose, with one key, and colours every terminal's border by what its agent is doing: blue while it works, yellow when it needs an answer, green when it is done, red when it failed. Another key jumps to the agent that has waited longest, then to the ones that failed. It hooks into two command-line coding agents in Windows Terminal, and runs beside Mochi without either getting in the other's way.",
   roleSummary: "Just me: the idea, the Win32 layer, the daemon and the tests.",
   sections: [
     {
@@ -44,7 +44,7 @@ const en: LocalizedContent = {
       body: [
         "The daemon has to run elevated: Windows will not let a normal process move an administrator's window or draw beside it. That makes it a target, because anything that can change what it starts gets administrator rights for free.",
         "So nothing an ordinary program can touch decides what it starts. The binaries live in Program Files. The config lives in a folder only administrators can write, and the installer also hands that folder and everything in it to the Administrators group, because the owner of a file can always rewrite its access list. Commands arrive on a pipe only elevated processes can open, and Windows Terminal is found through its package, never through PATH.",
-        "The hooks get a pipe of their own, open to the signed-in user, and the most a message on it can do is colour a border.",
+        "The hooks get a pipe of their own, open to the signed-in user, and the most a message on it can do is set the state a border shows.",
       ],
     },
     {
@@ -75,11 +75,11 @@ const en: LocalizedContent = {
 };
 
 const de: LocalizedContent = {
-  tagline: "Flotten von KI-Agenten-Terminals unter Windows, jeder Rahmen sagt, was sein Agent tut.",
+  tagline: "KI-Coding-Agenten im Raster, deren Rahmen zeigen, welcher dich gerade braucht.",
   description:
     "Ein Windows-Werkzeug in Rust, um viele KI-Coding-Agenten gleichzeitig laufen zu lassen. Eine Taste öffnet eine Flotte von Terminals in einem Raster, und der Rahmen jedes Terminals zeigt, ob sein Agent arbeitet, auf dich wartet, fertig ist oder gescheitert ist.",
   overview:
-    "Wenn sechs Agenten gleichzeitig laufen, ist das Schwierige, zu merken, welcher gerade auf dich wartet. Daifuku öffnet sie mit einer Taste in einem Raster auf dem Bildschirm deiner Wahl und färbt den Rahmen jedes Terminals nach dem, was sein Agent tut: blau, solange er arbeitet, gelb, wenn er eine Antwort braucht, grün, wenn er fertig ist, rot, wenn er gescheitert ist. Eine weitere Taste springt zum Agenten, der am längsten wartet. Es funktioniert mit Claude Code und Codex in Windows Terminal und läuft neben Mochi, ohne dass sich die beiden in die Quere kommen.",
+    "Wenn sechs Agenten gleichzeitig laufen, ist das Schwierige, zu merken, welcher gerade auf dich wartet. Daifuku öffnet sie mit einer Taste in einem Raster auf dem Bildschirm deiner Wahl und färbt den Rahmen jedes Terminals nach dem, was sein Agent tut: blau, solange er arbeitet, gelb, wenn er eine Antwort braucht, grün, wenn er fertig ist, rot, wenn er gescheitert ist. Eine weitere Taste springt zum Agenten, der am längsten wartet, danach zu denen, die gescheitert sind. Es klinkt sich in zwei Kommandozeilen-Coding-Agenten in Windows Terminal ein und läuft neben Mochi, ohne dass sich die beiden in die Quere kommen.",
   roleSummary: "Nur ich: die Idee, die Win32-Schicht, der Daemon und die Tests.",
   sections: [
     {
@@ -101,7 +101,7 @@ const de: LocalizedContent = {
       body: [
         "Der Daemon muss mit erhöhten Rechten laufen: Windows lässt einen normalen Prozess weder das Fenster eines Administrators verschieben noch daneben zeichnen. Das macht ihn zum Ziel, denn alles, was ändern kann, was er startet, bekommt Administratorrechte geschenkt.",
         "Deshalb entscheidet nichts, was ein gewöhnliches Programm anfassen kann, darüber, was er startet. Die Programme liegen unter Program Files. Die Konfiguration liegt in einem Ordner, in den nur Administratoren schreiben können, und der Installer übergibt diesen Ordner samt Inhalt ausserdem der Gruppe Administratoren, weil der Besitzer einer Datei ihre Zugriffsliste immer neu schreiben kann. Befehle kommen über eine Pipe, die nur Prozesse mit erhöhten Rechten öffnen können, und Windows Terminal wird über sein Paket gefunden, nie über PATH.",
-        "Die Hooks bekommen eine eigene Pipe, offen für den angemeldeten Benutzer, und das Äusserste, was eine Nachricht darauf bewirken kann, ist einen Rahmen zu färben.",
+        "Die Hooks bekommen eine eigene Pipe, offen für den angemeldeten Benutzer, und das Äusserste, was eine Nachricht darauf bewirken kann, ist, den Zustand zu setzen, den ein Rahmen zeigt.",
       ],
     },
     {
@@ -132,11 +132,11 @@ const de: LocalizedContent = {
 };
 
 const fr: LocalizedContent = {
-  tagline: "Des flottes de terminaux d'agents IA sous Windows, chaque bordure dit ce que fait son agent.",
+  tagline: "Une grille d'agents de code IA dont les bordures montrent lequel vous attend.",
   description:
     "Un outil Windows, écrit en Rust, pour faire tourner beaucoup d'agents de code IA à la fois. Une touche ouvre une flotte de terminaux en grille, et la bordure de chaque terminal montre si son agent travaille, vous attend, a fini ou a échoué.",
   overview:
-    "Quand six agents tournent en même temps, le plus dur est de remarquer lequel vous attend. Daifuku les ouvre d'une seule touche en grille sur l'écran de votre choix, et colore la bordure de chaque terminal selon ce que fait son agent : bleu tant qu'il travaille, jaune quand il a besoin d'une réponse, vert quand il a fini, rouge quand il a échoué. Une autre touche saute à l'agent qui attend depuis le plus longtemps. Il fonctionne avec Claude Code et Codex dans Windows Terminal, et tourne à côté de Mochi sans que l'un gêne l'autre.",
+    "Quand six agents tournent en même temps, le plus dur est de remarquer lequel vous attend. Daifuku les ouvre d'une seule touche en grille sur l'écran de votre choix, et colore la bordure de chaque terminal selon ce que fait son agent : bleu tant qu'il travaille, jaune quand il a besoin d'une réponse, vert quand il a fini, rouge quand il a échoué. Une autre touche saute à l'agent qui attend depuis le plus longtemps, puis à ceux qui ont échoué. Il se branche sur deux agents de code en ligne de commande dans Windows Terminal, et tourne à côté de Mochi sans que l'un gêne l'autre.",
   roleSummary: "Moi seul : l'idée, la couche Win32, le démon et les tests.",
   sections: [
     {
@@ -158,7 +158,7 @@ const fr: LocalizedContent = {
       body: [
         "Le démon doit tourner avec des droits élevés : Windows ne laisse pas un processus normal déplacer la fenêtre d'un administrateur ni dessiner à côté. Cela en fait une cible, car tout ce qui peut changer ce qu'il lance obtient les droits d'administrateur gratuitement.",
         "Donc rien de ce qu'un programme ordinaire peut toucher ne décide de ce qu'il lance. Les binaires sont dans Program Files. La configuration est dans un dossier où seuls les administrateurs peuvent écrire, et l'installateur donne en plus ce dossier et tout son contenu au groupe Administrateurs, parce que le propriétaire d'un fichier peut toujours réécrire sa liste d'accès. Les commandes arrivent par un tube que seuls les processus élevés peuvent ouvrir, et Windows Terminal est trouvé par son paquet, jamais par le PATH.",
-        "Les hooks ont leur propre tube, ouvert à l'utilisateur connecté, et le plus qu'un message dessus puisse faire, c'est colorer une bordure.",
+        "Les hooks ont leur propre tube, ouvert à l'utilisateur connecté, et le plus qu'un message dessus puisse faire, c'est fixer l'état qu'affiche une bordure.",
       ],
     },
     {
@@ -189,11 +189,11 @@ const fr: LocalizedContent = {
 };
 
 const zh: LocalizedContent = {
-  tagline: "Windows 上成组的 AI 智能体终端，每个边框都说明它的智能体在做什么。",
+  tagline: "排成网格的 AI 编程智能体，看边框就知道哪个在等你。",
   description:
     "一个用 Rust 写的 Windows 工具，用来同时运行许多 AI 编程智能体。一个快捷键就能把一组终端排成网格打开，每个终端的边框显示它的智能体是在工作、在等你、已完成还是失败了。",
   overview:
-    "六个智能体同时运行时，难的是注意到哪一个正在等你。Daifuku 用一个快捷键把它们排成网格，打开在你选的显示器上，并按每个智能体在做的事给终端边框上色：工作时是蓝色，需要回答时是黄色，完成时是绿色，失败时是红色。另一个快捷键会跳到等得最久的那个智能体。它支持 Windows Terminal 里的 Claude Code 和 Codex，并能和 Mochi 同时运行，互不干扰。",
+    "六个智能体同时运行时，难的是注意到哪一个正在等你。Daifuku 用一个快捷键把它们排成网格，打开在你选的显示器上，并按每个智能体在做的事给终端边框上色：工作时是蓝色，需要回答时是黄色，完成时是绿色，失败时是红色。另一个快捷键会先跳到等得最久的那个智能体，再跳到失败的那些。它通过钩子接入 Windows Terminal 里的两种命令行编程智能体，并能和 Mochi 同时运行，互不干扰。",
   roleSummary: "只有我：想法、Win32 层、守护进程和测试。",
   sections: [
     {
@@ -214,7 +214,7 @@ const zh: LocalizedContent = {
       body: [
         "守护进程必须以提升的权限运行：Windows 不允许普通进程移动管理员的窗口，也不允许在旁边绘制。这让它成了目标，因为任何能改变它启动什么的东西，都会白白得到管理员权限。",
         "所以，普通程序能碰到的任何东西都不能决定它启动什么。程序文件放在 Program Files。配置放在只有管理员能写入的文件夹里，安装程序还会把这个文件夹及其中所有内容交给 Administrators 组，因为文件的所有者总能改写它的访问列表。命令只能通过只有提升权限的进程才能打开的管道传入，而 Windows Terminal 是通过它的软件包找到的，从不通过 PATH。",
-        "钩子有自己的管道，对已登录的用户开放，而其中的一条消息最多只能给一个边框上色。",
+        "钩子有自己的管道，对已登录的用户开放，而其中的一条消息最多只能设定一个边框显示的状态。",
       ],
     },
     {
