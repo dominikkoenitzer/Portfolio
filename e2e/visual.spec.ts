@@ -9,8 +9,10 @@ import { SHOT_ROUTES, SIZES, slugOf } from "./routes";
  * New baselines come from the "update snapshots" run of the CI workflow.
  *
  * Motion is reduced and CSS animations are stopped, the clock is fixed for
- * the sky's colours, and every canvas is masked: WebGL output differs between
+ * the sky's colours, and every canvas is hidden: WebGL output differs between
  * GPUs and software renderers, and the canvases are covered by the smoke spec.
+ * Hidden rather than masked, since the background canvas fills the viewport
+ * and a mask over it would leave one flat colour to compare.
  */
 test.skip(process.platform !== "linux", "baselines are rendered on Linux");
 test.use({ contextOptions: { reducedMotion: "reduce" } });
@@ -25,7 +27,7 @@ for (const size of SIZES) {
         await expect(page.locator("h1").first()).toBeVisible();
         await settle(page);
         await expect(page).toHaveScreenshot(`${slugOf(path)}-${size.width}.png`, {
-          mask: [page.locator("canvas")],
+          style: "canvas { visibility: hidden !important; }",
         });
       });
     }
