@@ -309,7 +309,7 @@ export function PickerDemo() {
                   <span aria-hidden>{typed}</span>
                   {phase !== "typed" ? <span aria-hidden className="ml-px h-4 w-px animate-pulse bg-foreground/70" /> : null}
                 </div>
-                <span aria-hidden className="flex h-10 items-center rounded-lg bg-foreground/[0.08] px-4 font-medium text-[0.8125rem] text-foreground/60">
+                <span aria-hidden className="flex h-10 items-center rounded-lg bg-foreground/[0.08] px-4 font-medium text-[0.8125rem] text-foreground/80">
                   Verify
                 </span>
               </div>
