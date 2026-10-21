@@ -269,14 +269,13 @@ export function SyncDemo() {
                   const winner = corrected && i === bestIndex;
                   return (
                     <motion.li
-                      animate={{ opacity: landed ? 1 : 0.3 }}
+                      animate={{
+                        background: winner ? "rgb(255 255 255 / 0.08)" : "rgb(255 255 255 / 0)",
+                        boxShadow: `inset 0 0 0 1px ${winner ? "rgb(255 255 255 / 0.35)" : landed ? FACE.line : "rgb(255 255 255 / 0)"}`,
+                      }}
                       className="flex items-center justify-between rounded-md px-2.5 py-1.5 sm:flex-col sm:gap-1 sm:px-1 sm:py-2"
                       key={sample.rtt}
-                      style={{
-                        color: winner ? FACE.text : FACE.caption,
-                        background: winner ? "rgb(255 255 255 / 0.08)" : "transparent",
-                        boxShadow: `inset 0 0 0 1px ${winner ? "rgb(255 255 255 / 0.35)" : FACE.line}`,
-                      }}
+                      style={{ color: winner ? FACE.text : FACE.caption }}
                       transition={fade}
                     >
                       <span>{sample.rtt} ms</span>
