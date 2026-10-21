@@ -9,7 +9,7 @@ import { getProjects } from "@/constants/projects";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
-import { CodePane, Figures, HeroPicture, PairFigure, Points, StillFigure } from "./e/kit";
+import { CodePane, HeroPicture, PairFigure, Points, StillFigure } from "./e/kit";
 import { hasStory, loadStory, storyNow } from "./e/story-loader";
 import type { Block, Story } from "./e/types";
 import type { VariantProps } from "./project-variants";
@@ -17,8 +17,8 @@ import type { VariantProps } from "./project-variants";
 /**
  * Layout e of the project page: a short, typography-led essay in one 640px
  * column under a wide picture of the real app. Each section shows its point
- * in the form that suits it (a live demo, a still, two stills, figures, code
- * or a short list), and a quiet sticky index runs beside it on wide screens.
+ * in the form that suits it (a live demo, a still, two stills, code or a
+ * short list), and a quiet sticky index runs beside it on wide screens.
  */
 
 /** The project's story: at once if it has arrived, undefined while it loads, null if it has none. */
@@ -172,13 +172,6 @@ function Blocks({ blocks }: { blocks: Block[] }) {
           return (
             <div className={gap} key={key}>
               <PairFigure caption={block.caption} stills={block.pair} />
-            </div>
-          );
-        }
-        if ("figures" in block) {
-          return (
-            <div className={gap} key={key}>
-              <Figures items={block.figures} />
             </div>
           );
         }

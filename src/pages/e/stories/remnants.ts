@@ -28,14 +28,7 @@ export const story: Story = {
       id: "cut",
       heading: "Most of the work was deleting",
       blocks: [
-        "The largest cut was the AI itself: chat, agent sessions, the coding assistant, MCP and the language-model APIs. AI code is registered all over the workbench, so further passes took out 143 files of leftover registrations and settings, then the agent welcome and setup flows.",
-        {
-          figures: [
-            { value: "759k", label: "lines removed" },
-            { value: "2.8k", label: "lines added" },
-            { value: "2,761", label: "files in the AI cut alone" },
-          ],
-        },
+        "The largest cut was the AI itself: chat, agent sessions, the coding assistant, MCP and the language-model APIs. AI code is registered all over the workbench, so further passes took out 143 files of leftover registrations and settings, then the agent welcome and setup flows. In all, about 759,000 lines went and 2,800 came in.",
         "One leftover broke the install itself: upstream's postinstall step linked an agent harness that was gone, so the install failed until I fixed that too.",
       ],
     },

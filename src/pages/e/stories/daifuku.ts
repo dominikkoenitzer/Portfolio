@@ -63,13 +63,6 @@ export const story: Story = {
       heading: "Measured on a real desktop",
       blocks: [
         "The bugs that mattered only showed on a real screen. A border lagged two seconds behind a moved window, because Windows delivers window events inside the message wait without ending it. An agent that started before its terminal was ready named a hidden console window zero pixels wide. Each is fixed and pinned by a check, and CI runs the whole path on a real Windows desktop on every push.",
-        {
-          figures: [
-            { value: "458", label: "tests" },
-            { value: "5", label: "crates" },
-            { value: "4", label: "states, told apart without colour" },
-          ],
-        },
         "It runs beside Mochi without either getting in the other's way, and it is how I work every day.",
       ],
     },

@@ -5,7 +5,7 @@ import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
 import { useMotionSafe } from "./motion";
 import { RING } from "./style";
-import type { Code, Figure, Point, Still } from "./types";
+import type { Code, Point, Still } from "./types";
 
 /** The shared controls of layout e's live demos: one demo box, pills and actions. */
 
@@ -418,27 +418,6 @@ export function HeroPicture({ still }: { still: Still }) {
       {still.caption ? <figcaption className={CAPTION}>{still.caption}</figcaption> : null}
       {viewer}
     </figure>
-  );
-}
-
-/**
- * What the project adds up to, as two to four numbers: the value in the title
- * face, what it counts in a few words below. No box; a hairline above and
- * below holds the row, so it reads as a pause in the text rather than a card.
- */
-export function Figures({ items }: { items: Figure[] }) {
-  return (
-    <dl
-      className="m-0 grid grid-cols-2 gap-x-6 gap-y-6 border-border/80 border-y py-6 sm:grid-cols-[repeat(var(--n),minmax(0,1fr))]"
-      style={{ "--n": items.length } as CSSProperties}
-    >
-      {items.map((item) => (
-        <div className="flex flex-col-reverse gap-1.5" key={item.label}>
-          <dt className="text-[0.8125rem] text-muted-foreground leading-snug">{item.label}</dt>
-          <dd className="title-serif m-0 text-[1.875rem] text-foreground leading-none tabular-nums">{item.value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 
