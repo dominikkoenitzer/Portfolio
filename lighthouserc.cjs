@@ -49,7 +49,6 @@ const ONLY = process.env.LIGHTHOUSE_PAGE;
 if (ONLY && !(ONLY in PAGES)) {
   throw new Error(`LIGHTHOUSE_PAGE=${ONLY} is not one of ${Object.keys(PAGES).join(", ")}`);
 }
-const PATHS = ONLY ? [PAGES[ONLY]] : Object.values(PAGES);
 
 const BUDGETS = {
   "categories:performance": { minScore: PRESET === "desktop" ? 0.95 : 0.9 },
@@ -60,25 +59,72 @@ const BUDGETS = {
   "cumulative-layout-shift": { maxNumericValue: 0.05 },
 };
 
-/** Named exceptions: [preset, audit, measured median, reason]. */
-const EXCEPTIONS = [];
+/**
+ * Named exceptions: [preset, page, audit, median measured on the CI runner].
+ *
+ * runner-main-thread: measured in run 39521834045 on the branch that added
+ * this gate, with the site as it is on main. On the GitHub runner the main
+ * thread is busy for 5 to 26 seconds after load on most pages, which takes
+ * Total Blocking Time and the performance score with it, and on mobile the
+ * largest paint lands at 4.2 to 5.6 s. On a 24-core desktop the same build
+ * measures 0 to 170 ms of blocking time (mobile preset, throttled), also
+ * with software WebGL, so the cause is not settled yet; the background
+ * canvas drawing on a runner without a GPU is the first suspect. Open until
+ * the reports in the run's artifacts are read and the page is fixed.
+ */
+const EXCEPTIONS = [
+  ["mobile", "home", "categories:performance", 0.48],
+  ["mobile", "home", "largest-contentful-paint", 4200],
+  ["mobile", "home", "total-blocking-time", 10605],
+  ["mobile", "about", "categories:performance", 0.43],
+  ["mobile", "about", "largest-contentful-paint", 5039],
+  ["mobile", "about", "total-blocking-time", 24618],
+  ["mobile", "projects", "categories:performance", 0.4],
+  ["mobile", "projects", "largest-contentful-paint", 5348],
+  ["mobile", "projects", "total-blocking-time", 26467],
+  ["mobile", "entropy", "categories:performance", 0.42],
+  ["mobile", "entropy", "largest-contentful-paint", 5608],
+  ["mobile", "entropy", "total-blocking-time", 4893],
+  ["mobile", "skills", "categories:performance", 0.44],
+  ["mobile", "skills", "largest-contentful-paint", 4913],
+  ["mobile", "skills", "total-blocking-time", 10212],
+  ["mobile", "services", "categories:performance", 0.46],
+  ["mobile", "services", "largest-contentful-paint", 4504],
+  ["mobile", "services", "total-blocking-time", 5214],
+  ["mobile", "contact", "categories:performance", 0.45],
+  ["mobile", "contact", "largest-contentful-paint", 4758],
+  ["mobile", "contact", "total-blocking-time", 17523],
+  ["desktop", "about", "categories:performance", 0.6],
+  ["desktop", "about", "total-blocking-time", 6370],
+  ["desktop", "skills", "categories:performance", 0.55],
+  ["desktop", "skills", "total-blocking-time", 21566],
+  ["desktop", "services", "categories:performance", 0.56],
+  ["desktop", "services", "total-blocking-time", 25510],
+  ["desktop", "contact", "categories:performance", 0.59],
+  ["desktop", "contact", "total-blocking-time", 18873],
+];
 
-const exceptionFor = (audit) =>
-  EXCEPTIONS.find(([preset, id]) => preset === PRESET && id === audit);
+const isException = (page, audit) =>
+  EXCEPTIONS.some(([preset, name, id]) => preset === PRESET && name === page && id === audit);
 
-const assertions = Object.fromEntries(
-  Object.entries(BUDGETS).map(([audit, budget]) => [
-    audit,
-    [exceptionFor(audit) ? "warn" : "error", { ...budget, aggregationMethod: "median" }],
-  ]),
-);
+const assertionsFor = (page) =>
+  Object.fromEntries(
+    Object.entries(BUDGETS).map(([audit, budget]) => [
+      audit,
+      [isException(page, audit) ? "warn" : "error", { ...budget, aggregationMethod: "median" }],
+    ]),
+  );
+
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+const urlOf = (path) => `http://127.0.0.1:${PORT}${path}`;
+const MEASURED = Object.entries(PAGES).filter(([name]) => !ONLY || name === ONLY);
 
 module.exports = {
   ci: {
     collect: {
       startServerCommand: `node scripts/serve-dist.mjs --port ${PORT}`,
       startServerReadyPattern: "serving",
-      url: PATHS.map((path) => `http://127.0.0.1:${PORT}${path}`),
+      url: MEASURED.map(([, path]) => urlOf(path)),
       numberOfRuns: 3,
       settings: {
         ...(PRESET === "desktop" ? { preset: "desktop" } : {}),
@@ -86,7 +132,12 @@ module.exports = {
         chromeFlags: "--headless=new --no-sandbox",
       },
     },
-    assert: { assertions },
+    assert: {
+      assertMatrix: MEASURED.map(([name, path]) => ({
+        matchingUrlPattern: `^${escape(urlOf(path))}$`,
+        assertions: assertionsFor(name),
+      })),
+    },
     upload: {
       target: "filesystem",
       outputDir: `.lighthouseci/${PRESET}${ONLY ? `-${ONLY}` : ""}`,
