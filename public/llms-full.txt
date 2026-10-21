@@ -205,7 +205,7 @@ A link hub built as a place: a small shrine garden on an island above a sea of c
 
 ### Senbon, June 2026
 Case study: https://dk.punds.ch/projects/senbon
-Live: https://senbon.vercel.app/
+Live: https://senbon.punds.ch/
 Source: private
 Stack: Next.js, React 19, Markdown
 
