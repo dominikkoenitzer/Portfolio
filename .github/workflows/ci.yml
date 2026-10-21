@@ -244,11 +244,16 @@ jobs:
           name: dist
           path: dist
 
+      # Installed outside the checkout: npm would otherwise read this
+      # project's overrides and refuse them against the CLI's own tree.
+      - name: Install the Lighthouse CI command
+        run: npm install --prefix "$RUNNER_TEMP/lhci" --no-audit --no-fund @lhci/cli@0.15.1
+
       # Reports stay in the run as an artifact; nothing is uploaded elsewhere.
       - name: Lighthouse (${{ matrix.preset }})
         env:
           LHCI_PRESET: ${{ matrix.preset }}
-        run: npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.cjs
+        run: '"$RUNNER_TEMP/lhci/node_modules/.bin/lhci" autorun --config=lighthouserc.cjs'
 
       - name: Summary
         if: ${{ !cancelled() }}

@@ -6,12 +6,20 @@
 // Reads the manifest the filesystem upload target writes. In CI the table is
 // appended to the job summary.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const dir = process.argv[2];
 const preset = process.env.LHCI_PRESET === "desktop" ? "desktop" : "mobile";
-const manifest = JSON.parse(readFileSync(join(dir, "manifest.json"), "utf8"));
+const manifestPath = join(dir, "manifest.json");
+if (!existsSync(manifestPath)) {
+  console.log(`### Lighthouse, ${preset}
+
+No results: the run stopped before any page was measured.
+`);
+  process.exit(0);
+}
+const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 
 const median = (xs) => {
   const s = [...xs].sort((a, b) => a - b);
