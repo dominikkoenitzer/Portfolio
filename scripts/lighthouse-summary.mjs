@@ -10,7 +10,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const dir = process.argv[2];
-const preset = process.env.LHCI_PRESET === "desktop" ? "desktop" : "mobile";
+const preset = process.env.LIGHTHOUSE_PRESET === "desktop" ? "desktop" : "mobile";
 const manifestPath = join(dir, "manifest.json");
 if (!existsSync(manifestPath)) {
   console.log(`### Lighthouse, ${preset}
