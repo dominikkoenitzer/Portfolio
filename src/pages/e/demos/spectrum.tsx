@@ -255,9 +255,14 @@ export function ContrastDemo() {
       >
         <div className="absolute inset-0 grid grid-cols-1 grid-rows-[minmax(0,1fr)_auto] gap-3 rounded-xl p-3 sm:grid-cols-[minmax(0,1fr)_12.5rem] sm:grid-rows-1" style={{ background: UI.paper, color: UI.ink }}>
           <div className="flex min-h-0 items-center justify-center rounded-lg px-4" style={{ background: css(bg) }}>
-            <p className="m-0 text-center text-[1.0625rem] leading-snug" style={{ color: css(fg) }}>
-              Text on this background
-            </p>
+            {/* The sample is the pair under test, so it is drawn rather than written:
+                its contrast is the measurement, and the ratio beside it is the text. */}
+            <p
+              aria-hidden
+              className="m-0 text-center text-[1.0625rem] leading-snug before:content-[attr(data-text)]"
+              data-text="Text on this background"
+              style={{ color: css(fg) }}
+            />
           </div>
           <div className="flex flex-col justify-center gap-2 rounded-lg px-4 py-3" style={{ background: UI.surface }}>
             <span className="font-semibold text-[1.75rem] leading-none tabular-nums">{ratio.toFixed(2)}:1</span>
