@@ -9,8 +9,11 @@ const FRAME = 1000 / 60;
 let queue = new Map<number, FrameRequestCallback>();
 let nextId = 1;
 let now = 0;
+let frameCount = 0;
+/** Even frames by default; a test may make them uneven. */
+let gapOf = (_n: number) => FRAME;
 const frame = () => {
-  now += FRAME;
+  now += gapOf(frameCount++);
   const due = queue;
   queue = new Map();
   for (const cb of due.values()) cb(now);
@@ -95,6 +98,8 @@ describe("runWhileGliding", () => {
     queue = new Map();
     nextId = 1;
     now = 0;
+    frameCount = 0;
+    gapOf = () => FRAME;
     vi.stubGlobal("window", {
       matchMedia: () => ({ matches: false }),
       addEventListener() {},
@@ -136,6 +141,37 @@ describe("runWhileGliding", () => {
     // the script reaches every target, so the comparison covers real glides
     expect(expected).toContain(1400);
     expect(expected[expected.length - 1]).toBe(2500);
+  });
+
+  it("drifts from the endless loop by at most one frame's motion on uneven frames", () => {
+    // 13 to 20 ms between frames, and a dropped frame every 37th. The endless
+    // loop gives a glide's first frame whatever gap came before it, a dropped
+    // frame included; here that frame gets the usual gap. On even frames the
+    // two are the same (above). On uneven ones a glide runs ahead or behind by
+    // the difference, at most the longest gap less the usual one, so the
+    // distance is bounded by that time at the fastest speed of the script.
+    gapOf = (n) => (n % 37 === 36 ? 2 * FRAME : FRAME + ((n * 7919) % 7) - 3);
+    const endless = makeLenis();
+    endlessLoop(endless.lenis);
+    const expected = script(endless.lenis, endless.wrapper);
+
+    queue = new Map();
+    now = 0;
+    frameCount = 0;
+    const onDemand = makeLenis();
+    runWhileGliding(onDemand.lenis);
+    const actual = script(onDemand.lenis, onDemand.wrapper);
+
+    let fastest = 0;
+    let longest = 0;
+    for (let i = 1; i < expected.length; i++) {
+      fastest = Math.max(fastest, Math.abs(expected[i] - expected[i - 1]) / gapOf(i));
+      longest = Math.max(longest, gapOf(i));
+    }
+    const worst = Math.max(...expected.map((y, i) => Math.abs(actual[i] - y)));
+    expect(worst).toBeGreaterThan(0);
+    expect(worst).toBeLessThanOrEqual(fastest * (longest - FRAME));
+    expect(actual[actual.length - 1]).toBe(expected[expected.length - 1]);
   });
 
   it("asks for no frame while the page is at rest", () => {
