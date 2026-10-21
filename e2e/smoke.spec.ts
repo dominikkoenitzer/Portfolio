@@ -193,9 +193,11 @@ test.describe("smooth scroll", () => {
     const afterKeys = await scrollY(page);
     expect(afterKeys).toBeGreaterThan(300);
 
-    await page.mouse.wheel(0, 200);
+    // Upwards, so the end of the page cannot clamp it: a glide that started
+    // from the last glide's target would end at 100, not here.
+    await page.mouse.wheel(0, -200);
     await atRest(page);
-    expect(await scrollY(page)).toBe(afterKeys + 200);
+    expect(await scrollY(page)).toBe(afterKeys - 200);
     expect(errors).toEqual([]);
   });
 });
