@@ -129,10 +129,10 @@ function Links({ project }: { project: PortfolioProject }) {
   return <div className="flex flex-wrap items-center gap-x-6 gap-y-2">{items}</div>;
 }
 
-/** A section heading with a hairline running to the edge of the column. */
+/** A section heading with a hairline running to the edge of the column. Headings are English, so no automatic hyphens. */
 function Heading({ children }: { children: ReactNode }) {
   return (
-    <h2 className="m-0 flex items-center gap-3 font-semibold text-[1rem] leading-[1.625] tracking-[-0.005em]">
+    <h2 className="m-0 flex items-center gap-3 hyphens-manual font-semibold text-[1rem] leading-[1.625] tracking-[-0.005em]">
       <span className="shrink-0 text-balance">{children}</span>
       <span aria-hidden className="h-px min-w-6 flex-1 bg-border/80" />
     </h2>
@@ -254,7 +254,7 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
   return (
     <div className="mx-auto w-full max-w-[968px] px-6 pt-4 pb-32 sm:px-8 xl:max-w-[920px] xl:px-0">
       <div className={TWO_COLUMNS}>
-        <nav aria-label={t.breadcrumb} className="xl:pt-[0.7rem]">
+        <div className="xl:pt-[0.7rem]">
           <Link
             className="inline-flex items-center gap-1.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-foreground"
             to="/projects"
@@ -262,7 +262,7 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
           >
             <span aria-hidden>&larr;</span> {t.projects}
           </Link>
-        </nav>
+        </div>
 
         <header className="mx-auto mt-10 w-full max-w-[640px] scroll-mt-28 xl:mx-0 xl:mt-0" id="story-top">
           <h1 className="title-serif m-0 ml-[-0.04em] font-bold text-[2.25rem] leading-[1.1] tracking-[-0.01em] sm:text-[2.5rem]">

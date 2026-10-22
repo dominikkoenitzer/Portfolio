@@ -156,7 +156,6 @@ export const de = {
   },
   projectDetails: {
     projects: "Projekte",
-    back: "Zurück",
     overview: "Übersicht",
     visitSite: "Website besuchen",
     download: "Download",
@@ -168,7 +167,6 @@ export const de = {
     nextImage: "Nächstes Bild",
     previousImage: "Vorheriges Bild",
     showImage: "Bild {index} anzeigen",
-    breadcrumb: "Brotkrümelnavigation",
     nextProject: "Nächstes Projekt",
     previousProject: "Vorheriges Projekt",
   },
