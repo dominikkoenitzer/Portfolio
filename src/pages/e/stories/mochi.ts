@@ -45,7 +45,7 @@ export const story: Story = {
       heading: "Smooth is a timer problem",
       blocks: [
         "Windows slide into their tiles. The first animations stuttered, and the drawing was never the cause: a program's default timer is so coarse that a wait meant to last a sixtieth of a second takes about 31 ms. Mochi raises the timer to 1 ms only while something moves.",
-        "An end-to-end suite opens throwaway windows, presses real keys and checks where the windows went, on a real Windows desktop on every push, and it holds a budget: a new window reaches its tile in a median of 27 ms.",
+        "An end-to-end suite opens throwaway windows, presses real keys and checks where the windows went, on a real Windows desktop on every push, and a latency run prints the cost: a new window reaches its tile in a median of 27 ms.",
       ],
     },
     {
