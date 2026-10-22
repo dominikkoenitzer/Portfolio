@@ -40,6 +40,9 @@ export async function settle(page: Page) {
  * Scrolls through the whole page so every section that fades in on scroll
  * has arrived, then waits for the fades to end. axe measures contrast as
  * painted, and text caught half-faded would read as a contrast failure.
+ * Only motion that changes colour or opacity counts: a demo that keeps
+ * moving things around (a timer ticking for half a minute) never settles,
+ * and where a thing sits does not change its contrast.
  */
 export async function revealAll(page: Page) {
   await settle(page);
@@ -51,14 +54,24 @@ export async function revealAll(page: Page) {
   }
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.waitForFunction(
-    () =>
-      document
+    () => {
+      const painted = /^(opacity|filter|color|fill|stroke|background|background-color|border-color|outline-color)$/;
+      const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+      const properties = (a: Animation) =>
+        a instanceof CSSTransition
+          ? [a.transitionProperty]
+          : a.effect instanceof KeyframeEffect
+            ? a.effect.getKeyframes().flatMap((frame) => Object.keys(frame).map(kebab))
+            : [];
+      return document
         .getAnimations()
         .filter((a) => a.playState === "running")
+        .filter((a) => properties(a).some((p) => p === "all" || painted.test(p)))
         .every((a) => {
           const end = a.effect?.getComputedTiming().endTime;
           return typeof end !== "number" || !Number.isFinite(end);
-        }),
+        });
+    },
     undefined,
     { timeout: 10_000 },
   );
