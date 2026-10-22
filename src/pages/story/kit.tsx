@@ -253,7 +253,8 @@ const cropOf = (still: Still) => still.crop ?? ([0, 0, 1, 1] as [number, number,
  */
 function useViewer(stills: Still[], radius: number) {
   const [state, setState] = useState<{ index: number; at: number; from: LightboxOrigin } | null>(null);
-  const t = translations[useLanguage().language].projectDetails;
+  const { language } = useLanguage();
+  const t = translations[language].projectDetails;
   const show = (index: number, el: HTMLElement) => {
     const r = el.getBoundingClientRect();
     setState({
@@ -271,6 +272,7 @@ function useViewer(stills: Still[], radius: number) {
       {state ? (
         <Lightbox
           alt={stills[state.index].alt}
+          altLang={language === "en" ? undefined : "en"}
           images={stills.map((still) => {
             const dark = document.documentElement.classList.contains("dark") && still.dark;
             return `/projects/e/${dark ? still.dark : still.name}-${largest(still)}.webp`;

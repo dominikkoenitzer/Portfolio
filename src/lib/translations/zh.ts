@@ -153,7 +153,6 @@ export const zh = {
   },
   projectDetails: {
     projects: "项目",
-    back: "返回",
     overview: "概览",
     visitSite: "访问站点",
     download: "下载",
@@ -165,7 +164,6 @@ export const zh = {
     nextImage: "下一张",
     previousImage: "上一张",
     showImage: "显示第 {index} 张",
-    breadcrumb: "面包屑导航",
     nextProject: "下一个项目",
     previousProject: "上一个项目",
   },

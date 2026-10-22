@@ -155,7 +155,6 @@ export const en = {
   },
   projectDetails: {
     projects: "Projects",
-    back: "Back",
     overview: "Overview",
     visitSite: "Visit site",
     download: "Download",
@@ -167,7 +166,6 @@ export const en = {
     nextImage: "Next image",
     previousImage: "Previous image",
     showImage: "Show image {index}",
-    breadcrumb: "Breadcrumb",
     nextProject: "Next project",
     previousProject: "Previous project",
   },

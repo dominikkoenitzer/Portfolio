@@ -46,6 +46,7 @@ export type LightboxOrigin = {
 
 export function Lightbox({
   alt,
+  altLang,
   images,
   index,
   labels,
@@ -55,6 +56,8 @@ export function Lightbox({
   originIndex,
 }: {
   alt: string;
+  /** The language of `alt` when it differs from the page's. */
+  altLang?: string;
   images: string[];
   index: number;
   /**
@@ -297,6 +300,7 @@ export function Lightbox({
 
         <motion.img
           alt={alt}
+          lang={altLang}
           animate={{ opacity: 1 }}
           className="max-h-full min-h-0 w-auto max-w-full border border-border/60 object-contain"
           drag={reduced || total < 2 ? false : "x"}

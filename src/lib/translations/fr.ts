@@ -156,7 +156,6 @@ export const fr = {
   },
   projectDetails: {
     projects: "Projets",
-    back: "Retour",
     overview: "Aperçu",
     visitSite: "Visiter le site",
     download: "Télécharger",
@@ -168,7 +167,6 @@ export const fr = {
     nextImage: "Image suivante",
     previousImage: "Image précédente",
     showImage: "Afficher l’image {index}",
-    breadcrumb: "Fil d’Ariane",
     nextProject: "Projet suivant",
     previousProject: "Projet précédent",
   },
