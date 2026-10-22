@@ -52,7 +52,7 @@ export type StorySection = {
   blocks: Block[];
 };
 
-/** A project told as an essay with live demos and stills (English in this preview). */
+/** A project told as an essay with live demos and stills, written in English. */
 export type Story = {
   /** One sentence under the name: what it is, plainly. */
   lead: string;

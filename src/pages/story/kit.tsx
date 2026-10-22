@@ -7,7 +7,7 @@ import { useMotionSafe } from "./motion";
 import { RING } from "./style";
 import type { Code, Point, Still } from "./types";
 
-/** The shared controls of layout e's live demos: one demo box, pills and actions. */
+/** The shared controls of the project pages' live demos: one demo box, pills and actions. */
 
 /**
  * The one demo box: the column's width, a fixed height (so nothing on the

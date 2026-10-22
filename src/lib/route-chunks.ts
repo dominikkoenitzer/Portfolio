@@ -7,7 +7,7 @@
  * Home is absent on purpose. It ships in the entry chunk, so there is nothing
  * to warm.
  */
-import { prefetchStoryFor } from "@/pages/e/story-loader";
+import { prefetchStoryFor } from "@/pages/story/story-loader";
 
 export const ROUTE_CHUNKS = {
   "/about": () => import("@/pages/About"),
