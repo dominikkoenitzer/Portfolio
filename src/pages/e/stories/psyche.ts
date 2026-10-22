@@ -36,7 +36,7 @@ export const story: Story = {
       id: "match",
       heading: "Typed without asking only when it is sure",
       blocks: [
-        "Only an exact or known match is typed without asking, and only when there is exactly one. A probable match is listed first and waits for me. Picking an account there asks whether to remember the site, because a lookalike remembered once would be typed into from then on.",
+        "Only an exact or known match is typed without asking, and only when there is exactly one. A probable match is listed first and waits for me. Picking an account there asks whether to remember the site, because a lookalike remembered once would get the code from then on.",
         {
           points: [
             { term: "Exact", text: "The site is a domain this account was used on, or under one." },
