@@ -71,7 +71,7 @@ export const story: Story = {
         {
           points: [
             { term: "Hidden files", text: "Skipped, along with system files." },
-            { term: "Locked folders", text: "Ignored instead of thrown on." },
+            { term: "Locked folders", text: "Left out instead of stopping the search." },
             { term: "File list", text: "Built before the search starts, so nothing fails halfway." },
             { term: "Over 4 MB", text: "Passed over, like a file that fails to read." },
             { term: "5,000 results", text: "Where the list stops." },
