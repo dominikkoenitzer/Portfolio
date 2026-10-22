@@ -2,7 +2,7 @@ import { useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { EASE_OUT } from "@/lib/motion";
 
-/** Timing and start-once-seen for the live demos of layout e. */
+/** Timing and start-once-seen for the live demos on the project pages. */
 
 /** Moving between places: settles in about 350ms with no visible overshoot. */
 export const SPRING = { type: "spring", stiffness: 420, damping: 40, mass: 0.9 } as const;
