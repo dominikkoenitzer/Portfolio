@@ -123,7 +123,7 @@ Where the less common ones show up in shipped work: Rust in Oxidize, Mochi and D
 
 ## 6. Projects
 
-Fifteen personal projects, ordered oldest first by the date the repository was created. Each has a full case study at https://dk.punds.ch/projects/<slug> that covers the problem, the objectives, the architecture decisions, the implementation, quality and security, the challenges, and what he would do next.
+Fifteen personal projects, ordered oldest first by the date the repository was created. Each has a case study at https://dk.punds.ch/projects/<slug>, written in English and built around captures of the real app; most also carry live demos of the app's key moment.
 
 A caveat the projects page states in its own words: this is "only the public-facing sliver" of what he has built. Other projects sit behind NDAs, in private repos, or on client infrastructure. Everything listed here is personal work, made in evenings and at weekends, most of it with the source public (Entropy, Spectrum, Senbon and Psyche are private).
 
