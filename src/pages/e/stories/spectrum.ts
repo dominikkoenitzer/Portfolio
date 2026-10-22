@@ -30,7 +30,7 @@ export const story: Story = {
       heading: "Hue alone does not survive a missing cone",
       blocks: [
         "The simulator runs the published matrices of Machado, Oliveira and Fernandes over every pixel, one for each missing or weak cone, on linear light.",
-        "The palette tool turns that into a check. It looks at every pair of colours under each full colour blindness and names the pairs that land closer than 0.05 in OKLab, two and a half just noticeable steps.",
+        "The palette tool turns that into a check. It looks at every pair of colours under each full colour blindness and names the pairs that land closer than 0.05 in OKLab, two and a half just-noticeable steps.",
         { Demo: VisionDemo },
       ],
     },
