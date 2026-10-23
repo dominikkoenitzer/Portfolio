@@ -26,8 +26,6 @@ import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
-import { readVariant } from "@/lib/project-variant";
-import { ProjectIndexList, ProjectTableList } from "./project-list-variants";
 import { PrivateSource } from "./PrivateSource";
 
 type TypeKey = "all" | "web" | "desktop";
@@ -171,8 +169,6 @@ export function ProjectsSection() {
   // back-navigation from a detail page and can be shared as a link. Defaults
   // are kept out of the URL to leave /projects clean.
   const [searchParams, setSearchParams] = useSearchParams();
-  // `?v=a` and `?v=c` show two list layouts under consideration.
-  const variant = readVariant(searchParams.get("v"));
   const query = searchParams.get("q") ?? "";
   const rawType = searchParams.get("type");
   const type: TypeKey =
@@ -400,10 +396,6 @@ export function ProjectsSection() {
                 {t.resetFilters}
               </Button>
             </motion.div>
-          ) : variant === "a" ? (
-            <ProjectIndexList projects={visible} />
-          ) : variant === "c" ? (
-            <ProjectTableList projects={visible} />
           ) : (
             /* Re-keyed per result set so the list reveals once per set instead
                of animating cards across the page to their new positions.

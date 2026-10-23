@@ -1,251 +1,12 @@
 import { animate, motion, type TargetAndTransition, useMotionValue } from "framer-motion";
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import type { ProjectStat } from "@/constants/projects/types";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
-import { DUR, EASE_OUT, SPRING_FLUID, VIEWPORT } from "@/lib/motion";
+import { DUR, EASE_OUT, SPRING_FLUID } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
-
-/* ------------------------------------------------------------------ */
-/* ProjectFigure: a framed screenshot, optionally opening a lightbox   */
-/* ------------------------------------------------------------------ */
-
-/**
- * The ratio every project screenshot in `public/projects/` is exported at
- * (1600x1000). It is only the opening bid: the frame re-reserves itself from
- * the file's own dimensions as soon as the browser knows them, so a portrait
- * shot or a square icon is never squeezed into a landscape slot.
- */
-const SHOT_RATIO = 16 / 10;
-
-export function ProjectFigure({
-  src,
-  alt,
-  label,
-  caption,
-  className,
-  layoutId,
-  onOpen,
-  openLabel,
-  priority = false,
-  ratio = SHOT_RATIO,
-  srcSet,
-  sizes,
-}: {
-  src?: string;
-  alt: string;
-  /**
-   * Candidates for the picture, when a smaller variant of it exists. Only the
-   * project's main shot has one (`<slug>-card.jpg`, written by
-   * `scripts/gen-card-images.ts`); the in-body gallery shots have no small
-   * variant, so they pass neither and ship their single file.
-   */
-  srcSet?: string;
-  /** Rendered width per breakpoint. Measured, never estimated: get it wrong and
-   * the browser picks a candidate too small and the screenshot is soft. */
-  sizes?: string;
-  /** Optional caption under the frame (the live host, usually). */
-  label?: string;
-  /** A sentence saying what the picture shows. Set in the body face, not as a micro-label. */
-  caption?: string;
-  className?: string;
-  /** When set, the frame becomes a button that opens the image in a lightbox. */
-  onOpen?: () => void;
-  /**
-   * Shared with the lightbox's copy of the same picture, so opening it grows
-   * the image out of this frame and closing it flies it back here.
-   */
-  layoutId?: string;
-  /** Accessible name for that button (required for it to render). */
-  openLabel?: string;
-  priority?: boolean;
-  /**
-   * Width over height of the picture, used to reserve its box before the file
-   * arrives. Pass the real one for anything that is not a landscape screenshot
-   * (a portrait shot, a square icon) to make the reservation exact from the
-   * first frame.
-   */
-  ratio?: number;
-}) {
-  const [box, setBox] = useState(ratio);
-  const [failed, setFailed] = useState(false);
-
-  // Correct the reservation from the file itself. Runs both on load and when
-  // the element attaches, because a cached image is already complete by the
-  // time React wires the handler up and would never fire `onLoad`.
-  const measure = useCallback((node: HTMLImageElement | null) => {
-    if (!node?.naturalWidth || !node.naturalHeight) return;
-    const real = node.naturalWidth / node.naturalHeight;
-    setBox((current) => (Math.abs(current - real) < 0.005 ? current : real));
-  }, []);
-
-  if (!src) return null;
-
-  // The box is reserved by ratio rather than left to the file: an <img> with no
-  // dimensions is a zero-height box until it decodes, and there are four of
-  // these per project page, so a cold load pushed the article down once per
-  // picture. `object-contain` means the reservation never crops, and a file
-  // that 404s leaves the frame standing instead of collapsing it.
-  const picture = (
-    <div className="relative w-full" style={{ aspectRatio: box }}>
-      <motion.img
-        alt={alt}
-        className={`absolute inset-0 h-full w-full object-contain ${failed ? "opacity-0" : ""}`}
-        layoutId={layoutId}
-        transition={{ layout: SPRING_FLUID }}
-        decoding="async"
-        fetchPriority={priority ? "high" : "auto"}
-        loading={priority ? "eager" : "lazy"}
-        onError={() => setFailed(true)}
-        onLoad={(event) => measure(event.currentTarget)}
-        ref={measure}
-        sizes={sizes}
-        src={src}
-        srcSet={srcSet}
-      />
-    </div>
-  );
-
-  // The focus ring is drawn on the frame: the button fills it, and the
-  // frame's `overflow-hidden` clipped the button's own outline away, so
-  // a focused screenshot looked exactly like an unfocused one. Same ring
-  // as the global `:focus-visible` rule.
-  const frame = (
-    <div className="relative overflow-hidden rounded-2xl bg-card ring-1 ring-black/5 has-[button:focus-visible]:[outline:2px_solid_hsl(var(--primary)/0.65)] has-[button:focus-visible]:[outline-offset:3px] dark:ring-white/5">
-      {onOpen && openLabel ? (
-        <button
-          aria-label={openLabel}
-          className="block w-full cursor-zoom-in focus-visible:outline-none"
-          // The custom cursor would morph onto the whole picture and lay its
-          // tinted box over the screenshot and the caption below it. A
-          // picture is not a label to snap to: the pointer stays a dot here.
-          data-cursor-ignore
-          onClick={onOpen}
-          type="button"
-        >
-          {picture}
-          {/* Affordance, not decoration: the frame is clickable, so say so.
-              Opacity only, and it is always painted for touch, where there
-              is no hover to reveal it; keyboard focus shows it like hover. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute right-3 bottom-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-card/90 text-foreground/80 shadow-sm transition-opacity duration-200 ease-out md:opacity-0 md:group-hover/shot:opacity-100 md:group-has-[button:focus-visible]/shot:opacity-100"
-          >
-            <Maximize2 className="h-4 w-4" />
-          </span>
-        </button>
-      ) : (
-        picture
-      )}
-    </div>
-  );
-
-  return (
-    <motion.figure
-      className={`group/shot m-0 ${className ?? ""}`}
-      initial={{ opacity: 0, y: 24 }}
-      transition={{ duration: DUR.slow, ease: EASE_OUT }}
-      viewport={VIEWPORT}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
-      {frame}
-      {caption ? (
-        <figcaption className="mt-3 max-w-prose text-foreground/90 text-sm leading-relaxed">
-          {caption}
-        </figcaption>
-      ) : label ? (
-        <figcaption className="mt-2.5 text-muted-foreground text-sm">
-          {label}
-        </figcaption>
-      ) : null}
-    </motion.figure>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* StatStrip: the project's headline numbers, as a flat meta row       */
-/* ------------------------------------------------------------------ */
-
-/** How many tests the repository has now, or `fallback` until it is known. */
-/**
- * Counts already fetched this session, per project. The endpoint is cached at
- * the edge for an hour, so asking again on every visit to the page would only
- * repeat the same answer.
- */
-const liveTestCounts = new Map<string, Promise<number | null>>();
-
-const fetchTestCount = (project: string) => {
-  let pending = liveTestCounts.get(project);
-  if (!pending) {
-    pending = fetch(`/api/test-count?project=${encodeURIComponent(project)}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((body: { count?: unknown } | null) =>
-        typeof body?.count === "number" ? body.count : null,
-      )
-      .catch(() => null);
-    liveTestCounts.set(project, pending);
-  }
-  return pending;
-};
-
-/**
- * How many tests the repository has now, or `fallback` until it is known.
- * A plain fetch rather than React Query: the query client lives only in the
- * About page's widget, and pulling it into this chunk for one number would
- * be the wrong trade.
- */
-export function LiveTestCount({
-  project,
-  fallback,
-}: {
-  project: string;
-  fallback: string;
-}) {
-  const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    let live = true;
-    fetchTestCount(project).then((value) => {
-      if (live && value !== null) setCount(value);
-    });
-    return () => {
-      live = false;
-    };
-  }, [project]);
-  return <>{count ?? fallback}</>;
-}
-
-export function StatStrip({ stats }: { stats?: ProjectStat[] }) {
-  if (!stats?.length) return null;
-  return (
-    <dl className="grid grid-cols-2 gap-x-8 gap-y-6 sm:flex sm:flex-wrap sm:gap-x-14">
-      {stats.map((stat) => (
-        <div key={stat.label}>
-          {/* The label reads under the number, so the term is voiced from a
-              screen-reader-only copy and the visible one is decorative. */}
-          <dt className="sr-only">{stat.label}</dt>
-          <dd className="m-0">
-            <span className="title-serif block text-3xl text-primary tabular-nums sm:text-4xl">
-              {stat.liveTests ? (
-                <LiveTestCount fallback={stat.value} project={stat.liveTests} />
-              ) : (
-                stat.value
-              )}
-            </span>
-            <span
-              aria-hidden
-              className="mt-1.5 block text-muted-foreground text-sm"
-            >
-              {stat.label}
-            </span>
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Lightbox: full-size gallery viewer                                  */
@@ -285,6 +46,7 @@ export type LightboxOrigin = {
 
 export function Lightbox({
   alt,
+  altLang,
   images,
   index,
   labels,
@@ -294,6 +56,8 @@ export function Lightbox({
   originIndex,
 }: {
   alt: string;
+  /** The language of `alt` when it differs from the page's. */
+  altLang?: string;
   images: string[];
   index: number;
   /**
@@ -536,6 +300,7 @@ export function Lightbox({
 
         <motion.img
           alt={alt}
+          lang={altLang}
           animate={{ opacity: 1 }}
           className="max-h-full min-h-0 w-auto max-w-full border border-border/60 object-contain"
           drag={reduced || total < 2 ? false : "x"}

@@ -220,7 +220,9 @@ function Strip({ title, rejects, lit }: { title: string; rejects: boolean; lit: 
               }}
             >
               <span className="text-[0.6875rem] opacity-75">{v}</span>
-              <span className="mt-1 text-[0.8125rem]">{out ? "again" : POOL[v % POOL.length]}</span>
+              <span className={`mt-1 ${out ? "text-[0.5625rem] sm:text-[0.8125rem]" : "text-[0.8125rem]"}`}>
+                {out ? "again" : POOL[v % POOL.length]}
+              </span>
             </li>
           );
         })}

@@ -366,15 +366,6 @@ export const projectCardSrcSet = (image: string, imageWidth: number): string =>
   `${cardImageSrc(image)} ${PROJECT_CARD_WIDTH}w, ${largeCandidates(image, imageWidth)}`;
 
 /**
- * The candidates for a picture in the reading column, which has no card copy:
- * undefined for a 1600px picture, where the plain `src` is the only file.
- */
-export const pictureSrcSet = (image: string): string | undefined => {
-  const width = pictureWidth(image);
-  return width > PROJECT_MEDIUM_WIDTH ? largeCandidates(image, width) : undefined;
-};
-
-/**
  * How wide a catalogue card renders its picture, measured in a browser rather
  * than estimated: 534px from 1280 up, where the grid column stops growing,
  * 42vw for the two-column card between 768 and 1280, and all but the gutters

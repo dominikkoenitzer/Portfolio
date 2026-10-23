@@ -1,4 +1,4 @@
-import { prefetchStoryFor } from "@/pages/e/story-loader";
+import { prefetchStoryFor } from "@/pages/story/story-loader";
 import {
   chunkPathFor,
   ROUTE_CHUNKS,
