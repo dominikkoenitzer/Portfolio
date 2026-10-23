@@ -44,7 +44,7 @@ Email is the fastest route and he usually replies within a day. The contact page
 
 ## Projects
 
-Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug> covering the problem, the architecture decisions, the implementation, and what he would do next.
+Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug>, written in English and built around captures of the real app; most also carry live demos of the app's key moment.
 
 - [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
 - [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.

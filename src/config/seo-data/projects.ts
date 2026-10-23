@@ -4,9 +4,9 @@
  * `project.title` on its own is a one-word product name ("Zephyr", "Flow"),
  * so every project page used to ship a title with no query surface at
  * all: nobody searches for "Zephyr". Each entry here appends the short, factual
- * description of what the thing actually is, which is also what the page
- * renders below the heading, so the title matches the page and adds the terms a
- * person would really type ("windows auto clicker", "ntp synced clock").
+ * description of what the thing actually is, the same line its card in the
+ * catalogue shows, so the title matches the site and adds the terms a person
+ * would really type ("windows auto clicker", "ntp synced clock").
  *
  * Deliberately **not localized**, unlike the FAQ/HowTo copy next door. Helmet
  * appends its tags to the ones already in the served document, and

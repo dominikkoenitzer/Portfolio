@@ -23,7 +23,7 @@ const sharp = (() => {
   }
 })();
 
-/** Must match the widths `StillFigure` offers in `src/pages/e/kit.tsx`. */
+/** Must match the widths `StillFigure` offers in `src/pages/story/kit.tsx`. */
 const WIDTHS = [640, 960, 1280, 1920];
 const OUT = join(process.cwd(), "public", "projects", "e");
 

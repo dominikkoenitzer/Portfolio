@@ -23,7 +23,7 @@ export const story: Story = {
   },
   opening: [
     "Most portfolios are a template with a new name in it. I wanted mine to be the work sample, so the parts that make it work are my own: the language layer, the prerender step, the overlays and the visual system.",
-    "It runs in English, German, French and Chinese, and every case study is written in each of them.",
+    "It runs in English, German, French and Chinese. The project pages are written in English.",
   ],
   sections: [
     {
