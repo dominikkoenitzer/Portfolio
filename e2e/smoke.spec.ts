@@ -273,6 +273,40 @@ test.describe("keyboard", () => {
     await page.keyboard.press("Tab");
     await expect(field).toBeFocused();
   });
+
+  test("Enter and Escape that end a composition leave the search open", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.locator("header [data-search-trigger]:visible").first().click();
+    const field = page.getByRole("combobox");
+    await expect(field).toBeFocused();
+    await field.fill("contact");
+
+    for (const key of ["Enter", "Escape"]) {
+      for (const legacy of [false, true]) {
+        await field.evaluate(
+          (el, [key, legacy]) => {
+            const event = new KeyboardEvent("keydown", {
+              key,
+              bubbles: true,
+              cancelable: true,
+              isComposing: !legacy,
+            });
+            // Safari sends the key that ends a composition after it, marked only by keyCode 229.
+            if (legacy) Object.defineProperty(event, "keyCode", { value: 229 });
+            el.dispatchEvent(event);
+          },
+          [key, legacy] as const,
+        );
+      }
+    }
+    await page.keyboard.type("s");
+    await expect(field).toHaveValue("contacts");
+    await expect(page).toHaveURL(/\/$/);
+  });
 });
 
 test.describe("diagnostics", () => {

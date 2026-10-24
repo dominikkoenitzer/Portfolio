@@ -245,6 +245,8 @@ export default function SearchDialog({
   };
 
   const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    // A key that ends an input method composition belongs to the composition.
+    if (event.nativeEvent.isComposing || event.keyCode === 229) return;
     const immediate = event.repeat;
     const jump = event.metaKey || event.ctrlKey;
     switch (event.key) {
