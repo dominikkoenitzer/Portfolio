@@ -255,6 +255,24 @@ test.describe("keyboard", () => {
     await expect(page).toHaveURL(/\/about$/);
     await expect(page.locator("h1").first()).toBeVisible();
   });
+
+  test("a click inside the search panel keeps its keys working", async ({ page }) => {
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.locator("header [data-search-trigger]:visible").first().click();
+    const field = page.getByRole("combobox");
+    await expect(field).toBeFocused();
+    // The key hints along the bottom edge hold nothing focusable.
+    const hints = page.getByRole("dialog", { name: "Site search" }).locator('div[aria-hidden="true"]');
+    await expect(hints).toHaveCount(1);
+    await hints.click();
+    const highlighted = (await field.getAttribute("aria-activedescendant")) ?? "";
+    await page.keyboard.press("ArrowDown");
+    await expect(field).not.toHaveAttribute("aria-activedescendant", highlighted);
+    await page.keyboard.press("Tab");
+    await expect(field).toBeFocused();
+  });
 });
 
 test.describe("diagnostics", () => {
