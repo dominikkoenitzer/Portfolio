@@ -398,6 +398,10 @@ export default function SearchDialog({
               exit={{ ...rest, transition: PANEL_OUT }}
               initial={rest}
               onKeyDown={onKeyDown}
+              /* A press beside the field dropped focus to the page behind, out of reach of these keys. */
+              onMouseDown={(event) => {
+                if (event.target !== inputRef.current) event.preventDefault();
+              }}
               ref={panelRef}
               role="dialog"
               style={{
