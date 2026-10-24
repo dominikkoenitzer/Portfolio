@@ -213,6 +213,21 @@ test.describe("smooth scroll", () => {
 });
 
 test.describe("keyboard", () => {
+  test("closing the phone menu after a click hands focus to the menu button", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const menu = page.getByRole("dialog", { name: "Menu" });
+    await expect(menu.getByRole("button", { name: "Close menu" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
+  });
+
   test("skip link, then the nav, reach the content and the next page", async ({
     page,
     browserName,

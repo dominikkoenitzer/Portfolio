@@ -560,6 +560,7 @@ export function Navbar() {
                   aria-expanded={mobileMenuOpen}
                   aria-label={mobileMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
                   className="group relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/15 bg-primary/6 transition-colors duration-200 ease-out hover:bg-primary/12 lg:hidden"
+                  data-menu-trigger
                   onClick={mobileMenuOpen ? closeMobileMenu : openMobileMenu}
                 >
                   {/* Three bars that fold into a cross. */}

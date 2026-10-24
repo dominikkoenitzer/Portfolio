@@ -70,7 +70,20 @@ export function NavbarMobileMenu({
     const id = window.setTimeout(() => closeBtnRef.current?.focus(), 60);
     return () => {
       window.clearTimeout(id);
-      previousFocus.current?.focus?.();
+      // WebKit leaves a clicked button unfocused, so fall back to the menu button.
+      const previous = previousFocus.current;
+      const usable =
+        previous?.isConnected &&
+        previous !== document.body &&
+        previous !== document.documentElement;
+      if (usable) {
+        previous.focus();
+        return;
+      }
+      const triggers = [
+        ...document.querySelectorAll<HTMLElement>("header [data-menu-trigger]"),
+      ];
+      triggers.find((el) => el.getBoundingClientRect().width > 0)?.focus();
     };
   }, [open]);
 
