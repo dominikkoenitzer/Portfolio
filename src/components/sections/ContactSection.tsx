@@ -261,18 +261,19 @@ export function ContactSection() {
   // keyboard visitor was left at the top of the document with no way back to
   // the form but to tab through the whole page again.
   const submitRef = useRef<HTMLButtonElement>(null);
+  const againRef = useRef<HTMLButtonElement>(null);
   // Not a bare `.focus()`: at the moment the failure branch runs, React has not
   // re-rendered yet, so the button is still `disabled` and focusing it does
   // nothing at all. The next animation frame was not reliably after the commit
   // either: on desktop focus stayed on <body>. An effect always runs after
   // the commit, so the failure branch leaves its focus move here and the
-  // effect runs it once the form is back to idle.
+  // effect runs it once the send is over.
   const afterSend = useRef<(() => void) | null>(null);
   const restoreFocus = () => {
     afterSend.current = () => submitRef.current?.focus();
   };
   useEffect(() => {
-    if (status !== "idle" || !afterSend.current) return;
+    if (status === "sending" || !afterSend.current) return;
     const run = afterSend.current;
     afterSend.current = null;
     run();
@@ -374,6 +375,8 @@ export function ContactSection() {
         setStatus("idle");
         return;
       }
+      // The form, and the focused button with it, is gone once the confirmation shows.
+      afterSend.current = () => againRef.current?.focus();
       setStatus("sent");
     } catch {
       toast({
@@ -389,6 +392,10 @@ export function ContactSection() {
   const reset = () => {
     formRef.current?.reset();
     startedAt.current = performance.now();
+    afterSend.current = () => {
+      const field = formRef.current?.elements.namedItem("name");
+      if (field instanceof HTMLInputElement) field.focus();
+    };
     setStatus("idle");
   };
 
@@ -561,6 +568,7 @@ export function ContactSection() {
               <Button
                 className="mt-6 rounded-lg"
                 onClick={reset}
+                ref={againRef}
                 type="button"
                 variant="outline"
               >
