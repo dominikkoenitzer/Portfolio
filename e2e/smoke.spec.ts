@@ -255,6 +255,99 @@ test.describe("keyboard", () => {
     await expect(page).toHaveURL(/\/about$/);
     await expect(page.locator("h1").first()).toBeVisible();
   });
+
+  test("a click inside the search panel keeps its keys working", async ({ page }) => {
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.locator("header [data-search-trigger]:visible").first().click();
+    const field = page.getByRole("combobox");
+    await expect(field).toBeFocused();
+    // The key hints along the bottom edge hold nothing focusable.
+    const hints = page.getByRole("dialog", { name: "Site search" }).locator('div[aria-hidden="true"]');
+    await expect(hints).toHaveCount(1);
+    await hints.click();
+    const highlighted = (await field.getAttribute("aria-activedescendant")) ?? "";
+    await page.keyboard.press("ArrowDown");
+    await expect(field).not.toHaveAttribute("aria-activedescendant", highlighted);
+    await page.keyboard.press("Tab");
+    await expect(field).toBeFocused();
+  });
+
+  test("Enter and Escape that end a composition leave the search open", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.locator("header [data-search-trigger]:visible").first().click();
+    const field = page.getByRole("combobox");
+    await expect(field).toBeFocused();
+    await field.fill("contact");
+
+    for (const key of ["Enter", "Escape"]) {
+      for (const legacy of [false, true]) {
+        await field.evaluate(
+          (el, [key, legacy]) => {
+            const event = new KeyboardEvent("keydown", {
+              key,
+              bubbles: true,
+              cancelable: true,
+              isComposing: !legacy,
+            });
+            // Safari sends the key that ends a composition after it, marked only by keyCode 229.
+            if (legacy) Object.defineProperty(event, "keyCode", { value: 229 });
+            el.dispatchEvent(event);
+          },
+          [key, legacy] as const,
+        );
+      }
+    }
+    await page.keyboard.type("s");
+    await expect(field).toHaveValue("contacts");
+    await expect(page).toHaveURL(/\/$/);
+  });
+
+  test("Tab stays inside the phone menu", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const menu = page.getByRole("dialog", { name: "Menu" });
+    await expect(menu.getByRole("button", { name: "Close menu" })).toBeFocused();
+
+    for (const key of ["Tab", "Shift+Tab"]) {
+      for (let i = 1; i <= 16; i++) {
+        await page.keyboard.press(key);
+        const inside = await menu.evaluate((el) => el.contains(document.activeElement));
+        expect(inside, `${key} press ${i} stays in the menu`).toBe(true);
+      }
+    }
+  });
+
+  test("focus stays with the contact form through a send and the next one", async ({
+    page,
+  }) => {
+    await page.route("**/api/contact", (route) =>
+      route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }),
+    );
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    const name = page.locator('input[name="name"]');
+    await name.fill("Ada");
+    await page.locator('input[name="email"]').fill("ada@example.org");
+    await page.locator('textarea[name="message"]').fill("A short note.");
+    await page.locator('button[type="submit"]').focus();
+    await page.keyboard.press("Enter");
+
+    const again = page.getByRole("button", { name: "Send another message" });
+    await expect(again).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(name).toBeFocused();
+    await expect(name).toHaveValue("");
+  });
 });
 
 test.describe("diagnostics", () => {

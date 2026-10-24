@@ -332,6 +332,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.isComposing || e.keyCode === 229) return;
       // Only when this is the overlay in front: the lightbox and the CV dialog
       // bind their own handler, and every one of them used to fire at once.
       if (e.key === "Escape" && !isTopLayer(e)) return;
