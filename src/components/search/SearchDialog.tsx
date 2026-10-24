@@ -245,6 +245,8 @@ export default function SearchDialog({
   };
 
   const onKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    // A key that ends an input method composition belongs to the composition.
+    if (event.nativeEvent.isComposing || event.keyCode === 229) return;
     const immediate = event.repeat;
     const jump = event.metaKey || event.ctrlKey;
     switch (event.key) {
@@ -398,6 +400,10 @@ export default function SearchDialog({
               exit={{ ...rest, transition: PANEL_OUT }}
               initial={rest}
               onKeyDown={onKeyDown}
+              /* A press beside the field dropped focus to the page behind, out of reach of these keys. */
+              onMouseDown={(event) => {
+                if (event.target !== inputRef.current) event.preventDefault();
+              }}
               ref={panelRef}
               role="dialog"
               style={{
