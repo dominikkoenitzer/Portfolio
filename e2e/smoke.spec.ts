@@ -307,6 +307,24 @@ test.describe("keyboard", () => {
     await expect(field).toHaveValue("contacts");
     await expect(page).toHaveURL(/\/$/);
   });
+
+  test("Tab stays inside the phone menu", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await expectRendered(page);
+    await settle(page);
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const menu = page.getByRole("dialog", { name: "Menu" });
+    await expect(menu.getByRole("button", { name: "Close menu" })).toBeFocused();
+
+    for (const key of ["Tab", "Shift+Tab"]) {
+      for (let i = 1; i <= 16; i++) {
+        await page.keyboard.press(key);
+        const inside = await menu.evaluate((el) => el.contains(document.activeElement));
+        expect(inside, `${key} press ${i} stays in the menu`).toBe(true);
+      }
+    }
+  });
 });
 
 test.describe("diagnostics", () => {
