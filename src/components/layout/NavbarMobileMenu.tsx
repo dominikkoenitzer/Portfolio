@@ -13,6 +13,9 @@ import type { Translation } from "@/lib/translations";
 import type { NavLink } from "@/types";
 import { cn } from "@/lib/utils";
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]):not([data-focus-guard])';
+
 interface NavbarMobileMenuProps {
   open: boolean;
   onClose: () => void;
@@ -88,9 +91,7 @@ export function NavbarMobileMenu({
   // Keep Tab focus inside the open drawer.
   const trapTab = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (e.key !== "Tab") return;
-    const focusables = menuRef.current?.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    );
+    const focusables = menuRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE);
     if (!focusables || focusables.length === 0) return;
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
@@ -252,6 +253,14 @@ export function NavbarMobileMenu({
                 </Link>
               </div>
             </nav>
+
+            {/* Safari tabs past links, so Tab from the close button lands here instead of leaving the sheet. */}
+            <span
+              className="sr-only"
+              data-focus-guard
+              onFocus={() => menuRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus()}
+              tabIndex={0}
+            />
           </motion.div>
         </>
       )}
