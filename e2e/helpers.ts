@@ -37,6 +37,35 @@ export async function settle(page: Page) {
 }
 
 /**
+ * Painted animations that are running and will end: with `describe` false,
+ * whether none is left; with it true, a short description of each one.
+ */
+const unsettled = (describe: boolean) => {
+  const painted = /^(opacity|filter|color|fill|stroke|background|background-color|border-color|outline-color)$/;
+  const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  const properties = (a: Animation) =>
+    a instanceof CSSTransition
+      ? [a.transitionProperty]
+      : a.effect instanceof KeyframeEffect
+        ? a.effect.getKeyframes().flatMap((frame) => Object.keys(frame).map(kebab))
+        : [];
+  const left = document
+    .getAnimations()
+    .filter((a) => a.playState === "running")
+    .filter((a) => properties(a).some((p) => p === "all" || painted.test(p)))
+    .filter((a) => {
+      const end = a.effect?.getComputedTiming().endTime;
+      return typeof end === "number" && Number.isFinite(end);
+    });
+  if (!describe) return left.length === 0;
+  return left.slice(0, 8).map((a) => {
+    const target = a.effect instanceof KeyframeEffect ? a.effect.target : null;
+    const where = target ? `${target.tagName.toLowerCase()}.${String(target.getAttribute("class") ?? "").slice(0, 50)}` : "?";
+    return `${a.constructor.name} ${properties(a).join(",")} on ${where}, ${left.length} in all`;
+  });
+};
+
+/**
  * Scrolls through the whole page so every section that fades in on scroll
  * has arrived, then waits for the fades to end. axe measures contrast as
  * painted, and text caught half-faded would read as a contrast failure.
@@ -53,28 +82,13 @@ export async function revealAll(page: Page) {
     await page.waitForTimeout(60);
   }
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-  await page.waitForFunction(
-    () => {
-      const painted = /^(opacity|filter|color|fill|stroke|background|background-color|border-color|outline-color)$/;
-      const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
-      const properties = (a: Animation) =>
-        a instanceof CSSTransition
-          ? [a.transitionProperty]
-          : a.effect instanceof KeyframeEffect
-            ? a.effect.getKeyframes().flatMap((frame) => Object.keys(frame).map(kebab))
-            : [];
-      return document
-        .getAnimations()
-        .filter((a) => a.playState === "running")
-        .filter((a) => properties(a).some((p) => p === "all" || painted.test(p)))
-        .every((a) => {
-          const end = a.effect?.getComputedTiming().endTime;
-          return typeof end !== "number" || !Number.isFinite(end);
-        });
-    },
-    undefined,
-    { timeout: 10_000 },
-  );
+  try {
+    await page.waitForFunction(unsettled, false, { timeout: 10_000 });
+  } catch (error) {
+    // Name what kept moving, so a timeout points at the element instead of at this helper.
+    const moving = await page.evaluate(unsettled, true).catch(() => []);
+    throw new Error(`painted animations still running after 10 s: ${JSON.stringify(moving)}`, { cause: error });
+  }
   await page.waitForTimeout(300);
 }
 

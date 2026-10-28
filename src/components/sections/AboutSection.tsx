@@ -39,7 +39,8 @@ export function AboutSection() {
           className="md:col-span-5 lg:col-span-5 md:flex md:flex-col"
           {...revealOnScroll(reduceMotion)}
         >
-          <div className="mx-auto max-w-[268px] md:max-w-[348px]">
+          {/* w-full: inside the flex column the auto margins shrink this box to its content, and newer WebKit gives the percentage-sized photo no width there. */}
+          <div className="mx-auto w-full max-w-[268px] md:max-w-[348px]">
             <div className="aspect-square overflow-hidden rounded-2xl border border-border/60">
               {/* LCP element on /about: fetchPriority high + async decode so it
                   paints fast; explicit square dimensions reserve space (no CLS).
