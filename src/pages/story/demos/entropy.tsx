@@ -189,6 +189,7 @@ const SOURCE = 8;
 const POOL = ["a", "b", "c"];
 const LIMIT = Math.floor((SOURCE - 1) / POOL.length) * POOL.length;
 const DRAWS = 300;
+const RUN_MS = 2500;
 
 const draw = () => {
   const b = new Uint8Array(1);
@@ -289,8 +290,12 @@ export function RandomDemo() {
       return;
     }
     setRunning(true);
-    const step = () => {
-      for (let i = 0; i < 2 && t.draws < DRAWS; i += 1) one();
+    // Paced by the clock, not by frames: a slow device draws more per frame and finishes on time.
+    let start = 0;
+    const step = (now: number) => {
+      start ||= now;
+      const due = Math.min(DRAWS, Math.max(t.draws + 1, Math.round(((now - start) / RUN_MS) * DRAWS)));
+      while (t.draws < due) one();
       setTally(t);
       if (t.draws < DRAWS) frame.current = requestAnimationFrame(step);
       else setRunning(false);
