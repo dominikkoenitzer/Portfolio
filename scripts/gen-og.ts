@@ -170,7 +170,7 @@ const CARDS: { out: string; title: string; subtitle: string; path: string }[] = 
   { out: "public/og/skills.png", title: "Skills", subtitle: "What I work with day to day, and what I'm still getting better at", path: "/skills" },
   { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built, most of them with the source", path: "/projects" },
   { out: "public/og/services.png", title: "Services", subtitle: "Web development and software engineering, Zürich or remote", path: "/services" },
-  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together. A short form is all it takes.", path: "/contact" },
+  { out: "public/og/contact.png", title: "Contact", subtitle: "Let's work together.", path: "/contact" },
   { out: "public/og/donate.png", title: "Tip Jar", subtitle: "If something here clicked for you", path: "/donate" },
 ];
 
