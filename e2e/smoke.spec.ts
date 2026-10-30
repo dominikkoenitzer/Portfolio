@@ -340,6 +340,20 @@ test.describe("keyboard", () => {
       }
     }
   });
+
+  test("the chosen subject goes into the mail link", async ({ page }) => {
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    const mail = page.locator('main a[href^="mailto:"]').first();
+    const subject = async () =>
+      new URL((await mail.getAttribute("href")) ?? "").searchParams.get("subject");
+    expect(await subject()).toBe("Role at [company]");
+
+    await page.getByRole("button", { name: "a role, Change what this is about" }).click();
+    await page.getByRole("button", { name: "a freelance project", exact: true }).click();
+    await expect.poll(subject).toBe("Freelance project: [short description]");
+  });
 });
 
 test.describe("diagnostics", () => {
