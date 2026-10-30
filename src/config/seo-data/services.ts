@@ -146,7 +146,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Send a message",
-        text: "Head to dk.punds.ch/contact, pick what your message is about. Tell me what you need, roughly when you need it, and what the budget looks like.",
+        text: "Head to dk.punds.ch/contact and pick what your message is about. Tell me what you need, roughly when you need it, and what the budget looks like.",
       },
       {
         name: "Get a proposal",
@@ -200,7 +200,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Écrivez-moi",
-        text: "Rendez-vous sur dk.punds.ch/contact, choisissez l'objet de votre message. Dites-moi ce qu'il vous faut, à peu près pour quand, et le budget envisagé.",
+        text: "Rendez-vous sur dk.punds.ch/contact et choisissez l'objet de votre message. Dites-moi ce qu'il vous faut, à peu près pour quand, et le budget envisagé.",
       },
       {
         name: "Recevez une proposition",
