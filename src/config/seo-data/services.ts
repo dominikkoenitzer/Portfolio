@@ -146,7 +146,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Send a message",
-        text: "Head to dk.punds.ch/contact, pick what your message is about and fill in the short form. Tell me what you need, roughly when you need it, and what the budget looks like.",
+        text: "Head to dk.punds.ch/contact, pick what your message is about. Tell me what you need, roughly when you need it, and what the budget looks like.",
       },
       {
         name: "Get a proposal",
@@ -173,7 +173,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Nachricht schreiben",
-        text: "Geh auf dk.punds.ch/contact, wähl aus, worum es geht, und füll das kurze Formular aus. Schreib rein, was du brauchst, bis wann ungefähr und wie das Budget aussieht.",
+        text: "Geh auf dk.punds.ch/contact, wähl aus, worum es geht. Schreib rein, was du brauchst, bis wann ungefähr und wie das Budget aussieht.",
       },
       {
         name: "Angebot bekommen",
@@ -200,7 +200,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "Écrivez-moi",
-        text: "Rendez-vous sur dk.punds.ch/contact, choisissez l'objet de votre message et remplissez le court formulaire. Dites-moi ce qu'il vous faut, à peu près pour quand, et le budget envisagé.",
+        text: "Rendez-vous sur dk.punds.ch/contact, choisissez l'objet de votre message. Dites-moi ce qu'il vous faut, à peu près pour quand, et le budget envisagé.",
       },
       {
         name: "Recevez une proposition",
@@ -226,7 +226,7 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
       },
       {
         name: "发一封邮件",
-        text: "前往 dk.punds.ch/contact，选好想聊的主题，填写简短的表单。写清楚你需要什么、大概什么时候要、预算大致多少。",
+        text: "前往 dk.punds.ch/contact，选好想聊的主题。写清楚你需要什么、大概什么时候要、预算大致多少。",
       },
       {
         name: "拿到方案",
