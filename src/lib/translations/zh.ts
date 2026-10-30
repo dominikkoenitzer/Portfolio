@@ -264,25 +264,21 @@ export const zh = {
       job: {
         label: "职位机会",
         subject: "职位机会：[公司]",
-        formSubject: "职位机会",
         body: "你好 Dominik，\n\n我们 [公司] 正在招聘 [职位]，觉得你的作品很合适。\n\n· 职位：\n· 团队与技术栈：\n· 地点 / 远程：\n· 入职时间：\n\n此致，\n[姓名]",
       },
       freelance: {
         label: "自由职业项目",
         subject: "自由职业项目：[简要说明]",
-        formSubject: "自由职业项目",
         body: "你好 Dominik，\n\n我想请你参与 [项目]。\n\n· 我们的需求：\n· 大致时间安排：\n· 预算范围：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       collab: {
         label: "合作",
         subject: "合作：[想法]",
-        formSubject: "合作",
         body: "你好 Dominik，\n\n我正在做 [项目]，觉得我们也许可以一起做点什么。\n\n· 这个想法：\n· 我能带来什么：\n· 相关链接：\n\n此致，\n[姓名]",
       },
       other: {
         label: "其他事情",
         subject: "你好 Dominik",
-        formSubject: "你好 Dominik",
         body: "你好 Dominik，\n\n",
       },
     },
@@ -292,22 +288,6 @@ export const zh = {
     copyFailed: "复制失败，地址为 dominik.koenitzer@gmail.com",
     closeNotice: "关闭",
     eyebrow: "联系",
-    form: {
-      nameLabel: "姓名",
-      emailLabel: "邮箱",
-      messageLabel: "留言",
-      messagePlaceholder: "你需要什么、大概什么时候要、还有什么是我该知道的？",
-      send: "发送留言",
-      sending: "发送中…",
-      sentTitle: "已发送。",
-      sentBody: "谢谢，收到了。我通常会在一天内回复。",
-      sendAnother: "再发一条",
-      failed: "没发出去。请再试一次，或直接给我写邮件。",
-      tooMany: "你这个网络发的留言有点多。一小时后再试，或直接给我写邮件。",
-      fieldEmpty: "这一项不能为空。",
-      emailInvalid: "这个地址好像不完整，是不是打错了？",
-      orDirect: "或者直接给我写邮件：",
-    },
     responseTime: "我通常会在一天内回复。",
   },
   donate: {
@@ -395,7 +375,7 @@ export const zh = {
           "本站由 Vercel 托管。服务器日志（IP 地址、浏览器类型、访问时间）出于安全与可靠性目的而保存。访客统计通过 Vercel Analytics 以及 Vercel Speed Insights 仅以匿名形式收集，不使用任何 Cookie 或追踪标识符。",
         contactLabel: "邮件：",
         contactBody:
-          "如果您给我发邮件或使用联系表单，我只保留您发来的内容（您的姓名、邮箱地址和留言），仅用于回复您以及处理后续问题。表单留言存储在位于德国法兰克福的 Supabase 数据库中，同时保存您浏览器的用户代理（User-Agent）以及用密钥对您的 IP 地址计算出的哈希值，仅用于限制垃圾信息。",
+          "如果您给我发邮件，我只保留您发来的内容（您的姓名、邮箱地址和留言），仅用于回复您以及处理后续问题。",
       },
       rights: {
         heading: "您的权利",

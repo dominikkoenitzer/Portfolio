@@ -4,45 +4,24 @@ import {
   type MotionProps,
   useReducedMotion,
 } from "framer-motion";
-import { ArrowRight, ArrowUpRight, Check, ChevronDown } from "lucide-react";
-import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowUpRight, Check, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
-import { DUR, EASE_OUT, REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
+import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
 
 const EMAIL = SITE_CONFIG.email;
-
-/**
- * One recipe for every field, the card recipe turned inwards: the same hairline
- * border and surface as a card. Focus reads the way iOS draws it: the border
- * turns full violet, which is the indicator that carries the contrast, and a
- * wide soft halo grows around it. `text-base` on touch screens, because iOS
- * zooms into anything smaller than 16px.
- */
-const FIELD =
-  "w-full rounded-lg border border-border/60 bg-card px-3.5 py-2.5 text-base text-foreground placeholder:text-muted-foreground/70 transition-[border-color,box-shadow] duration-300 ease-out hover:border-primary/30 focus-visible:border-primary focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-primary/15 sm:text-sm";
-
-/**
- * The fields the visitor types, and the address check `api/contact.js` runs.
- * `type="email"` alone lets "name@gmailcom" and "a@gmail" through, and
- * `required` lets a message of only spaces through; the API refuses all three,
- * so they are caught here, before the request, with the same rule.
- */
-const TYPED_FIELDS = ["name", "email", "message"] as const;
-type TypedField = (typeof TYPED_FIELDS)[number];
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -54,14 +33,6 @@ type Draft = {
   label: string;
   subject: string;
   body: string;
-  /**
-   * What the form sends. The `subject` above is the mailto template, and its
-   * bracket is a prompt for the visitor to fill in ("Role at [company]"). Sent
-   * through the form nobody fills it, so the mail arrived titled with the
-   * placeholder. A service enquiry composes a real subject already and needs no
-   * second one.
-   */
-  formSubject?: string;
 };
 
 /**
@@ -150,12 +121,9 @@ function IntentLabel({ label }: { label: string }) {
 }
 
 /**
- * The contact page is one sentence the visitor finishes, then a short form.
- *
- * The form posts to `/api/contact` (same origin, so the CSP is untouched), which
- * stores the message in Supabase and mails it on. The picked subject travels
- * with it. The mailto link stays underneath as the fallback for anyone who
- * would rather use their own mail client, with the same prefilled subject.
+ * The contact page is one sentence the visitor finishes, and one link: the
+ * picked subject prefills a mailto template, so the message is sent by the
+ * visitor's own mail client.
  */
 export function ContactSection() {
   const { language } = useLanguage();
@@ -179,8 +147,8 @@ export function ContactSection() {
    * both directions: with no service it left `intent` pointing at one that no
    * longer existed (`t.intents.service` is undefined, and reading `.label` off
    * it took the page to the error boundary), and once corrected, pressing Back
-   * restored the service to the router but not to the picker, so the form sent
-   * the wrong subject.
+   * restored the service to the router but not to the picker, so the mail link
+   * carried the wrong subject.
    */
   const [chosen, setChosen] = useState<IntentKey | "service" | null>(null);
   // A new navigation, including Back and Forward, drops the explicit choice,
@@ -246,159 +214,6 @@ export function ContactSection() {
     [],
   );
 
-  // The form. `startedAt` is when the page mounted, on the page's own
-  // monotonic clock, and the request carries the time since as `fillMs`: the
-  // API drops anything "filled in" faster than a person can type, and
-  // `website` is the honeypot no person sees. Both are read by
-  // `api/contact.js`. An absolute timestamp compared there against the
-  // server's clock threw away real messages from a visitor whose clock ran
-  // ahead.
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
-  const startedAt = useRef(0);
-  const formRef = useRef<HTMLFormElement>(null);
-  // Sending disables the button, and disabling the focused element drops focus
-  // to <body>. On a failure the toast is the only sign anything happened, and a
-  // keyboard visitor was left at the top of the document with no way back to
-  // the form but to tab through the whole page again.
-  const submitRef = useRef<HTMLButtonElement>(null);
-  const againRef = useRef<HTMLButtonElement>(null);
-  // Not a bare `.focus()`: at the moment the failure branch runs, React has not
-  // re-rendered yet, so the button is still `disabled` and focusing it does
-  // nothing at all. The next animation frame was not reliably after the commit
-  // either: on desktop focus stayed on <body>. An effect always runs after
-  // the commit, so the failure branch leaves its focus move here and the
-  // effect runs it once the send is over.
-  const afterSend = useRef<(() => void) | null>(null);
-  const restoreFocus = () => {
-    afterSend.current = () => submitRef.current?.focus();
-  };
-  useEffect(() => {
-    if (status === "sending" || !afterSend.current) return;
-    const run = afterSend.current;
-    afterSend.current = null;
-    run();
-  }, [status]);
-  useEffect(() => {
-    startedAt.current = performance.now();
-  }, []);
-
-  // A field the API would refuse is marked the way the browser marks an empty
-  // required one: its own validation bubble with the reason, focus on the
-  // first, `aria-invalid` until the visitor types in it again. A generic
-  // "try again" toast left them retrying the same typo.
-  const [invalid, setInvalid] = useState<readonly TypedField[]>([]);
-  const markFields = (fields: readonly TypedField[]) => {
-    for (const field of fields) {
-      const el = formRef.current?.elements.namedItem(field);
-      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        el.setCustomValidity(
-          field === "email" && el.value.trim()
-            ? t.form.emailInvalid
-            : t.form.fieldEmpty,
-        );
-      }
-    }
-    setInvalid(fields);
-  };
-  const clearMark = (event: FormEvent<HTMLFormElement>) => {
-    const el = event.target;
-    if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) {
-      return;
-    }
-    el.setCustomValidity("");
-    setInvalid((prev) =>
-      prev.some((field) => field === el.name)
-        ? prev.filter((field) => field !== el.name)
-        : prev,
-    );
-  };
-
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (status === "sending") return;
-    const data = new FormData(event.currentTarget);
-    const typed = (field: TypedField) => String(data.get(field) ?? "").trim();
-    const refused = TYPED_FIELDS.filter((field) =>
-      field === "email" ? !EMAIL_RE.test(typed(field)) : !typed(field),
-    );
-    if (refused.length) {
-      markFields(refused);
-      formRef.current?.reportValidity();
-      return;
-    }
-    setStatus("sending");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        // Without a deadline a hung request parked the button on "Sending…"
-        // forever: disabled, focus dropped, and no way to try again short of
-        // reloading and retyping. An abort lands in the catch below, which
-        // already restores the button, the focus and the typed message.
-        signal: AbortSignal.timeout(20000),
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          email: data.get("email"),
-          message: data.get("message"),
-          website: data.get("website"),
-          subject: selected.formSubject ?? selected.subject,
-          intent: effectiveIntent,
-          language,
-          fillMs: Math.round(performance.now() - startedAt.current),
-        }),
-      });
-      if (res.status === 400) {
-        // The API names the fields it refused; anything else it says about a
-        // 400 is not the visitor's to fix, and falls through to the toast.
-        const body: unknown = await res.json().catch(() => null);
-        const named =
-          body && typeof body === "object" && "fields" in body
-            ? (body as { fields: unknown }).fields
-            : null;
-        const fields = Array.isArray(named)
-          ? TYPED_FIELDS.filter((field) => named.includes(field))
-          : [];
-        if (fields.length) {
-          markFields(fields);
-          afterSend.current = () => formRef.current?.reportValidity();
-          setStatus("idle");
-          return;
-        }
-      }
-      if (!res.ok) {
-        toast({
-          closeLabel: t.closeNotice,
-          title: res.status === 429 ? t.form.tooMany : t.form.failed,
-          variant: "destructive",
-        });
-        restoreFocus();
-        setStatus("idle");
-        return;
-      }
-      // The form, and the focused button with it, is gone once the confirmation shows.
-      afterSend.current = () => againRef.current?.focus();
-      setStatus("sent");
-    } catch {
-      toast({
-        closeLabel: t.closeNotice,
-        title: t.form.failed,
-        variant: "destructive",
-      });
-      restoreFocus();
-      setStatus("idle");
-    }
-  };
-
-  const reset = () => {
-    formRef.current?.reset();
-    startedAt.current = performance.now();
-    afterSend.current = () => {
-      const field = formRef.current?.elements.namedItem("name");
-      if (field instanceof HTMLInputElement) field.focus();
-    };
-    setStatus("idle");
-  };
-
   return (
     <section
       // The block is the whole page, so it centres in the viewport and owns
@@ -458,7 +273,7 @@ export function ContactSection() {
                 </span>
               ))}
               {/* The name leads with the visible subject: the fixed string
-                  alone hid which subject the form will send, and voice
+                  alone hid which subject the mail will carry, and voice
                   control could not reach the button by what it shows. */}
               <PopoverTrigger asChild>
                 <button
@@ -516,144 +331,8 @@ export function ContactSection() {
           </Popover>
         </motion.p>
 
-        {/* The form. Plain fields on the page column, no card around them:
-            the sentence above is the subject line, so the form only needs the
-            three things the sentence cannot say. Labels sit above the fields
-            and stay visible, placeholders only hint. */}
-        <motion.div className="mt-10 sm:mt-12" variants={REVEAL}>
-          {status === "sent" ? (
-            // The confirmation springs in where the form was, and a check
-            // draws itself in a sage circle: the answer to "did it go?" is a
-            // picture before it is a sentence. Reduced motion shows it drawn.
-            <motion.div
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              aria-live="polite"
-              className="max-w-xl rounded-2xl border border-border/60 bg-card p-6 sm:p-8"
-              initial={
-                reduceMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, scale: 0.96, y: 8 }
-              }
-              transition={
-                reduceMotion
-                  ? { duration: DUR.fast, ease: EASE_OUT }
-                  : { ...SPRING_FLUID, opacity: { duration: DUR.fast } }
-              }
-            >
-              <span
-                aria-hidden
-                className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-sage/25 text-sage-deep"
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  viewBox="0 0 24 24"
-                >
-                  <motion.path
-                    animate={{ pathLength: 1 }}
-                    d="M5 12.5l4.5 4.5L19 7.5"
-                    initial={{ pathLength: reduceMotion ? 1 : 0 }}
-                    transition={{ delay: 0.15, duration: 0.45, ease: EASE_OUT }}
-                  />
-                </svg>
-              </span>
-              <p className="font-semibold text-lg">{t.form.sentTitle}</p>
-              <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
-                {t.form.sentBody}
-              </p>
-              <Button
-                className="mt-6 rounded-lg"
-                onClick={reset}
-                ref={againRef}
-                type="button"
-                variant="outline"
-              >
-                {t.form.sendAnother}
-              </Button>
-            </motion.div>
-          ) : (
-            <form
-              className="grid max-w-xl gap-5"
-              noValidate={false}
-              onInput={clearMark}
-              onSubmit={submit}
-              ref={formRef}
-            >
-              <div className="grid gap-5 sm:grid-cols-2">
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium">{t.form.nameLabel}</span>
-                  <input
-                    aria-invalid={invalid.includes("name") || undefined}
-                    autoComplete="name"
-                    className={FIELD}
-                    maxLength={120}
-                    name="name"
-                    required
-                    type="text"
-                  />
-                </label>
-                <label className="grid gap-1.5 text-sm">
-                  <span className="font-medium">{t.form.emailLabel}</span>
-                  <input
-                    aria-invalid={invalid.includes("email") || undefined}
-                    autoComplete="email"
-                    className={FIELD}
-                    maxLength={254}
-                    name="email"
-                    required
-                    type="email"
-                  />
-                </label>
-              </div>
-              <label className="grid gap-1.5 text-sm">
-                <span className="font-medium">{t.form.messageLabel}</span>
-                <textarea
-                  aria-invalid={invalid.includes("message") || undefined}
-                  className={cn(FIELD, "min-h-36 resize-y leading-relaxed")}
-                  maxLength={5000}
-                  name="message"
-                  placeholder={t.form.messagePlaceholder}
-                  required
-                />
-              </label>
-              {/* Honeypot: off-screen rather than display:none, so the bots
-                  that skip hidden fields still fill this one. Out of the tab
-                  order and the accessibility tree for everyone else. */}
-              <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
-                <label>
-                  Website
-                  <input autoComplete="off" name="website" tabIndex={-1} type="text" />
-                </label>
-              </div>
-              <div>
-                <Button
-                  className="group rounded-lg px-6"
-                  disabled={status === "sending"}
-                  ref={submitRef}
-                  type="submit"
-                  variant="cta"
-                >
-                  {status === "sending" ? t.form.sending : t.form.send}
-                  <ArrowRight
-                    aria-hidden
-                    className="transition-transform duration-200 ease-out group-hover:translate-x-0.5"
-                  />
-                </Button>
-              </div>
-            </form>
-          )}
-        </motion.div>
-
-        {/* The address stays, as the fallback: same subject, the visitor's own
-            mail client. Smaller than it was, because the form is now the
-            thing the page is for. */}
         <motion.div className="mt-10 sm:mt-12" variants={REVEAL}>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            {t.form.orDirect}{" "}
             <a
               className="group inline-flex max-w-full items-center gap-1 font-medium text-foreground underline decoration-2 decoration-primary/30 underline-offset-[0.2em] transition-[text-decoration-color,color] duration-200 ease-out hover:text-primary hover:decoration-primary focus-visible:rounded-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
               href={mailtoFor(selected.subject, selected.body)}

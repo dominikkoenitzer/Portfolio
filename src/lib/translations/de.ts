@@ -325,25 +325,21 @@ export const de = {
       job: {
         label: "eine Stelle",
         subject: "Stelle bei [Firma]",
-        formSubject: "Stelle",
         body: "Hallo Dominik,\n\nwir suchen [Position] bei [Firma] und deine Arbeit passt gut dazu.\n\n· Position: \n· Team und Stack: \n· Standort / Remote: \n· Startdatum: \n\nBeste Grüsse,\n[Name]",
       },
       freelance: {
         label: "ein Freelance-Projekt",
         subject: "Freelance-Projekt: [kurze Beschreibung]",
-        formSubject: "Freelance-Projekt",
         body: "Hallo Dominik,\n\nich würde gerne mit dir an [Projekt] arbeiten.\n\n· Was wir brauchen: \n· Grober Zeitrahmen: \n· Budgetrahmen: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       collab: {
         label: "eine Zusammenarbeit",
         subject: "Zusammenarbeit: [Idee]",
-        formSubject: "Zusammenarbeit",
         body: "Hallo Dominik,\n\nich arbeite an [Projekt] und dachte, wir könnten zusammen etwas aufbauen.\n\n· Die Idee: \n· Was ich einbringe: \n· Links: \n\nBeste Grüsse,\n[Name]",
       },
       other: {
         label: "etwas anderes",
         subject: "Hallo Dominik",
-        formSubject: "Hallo Dominik",
         body: "Hallo Dominik,\n\n",
       },
     },
@@ -354,22 +350,6 @@ export const de = {
       "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
     closeNotice: "Schliessen",
     eyebrow: "Kontakt",
-    form: {
-      nameLabel: "Name",
-      emailLabel: "E-Mail",
-      messageLabel: "Nachricht",
-      messagePlaceholder: "Was brauchst du, bis wann ungefähr, und was sollte ich wissen?",
-      send: "Nachricht senden",
-      sending: "Wird gesendet…",
-      sentTitle: "Gesendet.",
-      sentBody: "Danke, ist angekommen. Ich antworte normalerweise innerhalb eines Tages.",
-      sendAnother: "Noch eine Nachricht senden",
-      failed: "Das hat nicht geklappt. Versuch es nochmals oder schreib mir direkt.",
-      tooMany: "Das sind viele Nachrichten von deinem Anschluss. Versuch es in einer Stunde nochmals oder schreib mir direkt.",
-      fieldEmpty: "Das darf nicht leer sein.",
-      emailInvalid: "Die Adresse sieht unvollständig aus. Vielleicht ein Tippfehler?",
-      orDirect: "Oder schreib mir direkt:",
-    },
     responseTime: "Ich antworte normalerweise innerhalb eines Tages.",
   },
   donate: {
@@ -458,7 +438,7 @@ export const de = {
           "Diese Seite wird bei Vercel gehostet. Server-Logs (IP-Adresse, Browser-Typ, Zugriffszeit) werden zu Sicherheits- und Zuverlässigkeitszwecken gespeichert. Besucherstatistiken werden via Vercel Analytics und Vercel Speed Insights ausschliesslich anonymisiert erhoben. Cookies oder Tracking-Identifier werden nicht verwendet.",
         contactLabel: "E-Mail:",
         contactBody:
-          "Wenn du mir eine E-Mail schreibst oder das Kontaktformular benutzt, behalte ich nur, was du schickst (deinen Namen, deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären. Nachrichten aus dem Formular liegen in einer Supabase-Datenbank in Frankfurt, Deutschland, zusammen mit dem User-Agent deines Browsers und einem mit geheimem Schlüssel gebildeten Hash deiner IP-Adresse, der nur zur Spam-Begrenzung dient.",
+          "Wenn du mir eine E-Mail schreibst, behalte ich nur, was du schickst (deinen Namen, deine Adresse und deine Nachricht), um dir zu antworten und Rückfragen zu klären.",
       },
       rights: {
         heading: "Deine Rechte",
