@@ -21,7 +21,7 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 
 ## Contact
 
-Email is the fastest route and he usually replies within a day. The contact page has a short form: you pick what the message is about, write it, and it reaches him directly. A prefilled mailto link sits underneath for anyone who would rather use their own mail client.
+He usually replies within a day.
 
 ## Pages
 
@@ -31,7 +31,7 @@ Email is the fastest route and he usually replies within a day. The contact page
 - [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
 - [Projects](https://dk.punds.ch/projects): the fifteen personal projects, searchable and filterable by web or desktop.
 - [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
-- [Contact](https://dk.punds.ch/contact): a short form: choose an intent (a role, a freelance project, a collaboration, something else), write the message, and it reaches him directly. A prefilled mailto link sits underneath as the fallback.
+- [Contact](https://dk.punds.ch/contact): choose an intent (a role, a freelance project, a collaboration, something else).
 - [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
 - [Privacy](https://dk.punds.ch/privacy): Vercel server logs and anonymised Vercel Analytics, no cookies and no tracking identifiers, under Swiss FADP and EU GDPR.
 

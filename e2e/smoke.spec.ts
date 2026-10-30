@@ -341,27 +341,18 @@ test.describe("keyboard", () => {
     }
   });
 
-  test("focus stays with the contact form through a send and the next one", async ({
-    page,
-  }) => {
-    await page.route("**/api/contact", (route) =>
-      route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }),
-    );
+  test("the chosen subject goes into the mail link", async ({ page }) => {
     await page.goto("/contact");
     await expectRendered(page);
     await settle(page);
-    const name = page.locator('input[name="name"]');
-    await name.fill("Ada");
-    await page.locator('input[name="email"]').fill("ada@example.org");
-    await page.locator('textarea[name="message"]').fill("A short note.");
-    await page.locator('button[type="submit"]').focus();
-    await page.keyboard.press("Enter");
+    const mail = page.locator('main a[href^="mailto:"]').first();
+    const subject = async () =>
+      new URL((await mail.getAttribute("href")) ?? "").searchParams.get("subject");
+    expect(await subject()).toBe("Role at [company]");
 
-    const again = page.getByRole("button", { name: "Send another message" });
-    await expect(again).toBeFocused();
-    await page.keyboard.press("Enter");
-    await expect(name).toBeFocused();
-    await expect(name).toHaveValue("");
+    await page.getByRole("button", { name: "a role, Change what this is about" }).click();
+    await page.getByRole("button", { name: "a freelance project", exact: true }).click();
+    await expect.poll(subject).toBe("Freelance project: [short description]");
   });
 });
 

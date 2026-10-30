@@ -12,8 +12,6 @@ import {
 /** The serverless routes in `api/` that the local servers should answer. */
 const LOCAL_API_ROUTES = [
   "github-contributions",
-  "contact",
-  "keepalive",
   "test-count",
 ] as const;
 
@@ -21,34 +19,12 @@ const LOCAL_API_ROUTES = [
 const SERVER_ENV_KEYS = [
   "GITHUB_TOKEN",
   "VITE_GITHUB_TOKEN",
-  "SUPABASE_URL",
-  "SUPABASE_SERVICE_ROLE_KEY",
-  "GMAIL_USER",
-  "GMAIL_APP_PASSWORD",
-  "CONTACT_TO",
 ] as const;
-
-/** Reads a JSON request body the way Vercel hands it to a function. */
-const readJsonBody = (req: import("node:http").IncomingMessage) =>
-  new Promise<unknown>((resolve) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (c: Buffer) => chunks.push(c));
-    req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString("utf8");
-      if (!raw) return resolve(undefined);
-      try {
-        resolve(JSON.parse(raw));
-      } catch {
-        resolve(raw);
-      }
-    });
-    req.on("error", () => resolve(undefined));
-  });
 
 /**
  * Runs the real `api/*.js` serverless handlers in-process for local `vite dev`
- * AND `vite preview`, so the contributions widget and the contact form work
- * without `vercel dev`. The secrets are read server-side from the environment
+ * AND `vite preview`, so the contributions widget works without
+ * `vercel dev`. The secrets are read server-side from the environment
  * (`.env.local`) and used only here: they are never exposed to the client
  * bundle. On Vercel the platform serves the functions itself; this plugin is
  * dev/preview only (the hooks don't run during `vite build`).
@@ -80,9 +56,7 @@ function localApi(env: Record<string, string>): Plugin {
         const vreq = {
           method: req.method,
           headers: req.headers,
-          socket: req.socket,
           query: Object.fromEntries(parsed.searchParams),
-          body: req.method === "POST" ? await readJsonBody(req) : undefined,
         };
         const vres = {
           setHeader: (key: string, value: string) => res.setHeader(key, value),

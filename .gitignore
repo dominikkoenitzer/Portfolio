@@ -86,6 +86,3 @@ temp/
 
 # Scratch screenshot originals; optimized copies live in public/projects/
 Screenshots/
-
-# Supabase CLI link state
-supabase/.temp/

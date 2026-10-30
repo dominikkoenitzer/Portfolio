@@ -321,25 +321,21 @@ export const en = {
       job: {
         label: "a role",
         subject: "Role at [company]",
-        formSubject: "Role",
         body: "Hi Dominik,\n\nWe're hiring a [role] at [company] and your work looks like a good fit.\n\n· Role: \n· Team and stack: \n· Location / remote: \n· Start date: \n\nBest,\n[name]",
       },
       freelance: {
         label: "a freelance project",
         subject: "Freelance project: [short description]",
-        formSubject: "Freelance project",
         body: "Hi Dominik,\n\nI'd like to work with you on [project].\n\n· What we need: \n· Rough timeline: \n· Budget range: \n· Links: \n\nBest,\n[name]",
       },
       collab: {
         label: "building something together",
         subject: "Collaboration: [idea]",
-        formSubject: "Collaboration",
         body: "Hi Dominik,\n\nI'm working on [project] and thought we might build something together.\n\n· The idea: \n· What I'd bring: \n· Links: \n\nBest,\n[name]",
       },
       other: {
         label: "something else",
         subject: "Hi Dominik",
-        formSubject: "Hi Dominik",
         body: "Hi Dominik,\n\n",
       },
     },
@@ -349,22 +345,6 @@ export const en = {
     copyFailed: "Couldn't copy. The address is dominik.koenitzer@gmail.com",
     closeNotice: "Close",
     eyebrow: "Contact",
-    form: {
-      nameLabel: "Name",
-      emailLabel: "Email",
-      messageLabel: "Message",
-      messagePlaceholder: "What do you need, roughly when, and what should I know?",
-      send: "Send message",
-      sending: "Sending…",
-      sentTitle: "Sent.",
-      sentBody: "Thanks, I've got it. I usually reply within a day.",
-      sendAnother: "Send another message",
-      failed: "That didn't go through. Try again, or write to me directly.",
-      tooMany: "That's a lot of messages from your connection. Try again in an hour, or write to me directly.",
-      fieldEmpty: "This can't be empty.",
-      emailInvalid: "That address looks incomplete. Maybe a typo?",
-      orDirect: "Or write to me directly:",
-    },
     responseTime: "I usually reply within a day.",
   },
   donate: {
@@ -453,7 +433,7 @@ export const en = {
           "This site is hosted by Vercel. Server logs (IP address, browser type, access time) are stored for security and reliability. Visitor statistics are collected via Vercel Analytics and Vercel Speed Insights with anonymized data only. No cookies or tracking identifiers are used.",
         contactLabel: "Email:",
         contactBody:
-          "If you email me or use the contact form, I keep what you send (your name, your address and your message) only to answer you and any follow-up questions. Form messages are stored in a Supabase database in Frankfurt, Germany, together with your browser's user agent and a keyed hash of your IP address that is used only to limit spam.",
+          "If you email me, I keep what you send (your name, your address and your message) only to answer you and any follow-up questions.",
       },
       rights: {
         heading: "Your Rights",
