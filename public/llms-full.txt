@@ -296,7 +296,7 @@ Freelance work for small teams and businesses, described on the services page as
 
 Email: dominik.koenitzer@gmail.com. He usually replies within a day.
 
-The contact page (https://dk.punds.ch/contact) has a prefilled mailto link, and a copy-the-address fallback for anyone on webmail.
+The contact page (https://dk.punds.ch/contact) has a prefilled mailto link and a copy-the-address fallback for anyone on webmail.
 
 There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or any amount. It is a thank-you box, not a paywall. Nothing on the site or in any of the projects is gated behind it.
 
