@@ -12,8 +12,6 @@ import {
 /** The serverless routes in `api/` that the local servers should answer. */
 const LOCAL_API_ROUTES = [
   "github-contributions",
-  "contact",
-  "keepalive",
   "test-count",
 ] as const;
 
@@ -21,11 +19,6 @@ const LOCAL_API_ROUTES = [
 const SERVER_ENV_KEYS = [
   "GITHUB_TOKEN",
   "VITE_GITHUB_TOKEN",
-  "SUPABASE_URL",
-  "SUPABASE_SERVICE_ROLE_KEY",
-  "GMAIL_USER",
-  "GMAIL_APP_PASSWORD",
-  "CONTACT_TO",
 ] as const;
 
 /** Reads a JSON request body the way Vercel hands it to a function. */
@@ -47,8 +40,8 @@ const readJsonBody = (req: import("node:http").IncomingMessage) =>
 
 /**
  * Runs the real `api/*.js` serverless handlers in-process for local `vite dev`
- * AND `vite preview`, so the contributions widget and the contact form work
- * without `vercel dev`. The secrets are read server-side from the environment
+ * AND `vite preview`, so the contributions widget works without
+ * `vercel dev`. The secrets are read server-side from the environment
  * (`.env.local`) and used only here: they are never exposed to the client
  * bundle. On Vercel the platform serves the functions itself; this plugin is
  * dev/preview only (the hooks don't run during `vite build`).
