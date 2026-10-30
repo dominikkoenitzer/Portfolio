@@ -21,23 +21,6 @@ const SERVER_ENV_KEYS = [
   "VITE_GITHUB_TOKEN",
 ] as const;
 
-/** Reads a JSON request body the way Vercel hands it to a function. */
-const readJsonBody = (req: import("node:http").IncomingMessage) =>
-  new Promise<unknown>((resolve) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (c: Buffer) => chunks.push(c));
-    req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString("utf8");
-      if (!raw) return resolve(undefined);
-      try {
-        resolve(JSON.parse(raw));
-      } catch {
-        resolve(raw);
-      }
-    });
-    req.on("error", () => resolve(undefined));
-  });
-
 /**
  * Runs the real `api/*.js` serverless handlers in-process for local `vite dev`
  * AND `vite preview`, so the contributions widget works without
@@ -73,9 +56,7 @@ function localApi(env: Record<string, string>): Plugin {
         const vreq = {
           method: req.method,
           headers: req.headers,
-          socket: req.socket,
           query: Object.fromEntries(parsed.searchParams),
-          body: req.method === "POST" ? await readJsonBody(req) : undefined,
         };
         const vres = {
           setHeader: (key: string, value: string) => res.setHeader(key, value),
