@@ -18,13 +18,6 @@ export interface Skill {
   icon?: React.ReactNode;
 }
 
-export interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
 export interface InfoCardProps {
   icon: React.ReactNode;
   title: string;

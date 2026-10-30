@@ -299,10 +299,10 @@ export function CustomCursor() {
     // / pointer strayed far outside) so the caller can fall back to a dot.
     function glueMagnet(el: Element): boolean {
       if (!el.isConnected) return false;
-      // A target can stop being interactive while the pointer rests on it: the
-      // contact form disables its submit button for the length of the request,
-      // and the box went on advertising a control that no longer takes a click
-      // (the rect, the connection and the hit-test all still pass).
+      // A target can stop being interactive while the pointer rests on it: a
+      // button can disable itself for the length of a request, and the box
+      // went on advertising a control that no longer takes a click (the rect,
+      // the connection and the hit-test all still pass).
       if (!el.matches(INTERACTIVE_SELECTOR)) return false;
 
       // Prefer an override sub-rect (e.g. the hovered services leaf) over the
@@ -416,9 +416,9 @@ export function CustomCursor() {
         releaseMagnet();
         // Re-read what is under the pointer, exactly as the occlusion branch
         // above does. Without it a release could never be undone while the
-        // pointer sat still: the contact form's submit button drops the magnet
-        // when it disables itself for the request, and re-enabling it left a
-        // plain dot sitting on a live primary action until the mouse moved.
+        // pointer sat still: a button drops the magnet when it disables itself
+        // for a request, and re-enabling it left a plain dot sitting on a live
+        // primary action until the mouse moved.
         const { x, y } = pointerRef.current;
         applyContext(document.elementFromPoint(x, y));
         return;

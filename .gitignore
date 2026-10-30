@@ -86,6 +86,3 @@ temp/
 
 # Scratch screenshot originals; optimized copies live in public/projects/
 Screenshots/
-
-# OldDb CLI link state
-olddb/.temp/
