@@ -342,7 +342,7 @@ export const en = {
     emailHint: "Opens your mail app with a prefilled subject.",
     copyEmail: "Or copy the address.",
     copied: "Copied.",
-    copyFailed: "Couldn't copy. The address is dominik.koenitzer@gmail.com",
+    copyFailed: "Couldn't copy. The address is",
     closeNotice: "Close",
     eyebrow: "Contact",
     responseTime: "I usually reply within a day.",
