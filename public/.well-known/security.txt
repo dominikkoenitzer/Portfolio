@@ -1,4 +1,4 @@
-Contact: mailto:dominik.koenitzer@gmail.com
+Contact: https://dk.punds.ch/contact
 Expires: 2027-12-31T23:59:59.000Z
 Preferred-Languages: en, de, zh, fr
 Canonical: https://dk.punds.ch/.well-known/security.txt

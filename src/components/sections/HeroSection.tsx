@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
+import { mailto } from "@/lib/email";
 import { useLanguage } from "@/lib/language-context";
 import { EASE_OUT, REVEAL, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
@@ -88,7 +89,7 @@ const SOCIAL = [
     icon: <Github className="h-[18px] w-[18px]" />,
   },
   {
-    href: `mailto:${SITE_CONFIG.email}`,
+    href: mailto(),
     labelKey: "emailLabel",
     icon: <Mail className="h-[18px] w-[18px]" />,
   },

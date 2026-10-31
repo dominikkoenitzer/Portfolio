@@ -4,6 +4,7 @@ import { Github } from "@/components/ui/github-icon";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS, SITE_CONFIG } from "@/constants";
+import { mailto } from "@/lib/email";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, stagger } from "@/lib/motion";
@@ -113,7 +114,7 @@ export function Footer() {
               size="lg"
               variant="soft"
             >
-              <a href={`mailto:${SITE_CONFIG.email}`}>
+              <a href={mailto()}>
                 <Mail className="h-4 w-4" />
                 {t.footer.emailMe}
               </a>

@@ -347,7 +347,7 @@ export const de = {
     copyEmail: "Oder Adresse kopieren.",
     copied: "Kopiert.",
     copyFailed:
-      "Kopieren fehlgeschlagen. Die Adresse lautet dominik.koenitzer@gmail.com",
+      "Kopieren fehlgeschlagen. Die Adresse lautet",
     closeNotice: "Schliessen",
     eyebrow: "Kontakt",
     responseTime: "Ich antworte normalerweise innerhalb eines Tages.",

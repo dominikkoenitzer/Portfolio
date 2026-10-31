@@ -1,6 +1,6 @@
 # Dominik Könitzer
 
-> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He reads email at dominik.koenitzer@gmail.com.
+> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He can be reached through https://dk.punds.ch/contact.
 
 This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-10-08.
 
@@ -17,7 +17,7 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 - Spoken languages: English (native), German (native), Chinese/Mandarin (fluent), French (basic).
 - Website: https://dk.punds.ch
 - GitHub: https://github.com/dominikkoenitzer
-- Email: dominik.koenitzer@gmail.com
+- Contact: https://dk.punds.ch/contact
 
 ## Contact
 
@@ -116,4 +116,4 @@ The interface is localised to English (default), German, French and Chinese. Loc
 
 Quoting and summarising is welcome, including for answering questions about him and his work. Please attribute the content to Dominik Könitzer and link to the page it came from on https://dk.punds.ch.
 
-If a fact here disagrees with the rendered page, the rendered page wins. Corrections are welcome at dominik.koenitzer@gmail.com.
+If a fact here disagrees with the rendered page, the rendered page wins. Corrections are welcome through https://dk.punds.ch/contact.
