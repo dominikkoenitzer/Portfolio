@@ -25,9 +25,7 @@ const Contact = () => {
           description:
             "How to reach Dominik Könitzer, a software engineer in Switzerland.",
           url: contactUrl,
-          mainEntity: createPersonSchema({
-            email: SITE_CONFIG.email,
-          }),
+          mainEntity: createPersonSchema(),
         }}
         title={seo.title}
         url={contactUrl}

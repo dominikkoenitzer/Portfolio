@@ -257,7 +257,6 @@ const noscriptBlock = (title: string, description: string): string =>
           <li><a href="/cv/curriculum-vitae.html">My CV, in English</a></li>
           <li><a href="/cv/lebenslauf.html">Mein Lebenslauf, auf Deutsch</a></li>
           <li><a href="/sitemap.xml">Every page on this site</a></li>
-          <li><a href="mailto:${esc(SITE_CONFIG.email)}">Email me</a></li>
         </ul>
       </div>
     </noscript>`;

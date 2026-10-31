@@ -12,8 +12,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SITE_CONFIG } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
+import { email } from "@/lib/email";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, REVEAL, stagger } from "@/lib/motion";
@@ -21,7 +21,7 @@ import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
 
-const EMAIL = SITE_CONFIG.email;
+const EMAIL = email();
 
 // Display order of the subject options. Keys must exist under `contact.intents`
 // in every language module (typecheck enforces the shape via `Translation`).
@@ -200,7 +200,7 @@ export function ContactSection() {
     } catch {
       toast({
         closeLabel: t.closeNotice,
-        title: t.copyFailed,
+        title: `${t.copyFailed} ${EMAIL}`,
         variant: "destructive",
       });
     }

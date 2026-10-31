@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { SEO } from "@/components/seo";
 import { SITE_CONFIG } from "@/constants";
+import { email } from "@/lib/email";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { LOCALE_TAG } from "@/lib/locale";
@@ -15,7 +16,7 @@ import { cn } from "@/lib/utils";
 // Bump this when the policy text actually changes (rendered in the active locale).
 const PRIVACY_REVISED = "2026-10-30";
 
-const EMAIL = "dominik.koenitzer@gmail.com";
+const EMAIL = email();
 
 /**
  * Anchor ids stay English in every language, so a link someone saved or shared
