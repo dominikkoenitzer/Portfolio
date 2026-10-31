@@ -354,6 +354,25 @@ test.describe("keyboard", () => {
     await page.getByRole("button", { name: "a freelance project", exact: true }).click();
     await expect.poll(subject).toBe("Freelance project: [short description]");
   });
+
+  test("the mail links work while the served html holds no address", async ({ page }) => {
+    const address = /[\w.+-]+@[\w-]+\.[a-z]{2,}/i;
+    for (const route of ["/", "/contact", "/privacy"]) {
+      const html = await (await page.request.get(route)).text();
+      expect(html, `${route} as served`).not.toMatch(address);
+    }
+
+    await page.goto("/contact");
+    await expectRendered(page);
+    const mail = page.locator('main a[href^="mailto:"]').first();
+    const href = new URL((await mail.getAttribute("href")) ?? "");
+    expect(href.pathname).toMatch(new RegExp(`^${address.source}$`, "i"));
+    expect((await mail.innerText()).trim()).toBe(href.pathname);
+    await expect(page.locator('footer a[href^="mailto:"]')).toHaveAttribute(
+      "href",
+      `mailto:${href.pathname}`,
+    );
+  });
 });
 
 test.describe("diagnostics", () => {
