@@ -9,7 +9,7 @@ If you find a security issue (exposed data, an XSS vector, a dependency or
 configuration problem, or anything that could harm visitors) please report it
 **privately**:
 
-**Email:** dominik.koenitzer@gmail.com
+**Contact:** <https://dk.punds.ch/contact>
 
 Please include steps to reproduce and the potential impact. I'll acknowledge
 within a few days and aim to address valid reports promptly. Please **do not**
