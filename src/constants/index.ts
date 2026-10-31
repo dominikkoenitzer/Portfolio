@@ -19,7 +19,6 @@ export const SITE_CONFIG = {
   author: "Dominik Könitzer",
   url: "https://dk.punds.ch",
   ogImage: "/og-image.png",
-  email: "dominik.koenitzer@gmail.com",
   github: "https://github.com/dominikkoenitzer",
   location: {
     country: "Switzerland",

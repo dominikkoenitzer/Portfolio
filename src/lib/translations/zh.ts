@@ -285,7 +285,7 @@ export const zh = {
     emailHint: "将打开你的邮件应用，主题已填好。",
     copyEmail: "或复制地址。",
     copied: "已复制。",
-    copyFailed: "复制失败，地址为 dominik.koenitzer@gmail.com",
+    copyFailed: "复制失败，地址为",
     closeNotice: "关闭",
     eyebrow: "联系",
     responseTime: "我通常会在一天内回复。",

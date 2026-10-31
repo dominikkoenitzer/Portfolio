@@ -190,7 +190,6 @@ export const createPersonSchema = (
     "PostgreSQL",
     "MongoDB",
   ],
-  email: SITE_CONFIG.email,
   nationality: { "@type": "Country", name: "Switzerland" },
   hasOccupation: {
     "@type": "Occupation",
