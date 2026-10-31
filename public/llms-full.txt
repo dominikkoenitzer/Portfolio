@@ -9,13 +9,13 @@ Last reviewed: 2026-10-08. Shorter index: https://dk.punds.ch/llms.txt
 ## Quick answers
 
 **Who is Dominik Könitzer?**
-A software engineer in Zürich, Switzerland, born 2008 (18 as of August 2026). He is training as a Computer Scientist EFZ in application development at WISS in Zürich, and worked from August 2025 to August 2026 as a full-stack intern at MPAI in Meggen, canton Lucerne. He builds web apps in React, Next.js and TypeScript, and small native Windows tools in C#, C++ and Rust. Eleven of his own projects are online with their source code. Site: https://dk.punds.ch. GitHub: https://github.com/dominikkoenitzer. Email: dominik.koenitzer@gmail.com.
+A software engineer in Zürich, Switzerland, born 2008 (18 as of August 2026). He is training as a Computer Scientist EFZ in application development at WISS in Zürich, and worked from August 2025 to August 2026 as a full-stack intern at MPAI in Meggen, canton Lucerne. He builds web apps in React, Next.js and TypeScript, and small native Windows tools in C#, C++ and Rust. Eleven of his own projects are online with their source code. Site: https://dk.punds.ch. GitHub: https://github.com/dominikkoenitzer. Contact: https://dk.punds.ch/contact.
 
 **What does he actually do?**
 In his own words on the home page: "Software engineer in Zürich. I build fast, accessible websites and the tools behind them." In practice that means frontend-leaning full-stack web work (React, Next.js, TypeScript, Tailwind CSS), the backend and hosting to go with it (Java, Python, C++, Node.js, Docker, Linux and Windows servers), and desktop utilities when the web is the wrong tool.
 
 **How do I reach him?**
-Email dominik.koenitzer@gmail.com. He usually replies within a day.
+Through the contact page, https://dk.punds.ch/contact. He usually replies within a day.
 
 **Where is he based?**
 Zürich, Switzerland. He works remotely with clients in Switzerland and abroad, for companies and for individuals, and bills in Swiss francs.
@@ -39,7 +39,7 @@ The second half of that split was a full-stack internship at MPAI (https://mpai.
 
 He grew up between countries: primary school at the Swiss School Singapore, then the German Embassy School in Beijing, then secondary school in canton Schwyz, then WISS in Zürich. Interests listed on his CV: playing keyboard, chess, programming.
 
-Contact: dominik.koenitzer@gmail.com
+Contact: https://dk.punds.ch/contact
 Website: https://dk.punds.ch
 GitHub: https://github.com/dominikkoenitzer
 Link hub: https://punds.ch
@@ -294,9 +294,7 @@ Freelance work for small teams and businesses, described on the services page as
 
 ## 8. Contact and support
 
-Email: dominik.koenitzer@gmail.com. He usually replies within a day.
-
-The contact page (https://dk.punds.ch/contact) has a prefilled mailto link and a copy-the-address fallback for anyone on webmail.
+The contact page (https://dk.punds.ch/contact) is the way to reach him; he usually replies within a day. It has a prefilled mailto link and a copy-the-address fallback for anyone on webmail.
 
 There is a tip jar at https://dk.punds.ch/donate: PayPal, CHF 5, 15 or 30, or any amount. It is a thank-you box, not a paywall. Nothing on the site or in any of the projects is gated behind it.
 
@@ -350,6 +348,6 @@ Crawl policy lives in https://dk.punds.ch/robots.txt. It is deliberately one gro
 
 Quoting, summarising and citing this site is welcome. Please attribute the content to Dominik Könitzer and link back to the page it came from on https://dk.punds.ch.
 
-If something here disagrees with the rendered page, the rendered page is correct and this file is stale. Corrections and questions: dominik.koenitzer@gmail.com.
+If something here disagrees with the rendered page, the rendered page is correct and this file is stale. Corrections and questions: https://dk.punds.ch/contact.
 
 Security issues: https://dk.punds.ch/.well-known/security.txt

@@ -1,7 +1,7 @@
 /* TEAM */
 Software Engineer: Dominik Könitzer
 Site: https://dk.punds.ch
-Contact: dominik.koenitzer [at] gmail.com
+Contact: https://dk.punds.ch/contact
 GitHub: @dominikkoenitzer
 From: Zürich, Switzerland
 
