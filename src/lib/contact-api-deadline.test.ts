@@ -91,7 +91,7 @@ describe("contact API with a mail send that never finishes", () => {
         res,
       );
       expect(reply.status).toBe(200);
-      expect(blobStore.list("contact/messages/")).toHaveLength(1);
+      expect(blobStore.read("contact/limits/day.json").messages).toHaveLength(1);
       expect(Date.now() - start).toBeLessThan(5_000);
     },
     10_000,

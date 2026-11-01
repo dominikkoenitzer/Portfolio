@@ -34,7 +34,7 @@ vi.mock("@vercel/blob", () => import("./fake-blob"));
 let handler: (req: object, res: object) => Promise<unknown>;
 let blobStore: (typeof import("./fake-blob"))["blobStore"];
 
-const stored = () => blobStore.list("contact/messages/");
+const stored = (): object[] => blobStore.read("contact/limits/day.json")?.messages ?? [];
 
 type Reply = { status: number; body: unknown; headers: Record<string, string> };
 
@@ -121,14 +121,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("contact API hourly cap", () => {
-  it("stores five messages from one address and refuses the sixth and seventh", async () => {
+describe("contact API daily cap per address", () => {
+  it("stores six messages from one address and refuses the seventh and eighth", async () => {
     const statuses: number[] = [];
-    for (let i = 0; i < 7; i += 1) {
+    for (let i = 0; i < 8; i += 1) {
       statuses.push((await post(message())).status);
     }
-    expect(statuses).toEqual([200, 200, 200, 200, 200, 429, 429]);
-    expect(stored()).toHaveLength(5);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 200, 429, 429]);
+    expect(stored()).toHaveLength(6);
   });
 
   it("holds for a burst of parallel requests from one address", async () => {
@@ -136,7 +136,7 @@ describe("contact API hourly cap", () => {
       Array.from({ length: 30 }, () => post(message())),
     );
     const accepted = replies.filter((r) => r.status === 200).length;
-    expect(stored().length).toBeLessThanOrEqual(5);
+    expect(stored().length).toBeLessThanOrEqual(6);
     expect(accepted).toBe(stored().length);
     expect(replies.every((r) => r.status === 200 || r.status === 429)).toBe(
       true,
@@ -153,21 +153,23 @@ describe("contact API hourly cap", () => {
 });
 
 describe("contact API cap for IPv6", () => {
-  it("counts every address in one /64 as one sender", async () => {
+  it("counts every address in one /48 as one sender", async () => {
     const statuses: number[] = [];
-    for (let i = 1; i <= 5; i += 1) {
-      statuses.push((await post(message(), `2001:db8:a:b::${i}`)).status);
+    // One customer's /48 holds 65,536 /64 networks: a new one per message
+    // must not reset the count.
+    for (let i = 1; i <= 6; i += 1) {
+      statuses.push((await post(message(), `2001:db8:a:${i}::1`)).status);
     }
-    statuses.push((await post(message(), "2001:db8:a:b:ffff:1:2:3")).status);
-    statuses.push((await post(message(), "2001:0db8:000a:000b::9")).status);
+    statuses.push((await post(message(), "2001:db8:a:ffff:1:2:3:4")).status);
+    statuses.push((await post(message(), "2001:0db8:000a:0000::9")).status);
     statuses.push((await post(message(), "[2001:DB8:A:B::10]")).status);
-    expect(statuses).toEqual([200, 200, 200, 200, 200, 429, 429, 429]);
-    expect((await post(message(), "2001:db8:a:c::1")).status).toBe(200);
-    expect(stored()).toHaveLength(6);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 200, 429, 429, 429]);
+    expect((await post(message(), "2001:db8:b::1")).status).toBe(200);
+    expect(stored()).toHaveLength(7);
   });
 
   it("counts an IPv4 address the same when it arrives in IPv6 form", async () => {
-    for (let i = 0; i < 5; i += 1) await post(message(), "203.0.113.50");
+    for (let i = 0; i < 6; i += 1) await post(message(), "203.0.113.50");
     expect((await post(message(), "::ffff:203.0.113.50")).status).toBe(429);
   });
 });
@@ -183,7 +185,7 @@ describe("contact API when the store fails", () => {
     expect(blobStore.ops.advanced).toBe(0);
   });
 
-  it("refuses the message when the cap cannot be written", async () => {
+  it("refuses the message when it cannot be written", async () => {
     blobStore.write("contact/limits/day.json", JSON.stringify({ count: 0, addresses: {} }));
     blobStore.putError = new Error("store unreachable");
     const reply = await post(message());
@@ -191,19 +193,20 @@ describe("contact API when the store fails", () => {
     expect(stored()).toHaveLength(0);
   });
 
-  it("answers 502 when the message cannot be stored", async () => {
-    // The cap write goes through; every write after it fails.
-    blobStore.beforePut = () => {
-      blobStore.putError = new Error("store unreachable");
-    };
-    const reply = await post(message());
-    expect(reply.status).toBe(502);
-    expect(reply.body).toEqual({ error: "Could not store the message" });
+  it("lets the resend of a message whose answer was lost through once", async () => {
+    // The write lands but the answer never reaches the browser, which shows
+    // the failure; the visitor sends again with the same token.
+    blobStore.write("contact/limits/day.json", JSON.stringify({ count: 0, addresses: {} }));
+    const token = await formToken();
+    blobStore.afterPutError = new Error("socket hang up");
+    expect((await post(message({ token }))).status).toBe(503);
+    expect((await post(message({ token }))).status).toBe(200);
+    expect(stored()).toHaveLength(1);
   });
 });
 
 describe("contact API form token", () => {
-  it("hands out a signed start time that no cache keeps", async () => {
+  it("hands out a signed, single-use token that no cache keeps", async () => {
     const reply: Reply = { body: null, headers: {}, status: 0 };
     const res = {
       json(payload: unknown) {
@@ -222,7 +225,23 @@ describe("contact API form token", () => {
     expect(reply.status).toBe(200);
     expect(reply.headers["Cache-Control"]).toBe("no-store");
     expect(reply.body).toMatchObject({ minAgeMs: 3_000, maxAgeMs: 6 * 60 * 60 * 1000 });
-    expect((reply.body as { token: string }).token).toMatch(/^\d+\.[\w-]+$/);
+    expect((reply.body as { token: string }).token).toMatch(/^\d+\.[\w-]{16}\.[\w-]+$/);
+  });
+
+  it("hands every form a token of its own", async () => {
+    const tokens = new Set([await formToken(), await formToken(), await formToken()]);
+    expect(tokens.size).toBe(3);
+  });
+
+  it("stores one message per token and answers a replay as sent", async () => {
+    const token = await formToken();
+    const replies = [
+      await post(message({ token }), "203.0.113.1"),
+      await post(message({ token, subject: "Again" }), "203.0.113.2"),
+      await post(message({ token, subject: "Third" }), "2001:db8:c::1"),
+    ];
+    expect(replies.map((r) => r.status)).toEqual([200, 200, 200]);
+    expect(stored()).toHaveLength(1);
   });
 
   it("keeps a message sent with a token older than a person needs to type", async () => {
@@ -265,7 +284,13 @@ describe("contact API form token", () => {
 
   it("refuses a token this server did not sign", async () => {
     const stamp = Date.now() - 60_000;
-    const forged = [`${stamp}.${"A".repeat(43)}`, `${stamp}`, "token", `${stamp}.x.y`];
+    const forged = [
+      `${stamp}.${"A".repeat(16)}.${"A".repeat(43)}`,
+      `${stamp}.${"A".repeat(43)}`,
+      `${stamp}`,
+      "token",
+      `${stamp}.x.y`,
+    ];
     for (const token of forged) {
       expect((await post(message({ token }))).status).toBe(403);
     }
@@ -273,9 +298,15 @@ describe("contact API form token", () => {
     const other = await formToken();
     vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
     expect((await post(message({ token: other }))).status).toBe(403);
-    // The time is part of what is signed, so it cannot be moved back.
-    const [, signature] = (await formToken(0)).split(".");
-    expect((await post(message({ token: `${stamp}.${signature}` }))).status).toBe(403);
+    // The time and the nonce are both signed: neither can be moved back or
+    // swapped for a fresh one, which would make a spent token new again.
+    const [, nonce, signature] = (await formToken(0)).split(".");
+    expect((await post(message({ token: `${stamp}.${nonce}.${signature}` }))).status).toBe(403);
+    const [spentStamp, , spentSignature] = (await formToken()).split(".");
+    const fresh = "B".repeat(16);
+    expect(
+      (await post(message({ token: `${spentStamp}.${fresh}.${spentSignature}` }))).status,
+    ).toBe(403);
     expect(stored()).toHaveLength(0);
   });
 });

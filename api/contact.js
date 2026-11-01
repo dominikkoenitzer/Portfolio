@@ -1,12 +1,12 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import nodemailer from "nodemailer";
-import { createCap, markNotified, saveMessage } from "./_contact-store.js";
+import { createCap } from "./_contact-store.js";
 
 /**
  * GET and POST /api/contact
  *
- * GET hands the form a signed start time. POST takes the contact form, stores
- * the message in a private Vercel Blob store and mails it to Dominik. The
+ * GET hands the form a signed, single-use token. POST takes the contact form,
+ * stores the message in a private Vercel Blob store and mails it to Dominik. The
  * browser only ever talks to this same-origin route: the store token and the
  * mail credentials live in the server environment, so the CSP stays
  * same-origin and nothing secret reaches the client bundle.
@@ -16,28 +16,36 @@ import { createCap, markNotified, saveMessage } from "./_contact-store.js";
  *   GMAIL_USER, GMAIL_APP_PASSWORD             optional, the notification mail
  *   CONTACT_TO                                 optional, defaults to GMAIL_USER
  *   CONTACT_HASH_SECRET                        signs the form token and keys
- *                                              the stored address hash
+ *                                              the address hash the cap counts
  *
- * Spam: a honeypot field, a minimum fill time measured on the server, a cap
- * per address and hour (a /64 for IPv6), and a ceiling on the messages stored
- * per day. Bots that trip the first two get a 200 with nothing stored, so
- * they learn nothing.
+ * Spam: a honeypot field, a minimum fill time measured on the server, a token
+ * that stores one message only, a cap per address and day (a /48 for IPv6),
+ * and a ceiling on the messages stored per day. Bots that trip the first two
+ * get a 200 with nothing stored, so they learn nothing.
  */
 
 const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 };
 const MIN_FILL_MS = 3000;
 // A form left open longer than this asks for a new token before it sends.
 const TOKEN_MAX_AGE_MS = 6 * 60 * 60 * 1000;
-// Five messages an hour per address and eleven stored per Zurich day for the
-// whole site. An accepted message takes three writes, so a 31-day month takes
-// at most 1,023 of the 2,000 the Hobby plan allows. A conditional write that
-// loses a race may count as well. Each instance tries one write at a time, so
-// only a message another instance stored can make one lose: a day adds at
-// most eleven lost writes for every instance past the first. A refusal the
-// instance already knows of costs no read, and no instance reads the store
-// more than 21 times a minute.
-const CAPS = { perAddress: 5, perDay: 11, readsPerMinute: 21 };
+// Six messages per address and 31 stored per Zurich day for the whole site.
+// An accepted message takes one write and each day one more files the day
+// before, so a 31-day month takes at most 992 of the 2,000 the Hobby plan
+// allows. A conditional write that loses a race may count as well. Each
+// instance tries one write at a time, so only a message another instance
+// stored can make one lose: a day adds at most 31 lost writes for every
+// instance past the first. A refusal the instance already knows of costs no
+// read, and no instance reads the store more than 21 times a minute.
+const CAPS = {
+  perAddress: 6,
+  perDay: 31,
+  readsPerMinute: 21,
+  tokenMaxAgeMs: TOKEN_MAX_AGE_MS,
+};
 const takeSlot = createCap(CAPS);
+// The store gets this long per request. With the mail's own deadline the
+// answer stays inside the 20 s the browser waits.
+const STORE_DEADLINE_MS = () => Number(process.env.CONTACT_STORE_DEADLINE_MS) || 8000;
 const INTENTS = new Set(["job", "freelance", "collab", "other", "service"]);
 const LANGS = new Set(["en", "de", "fr", "zh"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -63,9 +71,9 @@ const clientIp = (req) => {
 };
 
 /**
- * The part of an address the hourly cap counts. An IPv6 visitor is usually
- * handed a whole /64, so counting the full address let one sender change it
- * per message; the first four groups are what identifies them. IPv4, and IPv6
+ * The part of an address the daily cap counts. An IPv6 customer is usually
+ * handed a /56 or a /48, so counting a /64 still let one sender change it per
+ * message; the first three groups are what identifies them. IPv4, and IPv6
  * that carries an IPv4 address, stay whole.
  */
 function addressKey(ip) {
@@ -85,42 +93,65 @@ function addressKey(ip) {
   const full = [...head, ...Array(gap).fill("0"), ...tail];
   if (full.length !== 8 || !full.every((g) => /^[0-9a-f]{1,4}$/.test(g))) return bare;
   return `${full
-    .slice(0, 4)
+    .slice(0, 3)
     .map((g) => Number.parseInt(g, 16).toString(16))
-    .join(":")}::/64`;
+    .join(":")}::/48`;
 }
 
 // Without CONTACT_HASH_SECRET, the token and the cap use a key that lasts as
-// long as this process.
+// long as this process. In production that breaks the form across instances,
+// so it is logged once.
 const PROCESS_KEY = randomBytes(32);
-const serverKey = () => process.env.CONTACT_HASH_SECRET || PROCESS_KEY;
+let warnedKey = false;
+const serverKey = () => {
+  const secret = process.env.CONTACT_HASH_SECRET;
+  if (secret) return secret;
+  if (!warnedKey && process.env.VERCEL_ENV === "production") {
+    warnedKey = true;
+    console.error("contact: CONTACT_HASH_SECRET is not set");
+  }
+  return PROCESS_KEY;
+};
 
 // A plain SHA-256 of an IPv4 address is reversed by hashing all four billion
 // of them, which a laptop does in minutes. Keyed with a secret only the server
-// knows, the value says nothing about the address. The cap always counts a
-// keyed hash; the message keeps one only when the key is the lasting secret,
-// since a hash under a key that died with its process links nothing.
+// knows, the value says nothing about the address. Only the cap keeps it, for
+// the rest of the day; the stored message carries none.
 const capHash = (ip) => createHmac("sha256", serverKey()).update(addressKey(ip)).digest("hex");
 
-const signStamp = (stamp) =>
+const signToken = (stamp, nonce) =>
   createHmac("sha256", serverKey())
-    .update(`contact-form:${stamp}`)
+    .update(`contact-form:${stamp}:${nonce}`)
     .digest("base64url");
 
+const issueToken = (at) => {
+  const stamp = String(at);
+  const nonce = randomBytes(12).toString("base64url");
+  return `${stamp}.${nonce}.${signToken(stamp, nonce)}`;
+};
+
 /**
- * How long ago, on this server's clock, the token was handed out. Null for no
- * token at all, NaN for one this server did not sign.
+ * Reads a form token. Null for no token at all, `{ age: NaN }` for one this
+ * server did not sign, otherwise how long ago, on this server's clock, it was
+ * handed out, with the nonce that makes it single-use.
  */
-function tokenAge(token, at) {
+function readToken(token, at) {
   if (typeof token !== "string" || token === "") return null;
   const parts = token.split(".");
-  if (parts.length !== 2 || !/^\d{1,16}$/.test(parts[0])) return Number.NaN;
-  const expected = Buffer.from(signStamp(parts[0]));
-  const given = Buffer.from(parts[1]);
-  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
-    return Number.NaN;
+  if (
+    parts.length !== 3 ||
+    !/^\d{1,16}$/.test(parts[0]) ||
+    !/^[A-Za-z0-9_-]{16}$/.test(parts[1])
+  ) {
+    return { age: Number.NaN };
   }
-  return at - Number(parts[0]);
+  const expected = Buffer.from(signToken(parts[0], parts[1]));
+  const given = Buffer.from(parts[2]);
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+    return { age: Number.NaN };
+  }
+  const stamp = Number(parts[0]);
+  return { age: at - stamp, stamp, nonce: parts[1] };
 }
 
 // The transport timeouts each cover one phase or one quiet stretch, so a mail
@@ -139,7 +170,10 @@ function withDeadline(promise, ms) {
 async function notify(row) {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) return false;
+  if (!user || !pass) {
+    console.error("contact: GMAIL_USER or GMAIL_APP_PASSWORD is not set, no mail sent");
+    return false;
+  }
   // The visitor's browser gives up after 20 s, and the mail is awaited before
   // the answer. With nodemailer's defaults (2 min to connect, 30 s for the
   // greeting, 10 min of silence) a slow Gmail turned a stored message into
@@ -180,10 +214,9 @@ export default async function handler(req, res) {
   // The form asks for this when it mounts and sends it back with the message,
   // so the fill time is measured on the server's clock alone.
   if (req.method === "GET") {
-    const stamp = String(Date.now());
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({
-      token: `${stamp}.${signStamp(stamp)}`,
+      token: issueToken(Date.now()),
       minAgeMs: MIN_FILL_MS,
       maxAgeMs: TOKEN_MAX_AGE_MS,
     });
@@ -244,7 +277,8 @@ export default async function handler(req, res) {
   // is the age of the signed token from GET, on this server's clock: a time
   // the visitor's browser reports can say anything. A token younger than a
   // person types, or one stamped ahead of this clock, counts as a bot.
-  const age = tokenAge(body.token, Date.now());
+  const token = readToken(body.token, Date.now());
+  const age = token ? token.age : null;
   const tooFast = age !== null && age < MIN_FILL_MS;
   if ((typeof body.website === "string" && body.website.trim() !== "") || tooFast) {
     return res.status(200).json({ ok: true });
@@ -253,7 +287,7 @@ export default async function handler(req, res) {
   // fetches a fresh one before it sends, so this is a page loaded before the
   // token existed, or a form left open too long: the answer is the general
   // failure, which points to the mail link, and the next try gets a new token.
-  if (age === null || !(age <= TOKEN_MAX_AGE_MS)) {
+  if (!token || !(age <= TOKEN_MAX_AGE_MS)) {
     return res.status(403).json({ error: "Form expired" });
   }
 
@@ -277,52 +311,46 @@ export default async function handler(req, res) {
 
   const ip = clientIp(req);
   const capKey = ip ? capHash(ip) : null;
-  row.ip_hash = process.env.CONTACT_HASH_SECRET ? capKey : null;
   row.created_at = new Date().toISOString();
 
   try {
-    // A cap that cannot be checked refuses the message: unchecked, a flood
-    // would spend the store's monthly writes. The form shows its general
-    // failure, which points to the mail link.
+    // The slot and the message are one write. A cap that cannot be checked
+    // refuses the message: unchecked, a flood would spend the store's monthly
+    // writes. The form shows its general failure, which points to the mail
+    // link.
     let slot;
     try {
-      slot = await takeSlot(capKey);
+      slot = await takeSlot({
+        ipHash: capKey,
+        nonce: token.nonce,
+        stamp: token.stamp,
+        row,
+        signal: AbortSignal.timeout(STORE_DEADLINE_MS()),
+      });
     } catch (err) {
-      console.error("contact: rate cap failed", err);
+      console.error("contact: store failed", err);
       slot = "failed";
     }
-    if (slot === "address") {
-      return res.status(429).json({ error: "Too many messages, try again later" });
+    // This token already stored its message: a resend after a lost answer, or
+    // a replay. Nothing new is stored or mailed, and the form shows it as sent.
+    if (slot === "sent") {
+      return res.status(200).json({ ok: true });
     }
-    // The site-wide ceiling keeps a flood from many addresses inside the
-    // store's monthly operations. The form shows its general failure for
-    // this, as for a cap it could not check, which points to the mail link.
+    // Both caps get one plain answer: the form is full for today and the mail
+    // link still works.
+    if (slot === "address" || slot === "day") {
+      return res.status(429).json({ error: "Full for today", reason: slot });
+    }
     if (slot !== "ok") {
       return res.status(503).json({ error: "Not taking messages right now" });
     }
 
-    let stored;
-    try {
-      stored = await saveMessage(row);
-    } catch (err) {
-      console.error("contact: store failed", err);
-      return res.status(502).json({ error: "Could not store the message" });
-    }
-
     // The stored message is the record; the mail is a courtesy. A mail failure
     // must not turn a stored message into an error the visitor sees.
-    let mailed = false;
     try {
-      mailed = await withDeadline(notify(row), MAIL_DEADLINE_MS());
+      await withDeadline(notify(row), MAIL_DEADLINE_MS());
     } catch (err) {
       console.error("contact: notification failed", err);
-    }
-    if (mailed) {
-      try {
-        await markNotified(stored, row);
-      } catch (err) {
-        console.error("contact: could not mark the message as mailed", err);
-      }
     }
 
     return res.status(200).json({ ok: true });

@@ -21,9 +21,10 @@ type PutOptions = {
   ifMatch?: string;
   contentType?: string;
   cacheControlMaxAge?: number;
+  abortSignal?: AbortSignal;
 };
 
-type GetOptions = { access?: string; useCache?: boolean };
+type GetOptions = { access?: string; useCache?: boolean; abortSignal?: AbortSignal };
 
 const created = {
   entries: new Map<string, Entry>(),
@@ -34,10 +35,14 @@ const created = {
   putError: null as Error | null,
   /** Throws this error from every read while set. */
   getError: null as Error | null,
+  /** Thrown once, right after the next put commits: an answer that got lost. */
+  afterPutError: null as Error | null,
   /** Runs once, right before the next put commits. */
   beforePut: null as null | ((pathname: string) => void),
   /** When set, waits are skipped so a test controls the order itself. */
   instant: false,
+  /** When set, every call waits this long, the way a slow store answers. */
+  delayMs: 0,
   reset() {
     this.entries.clear();
     this.cached.clear();
@@ -46,7 +51,9 @@ const created = {
     this.putError = null;
     this.getError = null;
     this.beforePut = null;
+    this.afterPutError = null;
     this.instant = false;
+    this.delayMs = 0;
   },
   /** Writes a document directly, the way another request would. */
   write(pathname: string, body: string) {
@@ -68,10 +75,23 @@ const created = {
 const shared = globalThis as { contactFakeBlob?: typeof created };
 export const blobStore = (shared.contactFakeBlob ??= created);
 
-const pause = () =>
-  blobStore.instant
-    ? Promise.resolve()
-    : new Promise((r) => setTimeout(r, 2 + Math.random() * 18));
+// Like the real client, an aborted signal ends the call with its reason.
+const pause = (signal?: AbortSignal) => {
+  signal?.throwIfAborted();
+  const ms = blobStore.delayMs || (blobStore.instant ? 0 : 2 + Math.random() * 18);
+  if (!ms) return Promise.resolve();
+  return new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      signal?.removeEventListener("abort", stop);
+      resolve();
+    }, ms);
+    const stop = () => {
+      clearTimeout(timer);
+      reject(signal?.reason);
+    };
+    signal?.addEventListener("abort", stop, { once: true });
+  });
+};
 
 export async function put(pathname: string, body: string, options: PutOptions) {
   blobStore.ops.advanced += 1;
@@ -81,7 +101,7 @@ export async function put(pathname: string, body: string, options: PutOptions) {
   if (options.ifMatch !== undefined && options.allowOverwrite === false) {
     throw new BlobError("ifMatch and allowOverwrite: false are contradictory.");
   }
-  await pause();
+  await pause(options.abortSignal);
   if (blobStore.putError) throw blobStore.putError;
   const hook = blobStore.beforePut;
   if (hook) {
@@ -101,6 +121,11 @@ export async function put(pathname: string, body: string, options: PutOptions) {
   blobStore.version += 1;
   const etag = `"v${blobStore.version}"`;
   blobStore.entries.set(pathname, { body, etag, access: options.access });
+  const lost = blobStore.afterPutError;
+  if (lost) {
+    blobStore.afterPutError = null;
+    throw lost;
+  }
   return { pathname, etag, url: `https://blob.test/${pathname}` };
 }
 
@@ -109,7 +134,7 @@ export async function get(pathname: string, options: GetOptions) {
   if (options?.access !== "private") {
     throw new BlobError("The contact store only holds private blobs.");
   }
-  await pause();
+  await pause(options.abortSignal);
   if (blobStore.getError) throw blobStore.getError;
   let entry = blobStore.entries.get(pathname);
   if (options.useCache !== false) {
