@@ -5,7 +5,6 @@ import { useLanguage } from "@/lib/language-context";
 import {
   createBreadcrumbSchema,
   createFAQSchema,
-  createHowToSchema,
   createSpeakableSchema,
   getOgLocale,
 } from "@/lib/seo-utils";
@@ -31,7 +30,6 @@ export function SEO({
   structuredData,
   geoLocation,
   faqSchema,
-  howToSchema,
   citationLinks,
   speakableSelectors,
 }: SEOProps) {
@@ -79,14 +77,6 @@ export function SEO({
   const faqSchemaData = createFAQSchema(faqSchema || [], citationLinks);
   if (faqSchemaData) {
     allStructuredData.push(faqSchemaData);
-  }
-
-  // HowTo schema
-  if (howToSchema) {
-    const howToSchemaData = createHowToSchema(howToSchema, citationLinks);
-    if (howToSchemaData) {
-      allStructuredData.push(howToSchemaData);
-    }
   }
 
   // Article schema for article-type pages

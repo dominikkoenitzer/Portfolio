@@ -1,5 +1,5 @@
 import type { Language } from "@/config/languages";
-import type { FAQItem, HowToSchema } from "@/types/seo";
+import type { FAQItem, ServiceProcess } from "@/types/seo";
 import type { LocaleRecord } from "./types";
 
 export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
@@ -134,11 +134,8 @@ export const SERVICES_FAQS: LocaleRecord<FAQItem[]> = {
   ],
 };
 
-export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
+export const SERVICES_PROCESS: LocaleRecord<ServiceProcess> = {
   en: {
-    name: "How to Hire Dominik Könitzer for Web Development Services",
-    description:
-      "Step-by-step guide to engaging Dominik Könitzer for software engineering and web development services",
     step: [
       {
         name: "Pick what you need",
@@ -163,9 +160,6 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
     ],
   },
   de: {
-    name: "Wie du Dominik Könitzer für Webentwicklungs-Leistungen engagierst",
-    description:
-      "Schritt-für-Schritt-Anleitung, um Dominik Könitzer für Software-Engineering- und Webentwicklungs-Leistungen zu beauftragen",
     step: [
       {
         name: "Aussuchen, was du brauchst",
@@ -190,9 +184,6 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
     ],
   },
   fr: {
-    name: "Comment engager Dominik Könitzer pour des services de développement web",
-    description:
-      "Guide étape par étape pour faire appel à Dominik Könitzer pour des services d'ingénierie logicielle et de développement web",
     step: [
       {
         name: "Choisissez ce qu'il vous faut",
@@ -217,8 +208,6 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
     ],
   },
   zh: {
-    name: "如何聘请 Dominik Könitzer 提供网页开发服务",
-    description: "聘请 Dominik Könitzer 进行软件工程与网页开发服务的分步指南",
     step: [
       {
         name: "挑出你需要的",
@@ -246,5 +235,5 @@ export const SERVICES_HOW_TO: LocaleRecord<HowToSchema> = {
 
 export const getServicesFaqs = (lang: Language) =>
   SERVICES_FAQS[lang] ?? SERVICES_FAQS.en;
-export const getServicesHowTo = (lang: Language) =>
-  SERVICES_HOW_TO[lang] ?? SERVICES_HOW_TO.en;
+export const getServicesProcess = (lang: Language) =>
+  SERVICES_PROCESS[lang] ?? SERVICES_PROCESS.en;

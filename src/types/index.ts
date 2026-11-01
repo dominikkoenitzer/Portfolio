@@ -36,7 +36,7 @@ export type {
   CitationLink,
   FAQItem,
   GeoLocation,
-  HowToSchema,
-  HowToStep,
+  ProcessStep,
   SEOProps,
+  ServiceProcess,
 } from "./seo";

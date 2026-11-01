@@ -14,16 +14,14 @@ export interface FAQItem {
   answer: string;
 }
 
-export interface HowToStep {
+export interface ProcessStep {
   name: string;
   text: string;
   image?: string;
 }
 
-export interface HowToSchema {
-  name: string;
-  description: string;
-  step: HowToStep[];
+export interface ServiceProcess {
+  step: ProcessStep[];
 }
 
 export interface CitationLink {
@@ -49,7 +47,6 @@ export interface SEOProps {
   structuredData?: object | object[];
   geoLocation?: GeoLocation;
   faqSchema?: FAQItem[];
-  howToSchema?: HowToSchema;
   citationLinks?: CitationLink[];
   /**
    * CSS selectors for content that voice assistants / AEO engines should read aloud.

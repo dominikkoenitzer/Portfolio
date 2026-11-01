@@ -37,7 +37,7 @@ import {
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Button } from "@/components/ui/button";
-import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
+import { getServicesFaqs, getServicesProcess } from "@/config/seo-data";
 import { useTheme } from "@/hooks/use-theme";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
@@ -314,9 +314,9 @@ export function ServicesSection() {
   const siteTheme = useTheme();
   const designTheme = SITE_SERVICE_TREE_THEME[siteTheme];
   const reduceMotion = useReducedMotion();
-  // Same source the page's JSON-LD is built from, rendered here so the
+  const steps = getServicesProcess(language).step;
+  // Same source the page's FAQ JSON-LD is built from, rendered here so the
   // visible content and the structured data can't drift apart.
-  const howTo = getServicesHowTo(language);
   const faqs = getServicesFaqs(language);
   // The tree's decorative accents are unreadable as small text on the light
   // page (a pastel on cream is under 2:1), so words use the text set for the
@@ -712,7 +712,7 @@ export function ServicesSection() {
             {t.processTitle}
           </motion.h2>
           <ol className="mt-8 max-w-lg space-y-7 lg:max-w-none">
-            {howTo.step.map((step, i) => (
+            {steps.map((step, i) => (
               <motion.li
                 className="flex gap-4"
                 key={step.name}
