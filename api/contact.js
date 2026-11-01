@@ -213,21 +213,22 @@ export default async function handler(req, res) {
   row.created_at = new Date().toISOString();
 
   try {
-    // A failed cap lets the message through, on purpose: a lost enquiry costs
-    // more than a rare extra one. It is logged, so a cap that stopped working
-    // does not go unnoticed.
-    let slot = "ok";
+    // A cap that cannot be checked refuses the message: unchecked, a flood
+    // would spend the store's monthly writes. The form shows its general
+    // failure, which points to the mail link.
+    let slot;
     try {
       slot = await takeSlot(row.ip_hash, CAPS);
     } catch (err) {
       console.error("contact: rate cap failed", err);
+      slot = "failed";
     }
     if (slot === "address") {
       return res.status(429).json({ error: "Too many messages, try again later" });
     }
     // The site-wide ceiling keeps a flood from many addresses inside the
     // store's monthly operations. The form shows its general failure for
-    // this, which points to the mail link.
+    // this, as for a cap it could not check, which points to the mail link.
     if (slot !== "ok") {
       return res.status(503).json({ error: "Not taking messages right now" });
     }

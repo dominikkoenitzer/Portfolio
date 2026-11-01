@@ -121,15 +121,29 @@ describe("contact API hourly cap", () => {
 });
 
 describe("contact API when the store fails", () => {
-  it("lets the message through when the cap cannot be read", async () => {
+  it("refuses the message with the general failure when the cap cannot be read", async () => {
     blobStore.getError = new Error("store unreachable");
     const reply = await post(message());
-    expect(reply.status).toBe(200);
-    expect(stored()).toHaveLength(1);
+    // Not 429 and not 400, so the form shows the toast that points to the
+    // mail link.
+    expect(reply.status).toBe(503);
+    expect(stored()).toHaveLength(0);
+    expect(blobStore.ops.advanced).toBe(0);
+  });
+
+  it("refuses the message when the cap cannot be written", async () => {
+    blobStore.write("contact/limits/day.json", JSON.stringify({ count: 0, addresses: {} }));
+    blobStore.putError = new Error("store unreachable");
+    const reply = await post(message());
+    expect(reply.status).toBe(503);
+    expect(stored()).toHaveLength(0);
   });
 
   it("answers 502 when the message cannot be stored", async () => {
-    blobStore.putError = new Error("store unreachable");
+    // The cap write goes through; every write after it fails.
+    blobStore.beforePut = () => {
+      blobStore.putError = new Error("store unreachable");
+    };
     const reply = await post(message());
     expect(reply.status).toBe(502);
     expect(reply.body).toEqual({ error: "Could not store the message" });
