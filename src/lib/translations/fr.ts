@@ -363,7 +363,7 @@ export const fr = {
       sentBody: "Merci, bien reçu. Je réponds généralement dans la journée.",
       sendAnother: "Envoyer un autre message",
       failed: "Ça n'est pas passé. Réessayez, ou écrivez-moi directement.",
-      tooMany: "Beaucoup de messages depuis votre connexion. Réessayez dans une heure, ou écrivez-moi directement.",
+      full: "Le formulaire est complet pour aujourd'hui. Écrivez-moi directement.",
       fieldEmpty: "Ce champ ne peut pas être vide.",
       emailInvalid: "Cette adresse semble incomplète. Une faute de frappe ?",
       orDirect: "Ou écrivez-moi directement :",

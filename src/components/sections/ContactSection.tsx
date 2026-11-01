@@ -19,6 +19,7 @@ import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+import { timeoutSignal } from "@/lib/timeout-signal";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "../layout/SectionHeading";
 
@@ -167,7 +168,7 @@ async function requestToken(): Promise<FormToken | null> {
   try {
     const res = await fetch("/api/contact", {
       cache: "no-store",
-      signal: AbortSignal.timeout(20000),
+      signal: timeoutSignal(20000),
     });
     if (!res.ok) return null;
     const body: unknown = await res.json();
@@ -303,7 +304,7 @@ export function ContactSection() {
   // keyboard visitor was left at the top of the document with no way back to
   // the form but to tab through the whole page again.
   const submitRef = useRef<HTMLButtonElement>(null);
-  const againRef = useRef<HTMLButtonElement>(null);
+  const sentRef = useRef<HTMLParagraphElement>(null);
   // Not a bare `.focus()`: at the moment the failure branch runs, React has not
   // re-rendered yet, so the button is still `disabled` and focusing it does
   // nothing at all. The next animation frame was not reliably after the commit
@@ -369,7 +370,10 @@ export function ContactSection() {
       return;
     }
     setStatus("sending");
-    try {
+    // Each token carries one message. `fresh` drops the one held, for a retry
+    // after the API refused it.
+    const send = async (fresh: boolean) => {
+      if (fresh) token.current = null;
       let form = await (token.current ??= requestToken());
       // A tab left open for hours holds a token the API no longer takes, and
       // a token that failed to load is no token: ask again, an hour early.
@@ -385,13 +389,13 @@ export function ContactSection() {
       if (wait > 0) {
         await new Promise((resolve) => window.setTimeout(resolve, wait));
       }
-      const res = await fetch("/api/contact", {
+      return fetch("/api/contact", {
         method: "POST",
         // Without a deadline a hung request parked the button on "Sending…"
         // forever: disabled, focus dropped, and no way to try again short of
         // reloading and retyping. An abort lands in the catch below, which
         // already restores the button, the focus and the typed message.
-        signal: AbortSignal.timeout(20000),
+        signal: timeoutSignal(20000),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
@@ -404,6 +408,12 @@ export function ContactSection() {
           token: form.value,
         }),
       });
+    };
+    try {
+      let res = await send(false);
+      // A refused token expired while the laptop slept or was spent by an
+      // earlier message: one more try with a new one, unseen by the visitor.
+      if (res.status === 403) res = await send(true);
       if (res.status === 400) {
         // The API names the fields it refused; anything else it says about a
         // 400 is not the visitor's to fix, and falls through to the toast.
@@ -423,19 +433,24 @@ export function ContactSection() {
         }
       }
       if (!res.ok) {
-        // The API refused the token, so the next try fetches a new one.
+        // The API refused the token, so the next try fetches a new one. Any
+        // other failure keeps it: a resend with the same token is stored once.
         if (res.status === 403) token.current = null;
         toast({
           closeLabel: t.closeNotice,
-          title: res.status === 429 ? t.form.tooMany : t.form.failed,
+          title: res.status === 429 ? t.form.full : t.form.failed,
           variant: "destructive",
         });
         restoreFocus();
         setStatus("idle");
         return;
       }
-      // The form, and the focused button with it, is gone once the confirmation shows.
-      afterSend.current = () => againRef.current?.focus();
+      // The token is spent; the next message needs a new one.
+      token.current = requestToken();
+      // The form, and the focused button with it, is gone once the
+      // confirmation shows. Focus goes to its title, so a screen reader reads
+      // "Sent." instead of only the button, and Tab reaches the button next.
+      afterSend.current = () => sentRef.current?.focus();
       setStatus("sent");
     } catch {
       toast({
@@ -619,14 +634,19 @@ export function ContactSection() {
                   />
                 </svg>
               </span>
-              <p className="font-semibold text-lg">{t.form.sentTitle}</p>
+              <p
+                className="font-semibold text-lg focus:outline-hidden"
+                ref={sentRef}
+                tabIndex={-1}
+              >
+                {t.form.sentTitle}
+              </p>
               <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
                 {t.form.sentBody}
               </p>
               <Button
                 className="mt-6 rounded-lg"
                 onClick={reset}
-                ref={againRef}
                 type="button"
                 variant="outline"
               >

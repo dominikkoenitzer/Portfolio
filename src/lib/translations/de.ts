@@ -365,7 +365,7 @@ export const de = {
       sentBody: "Danke, ist angekommen. Ich antworte normalerweise innerhalb eines Tages.",
       sendAnother: "Noch eine Nachricht senden",
       failed: "Das hat nicht geklappt. Versuch es nochmals oder schreib mir direkt.",
-      tooMany: "Das sind viele Nachrichten von deinem Anschluss. Versuch es in einer Stunde nochmals oder schreib mir direkt.",
+      full: "Das Formular ist für heute voll. Schreib mir direkt.",
       fieldEmpty: "Das darf nicht leer sein.",
       emailInvalid: "Die Adresse sieht unvollständig aus. Vielleicht ein Tippfehler?",
       orDirect: "Oder schreib mir direkt:",
