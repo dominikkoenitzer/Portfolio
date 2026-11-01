@@ -377,8 +377,16 @@ test.describe("keyboard", () => {
   test("focus stays with the contact form through a send and the next one", async ({
     page,
   }) => {
+    // GET hands out the form token, POST takes the message.
     await page.route("**/api/contact", (route) =>
-      route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' }),
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body:
+          route.request().method() === "GET"
+            ? '{"token":"t","minAgeMs":0,"maxAgeMs":21600000}'
+            : '{"ok":true}',
+      }),
     );
     await page.goto("/contact");
     await expectRendered(page);

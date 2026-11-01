@@ -1,29 +1,33 @@
-import { createHmac, randomBytes } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import nodemailer from "nodemailer";
 import { createCap, markNotified, saveMessage } from "./_contact-store.js";
 
 /**
- * POST /api/contact
+ * GET and POST /api/contact
  *
- * Takes the contact form, stores the message in a private Vercel Blob store
- * and mails it to Dominik. The browser only ever talks to this same-origin
- * route: the store token and the mail credentials live in the server
- * environment, so the CSP stays same-origin and nothing secret reaches the
- * client bundle.
+ * GET hands the form a signed start time. POST takes the contact form, stores
+ * the message in a private Vercel Blob store and mails it to Dominik. The
+ * browser only ever talks to this same-origin route: the store token and the
+ * mail credentials live in the server environment, so the CSP stays
+ * same-origin and nothing secret reaches the client bundle.
  *
  * Environment (Vercel project settings, `.env.local` for `vite dev`):
  *   BLOB_READ_WRITE_TOKEN                      required, set by the linked store
  *   GMAIL_USER, GMAIL_APP_PASSWORD             optional, the notification mail
  *   CONTACT_TO                                 optional, defaults to GMAIL_USER
- *   CONTACT_HASH_SECRET                        keys the stored address hash
+ *   CONTACT_HASH_SECRET                        signs the form token and keys
+ *                                              the stored address hash
  *
- * Spam: a honeypot field, a minimum fill time, a cap per address and hour
- * (a /64 for IPv6) and a ceiling on the messages stored per day. Bots that
- * trip the first two get a 200 with nothing stored, so they learn nothing.
+ * Spam: a honeypot field, a minimum fill time measured on the server, a cap
+ * per address and hour (a /64 for IPv6), and a ceiling on the messages stored
+ * per day. Bots that trip the first two get a 200 with nothing stored, so
+ * they learn nothing.
  */
 
 const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 };
 const MIN_FILL_MS = 3000;
+// A form left open longer than this asks for a new token before it sends.
+const TOKEN_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 // Five messages an hour per address and eleven stored per Zurich day for the
 // whole site. An accepted message takes three writes, so a 31-day month takes
 // at most 1,023 of the 2,000 the Hobby plan allows. A conditional write that
@@ -86,8 +90,8 @@ function addressKey(ip) {
     .join(":")}::/64`;
 }
 
-// Without CONTACT_HASH_SECRET the cap uses a key that lasts as long as this
-// process.
+// Without CONTACT_HASH_SECRET, the token and the cap use a key that lasts as
+// long as this process.
 const PROCESS_KEY = randomBytes(32);
 const serverKey = () => process.env.CONTACT_HASH_SECRET || PROCESS_KEY;
 
@@ -97,6 +101,27 @@ const serverKey = () => process.env.CONTACT_HASH_SECRET || PROCESS_KEY;
 // keyed hash; the message keeps one only when the key is the lasting secret,
 // since a hash under a key that died with its process links nothing.
 const capHash = (ip) => createHmac("sha256", serverKey()).update(addressKey(ip)).digest("hex");
+
+const signStamp = (stamp) =>
+  createHmac("sha256", serverKey())
+    .update(`contact-form:${stamp}`)
+    .digest("base64url");
+
+/**
+ * How long ago, on this server's clock, the token was handed out. Null for no
+ * token at all, NaN for one this server did not sign.
+ */
+function tokenAge(token, at) {
+  if (typeof token !== "string" || token === "") return null;
+  const parts = token.split(".");
+  if (parts.length !== 2 || !/^\d{1,16}$/.test(parts[0])) return Number.NaN;
+  const expected = Buffer.from(signStamp(parts[0]));
+  const given = Buffer.from(parts[1]);
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
+    return Number.NaN;
+  }
+  return at - Number(parts[0]);
+}
 
 // The transport timeouts each cover one phase or one quiet stretch, so a mail
 // server that answers slowly but steadily could still hold the answer past the
@@ -152,8 +177,19 @@ async function notify(row) {
 }
 
 export default async function handler(req, res) {
+  // The form asks for this when it mounts and sends it back with the message,
+  // so the fill time is measured on the server's clock alone.
+  if (req.method === "GET") {
+    const stamp = String(Date.now());
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({
+      token: `${stamp}.${signStamp(stamp)}`,
+      minAgeMs: MIN_FILL_MS,
+      maxAgeMs: TOKEN_MAX_AGE_MS,
+    });
+  }
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed" });
   }
 
@@ -204,25 +240,21 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid body" });
   }
 
-  // Honeypot and timing: answer as if it worked, store nothing.
-  // Both gates used to be skippable by leaving the field out, which is the first
-  // thing a bot does, so a missing or unreadable time now counts as one.
-  // The form sends `fillMs`, the fill time measured on the visitor's own
-  // clock. Subtracting their absolute `startedAt` from the server's clock
-  // mixed two clocks: one running a minute ahead turned 61.5 s of typing into
-  // 1.5 s, and a real message was thrown away behind a "Sent." `startedAt` is
-  // still read from a page loaded before the form sent `fillMs`.
-  const tooFast = (() => {
-    if (body.fillMs !== undefined) {
-      const fillMs = Number(body.fillMs);
-      return !Number.isFinite(fillMs) || fillMs < MIN_FILL_MS;
-    }
-    const startedAt = Number(body.startedAt);
-    const elapsed = Date.now() - startedAt;
-    return !Number.isFinite(startedAt) || (elapsed >= 0 && elapsed < MIN_FILL_MS);
-  })();
+  // Honeypot and timing: answer as if it worked, store nothing. The fill time
+  // is the age of the signed token from GET, on this server's clock: a time
+  // the visitor's browser reports can say anything. A token younger than a
+  // person types, or one stamped ahead of this clock, counts as a bot.
+  const age = tokenAge(body.token, Date.now());
+  const tooFast = age !== null && age < MIN_FILL_MS;
   if ((typeof body.website === "string" && body.website.trim() !== "") || tooFast) {
     return res.status(200).json({ ok: true });
+  }
+  // No token, one this server did not sign, or one past its time. The form
+  // fetches a fresh one before it sends, so this is a page loaded before the
+  // token existed, or a form left open too long: the answer is the general
+  // failure, which points to the mail link, and the next try gets a new token.
+  if (age === null || !(age <= TOKEN_MAX_AGE_MS)) {
+    return res.status(403).json({ error: "Form expired" });
   }
 
   const row = {

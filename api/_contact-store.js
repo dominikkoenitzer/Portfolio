@@ -10,7 +10,7 @@ import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
  * accepted message costs one read and two or three puts: the cap, the message
  * and, once the mail is out, the message again with `notified_at`. A refusal
  * the instance already knows of costs nothing, any other refusal the read
- * alone. Bots caught by the honeypot or the fill time never reach this file.
+ * alone. Bots caught by the honeypot or the form token never reach this file.
  */
 
 const HOUR_MS = 60 * 60 * 1000;

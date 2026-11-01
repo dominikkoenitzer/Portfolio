@@ -358,6 +358,29 @@ describe("contact store messages", () => {
 
 type Reply = { status: number; body: unknown };
 
+/**
+ * A form token as the GET hands it out `ageMs` ago, on the server's clock.
+ * The GET answers before its first await, so the clock is only moved for it.
+ */
+async function formToken(ageMs = 60_000): Promise<string> {
+  const reply = { body: null as unknown };
+  const res = {
+    json(payload: unknown) {
+      reply.body = payload;
+      return res;
+    },
+    setHeader() {},
+    status() {
+      return res;
+    },
+  };
+  const at = Date.now() - ageMs;
+  const clock = vi.spyOn(Date, "now").mockReturnValue(at);
+  await handler({ headers: {}, method: "GET" }, res);
+  clock.mockRestore();
+  return (reply.body as { token: string }).token;
+}
+
 async function post(extra: object = {}, ip = "203.0.113.7"): Promise<Reply> {
   const reply: Reply = { body: null, status: 0 };
   const res = {
@@ -371,6 +394,7 @@ async function post(extra: object = {}, ip = "203.0.113.7"): Promise<Reply> {
       return res;
     },
   };
+  const token = await formToken();
   await handler(
     {
       body: {
@@ -379,7 +403,7 @@ async function post(extra: object = {}, ip = "203.0.113.7"): Promise<Reply> {
         language: "en",
         message: "Hello, a real message.",
         name: "Ann",
-        fillMs: 60_000,
+        token,
         subject: "Role",
         website: "",
         ...extra,
@@ -451,7 +475,8 @@ describe("contact store operations per request", () => {
 
   it("spends nothing on a bot", async () => {
     await post({ website: "https://spam.example" });
-    await post({ fillMs: 500 });
+    await post({ token: undefined });
+    await post({ token: await formToken(500) });
     expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
   });
 

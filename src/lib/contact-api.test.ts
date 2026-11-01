@@ -36,24 +36,51 @@ let blobStore: (typeof import("./fake-blob"))["blobStore"];
 
 const stored = () => blobStore.list("contact/messages/");
 
-type Reply = { status: number; body: unknown };
+type Reply = { status: number; body: unknown; headers: Record<string, string> };
 
-async function post(body: object, ip = "203.0.113.7"): Promise<Reply> {
-  const reply: Reply = { body: null, status: 200 };
+/**
+ * A form token as the GET hands it out `ageMs` ago, on the server's clock.
+ * The GET answers before its first await, so the clock is only moved for it.
+ */
+async function formToken(ageMs = 60_000): Promise<string> {
+  const reply = { body: null as unknown };
   const res = {
     json(payload: unknown) {
       reply.body = payload;
       return res;
     },
     setHeader() {},
+    status() {
+      return res;
+    },
+  };
+  const at = Date.now() - ageMs;
+  const clock = vi.spyOn(Date, "now").mockReturnValue(at);
+  await handler({ headers: {}, method: "GET" }, res);
+  clock.mockRestore();
+  return (reply.body as { token: string }).token;
+}
+
+/** Posts the form; a body without a `token` key gets a minute-old one. */
+async function post(body: object, ip = "203.0.113.7"): Promise<Reply> {
+  const reply: Reply = { body: null, headers: {}, status: 200 };
+  const res = {
+    json(payload: unknown) {
+      reply.body = payload;
+      return res;
+    },
+    setHeader(name: string, value: string) {
+      reply.headers[name] = value;
+    },
     status(code: number) {
       reply.status = code;
       return res;
     },
   };
+  const token = "token" in body ? {} : { token: await formToken() };
   await handler(
     {
-      body,
+      body: { ...token, ...body },
       headers: {
         "content-type": "application/json",
         host: "dk.punds.ch",
@@ -73,7 +100,6 @@ const message = (extra: object = {}) => ({
   language: "en",
   message: "Hello, a real message.",
   name: "Ann",
-  startedAt: Date.now() - 60_000,
   subject: "Role",
   website: "",
   ...extra,
@@ -176,29 +202,80 @@ describe("contact API when the store fails", () => {
   });
 });
 
-describe("contact API fill-time gate", () => {
-  it("keeps a real message from a visitor whose clock runs a minute ahead", async () => {
-    // 61.5 s of typing on a clock 60 s fast: the absolute timestamp says 1.5 s.
-    const reply = await post(
-      message({ fillMs: 61_500, startedAt: Date.now() - 1_500 }),
-    );
+describe("contact API form token", () => {
+  it("hands out a signed start time that no cache keeps", async () => {
+    const reply: Reply = { body: null, headers: {}, status: 0 };
+    const res = {
+      json(payload: unknown) {
+        reply.body = payload;
+        return res;
+      },
+      setHeader(name: string, value: string) {
+        reply.headers[name] = value;
+      },
+      status(code: number) {
+        reply.status = code;
+        return res;
+      },
+    };
+    await handler({ headers: {}, method: "GET" }, res);
+    expect(reply.status).toBe(200);
+    expect(reply.headers["Cache-Control"]).toBe("no-store");
+    expect(reply.body).toMatchObject({ minAgeMs: 3_000, maxAgeMs: 6 * 60 * 60 * 1000 });
+    expect((reply.body as { token: string }).token).toMatch(/^\d+\.[\w-]+$/);
+  });
+
+  it("keeps a message sent with a token older than a person needs to type", async () => {
+    const reply = await post(message({ token: await formToken(3_000) }));
     expect(reply.status).toBe(200);
     expect(stored()).toHaveLength(1);
   });
 
-  it("drops a form filled faster than a person types", async () => {
-    await post(message({ fillMs: 1_500 }));
+  it("drops a message sent faster than a person types", async () => {
+    const reply = await post(message({ token: await formToken(2_000) }));
+    expect(reply.status).toBe(200);
     expect(stored()).toHaveLength(0);
   });
 
-  it("drops an unreadable fill time", async () => {
-    await post(message({ fillMs: "soon" }));
-    await post(message({ fillMs: null }));
+  it("drops a token stamped in the future", async () => {
+    const reply = await post(message({ token: await formToken(-60_000) }));
+    expect(reply.status).toBe(200);
     expect(stored()).toHaveLength(0);
   });
 
-  it("drops a message with no timing at all", async () => {
-    await post(message({ startedAt: undefined }));
+  it("refuses a message without a token, whatever fill time the browser reports", async () => {
+    // A page loaded before the token existed sends none: the general failure
+    // points that visitor to the mail link instead of a "Sent." for nothing.
+    const replies = [
+      await post(message({ token: undefined })),
+      await post(message({ token: "" })),
+      await post(message({ token: undefined, fillMs: 60_000 })),
+      await post(message({ token: undefined, startedAt: Date.now() - 60_000 })),
+    ];
+    expect(replies.map((r) => r.status)).toEqual([403, 403, 403, 403]);
+    expect(stored()).toHaveLength(0);
+    expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
+  });
+
+  it("refuses a token older than six hours", async () => {
+    const reply = await post(message({ token: await formToken(6 * 60 * 60 * 1000 + 1) }));
+    expect(reply.status).toBe(403);
+    expect(stored()).toHaveLength(0);
+  });
+
+  it("refuses a token this server did not sign", async () => {
+    const stamp = Date.now() - 60_000;
+    const forged = [`${stamp}.${"A".repeat(43)}`, `${stamp}`, "token", `${stamp}.x.y`];
+    for (const token of forged) {
+      expect((await post(message({ token }))).status).toBe(403);
+    }
+    vi.stubEnv("CONTACT_HASH_SECRET", "another-secret");
+    const other = await formToken();
+    vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
+    expect((await post(message({ token: other }))).status).toBe(403);
+    // The time is part of what is signed, so it cannot be moved back.
+    const [, signature] = (await formToken(0)).split(".");
+    expect((await post(message({ token: `${stamp}.${signature}` }))).status).toBe(403);
     expect(stored()).toHaveLength(0);
   });
 });
@@ -235,7 +312,7 @@ describe("contact API with a stalled mail server", () => {
       vi.stubEnv("GMAIL_USER", "someone@example.com");
       vi.stubEnv("GMAIL_APP_PASSWORD", "app-password");
       const start = Date.now();
-      const reply = await post(message({ fillMs: 60_000 }));
+      const reply = await post(message());
       expect(reply.status).toBe(200);
       expect(stored()).toHaveLength(1);
       expect(Date.now() - start).toBeLessThan(15_000);

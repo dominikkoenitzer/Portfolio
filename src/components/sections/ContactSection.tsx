@@ -149,6 +149,49 @@ function IntentLabel({ label }: { label: string }) {
   );
 }
 
+const HOUR_MS = 60 * 60 * 1000;
+
+/** The signed start time from `api/contact.js`, and when it arrived. */
+type FormToken = {
+  value: string;
+  minAgeMs: number;
+  maxAgeMs: number;
+  /** `performance.now()` on arrival, for the short wait before a send. */
+  mono: number;
+  /** `Date.now()` on arrival, which keeps counting while a laptop sleeps. */
+  wall: number;
+};
+
+/** Asks the API for a token; null when there is none to be had. */
+async function requestToken(): Promise<FormToken | null> {
+  try {
+    const res = await fetch("/api/contact", {
+      cache: "no-store",
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) return null;
+    const body: unknown = await res.json();
+    if (!body || typeof body !== "object") return null;
+    const { token, minAgeMs, maxAgeMs } = body as Record<string, unknown>;
+    if (
+      typeof token !== "string" ||
+      typeof minAgeMs !== "number" ||
+      typeof maxAgeMs !== "number"
+    ) {
+      return null;
+    }
+    return {
+      value: token,
+      minAgeMs,
+      maxAgeMs,
+      mono: performance.now(),
+      wall: Date.now(),
+    };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * The contact page is one sentence the visitor finishes, then a short form.
  *
@@ -247,15 +290,13 @@ export function ContactSection() {
     [],
   );
 
-  // The form. `startedAt` is when the page mounted, on the page's own
-  // monotonic clock, and the request carries the time since as `fillMs`: the
-  // API drops anything "filled in" faster than a person can type, and
+  // The form. The token is a start time the API signed when the page mounted,
+  // and the request carries it back: the API measures the fill time on its
+  // own clock and drops anything "filled in" faster than a person can type.
   // `website` is the honeypot no person sees. Both are read by
-  // `api/contact.js`. An absolute timestamp compared there against the
-  // server's clock threw away real messages from a visitor whose clock ran
-  // ahead.
+  // `api/contact.js`.
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
-  const startedAt = useRef(0);
+  const token = useRef<Promise<FormToken | null> | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   // Sending disables the button, and disabling the focused element drops focus
   // to <body>. On a failure the toast is the only sign anything happened, and a
@@ -280,7 +321,7 @@ export function ContactSection() {
     run();
   }, [status]);
   useEffect(() => {
-    startedAt.current = performance.now();
+    token.current = requestToken();
   }, []);
 
   // A field the API would refuse is marked the way the browser marks an empty
@@ -329,6 +370,21 @@ export function ContactSection() {
     }
     setStatus("sending");
     try {
+      let form = await (token.current ??= requestToken());
+      // A tab left open for hours holds a token the API no longer takes, and
+      // a token that failed to load is no token: ask again, an hour early.
+      if (!form || Date.now() - form.wall > form.maxAgeMs - HOUR_MS) {
+        token.current = requestToken();
+        form = await token.current;
+      }
+      if (!form) throw new Error("no form token");
+      // The API drops a send that comes sooner after the token than a person
+      // types, so a fresh token waits that long, plus a second for the clocks
+      // of two server instances. Typing a message takes longer than this.
+      const wait = form.minAgeMs + 1000 - (performance.now() - form.mono);
+      if (wait > 0) {
+        await new Promise((resolve) => window.setTimeout(resolve, wait));
+      }
       const res = await fetch("/api/contact", {
         method: "POST",
         // Without a deadline a hung request parked the button on "Sending…"
@@ -345,7 +401,7 @@ export function ContactSection() {
           subject: selected.formSubject ?? selected.subject,
           intent: effectiveIntent,
           language,
-          fillMs: Math.round(performance.now() - startedAt.current),
+          token: form.value,
         }),
       });
       if (res.status === 400) {
@@ -367,6 +423,8 @@ export function ContactSection() {
         }
       }
       if (!res.ok) {
+        // The API refused the token, so the next try fetches a new one.
+        if (res.status === 403) token.current = null;
         toast({
           closeLabel: t.closeNotice,
           title: res.status === 429 ? t.form.tooMany : t.form.failed,
@@ -392,7 +450,6 @@ export function ContactSection() {
 
   const reset = () => {
     formRef.current?.reset();
-    startedAt.current = performance.now();
     afterSend.current = () => {
       const field = formRef.current?.elements.namedItem("name");
       if (field instanceof HTMLInputElement) field.focus();

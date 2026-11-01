@@ -14,6 +14,29 @@ vi.mock("@vercel/blob", () => import("./fake-blob"));
 import handler from "../../api/contact.js";
 import { blobStore } from "./fake-blob";
 
+/**
+ * A form token as the GET hands it out `ageMs` ago, on the server's clock.
+ * The GET answers before its first await, so the clock is only moved for it.
+ */
+async function formToken(ageMs = 60_000): Promise<string> {
+  const reply = { body: null as unknown };
+  const res = {
+    json(payload: unknown) {
+      reply.body = payload;
+      return res;
+    },
+    setHeader() {},
+    status() {
+      return res;
+    },
+  };
+  const at = Date.now() - ageMs;
+  const clock = vi.spyOn(Date, "now").mockReturnValue(at);
+  await handler({ headers: {}, method: "GET" }, res);
+  clock.mockRestore();
+  return (reply.body as { token: string }).token;
+}
+
 beforeEach(() => {
   blobStore.reset();
   vi.stubEnv("GMAIL_USER", "someone@example.com");
@@ -43,6 +66,7 @@ describe("contact API with a mail send that never finishes", () => {
           return res;
         },
       };
+      const token = await formToken();
       const start = Date.now();
       await handler(
         {
@@ -52,8 +76,7 @@ describe("contact API with a mail send that never finishes", () => {
             language: "en",
             message: "Hello, a real message.",
             name: "Ann",
-            fillMs: 60_000,
-            startedAt: Date.now() - 60_000,
+            token,
             subject: "Role",
             website: "",
           },
