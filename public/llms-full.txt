@@ -23,9 +23,6 @@ Zürich, Switzerland. He works remotely with clients in Switzerland and abroad, 
 **What languages does he speak?**
 English (native), German (native), Chinese/Mandarin (fluent), French (basic). The Mandarin comes from four years at the German Embassy School in Beijing.
 
-**Can I hire him for a website?**
-Yes. Freelance services and starting prices are on https://dk.punds.ch/services, from 3'000 CHF for a website relaunch and 4'000 CHF for a new website through to 5'000 CHF and up for custom software, plus hourly and monthly options for support, hosting and security work.
-
 **Where is his CV?**
 https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. Both are static HTML and readable without JavaScript.
 
