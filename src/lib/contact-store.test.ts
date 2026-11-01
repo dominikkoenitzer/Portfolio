@@ -430,7 +430,7 @@ describe("contact store messages", () => {
     blobStore.ops = { simple: 0, advanced: 0 };
     expect(await slot("def", { row: { subject: "Role" } })).toBe("ok");
     expect(blobStore.ops).toEqual({ simple: 1, advanced: 1 });
-    expect(messages().at(-1)).toEqual({ subject: "Role" });
+    expect(messages().slice(-1)).toEqual([{ subject: "Role" }]);
     expect(blobStore.entries.get(LIMITS)?.access).toBe("private");
   });
 
@@ -606,7 +606,7 @@ describe("contact store operations per request", () => {
 
   it("stores and mails a token's message once, however often it is sent", async () => {
     const token = await formToken();
-    const replies = [];
+    const replies: Reply[] = [];
     for (let i = 0; i < 4; i += 1) replies.push(await post({ token }, `198.51.100.${i}`));
     expect(replies.map((r) => r.status)).toEqual([200, 200, 200, 200]);
     expect(messages()).toHaveLength(1);
