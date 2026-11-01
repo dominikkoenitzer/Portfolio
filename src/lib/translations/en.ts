@@ -484,7 +484,7 @@ export const en = {
       description:
         "Software engineering projects by Dominik Könitzer, a Swiss engineer, from web apps to a tiling window manager in Rust, each with a case study.",
       keywords:
-        "software engineer portfolio, web development projects, React TypeScript portfolio, frontend engineer Switzerland, hire software engineer",
+        "software engineer portfolio, web development projects, React TypeScript portfolio, frontend engineer Switzerland",
     },
     services: {
       title: "Web Development & Software Services",
@@ -498,7 +498,7 @@ export const en = {
       description:
         "Contact Dominik Könitzer, a software engineer in Switzerland, for web development projects, freelance work, collaborations, and consulting.",
       keywords:
-        "contact Dominik Könitzer, software engineer contact, web developer contact, hire software engineer, freelance developer Switzerland, software engineering consultation",
+        "contact Dominik Könitzer, software engineer contact, web developer contact, software engineering consultation",
     },
     donate: {
       title: "Support My Software Projects",
