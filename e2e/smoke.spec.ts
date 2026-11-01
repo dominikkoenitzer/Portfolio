@@ -373,6 +373,37 @@ test.describe("keyboard", () => {
       `mailto:${href.pathname}`,
     );
   });
+
+  test("focus stays with the contact form through a send and the next one", async ({
+    page,
+  }) => {
+    // GET hands out the form token, POST takes the message.
+    await page.route("**/api/contact", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body:
+          route.request().method() === "GET"
+            ? '{"token":"t","minAgeMs":0,"maxAgeMs":21600000}'
+            : '{"ok":true}',
+      }),
+    );
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    const name = page.locator('input[name="name"]');
+    await name.fill("Ada");
+    await page.locator('input[name="email"]').fill("ada@example.org");
+    await page.locator('textarea[name="message"]').fill("A short note.");
+    await page.locator('button[type="submit"]').focus();
+    await page.keyboard.press("Enter");
+
+    const again = page.getByRole("button", { name: "Send another message" });
+    await expect(again).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(name).toBeFocused();
+    await expect(name).toHaveValue("");
+  });
 });
 
 test.describe("diagnostics", () => {
