@@ -1,6 +1,6 @@
 import { createHmac, randomBytes } from "node:crypto";
 import nodemailer from "nodemailer";
-import { markNotified, saveMessage, takeSlot } from "./_contact-store.js";
+import { createCap, markNotified, saveMessage } from "./_contact-store.js";
 
 /**
  * POST /api/contact
@@ -24,10 +24,16 @@ import { markNotified, saveMessage, takeSlot } from "./_contact-store.js";
 
 const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 };
 const MIN_FILL_MS = 3000;
-// Five messages an hour per address, and eleven stored per Zurich day for the
-// whole site: at three writes each, a 31-day month takes at most 1,023 of the
-// 2,000 writes the Hobby plan allows.
-const CAPS = { perAddress: 5, perDay: 11 };
+// Five messages an hour per address and eleven stored per Zurich day for the
+// whole site. An accepted message takes three writes, so a 31-day month takes
+// at most 1,023 of the 2,000 the Hobby plan allows. A conditional write that
+// loses a race may count as well. Each instance tries one write at a time, so
+// only a message another instance stored can make one lose: a day adds at
+// most eleven lost writes for every instance past the first. A refusal the
+// instance already knows of costs no read, and no instance reads the store
+// more than 21 times a minute.
+const CAPS = { perAddress: 5, perDay: 11, readsPerMinute: 21 };
+const takeSlot = createCap(CAPS);
 const INTENTS = new Set(["job", "freelance", "collab", "other", "service"]);
 const LANGS = new Set(["en", "de", "fr", "zh"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -248,7 +254,7 @@ export default async function handler(req, res) {
     // failure, which points to the mail link.
     let slot;
     try {
-      slot = await takeSlot(capKey, CAPS);
+      slot = await takeSlot(capKey);
     } catch (err) {
       console.error("contact: rate cap failed", err);
       slot = "failed";

@@ -25,7 +25,7 @@ type PutOptions = {
 
 type GetOptions = { access?: string; useCache?: boolean };
 
-export const blobStore = {
+const created = {
   entries: new Map<string, Entry>(),
   cached: new Map<string, Entry>(),
   ops: { simple: 0, advanced: 0 },
@@ -61,6 +61,12 @@ export const blobStore = {
     return [...this.entries.keys()].filter((k) => k.startsWith(prefix));
   },
 };
+
+// One store per test file, kept when vi.resetModules() loads this module
+// again: the handler tests do that to start each test as a new instance, and
+// the store layer and the test must still see the same blobs.
+const shared = globalThis as { contactFakeBlob?: typeof created };
+export const blobStore = (shared.contactFakeBlob ??= created);
 
 const pause = () =>
   blobStore.instant

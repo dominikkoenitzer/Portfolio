@@ -15,18 +15,27 @@ vi.mock("nodemailer", () => ({
   },
 }));
 
-import handler from "../../api/contact.js";
-import {
-  CAP_ATTEMPTS,
-  markNotified,
-  saveMessage,
-  takeSlot,
-} from "../../api/_contact-store.js";
-import { blobStore } from "./fake-blob";
+import { CAP_ATTEMPTS } from "../../api/_contact-store.js";
+
+// The handler keeps what it learns about the cap in its module, so every test
+// loads the modules afresh, the way a new function instance starts.
+type Fake = typeof import("./fake-blob");
+let blobStore: Fake["blobStore"];
+let handler: (req: object, res: object) => Promise<unknown>;
+let store: {
+  createCap: (
+    caps: object,
+    now?: () => number,
+  ) => (hash: string | null) => Promise<string>;
+  markNotified: (pathname: string, record: object) => Promise<void>;
+  saveMessage: (record: object) => Promise<string>;
+};
 
 const HOUR = 60 * 60 * 1000;
+const MINUTE = 60 * 1000;
 const LIMITS = "contact/limits/day.json";
-const CAPS = { perAddress: 5, perDay: 11 };
+const CAPS = { perAddress: 5, perDay: 11, readsPerMinute: 21 };
+const cap = (now?: () => number) => store.createCap(CAPS, now);
 // 23:59 and 00:01 in Zurich, in winter (UTC+1) and in summer (UTC+2).
 const WINTER_LATE = Date.parse("2026-11-01T22:59:00Z");
 const WINTER_EARLY = Date.parse("2026-11-01T23:01:00Z");
@@ -39,7 +48,11 @@ const hashes = (n: number) =>
 const doc = (count: number, times: number[]) =>
   JSON.stringify({ day: "2026-11-01", count, addresses: { abc: times } });
 
-beforeEach(() => {
+beforeEach(async () => {
+  vi.resetModules();
+  ({ blobStore } = await import("./fake-blob"));
+  store = await import("../../api/_contact-store.js");
+  handler = (await import("../../api/contact.js")).default;
   blobStore.reset();
   mail.sent = 0;
   vi.spyOn(console, "error").mockImplementation(() => {});
@@ -52,15 +65,17 @@ afterEach(() => {
 
 describe("contact store cap per address", () => {
   it("takes five slots in an hour and refuses the sixth", async () => {
+    const takeSlot = cap();
     const taken: string[] = [];
-    for (let i = 0; i < 6; i += 1) taken.push(await takeSlot("abc", CAPS));
+    for (let i = 0; i < 6; i += 1) taken.push(await takeSlot("abc"));
     expect(taken).toEqual(["ok", "ok", "ok", "ok", "ok", "address"]);
     expect(limits().addresses.abc).toHaveLength(5);
   });
 
   it("never gives one address more than five slots under a parallel burst", async () => {
+    const takeSlot = cap();
     const taken = await Promise.all(
-      Array.from({ length: 30 }, () => takeSlot("abc", CAPS)),
+      Array.from({ length: 30 }, () => takeSlot("abc")),
     );
     const ok = taken.filter((t) => t === "ok").length;
     expect(ok).toBe(5);
@@ -74,35 +89,34 @@ describe("contact store cap per address", () => {
       LIMITS,
       doc(5, [now - HOUR - 1, now - HOUR, now - 10, now - 5, now - 1]),
     );
-    expect(await takeSlot("abc", CAPS, () => now)).toBe("ok");
+    expect(await cap(() => now)("abc")).toBe("ok");
     expect(limits().addresses.abc).toEqual([now - 10, now - 5, now - 1, now]);
   });
 
   it("keeps an address's hour across midnight in Zurich", async () => {
     const before = WINTER_LATE - 20 * 60 * 1000;
     blobStore.write(LIMITS, doc(5, Array(5).fill(before)));
-    expect(await takeSlot("abc", CAPS, () => WINTER_EARLY)).toBe("address");
-    expect(await takeSlot("def", CAPS, () => WINTER_EARLY)).toBe("ok");
+    const takeSlot = cap(() => WINTER_EARLY);
+    expect(await takeSlot("abc")).toBe("address");
+    expect(await takeSlot("def")).toBe("ok");
     expect(limits().addresses.abc).toHaveLength(5);
   });
 });
 
 describe("contact store ceiling per day", () => {
   it("stores eleven messages from different addresses in a day and refuses the twelfth", async () => {
+    const takeSlot = cap(() => WINTER_LATE);
     const taken: string[] = [];
-    for (const hash of hashes(12)) {
-      taken.push(await takeSlot(hash, CAPS, () => WINTER_LATE));
-    }
+    for (const hash of hashes(12)) taken.push(await takeSlot(hash));
     expect(taken.slice(0, 11).every((t) => t === "ok")).toBe(true);
     expect(taken[11]).toBe("day");
     expect(limits()).toMatchObject({ day: "2026-11-01", count: 11 });
   });
 
   it("counts a message without an address toward the day", async () => {
-    for (let i = 0; i < 11; i += 1) {
-      expect(await takeSlot(null, CAPS, () => WINTER_LATE)).toBe("ok");
-    }
-    expect(await takeSlot(null, CAPS, () => WINTER_LATE)).toBe("day");
+    const takeSlot = cap(() => WINTER_LATE);
+    for (let i = 0; i < 11; i += 1) expect(await takeSlot(null)).toBe("ok");
+    expect(await takeSlot(null)).toBe("day");
     expect(limits().addresses).toEqual({});
   });
 
@@ -113,15 +127,19 @@ describe("contact store ceiling per day", () => {
     ] as const;
     for (const [late, early, day] of cases) {
       blobStore.reset();
-      for (const hash of hashes(11)) await takeSlot(hash, CAPS, () => late);
-      expect(await takeSlot("late", CAPS, () => late)).toBe("day");
-      expect(await takeSlot("early", CAPS, () => early)).toBe("ok");
+      let clock: number = late;
+      const takeSlot = cap(() => clock);
+      for (const hash of hashes(11)) await takeSlot(hash);
+      expect(await takeSlot("late")).toBe("day");
+      clock = early;
+      expect(await takeSlot("early")).toBe("ok");
       expect(limits()).toMatchObject({ day, count: 1 });
     }
   });
 
   it("never stores more than eleven in a day under a parallel burst", async () => {
-    const taken = await Promise.all(hashes(40).map((hash) => takeSlot(hash, CAPS)));
+    const takeSlot = cap();
+    const taken = await Promise.all(hashes(40).map((hash) => takeSlot(hash)));
     const ok = taken.filter((t) => t === "ok").length;
     expect(ok).toBe(11);
     expect(limits().count).toBe(11);
@@ -142,10 +160,85 @@ describe("contact store ceiling per day", () => {
         },
       }),
     );
-    expect(await takeSlot("abc", CAPS, () => now)).toBe("ok");
+    expect(await cap(() => now)("abc")).toBe("ok");
     expect(limits().addresses).toEqual({ mixed: [now - 60_000], abc: [now] });
     expect(limits().count).toBe(4);
     expect(blobStore.list("contact/limits/")).toEqual([LIMITS]);
+  });
+});
+
+describe("contact store reads", () => {
+  it("refuses an address it knows is full without reading the store", async () => {
+    const takeSlot = cap();
+    for (let i = 0; i < 5; i += 1) await takeSlot("abc");
+    blobStore.ops = { simple: 0, advanced: 0 };
+    expect(await takeSlot("abc")).toBe("address");
+    expect(await takeSlot("abc")).toBe("address");
+    expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
+  });
+
+  it("refuses a day it knows is full without reading the store", async () => {
+    const takeSlot = cap(() => WINTER_LATE);
+    for (const hash of hashes(11)) await takeSlot(hash);
+    blobStore.ops = { simple: 0, advanced: 0 };
+    for (const hash of hashes(20)) expect(await takeSlot(`x${hash}`)).toBe("day");
+    expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
+  });
+
+  it("reads once on an instance that has not seen the full day, then refuses from memory", async () => {
+    const first = cap(() => WINTER_LATE);
+    for (const hash of hashes(11)) await first(hash);
+    const second = cap(() => WINTER_LATE);
+    blobStore.ops = { simple: 0, advanced: 0 };
+    expect(await second("late")).toBe("day");
+    expect(blobStore.ops).toEqual({ simple: 1, advanced: 0 });
+    expect(await second("later")).toBe("day");
+    expect(blobStore.ops).toEqual({ simple: 1, advanced: 0 });
+  });
+
+  it("forgets a full day at midnight in Zurich", async () => {
+    let clock: number = WINTER_LATE;
+    const takeSlot = cap(() => clock);
+    for (const hash of hashes(11)) await takeSlot(hash);
+    expect(await takeSlot("late")).toBe("day");
+    clock = WINTER_EARLY;
+    expect(await takeSlot("early")).toBe("ok");
+  });
+
+  it("reads the store no more than 21 times a minute", async () => {
+    let clock = WINTER_LATE;
+    const takeSlot = store.createCap(
+      { perAddress: 5, perDay: 1000, readsPerMinute: 21 },
+      () => clock,
+    );
+    const taken: string[] = [];
+    for (const hash of hashes(23)) taken.push(await takeSlot(hash));
+    expect(taken.slice(0, 21).every((t) => t === "ok")).toBe(true);
+    expect(taken.slice(21)).toEqual(["busy", "busy"]);
+    expect(blobStore.ops.simple).toBe(21);
+    clock += MINUTE - 1;
+    expect(await takeSlot("waits")).toBe("busy");
+    clock += 1;
+    expect(await takeSlot("passes")).toBe("ok");
+    expect(blobStore.ops.simple).toBe(22);
+  });
+
+  it("loses no conditional write to requests on the same instance", async () => {
+    const takeSlot = cap();
+    const taken = await Promise.all(hashes(40).map((hash) => takeSlot(hash)));
+    expect(taken.filter((t) => t === "ok")).toHaveLength(11);
+    expect(blobStore.ops).toEqual({ simple: 11, advanced: 11 });
+  });
+
+  it("loses at most eleven conditional writes a day to a second instance", async () => {
+    const one = cap();
+    const two = cap();
+    const taken = await Promise.all(
+      hashes(40).map((hash, i) => (i % 2 ? one : two)(hash)),
+    );
+    expect(taken.filter((t) => t === "ok")).toHaveLength(11);
+    expect(limits().count).toBe(11);
+    expect(blobStore.ops.advanced - 11).toBeLessThanOrEqual(11);
   });
 });
 
@@ -155,7 +248,7 @@ describe("contact store cap writes", () => {
     const earlier = Date.now() - 1000;
     blobStore.write(LIMITS, doc(1, [earlier]));
     blobStore.beforePut = () => blobStore.write(LIMITS, doc(2, [earlier, earlier]));
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
+    expect(await cap()("abc")).toBe("ok");
     expect(limits().addresses.abc).toHaveLength(3);
   });
 
@@ -164,7 +257,7 @@ describe("contact store cap writes", () => {
     const earlier = Date.now() - 1000;
     blobStore.write(LIMITS, doc(4, Array(4).fill(earlier)));
     blobStore.beforePut = () => blobStore.write(LIMITS, doc(5, Array(5).fill(earlier)));
-    expect(await takeSlot("abc", CAPS)).toBe("address");
+    expect(await cap()("abc")).toBe("address");
     expect(limits().addresses.abc).toHaveLength(5);
   });
 
@@ -175,20 +268,21 @@ describe("contact store cap writes", () => {
         LIMITS,
         JSON.stringify({ count: 0, addresses: { def: [Date.now()] } }),
       );
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
+    expect(await cap()("abc")).toBe("ok");
     expect(Object.keys(limits().addresses).sort()).toEqual(["abc", "def"]);
   });
 
   it("reads past the cache, so a second message is not refused on a stale etag", async () => {
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
+    const takeSlot = cap();
+    expect(await takeSlot("abc")).toBe("ok");
+    expect(await takeSlot("abc")).toBe("ok");
+    expect(await takeSlot("abc")).toBe("ok");
     expect(limits().addresses.abc).toHaveLength(3);
   });
 
   it("starts over from a document it cannot read", async () => {
     blobStore.write(LIMITS, "not json");
-    expect(await takeSlot("abc", CAPS)).toBe("ok");
+    expect(await cap()("abc")).toBe("ok");
     expect(limits().addresses.abc).toHaveLength(1);
   });
 
@@ -203,7 +297,7 @@ describe("contact store cap writes", () => {
       blobStore.beforePut = fight;
     };
     blobStore.beforePut = fight;
-    expect(await takeSlot("abc", CAPS)).toBe("busy");
+    expect(await cap()("abc")).toBe("busy");
     expect(tries).toBe(CAP_ATTEMPTS);
     expect(blobStore.ops.advanced).toBe(CAP_ATTEMPTS);
   });
@@ -215,13 +309,23 @@ describe("contact store cap writes", () => {
   it("passes a real store failure on instead of retrying it", async () => {
     blobStore.write(LIMITS, JSON.stringify({ count: 0, addresses: {} }));
     blobStore.putError = new Error("store unreachable");
-    await expect(takeSlot("abc", CAPS)).rejects.toThrow("store unreachable");
+    await expect(cap()("abc")).rejects.toThrow("store unreachable");
     expect(blobStore.ops.advanced).toBe(1);
   });
 
   it("passes on a failed create when no other request made the document", async () => {
     blobStore.putError = new Error("store unreachable");
-    await expect(takeSlot("abc", CAPS)).rejects.toThrow("store unreachable");
+    await expect(cap()("abc")).rejects.toThrow("store unreachable");
+  });
+
+  it("serves the next request in line after one that failed", async () => {
+    const takeSlot = cap();
+    blobStore.getError = new Error("store unreachable");
+    const failed = takeSlot("abc");
+    const next = takeSlot("def");
+    await expect(failed).rejects.toThrow("store unreachable");
+    blobStore.getError = null;
+    expect(await next).toBe("ok");
   });
 });
 
@@ -235,8 +339,8 @@ describe("contact store messages", () => {
   };
 
   it("keeps every message under a name of its own, privately", async () => {
-    const first = await saveMessage(record);
-    const second = await saveMessage(record);
+    const first = await store.saveMessage(record);
+    const second = await store.saveMessage(record);
     expect(first).not.toBe(second);
     expect(first.startsWith("contact/messages/2026-11-01T10-00-00-000Z-")).toBe(true);
     expect(blobStore.read(first)).toEqual(record);
@@ -244,8 +348,8 @@ describe("contact store messages", () => {
   });
 
   it("adds the mail time to the stored message", async () => {
-    const pathname = await saveMessage(record);
-    await markNotified(pathname, record);
+    const pathname = await store.saveMessage(record);
+    await store.markNotified(pathname, record);
     const kept = blobStore.read(pathname);
     expect(kept.name).toBe("Ann");
     expect(Number.isFinite(Date.parse(kept.notified_at))).toBe(true);
@@ -316,14 +420,14 @@ describe("contact store operations per request", () => {
     expect(blobStore.read(pathname).notified_at).toBeUndefined();
   });
 
-  it("spends one read and no write on a message refused for its address", async () => {
+  it("spends nothing on a message refused for an address the instance knows is full", async () => {
     for (let i = 0; i < 5; i += 1) await post();
     blobStore.ops = { simple: 0, advanced: 0 };
     expect((await post()).status).toBe(429);
-    expect(blobStore.ops).toEqual({ simple: 1, advanced: 0 });
+    expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
   });
 
-  it("refuses the twelfth message of the day with the general failure, for one read and no write", async () => {
+  it("refuses the twelfth message of the day with the general failure, at no cost", async () => {
     for (let i = 0; i < 11; i += 1) {
       expect((await post({}, `198.51.100.${i}`)).status).toBe(200);
     }
@@ -333,7 +437,7 @@ describe("contact store operations per request", () => {
     // not 400, which marks fields: any other failure shows the toast that
     // points to the mail link.
     expect(reply.status).toBe(503);
-    expect(blobStore.ops).toEqual({ simple: 1, advanced: 0 });
+    expect(blobStore.ops).toEqual({ simple: 0, advanced: 0 });
     expect(blobStore.list("contact/messages/")).toHaveLength(11);
   });
 

@@ -8,12 +8,13 @@ import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
  * Every write is a put, which the Hobby plan counts as an advanced operation
  * (2,000 a month), and every read here is a simple one (10,000 a month). An
  * accepted message costs one read and two or three puts: the cap, the message
- * and, once the mail is out, the message again with `notified_at`. A refused
- * one costs the read alone. Bots caught by the honeypot or the fill time never
- * reach this file.
+ * and, once the mail is out, the message again with `notified_at`. A refusal
+ * the instance already knows of costs nothing, any other refusal the read
+ * alone. Bots caught by the honeypot or the fill time never reach this file.
  */
 
 const HOUR_MS = 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
 
 // Each lost write means another request took a slot, and at most `perDay` of
 // those can happen in a day, so every request settles within perDay + 1 tries.
@@ -51,66 +52,106 @@ async function readJson(pathname) {
   return { etag: found.blob.etag, value };
 }
 
-/**
- * Takes a slot for one message: one of the `perDay` the site stores in a
- * Zurich day, and one of the `perAddress` its address hash has in an hour. A
- * message without an address counts toward the day only. The new document is
- * written only if it still has the etag it was read with, so two requests can
- * never both take the last slot: the slower one fails the condition, reads
- * again and sees the count.
- *
- * Resolves "ok" when a slot was taken, "address" or "day" for the cap that is
- * full, and "busy" when the document kept changing under it. Throws when the
- * store itself fails, which the caller lets through on purpose.
- */
-export async function takeSlot(ipHash, { perAddress, perDay }, now = Date.now) {
-  let createError = null;
-  for (let attempt = 0; attempt < CAP_ATTEMPTS; attempt += 1) {
-    const current = await readJson(LIMITS_PATH);
-    // A create that failed while nothing exists was not a lost race.
-    if (createError && !current) throw createError;
-    createError = null;
-    const at = now();
-    const day = zurichDay.format(at);
-    const kept = current?.value && typeof current.value === "object" ? current.value : {};
-    const count =
-      kept.day === day && Number.isInteger(kept.count) && kept.count > 0 ? kept.count : 0;
-    if (count >= perDay) return "day";
-    const addresses = {};
-    const seen = kept.addresses && typeof kept.addresses === "object" ? kept.addresses : {};
-    for (const [hash, list] of Object.entries(seen)) {
-      const times = (Array.isArray(list) ? list : []).filter(
-        (t) => Number.isFinite(t) && t <= at && at - t < HOUR_MS,
-      );
-      if (times.length) addresses[hash] = times;
-    }
-    if (ipHash) {
-      const mine = addresses[ipHash] ?? [];
-      if (mine.length >= perAddress) return "address";
-      addresses[ipHash] = [...mine, at];
-    }
-    const body = JSON.stringify({ day, count: count + 1, addresses });
-    const options = {
-      access: "private",
-      contentType: "application/json",
-      cacheControlMaxAge: 60,
-    };
-    try {
-      if (current) {
-        await put(LIMITS_PATH, body, { ...options, ifMatch: current.etag });
-      } else {
-        await put(LIMITS_PATH, body, { ...options, allowOverwrite: false });
-      }
-      return "ok";
-    } catch (err) {
-      if (err instanceof BlobPreconditionFailedError) continue;
-      if (current) throw err;
-      // Two first messages both found no document and both tried to create
-      // it. The next read tells a lost race from a real error.
-      createError = err;
-    }
+/** The cap document as it stands at `at`: today's count and the last hour. */
+function settle(value, at) {
+  const kept = value && typeof value === "object" ? value : {};
+  const day = zurichDay.format(at);
+  const count =
+    kept.day === day && Number.isInteger(kept.count) && kept.count > 0 ? kept.count : 0;
+  const addresses = {};
+  const seen = kept.addresses && typeof kept.addresses === "object" ? kept.addresses : {};
+  for (const [hash, list] of Object.entries(seen)) {
+    const times = (Array.isArray(list) ? list : []).filter(
+      (t) => Number.isFinite(t) && t <= at && at - t < HOUR_MS,
+    );
+    if (times.length) addresses[hash] = times;
   }
-  return "busy";
+  return { day, count, addresses };
+}
+
+/**
+ * The cap of one function instance: `perDay` messages stored in a Zurich day,
+ * `perAddress` per address hash in an hour, and at most `readsPerMinute`
+ * reads of the store. Returns `takeSlot(ipHash)`, which resolves "ok" when a
+ * slot was taken, "address" or "day" for the cap that is full, and "busy"
+ * when the document kept changing under it or the instance has read enough
+ * for this minute. It throws when the store itself fails.
+ *
+ * A message without an address counts toward the day only. The document is
+ * written only if it still has the etag it was read with, so two instances
+ * can never both take the last slot: the slower one fails the condition,
+ * reads again and sees the count.
+ */
+export function createCap({ perAddress, perDay, readsPerMinute }, now = Date.now) {
+  // The document as this instance last read or wrote it. Within its day a
+  // count only grows, and a time only leaves the hour as the clock moves, so
+  // a refusal taken from it is never wrong and costs no read. A pass is still
+  // checked against the store, where other instances write too.
+  let known = null;
+  const reads = [];
+  // One try at a time per instance: parallel requests on the same instance
+  // never race each other's writes, and once the day is full the ones still
+  // waiting are refused from memory.
+  let queue = Promise.resolve();
+
+  const refusal = (state, ipHash) => {
+    if (state.count >= perDay) return "day";
+    if (ipHash && (state.addresses[ipHash]?.length ?? 0) >= perAddress) return "address";
+    return null;
+  };
+
+  async function take(ipHash) {
+    let createError = null;
+    for (let attempt = 0; attempt < CAP_ATTEMPTS; attempt += 1) {
+      if (known) {
+        const remembered = refusal(settle(known, now()), ipHash);
+        if (remembered) return remembered;
+      }
+      const start = now();
+      while (reads.length && start - reads[0] >= MINUTE_MS) reads.shift();
+      if (reads.length >= readsPerMinute) return "busy";
+      reads.push(start);
+      const current = await readJson(LIMITS_PATH);
+      // A create that failed while nothing exists was not a lost race.
+      if (createError && !current) throw createError;
+      createError = null;
+      const at = now();
+      const state = settle(current?.value, at);
+      known = state;
+      const full = refusal(state, ipHash);
+      if (full) return full;
+      const addresses = { ...state.addresses };
+      if (ipHash) addresses[ipHash] = [...(addresses[ipHash] ?? []), at];
+      const next = { day: state.day, count: state.count + 1, addresses };
+      const options = {
+        access: "private",
+        contentType: "application/json",
+        cacheControlMaxAge: 60,
+      };
+      try {
+        if (current) {
+          await put(LIMITS_PATH, JSON.stringify(next), { ...options, ifMatch: current.etag });
+        } else {
+          await put(LIMITS_PATH, JSON.stringify(next), { ...options, allowOverwrite: false });
+        }
+        known = next;
+        return "ok";
+      } catch (err) {
+        if (err instanceof BlobPreconditionFailedError) continue;
+        if (current) throw err;
+        // Two first messages both found no document and both tried to create
+        // it. The next read tells a lost race from a real error.
+        createError = err;
+      }
+    }
+    return "busy";
+  }
+
+  return (ipHash) => {
+    const turn = queue.then(() => take(ipHash));
+    queue = turn.catch(() => {});
+    return turn;
+  };
 }
 
 /** Stores one message under a name of its own and returns that name. */

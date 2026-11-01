@@ -29,8 +29,10 @@ vi.mock("nodemailer", async (importOriginal) => {
 
 vi.mock("@vercel/blob", () => import("./fake-blob"));
 
-import handler from "../../api/contact.js";
-import { blobStore } from "./fake-blob";
+// The handler keeps what it learns about the cap in its module, so every test
+// loads it afresh, the way a new function instance starts.
+let handler: (req: object, res: object) => Promise<unknown>;
+let blobStore: (typeof import("./fake-blob"))["blobStore"];
 
 const stored = () => blobStore.list("contact/messages/");
 
@@ -77,7 +79,10 @@ const message = (extra: object = {}) => ({
   ...extra,
 });
 
-beforeEach(() => {
+beforeEach(async () => {
+  vi.resetModules();
+  ({ blobStore } = await import("./fake-blob"));
+  handler = (await import("../../api/contact.js")).default;
   blobStore.reset();
   vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
   vi.stubEnv("GMAIL_USER", "");
