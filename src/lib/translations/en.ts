@@ -360,7 +360,7 @@ export const en = {
       sentBody: "Thanks, I've got it. I usually reply within a day.",
       sendAnother: "Send another message",
       failed: "That didn't go through. Try again, or write to me directly.",
-      tooMany: "That's a lot of messages from your connection. Try again in an hour, or write to me directly.",
+      full: "The form is full for today, so write to me directly.",
       fieldEmpty: "This can't be empty.",
       emailInvalid: "That address looks incomplete. Maybe a typo?",
       orDirect: "Or write to me directly:",

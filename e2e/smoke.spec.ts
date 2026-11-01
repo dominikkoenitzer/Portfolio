@@ -377,34 +377,95 @@ test.describe("keyboard", () => {
   test("focus stays with the contact form through a send and the next one", async ({
     page,
   }) => {
-    // GET hands out the form token, POST takes the message.
-    await page.route("**/api/contact", (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body:
-          route.request().method() === "GET"
-            ? '{"token":"t","minAgeMs":0,"maxAgeMs":21600000}'
-            : '{"ok":true}',
-      }),
-    );
+    const posted = await contactApi(page, () => 200);
     await page.goto("/contact");
     await expectRendered(page);
     await settle(page);
     const name = page.locator('input[name="name"]');
-    await name.fill("Ada");
-    await page.locator('input[name="email"]').fill("ada@example.org");
-    await page.locator('textarea[name="message"]').fill("A short note.");
+    await fillContact(page);
     await page.locator('button[type="submit"]').focus();
     await page.keyboard.press("Enter");
 
+    // The title takes focus, so a screen reader reads it, and Tab moves on to
+    // the button for the next message.
+    await expect(page.getByText("Sent.", { exact: true })).toBeFocused();
+    await page.keyboard.press("Tab");
     const again = page.getByRole("button", { name: "Send another message" });
     await expect(again).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(name).toBeFocused();
     await expect(name).toHaveValue("");
+
+    // A token carries one message, so the next one goes with a new token.
+    await fillContact(page);
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByText("Sent.", { exact: true })).toBeFocused();
+    expect(posted).toEqual(["t1", "t2"]);
+  });
+
+  test("a refused token is swapped for a new one without bothering the visitor", async ({
+    page,
+  }) => {
+    const posted = await contactApi(page, (token) => (token === "t1" ? 403 : 200));
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    await fillContact(page);
+    await page.locator('button[type="submit"]').click();
+    await expect(page.getByText("Sent.", { exact: true })).toBeFocused();
+    expect(posted).toEqual(["t1", "t2"]);
+  });
+
+  test("a full day says so and keeps the message", async ({ page }) => {
+    await contactApi(page, () => 429);
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    await fillContact(page);
+    const submit = page.locator('button[type="submit"]');
+    await submit.click();
+    await expect(
+      page.getByText("The form is full for today, so write to me directly.").first(),
+    ).toBeVisible();
+    await expect(submit).toBeFocused();
+    await expect(page.locator('textarea[name="message"]')).toHaveValue("A short note.");
   });
 });
+
+/**
+ * Stands in for `/api/contact`: GET hands out the tokens t1, t2, and so on,
+ * POST answers with the status `answer` picks for the token it carries.
+ * Returns the tokens posted, in order.
+ */
+async function contactApi(page: Page, answer: (token: string) => number) {
+  const posted: string[] = [];
+  let issued = 0;
+  await page.route("**/api/contact", (route) => {
+    if (route.request().method() === "GET") {
+      issued += 1;
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ token: `t${issued}`, minAgeMs: 0, maxAgeMs: 21600000 }),
+      });
+    }
+    const token = String(route.request().postDataJSON()?.token);
+    posted.push(token);
+    const status = answer(token);
+    return route.fulfill({
+      status,
+      contentType: "application/json",
+      body: status === 200 ? '{"ok":true}' : '{"error":"refused"}',
+    });
+  });
+  return posted;
+}
+
+async function fillContact(page: Page) {
+  await page.locator('input[name="name"]').fill("Ada");
+  await page.locator('input[name="email"]').fill("ada@example.org");
+  await page.locator('textarea[name="message"]').fill("A short note.");
+}
 
 test.describe("diagnostics", () => {
   test("/diag measures, stays out of search and sends nothing without an endpoint", async ({
