@@ -17,13 +17,17 @@ import { markNotified, saveMessage, takeSlot } from "./_contact-store.js";
  *   CONTACT_TO                                 optional, defaults to GMAIL_USER
  *   CONTACT_HASH_SECRET                        keys the stored address hash
  *
- * Spam: a honeypot field, a minimum fill time and a per-IP hourly cap. Bots
- * that trip the first two get a 200 with nothing stored, so they learn nothing.
+ * Spam: a honeypot field, a minimum fill time, a per-IP hourly cap and a
+ * ceiling on the messages stored per day. Bots that trip the first two get a
+ * 200 with nothing stored, so they learn nothing.
  */
 
 const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 };
 const MIN_FILL_MS = 3000;
-const MAX_PER_HOUR = 5;
+// Five messages an hour per address, and eleven stored per Zurich day for the
+// whole site: at three writes each, a 31-day month takes at most 1,023 of the
+// 2,000 writes the Hobby plan allows.
+const CAPS = { perAddress: 5, perDay: 11 };
 const INTENTS = new Set(["job", "freelance", "collab", "other", "service"]);
 const LANGS = new Set(["en", "de", "fr", "zh"]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -212,16 +216,20 @@ export default async function handler(req, res) {
     // A failed cap lets the message through, on purpose: a lost enquiry costs
     // more than a rare extra one. It is logged, so a cap that stopped working
     // does not go unnoticed.
-    if (row.ip_hash) {
-      let allowed = true;
-      try {
-        allowed = await takeSlot(row.ip_hash, MAX_PER_HOUR);
-      } catch (err) {
-        console.error("contact: rate cap failed", err);
-      }
-      if (!allowed) {
-        return res.status(429).json({ error: "Too many messages, try again later" });
-      }
+    let slot = "ok";
+    try {
+      slot = await takeSlot(row.ip_hash, CAPS);
+    } catch (err) {
+      console.error("contact: rate cap failed", err);
+    }
+    if (slot === "address") {
+      return res.status(429).json({ error: "Too many messages, try again later" });
+    }
+    // The site-wide ceiling keeps a flood from many addresses inside the
+    // store's monthly operations. The form shows its general failure for
+    // this, which points to the mail link.
+    if (slot !== "ok") {
+      return res.status(503).json({ error: "Not taking messages right now" });
     }
 
     let stored;

@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
 
 /**
- * Where the contact form keeps its messages and its per-address cap: a private
- * Vercel Blob store. The underscore keeps this file from becoming a route.
+ * Where the contact form keeps its messages and its caps: a private Vercel
+ * Blob store. The underscore keeps this file from becoming a route.
  *
  * Every write is a put, which the Hobby plan counts as an advanced operation
  * (2,000 a month), and every read here is a simple one (10,000 a month). An
@@ -15,13 +15,23 @@ import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
 
 const HOUR_MS = 60 * 60 * 1000;
 
-// Each lost write means another request took a slot, and at most `max` of
-// those can happen inside one hour, so a request that is fair to everyone
-// settles in max + 1 tries. Eight leaves room without letting a stuck read
-// loop for long.
-export const CAP_ATTEMPTS = 8;
+// Each lost write means another request took a slot, and at most `perDay` of
+// those can happen in a day, so every request settles within perDay + 1 tries.
+export const CAP_ATTEMPTS = 12;
 
-const capPath = (ipHash) => `contact/limits/${ipHash}.json`;
+// One document holds both caps: the count of stored messages for the current
+// day in Zurich, and for each address hash the times it sent in the last hour.
+// Every write keeps only what is still inside its window, so nothing expired
+// is left behind to delete, and the hour of an address runs on across
+// midnight while the day count starts over.
+const LIMITS_PATH = "contact/limits/day.json";
+
+const zurichDay = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Zurich",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
 
 /**
  * Reads a JSON blob with its etag. The read skips the cache on purpose: a
@@ -42,29 +52,44 @@ async function readJson(pathname) {
 }
 
 /**
- * Takes one of the `max` slots an address has per hour. The slots live in one
- * small document per address hash, holding the times of the messages it sent
- * in the last hour. The new list is written only if the document still has
- * the etag it was read with, so two requests can never both take the last
- * slot: the slower one fails the condition, reads again and sees the count.
+ * Takes a slot for one message: one of the `perDay` the site stores in a
+ * Zurich day, and one of the `perAddress` its address hash has in an hour. A
+ * message without an address counts toward the day only. The new document is
+ * written only if it still has the etag it was read with, so two requests can
+ * never both take the last slot: the slower one fails the condition, reads
+ * again and sees the count.
  *
- * Resolves true when a slot was taken and false when the hour is full. Throws
- * when the store itself fails, which the caller lets through on purpose.
+ * Resolves "ok" when a slot was taken, "address" or "day" for the cap that is
+ * full, and "busy" when the document kept changing under it. Throws when the
+ * store itself fails, which the caller lets through on purpose.
  */
-export async function takeSlot(ipHash, max, now = Date.now) {
-  const pathname = capPath(ipHash);
+export async function takeSlot(ipHash, { perAddress, perDay }, now = Date.now) {
   let createError = null;
   for (let attempt = 0; attempt < CAP_ATTEMPTS; attempt += 1) {
-    const current = await readJson(pathname);
+    const current = await readJson(LIMITS_PATH);
     // A create that failed while nothing exists was not a lost race.
     if (createError && !current) throw createError;
     createError = null;
     const at = now();
-    const times = (Array.isArray(current?.value?.times) ? current.value.times : []).filter(
-      (t) => Number.isFinite(t) && t <= at && at - t < HOUR_MS,
-    );
-    if (times.length >= max) return false;
-    const body = JSON.stringify({ times: [...times, at] });
+    const day = zurichDay.format(at);
+    const kept = current?.value && typeof current.value === "object" ? current.value : {};
+    const count =
+      kept.day === day && Number.isInteger(kept.count) && kept.count > 0 ? kept.count : 0;
+    if (count >= perDay) return "day";
+    const addresses = {};
+    const seen = kept.addresses && typeof kept.addresses === "object" ? kept.addresses : {};
+    for (const [hash, list] of Object.entries(seen)) {
+      const times = (Array.isArray(list) ? list : []).filter(
+        (t) => Number.isFinite(t) && t <= at && at - t < HOUR_MS,
+      );
+      if (times.length) addresses[hash] = times;
+    }
+    if (ipHash) {
+      const mine = addresses[ipHash] ?? [];
+      if (mine.length >= perAddress) return "address";
+      addresses[ipHash] = [...mine, at];
+    }
+    const body = JSON.stringify({ day, count: count + 1, addresses });
     const options = {
       access: "private",
       contentType: "application/json",
@@ -72,21 +97,20 @@ export async function takeSlot(ipHash, max, now = Date.now) {
     };
     try {
       if (current) {
-        await put(pathname, body, { ...options, ifMatch: current.etag });
+        await put(LIMITS_PATH, body, { ...options, ifMatch: current.etag });
       } else {
-        await put(pathname, body, { ...options, allowOverwrite: false });
+        await put(LIMITS_PATH, body, { ...options, allowOverwrite: false });
       }
-      return true;
+      return "ok";
     } catch (err) {
       if (err instanceof BlobPreconditionFailedError) continue;
       if (current) throw err;
-      // Two first messages from one address both found no document and both
-      // tried to create it. The next read tells a lost race from a real error.
+      // Two first messages both found no document and both tried to create
+      // it. The next read tells a lost race from a real error.
       createError = err;
     }
   }
-  // Only a flood from one address keeps changing the document this often.
-  return false;
+  return "busy";
 }
 
 /** Stores one message under a name of its own and returns that name. */
