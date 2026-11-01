@@ -456,7 +456,7 @@ export const fr = {
           "Ce site est hébergé par Vercel. Les journaux serveur (adresse IP, type de navigateur, heure d'accès) sont stockés à des fins de sécurité et de fiabilité. Les statistiques de visiteurs sont collectées via Vercel Analytics et Vercel Speed Insights avec uniquement des données anonymisées. Aucun cookie ni identifiant de suivi n'est utilisé.",
         contactLabel: "E-mail :",
         contactBody:
-          "Si vous m'écrivez par e-mail, je ne conserve que ce que vous envoyez (votre nom, votre adresse et votre message), uniquement pour vous répondre et traiter vos questions de suivi.",
+          "Si vous m'écrivez par e-mail ou via le formulaire de contact, je ne conserve que ce que vous envoyez (votre nom, votre adresse et votre message), uniquement pour vous répondre et traiter vos questions de suivi. Les messages du formulaire sont stockés dans un espace privé chez Vercel à Francfort, en Allemagne, avec l'agent utilisateur de votre navigateur et une empreinte à clé secrète de votre adresse IP, qui sert uniquement à limiter le spam.",
       },
       rights: {
         heading: "Vos droits",

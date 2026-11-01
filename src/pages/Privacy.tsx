@@ -14,7 +14,7 @@ import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
 // Bump this when the policy text actually changes (rendered in the active locale).
-const PRIVACY_REVISED = "2026-10-30";
+const PRIVACY_REVISED = "2026-11-01";
 
 const EMAIL = email();
 
