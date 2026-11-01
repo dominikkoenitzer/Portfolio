@@ -1,3 +1,5 @@
+// @ts-expect-error -- the app tsconfig carries no Node types; vitest runs this file in Node.
+import { createHash } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@vercel/blob", () => import("./fake-blob"));
@@ -293,6 +295,7 @@ async function post(extra: object = {}, ip = "203.0.113.7"): Promise<Reply> {
 
 describe("contact store operations per request", () => {
   beforeEach(() => {
+    vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
     vi.stubEnv("GMAIL_USER", "someone@example.com");
     vi.stubEnv("GMAIL_APP_PASSWORD", "app-password");
   });
@@ -349,7 +352,6 @@ describe("contact store operations per request", () => {
   });
 
   it("stores the address only as a keyed hash", async () => {
-    vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
     await post({}, "198.51.100.23");
     const [pathname] = blobStore.list("contact/messages/");
     const kept = blobStore.read(pathname);
@@ -357,5 +359,20 @@ describe("contact store operations per request", () => {
     expect(kept.ip_hash).toMatch(/^[0-9a-f]{64}$/);
     expect(JSON.stringify(limits())).not.toContain("198.51.100.23");
     expect(Object.keys(limits().addresses)).toEqual([kept.ip_hash]);
+  });
+
+  it("keeps no address hash with the message without the secret, and still caps the address", async () => {
+    vi.stubEnv("CONTACT_HASH_SECRET", "");
+    const statuses: number[] = [];
+    for (let i = 0; i < 6; i += 1) statuses.push((await post({}, "198.51.100.23")).status);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 429]);
+    for (const pathname of blobStore.list("contact/messages/")) {
+      expect(blobStore.read(pathname).ip_hash).toBeNull();
+    }
+    // The cap keys the address with a key that lives only in this process,
+    // never with a plain hash anyone could reverse.
+    const plain = createHash("sha256").update("198.51.100.23").digest("hex");
+    expect(Object.keys(limits().addresses)).toHaveLength(1);
+    expect(Object.keys(limits().addresses)).not.toContain(plain);
   });
 });

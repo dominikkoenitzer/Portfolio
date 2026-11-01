@@ -1,4 +1,4 @@
-import { createHash, createHmac } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import nodemailer from "nodemailer";
 import { markNotified, saveMessage, takeSlot } from "./_contact-store.js";
 
@@ -52,16 +52,17 @@ const clientIp = (req) => {
   return (first || req.headers?.["x-real-ip"] || req.socket?.remoteAddress || "").trim();
 };
 
+// Without CONTACT_HASH_SECRET the cap uses a key that lasts as long as this
+// process.
+const PROCESS_KEY = randomBytes(32);
+const serverKey = () => process.env.CONTACT_HASH_SECRET || PROCESS_KEY;
+
 // A plain SHA-256 of an IPv4 address is reversed by hashing all four billion
 // of them, which a laptop does in minutes. Keyed with a secret only the server
-// knows, the stored value says nothing about the address. Without the secret
-// (a local run) it falls back to the plain hash, so the form still works.
-function hashIp(ip) {
-  const secret = process.env.CONTACT_HASH_SECRET;
-  return secret
-    ? createHmac("sha256", secret).update(ip).digest("hex")
-    : createHash("sha256").update(ip).digest("hex");
-}
+// knows, the value says nothing about the address. The cap always counts a
+// keyed hash; the message keeps one only when the key is the lasting secret,
+// since a hash under a key that died with its process links nothing.
+const capHash = (ip) => createHmac("sha256", serverKey()).update(ip).digest("hex");
 
 // The transport timeouts each cover one phase or one quiet stretch, so a mail
 // server that answers slowly but steadily could still hold the answer past the
@@ -209,7 +210,8 @@ export default async function handler(req, res) {
   }
 
   const ip = clientIp(req);
-  row.ip_hash = ip ? hashIp(ip) : null;
+  const capKey = ip ? capHash(ip) : null;
+  row.ip_hash = process.env.CONTACT_HASH_SECRET ? capKey : null;
   row.created_at = new Date().toISOString();
 
   try {
@@ -218,7 +220,7 @@ export default async function handler(req, res) {
     // failure, which points to the mail link.
     let slot;
     try {
-      slot = await takeSlot(row.ip_hash, CAPS);
+      slot = await takeSlot(capKey, CAPS);
     } catch (err) {
       console.error("contact: rate cap failed", err);
       slot = "failed";

@@ -79,6 +79,7 @@ const message = (extra: object = {}) => ({
 
 beforeEach(() => {
   blobStore.reset();
+  vi.stubEnv("CONTACT_HASH_SECRET", "test-secret");
   vi.stubEnv("GMAIL_USER", "");
   vi.stubEnv("GMAIL_APP_PASSWORD", "");
   vi.spyOn(console, "error").mockImplementation(() => {});
