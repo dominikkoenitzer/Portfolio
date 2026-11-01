@@ -96,13 +96,19 @@ describe("intent, not vocabulary", () => {
     expect(top(lang, query)?.kind).toBe("faq");
   });
 
-  it("sends hiring and process words somewhere that helps", () => {
-    // Contact is as good an answer as Services for "hire", and better than the
-    // nothing it used to return; the process steps are the answer for the
-    // question about how the work runs.
-    expect(["/contact", "/services"]).toContain(lands("en", "hire"));
+  it("sends process words to the steps on the services page", () => {
     expect(lands("en", "process")).toBe("/services");
   });
+
+  it.each(["en", "de", "fr", "zh"] as const)(
+    "%s: no row pitches hiring him",
+    (lang) => {
+      expect(count(lang, "hire")).toBe(0);
+      expect(JSON.stringify(INDEX[lang])).not.toMatch(
+        /\bhire\b|engagierst|Comment engager|聘请/i,
+      );
+    },
+  );
 
   it("sends contact words to the contact page", () => {
     expect(lands("en", "email")).toBe("/contact");

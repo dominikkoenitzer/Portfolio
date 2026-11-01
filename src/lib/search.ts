@@ -194,7 +194,6 @@ const ALIAS_GROUPS: readonly (readonly string[])[] = [
     "捐赠",
   ],
   [
-    "hire",
     "hiring",
     "job",
     "jobs",

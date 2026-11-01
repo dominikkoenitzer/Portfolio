@@ -487,7 +487,7 @@ export const fr = {
       description:
         "Projets logiciels de Dominik Könitzer, ingénieur suisse, des applications web à un gestionnaire de fenêtres en mosaïque en Rust, chacun avec son étude de cas.",
       keywords:
-        "portfolio ingénieur logiciel, projets de développement web, portfolio React TypeScript, ingénieur frontend Suisse, engager un ingénieur logiciel",
+        "portfolio ingénieur logiciel, projets de développement web, portfolio React TypeScript, ingénieur frontend Suisse",
     },
     services: {
       title: "Développement web & logiciel",
@@ -501,7 +501,7 @@ export const fr = {
       description:
         "Contactez Dominik Könitzer, ingénieur logiciel en Suisse, pour vos projets web, missions freelance, collaborations et conseil.",
       keywords:
-        "contacter Dominik Könitzer, contact ingénieur logiciel, contact développeur web, engager un ingénieur logiciel, développeur freelance Suisse, conseil en ingénierie logicielle",
+        "contacter Dominik Könitzer, contact ingénieur logiciel, contact développeur web, conseil en ingénierie logicielle",
     },
     donate: {
       title: "Pourboire",

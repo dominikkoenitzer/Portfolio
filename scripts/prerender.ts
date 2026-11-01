@@ -32,12 +32,10 @@ import {
   getProjectSeoDescription,
   getProjectSeoTitle,
   getServicesFaqs,
-  getServicesHowTo,
 } from "../src/config/seo-data";
 import {
   createBreadcrumbSchema,
   createFAQSchema,
-  createHowToSchema,
   createProfilePageSchema,
   createSoftwareApplicationSchema,
   createSoftwareSourceCodeSchema,
@@ -109,8 +107,8 @@ const staticSchemas = (route: string): object[] => {
   const breadcrumb = createBreadcrumbSchema(url);
   if (breadcrumb) graphs.push(breadcrumb);
 
-  // Services is the one page that renders the FAQ and the step-by-step copy, so
-  // it is the one page allowed to claim them. English, because that is what
+  // Services is the one page that renders the FAQ, so it is the one page allowed
+  // to claim it. English, because that is what
   // this document says and what Googlebot resolves to.
   // The About page is his profile page; Google reads it as such only when the
   // ProfilePage graph is in the served document.
@@ -119,8 +117,6 @@ const staticSchemas = (route: string): object[] => {
   if (route === "/services") {
     const faq = createFAQSchema(getServicesFaqs("en"), citations);
     if (faq) graphs.push(faq);
-    const howTo = createHowToSchema(getServicesHowTo("en"), citations);
-    if (howTo) graphs.push(howTo);
   }
 
   return graphs;

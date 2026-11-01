@@ -6,7 +6,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
 // Module path, not the seo-data barrel: that barrel also re-exports
-// services.ts, which is 14 kB of FAQ and HowTo copy in four languages and has
+// services.ts, which is 13 kB of FAQ and process copy in four languages and has
 // no business riding along in the project-detail chunk.
 import {
   getProjectSeoDescription,

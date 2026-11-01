@@ -1,6 +1,6 @@
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SEO } from "@/components/seo";
-import { getServicesFaqs, getServicesHowTo } from "@/config/seo-data";
+import { getServicesFaqs } from "@/config/seo-data";
 import { SITE_CONFIG } from "@/constants";
 import { useLanguage } from "@/lib/language-context";
 import {  getDefaultCitations,
@@ -20,7 +20,6 @@ const Services = () => {
         image={`${SITE_CONFIG.url}/og/services.png`}
         faqSchema={getServicesFaqs(language)}
         geoLocation={getDefaultGeoLocation()}
-        howToSchema={getServicesHowTo(language)}
         keywords={seo.keywords}
         structuredData={{
           "@context": "https://schema.org",

@@ -8,7 +8,7 @@
  * catalogue shows, so the title matches the site and adds the terms a person
  * would really type ("windows auto clicker", "ntp synced clock").
  *
- * Deliberately **not localized**, unlike the FAQ/HowTo copy next door. Helmet
+ * Deliberately **not localized**, unlike the FAQ and process copy next door. Helmet
  * appends its tags to the ones already in the served document, and
  * scripts/prerender.ts writes that document from English, so a localized title
  * would put two disagreeing `<title>` tags in the head of every non-English

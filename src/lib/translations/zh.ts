@@ -426,7 +426,7 @@ export const zh = {
       description:
         "瑞士软件工程师 Dominik Könitzer 的项目，从 Web 应用到一个用 Rust 写的平铺窗口管理器，每个都有案例说明。",
       keywords:
-        "软件工程师作品集, 网页开发项目, React TypeScript 作品集, 瑞士前端工程师, 雇用软件工程师",
+        "软件工程师作品集, 网页开发项目, React TypeScript 作品集, 瑞士前端工程师",
     },
     services: {
       title: "网页开发与软件服务",
@@ -440,7 +440,7 @@ export const zh = {
       description:
         "联系 Dominik Könitzer，瑞士苏黎世软件工程师，洽谈网页开发与全栈项目、自由职业工作、合作与咨询。",
       keywords:
-        "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 雇用软件工程师, 瑞士自由职业开发者, 软件工程咨询",
+        "联系 Dominik Könitzer, 软件工程师联系, 网页开发者联系, 软件工程咨询",
     },
     donate: {
       title: "打赏",

@@ -490,7 +490,7 @@ export const de = {
       description:
         "Software-Projekte von Dominik Könitzer, Software Engineer aus der Schweiz, von Web-Apps bis zu einem Tiling-Fenstermanager in Rust, jeweils mit Fallstudie.",
       keywords:
-        "Software-Engineer-Portfolio, Webentwicklungs-Projekte, React TypeScript Portfolio, Frontend-Engineer Schweiz, Software-Engineer anstellen",
+        "Software-Engineer-Portfolio, Webentwicklungs-Projekte, React TypeScript Portfolio, Frontend-Engineer Schweiz",
     },
     services: {
       title: "Webentwicklung & Software",
@@ -504,7 +504,7 @@ export const de = {
       description:
         "Kontaktiere Dominik Könitzer, Software Engineer aus Zürich, für Web- und Software-Projekte, Freelance-Aufträge, Kollaborationen und Beratung.",
       keywords:
-        "Dominik Könitzer kontaktieren, Software-Engineer-Kontakt, Webentwickler-Kontakt, Software-Engineer anstellen, Freelance-Entwickler Schweiz, Software-Engineering-Beratung",
+        "Dominik Könitzer kontaktieren, Software-Engineer-Kontakt, Webentwickler-Kontakt, Software-Engineering-Beratung",
     },
     donate: {
       title: "Trinkgeld",

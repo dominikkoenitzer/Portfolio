@@ -3,7 +3,7 @@ import type { Language } from "@/config/languages";
 // project schemas, which have nothing to do with the search index.
 import {
   getServicesFaqs,
-  getServicesHowTo,
+  getServicesProcess,
 } from "@/config/seo-data/services";
 import { NAV_LINKS } from "@/constants";
 import { getProjects } from "@/constants/projects";
@@ -174,22 +174,21 @@ function collect(language: Language, t: Translation): SearchRecord[] {
   }
 
   // How it works: the five process steps rendered on /services. They are the
-  // answer to "process", "how long", "budget" and "hire", none of which the
-  // service cards say. The schema name ("How to Hire ...") is searchable as
-  // body text while the visible heading stays the row title.
-  const howTo = getServicesHowTo(language);
+  // answer to "process", "how long" and "budget", none of which the
+  // service cards say.
+  const steps = getServicesProcess(language).step;
   records.push({
     id: "service:process",
     kind: "service",
     title: t.services.processTitle,
-    context: howTo.description,
+    context: steps.map((step) => step.name).join(" · "),
     href: "/services",
     // "process" is a search handle rather than copy, like the CV record's one
     // Latin keyword: the section is called "How it works" in all four
     // languages and never uses the word anybody would type to find it. The
     // synonym group carries Prozess, Ablauf, processus and 流程 from here.
-    keywords: ["process", ...howTo.step.map((step) => step.name)],
-    body: [howTo.name, ...howTo.step.map((step) => step.text)],
+    keywords: ["process", ...steps.map((step) => step.name)],
+    body: steps.map((step) => step.text),
   });
 
   for (const category of SKILL_CATEGORIES) {

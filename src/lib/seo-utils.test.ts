@@ -5,7 +5,6 @@ import { SUPPORTED_LANGUAGE_CODES } from "@/config/languages";
 import {
   createBreadcrumbSchema,
   createFAQSchema,
-  createHowToSchema,
   createSpeakableSchema,
   getOgLocale,
 } from "./seo-utils";
@@ -73,12 +72,6 @@ describe("createFAQSchema", () => {
     >;
 
     expect(answer.citation).toEqual(["https://www.wiss.ch"]);
-  });
-});
-
-describe("createHowToSchema", () => {
-  it("returns null for missing input", () => {
-    expect(createHowToSchema(undefined as never)).toBeNull();
   });
 });
 

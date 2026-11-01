@@ -4,7 +4,7 @@
 
 import type { Language } from "@/config/languages";
 import { SITE_CONFIG } from "@/constants";
-import type { CitationLink, FAQItem, HowToSchema } from "@/types/seo";
+import type { CitationLink, FAQItem } from "@/types/seo";
 
 /**
  * Map a UI language code to an Open Graph locale string.
@@ -63,34 +63,6 @@ export const createFAQSchema = (
           }),
       },
     })),
-  };
-};
-
-/**
- * HowTo schema (schema.org/HowTo). Used by AI engines for step-by-step recipes.
- */
-export const createHowToSchema = (
-  howTo: HowToSchema,
-  citations?: CitationLink[],
-) => {
-  if (!howTo) return null;
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: howTo.name,
-    description: howTo.description,
-    step: howTo.step.map((step, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: step.name,
-      text: step.text,
-      ...(step.image && { image: step.image }),
-    })),
-    ...(citations &&
-      citations.length > 0 && {
-        citation: citations.map((c) => c.url),
-      }),
   };
 };
 
