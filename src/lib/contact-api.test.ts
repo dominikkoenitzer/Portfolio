@@ -121,6 +121,26 @@ describe("contact API hourly cap", () => {
   });
 });
 
+describe("contact API cap for IPv6", () => {
+  it("counts every address in one /64 as one sender", async () => {
+    const statuses: number[] = [];
+    for (let i = 1; i <= 5; i += 1) {
+      statuses.push((await post(message(), `2001:db8:a:b::${i}`)).status);
+    }
+    statuses.push((await post(message(), "2001:db8:a:b:ffff:1:2:3")).status);
+    statuses.push((await post(message(), "2001:0db8:000a:000b::9")).status);
+    statuses.push((await post(message(), "[2001:DB8:A:B::10]")).status);
+    expect(statuses).toEqual([200, 200, 200, 200, 200, 429, 429, 429]);
+    expect((await post(message(), "2001:db8:a:c::1")).status).toBe(200);
+    expect(stored()).toHaveLength(6);
+  });
+
+  it("counts an IPv4 address the same when it arrives in IPv6 form", async () => {
+    for (let i = 0; i < 5; i += 1) await post(message(), "203.0.113.50");
+    expect((await post(message(), "::ffff:203.0.113.50")).status).toBe(429);
+  });
+});
+
 describe("contact API when the store fails", () => {
   it("refuses the message with the general failure when the cap cannot be read", async () => {
     blobStore.getError = new Error("store unreachable");

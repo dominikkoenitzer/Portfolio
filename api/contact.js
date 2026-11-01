@@ -17,9 +17,9 @@ import { markNotified, saveMessage, takeSlot } from "./_contact-store.js";
  *   CONTACT_TO                                 optional, defaults to GMAIL_USER
  *   CONTACT_HASH_SECRET                        keys the stored address hash
  *
- * Spam: a honeypot field, a minimum fill time, a per-IP hourly cap and a
- * ceiling on the messages stored per day. Bots that trip the first two get a
- * 200 with nothing stored, so they learn nothing.
+ * Spam: a honeypot field, a minimum fill time, a cap per address and hour
+ * (a /64 for IPv6) and a ceiling on the messages stored per day. Bots that
+ * trip the first two get a 200 with nothing stored, so they learn nothing.
  */
 
 const LIMITS = { name: 120, email: 254, subject: 200, message: 5000 };
@@ -52,6 +52,34 @@ const clientIp = (req) => {
   return (first || req.headers?.["x-real-ip"] || req.socket?.remoteAddress || "").trim();
 };
 
+/**
+ * The part of an address the hourly cap counts. An IPv6 visitor is usually
+ * handed a whole /64, so counting the full address let one sender change it
+ * per message; the first four groups are what identifies them. IPv4, and IPv6
+ * that carries an IPv4 address, stay whole.
+ */
+function addressKey(ip) {
+  const bare = ip.trim().replace(/^\[|\]$/g, "").split("%")[0].toLowerCase();
+  const mapped = bare.match(/^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/);
+  if (mapped) return mapped[1];
+  if (!bare.includes(":")) return bare;
+  const halves = bare.split("::");
+  if (halves.length > 2) return bare;
+  // A trailing dotted quad fills the last two groups.
+  const groups = (part) =>
+    part ? part.split(":").flatMap((g) => (g.includes(".") ? ["0", "0"] : [g])) : [];
+  const head = groups(halves[0]);
+  const tail = halves.length === 2 ? groups(halves[1]) : [];
+  const gap = halves.length === 2 ? 8 - head.length - tail.length : 0;
+  if (gap < 0) return bare;
+  const full = [...head, ...Array(gap).fill("0"), ...tail];
+  if (full.length !== 8 || !full.every((g) => /^[0-9a-f]{1,4}$/.test(g))) return bare;
+  return `${full
+    .slice(0, 4)
+    .map((g) => Number.parseInt(g, 16).toString(16))
+    .join(":")}::/64`;
+}
+
 // Without CONTACT_HASH_SECRET the cap uses a key that lasts as long as this
 // process.
 const PROCESS_KEY = randomBytes(32);
@@ -62,7 +90,7 @@ const serverKey = () => process.env.CONTACT_HASH_SECRET || PROCESS_KEY;
 // knows, the value says nothing about the address. The cap always counts a
 // keyed hash; the message keeps one only when the key is the lasting secret,
 // since a hash under a key that died with its process links nothing.
-const capHash = (ip) => createHmac("sha256", serverKey()).update(ip).digest("hex");
+const capHash = (ip) => createHmac("sha256", serverKey()).update(addressKey(ip)).digest("hex");
 
 // The transport timeouts each cover one phase or one quiet stretch, so a mail
 // server that answers slowly but steadily could still hold the answer past the
