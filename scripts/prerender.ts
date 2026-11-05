@@ -140,10 +140,9 @@ const pages: Page[] = STATIC.map(([route, key, image]) => {
 });
 
 // Title, description and keywords are exactly what ProjectDetails passes to
-// <SEO>: Helmet appends its tags to the ones already in the document, so
-// anything else here would put two disagreeing titles/descriptions in the same
-// head. getProjectSeoTitle is language-neutral for that reason; the description
-// is the English one, which is what Googlebot resolves to.
+// <SEO>, so a reader of the served document and of the rendered page get the
+// same text. getProjectSeoTitle is language-neutral for that reason; the
+// description is the English one, which is what Googlebot resolves to.
 for (const p of getProjects("en")) {
   pages.push({
     route: `/projects/${p.slug}`,
@@ -322,7 +321,7 @@ for (const page of pages) {
     const blocks = page.jsonLd
       .map(
         (data) =>
-          `  <script type="application/ld+json">${escJsonLd(data)}</script>`,
+          `  <script type="application/ld+json" data-route>${escJsonLd(data)}</script>`,
       )
       .join("\n");
     html = html.replace(/<\/head>/i, `${blocks}\n  </head>`);

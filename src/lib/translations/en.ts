@@ -51,7 +51,7 @@ export const en = {
     tagline:
       "Software engineer in Zürich. I build fast, accessible websites and the tools behind them.",
     hireMe: "Get in touch",
-    viewWork: "View Work",
+    viewWork: "View work",
     emailLabel: "Email",
   },
   about: {
