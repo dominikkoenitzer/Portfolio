@@ -56,6 +56,63 @@ test.describe("every route", () => {
   }
 });
 
+// Keys that may repeat in one head by design.
+const REPEATING_HEAD_KEYS = ["og:locale:alternate", "article:tag"];
+
+/** What the browser ended up with: repeated head tags and structured data blocks. */
+const headRepeats = (repeating: string[]) => {
+  const keys = [...document.head.querySelectorAll("title, meta, link[rel='canonical']")].flatMap((tag) => {
+    if (tag.tagName === "TITLE") return ["<title>"];
+    if (tag.tagName === "LINK") return ["canonical"];
+    return [tag.getAttribute("name") ?? tag.getAttribute("property") ?? []].flat();
+  });
+  const blocks = [...document.querySelectorAll('script[type="application/ld+json"]')].map((block) => block.textContent ?? "");
+  const repeated = (items: string[]) => [...new Set(items.filter((item, index) => items.indexOf(item) !== index))];
+  return {
+    tags: repeated(keys).filter((key) => !repeating.includes(key)),
+    blocks: repeated(blocks).map((block) => block.slice(0, 60)),
+    routeBlocks: document.querySelectorAll("script[data-route]").length,
+  };
+};
+
+test.describe("head", () => {
+  for (const route of ROUTES) {
+    test(`${route.path} holds each head tag once after it has rendered`, async ({ page }) => {
+      const served = await (await page.request.get(route.path)).text();
+      await page.goto(route.path);
+      await expectRendered(page);
+      await expect
+        .poll(() => page.evaluate(headRepeats, REPEATING_HEAD_KEYS))
+        .toEqual({ tags: [], blocks: [], routeBlocks: 0 });
+
+      // Whatever the served document described, the rendered page still describes.
+      const rendered = await page.evaluate(() =>
+        [...document.querySelectorAll('script[type="application/ld+json"]')].map(
+          (block) => JSON.parse(block.textContent ?? "{}")["@type"],
+        ),
+      );
+      const routeTypes = [...served.matchAll(/<script[^>]*data-route[^>]*>(.*?)<\/script>/gs)].map(
+        (match) => JSON.parse(match[1])["@type"],
+      );
+      expect(rendered).toEqual(expect.arrayContaining(routeTypes));
+    });
+  }
+
+  test("moving to another page leaves only that page's canonical", async ({ page }) => {
+    await page.goto("/");
+    await expectRendered(page);
+    await page.getByRole("link", { name: "View work", exact: true }).click();
+    await expect(page).toHaveURL(/\/projects$/);
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          [...document.querySelectorAll("link[rel='canonical']")].map((link) => new URL(link.getAttribute("href") ?? "").pathname),
+        ),
+      )
+      .toEqual(["/projects"]);
+  });
+});
+
 /**
  * Where the site draws with WebGL. Whether a context is possible is measured
  * in the browser first: with one, the canvas must be there and live; without,

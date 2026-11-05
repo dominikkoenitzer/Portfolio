@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { SITE_CONFIG } from "@/constants";
@@ -8,6 +9,7 @@ import {
   createSpeakableSchema,
   getOgLocale,
 } from "@/lib/seo-utils";
+import { dropServedHead } from "@/lib/served-head";
 import type { SEOProps } from "@/types/seo";
 
 export type { SEOProps };
@@ -117,6 +119,8 @@ export function SEO({
   }
 
   const currentLocale = getOgLocale(language);
+
+  useLayoutEffect(dropServedHead, []);
 
   return (
     <Helmet htmlAttributes={{ lang: language }}>
