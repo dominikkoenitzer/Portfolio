@@ -30,10 +30,30 @@ export function watchErrors(page: Page, { notFound = false } = {}) {
   return errors;
 }
 
-/** Waits until the route is drawn: fonts loaded and the network quiet. */
+/** Waits until the route is drawn: fonts loaded, the network quiet, on-screen images decoded. */
 export async function settle(page: Page) {
   await page.waitForLoadState("networkidle");
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
+  await page.evaluate(async () => {
+    const images = Array.from(document.images);
+    if (images.length === 0) return;
+    // WebKit can paint a loaded async-decoding image empty; the observer picks only images that will load.
+    const onScreen = await new Promise<HTMLImageElement[]>((resolve) => {
+      const observer = new IntersectionObserver((entries) => {
+        observer.disconnect();
+        resolve(
+          entries
+            .filter((entry) => entry.isIntersecting)
+            .map((entry) => entry.target as HTMLImageElement),
+        );
+      });
+      for (const image of images) observer.observe(image);
+    });
+    // A broken image rejects; its fallback is what the shot should show.
+    await Promise.all(
+      onScreen.map((image) => image.decode().catch(() => undefined)),
+    );
+  });
 }
 
 /**
