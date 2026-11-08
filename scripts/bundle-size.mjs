@@ -11,6 +11,10 @@
 // a named exception with the size measured when it was set: the check passes
 // while the entry stays at or under that ceiling, and fails the moment it grows
 // past it. The exception is removed once the entry is back under 170 kB.
+//
+// It also fails when a vendor chunk that only lazy routes use is part of the
+// entry. That happens without any import changing: a small module the entry
+// needs lands in such a chunk, and the whole chunk comes along with it.
 
 import { appendFileSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -23,6 +27,8 @@ const EXCEPTION = {
   reason:
     "the entry carries the router, the first page and the libraries it imports eagerly; measured 228.7 kB on main at 9cee2b0",
 };
+// react-query belongs to the About page, three.js to /skills and /services.
+const LAZY_ONLY = ["query-vendor.js", "three-vendor.js"];
 
 const args = process.argv.slice(2);
 const arg = (name) => {
@@ -76,6 +82,7 @@ const verdict = !overBudget
   : overCeiling
     ? `over the ${BUDGET_KB} kB budget and past the ${EXCEPTION.ceilingKb} kB ceiling of exception ${EXCEPTION.name}`
     : `over the ${BUDGET_KB} kB budget, under the ${EXCEPTION.ceilingKb} kB ceiling of exception ${EXCEPTION.name} (${EXCEPTION.reason})`;
+const strays = now.filter((f) => LAZY_ONLY.includes(f.name)).map((f) => f.name);
 
 const table = [
   "### Entry JavaScript, gzipped (kB)",
@@ -89,9 +96,10 @@ const table = [
   "",
   `${kb(total)} kB: ${verdict}.`,
   "",
+  ...strays.map((name) => `${name} is part of the entry, but only lazy routes should load it.\n`),
 ].join("\n");
 
 console.log(table);
 const summary = arg("summary");
 if (summary) appendFileSync(summary, `${table}\n`);
-if (overCeiling) process.exit(1);
+if (overCeiling || strays.length > 0) process.exit(1);

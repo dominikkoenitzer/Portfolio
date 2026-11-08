@@ -145,22 +145,32 @@ function textCharset(): Plugin {
 }
 
 /**
+ * The helpers the compiler injects for syntax es2020 lacks, such as private
+ * class fields. Entry and lazy vendors share them, so they go where every
+ * entry already is: left to themselves they landed in `query-vendor`, and the
+ * entry preloaded all of react-query to reach a few hundred bytes of helpers.
+ */
+const BUILD_HELPERS = /^\0@oxc-project\+runtime@[^\\/]+[\\/]helpers[\\/]/;
+
+/**
  * Vendor chunks, keyed by the npm package a module comes from.
  *
- * This is the function form of `manualChunks` on purpose. The object form
- * (`{ "react-vendor": ["react", …] }`) matches bare specifiers, and several of
- * ours never bound to a real module: `react` itself landed in `query-vendor`
- * and `scheduler`, which react-dom needs, ended up in a lazy vendor chunk that
- * the entry then had to preload. Matching resolved ids makes the assignment
- * exact. Order is the assignment order: first match wins, so React's own
- * runtime is listed before anything that depends on it.
+ * Each entry is a code splitting group matched on resolved module ids. The
+ * object form of `manualChunks` (`{ "react-vendor": ["react", …] }`) matched
+ * bare specifiers, and several of ours never bound to a real module. The
+ * function form runs as a single group under Rolldown: a chunk also takes the
+ * dependencies of what it captures, in the order modules are visited, so React
+ * landed in `framer-motion` and the helpers above in `query-vendor`. Here the
+ * list order is the priority: first match wins, so React's own runtime is
+ * listed before anything that depends on it.
  */
-const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
+const VENDOR_CHUNKS: ReadonlyArray<readonly [string, ...RegExp[]]> = [
   // React runtime. `scheduler` and the useSyncExternalStore shim are React's
   // own dependencies and must stay on this side of the split.
   [
     "react-vendor",
     /[\\/]node_modules[\\/](react|react-dom|react-is|react-router|react-router-dom|scheduler|use-sync-external-store)[\\/]/,
+    BUILD_HELPERS,
   ],
   ["framer-motion", /[\\/]node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/],
   // three.js + r3f and the state/measure helpers r3f pulls in. Reached only
@@ -191,14 +201,11 @@ const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
 const REACT_DOM_SERVER =
   /[\\/]node_modules[\\/]react-dom[\\/](server|static|cjs[\\/]react-dom-(server|static))/;
 
-function vendorChunk(id: string): string | undefined {
-  if (!id.includes("node_modules")) return undefined;
-  if (REACT_DOM_SERVER.test(id)) return undefined;
-  for (const [name, test] of VENDOR_CHUNKS) {
-    if (test.test(id)) return name;
-  }
-  return undefined;
-}
+const VENDOR_GROUPS = VENDOR_CHUNKS.map(([name, ...tests], index) => ({
+  name,
+  test: (id: string) => !REACT_DOM_SERVER.test(id) && tests.some((test) => test.test(id)),
+  priority: VENDOR_CHUNKS.length - index,
+}));
 
 /**
  * Preloads the woff2 files that paint the first screen (Kaisei Decol for
@@ -281,9 +288,9 @@ export default defineConfig(({ mode }) => {
       // to load. Everything else keeps the default decision.
       assetsInlineLimit: (file) =>
         /\.(woff2?|ttf|otf)$/i.test(file) ? false : undefined,
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks: vendorChunk,
+          codeSplitting: { groups: VENDOR_GROUPS },
         },
       },
       chunkSizeWarningLimit: 600,
