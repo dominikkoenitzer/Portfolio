@@ -146,10 +146,10 @@ export function NoteDemo() {
     <div ref={ref}>
       <Demo
         caption="Tick a to-do on either side and watch the other. Then press Flashcards."
-        height={340}
+        height={380}
         label="An Inkling note whose to-dos appear on Today and whose card lines become flashcards"
         live={status}
-        phoneHeight={500}
+        phoneHeight={600}
       >
         <Frame
           bottom={
