@@ -21,11 +21,11 @@ import {
   projectCardSrcSet,
 } from "@/constants/projects";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
-import { fillTemplate } from "@/lib/fill-template";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+import { fillTemplate } from "@/lib/fill-template";
 import { SectionHeading } from "../layout/SectionHeading";
 import { PrivateSource } from "./PrivateSource";
 
