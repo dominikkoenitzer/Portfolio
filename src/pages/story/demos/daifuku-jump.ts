@@ -11,11 +11,7 @@ type Jump = {
   waiting: number;
 };
 
-/**
- * The jump demo's bar, and whether the live region says it. A miss explains
- * itself only while nobody needs you; once someone does, the bar is as if
- * Jump had never missed.
- */
+/** The jump demo's bar and whether the live region says it; a miss holds only while nobody needs you. */
 export function jumpStatus({ miss, needed, visit, focus, label, waiting }: Jump): { text: string; announce: boolean } {
   if (miss && !needed) return { text: "Nobody needs you yet, so the focus stays where it is.", announce: true };
   if (visit) return { text: `On demo ${focus + 1}: ${label}.`, announce: true };
