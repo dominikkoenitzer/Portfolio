@@ -52,7 +52,7 @@ export const story: Story = {
           code: {
             file: "MainWindow.Files.cs",
             text: SAFE_WRITE,
-            caption: "The whole text lands in the temporary file first; only File.Replace touches the original.",
+            caption: "The whole text lands in the temporary file first; only files.Replace touches the original.",
           },
         },
         "Unsaved and untitled tabs go to the session two seconds after the last change, so their text survives closing the window, signing out of Windows or a crash.",
