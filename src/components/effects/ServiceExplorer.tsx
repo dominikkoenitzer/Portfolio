@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { buildSapling } from "@/components/effects/service-tree/build";
 import { clamp, easeOutCubic, lerpAngle } from "@/components/effects/service-tree/easing";
 import { HUBS } from "@/components/effects/service-tree/layout";
+import { shownLeaf } from "@/components/effects/service-tree/shown-leaf";
 import { releaseSharedTextures } from "@/components/effects/service-tree/textures";
 import {
   SERVICE_TREE_THEMES,
@@ -35,6 +36,8 @@ interface ServiceExplorerProps {
   nodes: ServiceTreeNode[];
   activeCategory: Category;
   selectedKey: string | null;
+  /** The leaf whose button in the section's list has keyboard focus. */
+  focusedKey?: string | null;
   designTheme: ServiceTreeTheme;
   autoRotate?: boolean;
   pulses?: boolean;
@@ -50,6 +53,7 @@ export default function ServiceExplorer({
   nodes,
   activeCategory,
   selectedKey,
+  focusedKey = null,
   designTheme,
   autoRotate = true,
   pulses = true,
@@ -64,6 +68,7 @@ export default function ServiceExplorer({
   // Live props the render loop reads without re-subscribing (effect runs once).
   const activeRef = useRef(activeCategory);
   const selectedRef = useRef(selectedKey);
+  const focusedRef = useRef(focusedKey);
   const autoRotateRef = useRef(autoRotate);
   const pulsesRef = useRef(pulses);
   const nodesRef = useRef(nodes);
@@ -77,6 +82,7 @@ export default function ServiceExplorer({
   useEffect(() => {
     activeRef.current = activeCategory;
     selectedRef.current = selectedKey;
+    focusedRef.current = focusedKey;
     autoRotateRef.current = autoRotate;
     pulsesRef.current = pulses;
     nodesRef.current = nodes;
@@ -337,13 +343,13 @@ export default function ServiceExplorer({
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
 
-    // ── Tooltip (project the hovered leaf to screen each frame) ───────────
+    // ── Tooltip (project the hovered or focused leaf to screen each frame) ─
     // Scratch vectors reused every frame: the loop never allocates.
     const tmpV = new THREE.Vector3();
     const focusV = new THREE.Vector3();
     const updateTooltip = () => {
       if (!tooltip) return;
-      const i = hovered;
+      const i = shownLeaf(hovered, focusedRef.current, nodeObjs);
       if (
         i == null ||
         !nodeObjs[i] ||
@@ -468,11 +474,12 @@ export default function ServiceExplorer({
 
       // Nodes: pop-in, hover/select focus, dim.
       const selKey = selectedRef.current;
+      const shown = shownLeaf(hovered, focusedRef.current, nodeObjs);
       for (let i = 0; i < nodeObjs.length; i++) {
         const n = nodeObjs[i];
         const f = catFactor[n.cat];
         const grown = el > n.growAt;
-        const focused = hovered === i || selKey === n.key;
+        const focused = shown === i || selKey === n.key;
         const tScale = grown ? (focused ? 1.34 : 1.0) : 0.001;
         n.scale += (tScale - n.scale) * 0.16;
         n.group.scale.setScalar(n.scale);

@@ -327,6 +327,8 @@ export function ServicesSection() {
 
   const [active, setActive] = useState<Category>("all");
   const [selectedKey, setSelectedKey] = useState<ItemKey | null>(null);
+  // The leaf button with keyboard focus, marked in the scene since the list is hidden.
+  const [focusedLeaf, setFocusedLeaf] = useState<ItemKey | null>(null);
   const [treeReady, setTreeReady] = useState(false);
   const [treeFailed, setTreeFailed] = useState(false);
 
@@ -448,6 +450,7 @@ export function ServicesSection() {
                   activeCategory={active}
                   key={designTheme}
                   designTheme={designTheme}
+                  focusedKey={focusedLeaf}
                   nodes={explorerNodes}
                   onError={handleError}
                   onReady={handleReady}
@@ -578,7 +581,11 @@ export function ServicesSection() {
                     <button
                       aria-expanded={selectedKey === item.itemKey}
                       id={`service-leaf-${item.itemKey}`}
+                      onBlur={() =>
+                        setFocusedLeaf((key) => (key === item.itemKey ? null : key))
+                      }
                       onClick={() => handleSelect(item.itemKey)}
+                      onFocus={() => setFocusedLeaf(item.itemKey)}
                       type="button"
                     >
                       {`${t.items[item.itemKey].title}, ${t.categoryMeta[item.category].label}, ${priceLabel(item, t)}`}
