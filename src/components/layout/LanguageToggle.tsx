@@ -116,7 +116,10 @@ export function LanguageToggle() {
                   >
                     {code}
                   </span>
-                  <span className={isActive ? "font-medium" : ""}>{label}</span>
+                  {/* Each name is marked in its own language, so a screen reader reads it with that language's voice. */}
+                  <span className={isActive ? "font-medium" : ""} lang={code}>
+                    {label}
+                  </span>
                   {/* The selected row is carried by a tinted background alone,
                       which is faint at a glance. A tick states it outright and
                       inherits its colour from the row. */}
@@ -145,7 +148,10 @@ export function LanguageToggle() {
                 </span>
                 <span className="flex flex-col leading-tight">
                   <span className="text-sm">{t.toggles.useSystem}</span>
-                  <span className="text-[11px] text-muted-foreground">
+                  <span
+                    className="text-[11px] text-muted-foreground"
+                    lang={systemLanguage.code}
+                  >
                     {systemLanguage.label}
                   </span>
                 </span>
