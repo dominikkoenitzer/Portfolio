@@ -1,14 +1,27 @@
 import type { Story } from "../types";
 
-// The body of SafeWrite in MainWindow.Files.cs; the temporary path above it
-// and the cleanup in `finally` are trimmed.
-const SAFE_WRITE = `try
+// The body of the SafeWrite that takes a writer, in MainWindow.Files.cs; the temporary path above it and the cleanup in `finally` are trimmed.
+const SAFE_WRITE = `bool onlyCopy = false;
+try
 {
-    File.WriteAllText(temp, text, encoding);
-    if (File.Exists(full))
-        File.Replace(temp, full, destinationBackupFileName: null);
+    write(temp);
+    if (!File.Exists(full))
+    {
+        files.Move(temp, full, overwrite: false);
+    }
     else
-        File.Move(temp, full);
+    {
+        try
+        {
+            files.Replace(temp, full);
+        }
+        catch when (!File.Exists(full) && File.Exists(temp))
+        {
+            // ReplaceFile can fail after it took the file away (ERROR_UNABLE_TO_MOVE_REPLACEMENT).
+            onlyCopy = true;
+            files.Move(temp, full, overwrite: false);
+        }
+    }
 }
 finally
 {
