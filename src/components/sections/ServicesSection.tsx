@@ -38,7 +38,9 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { getServicesFaqs, getServicesProcess } from "@/config/seo-data";
+import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useTheme } from "@/hooks/use-theme";
+import { escapeCloses } from "@/lib/escape-closes";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import {
@@ -395,15 +397,16 @@ export function ServicesSection() {
   const handleError = useCallback(() => setTreeFailed(true), []);
   const handleReady = useCallback(() => setTreeReady(true), []);
 
-  // Esc closes the open card (matches the Navbar mobile-menu pattern).
+  // Esc closes the open card, unless the search or a menu lies over it.
+  const isTopLayer = useOverlayLayer(selectedKey !== null);
   useEffect(() => {
     if (!selectedKey) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeCard();
+      if (escapeCloses(e, isTopLayer)) closeCard();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selectedKey, closeCard]);
+  }, [selectedKey, closeCard, isTopLayer]);
 
   // Stable identity across selection so the scene builds its textures once.
   const explorerNodes = useMemo<ServiceTreeNode[]>(
