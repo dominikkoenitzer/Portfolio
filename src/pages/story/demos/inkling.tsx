@@ -197,10 +197,11 @@ export function NoteDemo() {
                     <AnimatePresence initial={false}>
                       {onToday.map((l) => {
                         const ticked = done.has(l.id);
+                        // The row clips for its height animation; its clip reaches into the panel's padding and the row above, so the checkbox's focus ring shows whole.
                         return (
                           <motion.li
                             animate={{ opacity: 1, height: "auto" }}
-                            className="overflow-hidden"
+                            className="-mt-3 -ml-5 overflow-hidden pt-3 pl-5"
                             exit={{ opacity: 0, height: 0 }}
                             initial={{ opacity: 0, height: 0 }}
                             key={l.id}
