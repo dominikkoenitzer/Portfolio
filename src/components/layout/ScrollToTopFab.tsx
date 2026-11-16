@@ -6,6 +6,7 @@ import { haptic } from "@/hooks/use-haptic";
 import { useLanguage } from "@/lib/language-context";
 import { SPRING_SOFT } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { scrollToTop } from "@/lib/scroll-to-top";
 import { translations } from "@/lib/translations";
 
 /**
@@ -53,8 +54,7 @@ export function ScrollToTopFab() {
     return () => observer.disconnect();
   }, []);
 
-  const handleClick = () => {
-    haptic("light");
+  const startScroll = () => {
     // Drive the return through Lenis when it's active so the smooth scroll and
     // Lenis's internal target stay in sync. Without Lenis (reduced motion), jump
     // instantly, an explicit behavior:"smooth" would animate despite the
@@ -73,6 +73,11 @@ export function ScrollToTopFab() {
         behavior: prefersReducedMotion() ? "auto" : "smooth",
       });
     }
+  };
+
+  const handleClick = () => {
+    haptic("light");
+    scrollToTop(startScroll, document.getElementById("main-content"));
   };
 
   return (
