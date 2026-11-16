@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import {
   canWebGL,
   liveCanvases,
@@ -523,6 +523,118 @@ async function fillContact(page: Page) {
   await page.locator('input[name="email"]').fill("ada@example.org");
   await page.locator('textarea[name="message"]').fill("A short note.");
 }
+
+/** Opens a project page and brings one of its story demos into view. */
+async function openDemo(page: Page, path: string, label: string) {
+  await page.goto(path);
+  await expectRendered(page);
+  const demo = page.getByRole("figure", { name: label });
+  await demo.scrollIntoViewIfNeeded();
+  await expect(demo).toBeVisible();
+  return demo;
+}
+
+const holdsFocus = (demo: Locator) =>
+  demo.evaluate((el) => el.contains(document.activeElement));
+
+/**
+ * A demo button that a press removes or turns off must hand the focus to a
+ * control in the same demo, or a keyboard user starts again from the top.
+ */
+test.describe("story demos by keyboard", () => {
+  for (const width of [1440, 390]) {
+    test.describe(`at ${width} px`, () => {
+      test.use({ viewport: { width, height: width > 600 ? 900 : 844 } });
+
+      test("Entropy's Draw keeps the focus through its run", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/entropy",
+          "Random characters picked by modulo and by rejection sampling, side by side",
+        );
+        // It draws once by itself when it comes into view.
+        const again = demo.getByRole("button", { name: "Draw again" });
+        await expect(again).toBeVisible();
+        await again.focus();
+        await page.keyboard.press("Enter");
+        await expect(again).toBeHidden();
+        expect(await holdsFocus(demo)).toBe(true);
+        await expect(again).toBeFocused();
+      });
+
+      test("Inkling's grades and Reset leave the focus on the card", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/inkling",
+          "An Inkling flashcard scheduled by FSRS-6, review by review",
+        );
+        const card = demo.getByRole("button", { name: /^Proteins are built/ });
+        const answer = demo.getByText("ribosomes", { exact: true });
+        await card.focus();
+        await page.keyboard.press("Space");
+        await expect(answer).toBeVisible();
+
+        await demo.getByRole("button", { name: /^Good/ }).focus();
+        await page.keyboard.press("Enter");
+        await expect(card).toBeFocused();
+        await expect(answer).toBeHidden();
+
+        // Space shows the next answer instead of scrolling the page.
+        const scrolled = await page.evaluate(() => window.scrollY);
+        await page.keyboard.press("Space");
+        await expect(answer).toBeVisible();
+        expect(await page.evaluate(() => window.scrollY)).toBe(scrolled);
+        await page.keyboard.press("3");
+        await expect(card).toBeFocused();
+
+        const reset = demo.getByRole("button", { name: "Reset" });
+        await reset.focus();
+        await page.keyboard.press("Enter");
+        await expect(reset).toBeHidden();
+        await expect(card).toBeFocused();
+      });
+
+      test("Oxidize's Cancel hands the focus to Remove completely", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/oxidize",
+          "Oxidize removing a program completely into a backup, and Undo restoring it",
+        );
+        const remove = demo.getByRole("button", { name: "Remove completely", exact: true });
+        const cancel = demo.getByRole("button", { name: "Cancel", exact: true });
+        await remove.focus();
+        await page.keyboard.press("Enter");
+        await expect(cancel).toBeVisible();
+        await cancel.focus();
+        await page.keyboard.press("Enter");
+        await expect(cancel).toBeHidden();
+        await expect(remove).toBeFocused();
+      });
+
+      test("Mochi's Start hands the keys to the desktop and Reset keeps its button", async ({
+        page,
+      }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/mochi",
+          "Mochi tiling floating windows and moving focus between them",
+        );
+        await demo.getByRole("button", { name: "Start", exact: true }).focus();
+        await page.keyboard.press("Enter");
+        await expect(demo.getByRole("application")).toBeFocused();
+
+        const status = demo.getByText(/has the focus\.$/).first();
+        const before = await status.textContent();
+        await page.keyboard.press("ArrowRight");
+        await expect(status).not.toHaveText(before ?? "");
+
+        await demo.getByRole("button", { name: "Reset", exact: true }).focus();
+        await page.keyboard.press("Enter");
+        await expect(demo.getByRole("button", { name: "Start", exact: true })).toBeFocused();
+      });
+    });
+  }
+});
 
 test.describe("diagnostics", () => {
   test("/diag measures, stays out of search and sends nothing without an endpoint", async ({
