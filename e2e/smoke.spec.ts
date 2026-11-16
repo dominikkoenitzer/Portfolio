@@ -380,6 +380,20 @@ test.describe("keyboard", () => {
     await expect(page).toHaveURL(/\/$/);
   });
 
+  test("keys typed inside the projects search land where the caret is", async ({ page }) => {
+    await page.goto("/projects");
+    await expectRendered(page);
+    await settle(page);
+    const field = page.getByRole("textbox", { name: "Search by name, tech, or keyword…" });
+    await field.click();
+    await page.keyboard.type("rct");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.type("ea");
+    await expect(field).toHaveValue("react");
+    await expect(page).toHaveURL(/\/projects\?q=react$/);
+  });
+
   test("Tab stays inside the phone menu", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
