@@ -1,5 +1,5 @@
 import { Check, Languages, Monitor } from "lucide-react";
-import { type KeyboardEvent as ReactKeyboardEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -9,6 +9,7 @@ import {
 import { LANGUAGES } from "@/config/languages";
 import { useOverlayLayer } from "@/hooks/use-overlay-layer";
 import { useLanguage } from "@/lib/language-context";
+import { moveFocusInList } from "@/lib/list-keys";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 
@@ -20,35 +21,11 @@ export function LanguageToggle() {
   // layer of its own one Escape closed both: the sheet's handler only knew
   // about the overlays in the stack.
   const isTopLayer = useOverlayLayer(open);
-  const listRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
 
   const systemLanguage = LANGUAGES.find(
     ({ code }) => code === detectedLanguage,
   );
-
-  // Radix gives the popover focus but no roving movement: the rows are plain
-  // buttons, so Tab was the only way through them. Arrows, Home and End walk
-  // the whole sheet, the system row included, which is what a keyboard user
-  // reaches for after the menu opens on the current language.
-  const onListKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) return;
-    const items = Array.from(
-      listRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? [],
-    );
-    if (items.length === 0) return;
-    e.preventDefault();
-    const from = items.indexOf(document.activeElement as HTMLButtonElement);
-    const next =
-      e.key === "Home"
-        ? 0
-        : e.key === "End"
-          ? items.length - 1
-          : e.key === "ArrowDown"
-            ? (from + 1) % items.length
-            : (from - 1 + items.length) % items.length;
-    items[next]?.focus();
-  };
 
   return (
     <Popover onOpenChange={setOpen} open={open}>
@@ -87,7 +64,8 @@ export function LanguageToggle() {
         }}
         sideOffset={8}
       >
-        <div onKeyDown={onListKeyDown} ref={listRef}>
+        {/* Arrows, Home and End walk the whole sheet, the system row included. */}
+        <div onKeyDown={moveFocusInList}>
           <div className="grid gap-1">
             {LANGUAGES.map(({ code, label }) => {
               const isActive = language === code;
@@ -116,7 +94,10 @@ export function LanguageToggle() {
                   >
                     {code}
                   </span>
-                  <span className={isActive ? "font-medium" : ""}>{label}</span>
+                  {/* Each name is marked in its own language, so a screen reader reads it with that language's voice. */}
+                  <span className={isActive ? "font-medium" : ""} lang={code}>
+                    {label}
+                  </span>
                   {/* The selected row is carried by a tinted background alone,
                       which is faint at a glance. A tick states it outright and
                       inherits its colour from the row. */}
@@ -145,7 +126,10 @@ export function LanguageToggle() {
                 </span>
                 <span className="flex flex-col leading-tight">
                   <span className="text-sm">{t.toggles.useSystem}</span>
-                  <span className="text-[11px] text-muted-foreground">
+                  <span
+                    className="text-[11px] text-muted-foreground"
+                    lang={systemLanguage.code}
+                  >
                     {systemLanguage.label}
                   </span>
                 </span>

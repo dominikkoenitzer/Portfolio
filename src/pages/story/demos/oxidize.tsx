@@ -1,6 +1,7 @@
 import { AnimatePresence, LayoutGroup, animate, motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { Check } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { keepFocus } from "../keep-focus";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, wait } from "../motion";
 import "./oxidize.css";
@@ -447,6 +448,8 @@ export function BackupDemo() {
   const [phase, setPhase] = useState<RemovePhase>("footprint");
   const [restored, setRestored] = useState(false);
   const run = useRef(0);
+  const cancelButton = useRef<HTMLButtonElement>(null);
+  const removeButton = useRef<HTMLButtonElement>(null);
   useEffect(() => () => void run.current++, []);
   const items = [...FOOTPRINT.flatMap((s) => s.items), USER_SETTINGS];
   const away = phase === "done" || phase === "restoring";
@@ -496,13 +499,18 @@ export function BackupDemo() {
           <>
             <BarText>{told}</BarText>
             {phase === "confirm" ? (
-              <Action onClick={() => setPhase("footprint")} width="min-w-[5.5rem]">
+              <Action
+                onClick={() => keepFocus(cancelButton.current, removeButton.current, () => setPhase("footprint"))}
+                ref={cancelButton}
+                width="min-w-[5.5rem]"
+              >
                 Cancel
               </Action>
             ) : null}
             <Action
               onClick={() => (phase === "footprint" ? setPhase("confirm") : phase === "confirm" ? void remove() : phase === "done" ? void undo() : undefined)}
               primary
+              ref={removeButton}
               width="min-w-[10rem]"
             >
               {phase === "done" || phase === "restoring" ? "Undo" : "Remove completely"}

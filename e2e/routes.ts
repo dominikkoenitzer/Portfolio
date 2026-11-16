@@ -30,6 +30,8 @@ export const ROUTES: RouteCase[] = [
   ...projectPaths.map((path) => ({ path, status: 200 })),
   // Any path without a file behind it gets the 404 page with a 404 status.
   { path: "/no-such-page", status: 404 },
+  // A project slug with no project gets the same page at its own address.
+  { path: "/projects/no-such-project", status: 404 },
 ];
 
 if (staticPaths.length < 10 || projectPaths.length < 15) {

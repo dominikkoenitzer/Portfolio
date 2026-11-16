@@ -18,7 +18,8 @@ export const PROJECTS = {
     repo: "dominikkoenitzer/Mochi",
     // Every crate lives under crates/; nothing outside it holds tests.
     include: (path) => path.includes("/crates/") && path.endsWith(".rs"),
-    marker: /#\[test\]/g,
+    // Plain tests and the async ones mochic runs on tokio.
+    marker: /#\[(?:tokio::)?test\]/g,
   },
   zephyr: {
     repo: "dominikkoenitzer/Zephyr",

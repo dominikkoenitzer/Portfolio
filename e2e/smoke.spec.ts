@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import {
   canWebGL,
   liveCanvases,
@@ -56,6 +56,22 @@ test.describe("every route", () => {
   }
 });
 
+test.describe("not found", () => {
+  test("a project link with no project keeps its address and says the page is missing", async ({
+    page,
+  }) => {
+    const errors = watchErrors(page, { notFound: true });
+    const response = await page.goto("/projects/no-such-project");
+    expect(response?.status()).toBe(404);
+    await expectRendered(page);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Page not found" }),
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/projects\/no-such-project$/);
+    expect(errors).toEqual([]);
+  });
+});
+
 // Keys that may repeat in one head by design.
 const REPEATING_HEAD_KEYS = ["og:locale:alternate", "article:tag"];
 
@@ -110,6 +126,36 @@ test.describe("head", () => {
         ),
       )
       .toEqual(["/projects"]);
+  });
+});
+
+test.describe("projects search", () => {
+  test("keys typed inside the text land where the caret is", async ({ page }) => {
+    await page.goto("/projects");
+    await expectRendered(page);
+    await settle(page);
+    const field = page.getByRole("textbox", { name: "Search by name, tech, or keyword…" });
+    await field.click();
+    await page.keyboard.type("rct");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.type("ea");
+    await expect(field).toHaveValue("react");
+    await expect(page).toHaveURL(/\/projects\?q=react$/);
+  });
+});
+
+test.describe("projects", () => {
+  test("the back link on a project page returns to the list as it was filtered", async ({
+    page,
+  }) => {
+    await page.goto("/projects?type=desktop");
+    await expectRendered(page);
+    await page.getByRole("link", { name: /^View details about / }).first().click();
+    await expect(page).toHaveURL(/\/projects\/[^/?]+$/);
+    await expectRendered(page);
+    await page.locator("main").getByRole("link", { name: "Projects", exact: true }).click();
+    await expect(page).toHaveURL(/\/projects\?type=desktop$/);
   });
 });
 
@@ -196,16 +242,21 @@ test.describe("reduced motion", () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   });
 
-  test("the logo strip stands still", async ({ page }) => {
-    await page.goto("/projects/entropy");
-    await expectRendered(page);
-    const track = page.locator(".logoloop__track").first();
-    await track.scrollIntoViewIfNeeded();
-    const before = await track.evaluate((el) => getComputedStyle(el).transform);
-    await page.waitForTimeout(800);
-    const after = await track.evaluate((el) => getComputedStyle(el).transform);
-    expect(after).toBe(before);
-  });
+  for (const width of [1440, 390, 360]) {
+    test(`every logo of the tech list is in view at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/projects/entropy");
+      await expectRendered(page);
+      const list = page.getByRole("list", { name: "Entropy tech stack" });
+      await list.scrollIntoViewIfNeeded();
+      await expect(page.locator(".logoloop__track")).toHaveCount(0);
+      const items = list.getByRole("listitem");
+      expect(await items.count()).toBeGreaterThan(5);
+      for (const item of await items.all()) {
+        await expect(item).toBeInViewport({ ratio: 1 });
+      }
+    });
+  }
 });
 
 /**
@@ -412,6 +463,42 @@ test.describe("keyboard", () => {
     await expect.poll(subject).toBe("Freelance project: [short description]");
   });
 
+  test("the subject list moves by keys and opens on the chosen subject", async ({ page }) => {
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    const list = page.getByRole("dialog", { name: "Change what this is about" });
+    const option = (name: string) => list.getByRole("button", { name, exact: true });
+
+    await page.getByRole("button", { name: "a role, Change what this is about" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(option("a role")).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(option("a freelance project")).toBeFocused();
+    await page.keyboard.press("End");
+    await expect(option("something else")).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(option("a role")).toBeFocused();
+    await page.keyboard.press("ArrowUp");
+    await expect(option("something else")).toBeFocused();
+    await page.keyboard.press("Home");
+    await expect(option("a role")).toBeFocused();
+
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Enter");
+    const trigger = page.getByRole("button", {
+      name: "a freelance project, Change what this is about",
+    });
+    await expect(trigger).toBeFocused();
+    await expect(page.locator('main a[href^="mailto:"]').first()).toHaveAttribute(
+      "href",
+      /subject=Freelance%20project/,
+    );
+
+    await page.keyboard.press("Enter");
+    await expect(option("a freelance project")).toBeFocused();
+  });
+
   test("the mail links work while the served html holds no address", async ({ page }) => {
     const address = /[\w.+-]+@[\w-]+\.[a-z]{2,}/i;
     for (const route of ["/", "/contact", "/privacy"]) {
@@ -523,6 +610,118 @@ async function fillContact(page: Page) {
   await page.locator('input[name="email"]').fill("ada@example.org");
   await page.locator('textarea[name="message"]').fill("A short note.");
 }
+
+/** Opens a project page and brings one of its story demos into view. */
+async function openDemo(page: Page, path: string, label: string) {
+  await page.goto(path);
+  await expectRendered(page);
+  const demo = page.getByRole("figure", { name: label });
+  await demo.scrollIntoViewIfNeeded();
+  await expect(demo).toBeVisible();
+  return demo;
+}
+
+const holdsFocus = (demo: Locator) =>
+  demo.evaluate((el) => el.contains(document.activeElement));
+
+/**
+ * A demo button that a press removes or turns off must hand the focus to a
+ * control in the same demo, or a keyboard user starts again from the top.
+ */
+test.describe("story demos by keyboard", () => {
+  for (const width of [1440, 390]) {
+    test.describe(`at ${width} px`, () => {
+      test.use({ viewport: { width, height: width > 600 ? 900 : 844 } });
+
+      test("Entropy's Draw keeps the focus through its run", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/entropy",
+          "Random characters picked by modulo and by rejection sampling, side by side",
+        );
+        // It draws once by itself when it comes into view.
+        const again = demo.getByRole("button", { name: "Draw again" });
+        await expect(again).toBeVisible();
+        await again.focus();
+        await page.keyboard.press("Enter");
+        await expect(again).toBeHidden();
+        expect(await holdsFocus(demo)).toBe(true);
+        await expect(again).toBeFocused();
+      });
+
+      test("Inkling's grades and Reset leave the focus on the card", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/inkling",
+          "An Inkling flashcard scheduled by FSRS-6, review by review",
+        );
+        const card = demo.getByRole("button", { name: /^Proteins are built/ });
+        const answer = demo.getByText("ribosomes", { exact: true });
+        await card.focus();
+        await page.keyboard.press("Space");
+        await expect(answer).toBeVisible();
+
+        await demo.getByRole("button", { name: /^Good/ }).focus();
+        await page.keyboard.press("Enter");
+        await expect(card).toBeFocused();
+        await expect(answer).toBeHidden();
+
+        // Space shows the next answer instead of scrolling the page.
+        const scrolled = await page.evaluate(() => window.scrollY);
+        await page.keyboard.press("Space");
+        await expect(answer).toBeVisible();
+        expect(await page.evaluate(() => window.scrollY)).toBe(scrolled);
+        await page.keyboard.press("3");
+        await expect(card).toBeFocused();
+
+        const reset = demo.getByRole("button", { name: "Reset" });
+        await reset.focus();
+        await page.keyboard.press("Enter");
+        await expect(reset).toBeHidden();
+        await expect(card).toBeFocused();
+      });
+
+      test("Oxidize's Cancel hands the focus to Remove completely", async ({ page }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/oxidize",
+          "Oxidize removing a program completely into a backup, and Undo restoring it",
+        );
+        const remove = demo.getByRole("button", { name: "Remove completely", exact: true });
+        const cancel = demo.getByRole("button", { name: "Cancel", exact: true });
+        await remove.focus();
+        await page.keyboard.press("Enter");
+        await expect(cancel).toBeVisible();
+        await cancel.focus();
+        await page.keyboard.press("Enter");
+        await expect(cancel).toBeHidden();
+        await expect(remove).toBeFocused();
+      });
+
+      test("Mochi's Start hands the keys to the desktop and Reset keeps its button", async ({
+        page,
+      }) => {
+        const demo = await openDemo(
+          page,
+          "/projects/mochi",
+          "Mochi tiling floating windows and moving focus between them",
+        );
+        await demo.getByRole("button", { name: "Start", exact: true }).focus();
+        await page.keyboard.press("Enter");
+        await expect(demo.getByRole("application")).toBeFocused();
+
+        const status = demo.getByText(/has the focus\.$/).first();
+        const before = await status.textContent();
+        await page.keyboard.press("ArrowRight");
+        await expect(status).not.toHaveText(before ?? "");
+
+        await demo.getByRole("button", { name: "Reset", exact: true }).focus();
+        await page.keyboard.press("Enter");
+        await expect(demo.getByRole("button", { name: "Start", exact: true })).toBeFocused();
+      });
+    });
+  }
+});
 
 test.describe("diagnostics", () => {
   test("/diag measures, stays out of search and sends nothing without an endpoint", async ({

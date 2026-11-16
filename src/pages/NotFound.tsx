@@ -79,6 +79,8 @@ function Destination({
  * There is deliberately no route for this page and none is needed: Vercel
  * serves dist/404.html with a real 404 status for any path with no file behind
  * it, the app boots from that file and the router's `*` case renders this.
+ * ProjectDetails renders it too for a slug with no project, so that address
+ * stays in the bar instead of turning into /projects.
  */
 export default function NotFound() {
   const { language } = useLanguage();

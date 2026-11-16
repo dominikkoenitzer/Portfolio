@@ -13,6 +13,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildSearchIndex } from "@/components/search/search-index";
+import { SKILL_CATEGORIES } from "@/constants/skills";
 import { de } from "@/lib/translations/de";
 import { en } from "@/lib/translations/en";
 import { fr } from "@/lib/translations/fr";
@@ -198,5 +199,50 @@ describe("the obvious queries stay obvious", () => {
 
   it("keeps a technology query on the technology", () => {
     expect(top("en", "rust")?.kind).toBe("skill");
+  });
+});
+
+describe("a skill is found by the name its card shows", () => {
+  const translated = { de, fr, zh } as const;
+  const named = (Object.keys(translated) as (keyof typeof translated)[]).flatMap(
+    (lang) =>
+      Object.entries(translated[lang].skills.skillNames).map(
+        ([name, label]) => [lang, label, name] as const,
+      ),
+  );
+  const skillTitle = (lang: Lang, name: string) =>
+    INDEX[lang].find((record) => record.id === `skill:${name}`)?.title;
+
+  it.each(named)("%s: %s finds the %s skill", (lang, label, name) => {
+    const hit = top(lang, label);
+    expect(hit?.id).toBe(`skill:${name}`);
+    expect(hit?.title).toBe(label);
+  });
+
+  it.each(named.map(([lang, label, name]) => [lang, name, label] as const))(
+    "%s: %s still finds the skill, titled %s",
+    (lang, name, label) => {
+      const hit = top(lang, name);
+      expect(hit?.id).toBe(`skill:${name}`);
+      expect(hit?.title).toBe(label);
+    },
+  );
+
+  it("keeps the English titles on the English page", () => {
+    for (const { skills } of SKILL_CATEGORIES) {
+      for (const name of skills) expect(skillTitle("en", name)).toBe(name);
+    }
+  });
+
+  it("keeps the tech names in every language", () => {
+    const professional = new Set(Object.keys(en.skills.skillNames));
+    for (const lang of Object.keys(INDEX) as Lang[]) {
+      for (const { skills } of SKILL_CATEGORIES) {
+        for (const name of skills) {
+          if (professional.has(name)) continue;
+          expect(skillTitle(lang, name), `${lang}: ${name}`).toBe(name);
+        }
+      }
+    }
   });
 });

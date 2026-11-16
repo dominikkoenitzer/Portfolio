@@ -759,6 +759,11 @@
   outline-offset: 3px;
 }
 
+/* Back to top hands focus to main, where a ring around the whole page would be noise. */
+[data-quiet-focus]:focus-visible {
+  outline: none;
+}
+
 /* Mobile drawer: block overscroll chaining into the body. */
 [data-mobile-scroll] {
   overscroll-behavior: contain;

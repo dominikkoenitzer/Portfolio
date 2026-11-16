@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { email } from "@/lib/email";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
+import { moveFocusInList } from "@/lib/list-keys";
 import { DUR, EASE_OUT, REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
 import { timeoutSignal } from "@/lib/timeout-signal";
@@ -236,6 +237,7 @@ export function ContactSection() {
     setChosen(null);
   }
   const [open, setOpen] = useState(false);
+  const chosenOptionRef = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
 
   // An explicit "service" only counts while there is one; otherwise follow the
@@ -555,8 +557,13 @@ export function ContactSection() {
               align="start"
               aria-label={t.changeSubject}
               className="w-72 p-1.5"
+              onOpenAutoFocus={(e) => {
+                // Open on the chosen subject, as the language menu opens on the current language.
+                e.preventDefault();
+                chosenOptionRef.current?.focus();
+              }}
             >
-              <div className="grid gap-0.5">
+              <div className="grid gap-0.5" onKeyDown={moveFocusInList}>
                 {options.map(({ key, label }) => {
                   const isActive = key === effectiveIntent;
                   return (
@@ -573,6 +580,7 @@ export function ContactSection() {
                         setChosen(key);
                         setOpen(false);
                       }}
+                      ref={isActive ? chosenOptionRef : undefined}
                       type="button"
                     >
                       <span className="min-w-0 wrap-anywhere">

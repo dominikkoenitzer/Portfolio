@@ -22,12 +22,14 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useOpenerOrigin } from "@/hooks/use-opener-origin";
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
+import { fillTemplate } from "@/lib/fill-template";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, SPRING_FLUID } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { isSameLocation } from "@/lib/same-location";
 import {
   groupHits,
   type SearchHit,
@@ -35,6 +37,7 @@ import {
   type SearchRecord,
   searchRecords,
 } from "@/lib/search";
+import { searchStatus } from "@/lib/search-status";
 import { translations } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { buildSearchIndex, suggestedRecords } from "./search-index";
@@ -108,6 +111,7 @@ export default function SearchDialog({
   const t = translations[language];
   const copy = t.search;
   const navigate = useNavigate();
+  const location = useLocation();
   const reduceMotion = prefersReducedMotion();
 
   const [query, setQuery] = useState("");
@@ -202,9 +206,12 @@ export default function SearchDialog({
       // the header button they came from with the whole nav to tab through.
       selected.current = true;
       onClose();
-      navigate(hit.record.href);
+      // Replace on the page already open, as a click on the row's `<Link>` does.
+      navigate(hit.record.href, {
+        replace: isSameLocation(location, hit.record.href),
+      });
     },
-    [navigate, onClose],
+    [location, navigate, onClose],
   );
 
   /**
@@ -362,12 +369,8 @@ export default function SearchDialog({
     return null;
   }
 
-  // Counts what the list is actually offering, so the suggestions on open are
-  // announced too rather than opening on silence.
-  const status =
-    flat.length === 1
-      ? copy.resultsOne
-      : copy.results.replace("{count}", String(flat.length));
+  // Counts the rows on offer; a query with no hits reads the no-match line.
+  const status = searchStatus(copy, trimmed, flat.length, showingSuggestions);
   const rest = reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.5 };
 
   return createPortal(
@@ -459,7 +462,7 @@ export default function SearchDialog({
               {trimmed && showingSuggestions ? (
                 // The query, handed back, with the routes still underneath.
                 <p className="shrink-0 px-3 pt-3 text-muted-foreground text-sm">
-                  {copy.noResults.replace("{query}", trimmed)}
+                  {fillTemplate(copy.noResults, "query", trimmed)}
                 </p>
               ) : null}
 

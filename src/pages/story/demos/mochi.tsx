@@ -1,5 +1,6 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { type KeyboardEvent, type ReactNode, useState } from "react";
+import { type KeyboardEvent, type ReactNode, useRef, useState } from "react";
+import { keepFocus } from "../keep-focus";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe } from "../motion";
 
@@ -292,6 +293,8 @@ export function TilingDemo() {
   const [tiled, setTiled] = useState(false);
   const [count, setCount] = useState(3);
   const [focus, setFocus] = useState(0);
+  const startButton = useRef<HTMLButtonElement>(null);
+  const desktop = useRef<HTMLDivElement>(null);
   const rects = tiled ? tile("bsp", count) : FLOATING.slice(0, count);
 
   const onKey = (event: KeyboardEvent) => {
@@ -315,37 +318,40 @@ export function TilingDemo() {
           <>
             <BarText>{status}</BarText>
             {tiled ? (
-              <>
-                {/* One place for both: it opens windows up to five, then closes the newest. */}
-                <Action
-                  onClick={() => {
-                    if (count < APPS.length) {
-                      setFocus(count);
-                      setCount(count + 1);
-                    } else {
-                      setFocus(Math.min(focus, count - 2));
-                      setCount(count - 1);
-                    }
-                  }}
-                  width="min-w-[8.5rem]"
-                >
-                  {count < APPS.length ? "Open a window" : "Close a window"}
-                </Action>
-                <Action
-                  onClick={() => {
-                    setTiled(false);
-                    setCount(3);
-                    setFocus(0);
-                  }}
-                >
-                  Reset
-                </Action>
-              </>
-            ) : (
-              <Action onClick={() => setTiled(true)} primary width="min-w-[5.5rem]">
-                Start
+              // One place for both: it opens windows up to five, then closes the newest.
+              <Action
+                onClick={() => {
+                  if (count < APPS.length) {
+                    setFocus(count);
+                    setCount(count + 1);
+                  } else {
+                    setFocus(Math.min(focus, count - 2));
+                    setCount(count - 1);
+                  }
+                }}
+                width="min-w-[8.5rem]"
+              >
+                {count < APPS.length ? "Open a window" : "Close a window"}
               </Action>
-            )}
+            ) : null}
+            {/* Start and Reset are one button, so the focus stays on it through Reset. */}
+            <Action
+              onClick={() => {
+                if (!tiled) {
+                  // The arrow keys move the pink focus from the desktop, so it takes the keyboard focus.
+                  keepFocus(startButton.current, desktop.current, () => setTiled(true));
+                  return;
+                }
+                setTiled(false);
+                setCount(3);
+                setFocus(0);
+              }}
+              primary={!tiled}
+              ref={startButton}
+              width={tiled ? "" : "min-w-[5.5rem]"}
+            >
+              {tiled ? "Reset" : "Start"}
+            </Action>
           </>
         }
       >
@@ -355,6 +361,7 @@ export function TilingDemo() {
             aria-label="Desktop. Once the windows are tiled, the arrow keys or H, J, K and L move the focus."
             className="absolute inset-0 rounded-md"
             onKeyDown={onKey}
+            ref={desktop}
             role="application"
             tabIndex={0}
           >
@@ -466,7 +473,7 @@ export function StopDemo() {
                 <span className="text-[0.75rem] text-muted-foreground">Nothing left here.</span>
               ) : (
                 APPS.slice(2, 4).map((app, i) => (
-                  <motion.div className="h-12 w-24 shrink-0 sm:w-28" key={app.name} layoutId={`mochi-hidden-${i}`} transition={spring}>
+                  <motion.div className="h-12 w-24 min-w-0 sm:w-28" key={app.name} layoutId={`mochi-hidden-${i}`} transition={spring}>
                     <Window app={app} focused={false} />
                   </motion.div>
                 ))

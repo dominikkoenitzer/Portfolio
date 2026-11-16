@@ -1,7 +1,10 @@
 import type { Story } from "../types";
 
 // Verbatim from scripts/prerender.ts, the error message trimmed.
-const ROUTE_CHECK = `const covered = new Set(pages.map((p) => p.route));
+const ROUTE_CHECK = `const covered = new Set([
+  ...pages.map((p) => p.route),
+  ...Object.keys(UNLISTED_ROUTES),
+]);
 const uncovered = [...routerSrc.matchAll(/path="([^"]+)"/g)]
   .map((m) => m[1])
   .filter((p) => p !== "*" && !p.includes(":") && !covered.has(p));

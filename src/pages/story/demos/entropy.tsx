@@ -1,5 +1,6 @@
 import { animate, motion, useMotionValue, useMotionValueEvent } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { keepFocus } from "../keep-focus";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, useSeenOnce } from "../motion";
 
@@ -261,9 +262,14 @@ export function RandomDemo() {
   const [tally, setTally] = useState(EMPTY);
   const [running, setRunning] = useState(false);
   const frame = useRef(0);
+  const drawButton = useRef<HTMLButtonElement>(null);
   const [box, seen] = useSeenOnce<HTMLDivElement>();
 
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  // Draw is back once the run ends, and takes back the focus it lent the stage.
+  useEffect(() => {
+    if (!running) keepFocus(box.current, drawButton.current);
+  }, [running, box]);
 
   const run = () => {
     cancelAnimationFrame(frame.current);
@@ -289,7 +295,8 @@ export function RandomDemo() {
       setTally(t);
       return;
     }
-    setRunning(true);
+    // Draw leaves the bar while the run lasts, so the stage holds its focus.
+    keepFocus(drawButton.current, box.current, () => setRunning(true));
     // Paced by the clock, not by frames: a slow device draws more per frame and finishes on time.
     let start = 0;
     const step = (now: number) => {
@@ -341,6 +348,7 @@ export function RandomDemo() {
                   run();
                 }}
                 primary={tally.draws === 0}
+                ref={drawButton}
               >
                 {tally.draws === 0 ? `Draw ${DRAWS}` : "Draw again"}
               </Action>
@@ -348,7 +356,13 @@ export function RandomDemo() {
           </>
         }
       >
-        <div className="absolute inset-0 flex flex-col justify-center gap-5 overflow-hidden rounded-xl p-4 sm:p-5" ref={box} style={{ background: E.bg, color: E.paper }}>
+        <div
+          className="absolute inset-0 flex flex-col justify-center gap-5 overflow-hidden rounded-xl p-4 sm:p-5"
+          ref={box}
+          // Holds Draw's focus during a run; the site's ring around the whole stage would only be noise.
+          style={{ background: E.bg, color: E.paper, outline: "none" }}
+          tabIndex={-1}
+        >
           <div className="flex flex-col gap-3">
             <Strip lit={tally.lastModulo >= 0 ? [tally.lastModulo] : []} rejects={false} title="Modulo: the value mod 3 picks the letter" />
             <Shares counts={tally.modulo} draws={tally.draws} />

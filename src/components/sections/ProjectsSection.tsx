@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { Github } from "@/components/ui/github-icon";
-import { type KeyboardEvent, useId, useMemo, useRef } from "react";
+import { type KeyboardEvent, type MouseEvent, useId, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { Button } from "@/components/ui/button";
@@ -20,11 +20,15 @@ import {
   PROJECT_CARD_SIZES,
   projectCardSrcSet,
 } from "@/constants/projects";
+import { useSearchDraft } from "@/hooks/use-search-draft";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
+import { clearFilter } from "@/lib/clear-filter";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
+import { techChipText } from "@/lib/tech-chip";
 import { translations } from "@/lib/translations";
+import { fillTemplate } from "@/lib/fill-template";
 import { SectionHeading } from "../layout/SectionHeading";
 import { PrivateSource } from "./PrivateSource";
 
@@ -170,6 +174,8 @@ export function ProjectsSection() {
   // are kept out of the URL to leave /projects clean.
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  // The field shows its own text: the router applies each write to the URL later, and showing the URL would move the caret.
+  const [search, typeSearch] = useSearchDraft(query);
   const rawType = searchParams.get("type");
   const type: TypeKey =
     rawType === "web" || rawType === "desktop" ? rawType : "all";
@@ -179,9 +185,13 @@ export function ProjectsSection() {
   const rawSort = searchParams.get("sort");
   const sort: SortKey =
     rawSort === "oldest" || rawSort === "az" ? rawSort : "newest";
+  // Handed to a project page so its back link returns to the list as it is now.
+  const listParams = searchParams.toString();
+  const listSearch = listParams ? `?${listParams}` : undefined;
 
   const updateParams = (
     patch: Partial<Record<"q" | "type" | "sort" | "tech", string>>,
+    state?: object,
   ) => {
     const next = new URLSearchParams(searchParams);
     for (const [key, value] of Object.entries(patch)) {
@@ -191,8 +201,17 @@ export function ProjectsSection() {
         next.set(key, value);
       }
     }
-    setSearchParams(next, { replace: true });
+    setSearchParams(next, { replace: true, state });
   };
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const clearFrom = (event: MouseEvent<HTMLButtonElement>, clear: () => void) =>
+    clearFilter(
+      clear,
+      event.currentTarget === document.activeElement,
+      searchRef.current,
+      (event.nativeEvent as PointerEvent).pointerType,
+    );
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -305,16 +324,19 @@ export function ProjectsSection() {
                   <input
                     aria-label={t.searchPlaceholder}
                     className={`h-11 w-full rounded-full bg-card pr-11 pl-10 text-sm ring-1 ring-border/50 transition-shadow duration-200 ease-out placeholder:text-muted-foreground focus:ring-primary/40 ${FOCUS_RING}`}
-                    onChange={(event) => updateParams({ q: event.target.value })}
+                    onChange={(event) =>
+                      updateParams({ q: event.target.value }, typeSearch(event.target.value))
+                    }
                     placeholder={t.searchPlaceholder}
+                    ref={searchRef}
                     type="text"
-                    value={query}
+                    value={search}
                   />
-                  {query ? (
+                  {search ? (
                     <button
                       aria-label={t.clearSearch}
                       className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground ${FOCUS_RING}`}
-                      onClick={() => updateParams({ q: "" })}
+                      onClick={(event) => clearFrom(event, () => updateParams({ q: "" }))}
                       type="button"
                     >
                       <X className="h-4 w-4" />
@@ -352,12 +374,12 @@ export function ProjectsSection() {
                 </p>
                 {tech ? (
                   <button
-                    aria-label={`${t.techFilter.replace("{tech}", tech)}. ${t.clearTech}`}
+                    aria-label={`${techChipText(t.techFilter, tech)}. ${t.clearTech}`}
                     className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-sm transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
-                    onClick={() => updateParams({ tech: "" })}
+                    onClick={(event) => clearFrom(event, () => updateParams({ tech: "" }))}
                     type="button"
                   >
-                    {t.techFilter.replace("{tech}", tech)}
+                    {techChipText(t.techFilter, tech)}
                     <X aria-hidden className="h-3.5 w-3.5" />
                   </button>
                 ) : null}
@@ -380,7 +402,7 @@ export function ProjectsSection() {
                   the query is a state, not a dead end. */}
               {query.trim() ? (
                 <p className="mt-3 max-w-sm truncate text-muted-foreground text-sm">
-                  {t.noResultsQuery.replace("{query}", query.trim())}
+                  {fillTemplate(t.noResultsQuery, "query", query.trim())}
                 </p>
               ) : null}
               <p className="mt-3 max-w-sm text-muted-foreground text-sm leading-relaxed">
@@ -388,8 +410,10 @@ export function ProjectsSection() {
               </p>
               <Button
                 className="mt-6 rounded-lg px-5"
-                onClick={() =>
-                  updateParams({ q: "", type: "all", sort: "newest", tech: "" })
+                onClick={(event) =>
+                  clearFrom(event, () =>
+                    updateParams({ q: "", type: "all", sort: "newest", tech: "" }),
+                  )
                 }
                 variant="cta"
               >
@@ -571,6 +595,7 @@ export function ProjectsSection() {
                             project.title,
                           )}
                           className={`${ACTION_BASE} ${ACTION_QUIET}`}
+                          state={listSearch}
                           to={`/projects/${project.slug}`}
                           {...warmOnIntent(`/projects/${project.slug}`)}
                         >

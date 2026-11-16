@@ -70,4 +70,16 @@ describe("countInTarball", () => {
     );
     expect(countInTarball(tar, include, marker)).toEqual({ count: 3, files: 2 });
   });
+
+  it("counts Mochi's async tests along with its plain ones", async () => {
+    const { include, marker } = PROJECTS.mochi;
+    const tar = await archive(
+      entry(
+        "repo-abc/crates/mochic/src/mcp.rs",
+        "#[cfg(test)]\nmod tests {\n    #[test]\n    fn a() {}\n    #[tokio::test]\n    async fn b() {}\n}",
+      ),
+      entry("repo-abc/crates/mochi/src/lib.rs", "// a #[cfg_attr(test, derive(Debug))] is not a test"),
+    );
+    expect(countInTarball(tar, include, marker)).toEqual({ count: 2, files: 2 });
+  });
 });

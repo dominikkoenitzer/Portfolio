@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import { keepFocus } from "../keep-focus";
 import { Action, BarText, Demo, Frame } from "../kit";
 import { useMotionSafe, useSeenOnce } from "../motion";
 import { RING } from "../style";
@@ -146,10 +147,10 @@ export function NoteDemo() {
     <div ref={ref}>
       <Demo
         caption="Tick a to-do on either side and watch the other. Then press Flashcards."
-        height={340}
+        height={380}
         label="An Inkling note whose to-dos appear on Today and whose card lines become flashcards"
         live={status}
-        phoneHeight={500}
+        phoneHeight={600}
       >
         <Frame
           bottom={
@@ -197,10 +198,11 @@ export function NoteDemo() {
                     <AnimatePresence initial={false}>
                       {onToday.map((l) => {
                         const ticked = done.has(l.id);
+                        // The row clips for its height animation; its clip reaches into the panel's padding and the row above, so the checkbox's focus ring shows whole.
                         return (
                           <motion.li
                             animate={{ opacity: 1, height: "auto" }}
-                            className="overflow-hidden"
+                            className="-mt-3 -ml-5 overflow-hidden pt-3 pl-5"
                             exit={{ opacity: 0, height: 0 }}
                             initial={{ opacity: 0, height: 0 }}
                             key={l.id}
@@ -342,9 +344,14 @@ export function ReviewDemo() {
   const [day, setDay] = useState(0);
   const [shown, setShown] = useState(false);
   const [log, setLog] = useState<Array<{ label: string; days: number }>>([]);
+  const cardButton = useRef<HTMLButtonElement>(null);
+  const grades = useRef<HTMLDivElement>(null);
+  const resetButton = useRef<HTMLButtonElement>(null);
 
   const preview = GRADES.map((g) => schedule(card, g.rating, day).days);
   const rate = (g: Rating) => {
+    // The grades turn off until the next answer shows; on the card, Space and 1 to 4 keep working.
+    keepFocus(grades.current, cardButton.current);
     const next = schedule(card, g, day);
     setCard({ state: next.state, stability: next.stability, difficulty: next.difficulty, lastReview: day });
     setLog((l) => [...l, { label: GRADES[g - 1].label, days: next.days }]);
@@ -352,6 +359,7 @@ export function ReviewDemo() {
     setShown(false);
   };
   const reset = () => {
+    keepFocus(resetButton.current, cardButton.current);
     setCard(NEW);
     setDay(0);
     setShown(false);
@@ -385,7 +393,11 @@ export function ReviewDemo() {
         bottom={
           <>
             <BarText>{status}</BarText>
-            {log.length ? <Action onClick={reset}>Reset</Action> : null}
+            {log.length ? (
+              <Action onClick={reset} ref={resetButton}>
+                Reset
+              </Action>
+            ) : null}
           </>
         }
       >
@@ -421,6 +433,7 @@ export function ReviewDemo() {
           <button
             className={`flex min-h-[8rem] w-full max-w-[26rem] flex-col items-center justify-center gap-3 rounded-lg px-6 py-5 text-center ${RING}`}
             onClick={() => setShown(true)}
+            ref={cardButton}
             style={{ background: v("raised"), boxShadow: `inset 0 0 0 1px ${v("border")}` }}
             type="button"
           >
@@ -439,7 +452,7 @@ export function ReviewDemo() {
           </button>
 
           {/* Hidden in Inkling until the answer shows; here they wait dimmed, so the gaps read from the start. */}
-          <div className="grid w-full max-w-[26rem] grid-cols-4 gap-2" style={{ opacity: shown ? 1 : 0.45, transition: "opacity 200ms" }}>
+          <div className="grid w-full max-w-[26rem] grid-cols-4 gap-2" ref={grades} style={{ opacity: shown ? 1 : 0.45, transition: "opacity 200ms" }}>
             {GRADES.map((g, i) => (
               <button
                 className={`flex min-h-12 flex-col items-center justify-center rounded-md px-1 py-1.5 font-medium text-[0.8125rem] ${RING}`}
