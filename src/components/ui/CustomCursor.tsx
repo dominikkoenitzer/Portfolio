@@ -11,62 +11,51 @@ import { createPortal } from "react-dom";
 import { coversViewport, magnetRectOf } from "@/lib/cursor-magnet";
 
 /**
- * CustomCursor, a free-stack re-implementation of Motion+ `<Cursor/>`.
+ * The site's pointer. index.css hides the native cursor for fine pointers
+ * (`@media (pointer: fine) { * { cursor: none } }`), and this component portals
+ * one element into <body> that follows the mouse and takes its shape from what
+ * sits under it:
  *
- * Motion+'s cursor is a paid component (`motion-plus`); this reproduces its
- * *behaviour* using only framer-motion v12: no `motion-plus` import, no new
- * deps. It runs in "replace-default" mode: the native cursor is hidden globally
- * in index.css (`@media (pointer: fine){ *{cursor:none} }`) and we portal a
- * single custom element into <body> that follows the pointer and MORPHS to
- * context:
+ * - Dot: a small violet dot inside a thin sage ring, the portrait's eye with
+ *   its pupil and iris. A quick spring smooths the pointer without lagging it.
+ * - Magnet: over a link, button or other control, the dot snaps onto the
+ *   target and grows into a rounded box that matches its rect, plus padding,
+ *   and its border radius. The fill is a translucent violet, an inset violet
+ *   ring keeps the label legible, and the sage ring thins around the outside.
+ *   The box leans a little from the target's centre toward the pointer and
+ *   stays on the target through Lenis smooth scrolling and resizes.
+ * - Caret: over selectable text that is not a field, a thin I-beam whose
+ *   height follows the text's font size and line height.
+ * - Field: over a form field or an iframe it fades out, so the native cursor
+ *   handles typing, selection, IME and the caret blink, and a nested document
+ *   that swallows the page's mouse events cannot strand it.
+ * - Press: the shape shrinks a little while the button is held.
  *
- *   • DEFAULT: a small solid violet dot inside a thin sage ring (the portrait's
- *                eye: pupil and iris), tracked with a snappy (responsive,
- *                lightly-smoothed) spring. The Motion feel: not floaty, but not
- *                a rigid 1:1 either.
- *   • MAGNETIC: over an interactive target (link/button/…), the dot SNAPS onto
- *                the target and morphs into a rounded rectangle matching its
- *                bounding rect (+padding) and border-radius, with a translucent
- *                violet fill, an inset violet ring so the label stays legible,
- *                and the sage ring thinned around the outside.
- *                A subtle magnetic PULL nudges the box from the target centre
- *                toward the real pointer for a tactile feel. It stays GLUED to
- *                the target during Lenis smooth-scroll and on resize.
- *   • CARET: over non-input selectable text, morphs to a thin tall I-beam
- *                whose height is derived from the text's font/line metrics.
- *   • FIELD: over a real form field (or an iframe) it fades out (opacity 0)
- *                so the native cursor owns the typing / selection / IME / blink
- *                affordance a synthetic caret can't represent, and so a nested
- *                document that swallows the page's mouse events can't strand it.
- *   • PRESS: scale dips on mousedown, restores on mouseup.
+ * Theme: every colour is `hsl(var(--primary))` or `hsl(var(--sage))`. The
+ * tokens live on `:root` and the element sits in <body>, so a theme switch
+ * needs no JS. The animated fill, ring and halo widths are composed into the
+ * colour strings with `useMotionTemplate`.
  *
- * ── Theme ──────────────────────────────────────────────────────────────────
- * Every colour is `hsl(var(--primary))` or `hsl(var(--sage))`. The tokens live
- * on `:root` and we portal into <body>, so the CSS variables re-resolve
- * automatically with zero JS. Even the animated fill/ring/halo widths ride
- * motion values composed INTO the colour strings via `useMotionTemplate`.
+ * Performance: nothing on the move, hover, press or scroll path calls React
+ * setState. Position, size, radius, fill and ring alpha, press and visibility
+ * are motion values (useMotionValue, useSpring, useTransform,
+ * useMotionTemplate), and only transform, opacity and size animate. Because
+ * visibility is a motion value rather than React state with AnimatePresence,
+ * leaving the window, a blur, a hidden tab and the field fade never re-render.
+ * The scroll-glue rAF loop runs only while a magnet target is active and stops
+ * itself once there is none. There is no React state at all: the element
+ * mounts with the component and stays at `opacity: 0` until the first real
+ * move, which keeps the springs attached; see the note on the opacity spring
+ * below.
  *
- * ── Performance (hard requirement) ─────────────────────────────────────────
- * NOTHING on the move / hover / press / scroll path calls React setState.
- * Position, size, radius, fill/ring alpha, press and visibility all ride motion
- * values (useMotionValue / useSpring / useTransform / useMotionTemplate) and
- * animate only GPU-friendly transform / opacity / size. Visibility is a motion
- * value (not React state + AnimatePresence), so window-leave / blur / tab-hide /
- * form-field fades never re-render. The scroll-glue rAF loop runs ONLY while a
- * magnetic target is active and self-cancels the instant it isn't. There is no
- * React state at all: the element mounts with the component and hides itself
- * with `opacity: 0` until the first real move, which is what keeps the springs
- * attached; see the note on the opacity spring below.
- *
- * ── Robustness / SSR ───────────────────────────────────────────────────────
- * Renders nothing (return null) for reduced-motion or coarse/touch pointers,
- * the CSS restores the native cursor in those cases. All window/document access
- * is inside the effect or guarded, so SSR never crashes. Springs are ALWAYS
- * constructed (stable hook order); the reduced-motion opt-out is the render-time
- * `return null`, never a conditionally-called hook. Every listener is cleaned up
- * and the rAF is cancelled on unmount. Magnetic mode is defensively released
- * when its target unmounts, collapses to zero size, or the pointer strays well
- * outside it (scroll-away, gaps, nested/disabled elements).
+ * Robustness and SSR: with reduced motion or a coarse pointer it renders
+ * nothing, and the CSS gives the native cursor back. All window and document
+ * access sits inside the effect or behind a guard, so SSR never crashes. The
+ * springs are always created, which keeps the hook order stable; the opt-out
+ * is the render-time `return null`, never a conditional hook. Every listener
+ * is removed and the rAF cancelled on unmount. The magnet lets go when its
+ * target unmounts, collapses to zero size, or the pointer moves well outside
+ * it (scrolled away, gaps, nested or disabled elements).
  */
 
 /**
@@ -194,7 +183,7 @@ export function CustomCursor() {
   const fine = useMediaQuery("(pointer: fine)");
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
 
-  // ── Raw motion values (written imperatively, never re-render React) ────────
+  // Raw motion values, written imperatively, so React never re-renders.
   // Destination centre, size, radius, fill/ring alpha and visibility; the
   // springs below chase these. Initialised to the resting dot so nothing
   // "grows in" on first paint.
@@ -210,7 +199,7 @@ export function CustomCursor() {
   const visMV = useMotionValue(0); // 0 hidden / 1 shown (window-leave, blur, tab)
   const press = useMotionValue(0); // 1 while the primary button is held
 
-  // ── Springs (ALWAYS constructed: stable hook order) ──────────────────────
+  // Springs, always created so the hook order stays stable.
   const cx = useSpring(destX, POS_SPRING);
   const cy = useSpring(destY, POS_SPRING);
   const w = useSpring(destW, SIZE_SPRING);
@@ -248,7 +237,7 @@ export function CustomCursor() {
   const background = useMotionTemplate`hsl(var(--primary) / ${fill})`;
   const boxShadow = useMotionTemplate`inset 0 0 0 ${ring}px hsl(var(--primary) / 0.85), 0 0 0 ${halo}px hsl(var(--sage))`;
 
-  // ── Refs: hot-path state that must NOT trigger React renders ───────────────
+  // Refs for hot-path state that must not trigger React renders.
   const pointerRef = useRef({ x: -100, y: -100 });
   const activeTargetRef = useRef<Element | null>(null); // current magnetic target
   const magnetRadiusRef = useRef<MagnetRadius | null>(null); // its cached radius
@@ -268,9 +257,9 @@ export function CustomCursor() {
     // Mirror of visibility so the move path only ever writes visMV on a real
     // false→true edge: never per-frame. Boundary handlers keep it in sync.
     let shown = false;
-    // Whether the pointer is currently within the viewport. Tracked ONLY by
+    // Whether the pointer is currently within the viewport. Tracked only by
     // pointer boundary events (enter/move → true, leave → false); blur / tab-
-    // hide deliberately do NOT change it, so a keyboard app-or-tab switch (the
+    // hide deliberately do not change it, so a keyboard app-or-tab switch (the
     // pointer stays put over the page) can correctly re-show on refocus.
     let inside = false;
     // Occlusion-check bookkeeping for the glue loop, see the constants above.
@@ -293,7 +282,7 @@ export function CustomCursor() {
       press.set(0);
     };
 
-    // Recompute the magnetic box from the target's LIVE rect. This is the glue
+    // Recompute the magnetic box from the target's live rect. This is the glue
     // that keeps the morph on the target during Lenis smooth-scroll and resize.
     // Returns false when the magnet should be released (target gone / collapsed
     // / pointer strayed far outside) so the caller can fall back to a dot.
@@ -323,7 +312,7 @@ export function CustomCursor() {
         width = rect.width;
         height = rect.height;
       }
-      // Release on ANY degenerate rect (either axis collapsed), a collapsed
+      // Release on any degenerate rect (either axis collapsed), a collapsed
       // accordion / max-height:0 target would otherwise render a thin sliver.
       if (width < 1 || height < 1) return false;
       // And on the opposite degenerate case: a target that has grown to the
@@ -388,7 +377,7 @@ export function CustomCursor() {
       return !(top === el || el.contains(top) || top.contains(el));
     }
 
-    // The scroll-glue loop. Alive ONLY while a magnetic target is set; it reads
+    // The scroll-glue loop. Alive only while a magnetic target is set; it reads
     // `rafRef` back to null before rescheduling so `ensureRaf` can restart it,
     // and self-cancels (no reschedule) the moment there's no target.
     function tick() {
@@ -429,7 +418,7 @@ export function CustomCursor() {
       if (rafRef.current == null) rafRef.current = requestAnimationFrame(tick);
     }
 
-    // ── Shape setters (pure motion-value writes) ─────────────────────────────
+    // Shape setters, plain motion-value writes.
     function setDotShape() {
       destFill.set(1);
       destRing.set(0);
@@ -475,7 +464,7 @@ export function CustomCursor() {
 
     function enterMagnet(el: Element) {
       activeTargetRef.current = el;
-      // Read the target radius ONCE (constant while hovered); pills (percentage
+      // Read the target radius once (constant while hovered); pills (percentage
       // radii) round to half the short side each frame from the live rect. An
       // override target (a round services leaf on a square-cornered <canvas>)
       // has no meaningful CSS radius, so treat it as a pill for a snug halo.
@@ -507,7 +496,7 @@ export function CustomCursor() {
       destY.set(pointerRef.current.y);
     }
 
-    // ── Listeners ─────────────────────────────────────────────────────────────
+    // Listeners.
     // Resolve what's under the pointer and morph accordingly. Free (non-magnetic)
     // modes read the position from `pointerRef`, so this can also be driven by a
     // synthetic `mouseover` that carries no coordinates (see `onOver`).
@@ -575,7 +564,7 @@ export function CustomCursor() {
 
     // `mousemove` is not the only way the thing under the pointer changes: a
     // scroll, a resize, an overlay opening and a canvas scene re-hit-testing
-    // all move content under a STILL cursor, and none of them emit a move. The
+    // all move content under a still cursor, and none of them emit a move. The
     // browser does fire a trusted `mouseover` for every one of them (measured:
     // 8 of them across one wheel scroll), so this is what keeps the morph in
     // sync when the page moves instead of the mouse. Synthetic (untrusted)
@@ -655,7 +644,7 @@ export function CustomCursor() {
 
     // Window/tab focus changes hide the cursor in the background and re-show it
     // on return IF the pointer is still over the page. These events carry no
-    // coordinates and don't move the pointer, so we DON'T touch `inside` here,
+    // coordinates and don't move the pointer, so we don't touch `inside` here,
     // a keyboard app/tab switch keeps the pointer where it was, and re-show at
     // the last position without repositioning (no streak, no stale reveal when
     // the pointer had genuinely left the viewport first).
@@ -719,7 +708,7 @@ export function CustomCursor() {
   ]);
 
   // Reduced-motion / coarse-pointer users (and SSR) get nothing, the CSS
-  // restores the native cursor. This is the ONLY opt-out; all hooks above ran
+  // restores the native cursor. This is the only opt-out; all hooks above ran
   // unconditionally, so hook order is stable across every render.
   if (!fine || reduced || typeof document === "undefined") return null;
 
