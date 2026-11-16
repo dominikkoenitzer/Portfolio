@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { type CSSProperties, type KeyboardEvent, type ReactNode, useId, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, type ReactNode, type Ref, useId, useState } from "react";
 import { Lightbox, type LightboxOrigin } from "@/components/effects/project-effects";
 import { useLanguage } from "@/lib/language-context";
 import { translations } from "@/lib/translations";
@@ -136,6 +136,7 @@ export function Action({
   primary = false,
   label,
   width = "",
+  ref,
 }: {
   children: ReactNode;
   onClick: () => void;
@@ -145,6 +146,7 @@ export function Action({
   primary?: boolean;
   /** A minimum width that fits every label the action takes, so the bar never jumps. */
   width?: string;
+  ref?: Ref<HTMLButtonElement>;
 }) {
   const { reduced } = useMotionSafe();
   const tone = dark
@@ -159,6 +161,7 @@ export function Action({
       aria-label={label}
       className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full px-4 font-medium text-[0.8125rem] transition-colors duration-200 ease-bloom sm:h-8 sm:px-3.5 ${RING} ${width} ${tone}`}
       onClick={onClick}
+      ref={ref}
       type="button"
       whileTap={reduced ? undefined : { scale: 0.97 }}
     >
