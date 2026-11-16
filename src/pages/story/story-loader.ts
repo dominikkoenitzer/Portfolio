@@ -25,8 +25,9 @@ export function loadStory(slug: string): Promise<Story | null> {
         done.set(slug, module.story);
         return module.story;
       },
+      // Forget a failed fetch, so the next visit tries again; this one shows the page without it.
       () => {
-        done.set(slug, null);
+        pending.delete(slug);
         return null;
       },
     );
