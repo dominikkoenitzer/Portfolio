@@ -26,6 +26,7 @@ import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
 import { translations } from "@/lib/translations";
+import { fillTemplate } from "@/lib/fill-template";
 import { SectionHeading } from "../layout/SectionHeading";
 import { PrivateSource } from "./PrivateSource";
 
@@ -391,7 +392,7 @@ export function ProjectsSection() {
                   the query is a state, not a dead end. */}
               {query.trim() ? (
                 <p className="mt-3 max-w-sm truncate text-muted-foreground text-sm">
-                  {t.noResultsQuery.replace("{query}", query.trim())}
+                  {fillTemplate(t.noResultsQuery, "query", query.trim())}
                 </p>
               ) : null}
               <p className="mt-3 max-w-sm text-muted-foreground text-sm leading-relaxed">
