@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { Github } from "@/components/ui/github-icon";
-import { type KeyboardEvent, useId, useMemo, useRef } from "react";
+import { type KeyboardEvent, type MouseEvent, useId, useMemo, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { TechBadge } from "@/components/ui/tech-badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import {
   projectCardSrcSet,
 } from "@/constants/projects";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
+import { clearFilter } from "@/lib/clear-filter";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
@@ -194,6 +195,10 @@ export function ProjectsSection() {
     setSearchParams(next, { replace: true });
   };
 
+  const searchRef = useRef<HTMLInputElement>(null);
+  const clearFrom = (event: MouseEvent<HTMLButtonElement>, clear: () => void) =>
+    clearFilter(clear, event.currentTarget === document.activeElement, searchRef.current);
+
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = projects.filter((project) => {
@@ -307,6 +312,7 @@ export function ProjectsSection() {
                     className={`h-11 w-full rounded-full bg-card pr-11 pl-10 text-sm ring-1 ring-border/50 transition-shadow duration-200 ease-out placeholder:text-muted-foreground focus:ring-primary/40 ${FOCUS_RING}`}
                     onChange={(event) => updateParams({ q: event.target.value })}
                     placeholder={t.searchPlaceholder}
+                    ref={searchRef}
                     type="text"
                     value={query}
                   />
@@ -314,7 +320,7 @@ export function ProjectsSection() {
                     <button
                       aria-label={t.clearSearch}
                       className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground ${FOCUS_RING}`}
-                      onClick={() => updateParams({ q: "" })}
+                      onClick={(event) => clearFrom(event, () => updateParams({ q: "" }))}
                       type="button"
                     >
                       <X className="h-4 w-4" />
@@ -354,7 +360,7 @@ export function ProjectsSection() {
                   <button
                     aria-label={`${t.techFilter.replace("{tech}", tech)}. ${t.clearTech}`}
                     className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-sm transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
-                    onClick={() => updateParams({ tech: "" })}
+                    onClick={(event) => clearFrom(event, () => updateParams({ tech: "" }))}
                     type="button"
                   >
                     {t.techFilter.replace("{tech}", tech)}
@@ -388,8 +394,10 @@ export function ProjectsSection() {
               </p>
               <Button
                 className="mt-6 rounded-lg px-5"
-                onClick={() =>
-                  updateParams({ q: "", type: "all", sort: "newest", tech: "" })
+                onClick={(event) =>
+                  clearFrom(event, () =>
+                    updateParams({ q: "", type: "all", sort: "newest", tech: "" }),
+                  )
                 }
                 variant="cta"
               >
