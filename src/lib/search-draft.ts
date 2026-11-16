@@ -1,27 +1,31 @@
-/** The search field's own text and its writes to the address that have not arrived yet, oldest first. */
+/** What the search field typed last, and where. */
 export interface SearchDraft {
   readonly text: string;
-  readonly pending: readonly number[];
+  /** The key of the address the field showed when this text was typed. */
+  readonly at: string;
+  /** The number of the first write the field sent since the component mounted. */
+  readonly first: number;
 }
 
-/** A field showing what the address holds. */
-export const draftFrom = (query: string): SearchDraft => ({ text: query, pending: [] });
+/** The field took `text` while the address `at` was showing and sent it as write number `write`. */
+export const typed = (
+  draft: SearchDraft | null,
+  text: string,
+  at: string,
+  write: number,
+): SearchDraft => ({ text, at, first: draft?.first ?? write });
 
-/** The field took `text` and sent it to the address as write number `write`. */
-export const typed = (draft: SearchDraft, text: string, write: number): SearchDraft => ({
-  text,
-  pending: [...draft.pending, write],
-});
-
-/** The address now holds `query`: the field's own write keeps the typed text, any other change replaces it. */
-export function addressMoved(
-  draft: SearchDraft,
+/** The typed text while the address is the one it was typed at or one of the field's own writes; any other address shows its query. */
+export function shown(
+  draft: SearchDraft | null,
   query: string,
+  key: string,
   write: number | undefined,
-): SearchDraft {
-  const at = write === undefined ? -1 : draft.pending.indexOf(write);
-  if (at === -1) return draftFrom(query);
-  return { text: draft.text, pending: draft.pending.slice(at + 1) };
+): string {
+  if (draft === null) return query;
+  if (key === draft.at) return draft.text;
+  if (write !== undefined && write >= draft.first) return draft.text;
+  return query;
 }
 
 /** The number of the field's write a history entry carries, if it carries one. */
