@@ -1,9 +1,6 @@
 import { expect, type Locator, test } from "@playwright/test";
 
-/**
- * Where the checkbox's focus ring is cut off: for each ancestor up to the demo
- * that clips (its row first), how far the ring reaches past its padding box.
- */
+/** Each clipping ancestor up to the demo, its row first, that the checkbox's focus ring reaches past. */
 async function ringClips(box: Locator) {
   return box.evaluate((el) => {
     const style = getComputedStyle(el);
