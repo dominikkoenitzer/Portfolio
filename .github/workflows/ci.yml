@@ -190,13 +190,16 @@ jobs:
           name: dist
           path: dist
 
-      # The browser build is keyed on the lockfile, which pins the Playwright
-      # version; the system libraries it needs come from apt on every run.
+      - name: Read the runner's OS release
+        id: osrel
+        run: echo "id=$(. /etc/os-release && echo "$ID-$VERSION_ID")" >> "$GITHUB_OUTPUT"
+
+      # Browser builds are per OS release, so a newer runner image never restores one linked to older libraries.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: browsers
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('bun.lock') }}
+          key: playwright-${{ steps.osrel.outputs.id }}-${{ matrix.browser }}-${{ hashFiles('bun.lock') }}
 
       - name: Install ${{ matrix.browser }}
         if: steps.browsers.outputs.cache-hit != 'true'
