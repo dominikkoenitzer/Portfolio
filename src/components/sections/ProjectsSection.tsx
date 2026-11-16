@@ -24,6 +24,7 @@ import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
 import { REVEAL, SPRING_FLUID, stagger } from "@/lib/motion";
+import { techChipText } from "@/lib/tech-chip";
 import { translations } from "@/lib/translations";
 import { SectionHeading } from "../layout/SectionHeading";
 import { PrivateSource } from "./PrivateSource";
@@ -352,12 +353,12 @@ export function ProjectsSection() {
                 </p>
                 {tech ? (
                   <button
-                    aria-label={`${t.techFilter.replace("{tech}", tech)}. ${t.clearTech}`}
+                    aria-label={`${techChipText(t.techFilter, tech)}. ${t.clearTech}`}
                     className={`inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary text-sm transition-colors duration-200 ease-out hover:bg-primary/15 ${FOCUS_RING}`}
                     onClick={() => updateParams({ tech: "" })}
                     type="button"
                   >
-                    {t.techFilter.replace("{tech}", tech)}
+                    {techChipText(t.techFilter, tech)}
                     <X aria-hidden className="h-3.5 w-3.5" />
                   </button>
                 ) : null}
