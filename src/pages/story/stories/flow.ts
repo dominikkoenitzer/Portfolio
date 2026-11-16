@@ -2,14 +2,12 @@ import type { Still, Story } from "../types";
 
 // From HighResTimer::PreciseDelayMs in src/FlowEngine.cpp, its comments left
 // out. The target it spins towards is set just above: the start plus the delay.
-const DELAY_CODE = `if (milliseconds > 2) {
-    DWORD remaining = milliseconds - 2;
-    while (remaining > 0) {
-        if (cancel && cancel->load()) return;
-        const DWORD slice = remaining > 50 ? 50 : remaining;
-        Sleep(slice);
-        remaining -= slice;
-    }
+const DELAY_CODE = `for (;;) {
+    if (cancel && cancel->load()) return;
+    QueryPerformanceCounter(&now);
+    const LONGLONG remainingUs = static_cast<LONGLONG>(TicksToUs(now.QuadPart, target, freq.QuadPart));
+    if (remainingUs <= 2000) break;
+    SleepMicroseconds(std::min<LONGLONG>(50000, remainingUs - 2000));
 }
 do {
     if (cancel && cancel->load()) return;
