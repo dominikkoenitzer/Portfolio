@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { type KeyboardEvent, useEffect, useRef, useState } from "react";
+import { type KeyboardEvent, type MouseEvent, useEffect, useRef, useState } from "react";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, useSeenOnce, wait } from "../motion";
 import { RING } from "../style";
+import { type Phase, pickerKey } from "./psyche-keys";
 
 /*
  * Psyche, told through its key moments. The codes are real TOTP codes
@@ -150,8 +151,6 @@ const SITES = [
   { value: "acm-ecorp.example", label: "acm-ecorp.example" },
 ];
 
-type Phase = "idle" | "picker" | "ask" | "typing" | "typed";
-
 /** The key moment: Alt+P on a sign-in page types the right code, or asks. */
 export function PickerDemo() {
   const [ref, seen] = useSeenOnce<HTMLDivElement>();
@@ -171,6 +170,9 @@ export function PickerDemo() {
   const run = useRef(0);
   const firstRow = useRef<HTMLButtonElement>(null);
   const yes = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLDivElement>(null);
+  // The Alt+P button, taken from its click: Action has no ref of its own.
+  const opener = useRef<HTMLButtonElement | null>(null);
 
   const levels = ACCOUNTS.map((a, i) => match(site, [...a.domains, ...learned[i]], a.issuer));
   const weight = (l: Level) => (l === "Exact" ? 2 : l ? 1 : 0);
@@ -216,8 +218,15 @@ export function PickerDemo() {
     if (phase === "ask") yes.current?.focus({ preventScroll: true });
   }, [phase]);
 
+  // The picker is about to go: if it holds the focus, Alt+P takes it back, so the keys stay in the demo.
+  const handBack = () => {
+    const d = dialog.current;
+    if (d?.contains(d.ownerDocument.activeElement)) opener.current?.focus({ preventScroll: true });
+  };
+
   const pick = (i: number) => {
     if (levels[i] === "Exact") {
+      handBack();
       void typeCode(codes[i], "Typed the picked account's code.");
       return;
     }
@@ -230,6 +239,7 @@ export function PickerDemo() {
     const i = asked;
     const domain = siteOf(site);
     if (remember) setLearned((all) => all.map((d, j) => (j === i ? [...new Set([...d, domain])] : d)));
+    handBack();
     void typeCode(
       codes[i],
       remember ? `Typed. ${domain} is now an exact match for ${ACCOUNTS[i].issuer}: press Alt+P again.` : "Typed, and nothing remembered: the next visit asks again.",
@@ -237,13 +247,13 @@ export function PickerDemo() {
   };
 
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Escape" && (phase === "picker" || phase === "ask")) {
-      e.preventDefault();
+    const act = pickerKey(e.key, phase, e.target instanceof HTMLButtonElement && e.target !== yes.current);
+    if (!act) return;
+    e.preventDefault();
+    if (act === "close") {
+      handBack();
       setPhase("idle");
-    } else if (phase === "ask" && (e.key === "Enter" || e.key.toLowerCase() === "n")) {
-      e.preventDefault();
-      answer(e.key === "Enter");
-    }
+    } else answer(act === "yes");
   };
 
   const status =
@@ -282,7 +292,13 @@ export function PickerDemo() {
           bottom={
             <>
               <BarText>{status}</BarText>
-              <Action onClick={press} primary>
+              <Action
+                onClick={(e?: MouseEvent<HTMLButtonElement>) => {
+                  if (e) opener.current = e.currentTarget;
+                  press();
+                }}
+                primary
+              >
                 Alt+P
               </Action>
             </>
@@ -328,6 +344,7 @@ export function PickerDemo() {
                   initial={{ opacity: 0, y: 6 }}
                   role="dialog"
                   aria-label="Psyche picker"
+                  ref={dialog}
                   style={{ background: APP.bg, color: APP.text, boxShadow: `inset 0 0 0 1px ${APP.line}` }}
                   transition={fade}
                 >
