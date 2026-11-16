@@ -10,6 +10,7 @@ import { ROUTE_CHUNKS } from "@/lib/route-chunks";
 import { translations } from "@/lib/translations";
 import { pageTransitionVariants } from "@/lib/transitions";
 import Home from "@/pages/Home";
+import { NotFound } from "@/pages/LazyNotFound";
 
 // Every route but Home is lazy, and its import specifier lives in
 // lib/route-chunks so the prefetcher can warm the exact same chunk on hover.
@@ -22,7 +23,6 @@ const Services = lazy(ROUTE_CHUNKS["/services"]);
 const Contact = lazy(ROUTE_CHUNKS["/contact"]);
 const Donate = lazy(ROUTE_CHUNKS["/donate"]);
 const Privacy = lazy(ROUTE_CHUNKS["/privacy"]);
-const NotFound = lazy(() => import("@/pages/NotFound"));
 // Unlisted: no link points here, so there is nothing for the prefetcher to warm.
 const Diagnostics = lazy(() => import("@/pages/Diagnostics"));
 

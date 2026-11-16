@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Lock } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
 // Module path, not the seo-data barrel: that barrel also re-exports
@@ -26,6 +26,7 @@ import {
   getDefaultGeoLocation,
 } from "@/lib/seo-utils";
 import { translations } from "@/lib/translations";
+import { NotFound } from "@/pages/LazyNotFound";
 import { CodePane, HeroPicture, PairFigure, Points, StillFigure } from "./story/kit";
 import { hasStory, loadStory, storyNow } from "./story/story-loader";
 import type { Block, Story } from "./story/types";
@@ -409,7 +410,7 @@ const ProjectDetails = () => {
   const project = projectSlug ? getProject(projectSlug, language) : undefined;
 
   if (!project) {
-    return <Navigate replace to="/projects" />;
+    return <NotFound />;
   }
 
   const projectUrl = `${SITE_CONFIG.url}/projects/${project.slug}`;
