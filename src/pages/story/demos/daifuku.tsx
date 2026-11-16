@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Action, BarText, Demo, Frame, Pills } from "../kit";
 import { useMotionSafe, useSeenOnce, wait } from "../motion";
 import { RING } from "../style";
+import { jumpStatus } from "./daifuku-jump";
 
 /*
  * Daifuku, told through its key moments. The grid is Daifuku's own planner,
@@ -361,28 +362,28 @@ export function JumpDemo() {
     setVisit((v) => v + 1);
   };
 
-  const waiting = states.filter((s) => s === "waiting").length;
-  const status = miss
-    ? "Nobody needs you yet, so the focus stays where it is."
-    : visit
-      ? `On demo ${focus + 1}: ${STATE[states[focus]].label}.`
-      : waiting
-        ? `${waiting} waiting. Ctrl+Alt+N goes to the one that has waited longest.`
-        : "Six agents at work. Ctrl+Alt+N waits for one to need you.";
+  const status = jumpStatus({
+    miss,
+    needed: order.length,
+    visit,
+    focus,
+    label: STATE[states[focus]].label,
+    waiting: states.filter((s) => s === "waiting").length,
+  });
 
   return (
     <Demo
       caption="When borders turn yellow, press Jump until it comes back around. Then take the colour away."
       height={440}
       label="Six agents whose borders show their state, and a key that jumps to the one that needs you"
-      live={visit || miss ? status : ""}
+      live={status.announce ? status.text : ""}
       phoneHeight={420}
     >
       <div className="absolute inset-0" ref={ref}>
         <Frame
           bottom={
             <>
-              <BarText>{status}</BarText>
+              <BarText>{status.text}</BarText>
               <Action onClick={jump} primary width="min-w-[5.5rem]">
                 Jump
               </Action>
