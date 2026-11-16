@@ -6,7 +6,7 @@ import type { Story } from "./types";
  * (see `lib/route-chunks.ts`), so the story is usually in memory before the
  * page can render and arrives with the title instead of after it.
  */
-const STORIES = import.meta.glob<{ story: Story }>("./stories/*.ts");
+const STORIES = import.meta.glob<{ story: Story }>(["./stories/*.ts", "!./stories/*.test.ts"]);
 
 const done = new Map<string, Story | null>();
 const pending = new Map<string, Promise<Story | null>>();
