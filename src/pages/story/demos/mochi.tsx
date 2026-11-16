@@ -473,7 +473,7 @@ export function StopDemo() {
                 <span className="text-[0.75rem] text-muted-foreground">Nothing left here.</span>
               ) : (
                 APPS.slice(2, 4).map((app, i) => (
-                  <motion.div className="h-12 w-24 shrink-0 sm:w-28" key={app.name} layoutId={`mochi-hidden-${i}`} transition={spring}>
+                  <motion.div className="h-12 w-24 min-w-0 sm:w-28" key={app.name} layoutId={`mochi-hidden-${i}`} transition={spring}>
                     <Window app={app} focused={false} />
                   </motion.div>
                 ))
