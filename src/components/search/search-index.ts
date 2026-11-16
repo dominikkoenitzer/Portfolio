@@ -7,7 +7,7 @@ import {
 } from "@/config/seo-data/services";
 import { NAV_LINKS } from "@/constants";
 import { getProjects } from "@/constants/projects";
-import { SKILL_CATEGORIES } from "@/constants/skills";
+import { SKILL_CATEGORIES, skillLabel } from "@/constants/skills";
 import { getTimeline } from "@/constants/timeline";
 import { primeSearchRecords, type SearchRecord } from "@/lib/search";
 import type { Translation } from "@/lib/translations";
@@ -194,10 +194,13 @@ function collect(language: Language, t: Translation): SearchRecord[] {
   for (const category of SKILL_CATEGORIES) {
     const label = t.skills.categories[category.key];
     for (const name of category.skills) {
+      // Titled as the card reads; the English name stays findable on translated pages.
+      const title = skillLabel(name, t.skills.skillNames);
       records.push({
         id: `skill:${name}`,
         kind: "skill",
-        title: name,
+        title,
+        ...(title === name ? {} : { keywords: [name] }),
         context: label,
         href: "/skills",
       });
