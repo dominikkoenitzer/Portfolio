@@ -196,16 +196,21 @@ test.describe("reduced motion", () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
   });
 
-  test("the logo strip stands still", async ({ page }) => {
-    await page.goto("/projects/entropy");
-    await expectRendered(page);
-    const track = page.locator(".logoloop__track").first();
-    await track.scrollIntoViewIfNeeded();
-    const before = await track.evaluate((el) => getComputedStyle(el).transform);
-    await page.waitForTimeout(800);
-    const after = await track.evaluate((el) => getComputedStyle(el).transform);
-    expect(after).toBe(before);
-  });
+  for (const width of [1440, 390, 360]) {
+    test(`every logo of the tech list is in view at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/projects/entropy");
+      await expectRendered(page);
+      const list = page.getByRole("list", { name: "Entropy tech stack" });
+      await list.scrollIntoViewIfNeeded();
+      await expect(page.locator(".logoloop__track")).toHaveCount(0);
+      const items = list.getByRole("listitem");
+      expect(await items.count()).toBeGreaterThan(5);
+      for (const item of await items.all()) {
+        await expect(item).toBeInViewport({ ratio: 1 });
+      }
+    });
+  }
 });
 
 /**

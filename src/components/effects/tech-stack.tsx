@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import type { PortfolioProject } from "@/constants/projects";
 import { getTechHref, getTechIcon, TechIcon } from "@/components/ui/tech-badge";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import LogoLoop, { type LogoItem } from "./LogoLoop";
 
 /**
@@ -32,14 +34,17 @@ function getProjectLogos(project: PortfolioProject): LogoItem[] {
 
 /**
  * The project's tech stack as a slow, endless strip of logos, each linking to
- * the tool's own site. It pauses under the pointer and stands still for anyone
- * who asks for reduced motion. The edges fade through a mask rather than a
- * coloured overlay, so the strip sits on either theme without a seam.
+ * the tool's own site. It pauses under the pointer. Anyone who asks for reduced
+ * motion gets the static list instead, since a clipped strip that stands still
+ * would hide every logo past its edge. The edges fade through a mask rather
+ * than a coloured overlay, so the strip sits on either theme without a seam.
  */
 export function ProjectTechLoop({ project }: { project: PortfolioProject }) {
+  const [reduceMotion] = useState(prefersReducedMotion);
   const logos = getProjectLogos(project);
   if (logos.length === 0) return null;
   const label = `${project.title} tech stack`;
+  if (reduceMotion) return <StaticTechList label={label} logos={logos} />;
   return (
     <ErrorBoundary fallback={<StaticTechList label={label} logos={logos} />}>
       <div className="relative overflow-hidden text-foreground/75 [-webkit-mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)] [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]">
@@ -58,8 +63,9 @@ export function ProjectTechLoop({ project }: { project: PortfolioProject }) {
 }
 
 /**
- * The same logos standing still and wrapped, for when the moving strip throws:
- * this is the page's only list of its tech, so it must not simply vanish.
+ * The same logos standing still and wrapped, for reduced motion and for when
+ * the moving strip throws: this is the page's only list of its tech, so it
+ * must not simply vanish.
  */
 function StaticTechList({ label, logos }: { label: string; logos: LogoItem[] }) {
   return (
