@@ -16,9 +16,9 @@ describe("search draft", () => {
     expect(draft).toEqual({ text: "react", pending: [] });
   });
 
-  it("keeps the typed text when only the last of several writes arrives", () => {
-    const draft = typed(typed(draftFrom(""), "r", 1), "re", 2);
-    expect(addressMoved(draft, "re", 2)).toEqual({ text: "re", pending: [] });
+  it("keeps the typed text when a later write arrives and an earlier one never does", () => {
+    const draft = typed(typed(typed(draftFrom(""), "r", 1), "re", 2), "rea", 3);
+    expect(addressMoved(draft, "re", 2)).toEqual({ text: "rea", pending: [3] });
   });
 
   it("takes the address's text on a change from elsewhere", () => {
