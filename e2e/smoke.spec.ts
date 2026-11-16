@@ -113,6 +113,22 @@ test.describe("head", () => {
   });
 });
 
+test.describe("projects search", () => {
+  test("keys typed inside the text land where the caret is", async ({ page }) => {
+    await page.goto("/projects");
+    await expectRendered(page);
+    await settle(page);
+    const field = page.getByRole("textbox", { name: "Search by name, tech, or keyword…" });
+    await field.click();
+    await page.keyboard.type("rct");
+    await page.keyboard.press("Home");
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.type("ea");
+    await expect(field).toHaveValue("react");
+    await expect(page).toHaveURL(/\/projects\?q=react$/);
+  });
+});
+
 /**
  * Where the site draws with WebGL. Whether a context is possible is measured
  * in the browser first: with one, the canvas must be there and live; without,

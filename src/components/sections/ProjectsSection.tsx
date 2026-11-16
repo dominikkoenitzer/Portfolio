@@ -20,6 +20,7 @@ import {
   PROJECT_CARD_SIZES,
   projectCardSrcSet,
 } from "@/constants/projects";
+import { useSearchDraft } from "@/hooks/use-search-draft";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { clearFilter } from "@/lib/clear-filter";
 import { revealOnScroll } from "@/lib/framer-animations";
@@ -173,6 +174,8 @@ export function ProjectsSection() {
   // are kept out of the URL to leave /projects clean.
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
+  // The field shows its own text: the router applies each write to the URL later, and showing the URL would move the caret.
+  const [search, typeSearch] = useSearchDraft(query);
   const rawType = searchParams.get("type");
   const type: TypeKey =
     rawType === "web" || rawType === "desktop" ? rawType : "all";
@@ -185,6 +188,7 @@ export function ProjectsSection() {
 
   const updateParams = (
     patch: Partial<Record<"q" | "type" | "sort" | "tech", string>>,
+    state?: object,
   ) => {
     const next = new URLSearchParams(searchParams);
     for (const [key, value] of Object.entries(patch)) {
@@ -194,7 +198,7 @@ export function ProjectsSection() {
         next.set(key, value);
       }
     }
-    setSearchParams(next, { replace: true });
+    setSearchParams(next, { replace: true, state });
   };
 
   const searchRef = useRef<HTMLInputElement>(null);
@@ -317,13 +321,15 @@ export function ProjectsSection() {
                   <input
                     aria-label={t.searchPlaceholder}
                     className={`h-11 w-full rounded-full bg-card pr-11 pl-10 text-sm ring-1 ring-border/50 transition-shadow duration-200 ease-out placeholder:text-muted-foreground focus:ring-primary/40 ${FOCUS_RING}`}
-                    onChange={(event) => updateParams({ q: event.target.value })}
+                    onChange={(event) =>
+                      updateParams({ q: event.target.value }, typeSearch(event.target.value))
+                    }
                     placeholder={t.searchPlaceholder}
                     ref={searchRef}
                     type="text"
-                    value={query}
+                    value={search}
                   />
-                  {query ? (
+                  {search ? (
                     <button
                       aria-label={t.clearSearch}
                       className={`absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors duration-200 ease-out hover:text-foreground ${FOCUS_RING}`}
