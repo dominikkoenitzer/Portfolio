@@ -417,6 +417,42 @@ test.describe("keyboard", () => {
     await expect.poll(subject).toBe("Freelance project: [short description]");
   });
 
+  test("the subject list moves by keys and opens on the chosen subject", async ({ page }) => {
+    await page.goto("/contact");
+    await expectRendered(page);
+    await settle(page);
+    const list = page.getByRole("dialog", { name: "Change what this is about" });
+    const option = (name: string) => list.getByRole("button", { name, exact: true });
+
+    await page.getByRole("button", { name: "a role, Change what this is about" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(option("a role")).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(option("a freelance project")).toBeFocused();
+    await page.keyboard.press("End");
+    await expect(option("something else")).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    await expect(option("a role")).toBeFocused();
+    await page.keyboard.press("ArrowUp");
+    await expect(option("something else")).toBeFocused();
+    await page.keyboard.press("Home");
+    await expect(option("a role")).toBeFocused();
+
+    await page.keyboard.press("ArrowDown");
+    await page.keyboard.press("Enter");
+    const trigger = page.getByRole("button", {
+      name: "a freelance project, Change what this is about",
+    });
+    await expect(trigger).toBeFocused();
+    await expect(page.locator('main a[href^="mailto:"]').first()).toHaveAttribute(
+      "href",
+      /subject=Freelance%20project/,
+    );
+
+    await page.keyboard.press("Enter");
+    await expect(option("a freelance project")).toBeFocused();
+  });
+
   test("the mail links work while the served html holds no address", async ({ page }) => {
     const address = /[\w.+-]+@[\w-]+\.[a-z]{2,}/i;
     for (const route of ["/", "/contact", "/privacy"]) {
