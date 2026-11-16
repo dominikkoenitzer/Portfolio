@@ -185,6 +185,9 @@ export function ProjectsSection() {
   const rawSort = searchParams.get("sort");
   const sort: SortKey =
     rawSort === "oldest" || rawSort === "az" ? rawSort : "newest";
+  // Handed to a project page so its back link returns to the list as it is now.
+  const listParams = searchParams.toString();
+  const listSearch = listParams ? `?${listParams}` : undefined;
 
   const updateParams = (
     patch: Partial<Record<"q" | "type" | "sort" | "tech", string>>,
@@ -592,6 +595,7 @@ export function ProjectsSection() {
                             project.title,
                           )}
                           className={`${ACTION_BASE} ${ACTION_QUIET}`}
+                          state={listSearch}
                           to={`/projects/${project.slug}`}
                           {...warmOnIntent(`/projects/${project.slug}`)}
                         >

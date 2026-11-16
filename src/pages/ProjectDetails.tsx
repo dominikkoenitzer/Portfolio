@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Lock } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { SEO } from "@/components/seo";
 import { ProjectTechLoop } from "@/components/effects/tech-stack";
 // Module path, not the seo-data barrel: that barrel also re-exports
@@ -19,6 +19,7 @@ import type { PortfolioProject } from "@/constants/projects/types";
 import { useRoutePrefetch } from "@/hooks/use-route-prefetch";
 import { revealOnScroll } from "@/lib/framer-animations";
 import { useLanguage } from "@/lib/language-context";
+import { projectsBackTarget } from "@/lib/projects-back";
 import {
   createSoftwareApplicationSchema,
   createSoftwareSourceCodeSchema,
@@ -222,6 +223,8 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
   const reduceMotion = useReducedMotion();
   const lenis = useLenis();
   const { warmOnIntent } = useRoutePrefetch();
+  // The list's search, when the visitor came from it; the neighbour links pass it on.
+  const { state: listSearch } = useLocation();
   const story = useStory(project.slug);
   // Set only where the story's English sits inside a page in another language.
   const storyLang = language === "en" ? undefined : "en";
@@ -258,7 +261,7 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
         <div className="xl:pt-[0.7rem]">
           <Link
             className="inline-flex items-center gap-1.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-foreground"
-            to="/projects"
+            to={projectsBackTarget(listSearch)}
             {...warmOnIntent("/projects")}
           >
             <span aria-hidden>&larr;</span> {t.projects}
@@ -371,6 +374,7 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
                 {previous ? (
                   <Link
                     className="group block"
+                    state={listSearch}
                     to={`/projects/${previous.slug}`}
                     {...warmOnIntent(`/projects/${previous.slug}`)}
                   >
@@ -385,6 +389,7 @@ function ProjectStory({ project }: { project: PortfolioProject }) {
                 {next ? (
                   <Link
                     className="group block text-right"
+                    state={listSearch}
                     to={`/projects/${next.slug}`}
                     {...warmOnIntent(`/projects/${next.slug}`)}
                   >

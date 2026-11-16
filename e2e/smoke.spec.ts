@@ -145,6 +145,20 @@ test.describe("projects search", () => {
   });
 });
 
+test.describe("projects", () => {
+  test("the back link on a project page returns to the list as it was filtered", async ({
+    page,
+  }) => {
+    await page.goto("/projects?type=desktop");
+    await expectRendered(page);
+    await page.getByRole("link", { name: /^View details about / }).first().click();
+    await expect(page).toHaveURL(/\/projects\/[^/?]+$/);
+    await expectRendered(page);
+    await page.locator("main").getByRole("link", { name: "Projects", exact: true }).click();
+    await expect(page).toHaveURL(/\/projects\?type=desktop$/);
+  });
+});
+
 /**
  * Where the site draws with WebGL. Whether a context is possible is measured
  * in the browser first: with one, the canvas must be there and live; without,
