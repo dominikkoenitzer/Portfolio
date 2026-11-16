@@ -197,7 +197,12 @@ export function ProjectsSection() {
 
   const searchRef = useRef<HTMLInputElement>(null);
   const clearFrom = (event: MouseEvent<HTMLButtonElement>, clear: () => void) =>
-    clearFilter(clear, event.currentTarget === document.activeElement, searchRef.current);
+    clearFilter(
+      clear,
+      event.currentTarget === document.activeElement,
+      searchRef.current,
+      (event.nativeEvent as PointerEvent).pointerType,
+    );
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
