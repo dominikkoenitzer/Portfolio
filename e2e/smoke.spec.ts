@@ -56,6 +56,22 @@ test.describe("every route", () => {
   }
 });
 
+test.describe("not found", () => {
+  test("a project link with no project keeps its address and says the page is missing", async ({
+    page,
+  }) => {
+    const errors = watchErrors(page, { notFound: true });
+    const response = await page.goto("/projects/no-such-project");
+    expect(response?.status()).toBe(404);
+    await expectRendered(page);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Page not found" }),
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/projects\/no-such-project$/);
+    expect(errors).toEqual([]);
+  });
+});
+
 // Keys that may repeat in one head by design.
 const REPEATING_HEAD_KEYS = ["og:locale:alternate", "article:tag"];
 
