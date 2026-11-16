@@ -22,12 +22,13 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useOpenerOrigin } from "@/hooks/use-opener-origin";
 import { setCursorMagnetRect } from "@/lib/cursor-magnet";
 import { useLanguage } from "@/lib/language-context";
 import { DUR, EASE_OUT, SPRING_FLUID } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+import { isSameLocation } from "@/lib/same-location";
 import {
   groupHits,
   type SearchHit,
@@ -108,6 +109,7 @@ export default function SearchDialog({
   const t = translations[language];
   const copy = t.search;
   const navigate = useNavigate();
+  const location = useLocation();
   const reduceMotion = prefersReducedMotion();
 
   const [query, setQuery] = useState("");
@@ -202,9 +204,12 @@ export default function SearchDialog({
       // the header button they came from with the whole nav to tab through.
       selected.current = true;
       onClose();
-      navigate(hit.record.href);
+      // Replace on the page already open, as a click on the row's `<Link>` does.
+      navigate(hit.record.href, {
+        replace: isSameLocation(location, hit.record.href),
+      });
     },
-    [navigate, onClose],
+    [location, navigate, onClose],
   );
 
   /**
