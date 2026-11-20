@@ -47,7 +47,6 @@ export const fr = {
   hero: {
     greeting: "Bonjour, je suis",
     title: "Ingénieur logiciel & développeur web",
-    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "Ingénieur logiciel à Zurich. Je construis des sites rapides et accessibles, et les outils qui vont avec.",
     hireMe: "Me contacter",
