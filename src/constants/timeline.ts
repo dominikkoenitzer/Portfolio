@@ -56,6 +56,7 @@ const MPS_URL = "https://bezirksschulenschwyz.ch/oberarth/profil-oberarth";
 const DSP_URL = "https://www.dspeking.cn/";
 const SSS_URL = "https://swiss-school.edu.sg";
 
+const SWISSLEX_LOGO = "/timeline/swisslex.svg";
 const WISS_LOGO = "/timeline/wiss.ico";
 const MPAI_LOGO = "/timeline/mpai.png";
 const SSS_LOGO = "/timeline/sss-singapore.png";
@@ -92,6 +93,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         role: "Swisslex Intern",
         organization: "Swisslex",
         organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
         monogram: "S",
         period: "Oct 2026 – Present",
         start: "2026-10",
@@ -216,6 +218,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         role: "Praktikant Swisslex",
         organization: "Swisslex",
         organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
         monogram: "S",
         period: "Okt. 2026 – Heute",
         start: "2026-10",
@@ -340,6 +343,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         role: "Stagiaire Swisslex",
         organization: "Swisslex",
         organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
         monogram: "S",
         period: "oct. 2026 – aujourd'hui",
         start: "2026-10",
@@ -464,6 +468,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         role: "Swisslex 实习生",
         organization: "Swisslex",
         organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
         monogram: "S",
         period: "2026年10月 – 至今",
         start: "2026-10",
