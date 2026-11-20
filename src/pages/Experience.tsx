@@ -45,10 +45,10 @@ const Experience = () => {
             hasOccupation: [
               {
                 "@type": "Occupation",
-                name: "Software Engineering Intern",
+                name: "Swisslex Intern",
                 occupationLocation: {
                   "@type": "City",
-                  name: "Lucerne, Switzerland",
+                  name: "Zürich, Switzerland",
                 },
               },
             ],

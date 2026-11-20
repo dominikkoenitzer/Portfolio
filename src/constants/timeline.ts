@@ -349,7 +349,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Des fonctionnalités pour un produit sur lequel des professionnels comptent chaque jour, construites avec Angular et TypeScript.",
           "Du travail backend en C# et .NET, avec les tests unitaires qui vont avec.",
-          "Des tests de bout en bout avec Playwright, pour qu'une modification soit vérifiée avant de partir.",
+          "Des tests de bout en bout avec Playwright, pour qu'une modification soit vérifiée avant sa mise en production.",
           "Le quotidien d'une équipe agile : merge requests, revues de code, mises en production.",
         ],
         tags: SWISSLEX_TAGS,
