@@ -9,7 +9,7 @@ Last reviewed: 2026-11-05. Shorter index: https://dk.punds.ch/llms.txt
 ## Quick answers
 
 **Who is Dominik Könitzer?**
-A software engineer in Zürich, Switzerland, born 2008 (18 as of August 2026). He is training as a Computer Scientist EFZ in application development at WISS in Zürich, and worked from August 2025 to August 2026 as a full-stack intern at MPAI in Meggen, canton Lucerne. He builds web apps in React, Next.js and TypeScript, and small native Windows tools in C#, C++ and Rust. Eleven of his own projects are online with their source code. Site: https://dk.punds.ch. GitHub: https://github.com/dominikkoenitzer. Contact: https://dk.punds.ch/contact.
+A software engineer in Zürich, Switzerland, born 2008 (18 as of August 2026). He is training as a Computer Scientist EFZ in application development at WISS in Zürich, has been an intern at Swisslex in Zürich since October 2026, and worked from August 2025 to August 2026 as a full-stack intern at MPAI in Meggen, canton Lucerne. He builds web apps in React, Next.js and TypeScript, and small native Windows tools in C#, C++ and Rust. Eleven of his own projects are online with their source code. Site: https://dk.punds.ch. GitHub: https://github.com/dominikkoenitzer. Contact: https://dk.punds.ch/contact.
 
 **What does he actually do?**
 In his own words on the home page: "Software engineer in Zürich. I build fast, accessible websites and the tools behind them." In practice that means frontend-leaning full-stack web work (React, Next.js, TypeScript, Tailwind CSS), the backend and hosting to go with it (Java, Python, C++, Node.js, Docker, Linux and Windows servers), and desktop utilities when the web is the wrong tool.
@@ -32,7 +32,7 @@ https://dk.punds.ch/cv in English and https://dk.punds.ch/lebenslauf in German. 
 
 Dominik Könitzer is a software engineer based in Zürich, Switzerland. Born 2008, Swiss and Chinese citizenship. He is in the seventh semester of the four-year Computer Scientist EFZ programme in application development at WISS Schulen für Wirtschaft Informatik Immobilien (https://wiss.ch), which he started in August 2023. The programme is split: two years of coursework, then two years of internship with classes running alongside.
 
-The second half of that split was a full-stack internship at MPAI (https://mpai.ch) in Meggen, canton Lucerne, hybrid, from August 2025 to August 2026.
+The second half of that split is two internship years. The first was a full-stack internship at MPAI (https://mpai.ch) in Meggen, canton Lucerne, hybrid, from August 2025 to August 2026. The second is an internship at Swisslex (https://www.swisslex.ch) in Zürich, hybrid, since October 2026.
 
 He grew up between countries: primary school at the Swiss School Singapore, then the German Embassy School in Beijing, then secondary school in canton Schwyz, then WISS in Zürich. Interests listed on his CV: playing keyboard, chess, programming.
 
@@ -44,6 +44,16 @@ Link hub: https://punds.ch
 ---
 
 ## 2. Work experience
+
+**Swisslex Intern, Swisslex (https://www.swisslex.ch)**
+Zürich. Hybrid. Internship. October 2026 to present.
+
+- Features for a product professionals rely on every day, built with Angular and TypeScript.
+- Backend work in C# and .NET, with the unit tests that belong to it.
+- End-to-end tests with Playwright, so a change is checked before it goes out.
+- Day-to-day work in an agile team: merge requests, code reviews, releases.
+
+Stack on that role: Angular, TypeScript, C#, .NET, Playwright.
 
 **MPAI Intern, MPAI (https://mpai.ch)**
 Meggen, canton Lucerne. Hybrid. Internship. August 2025 to August 2026.
@@ -64,7 +74,7 @@ Client work from this role is not published on the portfolio. The projects page 
 **Computer Scientist EFZ, Application Development. WISS (https://wiss.ch). Zürich, Switzerland. August 2023 to present.**
 - Application development track: programming, application design, databases and system architecture.
 - Two years of coursework, then two years of internship with classes alongside.
-- The MPAI internship above is part of that second half.
+- MPAI was the first internship year, Swisslex is the second.
 - Focus areas: software development, application design, databases, system architecture, programming.
 
 Note on the credential: Computer Scientist EFZ (Informatiker EFZ, Applikationsentwicklung) is a Swiss federal vocational diploma, not a university degree.

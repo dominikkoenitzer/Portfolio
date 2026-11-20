@@ -494,9 +494,9 @@ export const de = {
     experience: {
       title: "Werdegang & Ausbildung",
       description:
-        "Der Werdegang von Dominik Könitzer: Software-Engineering-Praktikum bei MPAI in Luzern und die vierjährige Ausbildung an der WISS in Zürich.",
+        "Der Werdegang von Dominik Könitzer: Praktika bei Swisslex in Zürich (aktuell) und bei MPAI in Luzern, dazu die vierjährige Ausbildung an der WISS in Zürich.",
       keywords:
-        "Dominik Könitzer Werdegang, Lebenslauf, Berufserfahrung, Ausbildung, MPAI Praktikum, WISS Zürich, Informatiker EFZ, Software Engineer Schweiz",
+        "Dominik Könitzer Werdegang, Lebenslauf, Berufserfahrung, Ausbildung, Swisslex Praktikum, MPAI Praktikum, WISS Zürich, Informatiker EFZ, Software Engineer Schweiz",
     },
     skills: {
       title: "Skills & Technologien",

@@ -430,9 +430,9 @@ export const zh = {
     experience: {
       title: "履历与教育",
       description:
-        "Dominik Könitzer 的履历：在卢塞恩 MPAI 的软件工程实习，以及在苏黎世 WISS 的四年制学业。",
+        "Dominik Könitzer 的履历：目前在苏黎世 Swisslex 实习，此前在卢塞恩 MPAI 实习，以及在苏黎世 WISS 的四年制学业。",
       keywords:
-        "Dominik Könitzer 履历, 简历, 工作经历, 教育, MPAI 实习, 苏黎世 WISS, 信息技术专家 EFZ, 瑞士软件工程师",
+        "Dominik Könitzer 履历, 简历, 工作经历, 教育, Swisslex 实习, MPAI 实习, 苏黎世 WISS, 信息技术专家 EFZ, 瑞士软件工程师",
     },
     skills: {
       title: "技能与技术",

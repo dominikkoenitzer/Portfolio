@@ -43,7 +43,7 @@ export interface TimelineContent {
   education: TimelineEntry[];
 }
 
-const SWISSLEX_URL = "https://swisslex.ch/";
+const SWISSLEX_URL = "https://www.swisslex.ch/";
 const MPAI_URL = "https://mpai.ch/";
 
 const WISS_URL = "https://wiss.ch";
@@ -83,7 +83,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Career & education",
     heading: "Experience",
     subheading:
-      "School in three countries, then an internship in Lucerne. Newest first.",
+      "School in three countries, then internships in Lucerne and Zürich. Newest first.",
     experienceTitle: "Work Experience",
     educationTitle: "Education",
     moreTags: (n) => `Show ${n} more skill${n === 1 ? "" : "s"}`,
@@ -140,7 +140,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Application development track: programming, application design, databases and system architecture.",
           "Two years of coursework, then two years of internship with classes alongside.",
-          "The MPAI internship above is part of that second half.",
+          "MPAI was the first internship year, Swisslex is the second.",
         ],
         tags: [
           "Software Development",
@@ -207,7 +207,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Beruf & Ausbildung",
     heading: "Werdegang",
     subheading:
-      "Schule in drei Ländern, dann ein Praktikum in Luzern. Das Neueste zuerst.",
+      "Schule in drei Ländern, dann Praktika in Luzern und Zürich. Das Neueste zuerst.",
     experienceTitle: "Berufserfahrung",
     educationTitle: "Ausbildung",
     moreTags: (n) => `${n} weitere Fähigkeit${n === 1 ? "" : "en"} anzeigen`,
@@ -264,7 +264,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Fachrichtung Applikationsentwicklung: Programmierung, Applikationsdesign, Datenbanken und Systemarchitektur.",
           "Zwei Jahre Schule, danach zwei Jahre Praktikum mit Unterricht nebenbei.",
-          "Das MPAI-Praktikum oben gehört zu dieser zweiten Hälfte.",
+          "MPAI war das erste Praktikumsjahr, Swisslex ist das zweite.",
         ],
         tags: [
           "Softwareentwicklung",
@@ -331,7 +331,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Carrière & formation",
     heading: "Parcours",
     subheading:
-      "L'école dans trois pays, puis un stage à Lucerne. Le plus récent d'abord.",
+      "L'école dans trois pays, puis des stages à Lucerne et à Zurich. Le plus récent d'abord.",
     experienceTitle: "Expérience professionnelle",
     educationTitle: "Formation",
     moreTags: (n) => `Afficher ${n} compétence${n === 1 ? "" : "s"} de plus`,
@@ -388,7 +388,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Filière développement d'applications : programmation, conception d'applications, bases de données et architecture système.",
           "Deux ans de cours, puis deux ans de stage avec des cours en parallèle.",
-          "Le stage MPAI ci-dessus fait partie de cette seconde moitié.",
+          "MPAI était la première année de stage, Swisslex est la deuxième.",
         ],
         tags: [
           "Développement logiciel",
@@ -455,7 +455,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "职业与教育",
     heading: "履历",
     subheading:
-      "在三个国家上过学，之后在卢塞恩实习。最新的在前。",
+      "在三个国家上过学，之后在卢塞恩和苏黎世实习。最新的在前。",
     experienceTitle: "工作经历",
     educationTitle: "教育经历",
     moreTags: (n) => `显示另外 ${n} 项技能`,
@@ -512,7 +512,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "应用开发方向：编程、应用设计、数据库和系统架构。",
           "两年课程，之后两年实习，同时继续上课。",
-          "上面的 MPAI 实习就是后半段的一部分。",
+          "MPAI 是第一年实习，Swisslex 是第二年。",
         ],
         tags: ["软件开发", "应用设计", "数据库", "系统架构", "编程"],
       },

@@ -488,9 +488,9 @@ export const en = {
     experience: {
       title: "Experience & Education",
       description:
-        "Dominik Könitzer's experience and education: a software engineering internship at MPAI in Lucerne, and a four-year program at WISS in Zürich.",
+        "Dominik Könitzer's experience and education: internships at Swisslex in Zürich (current) and MPAI in Lucerne, and a four-year program at WISS in Zürich.",
       keywords:
-        "Dominik Könitzer experience, work experience, career, education, MPAI internship, WISS Zürich, Computer Scientist EFZ, software engineer Switzerland",
+        "Dominik Könitzer experience, work experience, career, education, Swisslex internship, MPAI internship, WISS Zürich, Computer Scientist EFZ, software engineer Switzerland",
     },
     skills: {
       title: "Skills & Technologies",
