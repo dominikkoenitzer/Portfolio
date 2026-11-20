@@ -43,6 +43,7 @@ export interface TimelineContent {
   education: TimelineEntry[];
 }
 
+const SWISSLEX_URL = "https://swisslex.ch/";
 const MPAI_URL = "https://mpai.ch/";
 
 const WISS_URL = "https://wiss.ch";
@@ -63,6 +64,8 @@ const DSP_LOGO = "/timeline/dsp-beijing.png";
 // The site's own brand icon: used for the self-employed / dk.punds.ch entry.
 
 // Tech stacks are proper nouns: identical across languages.
+const SWISSLEX_TAGS = ["Angular", "TypeScript", "C#", ".NET", "Playwright"];
+
 const MPAI_TAGS = [
   "React",
   "Next.js",
@@ -85,6 +88,24 @@ const TIMELINE: Record<Language, TimelineContent> = {
     educationTitle: "Education",
     moreTags: (n) => `Show ${n} more skill${n === 1 ? "" : "s"}`,
     experience: [
+      {
+        role: "Swisslex Intern",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        monogram: "S",
+        period: "Oct 2026 – Present",
+        start: "2026-10",
+        location: "Zürich",
+        arrangement: "Hybrid",
+        commitment: "Internship",
+        points: [
+          "Features for a product professionals rely on every day, built with Angular and TypeScript.",
+          "Backend work in C# and .NET, with the unit tests that belong to it.",
+          "End-to-end tests with Playwright, so a change is checked before it goes out.",
+          "Day-to-day work in an agile team: merge requests, code reviews, releases.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "MPAI Intern",
         organization: "MPAI",
@@ -192,6 +213,24 @@ const TIMELINE: Record<Language, TimelineContent> = {
     moreTags: (n) => `${n} weitere Fähigkeit${n === 1 ? "" : "en"} anzeigen`,
     experience: [
       {
+        role: "Praktikant Swisslex",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        monogram: "S",
+        period: "Okt. 2026 – Heute",
+        start: "2026-10",
+        location: "Zürich",
+        arrangement: "Hybrid",
+        commitment: "Praktikum",
+        points: [
+          "Funktionen für ein Produkt, auf das sich Fachleute täglich verlassen, gebaut mit Angular und TypeScript.",
+          "Backend-Arbeit in C# und .NET, mit den Unit-Tests, die dazugehören.",
+          "End-to-End-Tests mit Playwright, damit eine Änderung geprüft ist, bevor sie rausgeht.",
+          "Alltag in einem agilen Team: Merge Requests, Code-Reviews, Releases.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
+      {
         role: "Praktikant MPAI",
         organization: "MPAI",
         organizationUrl: MPAI_URL,
@@ -298,6 +337,24 @@ const TIMELINE: Record<Language, TimelineContent> = {
     moreTags: (n) => `Afficher ${n} compétence${n === 1 ? "" : "s"} de plus`,
     experience: [
       {
+        role: "Stagiaire Swisslex",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        monogram: "S",
+        period: "oct. 2026 – aujourd'hui",
+        start: "2026-10",
+        location: "Zurich",
+        arrangement: "Hybride",
+        commitment: "Stage",
+        points: [
+          "Des fonctionnalités pour un produit sur lequel des professionnels comptent chaque jour, construites avec Angular et TypeScript.",
+          "Du travail backend en C# et .NET, avec les tests unitaires qui vont avec.",
+          "Des tests de bout en bout avec Playwright, pour qu'une modification soit vérifiée avant de partir.",
+          "Le quotidien d'une équipe agile : merge requests, revues de code, mises en production.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
+      {
         role: "Stagiaire MPAI",
         organization: "MPAI",
         organizationUrl: MPAI_URL,
@@ -403,6 +460,24 @@ const TIMELINE: Record<Language, TimelineContent> = {
     educationTitle: "教育经历",
     moreTags: (n) => `显示另外 ${n} 项技能`,
     experience: [
+      {
+        role: "Swisslex 实习生",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        monogram: "S",
+        period: "2026年10月 – 至今",
+        start: "2026-10",
+        location: "苏黎世",
+        arrangement: "混合办公",
+        commitment: "实习",
+        points: [
+          "为一款专业人士每天都依赖的产品开发功能，用的是 Angular 和 TypeScript。",
+          "用 C# 和 .NET 做后端开发，并编写配套的单元测试。",
+          "用 Playwright 做端到端测试，让每次改动在发布前都经过检查。",
+          "敏捷团队的日常：合并请求、代码评审、发布。",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "MPAI 实习生",
         organization: "MPAI",
