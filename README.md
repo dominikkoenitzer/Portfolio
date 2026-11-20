@@ -2,6 +2,8 @@
 
 # Dominik Könitzer, Portfolio
 
+This code is public for viewing and reference only: using, copying, changing, sharing or selling it, in whole or in part, needs the copyright holder's written permission first, and its personal content, branding, designs, text and images may not be reused or redistributed.
+
 **A fast, multilingual, SEO-obsessed personal portfolio for a Swiss software engineer.**
 
 [![CI](https://github.com/dominikkoenitzer/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/dominikkoenitzer/Portfolio/actions/workflows/ci.yml)
