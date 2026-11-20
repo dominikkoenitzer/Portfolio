@@ -5,6 +5,7 @@ import {
   liveCanvases,
   loseContexts,
   revealAll,
+  scrollAtRest,
   settle,
   watchErrors,
 } from "./helpers";
@@ -615,6 +616,7 @@ async function fillContact(page: Page) {
 async function openDemo(page: Page, path: string, label: string) {
   await page.goto(path);
   await expectRendered(page);
+  await settle(page);
   const demo = page.getByRole("figure", { name: label });
   await demo.scrollIntoViewIfNeeded();
   await expect(demo).toBeVisible();
@@ -667,9 +669,11 @@ test.describe("story demos by keyboard", () => {
         await expect(answer).toBeHidden();
 
         // Space shows the next answer instead of scrolling the page.
+        await scrollAtRest(page);
         const scrolled = await page.evaluate(() => window.scrollY);
         await page.keyboard.press("Space");
         await expect(answer).toBeVisible();
+        await scrollAtRest(page);
         expect(await page.evaluate(() => window.scrollY)).toBe(scrolled);
         await page.keyboard.press("3");
         await expect(card).toBeFocused();

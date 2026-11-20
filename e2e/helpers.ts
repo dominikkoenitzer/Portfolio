@@ -112,6 +112,28 @@ export async function revealAll(page: Page) {
   await page.waitForTimeout(300);
 }
 
+/**
+ * Waits until the page's scroll position has held for 8 frames in a row, so
+ * a scroll still under way (a glide, the browser keeping its place while
+ * content above settles) ends before a test reads the position.
+ */
+export async function scrollAtRest(page: Page) {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        let last = window.scrollY;
+        let held = 0;
+        const frame = () => {
+          held = window.scrollY === last ? held + 1 : 0;
+          last = window.scrollY;
+          if (held >= 8) resolve();
+          else requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      }),
+  );
+}
+
 /** Whether this browser can create a WebGL context at all, measured. */
 export function canWebGL(page: Page) {
   return page.evaluate(() => {
