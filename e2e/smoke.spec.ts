@@ -4,31 +4,17 @@ import {
   canWebGL,
   liveCanvases,
   loseContexts,
-  paintAtRest,
-  paintedSince,
   revealAll,
   scrollAtRest,
   settle,
   watchErrors,
-  watchPaint,
 } from "./helpers";
 import { ROUTES } from "./routes";
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 async function seriousViolations(page: Page) {
-  const read = async () => {
-    await watchPaint(page);
-    const result = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
-    return { result, moved: await paintedSince(page) };
-  };
-  const first = await read();
-  let result = first.result;
-  // A fade that began during the read (Psyche's code turns over every 30 s) was measured half done: let it end and read once more.
-  if (first.moved) {
-    await paintAtRest(page);
-    result = (await read()).result;
-  }
+  const result = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
   return result.violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
     .map((v) => ({
