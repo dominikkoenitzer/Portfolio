@@ -47,7 +47,6 @@ export const zh = {
   hero: {
     greeting: "你好，我是",
     title: "软件工程师与网页开发者",
-    roles: ["Dominik", "Punds"] as string[],
     tagline:
       "苏黎世的软件工程师。我做快速、无障碍的网站，以及背后的工具。",
     hireMe: "联系我",

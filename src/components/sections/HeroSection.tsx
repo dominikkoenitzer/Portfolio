@@ -1,80 +1,38 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
 import { Github } from "@/components/ui/github-icon";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SITE_CONFIG } from "@/constants";
 import { mailto } from "@/lib/email";
 import { useLanguage } from "@/lib/language-context";
-import { EASE_OUT, REVEAL, stagger } from "@/lib/motion";
+import { REVEAL, stagger } from "@/lib/motion";
 import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { translations } from "@/lib/translations";
 
-/** How long each name holds before the next one takes over. */
-const HOLD_MS = 5500;
-
-/**
- * The owner's names (Dominik, Punds, DK), one at a time, on a plain crossfade.
- * Reduced motion holds the first name and never cycles.
- *
- * Mounted with `key={language}` so a language switch remounts it: the index
- * belongs to one list, and resetting it from an effect is what
- * `react-hooks/set-state-in-effect` exists to stop.
- */
+/** The owner's first name, set large. */
 function Name() {
   const { language } = useLanguage();
-  const { roles: names, title } = translations[language].hero;
-  const [index, setIndex] = useState(0);
-  const [reduceMotion] = useState(prefersReducedMotion);
-  const name = names[index] ?? names[0];
-
-  useEffect(() => {
-    if (reduceMotion || names.length < 2) return;
-    const cycle = setInterval(
-      () => setIndex((i) => (i + 1) % names.length),
-      HOLD_MS,
-    );
-    return () => clearInterval(cycle);
-  }, [names, reduceMotion]);
+  const { title } = translations[language].hero;
 
   return (
     <>
       {/* Stable heading for assistive tech and crawlers; the visible name
-          below is decoration and must not re-announce every few seconds. It is
-          translated, so a German screen reader is not handed an English phrase
-          inside a `lang="de"` document. */}
+          below is decoration. It is translated, so a German screen reader is
+          not handed an English phrase inside a `lang="de"` document. */}
       <h1 className="sr-only">Dominik Könitzer, {title}</h1>
-      {/* Both names share one grid cell, so the outgoing one is still fading
-          while the next is already arriving: the biggest element on the page
-          never blinks empty. `ml-[-0.055em]` takes back Geist's left
-          sidebearing at this size, which puts the stem of the first letter
-          on the same column as the text above and below (measured at 1440). */}
+      {/* `ml-[-0.055em]` takes back Geist's left sidebearing at this size,
+          which puts the stem of the first letter on the same column as the
+          text above and below (measured at 1440). */}
       <div
         aria-hidden="true"
-        className="ml-[-0.055em] grid leading-none tracking-[-0.01em]"
+        className="ml-[-0.055em] leading-none tracking-[-0.01em]"
         style={{ fontSize: "clamp(3rem, 9vw, 8.5rem)" }}
       >
-        {reduceMotion ? (
-          <span className="font-title block pb-[0.1em] text-primary">
-            {name}
-          </span>
-        ) : (
-          <AnimatePresence initial={false}>
-            <motion.span
-              animate={{ opacity: 1 }}
-              className="font-title col-start-1 row-start-1 block pb-[0.1em] text-primary"
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              key={name}
-              // A slow crossfade, so one name dissolves into the next like
-              // a thought passing rather than a switch.
-              transition={{ duration: 1.2, ease: EASE_OUT }}
-            >
-              {name}
-            </motion.span>
-          </AnimatePresence>
-        )}
+        <span className="font-title block pb-[0.1em] text-primary">
+          Dominik
+        </span>
       </div>
     </>
   );
@@ -121,7 +79,7 @@ export function HeroSection() {
         </motion.p>
 
         <motion.div className="mb-5 sm:mb-6 md:mb-7" variants={REVEAL}>
-          <Name key={language} />
+          <Name />
         </motion.div>
 
         <motion.p
