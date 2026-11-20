@@ -43,6 +43,7 @@ export interface TimelineContent {
   education: TimelineEntry[];
 }
 
+const SWISSLEX_URL = "https://www.swisslex.ch/";
 const MPAI_URL = "https://mpai.ch/";
 
 const WISS_URL = "https://wiss.ch";
@@ -55,6 +56,7 @@ const MPS_URL = "https://bezirksschulenschwyz.ch/oberarth/profil-oberarth";
 const DSP_URL = "https://www.dspeking.cn/";
 const SSS_URL = "https://swiss-school.edu.sg";
 
+const SWISSLEX_LOGO = "/timeline/swisslex.svg";
 const WISS_LOGO = "/timeline/wiss.ico";
 const MPAI_LOGO = "/timeline/mpai.png";
 const SSS_LOGO = "/timeline/sss-singapore.png";
@@ -63,6 +65,8 @@ const DSP_LOGO = "/timeline/dsp-beijing.png";
 // The site's own brand icon: used for the self-employed / dk.punds.ch entry.
 
 // Tech stacks are proper nouns: identical across languages.
+const SWISSLEX_TAGS = ["Angular", "TypeScript", "C#", ".NET", "Playwright"];
+
 const MPAI_TAGS = [
   "React",
   "Next.js",
@@ -80,11 +84,30 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Career & education",
     heading: "Experience",
     subheading:
-      "School in three countries, then an internship in Lucerne. Newest first.",
+      "School in three countries, then internships in Lucerne and Zürich. Newest first.",
     experienceTitle: "Work Experience",
     educationTitle: "Education",
     moreTags: (n) => `Show ${n} more skill${n === 1 ? "" : "s"}`,
     experience: [
+      {
+        role: "Swisslex Intern",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
+        monogram: "S",
+        period: "Oct 2026 – Present",
+        start: "2026-10",
+        location: "Zürich",
+        arrangement: "Hybrid",
+        commitment: "Internship",
+        points: [
+          "Features for a product professionals rely on every day, built with Angular and TypeScript.",
+          "Backend work in C# and .NET, with the unit tests that belong to it.",
+          "End-to-end tests with Playwright, so a change is checked before it goes out.",
+          "Day-to-day work in an agile team: merge requests, code reviews, releases.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "MPAI Intern",
         organization: "MPAI",
@@ -119,7 +142,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Application development track: programming, application design, databases and system architecture.",
           "Two years of coursework, then two years of internship with classes alongside.",
-          "The MPAI internship above is part of that second half.",
+          "MPAI was the first internship year, Swisslex is the second.",
         ],
         tags: [
           "Software Development",
@@ -186,11 +209,30 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Beruf & Ausbildung",
     heading: "Werdegang",
     subheading:
-      "Schule in drei Ländern, dann ein Praktikum in Luzern. Das Neueste zuerst.",
+      "Schule in drei Ländern, dann Praktika in Luzern und Zürich. Das Neueste zuerst.",
     experienceTitle: "Berufserfahrung",
     educationTitle: "Ausbildung",
     moreTags: (n) => `${n} weitere Fähigkeit${n === 1 ? "" : "en"} anzeigen`,
     experience: [
+      {
+        role: "Praktikant Swisslex",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
+        monogram: "S",
+        period: "Okt. 2026 – Heute",
+        start: "2026-10",
+        location: "Zürich",
+        arrangement: "Hybrid",
+        commitment: "Praktikum",
+        points: [
+          "Funktionen für ein Produkt, auf das sich Fachleute täglich verlassen, gebaut mit Angular und TypeScript.",
+          "Backend-Arbeit in C# und .NET, mit den Unit-Tests, die dazugehören.",
+          "End-to-End-Tests mit Playwright, damit eine Änderung geprüft ist, bevor sie rausgeht.",
+          "Alltag in einem agilen Team: Merge Requests, Code-Reviews, Releases.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "Praktikant MPAI",
         organization: "MPAI",
@@ -225,7 +267,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Fachrichtung Applikationsentwicklung: Programmierung, Applikationsdesign, Datenbanken und Systemarchitektur.",
           "Zwei Jahre Schule, danach zwei Jahre Praktikum mit Unterricht nebenbei.",
-          "Das MPAI-Praktikum oben gehört zu dieser zweiten Hälfte.",
+          "MPAI war das erste Praktikumsjahr, Swisslex ist das zweite.",
         ],
         tags: [
           "Softwareentwicklung",
@@ -292,11 +334,30 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "Carrière & formation",
     heading: "Parcours",
     subheading:
-      "L'école dans trois pays, puis un stage à Lucerne. Le plus récent d'abord.",
+      "L'école dans trois pays, puis des stages à Lucerne et à Zurich. Le plus récent d'abord.",
     experienceTitle: "Expérience professionnelle",
     educationTitle: "Formation",
     moreTags: (n) => `Afficher ${n} compétence${n === 1 ? "" : "s"} de plus`,
     experience: [
+      {
+        role: "Stagiaire Swisslex",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
+        monogram: "S",
+        period: "oct. 2026 – aujourd'hui",
+        start: "2026-10",
+        location: "Zurich",
+        arrangement: "Hybride",
+        commitment: "Stage",
+        points: [
+          "Des fonctionnalités pour un produit sur lequel des professionnels comptent chaque jour, construites avec Angular et TypeScript.",
+          "Du travail backend en C# et .NET, avec les tests unitaires qui vont avec.",
+          "Des tests de bout en bout avec Playwright, pour qu'une modification soit vérifiée avant sa mise en production.",
+          "Le quotidien d'une équipe agile : merge requests, revues de code, mises en production.",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "Stagiaire MPAI",
         organization: "MPAI",
@@ -331,7 +392,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "Filière développement d'applications : programmation, conception d'applications, bases de données et architecture système.",
           "Deux ans de cours, puis deux ans de stage avec des cours en parallèle.",
-          "Le stage MPAI ci-dessus fait partie de cette seconde moitié.",
+          "MPAI était la première année de stage, Swisslex est la deuxième.",
         ],
         tags: [
           "Développement logiciel",
@@ -398,11 +459,30 @@ const TIMELINE: Record<Language, TimelineContent> = {
     eyebrow: "职业与教育",
     heading: "履历",
     subheading:
-      "在三个国家上过学，之后在卢塞恩实习。最新的在前。",
+      "在三个国家上过学，之后在卢塞恩和苏黎世实习。最新的在前。",
     experienceTitle: "工作经历",
     educationTitle: "教育经历",
     moreTags: (n) => `显示另外 ${n} 项技能`,
     experience: [
+      {
+        role: "Swisslex 实习生",
+        organization: "Swisslex",
+        organizationUrl: SWISSLEX_URL,
+        logo: SWISSLEX_LOGO,
+        monogram: "S",
+        period: "2026年10月 – 至今",
+        start: "2026-10",
+        location: "苏黎世",
+        arrangement: "混合办公",
+        commitment: "实习",
+        points: [
+          "为一款专业人士每天都依赖的产品开发功能，用的是 Angular 和 TypeScript。",
+          "用 C# 和 .NET 做后端开发，并编写配套的单元测试。",
+          "用 Playwright 做端到端测试，让每次改动在发布前都经过检查。",
+          "敏捷团队的日常：合并请求、代码评审、发布。",
+        ],
+        tags: SWISSLEX_TAGS,
+      },
       {
         role: "MPAI 实习生",
         organization: "MPAI",
@@ -437,7 +517,7 @@ const TIMELINE: Record<Language, TimelineContent> = {
         points: [
           "应用开发方向：编程、应用设计、数据库和系统架构。",
           "两年课程，之后两年实习，同时继续上课。",
-          "上面的 MPAI 实习就是后半段的一部分。",
+          "MPAI 是第一年实习，Swisslex 是第二年。",
         ],
         tags: ["软件开发", "应用设计", "数据库", "系统架构", "编程"],
       },

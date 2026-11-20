@@ -491,9 +491,9 @@ export const fr = {
     experience: {
       title: "Parcours & formation",
       description:
-        "Le parcours de Dominik Könitzer : stage en ingénierie logicielle chez MPAI à Lucerne et formation de quatre ans à la WISS à Zurich.",
+        "Le parcours de Dominik Könitzer : stages chez Swisslex à Zurich (en cours) et chez MPAI à Lucerne, et formation de quatre ans à la WISS à Zurich.",
       keywords:
-        "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage MPAI, WISS Zurich, informaticien CFC, ingénieur logiciel Suisse",
+        "parcours Dominik Könitzer, CV, expérience professionnelle, formation, stage Swisslex, stage MPAI, WISS Zurich, informaticien CFC, ingénieur logiciel Suisse",
     },
     skills: {
       title: "Compétences & technologies",

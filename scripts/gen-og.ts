@@ -166,7 +166,7 @@ const homeCard = () =>
 
 const CARDS: { out: string; title: string; subtitle: string; path: string }[] = [
   { out: "public/og/about.png", title: "About", subtitle: "Software engineer in Zürich, Switzerland", path: "/about" },
-  { out: "public/og/experience.png", title: "Experience", subtitle: "School in three countries, then an internship in Lucerne", path: "/experience" },
+  { out: "public/og/experience.png", title: "Experience", subtitle: "School in three countries, then internships in Lucerne and Zürich", path: "/experience" },
   { out: "public/og/skills.png", title: "Skills", subtitle: "What I work with day to day, and what I'm still getting better at", path: "/skills" },
   { out: "public/og/projects.png", title: "Projects", subtitle: "Things I built, most of them with the source", path: "/projects" },
   { out: "public/og/services.png", title: "Services", subtitle: "Web development and software engineering, Zürich or remote", path: "/services" },
