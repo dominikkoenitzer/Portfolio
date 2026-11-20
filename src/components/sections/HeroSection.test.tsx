@@ -36,11 +36,14 @@ describe("HeroSection name", () => {
   });
 
   it.each(LANGUAGES)("keeps no list of other names in %s", (language) => {
-    expect(Object.keys(translations[language].hero)).not.toContain("roles");
-    expect(JSON.stringify(translations[language].hero)).not.toMatch(/Punds/);
+    const hero = translations[language].hero;
+    expect(Object.values(hero).some(Array.isArray)).toBe(false);
+    expect(JSON.stringify(hero)).not.toMatch(/Punds/);
   });
 
   it("never swaps the name on a timer", () => {
-    expect(heroSource).not.toMatch(/setInterval|AnimatePresence|Punds/);
+    expect(heroSource).not.toMatch(
+      /useEffect|setTimeout|setInterval|requestAnimationFrame|AnimatePresence|Punds/,
+    );
   });
 });
