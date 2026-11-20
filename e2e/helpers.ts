@@ -112,6 +112,75 @@ export async function revealAll(page: Page) {
   await page.waitForTimeout(300);
 }
 
+/** Waits until no painted animation that will end is running, as `revealAll` does. */
+export async function paintAtRest(page: Page) {
+  await page.waitForFunction(unsettled, false, { timeout: 10_000 });
+}
+
+/**
+ * Starts counting painted animations and transitions that begin from now on:
+ * those made by `element.animate` (motion libraries), CSS transitions, and
+ * inline opacity set frame by frame. `paintedSince` reads the count.
+ */
+export async function watchPaint(page: Page) {
+  await page.evaluate(() => {
+    const w = window as unknown as { __painted?: number; __paintWatched?: boolean };
+    w.__painted = 0;
+    if (w.__paintWatched) return;
+    w.__paintWatched = true;
+    const painted = /^(all|opacity|filter|color|fill|stroke|background|background-color|border-color|outline-color)$/;
+    const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+    const count = () => {
+      w.__painted = (w.__painted ?? 0) + 1;
+    };
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (this: Element, ...args: Parameters<Element["animate"]>) {
+      const animation = animate.apply(this, args);
+      const effect = animation.effect;
+      const end = effect?.getComputedTiming().endTime;
+      const keys = effect instanceof KeyframeEffect ? effect.getKeyframes().flatMap((frame) => Object.keys(frame).map(kebab)) : [];
+      if (typeof end === "number" && Number.isFinite(end) && keys.some((key) => painted.test(key))) count();
+      return animation;
+    };
+    document.addEventListener("transitionrun", (event) => {
+      if (painted.test(event.propertyName)) count();
+    }, true);
+    new MutationObserver((records) => {
+      for (const record of records) {
+        const before = /opacity:\s*([^;]+)/.exec(record.oldValue ?? "")?.[1]?.trim() ?? "";
+        if ((record.target as HTMLElement).style.opacity !== before) count();
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["style"], attributeOldValue: true, subtree: true });
+  });
+}
+
+/** Whether a painted animation began since `watchPaint`. */
+export function paintedSince(page: Page) {
+  return page.evaluate(() => ((window as unknown as { __painted?: number }).__painted ?? 0) > 0);
+}
+
+/**
+ * Waits until the page's scroll position has held for 8 frames in a row, so
+ * a scroll still under way (a glide, the browser keeping its place while
+ * content above settles) ends before a test reads the position.
+ */
+export async function scrollAtRest(page: Page) {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        let last = window.scrollY;
+        let held = 0;
+        const frame = () => {
+          held = window.scrollY === last ? held + 1 : 0;
+          last = window.scrollY;
+          if (held >= 8) resolve();
+          else requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      }),
+  );
+}
+
 /** Whether this browser can create a WebGL context at all, measured. */
 export function canWebGL(page: Page) {
   return page.evaluate(() => {

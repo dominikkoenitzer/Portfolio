@@ -4,16 +4,31 @@ import {
   canWebGL,
   liveCanvases,
   loseContexts,
+  paintAtRest,
+  paintedSince,
   revealAll,
+  scrollAtRest,
   settle,
   watchErrors,
+  watchPaint,
 } from "./helpers";
 import { ROUTES } from "./routes";
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 async function seriousViolations(page: Page) {
-  const result = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
+  const read = async () => {
+    await watchPaint(page);
+    const result = await new AxeBuilder({ page }).withTags(AXE_TAGS).analyze();
+    return { result, moved: await paintedSince(page) };
+  };
+  const first = await read();
+  let result = first.result;
+  // A fade that began during the read (Psyche's code turns over every 30 s) was measured half done: let it end and read once more.
+  if (first.moved) {
+    await paintAtRest(page);
+    result = (await read()).result;
+  }
   return result.violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
     .map((v) => ({
@@ -615,6 +630,7 @@ async function fillContact(page: Page) {
 async function openDemo(page: Page, path: string, label: string) {
   await page.goto(path);
   await expectRendered(page);
+  await settle(page);
   const demo = page.getByRole("figure", { name: label });
   await demo.scrollIntoViewIfNeeded();
   await expect(demo).toBeVisible();
@@ -667,6 +683,7 @@ test.describe("story demos by keyboard", () => {
         await expect(answer).toBeHidden();
 
         // Space shows the next answer instead of scrolling the page.
+        await scrollAtRest(page);
         const scrolled = await page.evaluate(() => window.scrollY);
         await page.keyboard.press("Space");
         await expect(answer).toBeVisible();
