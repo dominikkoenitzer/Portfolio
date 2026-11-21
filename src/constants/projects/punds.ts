@@ -12,9 +12,9 @@ export const punds: Record<Language, LocalizedContent> = {
   en: {
     tagline: "My link hub, built as a shrine garden on an island above the clouds and rendered live in the browser.",
     description:
-      "Punds is my one-page link hub: a quiet shrine garden on an island above the clouds, rendered live in the browser with Three.js. Look around with the pointer, walk up to the rack and open one of the three wooden plaques.",
+      "Shrine is my one-page link hub: a quiet shrine garden on an island above the clouds, rendered live in the browser with Three.js. Look around with the pointer, walk up to the rack and open one of the three wooden plaques.",
     overview:
-      "I got tired of pasting five links every time someone asked what I had built, so I made one page that points at all of them, and refused to make it a list. Punds is a place instead. You stand on the stone path of a small shrine garden, high above a sea of clouds in the late afternoon, and look around. The links hang on a rack as three wooden plaques: point at one and it turns to you on its cord, click it and it opens. The plaques swing and knock into each other, a click on the pond drops a ripple, the koi follow you and the shrine bell rings. The runtime dependencies are react, react-dom and three. That is all of it.",
+      "I got tired of pasting five links every time someone asked what I had built, so I made one page that points at all of them, and refused to make it a list. Shrine is a place instead. You stand on the stone path of a small shrine garden, high above a sea of clouds in the late afternoon, and look around. The links hang on a rack as three wooden plaques: point at one and it turns to you on its cord, click it and it opens. The plaques swing and knock into each other, a click on the pond drops a ripple, the koi follow you and the shrine bell rings. The runtime dependencies are react, react-dom and three. That is all of it.",
     roleSummary: "Just me, including the parts nobody asked for: the koi, the bell, the wind in the cedars.",
     sections: [
       {
@@ -66,9 +66,9 @@ export const punds: Record<Language, LocalizedContent> = {
   de: {
     tagline: "Mein Link-Hub, gebaut als Schreingarten auf einer Insel über den Wolken und live im Browser gerendert.",
     description:
-      "Punds ist mein einseitiger Link-Hub: ein stiller Schreingarten auf einer Insel über den Wolken, live im Browser mit Three.js gerendert. Mit dem Zeiger umsehen, zum Gestell gehen und eine der drei Holztafeln öffnen.",
+      "Shrine ist mein einseitiger Link-Hub: ein stiller Schreingarten auf einer Insel über den Wolken, live im Browser mit Three.js gerendert. Mit dem Zeiger umsehen, zum Gestell gehen und eine der drei Holztafeln öffnen.",
     overview:
-      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt, und weigerte mich, eine Liste daraus zu machen. Punds ist stattdessen ein Ort. Man steht auf dem Steinweg eines kleinen Schreingartens, hoch über einem Wolkenmeer am späten Nachmittag, und sieht sich um. Die Links hängen als drei Holztafeln an einem Gestell: Zeigt man auf eine, dreht sie sich an ihrer Schnur zu einem hin, klickt man sie an, öffnet sie sich. Die Tafeln schwingen und stossen aneinander, ein Klick auf den Teich lässt eine Welle kreisen, die Kois folgen einem und die Schreinglocke läutet. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
+      "Ich hatte es satt, fünf Links zu kopieren, sobald jemand fragte, was ich gebaut habe. Also machte ich eine Seite, die auf alle zeigt, und weigerte mich, eine Liste daraus zu machen. Shrine ist stattdessen ein Ort. Man steht auf dem Steinweg eines kleinen Schreingartens, hoch über einem Wolkenmeer am späten Nachmittag, und sieht sich um. Die Links hängen als drei Holztafeln an einem Gestell: Zeigt man auf eine, dreht sie sich an ihrer Schnur zu einem hin, klickt man sie an, öffnet sie sich. Die Tafeln schwingen und stossen aneinander, ein Klick auf den Teich lässt eine Welle kreisen, die Kois folgen einem und die Schreinglocke läutet. Die Laufzeit-Abhängigkeiten sind react, react-dom und three. Das ist alles.",
     roleSummary:
       "Nur ich, samt der Teile, nach denen niemand gefragt hat: die Kois, die Glocke, der Wind in den Zedern.",
     sections: [
@@ -121,9 +121,9 @@ export const punds: Record<Language, LocalizedContent> = {
   fr: {
     tagline: "Mon hub de liens, construit comme un jardin de sanctuaire sur une île au-dessus des nuages et rendu en direct dans le navigateur.",
     description:
-      "Punds est mon hub de liens en une page : un jardin de sanctuaire paisible sur une île au-dessus des nuages, rendu en direct dans le navigateur avec Three.js. Regardez autour de vous avec le pointeur, approchez-vous du portant et ouvrez l'une des trois plaques de bois.",
+      "Shrine est mon hub de liens en une page : un jardin de sanctuaire paisible sur une île au-dessus des nuages, rendu en direct dans le navigateur avec Three.js. Regardez autour de vous avec le pointeur, approchez-vous du portant et ouvrez l'une des trois plaques de bois.",
     overview:
-      "J'en avais assez de copier cinq liens chaque fois qu'on me demandait ce que j'avais construit, alors j'ai fait une page qui pointe vers tous, et j'ai refusé d'en faire une liste. Punds est plutôt un lieu. On se tient sur le chemin de pierre d'un petit jardin de sanctuaire, haut au-dessus d'une mer de nuages en fin d'après-midi, et on regarde autour de soi. Les liens pendent à un portant sous la forme de trois plaques de bois : pointez-en une et elle se tourne vers vous au bout de sa corde, cliquez et elle s'ouvre. Les plaques se balancent et s'entrechoquent, un clic sur l'étang y fait naître une ondulation, les carpes vous suivent et la cloche du sanctuaire sonne. Les dépendances d'exécution sont react, react-dom et three. C'est tout.",
+      "J'en avais assez de copier cinq liens chaque fois qu'on me demandait ce que j'avais construit, alors j'ai fait une page qui pointe vers tous, et j'ai refusé d'en faire une liste. Shrine est plutôt un lieu. On se tient sur le chemin de pierre d'un petit jardin de sanctuaire, haut au-dessus d'une mer de nuages en fin d'après-midi, et on regarde autour de soi. Les liens pendent à un portant sous la forme de trois plaques de bois : pointez-en une et elle se tourne vers vous au bout de sa corde, cliquez et elle s'ouvre. Les plaques se balancent et s'entrechoquent, un clic sur l'étang y fait naître une ondulation, les carpes vous suivent et la cloche du sanctuaire sonne. Les dépendances d'exécution sont react, react-dom et three. C'est tout.",
     roleSummary:
       "Moi seul, y compris les parties que personne n'avait demandées : les carpes, la cloche, le vent dans les cèdres.",
     sections: [
@@ -176,9 +176,9 @@ export const punds: Record<Language, LocalizedContent> = {
   zh: {
     tagline: "我的链接中枢，做成云海之上一座岛屿上的神社庭园，在浏览器里实时渲染。",
     description:
-      "Punds 是我的单页链接中枢：云海之上一座岛屿上安静的神社庭园，用 Three.js 在浏览器里实时渲染。用指针环顾四周，走到木架前，打开三块木牌中的一块。",
+      "Shrine 是我的单页链接中枢：云海之上一座岛屿上安静的神社庭园，用 Three.js 在浏览器里实时渲染。用指针环顾四周，走到木架前，打开三块木牌中的一块。",
     overview:
-      "每次有人问我做过什么，我都得复制五个链接，实在受够了，于是做了一个指向全部的页面，而且拒绝把它做成一份清单。Punds 是一个地方。你站在一座小神社庭园的石径上，傍晚时分，脚下是高高的云海，四处张望。链接挂在一个木架上，是三块木牌：指向其中一块，它会顺着绳子转向你，点一下就打开。木牌来回摆动、互相碰撞，点一下池塘会荡开一圈涟漪，锦鲤跟着你游，神社的钟会响。运行时依赖是 react、react-dom 和 three，就这三个。",
+      "每次有人问我做过什么，我都得复制五个链接，实在受够了，于是做了一个指向全部的页面，而且拒绝把它做成一份清单。Shrine 是一个地方。你站在一座小神社庭园的石径上，傍晚时分，脚下是高高的云海，四处张望。链接挂在一个木架上，是三块木牌：指向其中一块，它会顺着绳子转向你，点一下就打开。木牌来回摆动、互相碰撞，点一下池塘会荡开一圈涟漪，锦鲤跟着你游，神社的钟会响。运行时依赖是 react、react-dom 和 three，就这三个。",
     roleSummary: "只有我，包括没人要求的那些部分：锦鲤、钟、杉林里的风。",
     sections: [
       {
