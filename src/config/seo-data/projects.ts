@@ -28,7 +28,7 @@ const PROJECT_SEO_TITLES: Record<string, string> = {
   time: "Time, an NTP-synced web clock",
   jester: "Jester, a tabbed Windows notepad",
   flow: "Flow, a Windows macro and auto-clicker",
-  punds: "Punds, a link hub as a 3D shrine garden",
+  punds: "Shrine, a link hub as a 3D shrine garden",
   senbon: "Senbon, a markdown journal",
   oxidize: "Oxidize, a thorough Windows uninstaller",
   inkling: "Inkling, a desktop study companion",

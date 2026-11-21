@@ -153,10 +153,10 @@ const PROJECT_BASE: ProjectBase[] = [
   },
   {
     slug: "punds",
-    title: "Punds",
+    title: "Shrine",
     platform: "web",
     date: "2026-06",
-    repoUrl: "https://github.com/dominikkoenitzer/Punds",
+    repoUrl: "https://github.com/dominikkoenitzer/Shrine",
     liveUrl: "https://punds.ch/",
     priority: 9,
     image: "/projects/punds.jpg",

@@ -154,7 +154,7 @@
     </image:image>
   </url>
 
-  <!-- Project: Punds -->
+  <!-- Project: Shrine -->
   <url>
     <loc>https://dk.punds.ch/projects/punds</loc>
     <lastmod>2026-09-27</lastmod>
@@ -162,7 +162,7 @@
     <priority>0.8</priority>
     <image:image>
       <image:loc>https://dk.punds.ch/projects/punds.jpg</image:loc>
-      <image:title>Punds, a software project by Dominik Könitzer</image:title>
+      <image:title>Shrine, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 

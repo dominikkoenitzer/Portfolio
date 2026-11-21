@@ -8,7 +8,7 @@ export const SLOW_WINDOWS_TO_STEP_DOWN = 2
 export const FAST_WINDOWS_TO_STEP_UP = 4
 export const COOLDOWN_WINDOWS = 4`;
 
-/** Punds, a small project: how you move, what is generated, how it spares a weak device, the plain links. */
+/** Shrine, a small project: how you move, what is generated, how it spares a weak device, the plain links. */
 export const story: Story = {
   lead: "My link hub, built as a shrine garden on an island above the clouds and rendered live in the browser.",
   hero: {
