@@ -423,6 +423,7 @@ const ProjectDetails = () => {
   return (
     <>
       <SEO
+        breadcrumbName={project.title}
         citationLinks={getDefaultCitations()}
         // Exactly what scripts/prerender.ts writes into this route's static document.
         description={getProjectSeoDescription(project)}

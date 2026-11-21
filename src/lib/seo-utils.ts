@@ -85,7 +85,9 @@ export const createProfilePageSchema = () => ({
   mainEntity: { "@id": `${SITE_CONFIG.url}/#person` },
 });
 
-export const createBreadcrumbSchema = (url: string) => {
+// `pageName` names the last crumb when the page's own name is not its address
+// segment, as with a project whose slug outlived its title.
+export const createBreadcrumbSchema = (url: string, pageName?: string) => {
   if (!url || url === SITE_CONFIG.url || url === `${SITE_CONFIG.url}/`) {
     return null;
   }
@@ -93,6 +95,7 @@ export const createBreadcrumbSchema = (url: string) => {
   try {
     const pathSegments = new URL(url).pathname.split("/").filter(Boolean);
     if (pathSegments.length === 0) return null;
+    const last = pathSegments.length - 1;
 
     return {
       "@context": "https://schema.org",
@@ -107,7 +110,10 @@ export const createBreadcrumbSchema = (url: string) => {
         ...pathSegments.map((segment, index) => ({
           "@type": "ListItem",
           position: index + 2,
-          name: segment.charAt(0).toUpperCase() + segment.slice(1),
+          name:
+            index === last && pageName
+              ? pageName
+              : segment.charAt(0).toUpperCase() + segment.slice(1),
           item: `${SITE_CONFIG.url}/${pathSegments.slice(0, index + 1).join("/")}`,
         })),
       ],

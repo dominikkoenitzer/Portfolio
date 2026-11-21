@@ -53,4 +53,6 @@ export interface SEOProps {
    * Emitted as schema.org SpeakableSpecification.
    */
   speakableSelectors?: string[];
+  /** The last breadcrumb's name, where the page's name differs from its address. */
+  breadcrumbName?: string;
 }

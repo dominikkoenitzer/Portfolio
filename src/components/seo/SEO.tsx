@@ -34,6 +34,7 @@ export function SEO({
   faqSchema,
   citationLinks,
   speakableSelectors,
+  breadcrumbName,
 }: SEOProps) {
   const { language } = useLanguage();
   const { pathname } = useLocation();
@@ -107,7 +108,7 @@ export function SEO({
   }
 
   // Breadcrumb schema
-  const breadcrumbSchema = createBreadcrumbSchema(siteUrl);
+  const breadcrumbSchema = createBreadcrumbSchema(siteUrl, breadcrumbName);
   if (breadcrumbSchema) {
     allStructuredData.push(breadcrumbSchema);
   }
