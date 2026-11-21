@@ -9,7 +9,7 @@ import {
   settle,
   watchErrors,
 } from "./helpers";
-import { ROUTES } from "./routes";
+import { PROJECT_TITLES, ROUTES } from "./routes";
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
@@ -112,6 +112,25 @@ test.describe("head", () => {
         (match) => JSON.parse(match[1])["@type"],
       );
       expect(rendered).toEqual(expect.arrayContaining(routeTypes));
+
+      // A project's trail ends in its title, served and rendered alike.
+      const title = PROJECT_TITLES.get(route.path);
+      if (title) {
+        const lastCrumbs = (graphs: Array<Record<string, unknown>>) =>
+          graphs
+            .filter((graph) => graph["@type"] === "BreadcrumbList")
+            .map((graph) => (graph.itemListElement as Array<{ name: string }>).at(-1)?.name);
+        const servedGraphs = [...served.matchAll(/<script[^>]*data-route[^>]*>(.*?)<\/script>/gs)].map(
+          (match) => JSON.parse(match[1]),
+        );
+        const renderedGraphs = await page.evaluate(() =>
+          [...document.querySelectorAll('script[type="application/ld+json"]')].map((block) =>
+            JSON.parse(block.textContent ?? "{}"),
+          ),
+        );
+        expect(lastCrumbs(servedGraphs)).toEqual([title]);
+        expect(lastCrumbs(renderedGraphs)).toEqual([title]);
+      }
     });
   }
 

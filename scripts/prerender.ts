@@ -98,13 +98,13 @@ const citations = getDefaultCitations();
  * the Helmet-appended one are the same object rather than two disagreeing ones.
  * Same trade-off the robots/canonical pair already makes.
  */
-const staticSchemas = (route: string): object[] => {
+const staticSchemas = (route: string, pageName?: string): object[] => {
   const url = `${SITE_CONFIG.url}${route}`;
   const graphs: object[] = [];
 
   // Breadcrumbs are how a nested route gets a trail instead of a bare URL in
   // the result. Returns null on "/", which has no trail to show.
-  const breadcrumb = createBreadcrumbSchema(url);
+  const breadcrumb = createBreadcrumbSchema(url, pageName);
   if (breadcrumb) graphs.push(breadcrumb);
 
   // Services is the one page that renders the FAQ, so it is the one page allowed
@@ -153,7 +153,8 @@ for (const p of getProjects("en")) {
     // ProjectDetails passes type="article" to <SEO>.
     ogType: "article",
     jsonLd: [
-      ...staticSchemas(`/projects/${p.slug}`),
+      // The crumb carries the title, as ProjectDetails passes it to <SEO>.
+      ...staticSchemas(`/projects/${p.slug}`, p.title),
       createSoftwareSourceCodeSchema(p),
       // Same rule as ProjectDetails: a project that runs only locally is
       // described by its source, not offered as an application.

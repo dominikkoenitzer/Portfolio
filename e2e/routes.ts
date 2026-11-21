@@ -20,6 +20,15 @@ const projectPaths = [
   ...read("src/constants/projects/index.ts").matchAll(/slug:\s*"([^"]+)"/g),
 ].map((m) => `/projects/${m[1]}`);
 
+/** Each project's title by its path, since a slug can outlive the name. */
+export const PROJECT_TITLES = new Map(
+  [
+    ...read("src/constants/projects/index.ts").matchAll(
+      /slug:\s*"([^"]+)",\s*title:\s*"([^"]+)"/g,
+    ),
+  ].map((m) => [`/projects/${m[1]}`, m[2]]),
+);
+
 export interface RouteCase {
   path: string;
   status: number;
@@ -34,9 +43,13 @@ export const ROUTES: RouteCase[] = [
   { path: "/projects/no-such-project", status: 404 },
 ];
 
-if (staticPaths.length < 10 || projectPaths.length < 15) {
+if (
+  staticPaths.length < 10 ||
+  projectPaths.length < 15 ||
+  PROJECT_TITLES.size !== projectPaths.length
+) {
   throw new Error(
-    `route discovery found ${staticPaths.length} pages and ${projectPaths.length} projects; the patterns no longer match the sources`,
+    `route discovery found ${staticPaths.length} pages, ${projectPaths.length} projects and ${PROJECT_TITLES.size} titles; the patterns no longer match the sources`,
   );
 }
 

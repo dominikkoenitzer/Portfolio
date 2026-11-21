@@ -109,6 +109,14 @@ describe("createBreadcrumbSchema", () => {
     const schema = createBreadcrumbSchema(`${SITE_CONFIG.url}/projects`);
     expect(schema?.itemListElement[1].name).toBe("Projects");
   });
+
+  it("names the last crumb after the page when its address spells another name", () => {
+    const schema = createBreadcrumbSchema(`${SITE_CONFIG.url}/projects/punds`, "Shrine");
+    const items = schema?.itemListElement ?? [];
+
+    expect(items.map((item) => item.name)).toEqual(["Home", "Projects", "Shrine"]);
+    expect(items[2].item).toBe(`${SITE_CONFIG.url}/projects/punds`);
+  });
 });
 
 describe("createSpeakableSchema", () => {
