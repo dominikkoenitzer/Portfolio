@@ -159,7 +159,7 @@ const Privacy = () => {
           "@context": "https://schema.org",
           "@type": "WebPage",
           name: "Privacy Policy",
-          description: "Privacy policy for dk.punds.ch",
+          description: "Privacy policy for portfolio-izanagi.vercel.app",
           url: privacyUrl,
         }}
         title={seo.title}

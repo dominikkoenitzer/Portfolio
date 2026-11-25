@@ -33,7 +33,7 @@ body:
     attributes:
       label: Where did this happen?
       options:
-        - Live site (dk.punds.ch)
+        - Live site (portfolio-izanagi.vercel.app)
         - Local dev
         - Not sure
     validations:

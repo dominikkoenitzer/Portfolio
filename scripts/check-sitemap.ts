@@ -17,7 +17,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { UNLISTED_ROUTES } from "./head-meta";
 
-const BASE = "https://dk.punds.ch";
+const BASE = "https://portfolio-izanagi.vercel.app";
 
 /**
  * Indexable documents served straight out of public/, so the router never sees

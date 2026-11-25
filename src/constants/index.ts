@@ -17,7 +17,7 @@ export const SITE_CONFIG = {
   description:
     "Software engineer in Switzerland, studying at WISS Schulen für Wirtschaft Informatik Immobilien and building web apps with React, TypeScript and Node.",
   author: "Dominik Könitzer",
-  url: "https://dk.punds.ch",
+  url: "https://portfolio-izanagi.vercel.app",
   ogImage: "/og-image.png",
   github: "https://github.com/dominikkoenitzer",
   location: {

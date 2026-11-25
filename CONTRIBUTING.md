@@ -57,5 +57,5 @@ A few things are deliberate and load-bearing:
 ## Reporting bugs & ideas
 
 Use the [issue templates](https://github.com/dominikkoenitzer/Portfolio/issues/new/choose).
-For anything sensitive, write through <https://dk.punds.ch/contact> instead of
+For anything sensitive, write through <https://portfolio-izanagi.vercel.app/contact> instead of
 opening a public issue.

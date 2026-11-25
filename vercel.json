@@ -55,7 +55,7 @@
       "has": [
         {
           "type": "host",
-          "value": "dk.punds.ch"
+          "value": "portfolio-izanagi.vercel.app"
         }
       ],
       "headers": [

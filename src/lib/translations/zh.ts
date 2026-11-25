@@ -471,7 +471,7 @@ export const zh = {
     privacy: {
       title: "隐私政策",
       description:
-        "dk.punds.ch 隐私政策：访问本站时会收集哪些数据、如何使用与保护，符合瑞士 FADP 与欧盟 GDPR。",
+        "portfolio-izanagi.vercel.app 隐私政策：访问本站时会收集哪些数据、如何使用与保护，符合瑞士 FADP 与欧盟 GDPR。",
       keywords: "隐私政策, 数据保护, GDPR, FADP, 隐私声明, 数据隐私, 瑞士隐私",
     },
     projectDetailsKeywordsSuffix: "项目, 软件工程案例研究, 网页开发作品集",

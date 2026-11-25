@@ -101,16 +101,15 @@ describe("the project list", () => {
     expect(projects.find((p) => p.slug === "psyche")?.platform).toBe("desktop");
   });
 
-  // Every download goes through the app's own download page; only that page
-  // links the file itself.
-  it("sends every download to its app's own page", () => {
+  // Every download goes through the app's own release page, never a file.
+  it("sends every download to its app's release page", () => {
     for (const project of projects) {
       expect(Boolean(project.downloadPage), project.slug).toBe(
         Boolean(project.downloadUrl),
       );
       if (project.downloadPage) {
         expect(project.downloadPage, project.slug).toMatch(
-          /^https:\/\/[a-z]+\.punds\.ch\/$/,
+          /^https:\/\/github\.com\/dominikkoenitzer\/[A-Za-z]+\/releases\/latest$/,
         );
         expect(project.downloadUrl, project.slug).toBe(project.downloadPage);
       }

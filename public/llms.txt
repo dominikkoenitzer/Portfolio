@@ -1,10 +1,10 @@
 # Dominik Könitzer
 
-> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, has been an intern at Swisslex in Zürich since October 2026, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He can be reached through https://dk.punds.ch/contact.
+> Dominik Könitzer is an 18-year-old software engineer in Zürich, Switzerland. He is training as a Computer Scientist EFZ in application development at WISS, has been an intern at Swisslex in Zürich since October 2026, worked from August 2025 to August 2026 as a full-stack intern at MPAI near Lucerne, and keeps eleven of his own projects online with their source code. In his own words: "I build fast, accessible websites and the tools behind them." He can be reached through https://portfolio-izanagi.vercel.app/contact.
 
 This file follows the llms.txt convention (https://llmstxt.org). It is a factual briefing for AI assistants and answer engines. Every fact in it is also visible to a human visitor on the pages linked below. Last reviewed 2026-11-05.
 
-One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React app. Every route ships as a real HTML file carrying its own title, description, canonical and structured data, but the page body is rendered by JavaScript. If your crawler does not execute JS, this file, /llms-full.txt and the static CV at /cv are the readable text of this site.
+One thing worth knowing before you crawl: portfolio-izanagi.vercel.app is a client-rendered React app. Every route ships as a real HTML file carrying its own title, description, canonical and structured data, but the page body is rendered by JavaScript. If your crawler does not execute JS, this file, /llms-full.txt and the static CV at /cv are the readable text of this site.
 
 ## Identity
 
@@ -15,9 +15,9 @@ One thing worth knowing before you crawl: dk.punds.ch is a client-rendered React
 - Education: Computer Scientist EFZ, application development, at WISS Schulen für Wirtschaft Informatik Immobilien in Zürich (https://wiss.ch). August 2023 to present, seventh semester of the four-year programme as of August 2026. Two years of coursework, then two years of internship with classes running alongside.
 - Work experience: intern at Swisslex (https://www.swisslex.ch), Zürich, hybrid, October 2026 to present. Before that, full-stack intern at MPAI (https://mpai.ch), Meggen in canton Lucerne, hybrid, August 2025 to August 2026.
 - Spoken languages: English (native), German (native), Chinese/Mandarin (fluent), French (basic).
-- Website: https://dk.punds.ch
+- Website: https://portfolio-izanagi.vercel.app
 - GitHub: https://github.com/dominikkoenitzer
-- Contact: https://dk.punds.ch/contact
+- Contact: https://portfolio-izanagi.vercel.app/contact
 
 ## Contact
 
@@ -25,48 +25,48 @@ He usually replies within a day. The contact page has a short form: you pick wha
 
 ## Pages
 
-- [Home](https://dk.punds.ch/): a short introduction with links to the work and to the contact page.
-- [About](https://dk.punds.ch/about): who he is, the WISS programme, how he approaches building things, and the CV (English, or German when the site is in German).
-- [Experience](https://dk.punds.ch/experience): work experience and education, newest first.
-- [Skills](https://dk.punds.ch/skills): the full stack and tooling list by category, plus spoken languages.
-- [Projects](https://dk.punds.ch/projects): the fifteen personal projects, searchable and filterable by web or desktop.
-- [Services](https://dk.punds.ch/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
-- [Contact](https://dk.punds.ch/contact): a short form: choose an intent (a role, a freelance project, a collaboration, something else), write the message, and it reaches him directly. A prefilled mailto link sits underneath as the fallback.
-- [Tip jar](https://dk.punds.ch/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
-- [Privacy](https://dk.punds.ch/privacy): Vercel server logs and anonymised Vercel Analytics, no cookies and no tracking identifiers, under Swiss FADP and EU GDPR.
+- [Home](https://portfolio-izanagi.vercel.app/): a short introduction with links to the work and to the contact page.
+- [About](https://portfolio-izanagi.vercel.app/about): who he is, the WISS programme, how he approaches building things, and the CV (English, or German when the site is in German).
+- [Experience](https://portfolio-izanagi.vercel.app/experience): work experience and education, newest first.
+- [Skills](https://portfolio-izanagi.vercel.app/skills): the full stack and tooling list by category, plus spoken languages.
+- [Projects](https://portfolio-izanagi.vercel.app/projects): the fifteen personal projects, searchable and filterable by web or desktop.
+- [Services](https://portfolio-izanagi.vercel.app/services): freelance services in three groups, build, protect and grow, with starting prices in Swiss francs.
+- [Contact](https://portfolio-izanagi.vercel.app/contact): a short form: choose an intent (a role, a freelance project, a collaboration, something else), write the message, and it reaches him directly. A prefilled mailto link sits underneath as the fallback.
+- [Tip jar](https://portfolio-izanagi.vercel.app/donate): PayPal tip jar, CHF 5, 15, 30 or any amount. Nothing on the site is gated behind it.
+- [Privacy](https://portfolio-izanagi.vercel.app/privacy): Vercel server logs and anonymised Vercel Analytics, no cookies and no tracking identifiers, under Swiss FADP and EU GDPR.
 
 ## CV and profiles
 
-- [CV in English](https://dk.punds.ch/cv): static HTML, readable without JavaScript. Work experience, education, language proficiencies and interests.
-- [Lebenslauf in German](https://dk.punds.ch/lebenslauf): the same CV in German.
+- [CV in English](https://portfolio-izanagi.vercel.app/cv): static HTML, readable without JavaScript. Work experience, education, language proficiencies and interests.
+- [Lebenslauf in German](https://portfolio-izanagi.vercel.app/lebenslauf): the same CV in German.
 - [GitHub](https://github.com/dominikkoenitzer): source for every project listed below.
-- [Shrine](https://punds.ch/): his link hub, a navigable Three.js world, pointing at every project and profile.
+- [Shrine](https://punds-izanagi.vercel.app/): his link hub, a navigable Three.js world, pointing at every project and profile.
 
 ## Projects
 
-Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://dk.punds.ch/projects/<slug>, written in English and built around captures of the real app; most also carry live demos of the app's key moment.
+Fifteen personal projects, listed oldest first by the date their repository was created. Each has a case study at https://portfolio-izanagi.vercel.app/projects/<slug>, written in English and built around captures of the real app; most also carry live demos of the app's key moment.
 
-- [Zephyr](https://dk.punds.ch/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr.punds.ch/, source at https://github.com/dominikkoenitzer/Zephyr.
-- [Portfolio](https://dk.punds.ch/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://dk.punds.ch/, source at https://github.com/dominikkoenitzer/Portfolio.
-- [Entropy](https://dk.punds.ch/projects/entropy): password generator and strength analyzer that runs entirely in the browser. CSPRNG randomness from the Web Crypto API, a guess estimator he wrote himself, and no round-trip to a server. Since October 2026 the same repository also holds a Windows app, a local password manager on the same engine: Alt+E types the login for the site in front, and a Health page checks every saved password with the ported analyzer and an offline filter of about a million leaked passwords. February 2026. Next.js, TypeScript, C#, WinUI 3. Live at https://entropy.punds.ch/, source code private.
-- [Spectrum](https://dk.punds.ch/projects/spectrum): client-side colour toolkit. Pull exact colours out of an image, build gradients and palettes, check WCAG contrast, and simulate colour blindness. Nothing is uploaded. February 2026. Next.js, TypeScript. Live at https://spectrum.punds.ch/, source code private.
-- [Remnants](https://dk.punds.ch/projects/remnants): a code editor for Windows, macOS and Linux, his personal fork of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact. February 2026. TypeScript, Electron. Download page at https://remnants.punds.ch/, source at https://github.com/dominikkoenitzer/Remnants.
-- [Time](https://dk.punds.ch/projects/time): a web clock synchronised against network time, accurate to within hundredths of a second even when the device clock is wrong, shown on one bare screen with the date, the ISO week, and the visitor's own timezone and offset. June 2026. Next.js, TypeScript, Intl. Live at https://time.punds.ch/, source at https://github.com/dominikkoenitzer/Time.
-- [Jester](https://dk.punds.ch/projects/jester): a native Windows notepad that grew up. Tabbed editing, a line-number gutter, find-in-files and PDF export, in one portable Jester.exe with no installer. June 2026. C#, WPF, .NET 10. Download page at https://jester.punds.ch/, source at https://github.com/dominikkoenitzer/Jester.
-- [Flow](https://dk.punds.ch/projects/flow): a native Windows app that records mouse and keyboard macros, replays them on a high-resolution timer, and runs a high-speed auto-clicker. One exe, no runtime. June 2026. C++17, Win32, GDI+. Download page at https://flow.punds.ch/, source at https://github.com/dominikkoenitzer/Flow.
-- [Shrine](https://dk.punds.ch/projects/punds): a link hub built as a shrine garden on an island above the clouds, rendered live with Three.js, with three wooden plaques: this portfolio, his GitHub profile and Senbon. June 2026. React, TypeScript, Three.js. Live at https://punds.ch/, source at https://github.com/dominikkoenitzer/Shrine.
-- [Senbon](https://dk.punds.ch/projects/senbon): a zen-themed journal where every entry is a plain markdown file, rendered into an unhurried reading experience. No CMS, and noindex on purpose: it asks search engines and AI crawlers to leave it alone. June 2026. Next.js, React 19, Markdown. Live at https://senbon.punds.ch/, source code private.
-- [Oxidize](https://dk.punds.ch/projects/oxidize): a thorough Windows uninstaller written in Rust. It closes what still runs from a program's folders, runs its uninstaller where one is needed, then finds and removes the registry keys, files, services, tasks, firewall rules and PATH entries it left behind, backing each one up first. Ships as a scriptable CLI and a native egui GUI sharing one engine. June 2026. Rust. Download page at https://oxidize.punds.ch/, source at https://github.com/dominikkoenitzer/Oxidize.
-- [Inkling](https://dk.punds.ch/projects/inkling): a desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your own machine. A checkbox in a note shows up on Today, and a line with :: becomes a flashcard. July 2026. Electron, React, TypeScript, SQLite. Download page at https://inkling.punds.ch/, source at https://github.com/dominikkoenitzer/Inkling.
-- [Mochi](https://dk.punds.ch/projects/mochi): a tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash. September 2026. Rust, Win32. Download page at https://mochi.punds.ch/, source at https://github.com/dominikkoenitzer/Mochi.
-- [Daifuku](https://dk.punds.ch/projects/daifuku): fleets of AI agent terminals for Windows. One key opens them in a grid, and each terminal's border shows whether its agent is working, waiting for you, done or failed. September 2026. Rust, Win32. Download page at https://daifuku.punds.ch/, source at https://github.com/dominikkoenitzer/Daifuku.
-- [Psyche](https://dk.punds.ch/projects/psyche): two-factor codes on the Windows desktop. Press Alt+P on any 2FA prompt and it types the code for the site in front. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects for the signed-in account, and accounts move over from Google Authenticator through the webcam or from Aegis, 2FAS, Proton Authenticator, Ente Auth and Bitwarden exports. October 2026. C#, .NET 10, WinUI 3, Native AOT. Source code private.
+- [Zephyr](https://portfolio-izanagi.vercel.app/projects/zephyr): local-first productivity app, a to-do list and a Pomodoro focus timer in one place. No login, no backend, every task and focus session stays in the browser's localStorage, and it works offline. Installable as a PWA. December 2024. React, Vite, Tailwind CSS, Radix UI. Live at https://zephyr-izanagi.vercel.app/, source at https://github.com/dominikkoenitzer/Zephyr.
+- [Portfolio](https://portfolio-izanagi.vercel.app/projects/portfolio): this site. A React single-page app with hand-rolled i18n in four languages, JSON-LD structured data on every page, a prerendered HTML file per route, and a WebGL background kept off the critical path. May 2025. React 19, TypeScript, Vite. Live at https://portfolio-izanagi.vercel.app/, source at https://github.com/dominikkoenitzer/Portfolio.
+- [Entropy](https://portfolio-izanagi.vercel.app/projects/entropy): password generator and strength analyzer that runs entirely in the browser. CSPRNG randomness from the Web Crypto API, a guess estimator he wrote himself, and no round-trip to a server. Since October 2026 the same repository also holds a Windows app, a local password manager on the same engine: Alt+E types the login for the site in front, and a Health page checks every saved password with the ported analyzer and an offline filter of about a million leaked passwords. February 2026. Next.js, TypeScript, C#, WinUI 3. Live at https://entropy-izanagi.vercel.app/, source code private.
+- [Spectrum](https://portfolio-izanagi.vercel.app/projects/spectrum): client-side colour toolkit. Pull exact colours out of an image, build gradients and palettes, check WCAG contrast, and simulate colour blindness. Nothing is uploaded. February 2026. Next.js, TypeScript. Live at https://spectrum-izanagi.vercel.app/, source code private.
+- [Remnants](https://portfolio-izanagi.vercel.app/projects/remnants): a code editor for Windows, macOS and Linux, his personal fork of Code - OSS with Copilot, chat, agents, telemetry and sign-in cut out, and the editor, terminal, Git and debugger left fully intact. February 2026. TypeScript, Electron. Download page at https://github.com/dominikkoenitzer/Remnants/releases/latest, source at https://github.com/dominikkoenitzer/Remnants.
+- [Time](https://portfolio-izanagi.vercel.app/projects/time): a web clock synchronised against network time, accurate to within hundredths of a second even when the device clock is wrong, shown on one bare screen with the date, the ISO week, and the visitor's own timezone and offset. June 2026. Next.js, TypeScript, Intl. Live at https://time-izanagi.vercel.app/, source at https://github.com/dominikkoenitzer/Time.
+- [Jester](https://portfolio-izanagi.vercel.app/projects/jester): a native Windows notepad that grew up. Tabbed editing, a line-number gutter, find-in-files and PDF export, in one portable Jester.exe with no installer. June 2026. C#, WPF, .NET 10. Download page at https://github.com/dominikkoenitzer/Jester/releases/latest, source at https://github.com/dominikkoenitzer/Jester.
+- [Flow](https://portfolio-izanagi.vercel.app/projects/flow): a native Windows app that records mouse and keyboard macros, replays them on a high-resolution timer, and runs a high-speed auto-clicker. One exe, no runtime. June 2026. C++17, Win32, GDI+. Download page at https://github.com/dominikkoenitzer/Flow/releases/latest, source at https://github.com/dominikkoenitzer/Flow.
+- [Shrine](https://portfolio-izanagi.vercel.app/projects/punds): a link hub built as a shrine garden on an island above the clouds, rendered live with Three.js, with three wooden plaques: this portfolio, his GitHub profile and Senbon. June 2026. React, TypeScript, Three.js. Live at https://punds-izanagi.vercel.app/, source at https://github.com/dominikkoenitzer/Shrine.
+- [Senbon](https://portfolio-izanagi.vercel.app/projects/senbon): a zen-themed journal where every entry is a plain markdown file, rendered into an unhurried reading experience. No CMS, and noindex on purpose: it asks search engines and AI crawlers to leave it alone. June 2026. Next.js, React 19, Markdown. Live at https://senbon.vercel.app/, source code private.
+- [Oxidize](https://portfolio-izanagi.vercel.app/projects/oxidize): a thorough Windows uninstaller written in Rust. It closes what still runs from a program's folders, runs its uninstaller where one is needed, then finds and removes the registry keys, files, services, tasks, firewall rules and PATH entries it left behind, backing each one up first. Ships as a scriptable CLI and a native egui GUI sharing one engine. June 2026. Rust. Download page at https://github.com/dominikkoenitzer/Oxidize/releases/latest, source at https://github.com/dominikkoenitzer/Oxidize.
+- [Inkling](https://portfolio-izanagi.vercel.app/projects/inkling): a desktop study app for notes, to-dos and flashcards, kept in one SQLite file on your own machine. A checkbox in a note shows up on Today, and a line with :: becomes a flashcard. July 2026. Electron, React, TypeScript, SQLite. Download page at https://github.com/dominikkoenitzer/Inkling/releases/latest, source at https://github.com/dominikkoenitzer/Inkling.
+- [Mochi](https://portfolio-izanagi.vercel.app/projects/mochi): a tiling window manager for Windows, written in Rust. It tiles real windows, binds its own keys, and puts the desktop back exactly as it found it, even after a crash. September 2026. Rust, Win32. Download page at https://github.com/dominikkoenitzer/Mochi/releases/latest, source at https://github.com/dominikkoenitzer/Mochi.
+- [Daifuku](https://portfolio-izanagi.vercel.app/projects/daifuku): fleets of AI agent terminals for Windows. One key opens them in a grid, and each terminal's border shows whether its agent is working, waiting for you, done or failed. September 2026. Rust, Win32. Download page at https://github.com/dominikkoenitzer/Daifuku/releases/latest, source at https://github.com/dominikkoenitzer/Daifuku.
+- [Psyche](https://portfolio-izanagi.vercel.app/projects/psyche): two-factor codes on the Windows desktop. Press Alt+P on any 2FA prompt and it types the code for the site in front. The vault is encrypted with XChaCha20-Poly1305 under a key Windows protects for the signed-in account, and accounts move over from Google Authenticator through the webcam or from Aegis, 2FAS, Proton Authenticator, Ente Auth and Bitwarden exports. October 2026. C#, .NET 10, WinUI 3, Native AOT. Source code private.
 
 Worth saying plainly, because the projects page says it too: these fifteen are personal projects, built in evenings and at weekends, and they are only the public sliver of his work. Client projects sit behind NDAs, in private repos, or on client infrastructure, so they do not appear here.
 
 ## Skills
 
-Taken from https://dk.punds.ch/skills, in the categories that page uses.
+Taken from https://portfolio-izanagi.vercel.app/skills, in the categories that page uses.
 
 - Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, shadcn/ui, Radix UI, Framer Motion.
 - Backend: Java, Kotlin, Rust, Node.js, Bun, Spring Framework, Python, C#, C++, GraphQL.
@@ -95,7 +95,7 @@ Grow:
 - Website Relaunch, from 3'000 CHF: your existing site rebuilt, mobile, fast, secure and findable.
 - Support and Content, 110 CHF per hour: new text and images put in, small bugs fixed, things made quicker.
 
-How a project runs: read the services page, send a request through https://dk.punds.ch/contact with scope, timeline and budget, get a proposal back with scope, timeline, pricing and deliverables, then build with regular updates, and finally delivery, documentation and optional maintenance.
+How a project runs: read the services page, send a request through https://portfolio-izanagi.vercel.app/contact with scope, timeline and budget, get a proposal back with scope, timeline, pricing and deliverables, then build with regular updates, and finally delivery, documentation and optional maintenance.
 
 ## About this site
 
@@ -105,15 +105,15 @@ The interface is localised to English (default), German, French and Chinese. Loc
 
 ## Machine-readable files
 
-- https://dk.punds.ch/llms.txt: this file.
-- https://dk.punds.ch/llms-full.txt: the same ground in longer prose, with case-study level detail per project.
-- https://dk.punds.ch/sitemap.xml: the canonical URL set, one entry per route.
-- https://dk.punds.ch/robots.txt: crawl policy. One group, `User-agent: *`, allowing everything except /api/.
-- https://dk.punds.ch/humans.txt: credits and the stack behind the site.
-- https://dk.punds.ch/.well-known/security.txt: where to report a security issue.
+- https://portfolio-izanagi.vercel.app/llms.txt: this file.
+- https://portfolio-izanagi.vercel.app/llms-full.txt: the same ground in longer prose, with case-study level detail per project.
+- https://portfolio-izanagi.vercel.app/sitemap.xml: the canonical URL set, one entry per route.
+- https://portfolio-izanagi.vercel.app/robots.txt: crawl policy. One group, `User-agent: *`, allowing everything except /api/.
+- https://portfolio-izanagi.vercel.app/humans.txt: credits and the stack behind the site.
+- https://portfolio-izanagi.vercel.app/.well-known/security.txt: where to report a security issue.
 
 ## Using this content
 
-Quoting and summarising is welcome, including for answering questions about him and his work. Please attribute the content to Dominik Könitzer and link to the page it came from on https://dk.punds.ch.
+Quoting and summarising is welcome, including for answering questions about him and his work. Please attribute the content to Dominik Könitzer and link to the page it came from on https://portfolio-izanagi.vercel.app.
 
-If a fact here disagrees with the rendered page, the rendered page wins. Corrections are welcome through https://dk.punds.ch/contact.
+If a fact here disagrees with the rendered page, the rendered page wins. Corrections are welcome through https://portfolio-izanagi.vercel.app/contact.

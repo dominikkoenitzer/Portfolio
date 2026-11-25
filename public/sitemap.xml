@@ -8,19 +8,19 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://dk.punds.ch/</loc>
+    <loc>https://portfolio-izanagi.vercel.app/</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/og-image.png</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/og-image.png</image:loc>
       <image:title>Dominik Könitzer, software engineer portfolio</image:title>
     </image:image>
   </url>
 
   <!-- About -->
   <url>
-    <loc>https://dk.punds.ch/about</loc>
+    <loc>https://portfolio-izanagi.vercel.app/about</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -28,7 +28,7 @@
 
   <!-- Experience -->
   <url>
-    <loc>https://dk.punds.ch/experience</loc>
+    <loc>https://portfolio-izanagi.vercel.app/experience</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -36,7 +36,7 @@
 
   <!-- Skills -->
   <url>
-    <loc>https://dk.punds.ch/skills</loc>
+    <loc>https://portfolio-izanagi.vercel.app/skills</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -44,7 +44,7 @@
 
   <!-- Services -->
   <url>
-    <loc>https://dk.punds.ch/services</loc>
+    <loc>https://portfolio-izanagi.vercel.app/services</loc>
     <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -52,7 +52,7 @@
 
   <!-- Projects -->
   <url>
-    <loc>https://dk.punds.ch/projects</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -60,187 +60,187 @@
 
   <!-- Project: Zephyr -->
   <url>
-    <loc>https://dk.punds.ch/projects/zephyr</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/zephyr</loc>
     <lastmod>2026-09-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/zephyr.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/zephyr.jpg</image:loc>
       <image:title>Zephyr, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Portfolio -->
   <url>
-    <loc>https://dk.punds.ch/projects/portfolio</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/portfolio</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/portfolio.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/portfolio.jpg</image:loc>
       <image:title>Portfolio, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Entropy -->
   <url>
-    <loc>https://dk.punds.ch/projects/entropy</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/entropy</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/entropy.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/entropy.jpg</image:loc>
       <image:title>Entropy, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Spectrum -->
   <url>
-    <loc>https://dk.punds.ch/projects/spectrum</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/spectrum</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/spectrum.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/spectrum.jpg</image:loc>
       <image:title>Spectrum, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Remnants -->
   <url>
-    <loc>https://dk.punds.ch/projects/remnants</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/remnants</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/remnants.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/remnants.jpg</image:loc>
       <image:title>Remnants, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Time -->
   <url>
-    <loc>https://dk.punds.ch/projects/time</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/time</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/time.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/time.jpg</image:loc>
       <image:title>Time, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Jester -->
   <url>
-    <loc>https://dk.punds.ch/projects/jester</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/jester</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/jester.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/jester.jpg</image:loc>
       <image:title>Jester, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Flow -->
   <url>
-    <loc>https://dk.punds.ch/projects/flow</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/flow</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/flow.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/flow.jpg</image:loc>
       <image:title>Flow, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Shrine -->
   <url>
-    <loc>https://dk.punds.ch/projects/punds</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/punds</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/punds.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/punds.jpg</image:loc>
       <image:title>Shrine, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Senbon -->
   <url>
-    <loc>https://dk.punds.ch/projects/senbon</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/senbon</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/senbon.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/senbon.jpg</image:loc>
       <image:title>Senbon, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Oxidize -->
   <url>
-    <loc>https://dk.punds.ch/projects/oxidize</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/oxidize</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/oxidize.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/oxidize.jpg</image:loc>
       <image:title>Oxidize, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Inkling -->
   <url>
-    <loc>https://dk.punds.ch/projects/inkling</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/inkling</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/inkling.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/inkling.jpg</image:loc>
       <image:title>Inkling, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Mochi -->
   <url>
-    <loc>https://dk.punds.ch/projects/mochi</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/mochi</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/mochi.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/mochi.jpg</image:loc>
       <image:title>Mochi, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Daifuku -->
   <url>
-    <loc>https://dk.punds.ch/projects/daifuku</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/daifuku</loc>
     <lastmod>2026-09-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/daifuku.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/daifuku.jpg</image:loc>
       <image:title>Daifuku, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Project: Psyche -->
   <url>
-    <loc>https://dk.punds.ch/projects/psyche</loc>
+    <loc>https://portfolio-izanagi.vercel.app/projects/psyche</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://dk.punds.ch/projects/psyche.jpg</image:loc>
+      <image:loc>https://portfolio-izanagi.vercel.app/projects/psyche.jpg</image:loc>
       <image:title>Psyche, a software project by Dominik Könitzer</image:title>
     </image:image>
   </url>
 
   <!-- Contact -->
   <url>
-    <loc>https://dk.punds.ch/contact</loc>
+    <loc>https://portfolio-izanagi.vercel.app/contact</loc>
     <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -248,7 +248,7 @@
 
   <!-- Donate -->
   <url>
-    <loc>https://dk.punds.ch/donate</loc>
+    <loc>https://portfolio-izanagi.vercel.app/donate</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -256,7 +256,7 @@
 
   <!-- Privacy -->
   <url>
-    <loc>https://dk.punds.ch/privacy</loc>
+    <loc>https://portfolio-izanagi.vercel.app/privacy</loc>
     <lastmod>2026-11-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -269,14 +269,14 @@
        inbound link is rendered by JavaScript, so without these two entries a
        crawler that does not run JS never discovers them. -->
   <url>
-    <loc>https://dk.punds.ch/cv/curriculum-vitae.html</loc>
+    <loc>https://portfolio-izanagi.vercel.app/cv/curriculum-vitae.html</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://dk.punds.ch/cv/lebenslauf.html</loc>
+    <loc>https://portfolio-izanagi.vercel.app/cv/lebenslauf.html</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

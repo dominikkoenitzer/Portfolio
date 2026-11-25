@@ -535,7 +535,7 @@ export const de = {
     privacy: {
       title: "Datenschutzerklärung",
       description:
-        "Datenschutzerklärung für dk.punds.ch: welche Daten beim Besuch erhoben werden, wie sie genutzt und geschützt werden. Nach Schweizer DSG und EU-DSGVO.",
+        "Datenschutzerklärung für portfolio-izanagi.vercel.app: welche Daten beim Besuch erhoben werden, wie sie genutzt und geschützt werden. Nach Schweizer DSG und EU-DSGVO.",
       keywords:
         "Datenschutzerklärung, Datenschutz, DSGVO, DSG, Privacy Statement, Datensicherheit, Datenschutz Schweiz",
     },

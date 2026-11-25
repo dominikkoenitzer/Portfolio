@@ -1,5 +1,5 @@
-Contact: https://dk.punds.ch/contact
+Contact: https://portfolio-izanagi.vercel.app/contact
 Expires: 2027-12-31T23:59:59.000Z
 Preferred-Languages: en, de, zh, fr
-Canonical: https://dk.punds.ch/.well-known/security.txt
-Policy: https://dk.punds.ch/privacy
+Canonical: https://portfolio-izanagi.vercel.app/.well-known/security.txt
+Policy: https://portfolio-izanagi.vercel.app/privacy

@@ -532,7 +532,7 @@ export const fr = {
     privacy: {
       title: "Politique de confidentialité",
       description:
-        "Politique de confidentialité de dk.punds.ch : les données collectées lors de votre visite, leur usage et leur protection, selon la LPD suisse et le RGPD.",
+        "Politique de confidentialité de portfolio-izanagi.vercel.app : les données collectées lors de votre visite, leur usage et leur protection, selon la LPD suisse et le RGPD.",
       keywords:
         "politique de confidentialité, protection des données, RGPD, LPD, déclaration de confidentialité, confidentialité des données, confidentialité Suisse",
     },

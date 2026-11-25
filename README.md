@@ -8,9 +8,9 @@ This code is public for viewing and reference only: using, copying, changing, sh
 
 [![CI](https://github.com/dominikkoenitzer/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/dominikkoenitzer/Portfolio/actions/workflows/ci.yml)
 [![License: All Rights Reserved](https://img.shields.io/badge/license-All%20Rights%20Reserved-red.svg)](./LICENSE)
-[![Deployed on Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000.svg?logo=vercel)](https://dk.punds.ch)
+[![Deployed on Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000.svg?logo=vercel)](https://portfolio-izanagi.vercel.app)
 
-[**Live → dk.punds.ch**](https://dk.punds.ch)
+[**Live → portfolio-izanagi.vercel.app**](https://portfolio-izanagi.vercel.app)
 
 <img src="docs/screenshot.jpg" alt="The portfolio landing page: the hero headline under the WebGL aurora background." width="900">
 
@@ -98,4 +98,4 @@ redistribution. See [LICENSE](./LICENSE).
 
 **Dominik Könitzer**, software engineer in Zürich, Switzerland.
 
-[dk.punds.ch](https://dk.punds.ch) · [CV](https://dk.punds.ch/cv) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [Contact](https://dk.punds.ch/contact)
+[portfolio-izanagi.vercel.app](https://portfolio-izanagi.vercel.app) · [CV](https://portfolio-izanagi.vercel.app/cv) · [@dominikkoenitzer](https://github.com/dominikkoenitzer) · [Contact](https://portfolio-izanagi.vercel.app/contact)

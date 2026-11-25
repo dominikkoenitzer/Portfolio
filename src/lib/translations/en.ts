@@ -529,7 +529,7 @@ export const en = {
     privacy: {
       title: "Privacy Policy",
       description:
-        "Privacy policy for dk.punds.ch: what data is collected when you visit, how it is used, and how it is protected under Swiss FADP and EU GDPR.",
+        "Privacy policy for portfolio-izanagi.vercel.app: what data is collected when you visit, how it is used, and how it is protected under Swiss FADP and EU GDPR.",
       keywords:
         "privacy policy, data protection, GDPR, FADP, privacy statement, data privacy, Switzerland privacy",
     },

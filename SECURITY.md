@@ -1,7 +1,7 @@
 # Security Policy
 
 This repository is the source for a personal portfolio website
-(<https://dk.punds.ch>).
+(<https://portfolio-izanagi.vercel.app>).
 
 ## Reporting a vulnerability
 
@@ -9,7 +9,7 @@ If you find a security issue (exposed data, an XSS vector, a dependency or
 configuration problem, or anything that could harm visitors) please report it
 **privately**:
 
-**Contact:** <https://dk.punds.ch/contact>
+**Contact:** <https://portfolio-izanagi.vercel.app/contact>
 
 Please include steps to reproduce and the potential impact. I'll acknowledge
 within a few days and aim to address valid reports promptly. Please **do not**

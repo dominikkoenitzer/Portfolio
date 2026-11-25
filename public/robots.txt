@@ -1,4 +1,4 @@
-# robots.txt for https://dk.punds.ch
+# robots.txt for https://portfolio-izanagi.vercel.app
 # One group covers every crawler, search engines and AI crawlers alike.
 #
 # Do NOT add a per-bot group. A crawler obeys only the single most specific
@@ -12,8 +12,8 @@ Allow: /
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://dk.punds.ch/sitemap.xml
+Sitemap: https://portfolio-izanagi.vercel.app/sitemap.xml
 
 # AI / LLM resources (llms.txt convention)
-# LLM: https://dk.punds.ch/llms.txt
-# Full text: https://dk.punds.ch/llms-full.txt
+# LLM: https://portfolio-izanagi.vercel.app/llms.txt
+# Full text: https://portfolio-izanagi.vercel.app/llms-full.txt

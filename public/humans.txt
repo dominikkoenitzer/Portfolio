@@ -1,7 +1,7 @@
 /* TEAM */
 Software Engineer: Dominik Könitzer
-Site: https://dk.punds.ch
-Contact: https://dk.punds.ch/contact
+Site: https://portfolio-izanagi.vercel.app
+Contact: https://portfolio-izanagi.vercel.app/contact
 GitHub: @dominikkoenitzer
 From: Zürich, Switzerland
 
@@ -18,4 +18,4 @@ Standards: HTML5, CSS3, ECMAScript 2022+, WAI-ARIA, JSON-LD
 Components: React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI, Framer Motion, React Router, TanStack Query, Lenis, three.js
 Tooling: bun, ESLint, Vitest, GitHub Actions
 Source: https://github.com/dominikkoenitzer/Portfolio
-For machines: https://dk.punds.ch/llms.txt
+For machines: https://portfolio-izanagi.vercel.app/llms.txt

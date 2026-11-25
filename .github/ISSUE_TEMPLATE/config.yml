@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Contact Dominik
-    url: https://dk.punds.ch/contact
+    url: https://portfolio-izanagi.vercel.app/contact
     about: For private questions, security reports, or hiring.
   - name: Live site
-    url: https://dk.punds.ch
+    url: https://portfolio-izanagi.vercel.app
     about: See the portfolio in action.
