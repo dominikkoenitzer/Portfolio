@@ -199,7 +199,7 @@ async function notify(row) {
     "Antworten geht direkt an den Absender (Reply-To ist gesetzt).",
   ].join("\n");
   await transport.sendMail({
-    from: `"dk.punds.ch Kontakt" <${user}>`,
+    from: `"Portfolio Kontakt" <${user}>`,
     to,
     // Backslashes have to go as well as quotes: a name ending in one escaped the
     // closing quote and swallowed the address, so the reply went nowhere.

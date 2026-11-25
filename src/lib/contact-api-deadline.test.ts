@@ -82,8 +82,8 @@ describe("contact API with a mail send that never finishes", () => {
           },
           headers: {
             "content-type": "application/json",
-            host: "dk.punds.ch",
-            origin: "https://dk.punds.ch",
+            host: "portfolio-izanagi.vercel.app",
+            origin: "https://portfolio-izanagi.vercel.app",
             "x-forwarded-for": "203.0.113.9",
           },
           method: "POST",

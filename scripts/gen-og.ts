@@ -150,7 +150,7 @@ const card = (title: string, sub: string, path: string) =>
   ${eyebrow("Dominik Könitzer", 196)}
   <text x="114" y="330" font-family="${TITLE_FONT}" font-weight="700" font-size="104" fill="url(#name)">${esc(title)}</text>
   ${subtitle(sub, 404)}
-  ${footer(`dk.punds.ch${path}`)}
+  ${footer(`portfolio-izanagi.vercel.app${path}`)}
 </svg>`;
 
 // The home card mirrors the hero: the greeting, then the name at hero size.
@@ -161,7 +161,7 @@ const homeCard = () =>
   <text x="114" y="292" font-family="${NAME_FONT}" font-weight="600" font-size="116" letter-spacing="-5.2" fill="url(#name)">Dominik</text>
   <text x="114" y="404" font-family="${NAME_FONT}" font-weight="600" font-size="116" letter-spacing="-5.2" fill="url(#name)">Könitzer</text>
   ${subtitle("Software engineer and web developer in Zürich", 470)}
-  ${footer("dk.punds.ch")}
+  ${footer("portfolio-izanagi.vercel.app")}
 </svg>`;
 
 const CARDS: { out: string; title: string; subtitle: string; path: string }[] = [

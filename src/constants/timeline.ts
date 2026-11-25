@@ -62,7 +62,7 @@ const MPAI_LOGO = "/timeline/mpai.png";
 const SSS_LOGO = "/timeline/sss-singapore.png";
 const MPS_LOGO = "/timeline/mps-oberarth.png";
 const DSP_LOGO = "/timeline/dsp-beijing.png";
-// The site's own brand icon: used for the self-employed / dk.punds.ch entry.
+// The site's own brand icon: used for the self-employed entry.
 
 // Tech stacks are proper nouns: identical across languages.
 const SWISSLEX_TAGS = ["Angular", "TypeScript", "C#", ".NET", "Playwright"];

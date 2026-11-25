@@ -101,7 +101,7 @@ export default async function handler(req, res) {
   const token = process.env.GITHUB_TOKEN || process.env.VITE_GITHUB_TOKEN;
   const headers = {
     Accept: "application/vnd.github+json",
-    "User-Agent": "dk.punds.ch",
+    "User-Agent": "portfolio-izanagi.vercel.app",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
