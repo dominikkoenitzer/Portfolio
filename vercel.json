@@ -18,6 +18,291 @@
       "source": "/avatar.jpg",
       "destination": "/dominik-koenitzer.jpg",
       "permanent": true
+    },
+    {
+      "source": "/get/daifuku",
+      "destination": "/projects/daifuku",
+      "permanent": true
+    },
+    {
+      "source": "/get/daifuku/download/windows",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/windows-arm64",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-arm64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/windows-arm",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-arm64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/zip",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-x64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/zip-arm64",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-arm64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/schema.json",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/schema.json",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/windows.sha256",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku.exe.sha256",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/windows-arm64.sha256",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-arm64.exe.sha256",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/zip.sha256",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-x64.zip.sha256",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/download/zip-arm64.sha256",
+      "destination": "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-arm64.zip.sha256",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/llms.txt",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/llms.txt",
+      "permanent": false
+    },
+    {
+      "source": "/get/daifuku/skill/daifuku.zip",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/skill/daifuku.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi",
+      "destination": "/projects/mochi",
+      "permanent": true
+    },
+    {
+      "source": "/get/mochi/install.ps1",
+      "destination": "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/install.ps1",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/latest",
+      "destination": "https://api.github.com/repos/dominikkoenitzer/Mochi/releases/latest",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/download/windows",
+      "destination": "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/Mochi-Setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/download/:file",
+      "destination": "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/:file",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/download/:tag/:file",
+      "destination": "https://github.com/dominikkoenitzer/Mochi/releases/download/:tag/:file",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/schema.json",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/schema.json",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/llms.txt",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/llms.txt",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/skill/mochi.zip",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/skill/mochi.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants",
+      "destination": "/projects/remnants",
+      "permanent": true
+    },
+    {
+      "source": "/get/remnants/download/windows",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-x64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/windows-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-arm64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/mac",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-darwin-arm64.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/mac-intel",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-darwin-x64.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/linux",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-linux-x64.tar.gz",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/deb",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/remnants-amd64.deb",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/rpm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/remnants-x86_64.rpm",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/pkgbuild",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/PKGBUILD",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/checksums",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/SHA256SUMS",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/windows-system",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsSetup-x64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/windows-system-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsSetup-arm64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/windows-zip",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-win32-x64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/windows-zip-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-win32-arm64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/mac-zip",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-darwin-arm64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/mac-intel-zip",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-darwin-x64.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/linux-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/Remnants-linux-arm64.tar.gz",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/deb-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/remnants-arm64.deb",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/download/rpm-arm",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/remnants-aarch64.rpm",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/issues",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/issues",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/issues/new",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/issues/new",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/releases/download/:tag/:file",
+      "destination": "https://github.com/dominikkoenitzer/Remnants/releases/download/:tag/:file",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/llms.txt",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Remnants/main/site/llms.txt",
+      "permanent": false
+    },
+    {
+      "source": "/get/remnants/license.txt",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Remnants/main/site/license.txt",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling",
+      "destination": "/projects/inkling",
+      "permanent": true
+    },
+    {
+      "source": "/get/inkling/download/windows",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-Setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/download/mac",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-mac.dmg",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/download/linux",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling.AppImage",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/update/latest.yml",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/latest.yml",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/update/latest-mac.yml",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/latest-mac.yml",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/update/latest-linux.yml",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/latest-linux.yml",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/update/:file",
+      "destination": "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/:file",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/llms.txt",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/llms.txt",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/skill/inkling.zip",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/skill/inkling.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/install",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/install",
+      "permanent": false
     }
   ],
   "headers": [
@@ -209,6 +494,12 @@
           "value": "public, max-age=86400"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/get/remnants/latest",
+      "destination": "/api/remnants-latest"
     }
   ]
 }
