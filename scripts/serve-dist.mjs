@@ -55,16 +55,18 @@ const TYPES = {
   ".wasm": "application/wasm",
 };
 
-// vercel.json sources are path patterns where `(...)` groups are regular
-// expressions; everything outside the groups is literal.
+// In vercel.json sources `(...)` is a regular expression, `:name` one path segment, `:name+` one or more and the rest literal.
 function toRegExp(source) {
   let out = "";
   let depth = 0;
-  for (const ch of source) {
-    if (ch === "(") depth++;
-    if (depth === 0 && /[.+?^${}|[\]\\]/.test(ch)) out += `\\${ch}`;
-    else out += ch;
-    if (ch === ")") depth--;
+  for (const part of source.match(/:[A-Za-z_]\w*\+?|[^]/g) ?? []) {
+    if (part === "(") depth++;
+    if (depth === 0 && part.endsWith("+") && part.length > 1)
+      out += `(?<${part.slice(1, -1)}>[^/]+(?:/[^/]+)*)`;
+    else if (depth === 0 && part.length > 1) out += `(?<${part.slice(1)}>[^/]+?)`;
+    else if (depth === 0 && /[.+?^${}|[\]\\]/.test(part)) out += `\\${part}`;
+    else out += part;
+    if (part === ")") depth--;
   }
   return new RegExp(`^${out}$`);
 }
@@ -74,6 +76,12 @@ const redirects = (config.redirects ?? []).map((r) => ({
   to: r.destination,
   status: r.permanent ? 308 : 307,
 }));
+
+// A destination takes the segments its source named, as `:name` or `:name+`.
+const destination = (to, groups = {}) =>
+  to.replace(/:([A-Za-z_]\w*)\+?/g, (token, name) =>
+    name in groups ? groups[name].split("/").map(encodeURIComponent).join("/") : token,
+  );
 // The host-only rules (the CSP is sent for the production host alone) apply
 // here too, so the tests run under the policy visitors get. Over plain http on
 // 127.0.0.1 `upgrade-insecure-requests` would rewrite every request to https,
@@ -161,8 +169,9 @@ const server = createServer((req, res) => {
     return;
   }
   for (const r of redirects) {
-    if (r.match.test(pathname)) {
-      res.writeHead(r.status, { Location: r.to }).end();
+    const found = r.match.exec(pathname);
+    if (found) {
+      res.writeHead(r.status, { Location: destination(r.to, found.groups) }).end();
       return;
     }
   }
