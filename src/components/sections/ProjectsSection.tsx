@@ -18,6 +18,7 @@ import {
   getProjects,
   type PortfolioProject,
   PROJECT_CARD_SIZES,
+  projectCardAvifSrcSet,
   projectCardSrcSet,
 } from "@/constants/projects";
 import { useSearchDraft } from "@/hooks/use-search-draft";
@@ -467,6 +468,16 @@ export function ProjectsSection() {
                            browser will not start a lazy image until layout has
                            told it the box is on screen. The rest stay lazy. */
                         <div className="w-full overflow-hidden rounded-xl shadow-sm ring-1 ring-black/5 dark:ring-white/5">
+                        <picture className="block">
+                        {/* AVIF first, held to the error of a quality 82 JPEG: see the script. */}
+                        <source
+                          sizes={PROJECT_CARD_SIZES}
+                          srcSet={projectCardAvifSrcSet(
+                            project.image,
+                            project.imageWidth,
+                          )}
+                          type="image/avif"
+                        />
                         <img
                           alt={`${project.title} screenshot`}
                           className="aspect-16/10 w-full object-cover object-top"
@@ -483,6 +494,7 @@ export function ProjectsSection() {
                             project.imageWidth,
                           )}
                         />
+                        </picture>
                         </div>
                       ) : null}
 

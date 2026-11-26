@@ -365,6 +365,19 @@ const largeCandidates = (image: string, imageWidth: number): string =>
 export const projectCardSrcSet = (image: string, imageWidth: number): string =>
   `${cardImageSrc(image)} ${PROJECT_CARD_WIDTH}w, ${largeCandidates(image, imageWidth)}`;
 
+/** The AVIF copy of a catalogue candidate, written beside the JPEG by `gen-card-images.ts`. */
+export const avifImageSrc = (image: string): string =>
+  image.replace(/\.(jpe?g|png)$/i, ".avif");
+
+/** The AVIF copy of the middle candidate, or of the original when that is the middle size. */
+export const mediumAvifSrc = (image: string, imageWidth: number): string =>
+  avifImageSrc(imageWidth > PROJECT_MEDIUM_WIDTH ? mediumImageSrc(image) : image);
+
+/** The card candidates as AVIF up to the middle size, offered first through `<picture>`. */
+export const projectCardAvifSrcSet = (image: string, imageWidth: number): string =>
+  `${avifImageSrc(cardImageSrc(image))} ${PROJECT_CARD_WIDTH}w, ` +
+  `${mediumAvifSrc(image, imageWidth)} ${Math.min(imageWidth, PROJECT_MEDIUM_WIDTH)}w`;
+
 /**
  * How wide a catalogue card renders its picture, measured in a browser rather
  * than estimated: 534px from 1280 up, where the grid column stops growing,

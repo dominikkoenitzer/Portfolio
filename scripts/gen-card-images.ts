@@ -29,6 +29,8 @@
  * card and the reading column offer it before the full capture, so a retina
  * card costs what it did when 1600 px was the original and only the lightbox
  * fetches the full file.
+ *
+ * Each card picture also gets AVIF copies at the card and middle sizes, held to the error of a quality 82 JPEG of that size.
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -36,7 +38,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import {
+  avifImageSrc,
   cardImageSrc,
+  mediumAvifSrc,
   mediumImageSrc,
   PORTFOLIO_PROJECTS,
   PROJECT_CARD_WIDTH,
@@ -70,8 +74,47 @@ const encode = (input: Buffer, width = PROJECT_CARD_WIDTH) =>
     .jpeg({ quality: 82, mozjpeg: true, chromaSubsampling: "4:4:4" })
     .toBuffer();
 
+const pixelsOf = (input: Buffer, width?: number) =>
+  (width ? sharp(input).resize(width, null, { kernel: "lanczos3" }) : sharp(input))
+    .removeAlpha()
+    .raw()
+    .toBuffer();
+
+const meanSquaredError = (a: Buffer, b: Buffer) => {
+  let sum = 0;
+  for (let i = 0; i < a.length; i++) sum += (a[i] - b[i]) ** 2;
+  return sum / a.length;
+};
+
+const encodeAvif = (input: Buffer, width: number, quality: number) =>
+  sharp(input)
+    .resize(width, null, { kernel: "lanczos3" })
+    .avif({ quality, chromaSubsampling: "4:4:4", effort: 6 })
+    .toBuffer();
+
+// The lowest AVIF quality no further from the plain downscale than a quality 82 JPEG of that size, bisected per picture.
+const avifNoWorseThanJpeg = async (source: Buffer, width: number) => {
+  const reference = await pixelsOf(source, width);
+  const bound = meanSquaredError(await pixelsOf(await encode(source, width)), reference);
+  let low = 30;
+  let high = 100;
+  let best = await encodeAvif(source, width, high);
+  while (low < high) {
+    const quality = (low + high) >> 1;
+    const avif = await encodeAvif(source, width, quality);
+    if (meanSquaredError(await pixelsOf(avif), reference) <= bound) {
+      best = avif;
+      high = quality;
+    } else {
+      low = quality + 1;
+    }
+  }
+  return { avif: best, quality: low };
+};
+
 let before = 0;
 let after = 0;
+let avifBytes = 0;
 let mismatches = 0;
 
 for (const project of PORTFOLIO_PROJECTS) {
@@ -98,6 +141,26 @@ for (const project of PORTFOLIO_PROJECTS) {
     `  ${project.slug.padEnd(10)} ${String(Math.round(source.length / 1024)).padStart(4)} kB -> ` +
       `${String(Math.round(buffer.length / 1024)).padStart(4)} kB  ${card}`,
   );
+
+  // The AVIF pair the card offers first: the card size and the middle size.
+  for (const [path, width, jpegBytes] of [
+    [avifImageSrc(card), PROJECT_CARD_WIDTH, buffer.length],
+    [
+      mediumAvifSrc(project.image, project.imageWidth),
+      Math.min(project.imageWidth, PROJECT_MEDIUM_WIDTH),
+      project.imageWidth > PROJECT_MEDIUM_WIDTH
+        ? (await encode(source, PROJECT_MEDIUM_WIDTH)).length
+        : source.length,
+    ],
+  ] as const) {
+    const { avif, quality } = await avifNoWorseThanJpeg(source, width);
+    await writeFile(join(PUBLIC, path), avif);
+    avifBytes += avif.length;
+    console.log(
+      `  ${String(Math.round(jpegBytes / 1024)).padStart(4)} kB jpeg, ` +
+        `${String(Math.round(avif.length / 1024)).padStart(4)} kB avif at ${quality}  ${path}`,
+    );
+  }
 }
 
 for (const project of PORTFOLIO_PROJECTS) {
@@ -127,6 +190,7 @@ console.log(
   `\ncard images: ${Math.round(before / 1024)} kB of originals -> ` +
     `${Math.round(after / 1024)} kB (${Math.round(100 - (100 * after) / before)}% less on a 1x display)`,
 );
+console.log(`avif copies: ${Math.round(avifBytes / 1024)} kB in all`);
 
 if (mismatches > 0) {
   console.error(

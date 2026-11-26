@@ -6,6 +6,8 @@ import {
   getProject,
   getProjects,
   PORTFOLIO_PROJECTS,
+  projectCardAvifSrcSet,
+  projectCardSrcSet,
 } from "./index";
 import { PROJECT_STACKS } from "./stacks";
 import { SKILL_CATEGORIES } from "@/constants/skills";
@@ -137,6 +139,21 @@ describe("the project list", () => {
       const card = cardImageSrc(project.image);
       expect(card, project.slug).toMatch(/^\/projects\/[\w-]+-card\.jpg$/);
       expect(card, project.slug).not.toBe(project.image);
+    }
+  });
+
+  // Every AVIF width must also be a JPEG width, or the browser picks a different size from the two lists.
+  it("offers an AVIF twin for the card and middle candidates", () => {
+    for (const project of projects) {
+      if (!project.image || project.imageIcon) continue;
+      const avif = projectCardAvifSrcSet(project.image, project.imageWidth);
+      const widths = avif.split(", ").map((entry) => entry.split(" ")[1]);
+      expect(widths, project.slug).toEqual(["800w", "1600w"]);
+      for (const entry of avif.split(", ")) {
+        expect(entry, project.slug).toMatch(/^\/projects\/[\w-]+\.avif \d+w$/);
+      }
+      const jpeg = projectCardSrcSet(project.image, project.imageWidth);
+      for (const width of widths) expect(jpeg, project.slug).toContain(` ${width}`);
     }
   });
 

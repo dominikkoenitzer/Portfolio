@@ -20,13 +20,15 @@ import { dirname, join } from "node:path";
 
 import { SITE_CONFIG } from "../src/constants";
 import {
+  avifImageSrc,
   cardImageSrc,
   getProjects,
+  mediumAvifSrc,
   mediumImageSrc,
   PROJECT_CARD_SIZES,
   PROJECT_MEDIUM_WIDTH,
   pictureWidth,
-  projectCardSrcSet,
+  projectCardAvifSrcSet,
 } from "../src/constants/projects";
 import {
   getProjectSeoDescription,
@@ -175,6 +177,9 @@ const missingCards = getProjects("en")
   .filter((p) => p.image && !p.imageIcon)
   .flatMap((p) => [
     cardImageSrc(p.image as string),
+    // The two AVIF candidates the card offers ahead of the JPEGs.
+    avifImageSrc(cardImageSrc(p.image as string)),
+    mediumAvifSrc(p.image as string, p.imageWidth),
     // The 1600px middle copy of every wider picture, which the card and the
     // reading column offer before the full capture.
     ...[p.image as string, ...(p.gallery ?? [])]
@@ -352,13 +357,15 @@ for (const page of pages) {
   // would preload the full-size file and the card would then pick the small
   // one, paying for both. The list opens on the newest project because that is
   // the default sort, and the base array runs oldest first.
+  // It names the AVIF set and type the card offers first, so a browser without AVIF skips it.
   if (page.route === "/projects" && firstCard?.image) {
     const srcset = esc(
-      projectCardSrcSet(firstCard.image, firstCard.imageWidth),
+      projectCardAvifSrcSet(firstCard.image, firstCard.imageWidth),
     );
     html = html.replace(
       /<\/head>/i,
-      `  <link rel="preload" as="image" href="${esc(firstCard.image)}" ` +
+      `  <link rel="preload" as="image" type="image/avif" ` +
+        `href="${esc(mediumAvifSrc(firstCard.image, firstCard.imageWidth))}" ` +
         `imagesrcset="${srcset}" imagesizes="${esc(PROJECT_CARD_SIZES)}" ` +
         `fetchpriority="high">\n  </head>`,
     );
