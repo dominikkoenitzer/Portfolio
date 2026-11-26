@@ -177,6 +177,19 @@ test.describe("projects", () => {
     await page.locator("main").getByRole("link", { name: "Projects", exact: true }).click();
     await expect(page).toHaveURL(/\/projects\?type=desktop$/);
   });
+
+  test("a card's Download button leads to that app's project page", async ({ page }) => {
+    await page.goto("/projects?type=desktop");
+    await expectRendered(page);
+    const download = page.getByRole("link", { name: /^Download / });
+    expect(await download.count()).toBeGreaterThan(0);
+    for (const link of await download.all()) {
+      await expect(link).toHaveAttribute("href", /^\/projects\/[a-z-]+$/);
+    }
+    await download.first().click();
+    await expect(page).toHaveURL(/\/projects\/[^/?]+$/);
+    await expectRendered(page);
+  });
 });
 
 /**

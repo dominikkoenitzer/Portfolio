@@ -548,19 +548,19 @@ export function ProjectsSection() {
                         }`}
                       >
                         {project.downloadUrl ? (
-                          <a
+                          <Link
                             aria-label={t.openDownload.replace(
                               "{name}",
                               project.title,
                             )}
                             className={`${ACTION_BASE} ${ACTION_MAIN} col-span-2 sm:col-span-1`}
-                            href={project.downloadUrl}
-                            rel="noopener noreferrer"
-                            target="_blank"
+                            state={listSearch}
+                            to={`/projects/${project.slug}`}
+                            {...warmOnIntent(`/projects/${project.slug}`)}
                           >
                             {t.download}
                             <Download className="h-3.5 w-3.5" />
-                          </a>
+                          </Link>
                         ) : project.liveUrl ? (
                           <a
                             aria-label={t.openLive.replace(
