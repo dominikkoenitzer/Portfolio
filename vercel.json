@@ -85,6 +85,11 @@
       "permanent": false
     },
     {
+      "source": "/get/daifuku/skill/daifuku/:path+",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/skill/daifuku/:path+",
+      "permanent": false
+    },
+    {
       "source": "/get/mochi",
       "destination": "/projects/mochi",
       "permanent": true
@@ -127,6 +132,11 @@
     {
       "source": "/get/mochi/skill/mochi.zip",
       "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/skill/mochi.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/mochi/skill/mochi/:path+",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/skill/mochi/:path+",
       "permanent": false
     },
     {
@@ -297,6 +307,11 @@
     {
       "source": "/get/inkling/skill/inkling.zip",
       "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/skill/inkling.zip",
+      "permanent": false
+    },
+    {
+      "source": "/get/inkling/skill/inkling/:path+",
+      "destination": "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/skill/inkling/:path+",
       "permanent": false
     },
     {

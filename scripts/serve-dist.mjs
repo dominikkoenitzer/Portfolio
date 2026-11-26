@@ -55,13 +55,15 @@ const TYPES = {
   ".wasm": "application/wasm",
 };
 
-// In vercel.json sources `(...)` is a regular expression, `:name` one path segment and the rest literal.
+// In vercel.json sources `(...)` is a regular expression, `:name` one path segment, `:name+` one or more and the rest literal.
 function toRegExp(source) {
   let out = "";
   let depth = 0;
-  for (const part of source.match(/:[A-Za-z_]\w*|[^]/g) ?? []) {
+  for (const part of source.match(/:[A-Za-z_]\w*\+?|[^]/g) ?? []) {
     if (part === "(") depth++;
-    if (depth === 0 && part.length > 1) out += `(?<${part.slice(1)}>[^/]+?)`;
+    if (depth === 0 && part.endsWith("+") && part.length > 1)
+      out += `(?<${part.slice(1, -1)}>[^/]+(?:/[^/]+)*)`;
+    else if (depth === 0 && part.length > 1) out += `(?<${part.slice(1)}>[^/]+?)`;
     else if (depth === 0 && /[.+?^${}|[\]\\]/.test(part)) out += `\\${part}`;
     else out += part;
     if (part === ")") depth--;
@@ -75,10 +77,10 @@ const redirects = (config.redirects ?? []).map((r) => ({
   status: r.permanent ? 308 : 307,
 }));
 
-// A destination takes the segments its source named, as `:name`.
+// A destination takes the segments its source named, as `:name` or `:name+`.
 const destination = (to, groups = {}) =>
-  to.replace(/:([A-Za-z_]\w*)/g, (token, name) =>
-    name in groups ? encodeURIComponent(groups[name]) : token,
+  to.replace(/:([A-Za-z_]\w*)\+?/g, (token, name) =>
+    name in groups ? groups[name].split("/").map(encodeURIComponent).join("/") : token,
   );
 // The host-only rules (the CSP is sent for the production host alone) apply
 // here too, so the tests run under the policy visitors get. Over plain http on

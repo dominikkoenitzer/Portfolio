@@ -17,6 +17,7 @@ const APP_ROUTES: [source: string, target: string, path?: string][] = [
   ["/get/daifuku/download/zip-arm64.sha256", "https://github.com/dominikkoenitzer/Daifuku/releases/latest/download/daifuku-windows-arm64.zip.sha256"],
   ["/get/daifuku/llms.txt", "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/llms.txt"],
   ["/get/daifuku/skill/daifuku.zip", "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/skill/daifuku.zip"],
+  ["/get/daifuku/skill/daifuku/:path+", "https://raw.githubusercontent.com/dominikkoenitzer/Daifuku/main/site/skill/daifuku/references/commands.md", "/get/daifuku/skill/daifuku/references/commands.md"],
   ["/get/mochi", "/projects/mochi"],
   ["/get/mochi/install.ps1", "https://github.com/dominikkoenitzer/Mochi/releases/latest/download/install.ps1"],
   ["/get/mochi/latest", "https://api.github.com/repos/dominikkoenitzer/Mochi/releases/latest"],
@@ -26,6 +27,7 @@ const APP_ROUTES: [source: string, target: string, path?: string][] = [
   ["/get/mochi/schema.json", "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/schema.json"],
   ["/get/mochi/llms.txt", "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/llms.txt"],
   ["/get/mochi/skill/mochi.zip", "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/skill/mochi.zip"],
+  ["/get/mochi/skill/mochi/:path+", "https://raw.githubusercontent.com/dominikkoenitzer/Mochi/main/site/skill/mochi/SKILL.md", "/get/mochi/skill/mochi/SKILL.md"],
   ["/get/remnants", "/projects/remnants"],
   ["/get/remnants/download/windows", "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-x64.exe"],
   ["/get/remnants/download/windows-arm", "https://github.com/dominikkoenitzer/Remnants/releases/latest/download/RemnantsUserSetup-arm64.exe"],
@@ -60,6 +62,7 @@ const APP_ROUTES: [source: string, target: string, path?: string][] = [
   ["/get/inkling/update/:file", "https://github.com/dominikkoenitzer/Inkling/releases/latest/download/Inkling-Setup-0.9.1.exe.blockmap", "/get/inkling/update/Inkling-Setup-0.9.1.exe.blockmap"],
   ["/get/inkling/llms.txt", "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/llms.txt"],
   ["/get/inkling/skill/inkling.zip", "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/skill/inkling.zip"],
+  ["/get/inkling/skill/inkling/:path+", "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/skill/inkling/references/cards.md", "/get/inkling/skill/inkling/references/cards.md"],
   ["/get/inkling/install", "https://raw.githubusercontent.com/dominikkoenitzer/Inkling/main/site/install"],
 ];
 
@@ -85,7 +88,9 @@ test.describe("app routes", () => {
     expect(listed.length).toBe(APP_ROUTES.length);
   });
 
-  test("a path no app serves is not found", async ({ request }) => {
-    expect((await request.get("/get/daifuku/nothing", { maxRedirects: 0 })).status()).toBe(404);
-  });
+  for (const path of ["/get/daifuku/nothing", "/get/mochi/skill/mochi"]) {
+    test(`${path} is not found`, async ({ request }) => {
+      expect((await request.get(path, { maxRedirects: 0 })).status()).toBe(404);
+    });
+  }
 });
