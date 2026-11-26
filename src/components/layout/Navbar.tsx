@@ -303,10 +303,7 @@ export function Navbar() {
   // closes the drawer), so they share one layer.
   const isTopLayer = useOverlayLayer(mobileMenuOpen || searchOpen);
 
-  // Arm the palette once the browser has nothing better to do, so the first
-  // open is never the slow one. Hover, focus and the modifier key all preload
-  // as well, but a visitor who goes straight for the shortcut touches none of
-  // them, and that first open measured a third of a second.
+  // Arm the palette after load so the first open is rarely the slow one; hover and focus preload it too.
   useEffect(() => {
     // Not on a connection the visitor pays for by the byte. Arming the palette
     // pulls the search index, and the index pulls the whole project catalogue
@@ -317,17 +314,23 @@ export function Navbar() {
     // unconditionally: those are the visitor asking.
     if (!allowsPrefetch(readConnection())) return;
 
-    const idle = window.requestIdleCallback;
-    if (idle) {
-      // The aurora animates on its own rAF, so this page is never truly idle
-      // and the callback lands on its timeout. Two seconds is late enough to
-      // be clear of first paint and early enough that a visitor reaching for
-      // the shortcut finds the chunk already there.
-      const id = idle(preloadSearch, { timeout: 2000 });
-      return () => window.cancelIdleCallback?.(id);
-    }
-    const timer = window.setTimeout(preloadSearch, 2000);
-    return () => window.clearTimeout(timer);
+    // Counted from load, not mount: an earlier idle parsed the catalogue before the hero's largest paint.
+    let timer = 0;
+    let id = 0;
+    const arm = () => {
+      timer = window.setTimeout(() => {
+        const idle = window.requestIdleCallback;
+        if (idle) id = idle(preloadSearch, { timeout: 2000 });
+        else preloadSearch();
+      }, 2000);
+    };
+    if (document.readyState === "complete") arm();
+    else window.addEventListener("load", arm, { once: true });
+    return () => {
+      window.removeEventListener("load", arm);
+      window.clearTimeout(timer);
+      if (id) window.cancelIdleCallback?.(id);
+    };
   }, [preloadSearch]);
 
   useEffect(() => {

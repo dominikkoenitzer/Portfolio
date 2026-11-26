@@ -417,6 +417,27 @@ test.describe("keyboard", () => {
     await expect(field).toBeFocused();
   });
 
+  test("the search answers when opened before it has been armed", async ({ page }) => {
+    // A saved-data connection never arms the palette, so only the open itself can load it.
+    await page.addInitScript(() =>
+      Object.defineProperty(navigator, "connection", { value: { saveData: true }, configurable: true }),
+    );
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expectRendered(page);
+    const armed = await page.evaluate(() =>
+      performance
+        .getEntriesByType("resource")
+        .some((entry) => /\/(SearchDialog|search-index)-[^/]+\.js$/.test(entry.name)),
+    );
+    expect(armed, "the palette is still cold when it is opened").toBe(false);
+    await page.locator("header [data-search-trigger]:visible").first().click();
+    const field = page.getByRole("combobox");
+    await expect(field).toBeFocused();
+    await field.fill("psyche");
+    const dialog = page.getByRole("dialog", { name: "Site search" });
+    await expect(dialog.getByRole("option", { name: /Psyche/ }).first()).toBeVisible();
+  });
+
   test("Enter and Escape that end a composition leave the search open", async ({
     page,
   }) => {
